@@ -2,10 +2,11 @@
 // copia de `release/win-unpacked` con `resources/actualizaciones.json` (el repositorio y el commit), en un `.zip`
 // con la carpeta `win-unpacked` adentro. Las copias compartidas la bajan solas y la ponen al cerrar Iridium.
 // Publica lo que marca `main` (lo que se armó por última vez, D-070); si `main` no está en GitHub, lo sube.
-// Con `--desde <carpeta>`, la versión armada en otra carpeta (`tools/actualizar.ps1 -Release <carpeta>`), con el commit
-// de su `nueva/lista.json`: sirve para publicar sin cambiar la app de uso diario.
+// Con `--desde <carpeta>`, la versión armada en otra carpeta (`tools/actualizar.ps1 -Release <carpeta>`): la de
+// `nueva`, con el commit de su `lista.json`, o, si ya se puso, la de `win-unpacked` con `--commit`. Sirve para publicar
+// sin cambiar la app de uso diario.
 // La sesión de GitHub es la de git (D-081): si no hay, git abre su ventana.
-// Uso: node --experimental-strip-types tools/publicar.ts [--repo dueño/nombre] [--desde carpeta]
+// Uso: node --experimental-strip-types tools/publicar.ts [--repo dueño/nombre] [--desde carpeta [--commit c]]
 import { execFileSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { cp, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
@@ -39,18 +40,22 @@ const opcion = (nombre: string) => {
 }
 const repo = opcion('--repo') ?? repoDeOrigin()
 const desde = opcion('--desde')
-const app = desde ? join(desde, 'nueva', 'win-unpacked') : join('release', 'win-unpacked')
+const lista = desde ? join(desde, 'nueva', 'lista.json') : null
+const conLista = lista !== null && existsSync(lista)
+const app = desde ? join(desde, conLista ? 'nueva' : '', 'win-unpacked') : join('release', 'win-unpacked')
 if (!existsSync(join(app, 'Iridium.exe'))) throw new Error(`No está la app armada (${app}).`)
 
-const ref = desde
-  ? (JSON.parse((await readFile(join(desde, 'nueva', 'lista.json'), 'utf8')).replace(/^﻿/, '')) as {
-      commit: string
-      sinGuardar: boolean
-    })
-  : null
+const ref =
+  lista && conLista
+    ? (JSON.parse((await readFile(lista, 'utf8')).replace(/^﻿/, '')) as {
+        commit: string
+        sinGuardar: boolean
+      })
+    : null
 if (ref?.sinGuardar)
   throw new Error('Esa versión se armó con cambios sin commitear: commitealos y armala de nuevo.')
-const base = ref?.commit ?? 'main'
+if (desde && !ref && !opcion('--commit')) throw new Error('Sin nueva/lista.json, falta --commit.')
+const base = ref?.commit ?? opcion('--commit') ?? 'main'
 const commit = git('rev-parse', '--short', base)
 const largo = git('rev-parse', base)
 const mensaje = git('log', '-1', '--format=%s', base)
