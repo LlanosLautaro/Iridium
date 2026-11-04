@@ -54,7 +54,7 @@ test.beforeEach(async () => {
   raiz = join(base, 'PROYECTOS')
   claude = join(base, '.claude')
   datos = join(base, 'datos')
-  iridium = join(datos, 'Iridium')
+  iridium = join(raiz, '.iridium')
   await armarCarpetaClaude(claude, join(iridium, 'Skills'), join(base, 'afuera'))
   await proyecto('Skills', { '.proyecto.json': ficha, 'CLAUDE.md': '# Skills\n' }, iridium)
   await proyecto('Gamma', {

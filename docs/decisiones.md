@@ -89,9 +89,10 @@
 | D-080 | 2026-11-04 | general | 10 (Q-116) | La carpeta para compartir explica Iridium por dentro e instala el comprobador de preguntas | vigente |
 | D-081 | 2026-11-04 | general | 10 (Q-117) | La sección Git crea el repositorio y lo publica en GitHub, con la sesión de GitHub de git | vigente |
 | D-082 | 2026-11-04 | general | 10 (Q-119) | El repo de Iridium no nombra los otros proyectos del usuario | vigente |
-| D-083 | 2026-11-04 | general | 10 (Q-120) | Ideas y Skills viven en una carpeta «Iridium» aparte de los proyectos | vigente |
+| D-083 | 2026-11-04 | general | 10 (Q-120) | Ideas y Skills viven en una carpeta «Iridium» aparte de los proyectos | reemplazada en parte por D-087 (dónde) |
 | D-084 | 2026-11-04 | general | 10 (Q-121) | Al terminar la limpieza, el repo empieza de nuevo con un solo commit | vigente |
 | D-085 | 2026-11-04 | general (Compartir) | 10, a pedido del usuario | Las copias compartidas se actualizan solas desde las versiones publicadas en GitHub | vigente |
+| D-087 | 2026-11-04 | general | 10 (Q-125) | Ideas y Skills viven en `.iridium`, dentro de la carpeta de proyectos, como un vault | vigente |
 | D-086 | 2026-11-04 | general | 10 (Q-124) | Una skill «iridium» viaja con Iridium y se carga solo en sus conversaciones, con la guía de hitos si falta | vigente |
 
 ---
@@ -1959,7 +1960,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-04
 - **Ámbito:** general (ajusta D-060, D-068 e IN-3)
 - **Hito o paso:** 10 (Q-120)
-- **Estado:** vigente
+- **Estado:** reemplazada en parte por D-087: la carpeta pasa a ser `.iridium`, dentro de la carpeta de proyectos; la mudanza y lo demás siguen
 
 **Contexto:** las carpetas del chat general (`Ideas`) y de la sección Skills estaban dentro de la carpeta de proyectos, con nombres fijos, y la grilla las escondía por nombre. El usuario pidió que no sean carpetas de proyecto: no se usan igual ni para lo mismo, y quien recibe Iridium no las tiene. Además, la carpeta de proyectos por defecto era la ruta de esta PC (D-082).
 
@@ -2041,3 +2042,27 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - Si la guía cambia, entra en la próxima versión armada (y publicada). La skill `iridium` se cambia junto con lo que Iridium lee (`src/main/core/visor/`, pendientes, scripts): reemplaza al pendiente de D-080 sobre la guía de la carpeta para compartir.
 - La configuración inicial de la carpeta para compartir se achica: ya no hace falta instalar la guía.
 - Probado: `tests/d086-complementos.test.ts` y `tools/probar-complementos.ts` con el Claude Code real, sin mandar mensajes: suma `iridium:iridium` e `iridium-guia:hitos-desarrollo-app`.
+
+## D-087 — Ideas y Skills viven en `.iridium`, dentro de la carpeta de proyectos, como un vault
+- **Fecha:** 2026-11-04
+- **Ámbito:** general (reemplaza el lugar de D-083)
+- **Hito o paso:** 10 (Q-125)
+- **Estado:** vigente
+
+**Contexto:** con Q-115 el usuario propuso que la carpeta que se elige para Iridium funcione como un vault de Obsidian: adentro, una carpeta `.iridium` con lo de Iridium (las skills y los datos internos, como las ideas) y la opción de respaldarla en GitHub. D-083 había puesto Ideas y Skills en una carpeta aparte, que se elegía en Ajustes.
+
+**Opciones (Q-125):** A) `.iridium` dentro de la carpeta de proyectos; los proyectos no se mueven; respaldo opcional (elegida); B) una carpeta con `.iridium` y al lado `projects`, moviendo todos los proyectos; C) dejar D-083 y sumar solo el respaldo.
+
+**Decisión:**
+1. **La carpeta de Iridium es `<carpeta de proyectos>\.iridium`**, con `Ideas` y `Skills` adentro. No se elige aparte: va con la carpeta de proyectos. La grilla no la muestra (empieza con punto).
+2. **Ajustes › Proyectos** muestra dónde está, sin **Cambiar…**: para moverla se cambia la carpeta de proyectos.
+3. **Mover** trae Ideas y Skills desde donde estén: sueltas en la carpeta de proyectos (`Ideas`, la carpeta de skills de antes), en la carpeta Iridium aparte de D-083 (la elegida o la de Documentos), o en el `.iridium` de la carpeta de proyectos anterior. Al cambiar la carpeta de proyectos, el `.iridium` de la anterior queda anotado (`carpetaIridium` en `config.json`) para que Mover lo traiga. La mudanza es la de D-083: con su git, los enlaces de las skills y las conversaciones.
+4. Si la carpeta de proyectos no existe, `.iridium` no se crea (crearla de rebote escondía que faltaba; lo encontró la prueba de CO-4).
+
+**Motivo:** todo lo de Iridium queda junto a lo que maneja, como en Obsidian, sin mover ningún proyecto; elegir una sola carpeta alcanza.
+
+**Consecuencias:**
+- Los datos internos (`%APPDATA%\Centro de Desarrollo`: ajustes, sesiones, borradores) siguen donde estaban: `config.json` dice cuál es la carpeta de proyectos, así que no puede vivir adentro de ella. Llevar a `.iridium` lo que no depende de la PC queda para después.
+- **Respaldo en GitHub:** hoy ya se puede con lo que hay: Ideas y Skills son repos git; **Abrir como proyecto** › Git › **Publicar en GitHub** (D-081) sube cada una como repo privado. Un botón único en Ajustes queda en el Backlog.
+- Q-122 (probar Mover) se reescribe para `.iridium`. La carpeta para compartir copia `Ideas` adentro de la carpeta de proyectos y Mover la lleva a `.iridium`.
+- Pruebas: `tests/d083-carpeta-iridium.test.ts` (traer de una carpeta anterior) y `tests/e2e/d083-carpeta-iridium.spec.ts` (Mover a `.iridium`; cambiar la carpeta de proyectos y traerla).

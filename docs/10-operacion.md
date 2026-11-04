@@ -34,6 +34,7 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 - **Mantenimiento:** subir los parches (React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316) con las pruebas completas y armar.
 - **Lo del Gestor que falta en Iridium:** primero lo de R-7: el clic derecho en la tarjeta (abrir en VS Code y en el explorador, estado, archivar, ícono; C-9, C-12) y **Nuevo proyecto** arriba de la grilla (C-10). Después, búsqueda entre proyectos y grupos y filtros (C-8, C-9).
 - **Ideas y skills del proyecto (R-8):** un ícono en la barra del proyecto con sus ideas sueltas (`00-idea.md` › Ideas para después y `07-construccion.md` › Ideas nuevas); y las skills del proyecto (`.claude/skills/` de cada uno), con su ícono solo si tiene alguna (lo de «elegir por proyecto» de D-064).
+- **Respaldo de `.iridium` en GitHub (D-087):** un botón en Ajustes › Proyectos que publique Ideas y Skills como repos privados y los suba solo; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub.
 - **Revisión:** la línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto (D-082).
 - **Seguir a la IA y el cierre de sesión con comprobación** (C-4, C-6); avisos de Windows (C-51).
 - **Plan completo:** decisiones, módulos como caja, todos los planes en una vista, diagramas (C-15, C-16, C-18, C-19).
@@ -47,7 +48,7 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 - Número de versión y `CHANGELOG.md` (D-077: la opción A de Q-109, cuando quieras).
 
 ### Defectos y deuda abiertos
-- **Defecto 1** (`08-calidad.md` › Defectos): una prueba que falló una vez en la tanda completa. En observación: si vuelve, se guarda su `error-context` y se investiga. 2026-11-04: las tres de `r3-electron` fallaron juntas en una tanda completa; pasaron solas y en la tanda siguiente (81 de 81).
+- **Defecto 1** (`08-calidad.md` › Defectos): una prueba que falló una vez en la tanda completa. En observación: si vuelve, se guarda su `error-context` y se investiga. 2026-11-04: las tres de `r3-electron` fallaron juntas en una tanda completa; pasaron solas y en la tanda siguiente (81 de 81). 2026-11-04 (otra vez, en la tanda de D-087): las mismas tres; la tarjeta mostraba «Guardado en … R-1» cuando esperaba R-2, como si el número de comentario viniera de una prueba anterior. Pasaron solas. Pista para investigar: algo de la Revisión que queda entre una prueba y otra en la tanda completa.
 - **Defecto 4:** `minimatch` vulnerable dentro de `electron-builder`; no viaja en la app. Se cierra cuando `electron-builder` lo actualice (se mira en cada mantenimiento).
 - **Deuda** (`07-construccion.md` › Deuda técnica): lo copiado del Gestor sin usar (se usa con C-9 y C-10, o se borra) y la ventana sin minificar (si el arranque pasa de 2 s).
 

@@ -20,8 +20,8 @@ function ChatSkills({ sobre }: { sobre: { nombre: string; quitar: () => void } |
       <div className="chat-falta" role="note">
         <b>Chat de Skills</b>
         <p>
-          Iridium usa la carpeta <code>{CARPETA_SKILLS}</code> de la carpeta Iridium para tus skills propias y
-          no pudo crearla. Revisá esa carpeta en Ajustes › Proyectos.
+          Iridium usa la carpeta <code>{CARPETA_SKILLS}</code> de <code>.iridium</code>, en tu carpeta de
+          proyectos, para tus skills propias y no pudo crearla. Revisá esa carpeta en Ajustes › Proyectos.
         </p>
       </div>
     )

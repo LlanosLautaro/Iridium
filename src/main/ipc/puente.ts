@@ -4,6 +4,7 @@ import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import {
   type AccesoVersiones,
   CANALES,
+  CARPETA_IRIDIUM,
   type EstadoMotor,
   type EstilosRespuesta,
   type ListaProyectos,
@@ -148,8 +149,16 @@ export function registrarPuente(s: Servicios): Puente {
   }
 
   const raiz = async (): Promise<string> => normalize((await s.config.leer()).raiz ?? (await s.raizInicial()))
-  const carpetaIridium = async (): Promise<string> =>
-    normalize((await s.config.leer()).carpetaIridium ?? s.carpetaIridiumInicial())
+  /** La carpeta de Iridium: `.iridium` dentro de la carpeta de proyectos (D-087). */
+  const carpetaIridium = async (): Promise<string> => join(await raiz(), CARPETA_IRIDIUM)
+  /**
+   * Donde pudieron quedar Ideas y Skills antes: la carpeta Iridium aparte de D-083 (la elegida o la de Documentos) o
+   * el `.iridium` de la carpeta de proyectos anterior. Si están ahí y no en `.iridium`, se ofrece Mover.
+   */
+  const anteriores = async (): Promise<string[]> => {
+    const c = await s.config.leer()
+    return [...(c.carpetaIridium ? [normalize(c.carpetaIridium)] : []), s.carpetaIridiumInicial()]
+  }
 
   // El uso de la suscripción (H-12): al verificar, con cada turno de cualquier sesión, al volver a la ventana y cada tanto.
   const uso = new UsoDeLaSuscripcion({ motor: s.motor, alCambio: (u) => enviar(CANALES.usoCambio, u) })
@@ -181,8 +190,9 @@ export function registrarPuente(s: Servicios): Puente {
 
   /** Lista los proyectos y deja vigilando esa carpeta (si cambió, se vigila la nueva). */
   const listar = async (): Promise<ListaProyectos> => {
-    const [actual, iridium] = await Promise.all([raiz(), carpetaIridium()])
-    enDisco = await prepararCarpetaIridium(iridium, actual, !mudando)
+    const [actual, iridium, antes] = await Promise.all([raiz(), carpetaIridium(), anteriores()])
+    // Sin la carpeta de proyectos no se crea `.iridium`: crearla de rebote escondería que falta (CO-4).
+    enDisco = await prepararCarpetaIridium(iridium, actual, !mudando && (await existeCarpeta(actual)), antes)
     raizActual = actual
     const lista = await listarProyectos(actual, iridium, enDisco)
     if (lista.tipo === 'error')
@@ -291,7 +301,11 @@ export function registrarPuente(s: Servicios): Puente {
     const r = await (v ? dialog.showOpenDialog(v, { ...opciones, properties: ['openDirectory'] }) : null)
     const elegida = r && !r.canceled ? r.filePaths[0] : undefined
     if (!elegida) return null
-    await s.config.guardar({ raiz: elegida })
+    // El `.iridium` de la carpeta anterior queda como «de antes»: en la nueva, Mover lo trae (D-087).
+    const vieja = await carpetaIridium()
+    if (normalize(elegida) !== (await raiz()) && (await existeCarpeta(vieja)))
+      await s.config.guardar({ raiz: elegida, carpetaIridium: vieja })
+    else await s.config.guardar({ raiz: elegida })
     return listar()
   })
 
@@ -584,11 +598,11 @@ export function registrarPuente(s: Servicios): Puente {
     const r = await (v
       ? dialog.showMessageBox(v, {
           type: 'question',
-          title: 'Mover a la carpeta Iridium',
+          title: 'Mover a la carpeta de Iridium',
           message: `¿Mover ${pares.map((p) => basename(p.origen)).join(' y ')} a ${iridium}?`,
           detail:
-            'Se mueven enteras, con su historial de git. Iridium rehace los enlaces de tus skills y se lleva las ' +
-            'conversaciones de esas carpetas. La carpeta de proyectos queda solo con tus proyectos.',
+            'Se mueven enteras, con su historial de git, a la carpeta .iridium de tu carpeta de proyectos. Iridium ' +
+            'rehace los enlaces de tus skills y se lleva las conversaciones de esas carpetas. Tus proyectos no se mueven.',
           buttons: ['Mover', 'Cancelar'],
           defaultId: 0,
           cancelId: 1,
@@ -601,35 +615,6 @@ export function registrarPuente(s: Servicios): Puente {
     } finally {
       mudando = false
     }
-  })
-
-  ipcMain.handle(CANALES.cambiarCarpetaIridium, async (): Promise<ResultadoMudanza> => {
-    const v = s.ventana()
-    const actual = await carpetaIridium()
-    const opciones = { title: 'Elegir la carpeta Iridium', defaultPath: actual }
-    const r = await (v
-      ? dialog.showOpenDialog(v, { ...opciones, properties: ['openDirectory', 'createDirectory'] })
-      : null)
-    const elegida = r && !r.canceled ? r.filePaths[0] : undefined
-    if (!elegida || normalize(elegida) === actual) return { tipo: 'cancelada' }
-    await listar()
-    const destinos = rutasIridium(normalize(elegida))
-    // Las de antes que todavía no se mudaron se quedan donde están: Mover las lleva después a la carpeta nueva.
-    const pares = (['ideas', 'skills'] as const).flatMap((cual) => {
-      const origen = enDisco.rutas[cual]
-      return origen && !enDisco.mudanza?.[cual] ? [{ cual, origen, destino: destinos[cual] }] : []
-    })
-    let avisos: string[]
-    mudando = true
-    try {
-      const hecho = await mudarCarpetas(pares)
-      if (hecho.tipo !== 'ok') return hecho
-      avisos = hecho.avisos
-      await s.config.guardar({ carpetaIridium: normalize(elegida) })
-    } finally {
-      mudando = false
-    }
-    return { tipo: 'ok', lista: await listar(), avisos }
   })
 
   // Al abrir, el motor se verifica aparte: la grilla no lo espera (05-arquitectura.md › Abrir la app).

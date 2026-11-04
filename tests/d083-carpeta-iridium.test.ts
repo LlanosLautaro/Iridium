@@ -68,6 +68,23 @@ describe('prepararCarpetaIridium', () => {
     expect(r.rutas).toEqual({ ideas: join(raiz, 'Ideas'), skills: join(iridium, 'Skills') })
     expect(r.mudanza).toEqual({ ideas: join(raiz, 'Ideas'), skills: null })
   })
+
+  it('D-087: con .iridium en la carpeta de proyectos, también ofrece traer las de una carpeta de Iridium anterior', async () => {
+    const vault = join(raiz, '.iridium')
+    const anterior = join(base, 'Documentos', 'Iridium')
+    await archivo(join(anterior, 'Ideas', 'ideas.md'), '# Ideas\n')
+    await archivo(join(anterior, 'Skills', 'CLAUDE.md'), '# Skills\n')
+    const r = await prepararCarpetaIridium(vault, raiz, true, [join(base, 'no-esta'), anterior])
+    expect(r.mudanza).toEqual({ ideas: join(anterior, 'Ideas'), skills: join(anterior, 'Skills') })
+    // Las sueltas en la carpeta de proyectos van primero.
+    await archivo(join(raiz, 'Ideas', 'ideas.md'), '# Ideas\n')
+    const r2 = await prepararCarpetaIridium(vault, raiz, true, [anterior])
+    expect(r2.mudanza?.ideas).toBe(join(raiz, 'Ideas'))
+    // Ya en .iridium, no hay nada para mudar aunque las viejas sigan.
+    await archivo(join(vault, 'Ideas', 'ideas.md'), '# Ideas\n')
+    await archivo(join(vault, 'Skills', 'CLAUDE.md'), '# Skills\n')
+    expect((await prepararCarpetaIridium(vault, raiz, true, [anterior])).mudanza).toBeNull()
+  })
 })
 
 describe('listarProyectos con la carpeta Iridium', () => {

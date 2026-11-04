@@ -24,7 +24,10 @@ const Config = z.object({
   version: z.literal(1).catch(1),
   /** Carpeta de proyectos; si falta, `Documentos\Proyectos` (D-083). */
   raiz: z.string().min(1).optional().catch(undefined),
-  /** La carpeta Iridium, con Ideas y Skills (D-083); si falta, `Documentos\Iridium`. */
+  /**
+   * Una carpeta de Iridium de antes, con Ideas y Skills por mudar a `.iridium` (D-083 la tenía aparte; D-087 la deja al
+   * cambiar de carpeta de proyectos).
+   */
   carpetaIridium: z.string().min(1).optional().catch(undefined),
   verArchivados: z.boolean().catch(false),
   anchoConversacion: z

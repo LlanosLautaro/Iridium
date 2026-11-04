@@ -82,8 +82,9 @@ export function Ideas() {
   else if (ideas?.tipo === 'sin-carpeta')
     detalle = (
       <MensajeIdeas titulo="No está la carpeta Ideas">
-        Iridium guarda las ideas en la carpeta <code>{CARPETA_GENERAL}</code> de la carpeta Iridium y no pudo
-        crearla. Revisá esa carpeta en Ajustes › Proyectos y volvé a abrir Iridium.
+        Iridium guarda las ideas en la carpeta <code>{CARPETA_GENERAL}</code> de <code>.iridium</code>, en tu
+        carpeta de proyectos, y no pudo crearla. Revisá esa carpeta en Ajustes › Proyectos y volvé a abrir
+        Iridium.
       </MensajeIdeas>
     )
   else if (ideas?.tipo === 'grande')

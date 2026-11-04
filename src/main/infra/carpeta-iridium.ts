@@ -30,21 +30,25 @@ async function crear(ruta: string, cual: Cual): Promise<void> {
 }
 
 /**
- * Qué carpeta se usa para Ideas y para Skills: la de la carpeta Iridium; si falta y la de antes sigue en la carpeta
- * de proyectos, esa (y se ofrece mudarla); si no está ninguna, se crea la nueva.
+ * Qué carpeta se usa para Ideas y para Skills: la de `carpeta`; si falta y hay una de antes (suelta en la carpeta de
+ * proyectos, D-060 y D-068, o en otra carpeta de Iridium, `anteriores`), esa, y se ofrece mudarla; si no hay ninguna,
+ * se crea la nueva.
  */
 export async function prepararCarpetaIridium(
   carpeta: string,
   raiz: string,
   crearSiFalta = true,
+  anteriores: string[] = [],
 ): Promise<CarpetasEnDisco> {
   const nuevas = rutasIridium(carpeta)
   const rutas: Record<Cual, string | null> = { ideas: null, skills: null }
   const mudanza: Record<Cual, string | null> = { ideas: null, skills: null }
   for (const cual of ['ideas', 'skills'] as const) {
-    const vieja = join(raiz, ANTES[cual])
+    let vieja: string | null = null
+    for (const posible of [join(raiz, ANTES[cual]), ...anteriores.map((a) => rutasIridium(a)[cual])])
+      if (!vieja && (await existeCarpeta(posible))) vieja = posible
     if (await existeCarpeta(nuevas[cual])) rutas[cual] = nuevas[cual]
-    else if (await existeCarpeta(vieja)) rutas[cual] = mudanza[cual] = vieja
+    else if (vieja) rutas[cual] = mudanza[cual] = vieja
     else if (crearSiFalta)
       rutas[cual] = await crear(nuevas[cual], cual).then(
         () => nuevas[cual],

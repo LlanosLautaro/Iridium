@@ -10,8 +10,8 @@ import { ChatGeneral } from '../inicio/ChatGeneral'
 import { Tarjeta } from './Tarjeta'
 
 /**
- * La mudanza (D-083): las carpetas de Ideas y Skills de antes siguen en la carpeta de proyectos. Mover las lleva a la
- * carpeta Iridium, después de confirmarlo.
+ * La mudanza (D-083, D-087): Ideas y Skills siguen donde estaban antes (sueltas en la carpeta de proyectos o en otra
+ * carpeta de Iridium). Mover las lleva a `.iridium`, después de confirmarlo.
  */
 function Mudanza({ lista }: { lista: ListaProyectos }) {
   const ponerLista = usarEstado((s) => s.ponerLista)
@@ -35,7 +35,7 @@ function Mudanza({ lista }: { lista: ListaProyectos }) {
         ponerLista(r.lista)
         // Las pestañas y el proyecto abierto cambiaron de ruta.
         ponerPreferencias(await window.iridium.leerPreferencias())
-        setResultado(['Listo: se movieron a la carpeta Iridium.', ...r.avisos].join(' '))
+        setResultado(['Listo: se movieron a la carpeta de Iridium.', ...r.avisos].join(' '))
       } else if (r.tipo === 'error') setResultado(r.mensaje)
     } finally {
       setMoviendo(false)
@@ -44,10 +44,10 @@ function Mudanza({ lista }: { lista: ListaProyectos }) {
   return (
     <div className="mudanza" role="status">
       <p>
-        <b>{nombres.join(' y ')}</b> {nombres.length > 1 ? 'están' : 'está'} en la carpeta de proyectos.
-        Iridium ahora
-        {nombres.length > 1 ? ' las guarda' : ' la guarda'} aparte, en <span className="ruta">{carpeta}</span>
-        .{resultado && <span className="error"> {resultado}</span>}
+        <b>{nombres.join(' y ')}</b> {nombres.length > 1 ? 'siguen' : 'sigue'} donde{' '}
+        {nombres.length > 1 ? 'estaban' : 'estaba'} antes. Iridium ahora{' '}
+        {nombres.length > 1 ? 'las guarda' : 'la guarda'} en la carpeta de Iridium, dentro de tus proyectos:{' '}
+        <span className="ruta">{carpeta}</span>.{resultado && <span className="error"> {resultado}</span>}
       </p>
       <button type="button" className="btn primario" onClick={mover} disabled={moviendo}>
         <Icono nombre="carpeta" />

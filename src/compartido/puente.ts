@@ -31,7 +31,13 @@ export interface TarjetaProyecto {
   revision: number
 }
 
-/** La carpeta Iridium (D-083): Ideas y Skills, aparte de la carpeta de proyectos. */
+/**
+ * La carpeta de Iridium dentro de la carpeta de proyectos (D-087, como el `.obsidian` de un vault): Ideas y Skills.
+ * La grilla no la muestra (empieza con punto).
+ */
+export const CARPETA_IRIDIUM = '.iridium'
+
+/** La carpeta de Iridium (D-083, D-087): Ideas y Skills, aparte de los proyectos. */
 export interface CarpetasIridium {
   carpeta: string
   /** La carpeta del chat general (D-060); null si no está. */
@@ -39,8 +45,8 @@ export interface CarpetasIridium {
   /** La carpeta del chat de Skills (D-068); null si no está. */
   skills: TarjetaProyecto | null
   /**
-   * Las de antes de D-083 que siguen en la carpeta de proyectos y faltan en la carpeta Iridium: se ofrece mudarlas y,
-   * mientras tanto, se usan ellas. null si no hay nada para mudar.
+   * Las de antes que faltan en `.iridium` (sueltas en la carpeta de proyectos, o en otra carpeta de Iridium): se ofrece
+   * mudarlas y, mientras tanto, se usan ellas. null si no hay nada para mudar.
    */
   mudanza: { ideas: string | null; skills: string | null } | null
 }
@@ -49,7 +55,7 @@ export type ListaProyectos =
   | { tipo: 'lista'; raiz: string; proyectos: TarjetaProyecto[]; iridium: CarpetasIridium }
   | { tipo: 'error'; raiz: string; mensaje: string; iridium: CarpetasIridium }
 
-/** Cómo terminó Mover (la mudanza) o Cambiar la carpeta Iridium. */
+/** Cómo terminó Mover (la mudanza). */
 export type ResultadoMudanza =
   | { tipo: 'ok'; lista: ListaProyectos; avisos: string[] }
   | { tipo: 'cancelada' }
@@ -654,7 +660,6 @@ export const CANALES = {
   proyectosCambiaron: 'proyectos:cambiaron',
   elegirCarpeta: 'proyectos:elegir-carpeta',
   mudar: 'iridium:mudar',
-  cambiarCarpetaIridium: 'iridium:cambiar-carpeta',
   leerPreferencias: 'preferencias:leer',
   guardarPreferencias: 'preferencias:guardar',
   estadoMotor: 'motor:estado',
@@ -727,8 +732,6 @@ export interface ApiIridium {
   elegirCarpeta(): Promise<ListaProyectos | null>
   /** Mueve las carpetas de antes a la carpeta Iridium, después de confirmarlo (D-083). */
   mudar(): Promise<ResultadoMudanza>
-  /** Elige otra carpeta Iridium y lleva ahí Ideas y Skills (D-083). */
-  cambiarCarpetaIridium(): Promise<ResultadoMudanza>
   leerPreferencias(): Promise<Preferencias>
   guardarPreferencias(cambio: Partial<Preferencias>): Promise<Preferencias>
   /** Los estilos de respuesta de Claude Code para el tono (AJ-3), sin gastar uso. */

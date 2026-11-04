@@ -31,7 +31,6 @@ const api: ApiIridium = {
   alCambiarProyectos: (f) => escuchar<ListaProyectos>(CANALES.proyectosCambiaron, f),
   elegirCarpeta: () => ipcRenderer.invoke(CANALES.elegirCarpeta),
   mudar: () => ipcRenderer.invoke(CANALES.mudar),
-  cambiarCarpetaIridium: () => ipcRenderer.invoke(CANALES.cambiarCarpetaIridium),
   leerPreferencias: () => ipcRenderer.invoke(CANALES.leerPreferencias),
   guardarPreferencias: (cambio) => ipcRenderer.invoke(CANALES.guardarPreferencias, cambio),
   estilosDeRespuesta: () => ipcRenderer.invoke(CANALES.estilos),

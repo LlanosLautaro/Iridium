@@ -14,8 +14,8 @@ export function ChatGeneral({ sobre = null }: { sobre?: Sobre | null }) {
         <b>Chat general</b>
         <p>
           Para conversar acá de varios proyectos y de ideas sueltas, Iridium usa la carpeta{' '}
-          <code>{CARPETA_GENERAL}</code> de la carpeta Iridium y no pudo crearla. Revisá esa carpeta en
-          Ajustes › Proyectos.
+          <code>{CARPETA_GENERAL}</code> de <code>.iridium</code>, en tu carpeta de proyectos, y no pudo
+          crearla. Revisá esa carpeta en Ajustes › Proyectos.
         </p>
       </div>
     )

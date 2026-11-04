@@ -1,6 +1,7 @@
 // D-083 con la app abierta y el motor falso: las carpetas de Ideas y Skills de antes, en la carpeta de proyectos, se
 // siguen usando y el inicio ofrece Mover; Mover (con la confirmación reemplazada) las lleva a la carpeta Iridium con
-// sus enlaces y su conversación; Ajustes › Proyectos cambia la carpeta Iridium de lugar.
+// sus enlaces y su conversación. Con D-087 la carpeta de Iridium es `.iridium`, dentro de la carpeta de proyectos: al
+// cambiar de carpeta de proyectos, Iridium ofrece traerla.
 import { mkdir, mkdtemp, readdir, readFile, readlink, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -79,15 +80,15 @@ test.afterEach(async () => {
   await rm(base, { recursive: true, force: true, maxRetries: 5 })
 })
 
-test('las de antes se siguen usando; Mover las lleva a la carpeta Iridium con su enlace y su conversación', async () => {
+test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y su conversación', async () => {
   const { app, win } = await abrir()
   const grilla = win.getByRole('region', { name: 'Proyectos' })
   await expect(grilla.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
   // No salen en la grilla: siguen funcionando como Ideas y Skills.
   await expect(grilla.locator('.tarjeta')).toHaveCount(1)
   const aviso = grilla.locator('.mudanza')
-  await expect(aviso).toContainText('Ideas y Skills y Claude están en la carpeta de proyectos')
-  await expect(aviso).toContainText(join(datos, 'Iridium'))
+  await expect(aviso).toContainText('Ideas y Skills y Claude siguen donde estaban antes')
+  await expect(aviso).toContainText(join(raiz, '.iridium'))
   await win.keyboard.press('Control+4')
   await expect(win.getByRole('navigation', { name: 'Ideas' }).getByTitle('Una idea vieja')).toBeVisible()
   // Una conversación en el chat general antes de mover.
@@ -110,13 +111,13 @@ test('las de antes se siguen usando; Mover las lleva a la carpeta Iridium con su
     dialog.showMessageBox = (async () => ({ response: 0, checkboxChecked: false })) as never
   })
   await aviso.getByRole('button', { name: 'Mover' }).click()
-  await expect(grilla.locator('.mudanza')).toContainText('Listo: se movieron a la carpeta Iridium.')
+  await expect(grilla.locator('.mudanza')).toContainText('Listo: se movieron a la carpeta de Iridium.')
   await win.screenshot({ path: 'test-results/d083-movidas.png' })
-  expect(await readdir(raiz)).toEqual(['Alfa'])
-  const iridium = join(datos, 'Iridium')
+  expect((await readdir(raiz)).sort()).toEqual(['.iridium', 'Alfa'])
+  const iridium = join(raiz, '.iridium')
   expect((await readdir(join(iridium, 'Ideas'))).sort()).toEqual(['.git', 'CLAUDE.md', 'ideas.md'])
   expect(await readlink(join(claude, 'skills', 'guia'))).toMatch(
-    /Iridium[\\/]Skills[\\/]skills[\\/]guia[\\/]?$/,
+    /\.iridium[\\/]Skills[\\/]skills[\\/]guia[\\/]?$/,
   )
 
   // Ideas sigue, con la misma conversación.
@@ -139,30 +140,46 @@ test('las de antes se siguen usando; Mover las lleva a la carpeta Iridium con su
   await otra.app.close()
 })
 
-test('Ajustes › Proyectos cambia la carpeta Iridium y lleva Ideas y Skills', async () => {
+test('D-087: sin las de antes crea .iridium; con otra carpeta de proyectos, ofrece traerla', async () => {
   await rm(join(raiz, 'Ideas'), { recursive: true })
   await rm(join(raiz, 'Skills y Claude'), { recursive: true })
   const { app, win } = await abrir()
   await expect(win.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
-  // Sin las de antes, Iridium crea las suyas.
-  const primera = join(datos, 'Iridium')
+  // Sin las de antes, Iridium crea las suyas en .iridium, y la grilla no la muestra.
+  const primera = join(raiz, '.iridium')
   expect((await readdir(primera)).sort()).toEqual(['Ideas', 'Skills'])
+  await expect(win.locator('.tarjeta')).toHaveCount(1)
   await writeFile(join(primera, 'Ideas', 'nota.md'), 'mía\n')
 
   await win.keyboard.press('Control+,')
   await win.getByRole('dialog').getByRole('button', { name: 'Proyectos' }).click()
   const fila = win.getByRole('dialog', { name: 'Proyectos' }).locator('.carpeta-iridium')
-  await expect(fila).toContainText('Carpeta Iridium')
+  await expect(fila).toContainText('Carpeta de Iridium')
   await expect(fila.locator('.ruta')).toHaveText(primera)
-  const segunda = join(base, 'Otra')
+  await expect(fila.getByRole('button')).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/d087-ajustes.png' })
+
+  // Otra carpeta de proyectos: su .iridium no está; Iridium ofrece traer la de la anterior.
+  const otra = join(base, 'Otros')
+  await archivo(join(otra, 'Beta', '.proyecto.json'), ficha)
   await app.evaluate(({ dialog }, ruta) => {
     dialog.showOpenDialog = (async () => ({ canceled: false, filePaths: [ruta] })) as never
-  }, segunda)
-  await fila.getByRole('button', { name: 'Cambiar…' }).click()
-  await expect(fila.locator('.ruta')).toHaveText(segunda)
-  await win.screenshot({ path: 'test-results/d083-ajustes.png' })
-  expect((await leerConfig()).carpetaIridium).toBe(segunda)
-  expect(await readFile(join(segunda, 'Ideas', 'nota.md'), 'utf8')).toBe('mía\n')
-  expect(await readdir(primera)).toEqual([])
+  }, otra)
+  await win
+    .getByRole('dialog', { name: 'Proyectos' })
+    .locator('.carpeta-proyectos')
+    .getByRole('button', { name: 'Cambiar…' })
+    .click()
+  await expect(fila.locator('.ruta')).toHaveText(join(otra, '.iridium'))
+  expect((await leerConfig()).carpetaIridium).toBe(primera)
+  await win.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click()
+  const aviso = win.getByRole('region', { name: 'Proyectos' }).locator('.mudanza')
+  await expect(aviso).toContainText('Ideas y Skills siguen donde estaban antes')
+  await app.evaluate(({ dialog }) => {
+    dialog.showMessageBox = (async () => ({ response: 0, checkboxChecked: false })) as never
+  })
+  await aviso.getByRole('button', { name: 'Mover' }).click()
+  await expect(win.locator('.mudanza')).toContainText('Listo: se movieron a la carpeta de Iridium.')
+  expect(await readFile(join(otra, '.iridium', 'Ideas', 'nota.md'), 'utf8')).toBe('mía\n')
   await app.close()
 })
