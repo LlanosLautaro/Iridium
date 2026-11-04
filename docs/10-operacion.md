@@ -56,10 +56,11 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 - Poner al día `gestor-proyectos` y la guía `hitos-desarrollo-app` (D-062, D-063, D-068, Defectos 13 y 14) y traer a `Skills` las skills que la licencia permite (D-014): van en sesiones de `Skills`.
 
 ## Próxima versión
-- **Objetivo:** compartir Iridium (D-084, D-085; Q-123 a Q-125). Después, Diseño y Capacidades (D-079).
+- **Objetivo:** compartir Iridium (D-084 a D-087): hecho; falta invitar a la otra persona (Q-126). Después, Diseño y Capacidades (D-079).
 - **Incluye:** `modulos/inicio/propuesta.md` › Propuesta de alcance.
 - **Hitos a recorrer:** el ciclo reducido del módulo (`modulos/inicio/estado.md`); un ajuste chico va directo a 7 → 8 → 9.
-- **Ajuste mediano (D-085):** versiones para compartir, construido y probado con GitHub (7 → 8); la primera publicada el 2026-11-04 (`aca3668`).
-- **Ajuste mediano (D-083):** la carpeta Iridium con Ideas y Skills, Mover y Cambiar en Ajustes, construido (7 → 8); falta tu prueba con tus carpetas (Q-122).
+- **Ajuste mediano (D-085, Q-123):** versiones para compartir, con el aviso para iniciar sesión en GitHub; construido y probado con GitHub (7 → 8). Publicadas `aca3668` y `c012989` (2026-11-04).
+- **Ajustes medianos (D-086, D-087):** la skill de Iridium y la guía como complementos de las conversaciones; Ideas y Skills en `.iridium`. Construidos y probados (7 → 8); falta tu prueba (Q-127).
+- **Ajuste mediano (D-083):** la carpeta Iridium con Ideas y Skills y Mover; desde D-087, en `.iridium` (Q-127).
 - **Ajuste chico (D-081):** Inicializar repositorio y Publicar en GitHub en la sección Git, construido (7 → 8); falta tu prueba con GitHub de verdad (Q-118).
 - **Propuestas:** módulo Inicio completo (Q-115, 2026-11-04).

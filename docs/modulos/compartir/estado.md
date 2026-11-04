@@ -20,7 +20,7 @@
 ## En qué estamos ahora
 La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). Con Q-103, la versión de Iridium pasó a su propia sección, Ajustes › Acerca de, al final.
 
-2026-11-04, a pedido del usuario: las copias compartidas se actualizan solas desde GitHub (D-085, CO-I7). Publicada la primera versión (`aca3668`) y probada de punta a punta con `tools/probar-compartida.ts`. Dónde se publica para la otra persona, en Q-123 (`docs/estado.md`).
+2026-11-04, a pedido del usuario: las copias compartidas se actualizan solas desde GitHub (D-085, CO-I7). Publicada la primera versión (`aca3668`) y probada de punta a punta con `tools/probar-compartida.ts`. Con Q-123 (A): repo privado y la otra persona como colaboradora; la copia avisa si falta iniciar sesión en GitHub. Publicada `c012989` y probada de nuevo.
 
 ## Pendientes
 - [x] Hito 8: si el ayudante no pudo poner la versión nueva, que Iridium lo diga al abrir (tanda 6, Defecto 3: «La versión nueva no entró · se reintenta al cerrar»; con el Defecto 21, el ayudante ya no deja la app partida si un archivo está trabado).
@@ -40,7 +40,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I3 | GitHub privado con `dev` y `main` | hecha (2026-10-31, D-070) |
 | CO-I4 | Elegir la carpeta de proyectos en Ajustes | aprobada (Q-98, 2026-11-01) |
 | CO-I5 | La versión de Iridium y cuándo se armó, en Ajustes › Acerca de (Q-103) | aprobada (Q-102, 2026-11-01) |
-| CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085) | hecha y probada con GitHub (2026-11-04); falta Q-123 |
+| CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085); con el repo privado, el aviso para iniciar sesión en GitHub (Q-123) | hecha y probada con GitHub (2026-11-04); falta invitar a la otra persona (Q-126) |
 | CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | aprobada (Q-102, 2026-11-01) |
 
 ## Log de iteraciones
