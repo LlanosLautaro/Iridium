@@ -1,0 +1,574 @@
+// Casos de uso de la conversación con la IA (I-2): Seguí y Nueva (H-4), sin esperar al usuario (H-5), Detener
+// (H-14) y una sesión por proyecto que sigue aunque no esté a la vista (H-2, H-6, D-015). Recibe el motor y el
+// registro de sesiones de afuera: así se prueba con el motor falso.
+import { basename } from 'node:path'
+import type {
+  AjusteIa,
+  CambioConversacion,
+  ContextoConversacion,
+  ConversacionAnterior,
+  ConversacionProyecto,
+  Entrada,
+  EstadoMotor,
+  FichaSesion,
+  PedidoSeguir,
+  PreguntaNueva,
+} from '../../compartido/puente'
+import {
+  AVISO_DETENIDA,
+  htmlDeMensaje,
+  INSTRUCCION_CENTRO,
+  MENSAJE_SEGUI,
+  mensajeParaLaIa,
+  preguntasNuevas,
+  tocadaDespues,
+  usadaAfuera,
+} from '../core/sesiones'
+import type { ArchivoSesiones, ResumenSesion } from '../infra/sesiones'
+import type { EventoMotor, FallaMotor, MensajeMotor, Motor, SesionMotor, UsoMotor } from '../motor/motor'
+
+const SIN_AJUSTE: AjusteIa = { modelo: null, esfuerzo: null }
+/** Cuánto se espera, al cerrar la app, a que las sesiones frenadas terminen de guardar su estado (F-6). */
+const ESPERA_DETENER_MS = 3000
+
+/** Cuántas entradas se mandan de una vez: lo último al abrir y de a tanto al subir (W-3 › Extremos). */
+export const ENTRADAS_POR_VEZ = 150
+
+export interface DependenciasConversacion {
+  motor: Motor
+  registro: ArchivoSesiones
+  /** Las `Q-n` sin responder del proyecto. */
+  preguntas: (ruta: string) => Promise<PreguntaNueva[]>
+  alCambio: (cambio: CambioConversacion) => void
+  /**
+   * Cómo se convierte el texto de la IA en HTML para ese proyecto: con sus códigos y citas como enlaces (F-4).
+   * Sin esto, Markdown seguro sin enlaces al proyecto.
+   */
+  html?: (ruta: string) => Promise<(texto: string) => string>
+  /** La instrucción de ese proyecto; sin esto, la del Centro. El chat de la vista de Proyectos tiene otra (D-060). */
+  instruccionBase?: (ruta: string) => string
+  /** Lo que se suma a la instrucción del Centro al abrir la sesión de ese proyecto (los comentarios abiertos, H-R6). */
+  instruccion?: (ruta: string) => Promise<string | null>
+  /** El modelo y el esfuerzo que eligió el proyecto (C-58). Sin esto, los de Claude Code. */
+  ajuste?: (ruta: string) => Promise<AjusteIa>
+  /** El tono de la IA en Iridium (AJ-3, D-065), igual para todos los proyectos. Sin esto, el de Claude Code. */
+  tono?: () => Promise<string | null>
+  /**
+   * El estado del motor antes de abrir una sesión: si no estaba listo, lo vuelve a verificar (el usuario pudo
+   * iniciar sesión después de abrir la app). Sin esto, se abre siempre.
+   */
+  motorListo?: () => Promise<EstadoMotor>
+  /** Un turno terminó por falta de sesión: el marco tiene que dejar de decir que hay (R-5). */
+  alPerderSesion?: () => void
+  /** El uso que informa una sesión al terminar cada turno. */
+  alUso?: (uso: UsoMotor) => void
+  /** Una línea para el registro del día (errores del motor; nunca el texto de la conversación). */
+  registrar?: (texto: string) => void
+  ahora?: () => number
+}
+
+interface Proyecto {
+  ruta: string
+  cargado: boolean
+  id: string | null
+  origen: ConversacionProyecto['origen']
+  titulo: string | null
+  /** La conversación que el usuario eligió de las anteriores (H-17); null = la última. */
+  elegida: string | null
+  /** El texto de la IA en HTML, con los enlaces del proyecto. */
+  html: (texto: string) => string
+  modificada: number | null
+  /** Última vez que el Centro terminó un turno en esta conversación. */
+  usoCentro: number | null
+  entradas: Entrada[]
+  /** El último turno lo cortó el usuario: el próximo mensaje se lo avisa a la IA. */
+  detenida: boolean
+  sesion: SesionMotor | null
+  ficha: FichaSesion | null
+  /** Las preguntas sin responder cuando empezó a trabajar: al terminar, las nuevas son las que dejó. */
+  antes: ReadonlySet<string>
+  /** Los pedidos de un proyecto se atienden de a uno: dos Seguí seguidos no abren dos sesiones. */
+  turno: Promise<unknown>
+  /** Cuánto contexto lleva la conversación; null si no se sabe todavía. */
+  contexto: ContextoConversacion | null
+}
+
+export class Conversaciones {
+  private readonly proyectos = new Map<string, Proyecto>()
+  /** El contexto de cada conversación que se leyó o que informó una sesión, por id. */
+  private readonly contextos = new Map<string, ContextoConversacion>()
+  private readonly pidiendoContexto = new Set<string>()
+  /** Lo que se guarda al terminar cada turno: al cerrar la app se espera (F-6). */
+  private readonly guardando = new Set<Promise<unknown>>()
+  private siguiente = 1
+  private readonly ahora: () => number
+
+  constructor(private readonly d: DependenciasConversacion) {
+    this.ahora = d.ahora ?? Date.now
+  }
+
+  private proyecto(ruta: string): Proyecto {
+    let p = this.proyectos.get(ruta)
+    if (!p) {
+      p = {
+        ruta,
+        cargado: false,
+        id: null,
+        origen: null,
+        titulo: null,
+        elegida: null,
+        html: htmlDeMensaje,
+        modificada: null,
+        usoCentro: null,
+        entradas: [],
+        detenida: false,
+        sesion: null,
+        ficha: null,
+        antes: new Set(),
+        turno: Promise.resolve(),
+        contexto: null,
+      }
+      this.proyectos.set(ruta, p)
+    }
+    return p
+  }
+
+  /** De a un pedido por proyecto. */
+  private enFila<T>(p: Proyecto, f: () => Promise<T>): Promise<T> {
+    const r = p.turno.then(f, f)
+    p.turno = r.catch(() => {})
+    return r
+  }
+
+  private id(): string {
+    return `e${this.siguiente++}`
+  }
+
+  private entradaDe(p: Proyecto, m: MensajeMotor): Entrada {
+    switch (m.tipo) {
+      case 'usuario': {
+        const texto = m.texto.startsWith(AVISO_DETENIDA)
+          ? m.texto.slice(AVISO_DETENIDA.length).trim()
+          : m.texto
+        return { tipo: 'usuario', id: this.id(), texto, cuando: m.cuando }
+      }
+      case 'ia':
+        return { tipo: 'ia', id: this.id(), html: p.html(m.texto), cuando: m.cuando }
+      case 'herramienta':
+        return { tipo: 'herramienta', id: this.id(), accion: m.accion, objeto: m.objeto }
+      case 'detenida':
+        return { tipo: 'aviso', id: this.id(), clase: 'detenida', texto: 'Detuviste a la IA.' }
+    }
+  }
+
+  private emitir(p: Proyecto, entradas: Entrada[], reiniciar = false): void {
+    p.entradas.push(...entradas)
+    this.d.alCambio({ ruta: p.ruta, id: p.id, reiniciar, entradas, ficha: p.ficha, contexto: p.contexto })
+  }
+
+  /** Lee el contexto de la conversación sin mandar nada (una vez por conversación) y lo avisa cuando llega. */
+  private leerContexto(p: Proyecto): void {
+    const id = p.id
+    if (!id || p.contexto || this.pidiendoContexto.has(id)) return
+    this.pidiendoContexto.add(id)
+    void this.d.motor
+      .contexto(p.ruta, id)
+      .catch(() => null)
+      .then((c) => {
+        this.pidiendoContexto.delete(id)
+        if (!c) return
+        // Del historial no se sabe cuándo fue el último pedido: es cuando se escribió la conversación por última vez.
+        if (c.ultimoPedido === null && p.id === id) c.ultimoPedido = p.modificada
+        if (!this.contextos.has(id)) this.contextos.set(id, c)
+        if (p.id !== id || p.contexto) return
+        p.contexto = this.contextos.get(id) ?? c
+        this.emitir(p, [])
+      })
+  }
+
+  private trabajando(p: Proyecto): boolean {
+    return p.ficha?.estado === 'trabajando'
+  }
+
+  /** Los enlaces del proyecto para el texto de la IA, al día con sus documentos. */
+  private async prepararHtml(p: Proyecto): Promise<void> {
+    if (!this.d.html) return
+    try {
+      p.html = await this.d.html(p.ruta)
+    } catch {
+      p.html = htmlDeMensaje
+    }
+  }
+
+  /**
+   * Lee la última conversación del proyecto (o la que eligió el usuario), salvo que sea la que ya tiene en memoria y
+   * nadie la tocó afuera.
+   */
+  private async cargar(p: Proyecto): Promise<void> {
+    if (p.sesion || this.trabajando(p)) return
+    let ultima: { id: string; modificada: number; titulo: string | null } | undefined
+    try {
+      const lista = await this.d.motor.conversaciones(p.ruta)
+      ultima = (p.elegida ? lista.find((c) => c.id === p.elegida) : undefined) ?? lista[0]
+    } catch {
+      if (p.cargado) return
+    }
+    if (ultima) p.titulo = ultima.titulo
+    if (p.cargado && ultima?.id === p.id) {
+      if (ultima.modificada === p.modificada || !tocadaDespues(ultima.modificada, p.usoCentro)) return
+    }
+    p.cargado = true
+    if (!ultima) {
+      Object.assign(p, {
+        id: null,
+        origen: null,
+        titulo: null,
+        elegida: null,
+        modificada: null,
+        usoCentro: null,
+        entradas: [],
+        detenida: false,
+        contexto: null,
+      })
+      return
+    }
+    await this.prepararHtml(p)
+    let mensajes: MensajeMotor[] = []
+    try {
+      mensajes = await this.d.motor.mensajes(p.ruta, ultima.id)
+    } catch {
+      // Un historial que no se puede leer: se muestra vacío y Seguí lo retoma igual.
+    }
+    const resumen = await this.d.registro.de(ultima.id)
+    p.id = ultima.id
+    p.modificada = ultima.modificada
+    p.origen = resumen?.empezadaEn === 'iridium' ? 'iridium' : 'vscode'
+    p.usoCentro = resumen?.ultimoUso ?? null
+    p.detenida = resumen?.detenida ?? false
+    p.entradas = mensajes.map((m) => this.entradaDe(p, m))
+    p.contexto = this.contextos.get(ultima.id) ?? null
+  }
+
+  /** La conversación del proyecto para mostrarla. No manda nada al modelo (D-020). */
+  abrir(ruta: string): Promise<ConversacionProyecto> {
+    const p = this.proyecto(ruta)
+    return this.enFila(p, () => this.vista(p))
+  }
+
+  private async vista(p: Proyecto): Promise<ConversacionProyecto> {
+    await this.cargar(p)
+    const enMarcha = p.sesion !== null || this.trabajando(p)
+    const afuera =
+      enMarcha || p.modificada === null ? null : usadaAfuera(p.modificada, p.usoCentro, this.ahora())
+    const desde = Math.max(0, p.entradas.length - ENTRADAS_POR_VEZ)
+    if (!enMarcha) this.leerContexto(p)
+    return {
+      ruta: p.ruta,
+      id: p.id,
+      origen: p.origen,
+      titulo: p.titulo,
+      modificada: p.modificada,
+      usadaAfuera: afuera,
+      entradas: p.entradas.slice(desde),
+      anteriores: desde,
+      ficha: p.ficha,
+      contexto: p.contexto,
+    }
+  }
+
+  /** Las conversaciones guardadas del proyecto, la más nueva primero, con su título y de dónde vienen (H-17). */
+  async lista(ruta: string): Promise<ConversacionAnterior[]> {
+    const guardadas = await this.d.motor.conversaciones(ruta)
+    return Promise.all(
+      guardadas.map(async (c) => ({
+        id: c.id,
+        titulo: c.titulo ?? 'Conversación sin título',
+        modificada: c.modificada,
+        origen: (await this.d.registro.de(c.id))?.empezadaEn === 'iridium' ? 'iridium' : 'vscode',
+      })),
+    )
+  }
+
+  /** Muestra otra conversación guardada; el próximo mensaje la continúa. Mientras trabaja, no se cambia. */
+  elegir(ruta: string, id: string): Promise<ConversacionProyecto> {
+    const p = this.proyecto(ruta)
+    return this.enFila(p, async () => {
+      if (!this.trabajando(p) && p.id !== id) {
+        p.sesion?.cerrar()
+        Object.assign(p, { sesion: null, elegida: id, cargado: false, detenida: false })
+      }
+      return this.vista(p)
+    })
+  }
+
+  /** Las entradas anteriores a las `tengo` últimas. */
+  anteriores(ruta: string, tengo: number): Entrada[] {
+    const p = this.proyectos.get(ruta)
+    if (!p) return []
+    const hasta = Math.max(0, p.entradas.length - tengo)
+    return p.entradas.slice(Math.max(0, hasta - ENTRADAS_POR_VEZ), hasta)
+  }
+
+  /** Seguí, Nueva o un mensaje propio. Si ya trabaja, el mensaje se suma a lo que está haciendo. */
+  seguir(ruta: string, pedido: PedidoSeguir): Promise<void> {
+    const p = this.proyecto(ruta)
+    return this.enFila(p, async () => {
+      let reiniciar = false
+      if (pedido.nueva) {
+        if (this.trabajando(p)) return
+        p.sesion?.cerrar()
+        Object.assign(p, {
+          cargado: true,
+          sesion: null,
+          id: null,
+          origen: 'iridium',
+          titulo: null,
+          elegida: null,
+          modificada: null,
+          usoCentro: null,
+          entradas: [],
+          detenida: false,
+          contexto: null,
+        })
+        reiniciar = true
+      } else if (!p.cargado) await this.cargar(p)
+      if (!p.sesion) await this.prepararHtml(p)
+
+      const texto = pedido.texto?.trim() || MENSAJE_SEGUI
+      // Sin sesión iniciada en Claude Code no se abre nada (F-5): el aviso dice cómo y Reintentar lo vuelve a mandar.
+      if (!p.sesion && this.d.motorListo) {
+        const estado = await this.d.motorListo()
+        if (estado.tipo === 'sin-sesion' || estado.tipo === 'falla') {
+          const reintentar = pedido.texto?.trim() || null
+          this.emitir(
+            p,
+            [
+              estado.tipo === 'sin-sesion'
+                ? { tipo: 'sin-sesion', id: this.id(), reintentar, enviado: false }
+                : {
+                    tipo: 'aviso',
+                    id: this.id(),
+                    clase: 'error',
+                    texto: `Claude Code no arranca: ${estado.motivo}. No se envió nada.`,
+                  },
+            ],
+            reiniciar,
+          )
+          return
+        }
+      }
+      const mensaje = mensajeParaLaIa(texto, p.detenida)
+      if (p.id && p.detenida)
+        await this.d.registro.guardar(p.id, this.resumenInicial(p, 'afuera'), { detenida: false })
+      p.detenida = false
+      if (!this.trabajando(p)) {
+        p.antes = new Set((await this.d.preguntas(ruta)).map((q) => q.codigo))
+        p.ficha = { ruta, estado: 'trabajando', preguntas: [], motivo: null }
+      }
+      this.emitir(p, [{ tipo: 'usuario', id: this.id(), texto, cuando: this.ahora() }], reiniciar)
+
+      if (p.sesion?.enviar(mensaje)) return
+      const base = this.d.instruccionBase?.(ruta) ?? INSTRUCCION_CENTRO
+      const extra = await this.d.instruccion?.(ruta).catch(() => null)
+      const ajuste = (await this.d.ajuste?.(ruta).catch(() => null)) ?? SIN_AJUSTE
+      const tono = (await this.d.tono?.().catch(() => null)) ?? null
+      const sesion = this.d.motor.abrir(
+        {
+          carpeta: ruta,
+          conversacion: p.id,
+          instruccion: extra ? `${base} ${extra}` : base,
+          ajuste,
+          tono,
+        },
+        (e) => this.alEvento(p, sesion, e),
+      )
+      p.sesion = sesion
+      sesion.enviar(mensaje)
+    })
+  }
+
+  /** Frena a la IA en el acto, sin confirmación (H-14). */
+  async detener(ruta: string): Promise<void> {
+    await this.proyectos.get(ruta)?.sesion?.detener()
+  }
+
+  /** El proyecto cambió su modelo o su esfuerzo: si tiene una sesión abierta, vale desde su próximo mensaje. */
+  ajustar(ruta: string, ajuste: AjusteIa): void {
+    this.proyectos.get(ruta)?.sesion?.ajustar(ajuste)
+  }
+
+  /** Cambió el tono (AJ-3): las sesiones abiertas lo toman desde su próximo mensaje; las nuevas lo leen al abrir. */
+  ponerTono(tono: string | null): void {
+    for (const p of this.proyectos.values()) p.sesion?.ponerTono(tono)
+  }
+
+  /**
+   * «Cerrar igual» (F-6): frena las sesiones que trabajan y espera a que guarden que se las detuvo, así el próximo
+   * Seguí se lo avisa a la IA.
+   */
+  async detenerTodo(): Promise<void> {
+    const trabajando = [...this.proyectos.values()].filter((p) => this.trabajando(p))
+    await Promise.all(trabajando.map((p) => p.sesion?.detener().catch(() => {})))
+    const hasta = this.ahora() + ESPERA_DETENER_MS
+    while (trabajando.some((p) => this.trabajando(p)) && this.ahora() < hasta)
+      await new Promise((r) => setTimeout(r, 50))
+    await Promise.all([...this.guardando])
+  }
+
+  /** Cierra la ficha de una sesión que no trabaja; la conversación queda para Seguí. */
+  cerrarFicha(ruta: string): void {
+    const p = this.proyectos.get(ruta)
+    if (!p?.ficha || this.trabajando(p)) return
+    p.ficha = null
+    this.emitir(p, [])
+  }
+
+  /** Los proyectos con la IA trabajando (para cerrar la app, F-6). */
+  enMarcha(): string[] {
+    return [...this.proyectos.values()].filter((p) => this.trabajando(p)).map((p) => p.ruta)
+  }
+
+  /**
+   * Se olvida de una carpeta que se mudó (D-083): cierra su sesión, si no trabaja, y la próxima vez se carga de la
+   * ruta nueva. false si la IA está trabajando ahí.
+   */
+  olvidar(ruta: string): boolean {
+    const p = this.proyectos.get(ruta)
+    if (!p) return true
+    if (this.trabajando(p)) return false
+    p.sesion?.cerrar()
+    if (p.ficha) {
+      p.ficha = null
+      this.emitir(p, [])
+    }
+    this.proyectos.delete(ruta)
+    return true
+  }
+
+  /** Termina todas las sesiones (al cerrar la app). */
+  cerrarTodo(): void {
+    for (const p of this.proyectos.values()) p.sesion?.cerrar()
+  }
+
+  private resumenInicial(p: Proyecto, empezadaEn: ResumenSesion['empezadaEn']): ResumenSesion {
+    return { ruta: p.ruta, empezadaEn, ultimoUso: null, detenida: false, ultimoEstado: null, preguntas: [] }
+  }
+
+  private alEvento(p: Proyecto, sesion: SesionMotor, e: EventoMotor): void {
+    // Lo que llega de una sesión vieja (antes de Nueva) ya no es de esta conversación.
+    if (p.sesion !== sesion) return
+    switch (e.tipo) {
+      case 'conversacion': {
+        if (p.id === e.id) return
+        const empezadaEn = p.id === null ? 'iridium' : 'afuera'
+        p.id = e.id
+        p.origen ??= 'iridium'
+        void this.d.registro.guardar(e.id, this.resumenInicial(p, empezadaEn)).catch(() => {})
+        this.emitir(p, [])
+        return
+      }
+      case 'mensaje':
+        // Llegó algo de Claude: si estaba reintentando, ya pudo.
+        if (p.ficha?.reintento) p.ficha = { ...p.ficha, reintento: null }
+        this.emitir(p, [this.entradaDe(p, e.mensaje)])
+        return
+      case 'reintento':
+        if (!this.trabajando(p) || !p.ficha) return
+        p.ficha = { ...p.ficha, reintento: e.reintento }
+        this.emitir(p, [])
+        return
+      case 'turno':
+        if (!e.sigue) this.terminarTurno(p, e.resultado, e.motivo, e.falla)
+        return
+      case 'contexto':
+        if (p.id) this.contextos.set(p.id, e.contexto)
+        p.contexto = e.contexto
+        this.emitir(p, [])
+        return
+      case 'uso':
+        this.d.alUso?.(e.uso)
+        return
+      case 'cerrada':
+        p.sesion = null
+        if (this.trabajando(p)) this.terminarTurno(p, 'error', 'Claude Code se cerró sin terminar el turno.')
+        return
+    }
+  }
+
+  private terminarTurno(
+    p: Proyecto,
+    resultado: 'ok' | 'detenida' | 'error',
+    motivo: string | null,
+    falla?: FallaMotor,
+  ): void {
+    const ruta = p.ruta
+    p.ficha = {
+      ruta,
+      estado: resultado === 'error' ? 'error' : 'terminada',
+      preguntas: [],
+      motivo: resultado === 'error' ? motivoDeFicha(falla, motivo) : null,
+    }
+    const avisos: Entrada[] = []
+    if (resultado === 'detenida')
+      avisos.push({ tipo: 'aviso', id: this.id(), clase: 'detenida', texto: 'Detuviste a la IA.' })
+    if (resultado === 'error') {
+      this.d.registrar?.(
+        `Error del motor en ${basename(ruta)}: ${falla?.tipo ?? 'falla'}${motivo ? ` — ${motivo}` : ''}`,
+      )
+      if (falla?.tipo === 'sin-sesion') {
+        this.d.alPerderSesion?.()
+        avisos.push({ tipo: 'sin-sesion', id: this.id(), reintentar: null, enviado: true })
+      } else if (falla?.tipo === 'uso-agotado')
+        avisos.push({ tipo: 'uso-agotado', id: this.id(), libera: falla.libera })
+      else if (falla?.tipo === 'sin-conexion')
+        // El motivo de Claude Code («API Error: Connection refused…») queda en el registro, no en la conversación.
+        avisos.push({
+          tipo: 'aviso',
+          id: this.id(),
+          clase: 'error',
+          texto: 'No hay conexión con Claude: revisá internet. Con Seguí se retoma la misma conversación.',
+        })
+      else
+        avisos.push({
+          tipo: 'aviso',
+          id: this.id(),
+          clase: 'error',
+          // El motivo viene de Claude Code, a veces sin punto final.
+          texto: `La sesión falló${motivo ? `: ${motivo.replace(/[^.!?…]$/, '$&.')}` : '.'} Con Seguí se retoma la misma conversación.`,
+        })
+    }
+    this.emitir(p, avisos)
+
+    const fin = this.ahora()
+    p.usoCentro = fin
+    // Ya es la última del proyecto: no hace falta seguir eligiéndola.
+    p.elegida = null
+    p.detenida = resultado === 'detenida'
+    const ficha = p.ficha
+    const id = p.id
+    const guardar = (async () => {
+      const nuevas = preguntasNuevas(p.antes, await this.d.preguntas(ruta).catch(() => []))
+      if (nuevas.length > 0 && p.ficha === ficha) {
+        p.ficha = { ...ficha, preguntas: nuevas }
+        this.emitir(p, [{ tipo: 'preguntas', id: this.id(), preguntas: nuevas }])
+      }
+      if (id)
+        await this.d.registro.guardar(id, this.resumenInicial(p, 'iridium'), {
+          ultimoUso: fin,
+          detenida: resultado === 'detenida',
+          ultimoEstado: resultado === 'ok' ? 'terminada' : resultado,
+          preguntas: nuevas.map((q) => q.codigo),
+        })
+    })().catch(() => {})
+    this.guardando.add(guardar)
+    void guardar.then(() => this.guardando.delete(guardar))
+  }
+}
+
+/** Lo que dice la ficha (y el aviso de H-13) cuando un turno falla. */
+function motivoDeFicha(falla: FallaMotor | undefined, motivo: string | null): string | null {
+  if (falla?.tipo === 'sin-sesion') return 'Claude Code no tiene sesión iniciada'
+  if (falla?.tipo === 'uso-agotado') return 'Se agotó el uso de la suscripción'
+  if (falla?.tipo === 'sin-conexion') return 'Sin conexión con Claude'
+  return motivo
+}

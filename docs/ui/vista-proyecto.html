@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vista de proyecto</title>
+<!-- D-041: tres paneles (secciones del proyecto · vista principal · conversación) y barra de título propia. -->
+<link rel="stylesheet" href="tokens.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body { background: var(--fondo); color: var(--texto); font: 400 var(--tam-base)/1.5 var(--ui); font-variant-numeric: tabular-nums; min-width: 1024px; overflow: hidden; }
+::selection { background: var(--seleccion); color: var(--texto); }
+:focus-visible { outline: 1px solid var(--primario); outline-offset: -1px; }
+* { scrollbar-width: thin; scrollbar-color: var(--borde-fuerte) transparent; }
+button, select { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.ic { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+code, .cod { font-family: var(--mono); font-size: 12.5px; color: var(--texto-2); }
+[hidden] { display: none !important; }
+
+/* Marco: barra de título propia arriba, barra de íconos, vista principal, divisor y conversación */
+.app { --ancho-chat: 440px; display: grid; grid-template-columns: 48px minmax(360px, 1fr) 5px var(--ancho-chat); grid-template-rows: 36px 1fr 26px; height: 100vh; }
+.app.sin-chat { grid-template-columns: 48px 1fr 0 0; }
+.app.sin-chat .divisor, .app.sin-chat .chat { display: none; }
+
+.titulo { grid-column: 1 / -1; display: flex; align-items: stretch; background: var(--barra); border-bottom: 1px solid var(--borde); -webkit-app-region: drag; }
+.titulo button { -webkit-app-region: no-drag; }
+.inicio { position: relative; width: 48px; display: grid; place-items: center; color: var(--primario); border-right: 1px solid var(--borde); }
+.inicio:hover { background: var(--hover); }
+.inicio.activo { background: var(--fondo); }
+.inicio .ic { width: 19px; height: 19px; }
+.badge { position: absolute; right: 5px; bottom: 4px; min-width: 16px; height: 16px; padding: 0 4px; display: grid; place-items: center; border-radius: var(--radio-control); background: var(--espera); color: var(--sobre-color); font: 700 10.5px/1 var(--mono); }
+.ses { display: flex; align-items: center; gap: 8px; padding: 0 6px 0 14px; border-right: 1px solid var(--borde); color: var(--texto-3); white-space: nowrap; position: relative; -webkit-app-region: no-drag; cursor: pointer; }
+.ses:hover { color: var(--texto-2); background: var(--hover); }
+.ses.activa { background: var(--fondo); color: var(--texto); }
+.ses.activa::before { content: ""; position: absolute; left: 10px; right: 10px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: var(--primario); }
+.ses .nom { font-weight: 600; }
+.ses .cerrar { width: 20px; height: 20px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.ses .cerrar .ic { width: 12px; height: 12px; }
+.ses .cerrar:hover { color: var(--texto); background: var(--hover); }
+.punto { width: 7px; height: 7px; border-radius: 50%; background: var(--texto-3); }
+.punto.trab { background: var(--trabaja); box-shadow: 0 0 0 3px color-mix(in oklab, var(--trabaja) 18%, transparent); }
+.punto.espera { background: var(--espera); }
+.titulo .relleno { flex: 1; }
+.ventana { display: flex; align-items: stretch; -webkit-app-region: no-drag; }
+.ventana span { width: 46px; display: grid; place-items: center; color: var(--texto-3); }
+.ventana span:hover { background: var(--hover); color: var(--texto); }
+.ventana span:last-child:hover { background: #c42b1c; color: #fff; }
+.ventana .ic { width: 13px; height: 13px; stroke-width: 1.2; }
+
+.actividad { background: var(--lateral); border-right: 1px solid var(--borde); display: flex; flex-direction: column; align-items: center; padding: 4px 0 6px; }
+.act { position: relative; width: 48px; height: 44px; display: grid; place-items: center; color: var(--texto-3); }
+.act .ic { width: 20px; height: 20px; }
+.act:hover { color: var(--texto); }
+.act.activo { color: var(--primario); }
+.act.activo::before { content: ""; position: absolute; left: 0; top: 11px; bottom: 11px; width: 2px; background: var(--primario); }
+.act .badge { right: 7px; bottom: 7px; }
+.act.abajo { margin-top: auto; }
+.act .tip { position: absolute; left: 52px; top: 50%; translate: 0 -50%; padding: 3px 8px; background: var(--elevado); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto); font-size: var(--tam-chico); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .12s; z-index: 5; }
+.act:hover .tip { opacity: 1; transition-delay: .35s; }
+
+.principal { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.cabecera { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 14px 0 20px; border-bottom: 1px solid var(--borde); flex: none; min-width: 0; }
+.cabecera h1 { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.cabecera .sub { color: var(--texto-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cabecera .der { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 7px; border: 1px solid color-mix(in oklab, currentColor 45%, transparent); border-radius: var(--radio-control); font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; white-space: nowrap; }
+.chip .ic { width: 12px; height: 12px; }
+.chip.espera { color: var(--espera); }
+.chip.ok { color: var(--ok); }
+.chip.neutro { color: var(--texto-3); }
+.vista { flex: 1; min-height: 0; overflow: auto; }
+
+.divisor { cursor: col-resize; background: var(--fondo); border-left: 1px solid var(--borde); position: relative; }
+.divisor:hover, .divisor.arrastra { background: color-mix(in oklab, var(--primario) 25%, var(--fondo)); }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px; border: 1px solid var(--borde-control); border-radius: var(--radio-control); font-weight: 600; white-space: nowrap; }
+.btn:hover { background: var(--hover); }
+.btn .ic { width: 14px; height: 14px; }
+.btn.chico { height: 26px; padding: 0 9px; }
+.btn.icono { width: 28px; padding: 0; justify-content: center; border-color: transparent; color: var(--texto-2); }
+.btn.icono:hover { color: var(--texto); }
+.btn.icono.abierto { background: var(--hover); color: var(--texto); }
+.btn.sigue { border-color: color-mix(in oklab, var(--primario) 55%, transparent); color: var(--primario-texto); }
+
+/* Conversación */
+.chat { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--fondo); position: relative; }
+.chat-cab { display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 10px 0 16px; border-bottom: 1px solid var(--borde); flex: none; }
+.chat-cab .tit { min-width: 0; flex: 1; line-height: 1.25; }
+.chat-cab .tit b { display: block; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-cab .tit small { display: block; color: var(--texto-3); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mensajes { flex: 1; overflow: auto; padding: 14px 18px 8px; }
+.msg { margin-bottom: 14px; }
+.msg .quien { font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--texto-3); margin-bottom: 2px; }
+.msg .quien.ia { color: var(--primario-texto); }
+.msg p { font-size: var(--tam-lectura); line-height: 1.55; margin-bottom: 6px; }
+.herr { display: flex; align-items: center; gap: 6px; color: var(--texto-3); font-size: var(--tam-chico); margin: 2px 0 8px; }
+.herr .ic { width: 12px; height: 12px; }
+.qs { border: 1px solid var(--espera-borde); background: var(--espera-fondo); border-radius: var(--radio-bloque); padding: 10px 12px; margin: 6px 0 4px; }
+.qs .encab { display: flex; align-items: center; gap: 6px; color: var(--espera); font-weight: 600; margin-bottom: 6px; }
+.qs .encab .ic { width: 14px; height: 14px; }
+.qs .q { display: flex; align-items: center; gap: 8px; }
+.qs .q span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn.responder { background: var(--espera); border-color: var(--espera); color: var(--sobre-color); }
+.btn.responder:hover { background: color-mix(in oklab, var(--espera) 88%, white); }
+.escribir { margin: 6px 14px 14px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-bloque); background: var(--caja); padding: 10px 12px 8px; flex: none; }
+.escribir .campo { color: var(--texto-3); min-height: 38px; }
+.escribir .campo::before { content: "> "; color: var(--primario); font-family: var(--mono); }
+.escribir .pie { display: flex; align-items: center; gap: 8px; color: var(--texto-3); font-size: 12px; }
+.escribir .pie .ic { margin-left: auto; }
+.historial { position: absolute; top: 44px; left: 10px; right: 10px; z-index: 10; background: var(--elevado); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-bloque); box-shadow: 0 12px 32px #0008; padding: 6px; }
+.historial h3 { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--texto-3); padding: 6px 8px 4px; font-weight: 600; }
+.conv { display: grid; grid-template-columns: 1fr auto; gap: 0 10px; width: 100%; text-align: left; padding: 7px 8px; border-radius: var(--radio-fila); }
+.conv:hover { background: var(--hover); }
+.conv.actual { background: var(--sel-fondo); }
+.conv b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.conv time { font-family: var(--mono); font-size: 12px; color: var(--texto-3); }
+.conv small { grid-column: 1 / -1; color: var(--texto-3); font-size: 12px; }
+
+/* Mapa (D-035) */
+.mapa { max-width: 860px; margin: 0 auto; padding: 22px 28px 40px; }
+.hitos { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; margin-bottom: 6px; }
+.casilla { height: 30px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); display: grid; place-items: center; font: 600 12px/1 var(--mono); color: var(--texto-3); }
+.casilla.hecho { background: color-mix(in oklab, var(--ok) 10%, var(--fondo)); color: var(--texto-2); border-color: color-mix(in oklab, var(--ok) 25%, var(--borde)); }
+.casilla.actual { border-color: var(--primario); color: var(--primario-texto); }
+.cuenta { color: var(--texto-3); font-size: var(--tam-chico); margin-bottom: 18px; }
+.tarjeta { border: 1px solid var(--borde); background: var(--caja); border-radius: var(--radio-tarjeta); padding: 18px 20px; }
+.tarjeta h2 { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
+.tarjeta .meta { color: var(--texto-3); margin-bottom: 14px; }
+.bloque { margin-top: 16px; }
+.bloque h3 { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--texto-3); font-weight: 600; margin-bottom: 6px; }
+.bloque p { color: var(--texto-2); }
+.pasos { list-style: none; padding: 0; display: grid; gap: 3px; }
+.pasos li { display: flex; align-items: center; gap: 8px; color: var(--texto-2); }
+.pasos li .ic { width: 14px; height: 14px; color: var(--texto-3); }
+.pasos li.ok .ic { color: var(--ok); }
+.pasos li.esp .ic { color: var(--espera); }
+.pasos li.cur { color: var(--texto); }
+.pasos li.cur .ic { color: var(--primario); }
+.espera-fila { display: flex; align-items: center; gap: 10px; border: 1px solid var(--espera-borde); background: var(--espera-fondo); border-radius: var(--radio-fila); padding: 8px 10px; }
+.espera-fila .ic { color: var(--espera); }
+.espera-fila span { flex: 1; }
+
+/* Docs (lector liviano, D-035) */
+.lector-barra { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-bottom: 1px solid var(--borde-suave); }
+.menu { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto-2); }
+.menu .ic { width: 13px; height: 13px; rotate: 90deg; }
+.hoja { max-width: 720px; margin: 0 auto; padding: 26px 28px 60px; font-size: var(--tam-lectura); line-height: 1.65; }
+.hoja h1 { font-size: 22px; font-weight: 600; margin-bottom: 14px; }
+.hoja h2 { font-size: 17px; font-weight: 600; margin: 24px 0 8px; }
+.hoja p, .hoja li { color: var(--texto-2); margin-bottom: 8px; }
+.hoja ul { padding-left: 20px; }
+.hoja a { color: inherit; text-decoration: underline dotted; text-underline-offset: 3px; }
+.hoja a:hover { color: var(--primario-texto); }
+.hoja pre { font-family: var(--mono); font-size: 12.5px; background: var(--caja); border: 1px solid var(--borde); border-radius: var(--radio-bloque); padding: 10px 12px; color: var(--texto-2); overflow: auto; margin-bottom: 10px; }
+.aviso-suave { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border: 1px dashed var(--borde-fuerte); border-radius: var(--radio-bloque); color: var(--texto-3); font-size: var(--tam-chico); margin-bottom: 18px; }
+
+/* Archivos y Git: lista a la izquierda, lo elegido a la derecha */
+.partida { display: grid; grid-template-columns: 260px 1fr; height: 100%; min-height: 0; }
+.lista { border-right: 1px solid var(--borde); overflow: auto; padding: 6px 0 20px; background: color-mix(in oklab, var(--lateral) 50%, var(--fondo)); }
+.lista h3 { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--texto-3); font-weight: 600; padding: 10px 14px 4px; display: flex; justify-content: space-between; white-space: nowrap; }
+.nodo { display: flex; align-items: center; gap: 6px; width: 100%; height: 26px; padding: 0 10px 0 calc(10px + var(--n, 0) * 14px); text-align: left; color: var(--texto-2); white-space: nowrap; }
+.nodo:hover { background: var(--hover); color: var(--texto); }
+.nodo.sel { background: var(--sel-fondo); color: var(--texto); }
+.nodo .ic { width: 14px; height: 14px; color: var(--texto-3); }
+.nodo .chev { width: 12px; height: 12px; transition: rotate .15s var(--sale); }
+.nodo[aria-expanded="true"] .chev { rotate: 90deg; }
+.nodo .nombre { overflow: hidden; text-overflow: ellipsis; }
+.nodo .mod { margin-left: auto; font: 600 12px/1 var(--mono); color: var(--espera); }
+.visor { overflow: auto; min-width: 0; }
+.visor-cab { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px; border-bottom: 1px solid var(--borde-suave); color: var(--texto-3); font-size: var(--tam-chico); position: sticky; top: 0; background: var(--fondo); }
+.visor-cab .ruta { font-family: var(--mono); color: var(--texto-2); }
+.visor-cab .der { margin-left: auto; }
+.codigo { font: 12.5px/1.6 var(--mono); padding: 8px 0 30px; counter-reset: l; white-space: pre; }
+.codigo div { padding: 0 16px 0 0; }
+.codigo div::before { counter-increment: l; content: counter(l); display: inline-block; width: 44px; padding-right: 14px; text-align: right; color: var(--texto-3); opacity: .6; }
+.codigo .c { color: var(--texto-3); }
+.codigo .k { color: var(--primario-texto); }
+.codigo .s { color: #c9b77a; }
+
+.commit { display: block; width: 100%; text-align: left; padding: 7px 14px; border-left: 2px solid transparent; }
+.commit:hover { background: var(--hover); }
+.commit.sel { background: var(--sel-fondo); border-left-color: var(--primario); }
+.commit b { display: block; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.commit small { color: var(--texto-3); font-size: 12px; }
+.commit small code { font-size: 12px; color: var(--texto-3); }
+.rama { display: flex; align-items: center; gap: 6px; padding: 10px 14px 4px; color: var(--texto-2); }
+.rama .ic { width: 14px; height: 14px; color: var(--texto-3); }
+.git-det { padding: 16px 20px 40px; }
+.git-det h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.git-det .meta { color: var(--texto-3); font-size: var(--tam-chico); margin-bottom: 14px; }
+.git-det .meta code { font-size: 12px; }
+.arch { border: 1px solid var(--borde); border-radius: var(--radio-bloque); margin-bottom: 8px; overflow: hidden; }
+.arch > button { display: flex; align-items: center; gap: 8px; width: 100%; height: 32px; padding: 0 12px; background: var(--caja); text-align: left; }
+.arch > button .ic { width: 12px; height: 12px; color: var(--texto-3); transition: rotate .15s var(--sale); }
+.arch > button[aria-expanded="true"] .ic { rotate: 90deg; }
+.arch > button .ruta { font-family: var(--mono); font-size: 12.5px; flex: 1; }
+.arch .mas { color: var(--ok); font: 600 12px var(--mono); }
+.arch .menos { color: var(--error); font: 600 12px var(--mono); }
+.dif { font: 12.5px/1.6 var(--mono); white-space: pre; overflow: auto; border-top: 1px solid var(--borde); }
+.dif div { padding: 0 12px; }
+.dif .h { color: var(--texto-3); background: var(--caja); }
+.dif .a { background: color-mix(in oklab, var(--ok) 11%, var(--fondo)); color: var(--texto); }
+.dif .a::before { content: "+ "; color: var(--ok); }
+.dif .b { background: color-mix(in oklab, var(--error) 11%, var(--fondo)); color: var(--texto); }
+.dif .b::before { content: "− "; color: var(--error); }
+.dif .n::before { content: "  "; }
+.dif .n { color: var(--texto-2); }
+
+/* Proyectos (grilla resumida; la completa es vista-proyectos.html) */
+.grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; padding: 20px; }
+.tarj { text-align: left; border: 1px solid var(--borde); background: var(--caja); border-radius: var(--radio-tarjeta); padding: 14px 16px; display: grid; grid-template-columns: 38px 1fr; gap: 4px 12px; }
+.tarj:hover { border-color: var(--borde-fuerte); background: var(--hover); }
+.tarj img { width: 38px; height: 38px; border-radius: var(--radio-bloque); grid-row: span 2; }
+.tarj b { font-weight: 600; font-size: 14px; }
+.tarj .est { color: var(--texto-2); font-size: var(--tam-chico); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tarj p { grid-column: 1 / -1; color: var(--texto-3); font-size: var(--tam-chico); margin-top: 8px; }
+.vacia { display: grid; place-items: center; height: 100%; color: var(--texto-3); text-align: center; padding: 40px; }
+.vacia b { display: block; color: var(--texto); font-size: 15px; margin-bottom: 6px; }
+
+.estado-barra { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding: 0 12px; background: var(--barra); border-top: 1px solid var(--borde); color: var(--texto-3); font-size: 12px; }
+.estado-barra .der { margin-left: auto; display: flex; gap: 14px; }
+.estado-barra .num { font-family: var(--mono); color: var(--texto-2); }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-marca" viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><path d="m16 12 3 3-3 3"/></symbol>
+  <symbol id="i-proyectos" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-pendientes" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-ajustes" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-mapa" viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
+  <symbol id="i-docs" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-archivos" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-archivo" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></symbol>
+  <symbol id="i-git" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7M18 10.5c0 4-6 3-10.5 6"/></symbol>
+  <symbol id="i-scripts" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5v14l11-7z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-atras" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-circulo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></symbol>
+  <symbol id="i-encurso" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></symbol>
+  <symbol id="i-espera" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5"/><path d="M12 16h.01"/></symbol>
+  <symbol id="i-min" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-max" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></symbol>
+  <symbol id="i-cierra" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-vscode" viewBox="0 0 24 24"><path d="M17 3 8 12l9 9 4-2V5zM8 12 4 9l-2 1v4l2 1z"/></symbol>
+</svg>
+
+<div class="app" id="app">
+  <header class="titulo">
+    <button class="inicio" id="inicio" title="Proyectos y Pendientes (2 preguntas sin responder)"><svg class="ic"><use href="#i-marca"/></svg><span class="badge">2</span></button>
+    <div class="ses activa" data-ses="centro"><span class="punto"></span><span class="nom">Centro de Desarrollo</span><button class="cerrar" aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <div class="ses" data-ses="beta"><span class="punto trab"></span><span class="nom">Beta</span><button class="cerrar" aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <div class="relleno" title="Arrastrá desde acá para mover la ventana"></div>
+    <div class="ventana" title="Estos tres botones los dibuja Windows (conservan el menú para acomodar ventanas)">
+      <span><svg class="ic"><use href="#i-min"/></svg></span><span><svg class="ic"><use href="#i-max"/></svg></span><span><svg class="ic"><use href="#i-cierra"/></svg></span>
+    </div>
+  </header>
+
+  <nav class="actividad" id="actividad"></nav>
+
+  <main class="principal">
+    <div class="cabecera" id="cabecera"></div>
+    <div class="vista" id="vista"></div>
+  </main>
+
+  <div class="divisor" id="divisor" title="Arrastrá para cambiar el ancho de la conversación (doble clic: ancho de entrada)"></div>
+
+  <aside class="chat" id="chat">
+    <div class="chat-cab">
+      <div class="tit"><b id="chatTitulo">Conversación de hoy, 09:50</b><small id="chatSub">Empezada en VS Code · contexto 42 %</small></div>
+      <button class="btn icono" id="btnHistorial" title="Conversaciones anteriores de este proyecto"><svg class="ic"><use href="#i-reloj"/></svg></button>
+      <button class="btn chico" id="btnNueva" title="Conversación en blanco (D-040)"><svg class="ic"><use href="#i-mas"/></svg>Nueva</button>
+      <button class="btn chico sigue" id="btnSegui" title="La IA lee estado.md y sigue el Próximo paso"><svg class="ic"><use href="#i-play"/></svg>Seguí</button>
+    </div>
+    <div class="historial" id="historial" hidden>
+      <h3>Conversaciones de Centro de Desarrollo</h3>
+      <button class="conv actual" data-conv="0"><b>Ajustes de I-3 por Q-59</b><time>hoy 09:50</time><small>Empezada en VS Code · la que está abierta</small></button>
+      <button class="conv" data-conv="1"><b>I-3: Pendientes</b><time>25/10 09:50</time><small>Iridium · 3 h 12 min · dejó Q-59</small></button>
+      <button class="conv" data-conv="2"><b>I-2 aprobada; próximo paso I-3</b><time>24/10 20:47</time><small>Iridium · 18 min</small></button>
+      <button class="conv" data-conv="3"><b>I-2: conversar con la IA</b><time>24/10 14:02</time><small>VS Code · 6 h · dejó Q-58</small></button>
+    </div>
+    <div class="mensajes" id="mensajes"></div>
+    <div class="escribir">
+      <div class="campo">Escribile a la IA…</div>
+      <div class="pie">Enter envía · Shift+Enter, salto de línea<svg class="ic"><use href="#i-flecha"/></svg></div>
+    </div>
+  </aside>
+
+  <footer class="estado-barra">
+    <span class="chip ok"><svg class="ic"><use href="#i-check"/></svg>Claude · Pro</span>
+    <span id="estadoHito">Hito 7 · Construcción</span>
+    <div class="der"><span>5 h <span class="num">34 %</span></span><span>semana <span class="num">61 %</span></span></div>
+  </footer>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const ic = (id) => `<svg class="ic"><use href="#i-${id}"/></svg>`;
+const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+const leer = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+
+const estado = { lugar: "proyecto", seccion: leer("iridium-proto-seccion") || "mapa", archivo: "CLAUDE.md", commit: "7597fc7" };
+
+const SECCIONES_PROYECTO = [
+  ["mapa", "Mapa"], ["docs", "Docs"], ["archivos", "Archivos"], ["git", "Git"], ["scripts", "Scripts"],
+];
+const SECCIONES_GENERAL = [["proyectos", "Proyectos"], ["pendientes", "Pendientes"]];
+
+function pintarActividad() {
+  const lista = estado.lugar === "proyecto" ? SECCIONES_PROYECTO : SECCIONES_GENERAL;
+  const actual = estado.lugar === "proyecto" ? estado.seccion : estado.general;
+  $("#actividad").innerHTML = lista.map(([id, nom]) =>
+    `<button class="act ${id === actual ? "activo" : ""}" data-sec="${id}" aria-label="${nom}">${ic(id)}${id === "pendientes" ? '<span class="badge">2</span>' : ""}<span class="tip">${nom}</span></button>`
+  ).join("") + `<button class="act abajo" aria-label="Ajustes">${ic("ajustes")}<span class="tip">Ajustes</span></button>`;
+  $("#inicio").classList.toggle("activo", estado.lugar === "general");
+  document.querySelectorAll(".ses").forEach((s) => s.classList.toggle("activa", estado.lugar === "proyecto" && s.dataset.ses === "centro"));
+}
+
+const CAB_PROYECTO = `<h1>Centro de Desarrollo</h1><span class="sub">Hito 7 · Construcción · I-4</span><span class="chip espera">${ic("espera")}1 pregunta · frena</span><div class="der"><button class="btn icono" title="Abrir en VS Code">${ic("vscode")}</button></div>`;
+
+const VISTAS = {
+  mapa: () => {
+    const est = ["hecho","hecho","hecho","hecho","hecho","hecho","hecho","actual","","",""];
+    return `<div class="mapa">
+      <div class="hitos">${est.map((e, i) => `<div class="casilla ${e}" title="Hito ${i}">${i}</div>`).join("")}</div>
+      <div class="cuenta">7 de 11 completos</div>
+      <div class="tarjeta">
+        <h2>Hito 7 · Construcción</h2><div class="meta">En curso desde el 23/10 · <a class="cod" href="#">07-construccion.md</a></div>
+        <div class="bloque"><h3>Próximo paso</h3><p>Procesar Q-60 (ajustes de I-3); después, I-4: el marco de tres paneles, Mapa, Docs, Archivos y las conversaciones anteriores.</p></div>
+        <div class="bloque"><h3>Pasos · 3 de 6</h3><ul class="pasos">
+          <li class="ok">${ic("check")}I-1 — Esqueleto</li>
+          <li class="ok">${ic("check")}I-2 — Conversar con la IA</li>
+          <li class="esp">${ic("espera")}I-3 — Pendientes · espera tu prueba</li>
+          <li class="cur">${ic("encurso")}I-4 — Marco de tres paneles, Mapa, Docs y Archivos</li>
+          <li>${ic("circulo")}I-5 — Git del proyecto</li>
+          <li>${ic("circulo")}I-6 — Uso, avisos y errores</li>
+        </ul></div>
+        <div class="bloque"><h3>Te espera</h3><div class="espera-fila">${ic("espera")}<span><b>Q-60</b> — ¿Los ajustes de I-3 funcionan como esperabas? · prueba · frena</span><button class="btn chico responder">Responder</button></div></div>
+        <div class="bloque"><h3>Lo último de la IA</h3><p>Hoy 10:24 — Ajustes por Q-59: casillas solo en la casilla, notas que crecen, Nueva en blanco.</p></div>
+      </div></div>`;
+  },
+  docs: () => `<div class="lector-barra"><button class="menu">decisiones.md ${ic("chev")}</button><button class="menu">En esta página ${ic("chev")}</button><span style="flex:1"></span><button class="btn chico">${ic("atras")}Atrás</button></div>
+    <article class="hoja">
+      <h1>D-041 — Tres paneles: secciones del proyecto, vista principal y conversación</h1>
+      <p><b>Contexto:</b> con la conversación al centro y el mapa en un panel desplegable (<a href="#">D-031</a>) no entraban bien las vistas que vienen: design system, prototipos, archivos, git.</p>
+      <h2>Decisión</h2>
+      <ul>
+        <li>La barra de íconos es del proyecto abierto: Mapa, Docs, Archivos, Git y Scripts.</li>
+        <li>La vista principal muestra la sección elegida; la conversación va siempre a la derecha y se ensancha arrastrando su borde.</li>
+        <li>La barra de título es propia; el botón de arriba a la izquierda abre Proyectos y Pendientes.</li>
+      </ul>
+      <p>Ver <a href="#">04-ux.md › W-3</a>.</p>
+    </article>`,
+  scripts: () => `<div class="lector-barra"><button class="menu">scripts.md ${ic("chev")}</button><button class="menu">En esta página ${ic("chev")}</button></div>
+    <article class="hoja">
+      <div class="aviso-suave">${ic("scripts")}Por ahora es <code>scripts.md</code> en el lector. Los botones que los ejecutan llegan con C-11, después del MVP.</div>
+      <h1>Scripts del usuario</h1>
+      <h2>Armar la última versión</h2>
+      <p><b>Ejecutar:</b></p><pre>pnpm armar</pre>
+      <h2>Abrir Iridium</h2>
+      <p><b>Ejecutar:</b> el acceso directo «Iridium» del escritorio.</p>
+    </article>`,
+  archivos: () => {
+    const arbol = [
+      [0, "carpeta", ".claude", false], [0, "carpeta", "docs", true],
+      [1, "carpeta", "research", false], [1, "carpeta", "respuestas", false], [1, "carpeta", "ui", false],
+      [1, "archivo", "decisiones.md"], [1, "archivo", "estado.md", null, "M"], [1, "archivo", "04-ux.md", null, "M"],
+      [0, "carpeta", "src", false], [0, "carpeta", "tests", false], [0, "carpeta", "tools", false],
+      [0, "archivo", "CLAUDE.md"], [0, "archivo", "DESIGN.md"], [0, "archivo", "package.json"], [0, "archivo", "README.md"],
+    ];
+    const filas = arbol.map(([n, t, nom, abierto, mod]) => t === "carpeta"
+      ? `<button class="nodo" style="--n:${n}" aria-expanded="${abierto}"><svg class="ic chev"><use href="#i-chev"/></svg>${ic("archivos")}<span class="nombre">${nom}</span></button>`
+      : `<button class="nodo ${nom === estado.archivo ? "sel" : ""}" style="--n:${n}" data-archivo="${nom}"><span style="width:12px"></span>${ic("archivo")}<span class="nombre">${nom}</span>${mod ? `<span class="mod" title="Modificado, sin guardar en git">${mod}</span>` : ""}</button>`).join("");
+    return `<div class="partida"><div class="lista"><h3>Centro de Desarrollo</h3>${filas}</div>
+      <div class="visor"><div class="visor-cab"><span class="ruta">${estado.archivo}</span><span class="der">${estado.archivo === "package.json" ? "48 líneas · solo lectura" : "52 líneas · markdown · solo lectura"}</span></div>${ARCHIVOS[estado.archivo] || ARCHIVOS["CLAUDE.md"]}</div></div>`;
+  },
+  git: () => {
+    const commits = [
+      ["7597fc7", "I-3: ajustes por Q-59 (casillas solo en la casilla, notas que crecen, Nueva en blanco D-040); Q-60", "hoy 10:24", 11],
+      ["edc1290", "I-3: Pendientes (responder las Q-n de todos los proyectos con su contexto, a medias, Ver entero)", "25/10 09:50", 38],
+      ["615c93d", "I-2 aprobada (Q-58); próximo paso: I-3 (Pendientes)", "24/10 20:47", 3],
+      ["755555a", "I-2: conversar con la IA (Seguí, Nueva, Detener, fichas de sesión, varios proyectos a la vez)", "24/10 20:09", 42],
+      ["1a5dd9e", "impeccable: estado de preguntas de la sesión anterior", "23/10 19:02", 1],
+      ["d17883a", "I-1: esqueleto de Iridium (grilla de Proyectos, vista del proyecto, motor verificado)", "23/10 19:02", 96],
+    ];
+    const lista = `<div class="rama">${ic("git")}<b>master</b></div>
+      <h3>Sin guardar <span>2</span></h3>
+      <button class="nodo ${estado.commit === "local" ? "sel" : ""}" data-commit="local">${ic("archivo")}<span class="nombre">docs/estado.md</span><span class="mod">M</span></button>
+      <button class="nodo ${estado.commit === "local" ? "sel" : ""}" data-commit="local">${ic("archivo")}<span class="nombre">docs/04-ux.md</span><span class="mod">M</span></button>
+      <h3>Historial</h3>` + commits.map(([h, m, f, n]) => `<button class="commit ${estado.commit === h ? "sel" : ""}" data-commit="${h}"><b>${m}</b><small><code>${h}</code> · ${f} · ${n} archivos</small></button>`).join("");
+    const det = estado.commit === "local"
+      ? `<h2>Cambios sin guardar</h2><div class="meta">La IA los guarda en un commit al cerrar su sesión. Elegí un archivo para ver qué cambió.</div>${difEstado()}`
+      : (() => { const c = commits.find((x) => x[0] === estado.commit) || commits[0]; return `<h2>${c[1]}</h2><div class="meta"><code>${c[0]}</code> · ${c[2]} · Lautaro con Claude · ${c[3]} archivos · elegí uno para ver qué cambió</div>
+        <div class="arch"><button aria-expanded="false">${ic("chev")}<span class="ruta">src/renderer/estilos/pendientes.css</span><span class="mas">+10</span><span class="menos">−2</span></button>${DIF_CSS}</div>
+        <div class="arch"><button aria-expanded="false">${ic("chev")}<span class="ruta">src/renderer/secciones/pendientes/Pendiente.tsx</span><span class="mas">+44</span><span class="menos">−18</span></button>${DIF_OTRO}</div>
+        <div class="arch"><button aria-expanded="false">${ic("chev")}<span class="ruta">docs/decisiones.md</span><span class="mas">+21</span><span class="menos">−0</span></button>${DIF_OTRO}</div>
+        <div class="arch"><button aria-expanded="false">${ic("chev")}<span class="ruta">docs/estado.md</span><span class="mas">+13</span><span class="menos">−10</span></button>${DIF_OTRO}</div>`; })();
+    return `<div class="partida"><div class="lista">${lista}</div><div class="visor"><div class="git-det">${det}</div></div></div>`;
+  },
+};
+
+const DIF_CSS = `<div class="dif" hidden><div class="h">@@ -499,14 +499,22 @@ textarea.campo {</div><div class="n">  resize: vertical;</div><div class="n">  line-height: 1.5;</div><div class="n">}</div><div class="a">textarea.campo.crece {</div><div class="a">  min-height: 30px;</div><div class="a">  padding: 5px 10px;</div><div class="a">  resize: none;</div><div class="a">  overflow: hidden;</div><div class="a">}</div><div class="n">.fila-nota {</div><div class="n">  display: grid;</div><div class="b">  align-items: center;</div><div class="a">  align-items: start;</div><div class="n">  gap: 10px;</div></div>`;
+const DIF_OTRO = `<div class="dif" hidden><div class="h">@@ (ejemplo) @@</div><div class="n">línea sin cambios</div><div class="b">línea quitada</div><div class="a">línea agregada</div></div>`;
+function difEstado() {
+  return `<div class="arch"><button aria-expanded="false">${ic("chev")}<span class="ruta">docs/estado.md</span><span class="mas">+1</span><span class="menos">−1</span></button><div class="dif" hidden><div class="h">@@ -10,7 +10,7 @@ ## Hito actual</div><div class="b">7 — Construcción — I-3 (Pendientes) probada; ajustes hechos, falta probarlos</div><div class="a">7 — Construcción — I-4 (marco de tres paneles, Mapa, Docs y Archivos)</div></div></div>
+    <div class="arch"><button aria-expanded="false">${ic("chev")}<span class="ruta">docs/04-ux.md</span><span class="mas">+38</span><span class="menos">−29</span></button>${DIF_OTRO}</div>`;
+}
+
+const ARCHIVOS = {
+  "CLAUDE.md": `<div class="codigo"><div><span class="k"># Instrucciones para la IA</span></div><div></div><div>Este proyecto se desarrolla siguiendo la guía de hitos <span class="s">\`hitos-desarrollo-app\`</span>.</div><div>Toda la documentación está en <span class="s">\`docs/\`</span>.</div><div></div><div><span class="k">## Al empezar cada sesión</span></div><div>1. Lee <span class="s">\`docs/estado.md\`</span> para saber en qué hito estamos.</div><div>2. Lee <span class="s">\`docs/perfil-proyecto.md\`</span> para recordar el tipo de app.</div><div>3. Antes de tocar código, lee <span class="s">\`docs/05-arquitectura.md\`</span>.</div><div></div><div><span class="k">## Proyecto</span></div><div>- **Nombre:** Iridium (D-033)</div><div>- **Stack:** Electron + TypeScript + React (D-028)</div></div>`,
+  "package.json": `<div class="codigo"><div>{</div><div>  <span class="k">"name"</span>: <span class="s">"iridium"</span>,</div><div>  <span class="k">"version"</span>: <span class="s">"0.3.0"</span>,</div><div>  <span class="k">"main"</span>: <span class="s">"out/main/index.js"</span>,</div><div>  <span class="k">"scripts"</span>: {</div><div>    <span class="k">"dev"</span>: <span class="s">"electron-vite dev"</span>,</div><div>    <span class="k">"test"</span>: <span class="s">"vitest run"</span>,</div><div>    <span class="k">"e2e"</span>: <span class="s">"playwright test"</span></div><div>  }</div><div>}</div></div>`,
+};
+
+const MENSAJES = [
+  `<div class="msg"><div class="quien">VOS</div><p>sigamos</p></div>
+   <div class="msg"><div class="quien ia">IA</div><div class="herr">${ic("chev")}Usó 16 herramientas</div><p>Hice los tres ajustes de Q-59: las casillas solo se marcan en la casilla, las notas crecen hacia abajo y <b>Nueva</b> abre un chat en blanco.</p><div class="herr">${ic("chev")}Usó 25 herramientas</div><p>Armé la versión nueva y dejé la prueba.</p>
+   <div class="qs"><div class="encab">${ic("espera")}Dejó 1 pregunta</div><div class="q"><span><b>Q-60</b> · prueba · frena — ¿Los ajustes de I-3 funcionan?</span><button class="btn chico responder">Responder</button></div></div></div>`,
+  `<div class="msg"><div class="quien">VOS</div><p>sigamos con I-3</p></div><div class="msg"><div class="quien ia">IA</div><div class="herr">${ic("chev")}Usó 210 herramientas</div><p>Pendientes está armado: las Q-n de todos los proyectos con su contexto adentro, a medias y Ver entero.</p></div>`,
+  `<div class="msg"><div class="quien">VOS</div><p>aprobada</p></div><div class="msg"><div class="quien ia">IA</div><p>Marqué I-2 aprobada y dejé como próximo paso I-3.</p></div>`,
+  `<div class="msg"><div class="quien">VOS</div><p>arrancá I-2</p></div><div class="msg"><div class="quien ia">IA</div><div class="herr">${ic("chev")}Usó 340 herramientas</div><p>Seguí, Nueva y Detener funcionan; las fichas de sesión van arriba.</p></div>`,
+];
+const TITULOS = [["Conversación de hoy, 09:50", "Empezada en VS Code · contexto 42 %"], ["I-3: Pendientes", "25/10 09:50 · anterior: escribir la retoma"], ["I-2 aprobada", "24/10 20:47 · anterior: escribir la retoma"], ["I-2: conversar con la IA", "24/10 14:02 · anterior: escribir la retoma"]];
+
+function pintarChat(i = 0) {
+  $("#mensajes").innerHTML = MENSAJES[i];
+  [$("#chatTitulo").textContent, $("#chatSub").textContent] = TITULOS[i];
+  document.querySelectorAll(".conv").forEach((c) => c.classList.toggle("actual", +c.dataset.conv === i));
+}
+
+function pintar() {
+  pintarActividad();
+  const app = $("#app");
+  if (estado.lugar === "general") {
+    app.classList.add("sin-chat");
+    if (estado.general === "proyectos") {
+      $("#cabecera").innerHTML = `<h1>Proyectos</h1><span class="sub"><code>11</code> · C:\\Proyectos</span>`;
+      const p = [["centro-de-desarrollo.svg", "Centro de Desarrollo", "en desarrollo", "Hito 7 · Construcción", true, "centro"], ["beta.svg", "Beta", "en desarrollo · la IA trabaja", "Hito 7 · Construcción", false, "beta"], ["delta.svg", "Delta", "en uso", "Hito 10 · Operación", false], ["gamma.svg", "Gamma", "idea", "Hito 1 · Exploración", false], ["skills.svg", "Skills", "en uso", "Sin estado", false], ["ideas.svg", "Ideas", "idea", "Sin estado", false]];
+      $("#vista").innerHTML = `<div class="grilla">${p.map(([img, n, e, h, q, s]) => `<button class="tarj" data-abrir="${s || ""}"><img src="iconos/${img}" alt=""><b>${n}</b><span class="est">${e}${q ? `<span class="chip espera">${ic("espera")}1 pregunta · frena</span>` : ""}</span><p>${h}</p></button>`).join("")}</div>`;
+    } else {
+      $("#cabecera").innerHTML = `<h1>Pendientes</h1><span class="sub">2 sin responder · 1 frena</span>`;
+      $("#vista").innerHTML = `<div class="vacia"><div><b>Pendientes queda como hoy</b>La columna de proyectos y sus preguntas (ver <code>vista-pendientes.html</code>), ahora como sección del inicio.</div></div>`;
+    }
+    $("#estadoHito").textContent = "";
+    return;
+  }
+  app.classList.remove("sin-chat");
+  $("#cabecera").innerHTML = CAB_PROYECTO;
+  $("#vista").innerHTML = VISTAS[estado.seccion]();
+  $("#vista").scrollTop = 0;
+  $("#estadoHito").textContent = "Hito 7 · Construcción";
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target;
+  const sec = t.closest("[data-sec]");
+  if (sec) {
+    if (estado.lugar === "proyecto") { estado.seccion = sec.dataset.sec; guardar("iridium-proto-seccion", estado.seccion); }
+    else estado.general = sec.dataset.sec;
+    return pintar();
+  }
+  if (t.closest("#inicio")) { estado.lugar = "general"; estado.general = estado.general || "proyectos"; return pintar(); }
+  const ses = t.closest(".ses");
+  if (ses && !t.closest(".cerrar")) { estado.lugar = "proyecto"; return pintar(); }
+  if (t.closest("[data-abrir]")) { estado.lugar = "proyecto"; return pintar(); }
+  const arch = t.closest("[data-archivo]");
+  if (arch) { estado.archivo = arch.dataset.archivo; return pintar(); }
+  const nodoCarpeta = t.closest(".nodo[aria-expanded]");
+  if (nodoCarpeta) { nodoCarpeta.setAttribute("aria-expanded", nodoCarpeta.getAttribute("aria-expanded") !== "true"); return; }
+  const com = t.closest("[data-commit]");
+  if (com) { estado.commit = com.dataset.commit; return pintar(); }
+  const a = t.closest(".arch > button");
+  if (a) { const abrir = a.getAttribute("aria-expanded") !== "true"; document.querySelectorAll(".arch > button").forEach((b) => { b.setAttribute("aria-expanded", "false"); if (b.nextElementSibling) b.nextElementSibling.hidden = true; }); a.setAttribute("aria-expanded", abrir); const d = a.nextElementSibling; if (d) d.hidden = a.getAttribute("aria-expanded") !== "true"; return; }
+  if (t.closest("#btnHistorial")) { const h = $("#historial"); h.hidden = !h.hidden; $("#btnHistorial").classList.toggle("abierto", !h.hidden); return; }
+  const conv = t.closest(".conv");
+  if (conv) { pintarChat(+conv.dataset.conv); $("#historial").hidden = true; $("#btnHistorial").classList.remove("abierto"); return; }
+  if (t.closest("#btnNueva")) { $("#mensajes").innerHTML = ""; $("#chatTitulo").textContent = "Conversación nueva"; $("#chatSub").textContent = "En blanco: empieza con lo que escribas o con Seguí"; return; }
+  if (!t.closest(".historial")) { $("#historial").hidden = true; $("#btnHistorial").classList.remove("abierto"); }
+});
+
+// Ancho de la conversación: se arrastra el divisor y se recuerda
+const app = $("#app");
+const ANCHO_ENTRADA = 440;
+const fijarAncho = (px) => { const max = Math.max(320, window.innerWidth - 48 - 360 - 5); const v = Math.min(max, Math.max(320, px)); app.style.setProperty("--ancho-chat", v + "px"); return v; };
+fijarAncho(+(leer("iridium-proto-chat") || ANCHO_ENTRADA));
+const div = $("#divisor");
+div.addEventListener("pointerdown", (e) => {
+  div.setPointerCapture(e.pointerId); div.classList.add("arrastra");
+  const mover = (ev) => guardar("iridium-proto-chat", fijarAncho(window.innerWidth - ev.clientX - 2));
+  const soltar = () => { div.classList.remove("arrastra"); div.removeEventListener("pointermove", mover); div.removeEventListener("pointerup", soltar); };
+  div.addEventListener("pointermove", mover); div.addEventListener("pointerup", soltar);
+});
+div.addEventListener("dblclick", () => guardar("iridium-proto-chat", fijarAncho(ANCHO_ENTRADA)));
+
+const q = new URLSearchParams(location.search);
+if (q.get("seccion")) estado.seccion = q.get("seccion");
+if (q.get("inicio")) { estado.lugar = "general"; estado.general = q.get("inicio"); }
+if (q.get("chat")) fijarAncho(+q.get("chat"));
+pintarChat(0);
+pintar();
+if (q.get("historial")) { $("#historial").hidden = false; $("#btnHistorial").classList.add("abierto"); }
+</script>
+</body>
+</html>

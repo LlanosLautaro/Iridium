@@ -1,0 +1,147 @@
+
+== Electron 44 ==
+{
+  "extensionCargada": {
+    "id": "lelcnpgmdljabcoanfccoicjjpejkfag",
+    "nombre": "S-3 Revision (spike)"
+  },
+  "respuestaSw": {
+    "swCorre": true,
+    "apis": {
+      "captureVisibleTab": "undefined",
+      "scripting": "function",
+      "storageLocal": "function"
+    },
+    "captura": {
+      "ok": false,
+      "error": "chrome.tabs.captureVisibleTab is not a function"
+    },
+    "envio": {
+      "ok": true,
+      "estado": 200,
+      "cuerpo": "guardado"
+    }
+  },
+  "capturePageRecortada": {
+    "ok": true,
+    "tamano": {
+      "width": 69,
+      "height": 35
+    }
+  }
+}
+
+== Recibido en el receptor desde Electron ==
+[
+  {
+    "origen": "chrome-extension://lelcnpgmdljabcoanfccoicjjpejkfag",
+    "url": "http://localhost:5199/",
+    "texto": "Guardar",
+    "rect": {
+      "x": 45,
+      "y": 192.6875,
+      "w": 68.90625,
+      "h": 35,
+      "dpr": 1
+    },
+    "hayFibra": true,
+    "componentes": [
+      "Tarjeta",
+      "App"
+    ],
+    "reactVisibleDesdeAislado": false,
+    "informeSw": {
+      "swCorre": true,
+      "apis": {
+        "captureVisibleTab": "undefined",
+        "scripting": "function",
+        "storageLocal": "function"
+      },
+      "captura": {
+        "ok": false,
+        "error": "chrome.tabs.captureVisibleTab is not a function"
+      }
+    },
+    "fuente": {
+      "marco": {
+        "funcion": "Tarjeta",
+        "url": "http://localhost:5199/src/Tarjeta.jsx",
+        "linea": 9,
+        "columna": 21
+      },
+      "original": {
+        "source": "Tarjeta.jsx",
+        "line": 6,
+        "column": 6,
+        "name": null
+      }
+    }
+  }
+]
+
+== Navegador (msedge) ==
+{
+  "swCorre": true,
+  "apis": {
+    "captureVisibleTab": "function",
+    "scripting": "function",
+    "storageLocal": "function"
+  },
+  "captura": {
+    "ok": true,
+    "largo": 13366
+  },
+  "envio": {
+    "ok": true,
+    "estado": 200,
+    "cuerpo": "guardado"
+  }
+}
+
+== Recibido en el receptor desde el navegador ==
+[
+  {
+    "origen": "chrome-extension://lelcnpgmdljabcoanfccoicjjpejkfag",
+    "url": "http://localhost:5199/",
+    "texto": "Guardar",
+    "rect": {
+      "x": 45,
+      "y": 192.6875,
+      "w": 68.90625,
+      "h": 35,
+      "dpr": 1
+    },
+    "hayFibra": true,
+    "componentes": [
+      "Tarjeta",
+      "App"
+    ],
+    "reactVisibleDesdeAislado": false,
+    "informeSw": {
+      "swCorre": true,
+      "apis": {
+        "captureVisibleTab": "function",
+        "scripting": "function",
+        "storageLocal": "function"
+      },
+      "captura": {
+        "ok": true,
+        "largo": 13366
+      }
+    },
+    "fuente": {
+      "marco": {
+        "funcion": "Tarjeta",
+        "url": "http://localhost:5199/src/Tarjeta.jsx",
+        "linea": 9,
+        "columna": 21
+      },
+      "original": {
+        "source": "Tarjeta.jsx",
+        "line": 6,
+        "column": 6,
+        "name": null
+      }
+    }
+  }
+]

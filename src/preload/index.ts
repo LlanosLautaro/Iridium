@@ -1,0 +1,94 @@
+// El puente seguro: la única API que ve la ventana (`window.iridium`). No expone nada de Node ni de Electron.
+import { contextBridge, ipcRenderer, webFrame } from 'electron'
+import { version } from '../../package.json'
+import {
+  type ApiIridium,
+  CANALES,
+  type CambioConversacion,
+  type EstadoMotor,
+  type ListaProyectos,
+  type SinArmar,
+  type UsoSuscripcion,
+  type VersionNueva,
+} from '../compartido/puente'
+
+// El tamaño de la ventana (Ctrl+= / Ctrl+-, Defecto 17) en `--zoom`: el ancho mínimo de la app se mide en píxeles de la
+// pantalla, así que al agrandar se achican los paneles en vez de cortarse. Cambiar el zoom cambia el ancho: `resize`.
+const ponerZoom = () => document.documentElement.style.setProperty('--zoom', String(webFrame.getZoomFactor()))
+window.addEventListener('DOMContentLoaded', ponerZoom)
+window.addEventListener('resize', ponerZoom)
+
+function escuchar<T>(canal: string, f: (dato: T) => void): () => void {
+  const manejar = (_: unknown, dato: T) => f(dato)
+  ipcRenderer.on(canal, manejar)
+  return () => ipcRenderer.removeListener(canal, manejar)
+}
+
+const api: ApiIridium = {
+  version,
+  listarProyectos: () => ipcRenderer.invoke(CANALES.listarProyectos),
+  alCambiarProyectos: (f) => escuchar<ListaProyectos>(CANALES.proyectosCambiaron, f),
+  elegirCarpeta: () => ipcRenderer.invoke(CANALES.elegirCarpeta),
+  mudar: () => ipcRenderer.invoke(CANALES.mudar),
+  cambiarCarpetaIridium: () => ipcRenderer.invoke(CANALES.cambiarCarpetaIridium),
+  leerPreferencias: () => ipcRenderer.invoke(CANALES.leerPreferencias),
+  guardarPreferencias: (cambio) => ipcRenderer.invoke(CANALES.guardarPreferencias, cambio),
+  estilosDeRespuesta: () => ipcRenderer.invoke(CANALES.estilos),
+  estadoMotor: () => ipcRenderer.invoke(CANALES.estadoMotor),
+  alCambiarMotor: (f) => escuchar<EstadoMotor>(CANALES.motorCambio, f),
+  iniciarSesion: () => ipcRenderer.invoke(CANALES.iniciarSesion),
+  uso: () => ipcRenderer.invoke(CANALES.uso),
+  alCambiarUso: (f) => escuchar<UsoSuscripcion>(CANALES.usoCambio, f),
+  alPedirCierre: (f) => escuchar<string[]>(CANALES.pedirCierre, f),
+  cerrarIgual: () => ipcRenderer.invoke(CANALES.cerrarIgual),
+  cancelarCierre: () => ipcRenderer.invoke(CANALES.cancelarCierre),
+  versionNueva: () => ipcRenderer.invoke(CANALES.versionNueva),
+  alCambiarVersionNueva: (f) => escuchar<VersionNueva | null>(CANALES.versionNuevaCambio, f),
+  reiniciarAhora: () => ipcRenderer.invoke(CANALES.reiniciarAhora),
+  zoom: (paso) => ipcRenderer.invoke(CANALES.zoom, paso),
+  sinArmar: () => ipcRenderer.invoke(CANALES.sinArmar),
+  alCambiarSinArmar: (f) => escuchar<SinArmar>(CANALES.sinArmarCambio, f),
+  armar: () => ipcRenderer.invoke(CANALES.armar),
+  abrirConversacion: (ruta) => ipcRenderer.invoke(CANALES.abrirConversacion, ruta),
+  anteriores: (ruta, tengo) => ipcRenderer.invoke(CANALES.anteriores, ruta, tengo),
+  seguir: (ruta, pedido) => ipcRenderer.invoke(CANALES.seguir, ruta, pedido),
+  detener: (ruta) => ipcRenderer.invoke(CANALES.detener, ruta),
+  cerrarFicha: (ruta) => ipcRenderer.invoke(CANALES.cerrarFicha, ruta),
+  alCambiarConversacion: (f) => escuchar<CambioConversacion>(CANALES.conversacionCambio, f),
+  pendientes: (ruta) => ipcRenderer.invoke(CANALES.pendientes, ruta),
+  responder: (ruta, pedido) => ipcRenderer.invoke(CANALES.responder, ruta, pedido),
+  leerEscritos: () => ipcRenderer.invoke(CANALES.leerEscritos),
+  guardarEscrito: (ruta, texto) => ipcRenderer.invoke(CANALES.guardarEscrito, ruta, texto),
+  aMedias: (ruta, codigo, borrador) => ipcRenderer.invoke(CANALES.aMedias, ruta, codigo, borrador),
+  documento: (ruta, documento) => ipcRenderer.invoke(CANALES.documento, ruta, documento),
+  documentos: (ruta) => ipcRenderer.invoke(CANALES.documentos, ruta),
+  alCambiarDocs: (f) => escuchar<string>(CANALES.docsCambiaron, f),
+  mapa: (ruta) => ipcRenderer.invoke(CANALES.mapa, ruta),
+  carpeta: (ruta, carpeta) => ipcRenderer.invoke(CANALES.carpeta, ruta, carpeta),
+  archivo: (ruta, archivo) => ipcRenderer.invoke(CANALES.archivo, ruta, archivo),
+  conversacionesAnteriores: (ruta) => ipcRenderer.invoke(CANALES.conversacionesAnteriores, ruta),
+  elegirConversacion: (ruta, id) => ipcRenderer.invoke(CANALES.elegirConversacion, ruta, id),
+  scripts: (ruta) => ipcRenderer.invoke(CANALES.scripts, ruta),
+  correrScript: (ruta, id) => ipcRenderer.invoke(CANALES.correrScript, ruta, id),
+  comentarios: (ruta) => ipcRenderer.invoke(CANALES.comentarios, ruta),
+  capturaComentario: (ruta, codigo) => ipcRenderer.invoke(CANALES.capturaComentario, ruta, codigo),
+  enviarComentario: (ruta, codigo) => ipcRenderer.invoke(CANALES.enviarComentario, ruta, codigo),
+  reabrirComentario: (ruta, codigo, nota) =>
+    ipcRenderer.invoke(CANALES.reabrirComentario, ruta, codigo, nota),
+  git: (ruta) => ipcRenderer.invoke(CANALES.git, ruta),
+  commit: (ruta, hash) => ipcRenderer.invoke(CANALES.commit, ruta, hash),
+  diferencia: (ruta, commit, archivo) => ipcRenderer.invoke(CANALES.diferencia, ruta, commit, archivo),
+  inicializarGit: (ruta) => ipcRenderer.invoke(CANALES.inicializarGit, ruta),
+  cuentaGithub: () => ipcRenderer.invoke(CANALES.cuentaGithub),
+  publicarGithub: (ruta, pedido) => ipcRenderer.invoke(CANALES.publicarGithub, ruta, pedido),
+  skills: () => ipcRenderer.invoke(CANALES.skills),
+  atrasados: () => ipcRenderer.invoke(CANALES.atrasados),
+  ponerAlDia: (ruta) => ipcRenderer.invoke(CANALES.ponerAlDia, ruta),
+  abrirCarpetaSkill: (id) => ipcRenderer.invoke(CANALES.abrirCarpetaSkill, id),
+  carpetaSkill: (id, carpeta) => ipcRenderer.invoke(CANALES.carpetaSkill, id, carpeta),
+  archivoSkill: (id, archivo) => ipcRenderer.invoke(CANALES.archivoSkill, id, archivo),
+  alCambiarSkills: (f) => escuchar<null>(CANALES.skillsCambiaron, () => f()),
+  ideas: () => ipcRenderer.invoke(CANALES.ideas),
+}
+
+contextBridge.exposeInMainWorld('iridium', api)

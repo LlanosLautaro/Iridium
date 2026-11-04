@@ -1,0 +1,120 @@
+<!doctype html>
+<!-- Maqueta de la ventana de Ajustes (módulo Apariencia, AJ-W1 en modulos/apariencia/ux.md). Detrás, una captura real
+     de Iridium en el tema Carbón (ajustes-fondo.png, la saca tools/maqueta-ajustes.ts). La sección se elige con #perfil,
+     #ia o #apariencia; ?tema=iridium la muestra con el tema de siempre. -->
+<html lang="es" data-tema="carbon">
+<head>
+<meta charset="utf-8">
+<title>Iridium · Ajustes (maqueta)</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font: var(--tam-base)/1.5 var(--ui); color: var(--texto); background: var(--fondo) url("ajustes-fondo.png") center / cover no-repeat; overflow: hidden; }
+  .velo { position: fixed; inset: 0; background: rgb(0 0 0 / .55); display: grid; place-items: center; }
+  .ventana { width: 860px; height: 600px; max-width: calc(100vw - 48px); max-height: calc(100vh - 48px); display: grid; grid-template-columns: 210px 1fr;
+    background: var(--fondo); border: 1px solid var(--borde-fuerte); border-radius: 12px; box-shadow: 0 24px 64px rgb(0 0 0 / .6); overflow: hidden; }
+  nav { background: var(--lateral); border-right: 1px solid var(--borde); padding: var(--esp-lg) var(--esp-sm); }
+  nav h2 { font-size: var(--tam-chico); font-weight: 600; color: var(--texto-3); margin: 0 var(--esp-sm) var(--esp-sm); letter-spacing: .02em; }
+  nav a { display: flex; align-items: center; gap: 10px; padding: 7px var(--esp-sm); border-radius: var(--radio-fila); color: var(--texto-2); text-decoration: none; }
+  nav a:hover { background: var(--hover); color: var(--texto); }
+  nav a[aria-current="page"] { background: var(--sel-fondo); color: var(--texto); }
+  nav svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+  main { padding: var(--esp-lg) 28px; overflow: auto; position: relative; }
+  .cerrar { position: absolute; top: 14px; right: 14px; width: 28px; height: 28px; border: 0; border-radius: var(--radio-control); background: none; color: var(--texto-2); font-size: 16px; cursor: pointer; }
+  .cerrar:hover { background: var(--hover); color: var(--texto); }
+  h1 { font-size: 17px; font-weight: 600; margin: 0 0 var(--esp-lg); }
+  section { display: none; } section.activa { display: block; }
+  .campo-ajuste { padding: var(--esp-md) 0; border-bottom: 1px solid var(--borde); display: grid; grid-template-columns: 1fr 280px; gap: var(--esp-lg); align-items: start; }
+  .campo-ajuste:last-child { border-bottom: 0; }
+  .campo-ajuste .r { font-weight: 600; }
+  .campo-ajuste .d { color: var(--texto-3); font-size: var(--tam-chico); margin-top: 2px; }
+  input[type="text"] { width: 100%; font: inherit; color: var(--texto); background: var(--caja); border: 1px solid var(--borde-control); border-radius: var(--radio-control); padding: 6px 10px; }
+  input[type="text"]::placeholder { color: var(--texto-3); }
+  input[type="text"]:focus { outline: none; border-color: var(--primario); box-shadow: 0 0 0 3px var(--seleccion); }
+  .tonos { grid-column: 1 / -1; display: grid; gap: 6px; margin-top: var(--esp-sm); }
+  .tono { display: grid; grid-template-columns: 18px 130px 1fr; gap: 10px; align-items: center; padding: 9px 12px; border: 1px solid var(--borde); border-radius: var(--radio-bloque); background: var(--caja); cursor: pointer; }
+  .tono:hover { border-color: var(--borde-fuerte); }
+  .tono.sel { border-color: var(--primario); background: var(--sel-fondo); }
+  .tono input { accent-color: var(--primario); margin: 0; }
+  .tono .d { margin: 0; }
+  .temas { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--esp-md); margin-top: var(--esp-sm); }
+  .tema { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--caja); padding: 8px; cursor: pointer; text-align: left; color: inherit; font: inherit; }
+  .tema:hover { border-color: var(--borde-fuerte); }
+  .tema.sel { border-color: var(--primario); box-shadow: 0 0 0 1px var(--primario); }
+  .tema img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: left top; border-radius: 6px; }
+  .tema .n { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px 2px; font-weight: 600; }
+  .tema .n span { font-weight: 400; color: var(--texto-3); font-size: var(--tam-chico); }
+  .tema .ok { color: var(--primario-texto); font-size: var(--tam-chico); font-weight: 600; }
+  .pie { color: var(--texto-3); font-size: var(--tam-chico); margin-top: var(--esp-md); }
+</style>
+</head>
+<body>
+<div class="velo">
+  <div class="ventana" role="dialog" aria-modal="true" aria-label="Ajustes">
+    <nav aria-label="Secciones de Ajustes">
+      <h2>Ajustes</h2>
+      <a href="#perfil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Perfil</a>
+      <a href="#ia"><svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.3L20 9l-4.5 3.8L17 19l-5-3-5 3 1.5-6.2L4 9l5.8-.7z"/></svg>IA</a>
+      <a href="#apariencia"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor"/></svg>Apariencia</a>
+    </nav>
+    <main>
+      <button class="cerrar" type="button" aria-label="Cerrar">✕</button>
+
+      <section id="perfil">
+        <h1>Perfil</h1>
+        <div class="campo-ajuste">
+          <div><div class="r">Tu nombre</div><div class="d">Se ve en la conversación en lugar de «Vos».</div></div>
+          <input type="text" placeholder="Cómo querés que te llame">
+        </div>
+      </section>
+
+      <section id="ia">
+        <h1>IA</h1>
+        <div class="campo-ajuste">
+          <div><div class="r">Nombre</div><div class="d">Opcional. Si queda vacío, la conversación dice «IA».</div></div>
+          <input type="text" placeholder="IA">
+        </div>
+        <div class="campo-ajuste">
+          <div><div class="r">Tono</div><div class="d">Los estilos de respuesta de Claude Code. Vale para las sesiones de Iridium; VS Code y la terminal siguen con el suyo.</div></div>
+          <div></div>
+          <div class="tonos" role="radiogroup" aria-label="Tono">
+            <label class="tono sel"><input type="radio" name="tono" checked><span>Normal</span><span class="d">Responde directo, sin explicaciones de más.</span></label>
+            <label class="tono"><input type="radio" name="tono"><span>Explicativo</span><span class="d">Suma el porqué de lo que hace mientras trabaja.</span></label>
+            <label class="tono"><input type="radio" name="tono"><span>Aprendizaje</span><span class="d">Explica y te deja partes chicas para hacer vos.</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section id="apariencia">
+        <h1>Apariencia</h1>
+        <div class="r" style="font-weight:600">Tema</div>
+        <div class="temas" role="radiogroup" aria-label="Tema">
+          <button type="button" class="tema" data-t="iridium"><img src="alternativas/temas/actual-2-proyecto.png" alt="">
+            <div class="n">Iridium <span>verde, Chakra Petch</span></div></button>
+          <button type="button" class="tema" data-t="carbon"><img src="alternativas/temas/a2-grafito-carbon-2-proyecto.png" alt="">
+            <div class="n">Carbón <span>gris oscuro, letra del sistema</span></div></button>
+        </div>
+        <p class="pie">El tema cambia en el momento, también lo que está detrás de esta ventana.</p>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+  const tema = new URLSearchParams(location.search).get('tema') ?? 'carbon'
+  if (tema === 'iridium') document.documentElement.removeAttribute('data-tema')
+  document.querySelectorAll('.tema').forEach((b) => {
+    b.classList.toggle('sel', b.dataset.t === tema)
+  })
+  const mostrar = () => {
+    const id = (location.hash || '#apariencia').slice(1)
+    document.querySelectorAll('section').forEach((s) => s.classList.toggle('activa', s.id === id))
+    document.querySelectorAll('nav a').forEach((a) => { if (a.hash === `#${id}`) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current') })
+  }
+  addEventListener('hashchange', mostrar); mostrar()
+  document.querySelectorAll('.tono').forEach((t) => t.addEventListener('click', () => {
+    document.querySelectorAll('.tono').forEach((x) => x.classList.toggle('sel', x === t))
+  }))
+</script>
+</body>
+</html>

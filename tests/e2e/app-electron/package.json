@@ -1,0 +1,6 @@
+{
+  "name": "luna",
+  "private": true,
+  "main": "main.mjs",
+  "type": "module"
+}

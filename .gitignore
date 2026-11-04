@@ -1,0 +1,13 @@
+/node_modules/
+out/
+release/
+test-results/
+playwright-report/
+spikes/**/node_modules/
+spikes/**/sandbox-*/
+.impeccable/review/
+tools/salida/
+tests/e2e/.tmp/
+release-tmp/
+# Las capturas de la Revisión muestran los proyectos de quien la usa: quedan en la PC, no en el repo (D-082).
+docs/revision/*.png

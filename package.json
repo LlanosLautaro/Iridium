@@ -1,0 +1,58 @@
+{
+  "name": "iridium",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Iridium: plataforma de desarrollo personal donde el usuario dirige con sus ideas y la IA desarrolla.",
+  "main": "out/main/index.js",
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "set ELECTRON_RUN_AS_NODE=&& electron-vite dev",
+    "build": "electron-vite build && node extension/armar.mjs",
+    "start": "set ELECTRON_RUN_AS_NODE=&& electron-vite preview",
+    "dist": "electron-vite build && node extension/armar.mjs && electron-builder --win --config electron-builder.yml",
+    "actualizar": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/actualizar.ps1",
+    "publicar": "node --experimental-strip-types tools/publicar.ts",
+    "volver": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/volver.ps1",
+    "extension": "node extension/armar.mjs && node --experimental-strip-types tools/instalar-extension.ts",
+    "claude": "node --experimental-strip-types tools/claude.ts",
+    "acceso-directo": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/acceso-directo.ps1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "cobertura": "vitest run --coverage",
+    "e2e": "electron-vite build && node extension/armar.mjs && playwright test",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.extension.json",
+    "lint": "biome check .",
+    "format": "biome check --write ."
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.309",
+    "@jridgewell/trace-mapping": "0.3.31",
+    "markdown-it": "15.0.3",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "5.2.0",
+    "@vitest/coverage-v8": "5.0.3",
+    "electron": "44.10.1",
+    "electron-builder": "26.18.0",
+    "electron-vite": "5.0.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "7.0.2",
+    "vite": "7.3.7",
+    "vitest": "5.0.3",
+    "zustand": "5.0.15"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  }
+}

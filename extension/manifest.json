@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Iridium · Revisión de la app",
+  "description": "Señalá una parte de tu app en desarrollo y comentala: el comentario llega a su proyecto en Iridium.",
+  "version": "0.2.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxIZ3MrI3bjYKkTcktDTCuuHdm8R20fFg4zMgXLyCPW5MhKKO+CXEOy1aL5MBX7t9aoQlosA5SDqWLOsmN7BmbkESDDWXHUlPyHkniPgLoXXPWyH6C87k+WQk38qstWVtAL8o28qwClfAC/2ywrvNhSO2e/H8Y5Xx7JQCJKa4CkgQ+UQQgSuLnjwyUo0I9bx8KHWrZ7DXlb6FM4SyAM9AOGTpHoL6ZEz496FR78kZJqxt7kn37M1gsoImbxxFpHTFjOo1uzw127y1jTGPxg/GA30RmqWO8v8697pifx/okgO8Vc4p6vqVibA5kDJtDJnoGhXn8Xx0/2gCffGpHRqZ7wIDAQAB",
+  "icons": { "128": "icono.png" },
+  "action": {
+    "default_title": "Revisión de Iridium: comentar esta app (F8)",
+    "default_icon": { "128": "icono.png" }
+  },
+  "background": { "service_worker": "js/sw.js" },
+  "permissions": ["storage", "alarms"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["http://localhost/*", "http://127.0.0.1/*", "http://[::1]/*", "file:///*"],
+      "js": ["js/pagina.js"],
+      "world": "MAIN",
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": ["http://localhost/*", "http://127.0.0.1/*", "http://[::1]/*", "file:///*"],
+      "js": ["js/selector.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["fuentes/*.woff2"],
+      "matches": ["http://localhost/*", "http://127.0.0.1/*", "http://[::1]/*", "file:///*"]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ronda 3 de estilo</title>
+<style>
+:root { color-scheme: dark; --fondo: #08090a; --texto: #e2e6e4; --texto-2: #9aa4a0; --borde: #23282a; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--fondo); color: var(--texto); font: 14px/1.5 "Segoe UI", system-ui, sans-serif; padding: 24px 28px 40px; }
+h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+p.sub { color: var(--texto-2); margin-bottom: 20px; }
+.grilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+figure { border: 1px solid var(--borde); }
+.marco { position: relative; aspect-ratio: 1440 / 900; overflow: hidden; }
+.marco iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; pointer-events: none; }
+figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--borde); }
+figcaption b { font-weight: 600; }
+figcaption span { color: var(--texto-2); font-size: 13px; }
+a { color: #6fe3cf; }
+</style>
+</head>
+<body>
+<h1>Ronda 3: E4 (calma) con piezas de E3, sin brillo de fondo</h1>
+<p class="sub">Las cuatro parten de E4 y suman de a una las piezas de E3. Rondas anteriores: <a href="ronda-1.html">1</a> · <a href="ronda-2.html">2</a>. Abrí cada una para tocarla: el botón de panel (o Ctrl+B) despliega el mapa.</p>
+<div class="grilla">
+  <figure><div class="marco"><iframe src="f1-redondeada.html?panel&sinaviso" title="F1 · Redondeada"></iframe></div><figcaption><b>F1 · Redondeada</b><span>E4 + esquinas redondeadas · <a href="f1-redondeada.html">abrir</a></span></figcaption></figure>
+  <figure><div class="marco"><iframe src="f2-medidores-finos.html?panel&sinaviso" title="F2 · Medidores finos"></iframe></div><figcaption><b>F2 · Medidores finos</b><span>F1 + medidores finos con brillo · <a href="f2-medidores-finos.html">abrir</a></span></figcaption></figure>
+  <figure><div class="marco"><iframe src="f3-rotulos.html?panel&sinaviso" title="F3 · Rótulos"></iframe></div><figcaption><b>F3 · Rótulos</b><span>F2 + rótulos en mayúsculas espaciadas · <a href="f3-rotulos.html">abrir</a></span></figcaption></figure>
+  <figure><div class="marco"><iframe src="f4-tarjetas.html?panel&sinaviso" title="F4 · Tarjetas"></iframe></div><figcaption><b>F4 · Tarjetas</b><span>F2 + tarjetas más suaves y selección redondeada · <a href="f4-tarjetas.html">abrir</a></span></figcaption></figure>
+</div>
+<script>
+function escalar() { document.querySelectorAll(".marco").forEach(m => m.querySelector("iframe").style.transform = `scale(${m.clientWidth / 1440})`); }
+addEventListener("resize", escalar); escalar();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+== 1) Dos sesiones a la vez ==
+[1.8s] A: estado → running
+[1.8s] B: estado → running
+[1.9s] A: init — apiKeySource=none session=952b93e7
+[1.9s] B: init — apiKeySource=none session=7e3def98
+[2.7s] B: rate_limit_event {"status":"allowed","resetsAt":1792710600,"rateLimitType":"five_hour","overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"unifiedWindows":{"five_hour":{"utilization":0.06,"resetsAt":1792710600},"seven_day":{"utilization":0.19,"resetsAt":1793145600}}}
+[2.9s] A: rate_limit_event {"status":"allowed","resetsAt":1792710600,"rateLimitType":"five_hour","overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"unifiedWindows":{"five_hour":{"utilization":0.06,"resetsAt":1792710600},"seven_day":{"utilization":0.19,"resetsAt":1793145600}}}
+[3.9s] B: estado → requires_action
+[3.9s] B: PERMISO pedido: Write {"file_path":"C:\\Proyectos\\Centro de Desar
+[3.9s] B: rate_limit_event {"status":"allowed","resetsAt":1792710600,"rateLimitType":"five_hour","overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"unifiedWindows":{"five_hour":{"utilization":0.07,"resetsAt":1792710600},"seven_day":{"utilization":0.19,"resetsAt":1793145600}}}
+[4.2s] A: estado → requires_action
+[4.2s] A: PERMISO pedido: Bash {"command":"printf 'hola desde proyecto-a' > \"D:/Carpeta Personal/Herramientas 
+[4.2s] A: rate_limit_event {"status":"allowed","resetsAt":1792710600,"rateLimitType":"five_hour","overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"unifiedWindows":{"five_hour":{"utilization":0.07,"resetsAt":1792710600},"seven_day":{"utilization":0.19,"resetsAt":1793145600}}}
+[7.9s] B: PERMISO concedido
+[7.9s] B: estado → running
+[8.2s] A: PERMISO concedido
+[8.2s] A: estado → running
+[9.1s] B: texto: listo
+[9.1s] B: rate_limit_event {"status":"allowed","resetsAt":1792710600,"rateLimitType":"five_hour","overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"unifiedWindows":{"five_hour":{"utilization":0.06,"resetsAt":1792710600},"seven_day":{"utilization":0.19,"resetsAt":1793145600}}}
+[9.2s] B: resultado: success, turnos=2, costo equivalente API=$0.0078
+[9.2s] B: estado → idle
+[11.1s] A: texto: listo
+[11.1s] A: rate_limit_event {"status":"allowed","resetsAt":1792710600,"rateLimitType":"five_hour","overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"unifiedWindows":{"five_hour":{"utilization":0.06,"resetsAt":1792710600},"seven_day":{"utilization":0.19,"resetsAt":1793145600}}}
+[11.1s] A: resultado: success, turnos=2, costo equivalente API=$0.0078
+[11.1s] A: estado → idle
+archivos: hola desde proyecto-a | hola desde proyecto-b
+
+== 2) Retomar la sesión A en otro proceso lógico ==
+[13.0s] A2: estado → running
+[13.1s] A2: init — apiKeySource=none session=952b93e7
+[14.5s] A2: texto: Creé `proyecto-a.txt` con el texto "hola desde proyecto-a".
+[14.5s] A2: rate_limit_event {"status":"allowed","resetsAt":1792710600,"rateLimitType":"five_hour","overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"unifiedWindows":{"five_hour":{"utilization":0.06,"resetsAt":1792710600},"seven_day":{"utilization":0.19,"resetsAt":1793145600}}}
+[14.5s] A2: resultado: success, turnos=1, costo equivalente API=$0.0084
+[14.5s] A2: estado → idle
+
+== 3) Uso de la suscripción (/usage) ==
+[16.5s] U: estado → running
+[17.1s] U: init — apiKeySource=none session=907b585c
+[17.1s] U: texto: You are currently using your subscription to power your Claude Code usage
+
+Current session: 7% used · resets Oct 22, 8:09pm (America/Argentina/Buenos_Aires)
+Current week (all models): 20% used · resets Oct 27, 8:59pm (America/Argentina/Buenos_Aires)
+
+What's contributing to your limits usage?
+Approxi
+[17.1s] U: resultado: success, turnos=0, costo equivalente API=$0.0000
+[17.1s] U: estado → idle
+7 sesiones en C:/Proyectos/Centro de Desarrollo
+2026-10-22T23:06 87b9f309 | sigamos
+2026-10-22T18:08 0c88a320 | Separación de proyectos y ejecución paralela
+2026-10-22T03:07 0f86c449 | Extensión para comentar elementos renderizados
+2026-10-22T00:31 bc66b121 | Diagrama de hitos y competidores
+2026-10-22T00:31 f51012fb | Continuar con esto

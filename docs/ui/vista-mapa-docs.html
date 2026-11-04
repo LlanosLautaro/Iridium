@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa y docs</title>
+<style>
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("fuentes/jetbrains-mono-100-800.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+
+:root { color-scheme: dark;
+  /* Superficies */
+  --fondo: #0a0f0e; --lateral: #070b0a; --barra: #060908; --elevado: #0e1513; --hover: #121c19;
+  --caja: #0f1714; --medidor-fondo: #17241f;
+  --borde: #18241f; --borde-suave: #121b18; --borde-fuerte: #24362f;
+  /* Texto */
+  --texto: #d9e6e0; --texto-2: #a3b8b0; --texto-3: #74908a;
+  /* Señales: verde activo y hecho, ámbar lo que espera del usuario, rojo error */
+  --primario: #3ee6a8; --primario-texto: #5cecb8; --trabaja: #3ee6a8; --ok: #3ee6a8;
+  --espera: #f5b13d; --espera-borde: #4a3c1a; --espera-fondo: #12170f;
+  --error: #ff5f57; --sobre-color: #0a0d0b;
+  --seleccion: #3ee6a844; --sel-fondo: #0f241d;
+  /* Letra: Chakra Petch para leer, JetBrains Mono solo para códigos y números */
+  --ui: "Chakra Petch", "Segoe UI", sans-serif; --mono: "JetBrains Mono", Consolas, monospace;
+  --tam-base: 13.5px; --tam-lectura: 15px; --tam-chico: 12.5px;
+  /* Esquinas */
+  --radio-tarjeta: 10px; --radio-control: 5px;
+  --sale: cubic-bezier(.16, 1, .3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body { background: var(--fondo); color: var(--texto); font: 400 var(--tam-base)/1.5 var(--ui); font-variant-numeric: tabular-nums; min-width: 1024px; overflow: hidden; }
+::selection { background: var(--seleccion); color: var(--texto); }
+:focus-visible { outline: 1px solid var(--primario); outline-offset: -1px; }
+* { scrollbar-width: thin; scrollbar-color: var(--borde-fuerte) transparent; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.ic { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+code, .cod { font-family: var(--mono); font-size: 12.5px; color: var(--texto-2); }
+a.cod { color: var(--texto-2); text-decoration: underline; text-decoration-color: var(--borde-fuerte); text-underline-offset: 3px; }
+.gira { animation: gira 1.4s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+
+.app { display: grid; grid-template-columns: 52px 1fr; grid-template-rows: 40px 1fr 28px; height: 100vh; }
+.actividad { grid-row: 1 / 3; background: var(--lateral); border-right: 1px solid var(--borde); display: flex; flex-direction: column; align-items: center; padding-bottom: 6px; }
+.marca-app { width: 52px; height: 40px; display: grid; place-items: center; border-bottom: 1px solid var(--borde); color: var(--primario); }
+.act { position: relative; width: 52px; height: 48px; display: grid; place-items: center; color: var(--texto-3); }
+.act .ic { width: 21px; height: 21px; }
+.act:hover { color: var(--texto); }
+.act.activo { color: var(--primario); }
+.act.activo::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 2px; background: var(--primario); }
+.act .badge { position: absolute; right: 8px; bottom: 8px; min-width: 17px; height: 17px; padding: 0 4px; display: grid; place-items: center; border-radius: var(--radio-control); background: var(--espera); color: var(--sobre-color); font: 700 11px/1 var(--mono); }
+.act.abajo { margin-top: auto; }
+
+.sesiones { grid-column: 2; display: flex; align-items: stretch; background: var(--barra); border-bottom: 1px solid var(--borde); min-width: 0; }
+.ses { display: flex; align-items: center; padding-right: 8px; border-right: 1px solid var(--borde); color: var(--texto-3); white-space: nowrap; position: relative; }
+.ses:hover { color: var(--texto-2); background: var(--hover); }
+.ses.activa { background: var(--fondo); color: var(--texto); }
+.ses.activa::before { content: ""; position: absolute; left: 10px; right: 10px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: var(--primario); }
+.ses .pestana { align-self: stretch; display: flex; align-items: center; gap: 8px; padding: 0 6px 0 14px; }
+.ses .nom { font-weight: 600; }
+.ses .cerrar { width: 22px; height: 22px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.ses .cerrar .ic { width: 13px; height: 13px; }
+.ses .cerrar:hover { color: var(--texto); background: var(--hover); }
+.sesiones .reloj { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 16px; color: var(--texto-3); font-size: var(--tam-chico); }
+.sesiones .reloj::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--primario); }
+.sesiones .reloj time { font-family: var(--mono); font-size: 12px; }
+
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 7px; border: 1px solid color-mix(in oklab, currentColor 45%, transparent); border-radius: var(--radio-control); font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; white-space: nowrap; }
+.chip .ic { width: 12px; height: 12px; }
+.chip.trab { color: var(--trabaja); }
+.chip.espera { color: var(--espera); }
+.chip.error { color: var(--error); }
+.chip.ok { color: var(--ok); }
+
+.trabajo { grid-column: 2; display: flex; flex-direction: column; min-height: 0; }
+.migas { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 10px 0 20px; flex: none; color: var(--texto-3); border-bottom: 1px solid var(--borde-suave); font-size: var(--tam-chico); }
+.migas .actual { color: var(--primario); font-weight: 600; }
+.migas .ic { width: 13px; height: 13px; }
+.migas .chip { margin-left: 10px; border-radius: 11px; }
+.migas .herr { margin-left: auto; display: flex; gap: 4px; }
+.btn-ic { width: 30px; height: 30px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.btn-ic:hover { background: var(--hover); color: var(--texto); }
+.btn-ic[aria-pressed="true"] { color: var(--primario); }
+
+.zonas { flex: 1; display: flex; min-height: 0; }
+.principal { flex: 1; min-width: 420px; container-type: inline-size; display: flex; flex-direction: column; min-height: 0; }
+.tirador { flex: none; width: 5px; margin: 0 -2px; cursor: col-resize; position: relative; z-index: 2; }
+.tirador::after { content: ""; position: absolute; left: 2px; top: 0; bottom: 0; width: 1px; background: var(--borde); }
+.tirador:hover::after, .tirador.arrastra::after, .tirador:focus-visible::after { background: var(--primario); }
+.tirador:focus-visible { outline: 0; }
+.panel-der { flex: none; width: var(--ancho, 340px); min-width: 260px; max-width: 60%; background: var(--lateral); display: flex; flex-direction: column; min-height: 0; animation: abre .2s var(--sale); }
+@keyframes abre { from { opacity: 0; transform: translateX(12px); } }
+.zonas.sin-panel .panel-der, .zonas.sin-panel .tirador { display: none; }
+
+.cab-panel { display: flex; align-items: center; height: 38px; padding: 0 8px 0 16px; flex: none; border-bottom: 1px solid var(--borde-suave); }
+.cab-panel .tabs { display: flex; gap: 16px; }
+.cab-panel .tabs button { height: 38px; font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; color: var(--texto-3); border-bottom: 2px solid transparent; }
+.cab-panel .tabs button[aria-selected="true"] { color: var(--primario); border-bottom-color: var(--primario); }
+.cab-panel .der { margin-left: auto; }
+
+/* La conversación se apoya en el compositor: el último turno queda justo arriba */
+.hilo { flex: 1; overflow-y: auto; padding: 20px 32px 24px; display: flex; flex-direction: column; }
+.hilo > * { width: 100%; max-width: 780px; margin-left: auto; margin-right: auto; }
+.hilo > :first-child { margin-top: auto; }
+.turno { padding: 14px 0; }
+.turno + .turno { border-top: 1px solid var(--borde-suave); }
+.quien { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font: 600 13px/1 var(--ui); letter-spacing: .02em; color: var(--texto-2); }
+.quien.ia { color: var(--primario); }
+.quien time { margin-left: auto; font: 400 12px/1 var(--mono); color: var(--texto-3); letter-spacing: 0; }
+.turno p { font-size: var(--tam-lectura); line-height: 1.65; color: var(--texto); max-width: 72ch; }
+.turno p + p, .herramientas + p { margin-top: 8px; }
+.turno p code { padding: 1px 5px; background: var(--elevado); color: var(--primario-texto); }
+
+.herramientas { margin: 8px 0 4px; }
+.herramientas > button { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 6px 0 2px; color: var(--texto-3); font-size: var(--tam-chico); }
+.herramientas > button:hover { color: var(--texto-2); }
+.herramientas > button .ic { width: 13px; height: 13px; transition: transform .15s; }
+.herramientas[open] > button .ic { transform: rotate(90deg); }
+.herramientas ul { list-style: none; padding: 4px 0 0 20px; display: none; }
+.herramientas[open] ul { display: grid; gap: 3px; }
+.herramientas li { display: flex; gap: 8px; color: var(--texto-3); font-size: var(--tam-chico); }
+.ahora { display: flex; align-items: center; gap: 8px; margin-top: 10px; color: var(--trabaja); font-size: var(--tam-chico); }
+.ahora .ic { width: 13px; height: 13px; }
+
+.pedido { margin: 14px 0 4px; max-width: 72ch; border: 1px solid var(--espera-borde); border-radius: var(--radio-tarjeta); background: var(--espera-fondo); padding: 14px 16px; display: grid; gap: 8px; }
+.pedido .meta { display: flex; align-items: center; gap: 10px; }
+.pedido .meta .q { font: 700 12.5px/1 var(--mono); color: var(--texto); }
+.pedido h3 { font-size: 16px; font-weight: 600; line-height: 1.4; }
+.pedido .ctx { font-size: var(--tam-chico); color: var(--texto-2); }
+.pedido .acc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+
+.btn { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 14px; border-radius: var(--radio-control); font: 600 13px/1 var(--ui); letter-spacing: .02em; }
+.btn.primario { background: var(--espera); color: var(--sobre-color); }
+.btn.primario:hover { filter: brightness(1.1); }
+.btn.secundario { border: 1px solid var(--borde-fuerte); color: var(--texto-2); }
+.btn.secundario:hover { color: var(--texto); border-color: var(--texto-3); }
+.btn .ic { width: 12px; height: 12px; }
+.btn.detener .ic { fill: currentColor; stroke: none; }
+
+.compositor { flex: none; padding: 10px 32px 16px; }
+.compositor .caja { max-width: 780px; margin: 0 auto; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-tarjeta); background: var(--caja); }
+.compositor .caja:focus-within { border-color: var(--primario); }
+.compositor .prompt { display: flex; align-items: flex-start; gap: 8px; padding: 12px 14px 4px; }
+.compositor .prompt .sig { color: var(--primario); font: 700 14px/1.5 var(--mono); }
+.compositor textarea { flex: 1; resize: none; border: 0; outline: 0; background: none; color: var(--texto); font: 400 14px/1.5 var(--ui); height: 44px; caret-color: var(--primario); }
+.compositor textarea::placeholder { color: var(--texto-3); }
+.compositor .fila { display: flex; align-items: center; gap: 8px; padding: 4px 8px 8px 14px; }
+.compositor .ayuda { color: var(--texto-3); font-size: var(--tam-chico); }
+.compositor .fila .der { margin-left: auto; display: flex; gap: 6px; }
+
+.arbol { flex: 1; overflow-y: auto; padding: 8px 0 12px; }
+.arbol .seccion { display: flex; justify-content: space-between; padding: 6px 14px 8px 16px; font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; color: var(--texto-2); }
+.arbol .seccion .cuenta { font-family: var(--mono); font-size: 12px; }
+.nodo { width: 100%; display: flex; align-items: center; gap: 8px; height: 27px; padding: 0 14px 0 var(--sangria, 10px); color: var(--texto-2); text-align: left; white-space: nowrap; font-size: 13px; }
+.nodo:hover { background: var(--hover); }
+.nodo.sel { margin: 0 6px; width: calc(100% - 12px); border-radius: 6px; background: var(--sel-fondo); color: var(--texto); }
+.nodo .chev { width: 13px; height: 13px; color: var(--texto-3); transition: transform .12s; }
+.nodo[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.nodo .sin-chev { width: 13px; flex: none; }
+.nodo .num { color: var(--texto-3); min-width: 18px; font: 500 12px/1 var(--mono); }
+.nodo .nombre { overflow: hidden; text-overflow: ellipsis; }
+.nodo .estado { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 400; color: var(--texto-3); }
+.nodo .estado .ic { width: 13px; height: 13px; }
+.nodo.hito-actual { color: var(--texto); font-weight: 600; }
+.ic.ok { color: var(--ok); }
+.ic.pend { color: var(--texto-3); }
+.ic.trab { color: var(--trabaja); }
+.hijos { display: none; }
+.hijos.abierto { display: block; }
+
+.docs { flex: 1; overflow-y: auto; padding: 12px 16px 16px; }
+.docs .ruta { font: 500 12px/1 var(--mono); color: var(--texto-3); }
+.docs h3 { font-size: 16px; font-weight: 600; margin: 12px 0 8px; color: var(--texto); }
+.docs p, .docs li { font-size: 13.5px; line-height: 1.6; color: var(--texto-2); }
+.docs ul { padding-left: 18px; margin-top: 6px; }
+
+.estado-barra { grid-column: 1 / 3; display: flex; align-items: center; gap: 4px; background: var(--barra); border-top: 1px solid var(--borde); padding: 0 12px; font-size: var(--tam-chico); color: var(--texto-2); }
+.estado-barra .it { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 8px; white-space: nowrap; }
+.estado-barra .der { margin-left: auto; display: flex; gap: 6px; }
+/* Los medidores son lo único con brillo */
+.medidor .barra { position: relative; display: inline-block; width: 72px; height: 6px; border-radius: 3px; overflow: hidden; background: var(--medidor-fondo); }
+.medidor .barra b { position: absolute; inset: 0 auto 0 0; width: var(--v); border-radius: 3px; background: var(--medidor, var(--primario)); box-shadow: 0 0 8px var(--medidor, var(--primario)); }
+.medidor .pc { font: 500 12px/1 var(--mono); color: var(--texto); min-width: 34px; }
+
+/* Abajo a la derecha (D-031); con el panel cerrado sube para no tapar el compositor */
+.aviso { position: fixed; right: 10px; bottom: 40px; width: 320px; background: var(--elevado); border: 1px solid var(--espera-borde); border-radius: var(--radio-tarjeta); box-shadow: 0 6px 14px oklch(0 0 0 / .5); padding: 12px 14px; display: grid; grid-template-columns: 18px 1fr auto; gap: 4px 10px; animation: llega .3s var(--sale) both .5s; transition: bottom .2s var(--sale); }
+body.sin-panel .aviso { bottom: 172px; }
+/* Mientras hay aviso y el panel está cerrado, la columna se corre para dejarle 340 px libres a la derecha */
+body.sin-panel.con-aviso .hilo, body.sin-panel.con-aviso .compositor { padding-right: max(32px, 1492px - 100cqw); transition: padding-right .2s var(--sale); }
+@keyframes llega { from { opacity: 0; transform: translateY(8px); } }
+.aviso > .ic { color: var(--espera); margin-top: 1px; }
+.aviso .t { font-weight: 600; }
+.aviso .d { grid-column: 2; color: var(--texto-2); font-size: var(--tam-chico); }
+.aviso .acc { grid-column: 2 / 4; display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+.oculto { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) { .gira { animation: none !important; } .panel-der, .aviso, .hilo, .compositor { animation: none; transition: none; } }
+
+/* Mapa (W-7, Q-53): dónde está el proyecto y qué sigue. Una línea de hitos y el hito actual; nada de lectura */
+.estado-proy { flex: 1; overflow-y: auto; padding: 20px 24px 72px; container-type: inline-size; }
+.estado-int { max-width: 880px; margin: 0 auto; display: grid; gap: 16px; }
+.linea { display: grid; gap: 8px; }
+.linea .cab { display: flex; align-items: baseline; gap: 10px; }
+.linea .cab h3 { font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; color: var(--texto-2); }
+.linea .cab .cuenta { margin-left: auto; font: 500 12px/1 var(--mono); color: var(--texto-3); }
+.hitos { display: flex; gap: 4px; }
+.h { position: relative; flex: 1; min-width: 0; height: 30px; display: grid; place-items: center; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto-3); font: 500 12px/1 var(--mono); }
+.h:hover { border-color: var(--texto-3); color: var(--texto); }
+.h.completo { border-color: color-mix(in oklab, var(--primario) 30%, var(--borde)); background: var(--sel-fondo); color: var(--primario); }
+.h.encurso { border-color: var(--primario); color: var(--primario); font-weight: 700; }
+.h.reabierto { border-color: var(--espera-borde); color: var(--espera); }
+.h.saltado { border-style: dashed; color: var(--texto-3); }
+.h.raro { border-style: dashed; color: var(--texto-2); }
+/* El hito que se está mirando lleva una raya debajo */
+.h[aria-current="true"]::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: -7px; height: 2px; border-radius: 2px; background: var(--texto-2); }
+.h.encurso[aria-current="true"]::after { background: var(--primario); }
+.leyenda-linea { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 4px; color: var(--texto-3); font-size: 12px; }
+.leyenda-linea span { display: inline-flex; align-items: center; gap: 6px; }
+.leyenda-linea i { width: 14px; height: 10px; border-radius: 3px; border: 1px solid var(--borde-fuerte); }
+.leyenda-linea i.completo { background: var(--sel-fondo); border-color: color-mix(in oklab, var(--primario) 30%, var(--borde)); }
+.leyenda-linea i.encurso { border-color: var(--primario); }
+.leyenda-linea i.reabierto { border-color: var(--espera-borde); }
+.leyenda-linea i.saltado { border-style: dashed; }
+.modulos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: var(--tam-chico); color: var(--texto-3); }
+
+.hito-card { display: grid; gap: 18px; padding: 18px 20px; border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--elevado); }
+.hito-card .cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hito-card .cab .num { font: 500 12px/1 var(--mono); color: var(--texto-3); }
+.hito-card .cab h3 { font: 600 17px/1.3 var(--ui); }
+.hito-card .cab .der { margin-left: auto; display: flex; gap: 6px; }
+.hito-card h4 { display: flex; align-items: baseline; gap: 8px; font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; color: var(--texto-3); margin-bottom: 8px; }
+.hito-card h4 .n { font: 500 12px/1 var(--mono); }
+.proximo { padding: 12px 14px; border-radius: 8px; background: var(--caja); border: 1px solid var(--borde-suave); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+.proximo code { font-family: var(--mono); font-size: 12.5px; color: var(--texto-2); }
+.dos { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@container (min-width: 700px) { .dos { grid-template-columns: 1fr 1fr; gap: 18px 32px; } }
+.filas { display: grid; gap: 2px; }
+.fila { display: flex; align-items: center; gap: 10px; min-height: 30px; padding: 4px 8px; margin: 0 -8px; border-radius: 6px; text-align: left; color: var(--texto); font-size: 13.5px; text-decoration: none; min-width: 0; }
+button.fila:hover, a.fila:hover { background: var(--hover); }
+.fila.sel { background: var(--sel-fondo); }
+.fila .t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fila .q { font: 700 12px/1 var(--mono); color: var(--texto); }
+.fila .est { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--texto-3); white-space: nowrap; }
+.fila .est .ic { width: 13px; height: 13px; }
+.fila .hora { font: 400 12px/1 var(--mono); color: var(--texto-3); }
+.fila.ver-mas { color: var(--texto-3); font-size: var(--tam-chico); }
+.vacio { color: var(--texto-3); font-size: var(--tam-chico); }
+.ic.reab { color: var(--espera); }
+.ic.salt { color: var(--texto-3); }
+.sin-guia { margin: 24px auto 0; max-width: 460px; display: grid; gap: 10px; padding: 20px 22px; border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--elevado); }
+.sin-guia h3 { font: 600 16px/1.4 var(--ui); }
+.sin-guia p { color: var(--texto-2); line-height: 1.6; }
+.sin-guia .filas { margin-top: 2px; }
+.sin-guia .fila { font: 500 12.5px/1 var(--mono); color: var(--texto-2); }
+
+/* Docs (W-8, Q-53): un lector liviano. Se llega casi siempre desde un enlace */
+.docs-vista { flex: 1; display: flex; flex-direction: column; min-height: 0; container-type: inline-size; }
+.barra-doc { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px 0 16px; flex: none; border-bottom: 1px solid var(--borde-suave); }
+.barra-doc .der { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.menu { position: relative; }
+.menu > button { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; border-radius: var(--radio-control); color: var(--texto-2); font-size: var(--tam-chico); max-width: 100%; }
+.menu > button:hover, .menu > button[aria-expanded="true"] { background: var(--hover); color: var(--texto); }
+.menu > button .nom { font: 500 12.5px/1 var(--mono); color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu > button .ic { width: 13px; height: 13px; transform: rotate(90deg); }
+.menu .lista { position: absolute; top: 32px; left: 0; z-index: 5; min-width: 240px; max-width: 340px; max-height: 60vh; overflow-y: auto; padding: 4px; border: 1px solid var(--borde-fuerte); border-radius: 8px; background: var(--elevado); box-shadow: 0 6px 14px oklch(0 0 0 / .5); }
+.menu.der-menu .lista { left: auto; right: 0; }
+.menu .lista button { width: 100%; display: block; height: 28px; padding: 0 10px; border-radius: 5px; text-align: left; color: var(--texto-2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.menu .lista button.mono { font: 500 12.5px/1 var(--mono); }
+.menu .lista button:hover { background: var(--hover); color: var(--texto); }
+.menu .lista button[aria-current="true"] { color: var(--primario); }
+.menu .lista button.sub { padding-left: 22px; color: var(--texto-3); font-size: 12.5px; }
+.atras { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; border-radius: var(--radio-control); color: var(--texto-2); font-size: var(--tam-chico); }
+.atras:hover { background: var(--hover); color: var(--texto); }
+.atras[disabled] { opacity: .4; pointer-events: none; }
+.atras .ic { width: 13px; height: 13px; transform: rotate(180deg); }
+.ancho-lectura { display: inline-flex; align-items: center; gap: 2px; padding: 2px; border: 1px solid var(--borde-suave); border-radius: var(--radio-control); }
+.ancho-lectura span { padding: 0 6px 0 4px; color: var(--texto-3); font-size: 12px; }
+.ancho-lectura button { height: 22px; padding: 0 8px; border-radius: 3px; color: var(--texto-3); font-size: 12px; }
+.ancho-lectura button:hover { color: var(--texto); }
+.ancho-lectura button[aria-pressed="true"] { background: var(--sel-fondo); color: var(--primario); }
+@container (max-width: 600px) { .ancho-lectura { display: none; } .barra-doc { padding: 0 8px; } }
+.lectura { flex: 1; overflow-y: auto; padding: 22px 28px 72px; min-width: 0; }
+@container (max-width: 600px) { .lectura { padding: 16px 18px 72px; } }
+.hoja { max-width: var(--hoja, 70ch); margin: 0 auto; }
+.aviso-doc { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 10px 12px; border: 1px dashed var(--borde-fuerte); border-radius: 8px; color: var(--texto-2); font-size: var(--tam-chico); }
+.aviso-doc .ic { color: var(--texto-3); width: 14px; height: 14px; }
+
+/* El texto de un documento: enlaces discretos en el color del texto; el verde queda para lo activo */
+.md h1 { font: 600 19px/1.35 var(--ui); margin: 0 0 12px; }
+.md h2 { font: 600 16.5px/1.35 var(--ui); margin: 28px 0 8px; }
+.md h3 { font: 600 15px/1.4 var(--ui); margin: 22px 0 6px; }
+.md h4 { font: 600 14px/1.4 var(--ui); margin: 16px 0 4px; color: var(--texto-2); }
+.md h1:first-child, .md h2:first-child { margin-top: 0; }
+.md .marcada { animation: marca 2.4s var(--sale); border-radius: 4px; }
+@keyframes marca { 0%, 40% { background: var(--sel-fondo); box-shadow: 0 0 0 6px var(--sel-fondo); } 100% { background: transparent; box-shadow: 0 0 0 6px transparent; } }
+.md p, .md li { font-size: 15px; line-height: 1.7; color: var(--texto); }
+.md p { margin: 8px 0; }
+.md ul, .md ol { padding-left: 20px; margin: 8px 0; }
+.md li + li { margin-top: 3px; }
+.md li.tarea { list-style: none; margin-left: -20px; display: flex; gap: 8px; }
+.md li.tarea .casilla { flex: none; width: 13px; height: 13px; margin-top: 6px; border: 1px solid var(--borde-fuerte); border-radius: 3px; display: grid; place-items: center; }
+.md li.tarea .casilla.si { border-color: var(--texto-3); color: var(--texto-2); }
+.md li.tarea .casilla .ic { width: 11px; height: 11px; stroke-width: 2.4; }
+.md blockquote { margin: 10px 0; padding: 6px 12px; border-radius: 6px; background: var(--caja); }
+.md blockquote p { color: var(--texto-2); font-size: 14px; }
+.md code { font-family: var(--mono); font-size: 13px; color: var(--texto-2); }
+.md strong { font-weight: 600; color: var(--texto); }
+.md a.vinc { color: inherit; text-decoration: underline; text-decoration-style: dotted; text-decoration-color: var(--texto-3); text-underline-offset: 3px; cursor: pointer; }
+.md a.vinc:hover { color: var(--primario-texto); text-decoration-style: solid; text-decoration-color: var(--primario); }
+.md a.vinc[data-cod] { white-space: nowrap; }
+.md a.vinc code { color: inherit; }
+/* Las tablas pueden salirse de la hoja hacia los márgenes, para que las columnas no se aprieten */
+.md .tabla { overflow-x: auto; margin: 12px 0; width: min(calc(100cqw - 56px), 120ch); max-width: none; position: relative; left: 50%; transform: translateX(-50%); }
+.md table { border-collapse: collapse; font-size: 13.5px; min-width: 100%; }
+.md th, .md td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--borde-suave); line-height: 1.5; }
+.md th { color: var(--texto-2); font-weight: 600; border-bottom-color: var(--borde-fuerte); white-space: nowrap; }
+.md tr.oculta { display: none; }
+.md .tabla.abierta tr.oculta { display: table-row; }
+.md .ver-filas { margin-top: 6px; color: var(--texto-2); font-size: var(--tam-chico); text-decoration: underline; text-decoration-color: var(--borde-fuerte); text-underline-offset: 3px; }
+.md .ver-filas:hover { color: var(--texto); }
+.md pre { margin: 10px 0; padding: 10px 12px; border-radius: 8px; background: var(--caja); border: 1px solid var(--borde-suave); overflow-x: auto; font: 400 12.5px/1.5 var(--mono); color: var(--texto-2); }
+.md .diagrama { margin: 10px 0 2px; font-size: 12px; color: var(--texto-3); display: flex; align-items: center; gap: 6px; }
+.md .diagrama + pre { margin-top: 4px; }
+.md hr { border: 0; border-top: 1px solid var(--borde-suave); margin: 18px 0; }
+
+/* La conversación, angosta a la derecha cuando el plan está en el área grande */
+.panel-der .hilo { padding: 14px 18px 16px; }
+.panel-der .turno p { font-size: 14px; }
+.panel-der .compositor { padding: 8px 14px 14px; }
+.cab-conv { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px 0 16px; flex: none; border-bottom: 1px solid var(--borde-suave); font: 600 var(--tam-chico)/1 var(--ui); color: var(--texto-2); }
+.cab-conv .ctx { margin-left: auto; font: 500 12px/1 var(--mono); color: var(--texto-3); }
+
+/* Solo en el prototipo: elegir qué estado de la pantalla se ve */
+.demo { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 4px 4px 4px 12px; border: 1px dashed var(--borde-fuerte); border-radius: 8px; background: var(--barra); font-size: 12px; color: var(--texto-3); z-index: 10; white-space: nowrap; }
+.demo button { height: 24px; padding: 0 8px; border-radius: 4px; color: var(--texto-2); font-size: 12px; }
+.demo button:hover { background: var(--hover); color: var(--texto); }
+.demo button[aria-pressed="true"] { background: var(--sel-fondo); color: var(--primario); }
+.demo .sep { width: 1px; height: 16px; background: var(--borde-fuerte); margin: 0 6px; }
+@media (prefers-reduced-motion: reduce) { .md .marcada { animation: none; background: var(--sel-fondo); } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-proyectos" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-pendientes" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-ajustes" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16"/><path d="M15 4v16"/></symbol>
+  <symbol id="i-cambiar" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-cuadro" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-tilde" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-circulo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></symbol>
+  <symbol id="i-error" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+  <symbol id="i-espera" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5"/><path d="M12 16h.01"/></symbol>
+  <symbol id="i-reabierto" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></symbol>
+  <symbol id="i-saltado" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12h8"/></symbol>
+  <symbol id="i-duda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-lista" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+  <symbol id="i-diagrama" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="5" rx="1"/><rect x="14" y="16" width="7" height="5" rx="1"/><path d="M6.5 8v5.5h11V16"/></symbol>
+  <symbol id="i-marca" viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><path d="m16 15 3 3-3 3" transform="translate(0 -3)"/></symbol>
+</svg>
+
+<div class="app">
+  <nav class="actividad" aria-label="Secciones">
+    <div class="marca-app" aria-hidden="true"><svg class="ic" style="width:22px;height:22px"><use href="#i-marca"/></svg></div>
+    <a class="act activo" href="vista-proyectos.html" title="Proyectos (Ctrl+1)" aria-label="Proyectos"><svg class="ic"><use href="#i-proyectos"/></svg></a>
+    <a class="act" href="vista-pendientes.html" title="Pendientes (Ctrl+2) · 1 sin responder" aria-label="Pendientes, 1 sin responder"><svg class="ic"><use href="#i-pendientes"/></svg><span class="badge">1</span></a>
+    <button class="act abajo" title="Ajustes" aria-label="Ajustes"><svg class="ic"><use href="#i-ajustes"/></svg></button>
+  </nav>
+
+  <div class="sesiones" role="tablist" aria-label="Sesiones abiertas">
+    <div class="ses activa"><button class="pestana" role="tab" aria-selected="true"><span class="nom">Centro de Desarrollo</span><span class="chip trab"><svg class="ic gira"><use href="#i-sync"/></svg>Trabajando</span></button><button class="cerrar" title="Cerrar la sesión (Ctrl+W)" aria-label="Cerrar Centro de Desarrollo"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <div class="ses"><button class="pestana" role="tab" aria-selected="false"><span class="nom">Gamma</span><span class="chip error"><svg class="ic"><use href="#i-error"/></svg>Error</span></button><button class="cerrar" title="Cerrar la sesión (Ctrl+W)" aria-label="Cerrar Gamma"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <span class="reloj">2 sesiones · <time>16:20</time></span>
+  </div>
+
+  <div class="trabajo">
+    <div class="migas">
+      <span>Proyectos</span><svg class="ic"><use href="#i-chev"/></svg>
+      <span class="actual" id="migaProy">Centro de Desarrollo</span><svg class="ic"><use href="#i-chev"/></svg>
+      <span id="migaHito">Hito 6 · UI</span>
+      <div class="herr">
+        <button class="btn-ic" id="cambiar" title="Intercambiar conversación y plan" aria-label="Intercambiar conversación y plan"><svg class="ic"><use href="#i-cambiar"/></svg></button>
+        <button class="btn-ic" id="togglePanel" aria-pressed="true" title="Mostrar u ocultar el panel (Ctrl+B)" aria-label="Mostrar u ocultar el panel"><svg class="ic"><use href="#i-panel"/></svg></button>
+      </div>
+    </div>
+
+    <div class="zonas" id="zonas">
+      <section class="principal" id="ranuraPrincipal">
+        <div id="plan" aria-label="Plan y documentos" style="display:contents">
+          <div class="cab-panel">
+            <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-vista="mapa">Mapa</button><button role="tab" aria-selected="false" data-vista="docs">Docs</button></div>
+          </div>
+          <div class="estado-proy" id="mapa"></div>
+          <div class="docs-vista oculto" id="docs">
+            <div class="barra-doc">
+              <div class="menu" id="menuDocs"><button aria-expanded="false" aria-haspopup="true" title="Elegir otro documento"><span class="nom" id="docNombre">estado.md</span><svg class="ic"><use href="#i-chev"/></svg></button><div class="lista oculto" role="menu"></div></div>
+              <div class="menu" id="menuSecs"><button aria-expanded="false" aria-haspopup="true" title="Ir a una sección de este documento">En esta página<svg class="ic"><use href="#i-chev"/></svg></button><div class="lista oculto" role="menu"></div></div>
+              <div class="der">
+                <span class="ancho-lectura" id="anchoLectura" role="group" aria-label="Ancho del texto"><span>Ancho del texto</span><button data-hoja="60ch">Angosto</button><button data-hoja="70ch">Normal</button><button data-hoja="96ch">Ancho</button></span>
+                <button class="atras" id="atras" disabled title="Volver a donde estabas (Alt+←)"><svg class="ic"><use href="#i-chev"/></svg>Atrás</button>
+              </div>
+            </div>
+            <article class="lectura" id="lectura"></article>
+          </div>
+        </div>
+      </section>
+
+      <div class="tirador" id="tirador" role="separator" tabindex="0" aria-orientation="vertical" aria-label="Ancho del panel (flechas para cambiarlo)" aria-valuemin="260" aria-valuemax="900" aria-valuenow="380"></div>
+
+      <aside class="panel-der" id="ranuraPanel" style="--ancho:380px">
+        <div id="conversacion" aria-label="Conversación con la IA" style="display:contents">
+          <div class="cab-conv">Conversación<span class="ctx" title="Contexto usado de esta conversación">52 %</span></div>
+          <div class="hilo">
+            <div class="turno"><div class="quien">Vos<time>16:12</time></div><p>Aplicá la solución recomendada para docs y mapa.</p></div>
+            <div class="turno">
+              <div class="quien ia">IA<time>16:12</time></div>
+              <p>Rehago el Mapa como estado del proyecto y Docs como lector liviano, como quedó en <code>06-ui.md</code>.</p>
+              <div class="ahora"><svg class="ic gira"><use href="#i-sync"/></svg>Editando vista-mapa-docs.html</div>
+            </div>
+          </div>
+          <div class="compositor">
+            <div class="caja">
+              <div class="prompt"><span class="sig" aria-hidden="true">&gt;</span><textarea placeholder="Escribile a la IA…" aria-label="Mensaje para la IA"></textarea></div>
+              <div class="fila">
+                <div class="der">
+                  <button class="btn secundario detener" title="Detener a la IA (se retoma con Seguí)"><svg class="ic"><use href="#i-cuadro"/></svg>Detener</button>
+                  <button class="btn-ic" title="Enviar" aria-label="Enviar"><svg class="ic"><use href="#i-flecha"/></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="estado-barra">
+    <span class="it"><span class="chip trab"><svg class="ic gira"><use href="#i-sync"/></svg>Trabajando</span></span>
+    <span class="it">Hito 6 · UI</span>
+    <div class="der">
+      <span class="it medidor" title="Contexto usado de esta conversación">Contexto <span class="barra" style="--v:52%"><b></b></span><span class="pc">52 %</span></span>
+      <span class="it medidor" title="Ventana de 5 horas · se libera a las 18:10">5 h <span class="barra" style="--v:47%"><b></b></span><span class="pc">47 %</span></span>
+      <span class="it medidor" title="Semana · se libera el lunes a las 09:00">Semana <span class="barra" style="--v:64%;--medidor:var(--espera)"><b></b></span><span class="pc">64 %</span></span>
+    </div>
+  </footer>
+</div>
+
+<div class="demo" role="group" aria-label="Estado de la pantalla, solo en el prototipo">
+  Mapa:
+  <button data-mapa="normal" aria-pressed="true">Este proyecto</button>
+  <button data-mapa="extremos">Casos extremos</button>
+  <button data-mapa="singuia">Sin estado.md</button>
+  <span class="sep"></span>Docs:
+  <button data-docs="falta">No existe</button>
+  <button data-docs="seccion">Sección perdida</button>
+  <button data-docs="cambio">Cambió</button>
+  <span class="sep"></span>
+  <button id="angosto" aria-pressed="false">Panel angosto</button>
+</div>
+
+<script src="vista-docs-datos.js"></script>
+<script>
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const ic = (id, cl = "") => `<svg class="ic ${cl}"><use href="#${id}"/></svg>`;
+
+// Un lector chico de markdown: títulos, listas, casillas, tablas, citas, código y diagramas como código
+const slug = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
+// Los títulos de cada documento, para saber dónde termina una cita «archivo.md › Título»
+const CABECERAS = Object.fromEntries(Object.entries(DOCS).map(([n, md]) => [n, [...md.matchAll(/^#{1,4} (.*)$/gm)].map(m => m[1].trim())]));
+const RE_COD = /\b([DQHWFCBIE]-\d+)\b/g;
+function enlazarCodigos(t) { return t.replace(RE_COD, m => `<a class="vinc" data-cod="${m}">${m}</a>`); }
+function inline(s, sinCodigos) {
+  // El código entre comillas invertidas se aparta primero, así las negritas pueden contenerlo
+  const guardados = [];
+  s = s.replace(/`([^`]+)`( › ([^;,.()`]+?)(?=$|[;,.()`:]| y | o | con | que ))?/g, (_, c, __, sec) => {
+    let h;
+    if (/^[\w./-]+\.md$/.test(c)) {
+      // `archivo.md` › Título: el enlace lleva a esa sección
+      // El título de la cita termina donde termina un título real del documento; si no, en el código o en cuatro palabras
+      let resto = "";
+      if (sec) {
+        sec = sec.trim();
+        const doc = c.replace(/^docs\//, ""), cod = sec.match(/^[A-Z]+-\d+\b/);
+        const real = (CABECERAS[doc] || []).filter(h => sec.toLowerCase().startsWith(h.toLowerCase())).sort((x, y) => y.length - x.length)[0];
+        const corte = real || (cod ? cod[0] : sec.split(" ").slice(0, 4).join(" "));
+        resto = sec.slice(corte.length); sec = corte;
+      }
+      h = `<a class="vinc" data-doc="${esc(c.replace(/^docs\//, ""))}"${sec ? ` data-sec="${esc(sec)}"` : ""}><code>${esc(c)}</code>${sec ? ` › ${esc(sec)}` : ""}</a>${esc(resto)}`;
+    } else h = `<code>${esc(c)}</code>` + (sec ? ` › ${esc(sec)}` : "");
+    guardados.push(h); return `\u0000${guardados.length - 1}\u0000`;
+  });
+  let t = esc(s);
+  if (!sinCodigos) t = enlazarCodigos(t);
+  t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/(^|[\s(])\*([^*\s][^*]*)\*/g, "$1<em>$2</em>");
+  return t.replace(/\u0000(\d+)\u0000/g, (_, k) => guardados[+k]);
+}
+function render(md) {
+  const lineas = md.replace(/\r/g, "").split("\n"), out = [], titulos = [];
+  let k = 0;
+  while (k < lineas.length) {
+    const l = lineas[k];
+    if (l.startsWith("```")) {
+      const lang = l.slice(3).trim(), cod = []; k++;
+      while (k < lineas.length && !lineas[k].startsWith("```")) cod.push(lineas[k++]);
+      k++;
+      if (lang === "mermaid") out.push(`<div class="diagrama">${ic("i-diagrama")}Diagrama: por ahora se ve como texto (dibujarlo es C-19)</div>`);
+      out.push(`<pre>${esc(cod.join("\n"))}</pre>`); continue;
+    }
+    const h = l.match(/^(#{1,4}) (.*)/);
+    if (h) { const id = "s-" + titulos.length; titulos.push({ nivel: h[1].length, texto: h[2], id }); out.push(`<h${h[1].length} id="${id}">${inline(h[2], true)}</h${h[1].length}>`); k++; continue; }
+    if (/^\|/.test(l)) {
+      const filas = []; while (k < lineas.length && /^\|/.test(lineas[k])) filas.push(lineas[k++]);
+      const celdas = f => f.replace(/^\||\|$/g, "").split("|").map(c => c.trim());
+      const cab = celdas(filas[0]), cuerpo = filas.slice(2).map(celdas);
+      out.push(`<div class="tabla"><table><thead><tr>${cab.map(c => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${cuerpo.map(f => `<tr>${f.map(c => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
+      continue;
+    }
+    if (/^\s*([-*]|\d+\.) /.test(l)) {
+      const items = [];
+      while (k < lineas.length && (/^\s*([-*]|\d+\.) /.test(lineas[k]) || (/^\s{2,}\S/.test(lineas[k]) && items.length))) {
+        const m = lineas[k].match(/^(\s*)([-*]|\d+\.) (.*)/);
+        if (m) items.push({ sangria: Math.floor(m[1].length / 2), ord: /\d/.test(m[2]), texto: m[3] });
+        else items[items.length - 1].texto += " " + lineas[k].trim();
+        k++;
+      }
+      const ord = items[0].ord;
+      out.push(`<${ord ? "ol" : "ul"}>${items.map(it => {
+        const t = it.texto.match(/^\[( |x)\] (.*)/);
+        const estilo = it.sangria ? ` style="margin-left:${it.sangria * 18}px"` : "";
+        if (t) return `<li class="tarea"${estilo}><span class="casilla ${t[1] === "x" ? "si" : ""}">${t[1] === "x" ? ic("i-tilde") : ""}</span><span>${inline(t[2])}</span></li>`;
+        return `<li${estilo}>${inline(it.texto)}</li>`;
+      }).join("")}</${ord ? "ol" : "ul"}>`);
+      continue;
+    }
+    if (l.startsWith(">")) { const q = []; while (k < lineas.length && lineas[k].startsWith(">")) q.push(lineas[k++].replace(/^>\s?/, "")); out.push(`<blockquote><p>${inline(q.join(" "))}</p></blockquote>`); continue; }
+    if (/^---+$/.test(l.trim())) { out.push("<hr>"); k++; continue; }
+    if (!l.trim()) { k++; continue; }
+    const p = []; while (k < lineas.length && lineas[k].trim() && !/^(#{1,4} |```|\||\s*([-*]|\d+\.) |>)/.test(lineas[k])) p.push(lineas[k++]);
+    out.push(`<p>${inline(p.join(" "))}</p>`);
+  }
+  return { html: out.join(""), titulos };
+}
+
+/* ---------- Mapa (W-7): estado del proyecto ---------- */
+const ESTADO = {
+  "completo": ["i-check", "ok", "completo"], "hecho": ["i-check", "ok", "hecho"],
+  "en curso": ["i-sync", "trab gira", "encurso"], "la IA trabaja": ["i-sync", "trab gira", "encurso"],
+  "pendiente": ["i-circulo", "pend", ""], "reabierto": ["i-reabierto", "reab", "reabierto"], "saltado": ["i-saltado", "salt", "saltado"]
+};
+// De estado.md: el próximo paso y las preguntas abiertas, leídos del documento real
+function seccionDe(doc, titulo) { const m = (DOCS[doc] || "").replace(/\r/g, "").match(new RegExp(`(?:^|\\n)## ${titulo}\\n([\\s\\S]*?)(?=\\n## |(?![\\s\\S]))`)); return m ? m[1].trim() : ""; }
+function proximoPaso() { const t = seccionDe("estado.md", "Próximo paso"); return t.split("\n").filter(l => l.trim()).map(l => inline(l)).join("<br>"); }
+function preguntasAbiertas() { return [...seccionDe("estado.md", "Preguntas abiertas").matchAll(/^- \*\*(Q-\d+) — (.+?)\*\*/gm)].map(m => [m[1], m[2]]); }
+
+const MAPA_NORMAL = { proy: "Centro de Desarrollo", hitos: [
+  [0, "Idea cruda", "completo", "00-idea.md"], [1, "Exploración", "completo", "01-exploracion.md"], [2, "Definición y alcance", "completo", "02-definicion.md"],
+  [3, "Investigación de dominio", "completo", "03-investigacion.md"], [4, "UX", "completo", "04-ux.md"], [5, "Arquitectura técnica", "completo", "05-arquitectura.md"],
+  [6, "UI", "en curso", "06-ui.md", [["Dirección visual", "hecho", "Dirección visual"], ["Design system", "hecho", "Design system"], ["Pantallas del MVP", "la IA trabaja", "Pantallas"], ["Contraste verificado", "pendiente", "Pendiente del hito"], ["Aprobación de pantallas", "pendiente", "Pendiente del hito"]]],
+  [7, "Construcción", "pendiente", "07-construccion.md"], [8, "Pruebas y calidad", "pendiente", "08-calidad.md"], [9, "Lanzamiento", "pendiente", "09-lanzamiento.md"], [10, "Operación", "pendiente", "10-operacion.md"]
+], ahora: "Editando vista-mapa-docs.html", hecho: [["16:05", "Revisó el propósito de Mapa, Docs y Pendientes"], ["15:52", "Ajustó Mapa y Docs por Q-51"], ["15:40", "Diseñó Mapa y Docs"]] };
+// De ejemplo: un proyecto avanzado con hito reabierto, saltado, un estado que no se entiende, muchas iteraciones y módulos
+const NOMBRES_I = ["Importar carpetas", "Galería", "Etiquetas", "Búsqueda", "Miniaturas", "Visor", "Notas", "Pestañas", "Extensión", "Atajos", "Sets", "Duplicados", "Exportar", "Pestañas relacionadas"];
+const MAPA_EXTREMOS = { proy: "Beta (ejemplo)", hitos: [
+  [0, "Idea cruda", "completo", "00-idea.md"], [1, "Exploración", "completo", "01-exploracion.md"], [2, "Definición y alcance", "completo", "02-definicion.md"],
+  [3, "Investigación de dominio", "reabierto", "03-investigacion.md", [["Formatos de video", "hecho", ""], ["Detección de parecidos", "pendiente", ""]]],
+  [4, "UX", "completo", "04-ux.md"], [5, "Arquitectura técnica", "completo", "05-arquitectura.md"], [6, "UI", "completo", "06-ui.md"],
+  [7, "Construcción", "en curso", "07-construccion.md", NOMBRES_I.map((n, k) => [`I-${k + 1} · ${n}`, k < 12 ? "hecho" : k === 12 ? "la IA trabaja" : "pendiente", ""]), 5],
+  [8, "Pruebas y calidad", "saltado", "08-calidad.md", null, 0, "app personal: alcanzan las pruebas de cada iteración"],
+  [9, "Lanzamiento", "a medias, depende de Q-12", "09-lanzamiento.md"], [10, "Operación", "pendiente", "10-operacion.md"]
+], modulos: [["Diseño", "en curso"], ["Revisión", "pendiente"], ["Skills", "completo"]],
+  proximo: "Validar I-14 (pestañas relacionadas) con Q-69 y cerrar la etapa E-3.", preguntas: [["Q-69", "¿Las pestañas relacionadas y «Explorar pestañas» funcionan como esperabas?"], ["Q-70", "¿Los sets de E-4 se ordenan por fecha o por nombre?"]],
+  ahora: "Exportando la galería (I-13)", hecho: [["11:20", "Terminó I-12 · Duplicados"], ["10:48", "Dejó Q-70 sobre el orden de los sets"]] };
+
+let mapaActual = "normal", mirado = null, verTodos = false;
+const datos = () => mapaActual === "extremos" ? MAPA_EXTREMOS : MAPA_NORMAL;
+function claseHito(est) { return ESTADO[est] ? ESTADO[est][2] : "raro"; }
+function chipEstado(est) {
+  if (!ESTADO[est]) return `<span class="chip" style="color:var(--texto-2)" title="Se muestra tal cual: no es un estado conocido">${ic("i-duda")}${esc(est)}</span>`;
+  const color = { completo: "var(--ok)", "en curso": "var(--trabaja)", reabierto: "var(--espera)" }[est] || "var(--texto-2)";
+  return `<span class="chip" style="color:${color}">${ic(ESTADO[est][0], est === "en curso" ? "gira" : "")}${est}</span>`;
+}
+function fila(p, e, doc, sec, extra = "") {
+  const [i, c] = ESTADO[e];
+  return `<button class="fila ${e === "la IA trabaja" ? "sel" : ""}" data-doc="${doc}" data-sec="${esc(sec || p)}" title="${esc(p)} · ${e}"><span class="t">${esc(p)}</span><span class="est">${e}${ic(i, c)}</span></button>`;
+}
+function tarjetaHito(d, idx) {
+  const [n, nombre, est, doc, pasos, ultimos, motivo] = d.hitos[idx];
+  const actual = est === "en curso";
+  const hechos = (pasos || []).filter(p => p[1] === "hecho").length;
+  let listaPasos = `<span class="vacio">${est === "pendiente" ? "Todavía no empezó." : est === "completo" ? "Completo." : "Sin pasos en su portón."}</span>`;
+  if (pasos && pasos.length) {
+    let lista = pasos, ocultos = 0;
+    if (ultimos && !verTodos && pasos.length > ultimos) { ocultos = pasos.length - ultimos; lista = pasos.slice(-ultimos); }
+    listaPasos = `<div class="filas">${ocultos ? `<button class="fila ver-mas" data-todos>+${ocultos} anteriores</button>` : ""}${lista.map(([p, e, sec]) => fila(p, e, doc, sec)).join("")}</div>`;
+  }
+  const abrir = DOCS[doc] || mapaActual !== "normal" ? `<button class="btn secundario" data-doc="${doc}">${ic("i-doc")}Abrir ${doc}</button>` : "";
+  const volver = !actual ? `<button class="btn secundario" data-volver>Ver el hito actual</button>` : "";
+  let cuerpo = `<div><h4>Pasos${pasos && pasos.length ? ` <span class="n">${hechos} / ${pasos.length}</span>` : ""}</h4>${listaPasos}</div>`;
+  if (motivo) cuerpo = `<p class="vacio" style="font-size:13.5px">Se saltó: ${esc(motivo)}.</p>` + cuerpo;
+  if (actual) {
+    const prox = mapaActual === "normal" ? proximoPaso() : esc(d.proximo);
+    const qs = mapaActual === "normal" ? preguntasAbiertas() : d.preguntas;
+    cuerpo = `<div><h4>Próximo paso</h4><div class="proximo">${prox}</div></div>
+      <div class="dos">${cuerpo}
+        <div><h4>Te espera <span class="n">${qs.length}</span></h4>${qs.length ? `<div class="filas">${qs.map(([q, t]) => `<a class="fila" href="vista-pendientes.html" title="Responder en Pendientes"><span class="q">${q}</span><span class="t">${esc(t)}</span>${ic("i-chev")}</a>`).join("")}</div>` : `<span class="vacio">Nada te espera.</span>`}
+          <h4 style="margin-top:18px">Lo último de la IA</h4><div class="filas"><div class="fila" style="color:var(--trabaja)">${ic("i-sync", "gira")}<span class="t">${esc(d.ahora)}</span><span class="hora">ahora</span></div>${d.hecho.map(([h, t]) => `<div class="fila"><span class="t" style="color:var(--texto-2)">${esc(t)}</span><span class="hora">${h}</span></div>`).join("")}</div></div>
+      </div>`;
+  }
+  return `<section class="hito-card" aria-label="Hito ${n}"><div class="cab"><span class="num">Hito ${String(n).padStart(2, "0")}</span><h3>${esc(nombre)}</h3>${chipEstado(est)}<div class="der">${volver}${abrir}</div></div>${cuerpo}</section>`;
+}
+function pintarMapa() {
+  const m = document.getElementById("mapa");
+  if (mapaActual === "singuia") {
+    m.innerHTML = `<div class="sin-guia"><h3>Este proyecto no sigue la guía todavía</h3><p>No tiene <code class="cod">docs/estado.md</code>, así que no hay hitos para mostrar. Estos son los documentos que tiene:</p>
+      <div class="filas"><button class="fila" data-doc="README.md">${ic("i-doc")}README.md</button><button class="fila" data-doc="notas.md">${ic("i-doc")}notas.md</button></div>
+      <p style="font-size:var(--tam-chico);color:var(--texto-3)">Para ponerlo al día, pedile a la IA en la conversación que lo audite con la guía de hitos.</p></div>`;
+    return;
+  }
+  const d = datos(), act = d.hitos.findIndex(h => h[2] === "en curso");
+  if (mirado === null) mirado = act;
+  const completos = d.hitos.filter(h => h[2] === "completo").length;
+  document.getElementById("migaProy").textContent = d.proy;
+  document.getElementById("migaHito").textContent = `Hito ${d.hitos[act][0]} · ${d.hitos[act][1]}`;
+  const hay = e => d.hitos.some(h => claseHito(h[2]) === e);
+  m.innerHTML = `<div class="estado-int">
+    <div class="linea"><div class="cab"><h3>Plan</h3><span class="cuenta">${completos} de ${d.hitos.length} completos</span></div>
+      <div class="hitos" role="list">${d.hitos.map(([n, nombre, est], k) => `<button class="h ${claseHito(est)}" role="listitem" data-mirar="${k}" aria-current="${k === mirado}" title="Hito ${n} · ${esc(nombre)} · ${esc(est)}" aria-label="Hito ${n}, ${esc(nombre)}, ${esc(est)}">${n}</button>`).join("")}</div>
+      <div class="leyenda-linea" style="margin-top:10px"><span><i class="completo"></i>completo</span><span><i class="encurso"></i>en curso</span><span><i></i>pendiente</span>${hay("reabierto") ? `<span><i class="reabierto"></i>reabierto</span>` : ""}${hay("saltado") ? `<span><i class="saltado"></i>saltado</span>` : ""}${hay("raro") ? `<span><i class="saltado"></i>no se entiende: se muestra tal cual</span>` : ""}</div>
+      ${d.modulos ? `<div class="modulos" style="margin-top:6px">Módulos: ${d.modulos.map(([n, e]) => chipEstado(e).replace(e + "</span>", `${n} · ${e}</span>`)).join("")}</div>` : ""}
+    </div>
+    ${tarjetaHito(d, mirado)}
+  </div>`;
+}
+document.getElementById("mapa").addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.mirar !== undefined) { mirado = +t.dataset.mirar; verTodos = false; pintarMapa(); return; }
+  if (t.hasAttribute("data-volver")) { mirado = null; pintarMapa(); return; }
+  if (t.hasAttribute("data-todos")) { verTodos = true; pintarMapa(); return; }
+  if (t.dataset.doc) { pestana("docs"); abrir(t.dataset.doc, t.dataset.sec || null, true); }
+});
+
+/* ---------- Docs (W-8): lector liviano ---------- */
+const ORDEN_DOCS = ["estado.md", "perfil-proyecto.md", "00-idea.md", "01-exploracion.md", "02-definicion.md", "03-investigacion.md", "04-ux.md", "05-arquitectura.md", "06-ui.md", "decisiones.md", "scripts.md", "plan-desarrollo.md", "README.md"];
+const TITULOS = Object.fromEntries(Object.entries(DOCS).map(([n, md]) => [n, render(md).titulos]));
+let actual = { doc: "estado.md", sec: null }, historial = [];
+
+function buscarSeccion(doc, sec) {
+  const ts = TITULOS[doc] || [], norm = s => s.toLowerCase().trim();
+  const ult = norm(sec.split("›").pop());
+  return ts.find(t => norm(t.texto) === ult) || ts.find(t => norm(t.texto).startsWith(ult + " ")) || ts.find(t => norm(t.texto).startsWith(ult));
+}
+// Las tablas de más de seis filas arrancan con cinco y un «Ver las N filas»
+function plegarTablas(raiz) {
+  raiz.querySelectorAll(".tabla").forEach(t => {
+    const filas = t.querySelectorAll("tbody tr"); if (filas.length <= 6) return;
+    filas.forEach((f, k) => { if (k >= 5) f.classList.add("oculta"); });
+    t.insertAdjacentHTML("afterend", `<button class="ver-filas" aria-expanded="false">Ver las ${filas.length} filas</button>`);
+  });
+}
+function abrir(doc, sec, guardar, conservar) {
+  const lec = document.getElementById("lectura");
+  if (guardar) historial.push({ ...actual, scroll: lec.scrollTop });
+  actual = { doc, sec };
+  document.getElementById("atras").disabled = !historial.length;
+  document.getElementById("docNombre").textContent = doc;
+  if (!DOCS[doc]) {
+    lec.innerHTML = `<div class="hoja"><div class="aviso-doc">${ic("i-busca")}${esc(doc)} no existe todavía. Si su hito no empezó, es normal: se crea cuando arranca.</div><div class="md"><p style="color:var(--texto-2)">Elegí otro documento arriba, o volvé con Atrás.</p></div></div>`;
+    pintarMenus(); return;
+  }
+  const r = render(DOCS[doc]);
+  const t = sec ? buscarSeccion(doc, sec) : null;
+  const aviso = sec && !t ? `<div class="aviso-doc">${ic("i-busca")}No se encontró la sección «${esc(sec)}»: el documento se abre al principio.</div>` : "";
+  const scroll = conservar ? lec.scrollTop : null;
+  lec.innerHTML = `<div class="hoja"><div id="cambioAviso"></div>${aviso}<div class="md">${r.html}</div></div>`;
+  plegarTablas(lec);
+  if (conservar) lec.scrollTop = scroll;
+  else if (t) { const el = document.getElementById(t.id); lec.scrollTop = el.offsetTop - 18; el.classList.add("marcada"); }
+  else lec.scrollTop = 0;
+  pintarMenus();
+}
+function pintarMenus() {
+  document.querySelector("#menuDocs .lista").innerHTML = ORDEN_DOCS.filter(n => DOCS[n]).map(n => `<button class="mono" data-doc="${n}" aria-current="${n === actual.doc}">${n}</button>`).join("");
+  const secs = (TITULOS[actual.doc] || []).filter(t => t.nivel === 2 || t.nivel === 3);
+  document.getElementById("menuSecs").classList.toggle("oculto", !secs.length);
+  document.querySelector("#menuSecs .lista").innerHTML = secs.map(t => `<button class="${t.nivel === 3 ? "sub" : ""}" data-doc="${actual.doc}" data-sec="${esc(t.texto)}" title="${esc(t.texto)}">${esc(t.texto)}</button>`).join("");
+}
+function cerrarMenus() { document.querySelectorAll(".menu").forEach(m => { m.querySelector(".lista").classList.add("oculto"); m.querySelector("button").setAttribute("aria-expanded", "false"); }); }
+document.querySelectorAll(".menu").forEach(m => {
+  m.querySelector("button").addEventListener("click", e => { e.stopPropagation(); const abierta = m.querySelector(".lista").classList.contains("oculto"); cerrarMenus(); if (abierta) { m.querySelector(".lista").classList.remove("oculto"); m.querySelector("button").setAttribute("aria-expanded", "true"); } });
+  m.querySelector(".lista").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; cerrarMenus(); abrir(b.dataset.doc, b.dataset.sec || null, true); });
+});
+document.addEventListener("click", cerrarMenus);
+function irCodigo(cod) {
+  // Salta a donde nace el código: el título que empieza por él, en cualquier documento
+  for (const n of ORDEN_DOCS) { const t = (TITULOS[n] || []).find(t => t.texto.startsWith(cod + " ") || t.texto === cod); if (t) return abrir(n, t.texto, true); }
+  for (const n of ORDEN_DOCS) if (DOCS[n] && new RegExp(`\\*\\*${cod} —`).test(DOCS[n])) return abrir(n, null, true);
+  abrir(actual.doc, cod, true);
+}
+document.getElementById("lectura").addEventListener("click", e => {
+  const vf = e.target.closest(".ver-filas");
+  if (vf) { const t = vf.previousElementSibling, ab = t.classList.toggle("abierta"); vf.setAttribute("aria-expanded", ab); vf.textContent = ab ? "Mostrar menos filas" : `Ver las ${t.querySelectorAll("tbody tr").length} filas`; return; }
+  const a = e.target.closest("a.vinc"); if (!a) return;
+  if (a.dataset.cod) irCodigo(a.dataset.cod); else abrir(a.dataset.doc, a.dataset.sec || null, true);
+});
+function atras() { const h = historial.pop(); if (!h) return; abrir(h.doc, h.sec, false); document.getElementById("lectura").scrollTop = h.scroll; document.getElementById("atras").disabled = !historial.length; }
+document.getElementById("atras").addEventListener("click", atras);
+document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarMenus(); if (e.altKey && e.key === "ArrowLeft") { e.preventDefault(); atras(); } if (e.ctrlKey && e.key.toLowerCase() === "b") { e.preventDefault(); toggle.click(); } });
+function anchoHoja(v) {
+  document.getElementById("lectura").style.setProperty("--hoja", v);
+  document.querySelectorAll("#anchoLectura button").forEach(b => b.setAttribute("aria-pressed", b.dataset.hoja === v));
+  try { localStorage.setItem("iridium.hoja", v); } catch (e) {}
+}
+document.querySelectorAll("#anchoLectura button").forEach(b => b.addEventListener("click", () => anchoHoja(b.dataset.hoja)));
+
+/* ---------- Pestañas, panel e intercambio (como en la vista de proyecto) ---------- */
+function pestana(v) {
+  document.querySelectorAll(".cab-panel .tabs button").forEach(x => x.setAttribute("aria-selected", x.dataset.vista === v));
+  document.getElementById("mapa").classList.toggle("oculto", v !== "mapa");
+  document.getElementById("docs").classList.toggle("oculto", v !== "docs");
+}
+document.querySelectorAll(".cab-panel .tabs button").forEach(b => b.addEventListener("click", () => pestana(b.dataset.vista)));
+const zonas = document.getElementById("zonas"), toggle = document.getElementById("togglePanel");
+const rP = document.getElementById("ranuraPrincipal"), rD = document.getElementById("ranuraPanel");
+function panelVisible(v) { zonas.classList.toggle("sin-panel", !v); toggle.setAttribute("aria-pressed", v); }
+toggle.addEventListener("click", () => panelVisible(zonas.classList.contains("sin-panel")));
+function intercambiar() {
+  const a = rP.firstElementChild, b = rD.firstElementChild; rP.appendChild(b); rD.appendChild(a);
+  panelVisible(true);
+  document.getElementById("angosto").setAttribute("aria-pressed", rD.contains(document.getElementById("plan")));
+  if (!document.getElementById("docs").classList.contains("oculto")) abrir(actual.doc, actual.sec, false);
+}
+document.getElementById("cambiar").addEventListener("click", intercambiar);
+document.getElementById("angosto").addEventListener("click", intercambiar);
+const tirador = document.getElementById("tirador");
+function anchoPanel(px) { const max = Math.round(zonas.getBoundingClientRect().width * .6), v = Math.round(Math.min(max, Math.max(260, px))); rD.style.setProperty("--ancho", v + "px"); tirador.setAttribute("aria-valuenow", v); tirador.setAttribute("aria-valuemax", max); }
+tirador.addEventListener("keydown", e => { const paso = e.shiftKey ? 60 : 20, ahora = rD.getBoundingClientRect().width; if (e.key === "ArrowLeft") anchoPanel(ahora + paso); else if (e.key === "ArrowRight") anchoPanel(ahora - paso); else return; e.preventDefault(); });
+tirador.addEventListener("pointerdown", e => { tirador.setPointerCapture(e.pointerId); tirador.classList.add("arrastra"); const mover = ev => anchoPanel(zonas.getBoundingClientRect().right - ev.clientX); tirador.addEventListener("pointermove", mover); tirador.addEventListener("pointerup", () => { tirador.classList.remove("arrastra"); tirador.removeEventListener("pointermove", mover); }, { once: true }); });
+
+/* ---------- Selector del prototipo ---------- */
+document.querySelectorAll(".demo [data-mapa]").forEach(b => b.addEventListener("click", () => {
+  mapaActual = b.dataset.mapa; mirado = null; verTodos = false;
+  document.querySelectorAll(".demo [data-mapa]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  pintarMapa(); pestana("mapa");
+}));
+document.querySelectorAll(".demo [data-docs]").forEach(b => b.addEventListener("click", () => {
+  pestana("docs");
+  if (b.dataset.docs === "falta") abrir("07-construccion.md", null, true);
+  if (b.dataset.docs === "seccion") abrir("04-ux.md", "W-14 — Galería", true);
+  if (b.dataset.docs === "cambio") {
+    // El documento cambió mientras se leía: se vuelve a dibujar sin mover la lectura
+    if (!DOCS[actual.doc]) abrir("estado.md", null, true);
+    abrir(actual.doc, actual.sec, false, true);
+    document.getElementById("cambioAviso").innerHTML = `<div class="aviso-doc" style="border-style:solid">${ic("i-sync")}La IA cambió este documento recién: se actualizó sin moverte de donde estabas.</div>`;
+    setTimeout(() => { const av = document.getElementById("cambioAviso"); if (av) av.innerHTML = ""; }, 6000);
+  }
+}));
+
+let hoja = "70ch"; try { hoja = localStorage.getItem("iridium.hoja") || hoja; } catch (e) {}
+anchoHoja(hoja);
+pintarMapa(); abrir("estado.md", null, false);
+const q = new URLSearchParams(location.search);
+if (q.get("mapa")) document.querySelector(`.demo [data-mapa="${q.get("mapa")}"]`)?.click();
+if (q.get("doc")) { pestana("docs"); abrir(q.get("doc"), q.get("sec"), false); }
+if (q.get("docs")) document.querySelector(`.demo [data-docs="${q.get("docs")}"]`)?.click();
+if (q.has("angosto")) intercambiar();
+if (q.has("menu")) document.querySelector("#menuDocs > button").click();
+</script>
+</body>
+</html>

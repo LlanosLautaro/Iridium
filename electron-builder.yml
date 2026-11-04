@@ -1,0 +1,39 @@
+# App de uso diario (05-arquitectura.md › Despliegue): una carpeta con el ejecutable y un acceso directo, como
+# otra app. Se arma con `pnpm dist` en `release/win-unpacked/`; una versión nueva se arma encima.
+appId: com.lautaro.iridium
+productName: Iridium
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**
+  - '!out/extension/**'
+  - package.json
+# La extensión de la Revisión va suelta: Iridium la copia a su carpeta fija al arrancar. El ayudante que pone la
+# versión nueva al cerrar (CO-I2) también: Iridium lo copia a la carpeta temporal y lo lanza.
+extraResources:
+  - from: out/extension
+    to: extension
+  - from: tools/cambiar-version.ps1
+    to: cambiar-version.ps1
+asar: true
+# El SDK trae su propio Claude Code (claude.exe): tiene que quedar fuera del archivo comprimido para poder
+# ejecutarse (riesgo de la arquitectura probado en I-1).
+asarUnpack:
+  - node_modules/@anthropic-ai/**
+# Los «fusibles» de Electron (Defecto 6, D-076): el programa armado no corre como Node (ELECTRON_RUN_AS_NODE) ni
+# lee NODE_OPTIONS, así otro programa de la PC no puede usar Iridium para correr su código; y solo carga la app de
+# su `app.asar`. `--inspect` queda: con él Playwright y las herramientas de `tools/` manejan la app armada.
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: true
+  onlyLoadAppFromAsar: true
+# Usa el Electron ya instalado (no descarga otro).
+electronDist: node_modules/electron/dist
+win:
+  target:
+    - target: dir
+      arch: x64
+  icon: build/icon.png
+  signAndEditExecutable: true

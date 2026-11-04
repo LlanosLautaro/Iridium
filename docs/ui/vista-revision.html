@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisión de la app</title>
+<!-- Módulo Revisión (modulos/revision/ux.md): W-R1 modo comentar, W-R2 tarjeta, W-R3 Revisión en el proyecto, W-R4 comentario en la conversación. -->
+<link rel="stylesheet" href="tokens.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body { background: var(--fondo); color: var(--texto); font: 400 var(--tam-base)/1.5 var(--ui); font-variant-numeric: tabular-nums; min-width: 1024px; overflow: hidden; }
+::selection { background: var(--seleccion); color: var(--texto); }
+:focus-visible { outline: 1px solid var(--primario); outline-offset: -1px; }
+* { scrollbar-width: thin; scrollbar-color: var(--borde-fuerte) transparent; }
+button, textarea { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.ic { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+code, .cod { font-family: var(--mono); font-size: 12.5px; color: var(--texto-2); }
+[hidden], .oculto { display: none !important; }
+kbd { font: 500 11.5px/1 var(--mono); color: var(--texto-2); padding: 2px 5px; border: 1px solid var(--borde-fuerte); border-radius: 4px; }
+
+/* ============ Escena 1: la app que se revisa, en el navegador ============ */
+.escena { position: fixed; inset: 0; }
+.nav { display: grid; grid-template-rows: 38px 40px 1fr; height: 100%; background: #1f2023; }
+/* Marco de Chrome, solo para situar la escena (no es diseño de Iridium) */
+.nav-pest { display: flex; align-items: end; padding: 0 8px; gap: 2px; background: #1f2023; }
+.nav-pest span { height: 32px; padding: 0 14px; display: flex; align-items: center; gap: 8px; border-radius: 8px 8px 0 0; background: #35363a; color: #e8eaed; font: 12px/1 "Segoe UI", sans-serif; }
+.nav-pest span i { width: 14px; height: 14px; border-radius: 50%; background: #8ab4f8; }
+.nav-barra { display: flex; align-items: center; gap: 10px; padding: 0 10px; background: #35363a; border-bottom: 1px solid #2a2b2e; }
+.nav-barra .dir { flex: 1; height: 28px; border-radius: 14px; background: #202124; color: #bdc1c6; font: 13px/28px "Segoe UI", sans-serif; padding: 0 14px; }
+.nav-barra .dir b { color: #e8eaed; font-weight: 400; }
+.nav-barra .gris { width: 16px; height: 16px; border-radius: 3px; background: #5f6368; opacity: .6; }
+/* Botón de la extensión: lleva la marca de Iridium y la cola en un número */
+.ext { position: relative; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--primario); }
+.ext:hover { background: #45464a; }
+.ext .ic { width: 18px; height: 18px; }
+.ext .cola { position: absolute; right: -2px; bottom: 0; min-width: 15px; height: 15px; padding: 0 3px; border-radius: 4px; background: var(--texto-2); color: var(--sobre-color); font: 700 10px/15px var(--mono); text-align: center; }
+
+/* La app de ejemplo («Beta»): estilo propio y claro, a propósito distinto de Iridium */
+.beta { position: relative; overflow: auto; background: #f4f2ee; color: #26231f; font: 15px/1.5 Georgia, "Times New Roman", serif; display: grid; grid-template-columns: 200px 1fr; }
+.beta-lat { background: #ebe7e0; padding: 26px 18px; border-right: 1px solid #ddd6cb; }
+.beta-lat h2 { font: italic 600 22px/1 Georgia, serif; margin-bottom: 26px; }
+.beta-lat a { display: block; padding: 7px 10px; border-radius: 6px; color: #5b544b; text-decoration: none; font-size: 14px; }
+.beta-lat a.act { background: #fff; color: #26231f; }
+.beta-cont { padding: 34px 44px 60px; max-width: 760px; }
+.beta-cont h1 { font: 400 30px/1.2 Georgia, serif; margin-bottom: 6px; }
+.beta-cont > p { color: #776f64; margin-bottom: 26px; }
+.m-tarjeta { background: #fff; border: 1px solid #e3ddd3; border-radius: 12px; padding: 20px 22px; margin-bottom: 18px; }
+.m-tarjeta h3 { font: 600 17px/1.3 Georgia, serif; }
+.m-tarjeta p { color: #776f64; font-size: 14px; margin: 4px 0 14px; }
+.m-btn { font: 600 14px/1 "Segoe UI", sans-serif; padding: 10px 16px; border-radius: 8px; background: #2f5d50; color: #fff; }
+.m-btn.sec { background: transparent; color: #2f5d50; border: 1px solid #c9d6d1; }
+.m-fila { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid #efeae2; font-size: 14px; }
+.m-fila:first-of-type { border-top: 0; }
+.m-sw { width: 36px; height: 20px; border-radius: 10px; background: #2f5d50; position: relative; }
+.m-sw::after { content: ""; position: absolute; right: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.m-sw.no { background: #cfc8bc; } .m-sw.no::after { right: auto; left: 3px; }
+.m-menu { display: inline-flex; gap: 6px; align-items: center; padding: 8px 12px; border: 1px solid #ddd6cb; border-radius: 8px; font: 14px "Segoe UI", sans-serif; background: #fff; }
+.beta-pie { grid-column: 2; padding: 0 44px 30px; color: #776f64; font-size: 12.5px; }
+
+/* --- Lo que dibuja la extensión. Vive aislado de la página (en la app, en un shadow root) y lleva las letras de Iridium --- */
+.capa { position: absolute; inset: 0; pointer-events: none; z-index: 20; font: 400 var(--tam-base)/1.5 var(--ui); color: var(--texto); }
+/* Aviso del modo comentar: abajo a la derecha, solo al entrar, y se va solo (no ocupa lugar de la app) */
+.aviso-modo { position: fixed; right: 16px; bottom: 16px; z-index: 30; display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--barra); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-tarjeta); box-shadow: 0 6px 14px oklch(0 0 0 / .5); font: 400 var(--tam-base)/1.4 var(--ui); color: var(--texto); pointer-events: none; animation: aviso 2.2s var(--sale) forwards; }
+.aviso-modo .faro { width: 8px; height: 8px; border-radius: 50%; background: var(--primario); }
+.aviso-modo.gris .faro { background: var(--texto-3); }
+.aviso-modo b { font-weight: 600; }
+.aviso-modo small { display: block; color: var(--texto-3); font-size: var(--tam-chico); }
+@keyframes aviso { 0% { opacity: 0; translate: 0 6px; } 10%, 75% { opacity: 1; translate: 0 0; } 100% { opacity: 0; } }
+/* Resaltado de elemento y su etiqueta */
+.resalte { position: absolute; border: 1.5px solid var(--primario); border-radius: 4px; background: color-mix(in oklab, var(--primario) 9%, transparent); transition: top .09s var(--sale), left .09s var(--sale), width .09s var(--sale), height .09s var(--sale); }
+.resalte.elegido { background: color-mix(in oklab, var(--primario) 5%, transparent); border-width: 2px; }
+.etiqueta { position: absolute; display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: var(--radio-control); background: var(--barra); border: 1px solid color-mix(in oklab, var(--primario) 45%, transparent); font: 500 12px/1 var(--mono); color: var(--texto-2); white-space: nowrap; }
+.etiqueta b { color: var(--primario-texto); font-weight: 600; }
+.etiqueta .sep { color: var(--texto-3); }
+/* Tarjeta del comentario */
+.tarj-com { position: absolute; width: 380px; pointer-events: auto; background: var(--caja); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-tarjeta); box-shadow: 0 6px 14px oklch(0 0 0 / .5); animation: aparece .18s var(--sale); }
+@keyframes aparece { from { opacity: 0; translate: 0 4px; } }
+.tarj-com:focus-within { border-color: color-mix(in oklab, var(--primario) 60%, var(--borde-fuerte)); }
+.tarj-com .cab { display: flex; align-items: center; gap: 8px; padding: 9px 12px 0; font: 500 12px/1.3 var(--mono); color: var(--texto-3); }
+.tarj-com .cab b { color: var(--texto-2); font-weight: 600; }
+.tarj-com .cab .proy { display: inline-flex; align-items: center; gap: 3px; height: 20px; padding: 0 6px; margin-left: auto; border-radius: var(--radio-control); font: 600 12px/1 var(--ui); color: var(--texto-2); }
+.tarj-com .cab .proy:hover { background: var(--hover); color: var(--texto); }
+.tarj-com .cab .proy .ic { width: 11px; height: 11px; rotate: 90deg; color: var(--texto-3); }
+.tarj-com .cab .x { width: 22px; height: 22px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.tarj-com .cab .x:hover { background: var(--hover); color: var(--texto); }
+.tarj-com .cab .x .ic { width: 12px; height: 12px; }
+.tarj-com .cuerpo { display: flex; gap: 6px; padding: 8px 12px 4px; }
+.tarj-com .cuerpo::before { content: ">"; font: 500 14px/1.55 var(--mono); color: var(--primario); }
+.tarj-com textarea { flex: 1; resize: none; min-height: 44px; max-height: 50vh; font: 400 14px/1.55 var(--ui); color: var(--texto); caret-color: var(--primario); cursor: text; outline: none; }
+.tarj-com textarea::placeholder { color: var(--texto-3); }
+.tarj-com .pie { display: flex; align-items: center; gap: 6px; padding: 6px 10px 10px 12px; }
+.tarj-com .pie .ayuda { color: var(--texto-3); font-size: 12px; margin-right: auto; }
+.tarj-com .elegir { padding: 10px 12px 2px; }
+.tarj-com .elegir p { font-weight: 600; margin-bottom: 6px; }
+.tarj-com .elegir p code { font-size: 12.5px; color: var(--texto); }
+.tarj-com .opciones { display: flex; flex-wrap: wrap; gap: 4px; }
+.tarj-com .opciones button { height: 26px; padding: 0 9px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto-2); display: inline-flex; align-items: center; gap: 6px; }
+.tarj-com .opciones button img { width: 14px; height: 14px; border-radius: 3px; }
+.tarj-com .opciones button:hover { color: var(--texto); border-color: var(--texto-3); }
+.tarj-com .opciones button[aria-pressed="true"] { border-color: var(--primario); color: var(--texto); background: var(--sel-fondo); }
+.tarj-com .linea { display: flex; gap: 8px; align-items: flex-start; margin: 0 12px 10px; padding: 8px 10px; border-radius: var(--radio-fila); background: var(--elevado); color: var(--texto-2); font-size: var(--tam-chico); }
+.tarj-com .linea .ic { width: 14px; height: 14px; margin-top: 2px; color: var(--texto-3); }
+.tarj-com .linea.ok .ic { color: var(--ok); }
+.tarj-com .linea b { color: var(--texto); font-weight: 600; }
+.tarj-com .hecho { display: flex; align-items: center; gap: 8px; padding: 14px 14px; font-weight: 600; }
+.tarj-com .hecho .ic { color: var(--ok); }
+.tarj-com .hecho small { display: block; font-weight: 400; color: var(--texto-3); font-size: var(--tam-chico); }
+
+/* Botones (los de Iridium; también dentro de la tarjeta) */
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px; border: 1px solid var(--borde-control); border-radius: var(--radio-control); font-weight: 600; white-space: nowrap; color: var(--texto-2); }
+.btn:hover { background: var(--hover); color: var(--texto); }
+.btn .ic { width: 14px; height: 14px; }
+.btn.chico { height: 26px; padding: 0 9px; }
+.btn.icono { width: 28px; padding: 0; justify-content: center; border-color: transparent; }
+.btn.sigue { border-color: color-mix(in oklab, var(--primario) 55%, transparent); color: var(--primario-texto); }
+.btn.sigue:hover { background: var(--sel-fondo); }
+.btn:disabled { opacity: .45; cursor: not-allowed; background: none; }
+.btn.enlace { border-color: transparent; padding: 0 6px; color: var(--texto-2); }
+
+/* ============ Escena 2: Iridium ============ */
+.app { --ancho-chat: 420px; display: grid; grid-template-columns: 48px minmax(420px, 1fr) 5px var(--ancho-chat); grid-template-rows: 36px 1fr 26px; height: 100vh; }
+.titulo { grid-column: 1 / -1; display: flex; align-items: stretch; background: var(--barra); border-bottom: 1px solid var(--borde); }
+.inicio { position: relative; width: 48px; display: grid; place-items: center; color: var(--primario); border-right: 1px solid var(--borde); }
+.inicio:hover { background: var(--hover); }
+.inicio .ic { width: 19px; height: 19px; }
+.badge { position: absolute; right: 5px; bottom: 4px; min-width: 16px; height: 16px; padding: 0 4px; display: grid; place-items: center; border-radius: var(--radio-control); background: var(--espera); color: var(--sobre-color); font: 700 10.5px/1 var(--mono); }
+.badge.neutro { background: var(--borde-fuerte); color: var(--texto); }
+.ses { display: flex; align-items: center; gap: 8px; padding: 0 6px 0 14px; border-right: 1px solid var(--borde); color: var(--texto-3); white-space: nowrap; position: relative; }
+.ses.activa { background: var(--fondo); color: var(--texto); }
+.ses.activa::before { content: ""; position: absolute; left: 10px; right: 10px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: var(--primario); }
+.ses .nom { font-weight: 600; }
+.ses .cerrar { width: 20px; height: 20px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.ses .cerrar .ic { width: 12px; height: 12px; }
+.ses .gira { width: 13px; height: 13px; color: var(--trabaja); animation: gira 1.4s linear infinite; }
+@keyframes gira { to { rotate: 360deg; } }
+.titulo .relleno { flex: 1; }
+.ventana { display: flex; }
+.ventana span { width: 46px; display: grid; place-items: center; color: var(--texto-3); }
+.ventana .ic { width: 13px; height: 13px; stroke-width: 1.2; }
+
+.actividad { background: var(--lateral); border-right: 1px solid var(--borde); display: flex; flex-direction: column; align-items: center; padding: 4px 0 6px; }
+.act { position: relative; width: 48px; height: 44px; display: grid; place-items: center; color: var(--texto-3); }
+.act .ic { width: 20px; height: 20px; }
+.act:hover { color: var(--texto); }
+.act.activo { color: var(--primario); }
+.act.activo::before { content: ""; position: absolute; left: 0; top: 11px; bottom: 11px; width: 2px; background: var(--primario); }
+.act .badge { right: 6px; bottom: 6px; }
+.act .tip { position: absolute; left: 52px; top: 50%; translate: 0 -50%; padding: 3px 8px; background: var(--elevado); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto); font-size: var(--tam-chico); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .12s; z-index: 5; }
+.act:hover .tip { opacity: 1; transition-delay: .35s; }
+
+.principal { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.cabecera { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 14px 0 20px; border-bottom: 1px solid var(--borde); flex: none; }
+.cabecera h1 { font-size: 14px; font-weight: 600; }
+.cabecera .sub { color: var(--texto-3); }
+.vista { flex: 1; min-height: 0; overflow: auto; }
+.divisor { background: var(--fondo); border-left: 1px solid var(--borde); }
+
+/* Revisión: lista */
+.rev { max-width: 880px; padding: 18px 24px 40px; }
+.rev-cab { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.rev-cab h2 { font-size: 16px; font-weight: 600; }
+.grupos { display: inline-flex; padding: 2px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); }
+.grupos button { height: 24px; padding: 0 10px; border-radius: 4px; color: var(--texto-3); font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+.grupos button span { font: 600 12px/1 var(--mono); }
+.grupos button:hover { color: var(--texto); }
+.grupos button[aria-pressed="true"] { background: var(--sel-fondo); color: var(--texto); }
+.rev-cab .ext-est { margin-left: auto; color: var(--texto-3); font-size: var(--tam-chico); display: inline-flex; gap: 6px; align-items: center; }
+.rev-cab .ext-est .ic { width: 13px; height: 13px; color: var(--ok); }
+.filas { display: grid; gap: 2px; }
+.fila { display: grid; grid-template-columns: 112px 1fr auto; gap: 14px; align-items: start; width: 100%; text-align: left; padding: 10px; border-radius: var(--radio-fila); }
+.fila:hover { background: var(--hover); }
+.fila .cap { width: 112px; height: 70px; }
+.fila .txt { font-size: 14px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.fila .donde { margin-top: 4px; color: var(--texto-3); font-size: var(--tam-chico); display: flex; gap: 8px; flex-wrap: wrap; }
+.fila .donde code { font-size: 12px; color: var(--texto-2); }
+.fila .hizo { margin-top: 6px; display: flex; gap: 6px; color: var(--texto-2); font-size: var(--tam-chico); }
+.fila .hizo .ic { width: 14px; height: 14px; color: var(--ok); margin-top: 2px; }
+.fila time, .fila .cod-r { font: 500 12px/1 var(--mono); color: var(--texto-3); white-space: nowrap; }
+.fila .meta-der { display: grid; justify-items: end; gap: 6px; }
+.fila .reab { color: var(--texto-2); font-size: 12px; display: inline-flex; gap: 4px; align-items: center; }
+.fila .reab .ic { width: 12px; height: 12px; }
+.fila.rota { grid-template-columns: 1fr; border: 1px dashed var(--borde-fuerte); color: var(--texto-3); font-size: var(--tam-chico); }
+.fila.rota b { color: var(--error); font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+.fila.rota b .ic { width: 14px; height: 14px; }
+.ninguno { padding: 12px 10px; color: var(--texto-3); }
+
+/* Capturas: imagen de la app comentada (en el prototipo, dibujos) */
+.cap { display: block; border-radius: var(--radio-control); border: 1px solid var(--borde); overflow: hidden; background: #f4f2ee; }
+.cap svg { display: block; width: 100%; height: 100%; }
+.cap.falta { display: grid; place-items: center; background: var(--caja); border-style: dashed; border-color: var(--borde-fuerte); color: var(--texto-3); font-size: 12px; }
+.cap.falta .ic { width: 16px; height: 16px; margin: 0 auto 2px; display: block; }
+
+/* Revisión: comentario elegido */
+.det { max-width: 900px; padding: 0 24px 40px; }
+.det-barra { display: flex; align-items: center; gap: 10px; height: 46px; border-bottom: 1px solid var(--borde-suave); margin-bottom: 18px; position: sticky; top: 0; background: var(--fondo); z-index: 2; }
+.det-barra .cod-r { font: 700 13px/1 var(--mono); }
+.det-barra .acc { margin-left: auto; display: flex; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 7px; border: 1px solid color-mix(in oklab, currentColor 45%, transparent); border-radius: var(--radio-control); font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; white-space: nowrap; }
+.chip .ic { width: 12px; height: 12px; }
+.chip.ok { color: var(--ok); }
+.chip.neutro { color: var(--texto-2); }
+.det-cuerpo { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, 1fr); gap: 22px; align-items: start; }
+.det-cuerpo .cap { aspect-ratio: 16 / 10; }
+.det .texto { font-size: var(--tam-lectura); line-height: 1.65; }
+.pistas { margin-top: 22px; display: grid; grid-template-columns: 92px 1fr; gap: 8px 14px; font-size: var(--tam-chico); }
+.pistas dt { color: var(--texto-3); }
+.pistas dd { color: var(--texto-2); min-width: 0; overflow-wrap: anywhere; }
+.pistas a { color: var(--texto); font-family: var(--mono); font-size: 12.5px; text-decoration: underline; text-decoration-color: var(--borde-fuerte); text-underline-offset: 3px; }
+.pistas a:hover { color: var(--primario-texto); text-decoration-color: currentColor; }
+.pistas .ya-no { color: var(--texto-3); font-family: var(--mono); font-size: 12.5px; text-decoration: line-through; }
+.historia { list-style: none; padding: 0; display: grid; gap: 6px; }
+.historia li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; color: var(--texto-2); }
+.historia li .ic { width: 14px; height: 14px; margin-top: 2px; color: var(--texto-3); }
+.historia li.cerro .ic { color: var(--ok); }
+.historia time { font: 500 12px var(--mono); color: var(--texto-3); }
+.reabrir { margin-top: 16px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-tarjeta); background: var(--caja); padding: 12px 14px; animation: aparece .18s var(--sale); }
+.reabrir label { display: block; font-weight: 600; margin-bottom: 6px; }
+.reabrir textarea { width: 100%; min-height: 54px; resize: vertical; border: 1px solid var(--borde-control); border-radius: var(--radio-control); padding: 6px 8px; font: 400 14px/1.5 var(--ui); color: var(--texto); caret-color: var(--primario); cursor: text; }
+.reabrir textarea:focus { outline: none; border-color: var(--primario); }
+.reabrir .pie { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+
+/* Revisión: vacía, Electron y cargando */
+.vacio { max-width: 560px; margin: 64px auto 0; padding: 0 24px; }
+.vacio h2 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.vacio p { color: var(--texto-2); margin-bottom: 14px; }
+.vacio .pasos { list-style: none; padding: 0; display: grid; gap: 8px; margin-bottom: 18px; }
+.vacio .pasos li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; color: var(--texto-2); }
+.vacio .pasos li span { font: 600 12px/20px var(--mono); color: var(--texto-3); }
+.vacio .pasos a { color: var(--texto); text-decoration: underline dotted; text-underline-offset: 3px; }
+.vacio .conexion { display: flex; gap: 8px; align-items: center; color: var(--texto-3); font-size: var(--tam-chico); padding-top: 14px; border-top: 1px solid var(--borde-suave); }
+.vacio .conexion .ic { width: 14px; height: 14px; }
+.electron { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: start; border: 1px solid var(--borde-fuerte); background: var(--caja); border-radius: var(--radio-tarjeta); padding: 12px 14px; margin-bottom: 18px; }
+.electron .ic { color: var(--texto-2); margin-top: 2px; }
+.electron b { font-weight: 600; display: block; }
+.electron p { color: var(--texto-3); font-size: var(--tam-chico); margin: 2px 0 0; }
+.silueta { display: grid; grid-template-columns: 112px 1fr; gap: 14px; padding: 10px; }
+.silueta i { display: block; border-radius: var(--radio-control); background: var(--caja); animation: late 1.4s ease-in-out infinite; }
+.silueta i:first-child { height: 70px; }
+.silueta div { display: grid; gap: 8px; align-content: start; padding-top: 4px; }
+.silueta div i { height: 12px; }
+@keyframes late { 50% { opacity: .5; } }
+
+/* Conversación */
+.chat { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--fondo); }
+.chat-cab { display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 10px 0 16px; border-bottom: 1px solid var(--borde); flex: none; }
+.chat-cab .tit { min-width: 0; flex: 1; line-height: 1.25; }
+.chat-cab .tit b { display: block; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-cab .tit small { display: block; color: var(--texto-3); font-size: 12px; }
+.mensajes { flex: 1; overflow: auto; padding: 14px 18px 8px; display: flex; flex-direction: column; justify-content: flex-end; }
+.msg { padding: 12px 0; border-top: 1px solid var(--borde-suave); }
+.msg:first-child { border-top: 0; }
+.msg .quien { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--texto-2); margin-bottom: 4px; }
+.msg .quien.ia { color: var(--primario-texto); }
+.msg .quien time { font: 500 12px var(--mono); color: var(--texto-3); }
+.msg p { font-size: var(--tam-lectura); line-height: 1.6; }
+.msg p code { font-size: 13px; color: var(--primario-texto); background: var(--elevado); padding: 1px 4px; border-radius: 4px; }
+.herr { display: flex; align-items: center; gap: 6px; color: var(--texto-3); font-size: var(--tam-chico); margin: 2px 0 6px; }
+.herr .ic { width: 12px; height: 12px; }
+.herr.ahora { color: var(--primario-texto); }
+.herr.ahora .ic { animation: gira 1.4s linear infinite; }
+/* W-R4: el comentario como mensaje del usuario */
+.msg-com { display: block; width: 100%; text-align: left; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-bloque); overflow: hidden; }
+.msg-com:hover { border-color: var(--texto-3); }
+.msg-com .cab { display: flex; white-space: nowrap; overflow: hidden; gap: 8px; align-items: center; padding: 6px 10px; border-bottom: 1px solid var(--borde-suave); background: var(--caja); font: 500 12px/1.3 var(--mono); color: var(--texto-3); }
+.msg-com .cab b { color: var(--texto-2); font-weight: 700; }
+.msg-com .cab .ic { width: 13px; height: 13px; }
+.msg-com .cab .ir { margin-left: auto; font: 400 12px var(--ui); display: inline-flex; gap: 4px; align-items: center; }
+.msg-com .cab .ir .ic { width: 11px; height: 11px; }
+.msg-com .cuerpo { display: grid; grid-template-columns: 72px 1fr; gap: 10px; padding: 10px; }
+.msg-com .cap { width: 72px; height: 46px; }
+.msg-com p { font-size: 14px; line-height: 1.5; }
+.escribir { margin: 6px 14px 14px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-tarjeta); background: var(--caja); padding: 10px 12px 8px; flex: none; }
+.escribir .campo { color: var(--texto-3); min-height: 38px; }
+.escribir .campo::before { content: "> "; color: var(--primario); font-family: var(--mono); }
+.escribir .campo.lleno { color: var(--texto); }
+.escribir .pie { display: flex; align-items: center; gap: 8px; color: var(--texto-3); font-size: 12px; }
+.escribir .pie .ic { margin-left: auto; }
+
+.estado-barra { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding: 0 12px; background: var(--barra); border-top: 1px solid var(--borde); color: var(--texto-3); font-size: 12px; }
+.estado-barra .der { margin-left: auto; display: flex; gap: 14px; }
+.estado-barra .num { font-family: var(--mono); color: var(--texto-2); }
+.estado-barra .trab { color: var(--primario-texto); display: inline-flex; gap: 6px; align-items: center; }
+.estado-barra .trab .ic { width: 12px; height: 12px; animation: gira 1.4s linear infinite; }
+
+/* Solo en el prototipo: elegir escena y estado */
+.demo { position: fixed; left: 60px; bottom: 36px; display: flex; align-items: center; gap: 4px; padding: 4px 4px 4px 12px; border: 1px dashed var(--borde-fuerte); border-radius: 8px; background: var(--barra); font-size: 12px; color: var(--texto-3); z-index: 100; white-space: nowrap; }
+.demo button { height: 24px; padding: 0 9px; border-radius: 4px; color: var(--texto-2); font-size: 12px; }
+.demo button:hover { background: var(--hover); color: var(--texto); }
+.demo button[aria-pressed="true"] { background: var(--sel-fondo); color: var(--primario); }
+.demo .sep { width: 1px; height: 18px; background: var(--borde-fuerte); margin: 0 6px; }
+.demo .pista { color: var(--texto-3); padding: 0 6px; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-marca" viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><path d="m16 12 3 3-3 3"/></symbol>
+  <symbol id="i-pendientes" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-mapa" viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
+  <symbol id="i-docs" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-archivos" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <!-- Revisión: un globo de comentario con un punto de mira (se señala algo de la app) -->
+  <symbol id="i-revision" viewBox="0 0 24 24"><path d="M20 14.5a2 2 0 0 1-2 2H8l-4 4V5.5a2 2 0 0 1 2-2h7"/><circle cx="18" cy="6" r="3"/><path d="M18 1.5v1.2M18 9.3v1.2M13.5 6h1.2M21.3 6h1.2"/></symbol>
+  <symbol id="i-git" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7M18 10.5c0 4-6 3-10.5 6"/></symbol>
+  <symbol id="i-scripts" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5v14l11-7z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-atras" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-circulo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></symbol>
+  <symbol id="i-espera" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5"/><path d="M12 16h.01"/></symbol>
+  <symbol id="i-gira" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></symbol>
+  <symbol id="i-enviar" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-reabrir" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-imagen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  <symbol id="i-enchufe" viewBox="0 0 24 24"><path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0zM12 17v5"/></symbol>
+  <symbol id="i-atomo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></symbol>
+  <symbol id="i-min" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-max" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></symbol>
+  <symbol id="i-cierra" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+</svg>
+
+<!-- ===================== Escena 1: la app que se revisa ===================== -->
+<section class="escena" id="escenaApp">
+  <div class="nav">
+    <div class="nav-pest"><span><i></i>Beta · Ajustes</span></div>
+    <div class="nav-barra">
+      <span class="gris"></span><span class="gris"></span>
+      <div class="dir" id="direccion"><b>localhost:5173</b>/ajustes</div>
+      <button class="ext" id="btnExt" title="Revisión de Iridium: comentar esta app (F8)"><svg class="ic"><use href="#i-marca"/></svg><span class="cola" id="cola" hidden>2</span></button>
+      <span class="gris"></span>
+    </div>
+    <div class="beta" id="beta">
+      <aside class="beta-lat" data-comp="Lateral" data-src="Lateral.jsx:3">
+        <h2 data-comp="Lateral" data-src="Lateral.jsx:5">Beta</h2>
+        <a href="#" data-comp="EnlaceMenu" data-src="Lateral.jsx:12">Inicio</a>
+        <a href="#" data-comp="EnlaceMenu" data-src="Lateral.jsx:12">Fases</a>
+        <a href="#" class="act" data-comp="EnlaceMenu" data-src="Lateral.jsx:12">Ajustes</a>
+      </aside>
+      <main class="beta-cont" data-comp="PaginaAjustes" data-src="Ajustes.jsx:9">
+        <h1 data-comp="PaginaAjustes" data-src="Ajustes.jsx:11">Ajustes</h1>
+        <p data-comp="PaginaAjustes" data-src="Ajustes.jsx:12">Cómo se ve la luna y cuándo te avisa.</p>
+        <section class="m-tarjeta" data-comp="Tarjeta" data-src="Tarjeta.jsx:3">
+          <h3 data-comp="Tarjeta" data-src="Tarjeta.jsx:5">Primera</h3>
+          <p data-comp="Tarjeta" data-src="Tarjeta.jsx:5">Fase que se muestra al abrir.</p>
+          <button class="m-btn" data-comp="Tarjeta" data-src="Tarjeta.jsx:6">Guardar</button>
+          <button class="m-btn sec" data-comp="Tarjeta" data-src="Tarjeta.jsx:7">Descartar</button>
+        </section>
+        <section class="m-tarjeta" data-comp="Tarjeta" data-src="Tarjeta.jsx:3">
+          <h3 data-comp="Tarjeta" data-src="Tarjeta.jsx:5">Avisos</h3>
+          <div class="m-fila" data-comp="Interruptor" data-src="Interruptor.jsx:4">Luna llena <span class="m-sw" data-comp="Interruptor" data-src="Interruptor.jsx:8"></span></div>
+          <div class="m-fila" data-comp="Interruptor" data-src="Interruptor.jsx:4">Eclipse <span class="m-sw no" data-comp="Interruptor" data-src="Interruptor.jsx:8"></span></div>
+          <div class="m-fila" data-comp="Interruptor" data-src="Interruptor.jsx:4">Hemisferio <span class="m-menu" data-comp="Menu" data-src="Menu.tsx:41">Sur ▾</span></div>
+        </section>
+      </main>
+      <footer class="beta-pie">Beta 0.3 · hecho a mano</footer>
+      <div class="capa" id="capa"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== Escena 2: Iridium ===================== -->
+<section class="escena oculto" id="escenaIridium">
+  <div class="app">
+    <header class="titulo">
+      <button class="inicio" title="Proyectos y Pendientes"><svg class="ic"><use href="#i-marca"/></svg></button>
+      <div class="ses activa"><svg class="ic gira"><use href="#i-gira"/></svg><span class="nom">Beta</span><button class="cerrar" aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+      <div class="ses"><span class="nom">Centro de Desarrollo</span><button class="cerrar" aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+      <div class="relleno"></div>
+      <div class="ventana"><span><svg class="ic"><use href="#i-min"/></svg></span><span><svg class="ic"><use href="#i-max"/></svg></span><span><svg class="ic"><use href="#i-cierra"/></svg></span></div>
+    </header>
+    <nav class="actividad">
+      <button class="act"><svg class="ic"><use href="#i-pendientes"/></svg><span class="tip">Pendientes</span></button>
+      <button class="act"><svg class="ic"><use href="#i-mapa"/></svg><span class="tip">Mapa</span></button>
+      <button class="act"><svg class="ic"><use href="#i-docs"/></svg><span class="tip">Docs</span></button>
+      <button class="act"><svg class="ic"><use href="#i-archivos"/></svg><span class="tip">Archivos</span></button>
+      <button class="act activo" id="actRevision"><svg class="ic"><use href="#i-revision"/></svg><span class="badge neutro" id="actCuenta">3</span><span class="tip" id="actTip">Revisión · 3 abiertos, esperan a la IA</span></button>
+      <button class="act"><svg class="ic"><use href="#i-git"/></svg><span class="tip">Git</span></button>
+      <button class="act"><svg class="ic"><use href="#i-scripts"/></svg><span class="tip">Scripts</span></button>
+    </nav>
+    <main class="principal">
+      <div class="cabecera"><h1>Beta</h1><span class="sub">Hito 7 · Construcción · I-3</span></div>
+      <div class="vista" id="vista"></div>
+    </main>
+    <div class="divisor"></div>
+    <aside class="chat">
+      <div class="chat-cab">
+        <div class="tit"><b>I-3: ajustes y avisos</b><small>Iridium · contexto 38 %</small></div>
+        <button class="btn icono" title="Conversaciones anteriores"><svg class="ic"><use href="#i-reloj"/></svg></button>
+        <button class="btn chico"><svg class="ic"><use href="#i-mas"/></svg>Nueva</button>
+      </div>
+      <div class="mensajes" id="mensajes"></div>
+      <div class="escribir">
+        <div class="campo" id="campo">Escribile a la IA…</div>
+        <div class="pie">Enter envía · Shift+Enter, salto de línea<svg class="ic"><use href="#i-flecha"/></svg></div>
+      </div>
+    </aside>
+    <footer class="estado-barra">
+      <span class="trab"><svg class="ic"><use href="#i-gira"/></svg>Trabajando en Beta</span>
+      <span>Hito 7 · Construcción</span>
+      <div class="der"><span>5 h <span class="num">34 %</span></span><span>semana <span class="num">61 %</span></span></div>
+    </footer>
+  </div>
+</section>
+
+<div class="demo" role="group" aria-label="Escena y estado, solo en el prototipo">
+  Prototipo:
+  <button data-escena="app" aria-pressed="true">En la app</button>
+  <button data-escena="iridium">En Iridium</button>
+  <span class="sep"></span>
+  <span id="estadosApp">
+    <button data-app="normal" aria-pressed="true">Normal</button>
+    <button data-app="sesion">Sin sesión abierta</button>
+    <button data-app="desconocido">Proyecto sin reconocer</button>
+    <button data-app="cerrado">Iridium cerrado</button>
+  </span>
+  <span id="estadosIr" hidden>
+    <button data-ir="lista" aria-pressed="true">Lista</button>
+    <button data-ir="abierto">Abierto</button>
+    <button data-ir="cerrado">Cerrado</button>
+    <button data-ir="vacio">Vacía</button>
+    <button data-ir="electron">Electron sin la línea</button>
+    <button data-ir="cargando">Cargando</button>
+    <button data-ir="extremos">Casos extremos</button>
+  </span>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s)
+const $$ = (s, r = document) => [...r.querySelectorAll(s)]
+const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
+const ic = (id) => `<svg class="ic"><use href="#i-${id}"/></svg>`
+
+/* ---------- Capturas dibujadas (en la app real son imágenes PNG) ---------- */
+function captura(tipo) {
+  const fondo = '<rect width="160" height="100" fill="#f4f2ee"/><rect width="34" height="100" fill="#ebe7e0"/>'
+  const marca = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="#3ee6a81a" stroke="#3ee6a8" stroke-width="1.4"/>`
+  const tarjeta = (y, h) => `<rect x="44" y="${y}" width="106" height="${h}" rx="4" fill="#fff" stroke="#e3ddd3"/>`
+  const lineas = (y) => `<rect x="52" y="${y}" width="32" height="4" rx="1" fill="#26231f"/><rect x="52" y="${y + 8}" width="58" height="3" rx="1" fill="#b6ada0"/>`
+  const dibujos = {
+    boton: tarjeta(22, 44) + lineas(30) + '<rect x="52" y="48" width="24" height="10" rx="2" fill="#2f5d50"/><rect x="80" y="48" width="26" height="10" rx="2" fill="none" stroke="#c9d6d1"/>' + marca(49, 45, 30, 16),
+    menu: tarjeta(14, 70) + lineas(22) + '<rect x="52" y="44" width="90" height="1" fill="#efeae2"/><rect x="52" y="62" width="90" height="1" fill="#efeae2"/><rect x="118" y="66" width="24" height="10" rx="2" fill="#fff" stroke="#ddd6cb"/>' + marca(115, 63, 30, 16),
+    tarjeta: tarjeta(20, 52) + lineas(28) + '<rect x="52" y="50" width="24" height="10" rx="2" fill="#2f5d50"/>' + marca(41, 17, 112, 58),
+    titulo: '<rect x="44" y="18" width="50" height="8" rx="1" fill="#26231f"/><rect x="44" y="31" width="70" height="3" rx="1" fill="#b6ada0"/>' + tarjeta(42, 40) + marca(41, 15, 56, 14),
+  }
+  return `<svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${fondo}${dibujos[tipo]}</svg>`
+}
+const cap = (tipo, clase = '') => tipo ? `<span class="cap ${clase}">${captura(tipo)}</span>` : `<span class="cap falta ${clase}"><span>${ic('imagen')}sin captura</span></span>`
+
+/* ---------- Datos del prototipo ---------- */
+const comentarios = [
+  { id: 14, estado: 'abierto', txt: 'El botón queda muy pegado al título; separalo un poco y que no parezca parte del texto.', archivo: 'Tarjeta.jsx', linea: 6, comp: 'Tarjeta › App', pagina: 'localhost:5173/ajustes', elem: 'button «Guardar»', fecha: 'hoy 14:32', cap: 'boton', hist: [['circulo', 'Dejado', 'hoy 14:32'], ['enviar', 'Enviado a la sesión', 'hoy 14:33']] },
+  { id: 13, estado: 'abierto', txt: 'El menú no se cierra al tocar afuera.', archivo: 'Menu.tsx', linea: 41, comp: 'Menu › Interruptor', pagina: 'localhost:5173/ajustes', elem: 'span «Sur ▾»', fecha: 'ayer 18:05', cap: 'menu', hist: [['circulo', 'Dejado', 'ayer 18:05']] },
+  { id: 11, estado: 'abierto', txt: 'Esta tarjeta y la de Avisos no tienen el mismo ancho de borde a borde.', archivo: 'Tarjeta.jsx', linea: 3, comp: 'Tarjeta › PaginaAjustes', pagina: 'localhost:5173/ajustes', elem: 'section', fecha: '25/10', cap: 'tarjeta', hist: [['circulo', 'Dejado', '25/10 11:20'], ['check', 'Cerrado por la IA: igualó el padding de las dos tarjetas', '25/10 12:02'], ['reabrir', 'Reabierto: «sigue un píxel corrido en Avisos»', '26/10 09:14']], reabierto: true },
+  { id: 12, estado: 'cerrado', txt: 'El título «Ajustes» es más chico que en el resto de las páginas.', archivo: 'Ajustes.jsx', linea: 11, comp: 'PaginaAjustes', pagina: 'localhost:5173/ajustes', elem: 'h1 «Ajustes»', fecha: '25/10', cap: 'titulo', cerro: 'ayer', hizo: 'Pasó el título a 30 px, como Inicio y Fases.', hist: [['circulo', 'Dejado', '25/10 11:24'], ['check', 'Cerrado por la IA: pasó el título a 30 px, como Inicio y Fases', 'ayer 16:40']] },
+  { id: 10, estado: 'cerrado', txt: 'Guardar no avisa que guardó.', archivo: 'Tarjeta.jsx', linea: 6, comp: 'Tarjeta › App', pagina: 'localhost:5173/ajustes', elem: 'button «Guardar»', fecha: '24/10', cap: 'boton', cerro: '24/10', hizo: 'Sumó un «Guardado» que se va solo a los dos segundos.', hist: [['circulo', 'Dejado', '24/10 20:10'], ['enviar', 'Enviado a la sesión', '24/10 20:10'], ['check', 'Cerrado por la IA: sumó un «Guardado» que se va solo', '24/10 20:31']] },
+]
+
+/* ===================================================================
+   Escena 1: modo comentar (W-R1) y tarjeta (W-R2)
+   =================================================================== */
+const beta = $('#beta'), capa = $('#capa')
+let estadoApp = 'normal'          // normal · sesion · desconocido · cerrado
+let activo = false, actual = null, pila = [], elegido = null, cola = 0
+let proyecto = 'Beta'
+const borradores = new Map()
+const proyectos = ['Beta', 'Gamma', 'Beta', 'Alfa', 'Eta']
+
+function rect(el) {
+  const r = el.getBoundingClientRect(), m = beta.getBoundingClientRect()
+  return { x: r.left - m.left + beta.scrollLeft, y: r.top - m.top + beta.scrollTop, w: r.width, h: r.height }
+}
+function nombre(el) {
+  const tag = el.tagName.toLowerCase()
+  if (estadoApp === 'sincomp' || !el.dataset.comp || el.closest('.beta-pie')) return `<b>${tag}</b>`
+  return `${el.dataset.comp} <span class="sep">›</span> <b>${tag}</b>`
+}
+function avisar(tit, sub, gris) {
+  $('.aviso-modo')?.remove()
+  const a = document.createElement('div')
+  a.className = 'aviso-modo' + (gris ? ' gris' : ''); a.setAttribute('role', 'status')
+  a.innerHTML = `<span class="faro"></span><div><b>${tit}</b><small>${sub}</small></div>`
+  document.body.appendChild(a)
+  a.addEventListener('animationend', () => a.remove())
+}
+let conocido = false
+function pintar() {
+  if (!activo) { capa.innerHTML = ''; return }
+  let html = ''
+  const el = elegido || actual
+  if (el) {
+    const r = rect(el)
+    html += `<div class="resalte ${elegido ? 'elegido' : ''}" style="left:${r.x - 3}px;top:${r.y - 3}px;width:${r.w + 6}px;height:${r.h + 6}px"></div>`
+    if (!elegido) {
+      const arriba = r.y - 28 > beta.scrollTop + 4
+      html += `<div class="etiqueta" style="left:${r.x - 3}px;top:${arriba ? r.y - 28 : r.y + r.h + 6}px">${nombre(el)}</div>`
+    }
+  }
+  capa.innerHTML = html
+  if (elegido) pintarTarjeta()
+}
+
+function pintarTarjeta(fin) {
+  const el = elegido, r = rect(el)
+  const ancho = 380, libreDer = beta.clientWidth - (r.x + r.w)
+  const left = libreDer > ancho + 24 ? r.x + r.w + 14 : Math.max(12, Math.min(r.x, beta.clientWidth - ancho - 12))
+  const top = libreDer > ancho + 24 ? Math.max(beta.scrollTop + 12, r.y - 8) : r.y + r.h + 12
+  const donde = el.dataset.src && !el.closest('.beta-pie') ? ` · ${el.dataset.src}` : ''
+  const cab = `<div class="cab"><span>${nombre(el).replace(/<span class="sep">›<\/span>/, '›')}${donde}</span>${estadoApp === 'desconocido' && !conocido ? '' : `<button class="proy" id="cambiarProy" title="Va a ${proyecto}. Tocá para cambiar de proyecto (si esta dirección pasó a otro)">${proyecto}${ic('chev')}</button>`}<button class="x" id="cerrarT" title="Cerrar (Esc); lo escrito queda">${ic('x')}</button></div>`
+  let cuerpo
+  if (fin) cuerpo = fin
+  else {
+    const preguntar = estadoApp === 'desconocido' && !conocido
+    const cerrado = estadoApp === 'cerrado'
+    cuerpo = (preguntar ? `<div class="elegir"><p>¿De qué proyecto es <code>localhost:5173</code>?</p><div class="opciones">${proyectos.map((p) => `<button data-p="${p}">${p}</button>`).join('')}</div></div>` : '')
+      + `<div class="cuerpo"><textarea id="texto" rows="2" placeholder="Qué le pasa a esto…">${esc(borradores.get(el) || '')}</textarea></div>`
+      + (cerrado ? `<div class="linea">${ic('espera')}<span>Iridium está cerrado: queda acá y se manda al abrirlo.</span></div>` : '')
+      + `<div class="pie"><span class="ayuda">Enter deja · Ctrl+Enter envía</span>
+          <button class="btn chico" id="enviar" ${cerrado || preguntar ? 'disabled' : ''} title="${cerrado ? 'Iridium está cerrado' : 'Lo guarda y se lo manda a la IA de ' + proyecto}">${ic('enviar')}Enviar ahora</button>
+          <button class="btn chico sigue" id="dejar" ${preguntar ? 'disabled' : ''}>Dejar</button></div>`
+  }
+  const t = document.createElement('div')
+  t.className = 'tarj-com'; t.style.left = left + 'px'; t.style.top = top + 'px'
+  t.innerHTML = cab + cuerpo
+  capa.appendChild(t)
+  $('#cerrarT', t).onclick = cerrarTarjeta
+  $('#cambiarProy', t)?.addEventListener('click', () => { conocido = false; const prev = estadoApp; estadoApp = 'desconocido'; capa.lastElementChild.remove(); pintarTarjeta(); estadoApp = prev })
+  if (fin) { $('#ok', t)?.addEventListener('click', cerrarTarjeta); return }
+  const ta = $('#texto', t)
+  ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length)
+  ta.oninput = () => { borradores.set(el, ta.value); ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px' }
+  ta.onkeydown = (e) => {
+    if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); if (!$('#enviar', t).disabled) enviar() }
+    else if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (!$('#dejar', t).disabled) dejar() }
+  }
+  $('#dejar', t).onclick = dejar
+  $('#enviar', t).onclick = enviar
+  $$('.opciones button', t).forEach((b) => b.onclick = () => { proyecto = b.dataset.p; conocido = true; pintar() })
+}
+function hecho(tit, sub, queda) {
+  const html = `<div class="hecho">${ic('check')}<div>${tit}${sub ? `<small>${sub}</small>` : ''}</div></div>`
+  capa.lastElementChild?.remove(); pintarTarjeta(html)
+  if (!queda) setTimeout(() => { if (elegido) cerrarTarjeta() }, 1100)
+}
+function dejar() {
+  borradores.delete(elegido)
+  if (estadoApp === 'cerrado') { cola++; actualizarCola(); hecho('Queda acá', 'Iridium está cerrado: se manda al abrirlo.') }
+  else hecho(`Guardado en ${proyecto}`)
+}
+function enviar() {
+  borradores.delete(elegido)
+  if (estadoApp === 'sesion') hecho('Guardado', `No hay una sesión abierta en ${proyecto}: la IA lo va a ver al empezar.`, true)
+  else hecho(`Enviado a la sesión de ${proyecto}`, 'Entra en el turno en curso. Lo ves en la conversación.')
+}
+function cerrarTarjeta() { elegido = null; pintar() }
+function actualizarCola() { const c = $('#cola'); c.hidden = !cola; c.textContent = cola; $('#btnExt').title = cola ? `${cola} comentarios esperan a que se abra Iridium` : 'Revisión de Iridium: comentar esta app (F8)' }
+
+function entrar() {
+  activo = true; conocido = estadoApp !== 'desconocido'; beta.style.cursor = 'crosshair'; pintar()
+  if (estadoApp === 'cerrado') avisar('Comentando · Iridium está cerrado', 'Los comentarios quedan acá y se mandan al abrirlo. F8 o Esc para salir.', true)
+  else if (estadoApp === 'desconocido') avisar('Comentando', '¿De qué proyecto es esta app? Lo elegís en la tarjeta. F8 o Esc para salir.', true)
+  else avisar(`Comentando en ${proyecto}`, 'Alt+↑ elige la caja que lo contiene. F8 o Esc para salir.')
+}
+function salir() { $('.aviso-modo')?.remove(); activo = false; actual = elegido = null; pila = []; beta.style.cursor = ''; pintar() }
+
+beta.addEventListener('mousemove', (e) => {
+  if (!activo || elegido || e.target.closest('.capa')) return
+  const el = e.target
+  if (el === beta || el === actual) return
+  actual = el; pila = []; pintar()
+})
+beta.addEventListener('mouseleave', () => { if (activo && !elegido) { actual = null; pintar() } })
+beta.addEventListener('click', (e) => {
+  if (!activo || e.target.closest('.capa')) return
+  e.preventDefault(); e.stopPropagation()
+  if (elegido) { cerrarTarjeta(); return }
+  if (actual) { elegido = actual; pintar() }
+}, true)
+beta.addEventListener('scroll', () => activo && !elegido && pintar())
+document.addEventListener('keydown', (e) => {
+  if (escena !== 'app') return
+  if (e.key === 'F8') { e.preventDefault(); activo ? salir() : entrar(); return }
+  if (!activo) return
+  if (e.key === 'Escape') { e.preventDefault(); elegido ? cerrarTarjeta() : salir(); return }
+  if (e.altKey && !elegido && actual) {
+    if (e.key === 'ArrowUp' && actual.parentElement && actual.parentElement !== beta) { e.preventDefault(); pila.push(actual); actual = actual.parentElement; pintar() }
+    if (e.key === 'ArrowDown' && pila.length) { e.preventDefault(); actual = pila.pop(); pintar() }
+  }
+})
+$('#btnExt').onclick = () => activo ? salir() : entrar()
+// Los enlaces y botones de Beta no hacen nada en el prototipo
+$$('#beta a').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()))
+
+/* ===================================================================
+   Escena 2: Revisión en Iridium (W-R3) y la conversación (W-R4)
+   =================================================================== */
+const vista = $('#vista')
+let estadoIr = 'lista', grupo = 'abiertos'
+
+function fila(c) {
+  const donde = c.archivo ? `<code>${c.archivo}:${c.linea}</code>${c.yaNo ? '<span>· el archivo ya no está</span>' : ''}` : `<span>${c.pagina}</span>`
+  const der = c.estado === 'cerrado'
+    ? `<div class="meta-der"><span class="chip ok">${ic('check')}cerrado ${c.cerro}</span><span class="cod-r">R-${c.id}</span></div>`
+    : `<div class="meta-der"><time>${c.fecha}</time><span class="cod-r">R-${c.id}</span>${c.reabierto ? `<span class="reab">${ic('reabrir')}reabierto</span>` : ''}</div>`
+  return `<button class="fila" data-id="${c.id}">${cap(c.cap)}<div><div class="txt">${esc(c.txt)}</div>
+    <div class="donde">${donde}${c.estado === 'cerrado' ? `<span>· dejado ${c.fecha}</span>` : ''}</div>
+    ${c.hizo ? `<div class="hizo">${ic('check')}<span>${esc(c.hizo)}</span></div>` : ''}</div>${der}</button>`
+}
+function lista(datos, extra = '') {
+  const ab = datos.filter((c) => c.estado === 'abierto'), ce = datos.filter((c) => c.estado === 'cerrado')
+  const mostrar = grupo === 'abiertos' ? ab : ce
+  vista.innerHTML = `<div class="rev">
+    <div class="rev-cab"><h2>Revisión</h2>
+      <div class="grupos" role="group" aria-label="Grupo">
+        <button data-g="abiertos" aria-pressed="${grupo === 'abiertos'}">Abiertos <span>${ab.length}</span></button>
+        <button data-g="cerrados" aria-pressed="${grupo === 'cerrados'}">Cerrados <span>${ce.length}</span></button>
+      </div>
+      <span class="ext-est">${ic('enchufe')}Extensión conectada hoy 14:32</span></div>
+    ${extra}
+    <div class="filas">${mostrar.length ? mostrar.map(fila).join('') : '<div class="ninguno">Ninguno.</div>'}${estadoIr === 'extremos' ? filaRota() : ''}</div></div>`
+  $$('.grupos button', vista).forEach((b) => b.onclick = () => { grupo = b.dataset.g; lista(datos, extra) })
+  $$('.fila[data-id]', vista).forEach((b) => b.onclick = () => detalle(datos.find((c) => c.id == b.dataset.id), datos, extra))
+}
+function filaRota() { return `<div class="fila rota"><div><b>${ic('espera')}No se pudo leer este comentario</b> · <code>docs/revision/R-7.md</code>: le falta la línea del estado. El resto se muestra igual.</div></div>` }
+
+function detalle(c, datos, extra) {
+  const cerrado = c.estado === 'cerrado'
+  const enlace = c.archivo ? (c.yaNo ? `<span class="ya-no">${c.archivo}, línea ${c.linea}</span> · ya no está` : `<a href="#" title="Abrir en Archivos, en esa línea">${c.archivo}, línea ${c.linea}</a>`) : '<span>sin archivo ni línea (la página no tiene mapa de fuentes)</span>'
+  vista.innerHTML = `<div class="det">
+    <div class="det-barra"><button class="btn chico enlace" id="atras">${ic('atras')}Atrás</button>
+      <span class="cod-r">R-${c.id}</span>${cerrado ? `<span class="chip ok">${ic('check')}cerrado</span>` : `<span class="chip neutro">${ic('circulo')}abierto</span>`}
+      <div class="acc">${cerrado ? `<button class="btn chico" id="reabrir">${ic('reabrir')}Reabrir</button>` : `<button class="btn chico" id="enviarYa">${ic('enviar')}Enviar ahora</button>`}</div></div>
+    <div class="det-cuerpo">${cap(c.cap)}<div><p class="texto">${esc(c.txt)}</p><div id="zonaReabrir"></div></div></div>
+    <dl class="pistas">
+      <dt>Dónde</dt><dd>${enlace}${c.comp ? ` · <code>${c.comp}</code>` : ''}</dd>
+      <dt>Página</dt><dd><code>${c.pagina}</code> · ${esc(c.elem)}</dd>
+      <dt>Historia</dt><dd><ul class="historia">${c.hist.map(([i, t, f]) => `<li class="${i === 'check' ? 'cerro' : ''}">${ic(i)}<span>${esc(t)} · <time>${f}</time></span></li>`).join('')}</ul></dd>
+    </dl></div>`
+  $('#atras').onclick = () => lista(datos, extra)
+  $('#enviarYa')?.addEventListener('click', (e) => { e.currentTarget.outerHTML = `<span class="chip ok">${ic('check')}enviado a la sesión de Beta</span>` })
+  $('#reabrir')?.addEventListener('click', () => {
+    $('#zonaReabrir').innerHTML = `<div class="reabrir"><label for="nota">¿Qué falta? <span style="color:var(--texto-3);font-weight:400">(opcional)</span></label>
+      <textarea id="nota" placeholder="Por ejemplo: en el celular sigue chico"></textarea>
+      <div class="pie"><button class="btn chico enlace" id="cancelar">Cancelar</button><button class="btn chico sigue" id="confirmar">${ic('reabrir')}Reabrir</button></div></div>`
+    $('#nota').focus()
+    $('#cancelar').onclick = () => $('#zonaReabrir').innerHTML = ''
+    $('#confirmar').onclick = () => {
+      const nota = $('#nota').value.trim()
+      c.estado = 'abierto'; c.reabierto = true; delete c.hizo
+      c.hist.push(['reabrir', nota ? `Reabierto: «${nota}»` : 'Reabierto', 'ahora'])
+      grupo = 'abiertos'; contar(datos); detalle(c, datos, extra)
+    }
+  })
+}
+function contar(datos) {
+  const n = datos.filter((c) => c.estado === 'abierto').length
+  $('#actCuenta').textContent = n; $('#actCuenta').hidden = !n
+  $('#actTip').textContent = n ? `Revisión · ${n} abiertos, esperan a la IA` : 'Revisión'
+}
+
+function vacio(electron) {
+  vista.innerHTML = `<div class="vacio">
+    ${electron ? `<div class="electron">${ic('atomo')}<div><b>Esta app es Electron y todavía no carga la extensión.</b><p>Hace falta una línea en el arranque de la app, solo para el modo desarrollo. La versión armada no la trae.</p></div><button class="btn chico sigue" id="pedir">Pedírselo a la IA</button></div>` : ''}
+    <h2>Todavía no hay comentarios</h2>
+    <p>Abrí la app en modo desarrollo y apretá <kbd>F8</kbd>. Señalás una parte, escribís qué le pasa y llega acá.</p>
+    <ol class="pasos">
+      <li><span>1</span><div>Instalá la extensión una vez en Chrome o Edge: <a href="#">scripts.md › Instalar la extensión de Revisión</a>.</div></li>
+      <li><span>2</span><div>Abrí la app en modo desarrollo (<code>localhost</code>, o la app Electron con la línea).</div></li>
+      <li><span>3</span><div>Con Iridium abierto, apretá el atajo o el botón de la extensión.</div></li>
+    </ol>
+    <div class="conexion">${ic('enchufe')}Extensión: ${electron ? 'conectada por última vez hoy 14:32' : 'nunca conectada'}</div></div>`
+  $('#pedir')?.addEventListener('click', () => {
+    $('#campo').textContent = 'Agregá en Beta la línea que carga la extensión de Revisión de Iridium en modo desarrollo (modulos/revision/diseno-tecnico.md).'
+    $('#campo').classList.add('lleno')
+  })
+}
+function cargando() { vista.innerHTML = `<div class="rev"><div class="rev-cab"><h2>Revisión</h2></div>${'<div class="silueta"><i></i><div><i style="width:80%"></i><i style="width:55%"></i><i style="width:30%"></i></div></div>'.repeat(4)}</div>` }
+
+function mensajes() {
+  const c = comentarios[0]
+  $('#mensajes').innerHTML = `
+    <div class="msg"><div class="quien ia">IA <time>14:21</time></div>
+      <p>Sumé el aviso de eclipse en <code>Avisos.jsx</code> y lo dejé apagado de entrada.</p>
+      <div class="herr">${ic('chev')}Usó 4 herramientas</div></div>
+    <div class="msg"><div class="quien">Vos <time>14:33</time></div>
+      <button class="msg-com" id="msgCom" title="Abrir R-${c.id} en Revisión">
+        <span class="cab">${ic('revision')}<b>Comentario R-${c.id}</b> · ${c.archivo}:${c.linea}<span class="ir" aria-hidden="true">${ic('chev')}</span></span>
+        <span class="cuerpo">${cap(c.cap)}<p>${esc(c.txt)}</p></span></button></div>
+    <div class="msg"><div class="quien ia">IA <time>14:33</time></div>
+      <p>Lo veo: el botón está a 4 px del texto. Lo separo y cierro R-${c.id}.</p>
+      <div class="herr ahora">${ic('gira')}Editando Tarjeta.jsx…</div></div>`
+  $('#msgCom').onclick = () => { estadoIr = 'abierto'; marcar(); detalle(comentarios[0], comentarios, '') }
+}
+
+function mostrarIr() {
+  const datos = comentarios
+  contar(datos)
+  if (estadoIr === 'lista') { grupo = 'abiertos'; lista(datos) }
+  else if (estadoIr === 'abierto') detalle(datos[0], datos, '')
+  else if (estadoIr === 'cerrado') { grupo = 'cerrados'; detalle(datos.find((c) => c.estado === 'cerrado'), datos, '') }
+  else if (estadoIr === 'vacio') { $('#actCuenta').hidden = true; $('#actTip').textContent = 'Revisión'; vacio(false) }
+  else if (estadoIr === 'electron') { $('#actCuenta').hidden = true; $('#actTip').textContent = 'Revisión'; vacio(true) }
+  else if (estadoIr === 'cargando') cargando()
+  else if (estadoIr === 'extremos') {
+    const muchos = [
+      { ...datos[0], id: 31, txt: 'Cuando la lista de fases tiene más de doce entradas, el último elemento queda tapado por el pie y no hay forma de verlo sin achicar la ventana; además el scroll salta al principio cada vez que se marca una fase como vista, lo que obliga a buscar de nuevo dónde estaba.', fecha: 'hoy 15:02', hist: [['circulo', 'Dejado', 'hoy 15:02']] },
+      { ...datos[1], id: 30, cap: null, txt: 'La captura falló en esta: el menú de hemisferio se abre detrás del pie.', fecha: 'hoy 14:58', hist: [['circulo', 'Dejado (sin captura)', 'hoy 14:58']] },
+      { ...datos[0], id: 29, archivo: null, comp: null, txt: 'En la página de prueba sin React, el enlace del pie está gris claro y no se lee.', pagina: 'localhost:8080/pie.html', elem: 'a «hecho a mano»', fecha: 'hoy 14:40', cap: 'titulo', hist: [['circulo', 'Dejado', 'hoy 14:40']] },
+      { ...datos[2], id: 28, yaNo: true, archivo: 'TarjetaVieja.jsx', txt: 'Esta tarjeta ya no se usa, pero el comentario sigue abierto.', fecha: '20/10', reabierto: false, hist: [['circulo', 'Dejado', '20/10 10:00']] },
+      ...Array.from({ length: 9 }, (_, i) => ({ ...datos[1], id: 27 - i, txt: `Detalle de ejemplo número ${i + 1} para ver que la lista se desplaza.`, fecha: `${19 - i}/10`, hist: [['circulo', 'Dejado', `${19 - i}/10`]] })),
+      ...datos.filter((c) => c.estado === 'cerrado'),
+    ]
+    grupo = 'abiertos'; contar(muchos); lista(muchos)
+  }
+}
+
+/* ---------- Selector del prototipo ---------- */
+let escena = 'app'
+function marcar() { $$('[data-ir]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.ir === estadoIr)) }
+$$('[data-escena]').forEach((b) => b.onclick = () => {
+  escena = b.dataset.escena
+  $$('[data-escena]').forEach((x) => x.setAttribute('aria-pressed', x === b))
+  $('#escenaApp').classList.toggle('oculto', escena !== 'app')
+  $('#escenaIridium').classList.toggle('oculto', escena !== 'iridium')
+  $('#estadosApp').hidden = escena !== 'app'; $('#estadosIr').hidden = escena !== 'iridium'
+  if (escena === 'iridium') { mensajes(); mostrarIr() }
+})
+$$('[data-app]').forEach((b) => b.onclick = () => {
+  estadoApp = b.dataset.app
+  $$('[data-app]').forEach((x) => x.setAttribute('aria-pressed', x === b))
+  cola = estadoApp === 'cerrado' ? 2 : 0; actualizarCola()
+  proyecto = 'Beta'; salir(); entrar()
+})
+$$('[data-ir]').forEach((b) => b.onclick = () => { estadoIr = b.dataset.ir; marcar(); mostrarIr() })
+
+// Arranca con el modo comentar activo y el botón «Guardar» señalado, como en W-R1
+entrar(); actual = $('.m-btn'); pintar()
+</script>
+</body>
+</html>

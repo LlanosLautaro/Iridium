@@ -1,0 +1,203 @@
+// Proyectos (H-1, 04-ux.md › W-2): los proyectos en una grilla, con su hito y lo que esperan del usuario. Ideas y
+// Skills están en la carpeta Iridium, aparte (D-083). A la derecha, el chat general (D-060): la conversación de la
+// carpeta Ideas, para ideas sueltas, proyectos nuevos y lo que toca a varios.
+import { type CSSProperties, type ReactNode, useState } from 'react'
+import type { ListaProyectos } from '../../../compartido/puente'
+import { fichaDe, usarEstado } from '../../estado'
+import { cambiarAncho, Divisor } from '../../ui/Divisor'
+import { Icono } from '../../ui/Icono'
+import { ChatGeneral } from '../inicio/ChatGeneral'
+import { Tarjeta } from './Tarjeta'
+
+/**
+ * La mudanza (D-083): las carpetas de Ideas y Skills de antes siguen en la carpeta de proyectos. Mover las lleva a la
+ * carpeta Iridium, después de confirmarlo.
+ */
+function Mudanza({ lista }: { lista: ListaProyectos }) {
+  const ponerLista = usarEstado((s) => s.ponerLista)
+  const ponerPreferencias = usarEstado((s) => s.ponerPreferencias)
+  const [moviendo, setMoviendo] = useState(false)
+  const [resultado, setResultado] = useState<string | null>(null)
+  const { mudanza, carpeta } = lista.iridium
+  if (!mudanza)
+    return resultado ? (
+      <p className="mudanza hecha" role="status">
+        {resultado}
+      </p>
+    ) : null
+  const nombres = [mudanza.ideas, mudanza.skills].filter((r) => r !== null).map((r) => r.split(/[\\/]/).pop())
+  const mover = async () => {
+    setMoviendo(true)
+    setResultado(null)
+    try {
+      const r = await window.iridium.mudar()
+      if (r.tipo === 'ok') {
+        ponerLista(r.lista)
+        // Las pestañas y el proyecto abierto cambiaron de ruta.
+        ponerPreferencias(await window.iridium.leerPreferencias())
+        setResultado(['Listo: se movieron a la carpeta Iridium.', ...r.avisos].join(' '))
+      } else if (r.tipo === 'error') setResultado(r.mensaje)
+    } finally {
+      setMoviendo(false)
+    }
+  }
+  return (
+    <div className="mudanza" role="status">
+      <p>
+        <b>{nombres.join(' y ')}</b> {nombres.length > 1 ? 'están' : 'está'} en la carpeta de proyectos.
+        Iridium ahora
+        {nombres.length > 1 ? ' las guarda' : ' la guarda'} aparte, en <span className="ruta">{carpeta}</span>
+        .{resultado && <span className="error"> {resultado}</span>}
+      </p>
+      <button type="button" className="btn primario" onClick={mover} disabled={moviendo}>
+        <Icono nombre="carpeta" />
+        {moviendo ? 'Moviendo…' : 'Mover'}
+      </button>
+    </div>
+  )
+}
+
+function Siluetas() {
+  const silueta = (i: number) => (
+    <div key={i} className="tarjeta silueta">
+      <div className="cab">
+        <span className="icono" />
+        <div>
+          <span className="linea" style={{ width: '60%' }} />
+          <span className="linea" style={{ width: '35%' }} />
+        </div>
+      </div>
+      <div className="desc">
+        <span className="linea" />
+        <span className="linea" style={{ width: '75%' }} />
+      </div>
+      <div className="pie">
+        <span className="linea" style={{ width: '40%' }} />
+      </div>
+    </div>
+  )
+  return (
+    <div className="grilla carga" role="status" aria-busy="true" aria-label="Cargando proyectos">
+      {Array.from({ length: 9 }, (_, i) => silueta(i))}
+    </div>
+  )
+}
+
+export function Proyectos() {
+  const lista = usarEstado((s) => s.lista)
+  const verArchivados = usarEstado((s) => s.preferencias.verArchivados)
+  const guardarPreferencias = usarEstado((s) => s.guardarPreferencias)
+  const abrirProyecto = usarEstado((s) => s.abrirProyecto)
+  const fichas = usarEstado((s) => s.fichas)
+  const ponerLista = usarEstado((s) => s.ponerLista)
+  const [eligiendo, setEligiendo] = useState(false)
+
+  const elegirCarpeta = async () => {
+    setEligiendo(true)
+    try {
+      const nueva = await window.iridium.elegirCarpeta()
+      if (nueva) ponerLista(nueva)
+    } finally {
+      setEligiendo(false)
+    }
+  }
+  const reintentar = async () => ponerLista(await window.iridium.listarProyectos())
+
+  const proyectos = lista?.tipo === 'lista' ? lista.proyectos : []
+  const archivados = proyectos.filter((p) => p.archivado).length
+  const visibles = verArchivados ? proyectos : proyectos.filter((p) => !p.archivado)
+  const conGrilla = lista?.tipo === 'lista' && proyectos.length > 0
+
+  let contenido: ReactNode
+  if (lista === null) contenido = <Siluetas />
+  else if (lista.tipo === 'error') {
+    contenido = (
+      <div className="mensaje error" role="alert">
+        <span className="chip error">
+          <Icono nombre="error" />
+          No se puede leer
+        </span>
+        <h2>No encuentro la carpeta de proyectos</h2>
+        <span className="ruta">{lista.raiz}</span>
+        <p>Puede que el disco no esté conectado o que la carpeta se haya movido.</p>
+        <div className="acc">
+          <button type="button" className="btn primario" onClick={elegirCarpeta} disabled={eligiendo}>
+            <Icono nombre="carpeta" />
+            Elegir la carpeta
+          </button>
+          <button type="button" className="btn secundario" onClick={reintentar}>
+            <Icono nombre="reintentar" />
+            Reintentar
+          </button>
+        </div>
+      </div>
+    )
+  } else if (proyectos.length === 0) {
+    contenido = (
+      <div className="mensaje" role="status">
+        <h2>Esta carpeta no tiene proyectos</h2>
+        <p>Iridium busca proyectos en las carpetas que están dentro de:</p>
+        <span className="ruta">{lista.raiz}</span>
+        <p>Creá una carpeta ahí o elegí otra carpeta de proyectos.</p>
+        <div className="acc">
+          <button type="button" className="btn primario" onClick={elegirCarpeta} disabled={eligiendo}>
+            <Icono nombre="carpeta" />
+            Elegir otra carpeta
+          </button>
+        </div>
+      </div>
+    )
+  } else {
+    contenido = (
+      <div className="grilla">
+        {visibles.map((p) => (
+          <Tarjeta key={p.ruta} p={p} ficha={fichaDe(fichas, p.ruta)} abrir={() => abrirProyecto(p.ruta)} />
+        ))}
+      </div>
+    )
+  }
+
+  const ancho = usarEstado((s) => s.preferencias.anchoConversacion)
+  return (
+    <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
+      <section className="principal grilla-proyectos" aria-label="Proyectos">
+        <div className="cabecera">
+          <h1>Proyectos</h1>
+          {conGrilla && (
+            <span className="total" title="Proyectos sin archivar">
+              {proyectos.length - archivados}
+            </span>
+          )}
+          {lista && (
+            <span className="raiz" title={lista.raiz}>
+              {lista.raiz}
+            </span>
+          )}
+          {conGrilla && (
+            <div className="der">
+              <button
+                type="button"
+                className="interruptor"
+                role="switch"
+                aria-checked={verArchivados}
+                title="Mostrar los archivados al final, más tenues"
+                onClick={() => guardarPreferencias({ verArchivados: !verArchivados })}
+              >
+                <span className="pista" />
+                Archivados <span className="n">{archivados}</span>
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="lienzo">
+          {lista && <Mudanza lista={lista} />}
+          {contenido}
+        </div>
+      </section>
+      <Divisor ancho={ancho} cambiar={cambiarAncho} />
+      <aside className="chat" aria-label="Chat general">
+        <ChatGeneral />
+      </aside>
+    </main>
+  )
+}

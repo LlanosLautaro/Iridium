@@ -1,0 +1,94 @@
+/* Ideas (modulos/inicio/ux.md › IN-W1): se arma con las piezas de Skills (la columna con grupos plegables, el detalle y
+   el chat); acá solo lo propio: Abrir como proyecto, el título largo de la idea y las filas Toca a y Fue a. */
+
+/* Abrir como proyecto, a la derecha del título de la columna (Ideas y Skills) */
+.columna .titulo .abrir-como-proyecto {
+  flex: none;
+  margin: 0 -8px 0 auto;
+  width: 26px;
+  height: 26px;
+}
+.columna .titulo .sk-dobles + .abrir-como-proyecto {
+  margin-left: 0;
+}
+.abrir-como-proyecto .ic {
+  width: 14px;
+  height: 14px;
+}
+
+/* El nombre de la sección, cortado si la columna es angosta */
+.id-columna .sk-grupo-tit .nom {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* El detalle: el título entero (las ideas tienen títulos largos) y el cuerpo como en Docs */
+.id-detalle h2 {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.id-detalle .cuerpo {
+  gap: 16px;
+}
+.id-detalle .md {
+  max-width: 68ch;
+  color: var(--texto-2);
+}
+
+/* Toca a y Fue a: la etiqueta en chico gris liquen; los proyectos, enlaces */
+.id-fila {
+  max-width: 68ch;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--borde-suave);
+}
+.id-fila .et {
+  flex: none;
+  width: 52px;
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+}
+.id-fila .valor {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 13.5px;
+}
+.id-proyecto {
+  color: var(--primario-texto);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.id-proyecto:hover {
+  text-decoration-style: solid;
+}
+.id-proyecto.falta {
+  color: var(--texto-2);
+  text-decoration: none;
+}
+.id-fila .md.id-destino {
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+/* Lo que va al medio cuando no hay idea para mostrar */
+.id-mensaje {
+  max-width: 52ch;
+  display: grid;
+  gap: 6px;
+  color: var(--texto-2);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.id-mensaje b {
+  font: 600 15px / 1.3 var(--ui);
+  color: var(--texto);
+}
+.id-mensaje code {
+  font: 12.5px / 1.4 var(--mono);
+}

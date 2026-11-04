@@ -1,0 +1,5 @@
+
+electron 44.5.1 node 24.21.0
+init apiKeySource=none
+texto: hola desde electron
+resultado: success

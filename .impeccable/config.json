@@ -1,0 +1,107 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-proyecto.html"
+        ],
+        "createdAt": "2026-10-23T11:41:37.628Z",
+        "reason": "Claude: app de herramienta (Operate) con el criterio del Manual de que un solo tamaño hace el trabajo; la jerarquía sale del peso, el ancho y el color, D-030"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-proyecto.html"
+        ],
+        "createdAt": "2026-10-23T11:57:00.017Z",
+        "reason": "Claude: las pestañas de sesión llenan el alto de su barra a propósito, como las pestañas de VS Code (D-031)"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-proyecto.html"
+        ],
+        "createdAt": "2026-10-23T13:46:36.989Z",
+        "reason": "user confirmed: F4 (D-032) incluye medidores de uso finos con brillo leve; es el único brillo de la pantalla"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-proyectos.html"
+        ],
+        "createdAt": "2026-10-23T17:32:15.830Z",
+        "reason": "user confirmed: F4 (D-032) incluye medidores de uso finos con brillo leve; es el único brillo de la pantalla"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-proyectos.html"
+        ],
+        "createdAt": "2026-10-23T17:34:43.704Z",
+        "reason": "Claude: las pestañas de sesión llenan el alto de su barra a propósito, como las pestañas de VS Code (D-031); mismo marco que vista-proyecto.html"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-pendientes.html"
+        ],
+        "createdAt": "2026-10-23T18:05:01.313Z",
+        "reason": "user confirmed: F4 (D-032) incluye medidores de uso finos con brillo leve; es el único brillo de la pantalla"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-pendientes.html"
+        ],
+        "createdAt": "2026-10-23T18:05:01.721Z",
+        "reason": "Claude: las pestañas de sesión llenan el alto de su barra a propósito, como las pestañas de VS Code (D-031); mismo marco que vista-proyecto.html"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-mapa-docs.html"
+        ],
+        "createdAt": "2026-10-23T18:19:57.607Z",
+        "reason": "user confirmed: F4 (D-032) incluye medidores de uso finos con brillo leve; es el único brillo de la pantalla"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-mapa-docs.html"
+        ],
+        "createdAt": "2026-10-23T18:19:58.061Z",
+        "reason": "Claude: las pestañas de sesión llenan el alto de su barra a propósito, como las pestañas de VS Code (D-031); mismo marco que vista-proyecto.html"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-revision.html"
+        ],
+        "createdAt": "2026-10-29T01:42:11.337Z",
+        "reason": "IA: Georgia y Segoe UI son de la app de ejemplo otra app y del marco de Chrome del prototipo, a propósito ajenos a Iridium; lo de la extensión usa las letras de DESIGN.md"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-revision.html"
+        ],
+        "createdAt": "2026-10-29T01:42:37.292Z",
+        "reason": "Claude: las pestañas de sesión llenan el alto de su barra como en VS Code (D-031), mismo marco y excepción que vista-proyecto.html; las teclas kbd, chips y la app de ejemplo otra app son compactas a propósito"
+      }
+    ]
+  }
+}

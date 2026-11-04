@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alternativas de la vista</title>
+<style>
+:root { color-scheme: dark; --fondo: #08090a; --texto: #e2e6e4; --texto-2: #9aa4a0; --borde: #23282a; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--fondo); color: var(--texto); font: 14px/1.5 "Segoe UI", system-ui, sans-serif; padding: 24px 28px 40px; }
+h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+p.sub { color: var(--texto-2); margin-bottom: 20px; }
+.grilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+figure { border: 1px solid var(--borde); }
+.marco { position: relative; aspect-ratio: 1440 / 900; overflow: hidden; }
+.marco iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; pointer-events: none; }
+figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--borde); }
+figcaption b { font-weight: 600; }
+figcaption span { color: var(--texto-2); font-size: 13px; }
+a { color: #6fe3cf; }
+</style>
+</head>
+<body>
+<h1>Cuatro alternativas de la vista de proyecto</h1>
+<p class="sub">Misma disposición (D-031), estilo nuevo desde las imágenes de prueba. Abrí cada una para tocarla: el botón de panel (o Ctrl+B) despliega el mapa.</p>
+<div class="grilla">
+  <figure><div class="marco"><iframe src="a-consola-pixel.html?panel&sinaviso" title="A"></iframe></div><figcaption><b>A · Consola pixel</b><span>Imagen 1 · <a href="a-consola-pixel.html">abrir</a></span></figcaption></figure>
+  <figure><div class="marco"><iframe src="b-centro-de-mando.html?panel&sinaviso" title="B"></iframe></div><figcaption><b>B · Centro de mando</b><span>Imagen 2 · <a href="b-centro-de-mando.html">abrir</a></span></figcaption></figure>
+  <figure><div class="marco"><iframe src="c-diario-terminal.html?panel&sinaviso" title="C"></iframe></div><figcaption><b>C · Diario terminal</b><span>Imagen 3 · <a href="c-diario-terminal.html">abrir</a></span></figcaption></figure>
+  <figure><div class="marco"><iframe src="d-sintesis.html?panel&sinaviso" title="D"></iframe></div><figcaption><b>D · Síntesis</b><span>Lo común de las tres · <a href="d-sintesis.html">abrir</a></span></figcaption></figure>
+</div>
+<script>
+function escalar() { document.querySelectorAll(".marco").forEach(m => m.querySelector("iframe").style.transform = `scale(${m.clientWidth / 1440})`); }
+addEventListener("resize", escalar); escalar();
+</script>
+</body>
+</html>

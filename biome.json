@@ -1,0 +1,107 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!docs",
+      "!spikes",
+      "!out",
+      "!release",
+      "!.impeccable",
+      "!.proyecto-icono.svg",
+      "!.proyecto.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 110
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/**", "!src/main/motor/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "@anthropic-ai/claude-agent-sdk": "Solo src/main/motor importa el SDK (D-007, D-025)."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/main/core/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "electron": "Las reglas puras no usan Electron (05-arquitectura.md › Convenciones).",
+                  "react": "Las reglas puras no usan React.",
+                  "fs": "Las reglas puras no tocan el disco: eso va en src/main/infra.",
+                  "node:fs": "Las reglas puras no tocan el disco: eso va en src/main/infra.",
+                  "node:fs/promises": "Las reglas puras no tocan el disco: eso va en src/main/infra.",
+                  "node:child_process": "Las reglas puras no ejecutan programas.",
+                  "@anthropic-ai/claude-agent-sdk": "Solo src/main/motor importa el SDK (D-007, D-025)."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/renderer/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "electron": "La ventana no usa Electron: pide todo por el puente (window.iridium).",
+                  "node:fs": "La ventana no toca el disco: pide todo por el puente.",
+                  "node:fs/promises": "La ventana no toca el disco: pide todo por el puente.",
+                  "@anthropic-ai/claude-agent-sdk": "Solo src/main/motor importa el SDK (D-007, D-025)."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

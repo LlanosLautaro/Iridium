@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proyectos</title>
+<style>
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("fuentes/jetbrains-mono-100-800.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+
+:root { color-scheme: dark;
+  /* Superficies */
+  --fondo: #0a0f0e; --lateral: #070b0a; --barra: #060908; --elevado: #0e1513; --hover: #121c19;
+  --caja: #0f1714; --medidor-fondo: #17241f;
+  --borde: #18241f; --borde-suave: #121b18; --borde-fuerte: #24362f;
+  /* Texto */
+  --texto: #d9e6e0; --texto-2: #a3b8b0; --texto-3: #74908a;
+  /* Señales: verde activo y hecho, ámbar lo que espera del usuario, rojo error */
+  --primario: #3ee6a8; --primario-texto: #5cecb8; --trabaja: #3ee6a8; --ok: #3ee6a8;
+  --espera: #f5b13d; --espera-borde: #4a3c1a; --espera-fondo: #12170f;
+  --error: #ff5f57; --sobre-color: #0a0d0b;
+  --seleccion: #3ee6a844; --sel-fondo: #0f241d;
+  /* Letra: Chakra Petch para leer, JetBrains Mono solo para códigos y números */
+  --ui: "Chakra Petch", "Segoe UI", sans-serif; --mono: "JetBrains Mono", Consolas, monospace;
+  --tam-base: 13.5px; --tam-lectura: 15px; --tam-chico: 12.5px;
+  /* Esquinas */
+  --radio-tarjeta: 10px; --radio-control: 5px;
+  --sale: cubic-bezier(.16, 1, .3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body { background: var(--fondo); color: var(--texto); font: 400 var(--tam-base)/1.5 var(--ui); font-variant-numeric: tabular-nums; min-width: 1024px; overflow: hidden; }
+::selection { background: var(--seleccion); color: var(--texto); }
+:focus-visible { outline: 1px solid var(--primario); outline-offset: -1px; }
+* { scrollbar-width: thin; scrollbar-color: var(--borde-fuerte) transparent; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.ic { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.cod { font-family: var(--mono); font-size: 12.5px; color: var(--texto-2); }
+.gira { animation: gira 1.4s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+
+/* Marco: igual que la vista de proyecto (W-1) */
+.app { display: grid; grid-template-columns: 52px 1fr; grid-template-rows: 40px 1fr 28px; height: 100vh; }
+.actividad { grid-row: 1 / 3; background: var(--lateral); border-right: 1px solid var(--borde); display: flex; flex-direction: column; align-items: center; padding-bottom: 6px; }
+.marca-app { width: 52px; height: 40px; display: grid; place-items: center; border-bottom: 1px solid var(--borde); color: var(--primario); }
+.act { position: relative; width: 52px; height: 48px; display: grid; place-items: center; color: var(--texto-3); }
+.act .ic { width: 21px; height: 21px; }
+.act:hover { color: var(--texto); }
+.act.activo { color: var(--primario); }
+.act.activo::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 2px; background: var(--primario); }
+.act .badge { position: absolute; right: 8px; bottom: 8px; min-width: 17px; height: 17px; padding: 0 4px; display: grid; place-items: center; border-radius: var(--radio-control); background: var(--espera); color: var(--sobre-color); font: 700 11px/1 var(--mono); }
+.act.abajo { margin-top: auto; }
+
+.sesiones { grid-column: 2; display: flex; align-items: stretch; background: var(--barra); border-bottom: 1px solid var(--borde); min-width: 0; }
+.ses { display: flex; align-items: center; padding-right: 8px; border-right: 1px solid var(--borde); color: var(--texto-3); white-space: nowrap; position: relative; }
+.ses:hover { color: var(--texto-2); background: var(--hover); }
+.ses .pestana { align-self: stretch; display: flex; align-items: center; gap: 8px; padding: 0 6px 0 14px; }
+.ses .nom { font-weight: 600; }
+.ses .cerrar { width: 22px; height: 22px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.ses .cerrar .ic { width: 13px; height: 13px; }
+.ses .cerrar:hover { color: var(--texto); background: var(--hover); }
+.sesiones .reloj { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 16px; color: var(--texto-3); font-size: var(--tam-chico); }
+.sesiones .reloj::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--primario); }
+.sesiones .reloj time { font-family: var(--mono); font-size: 12px; }
+
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 7px; border: 1px solid color-mix(in oklab, currentColor 45%, transparent); border-radius: var(--radio-control); font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; white-space: nowrap; }
+.chip .ic { width: 12px; height: 12px; }
+.chip.trab { color: var(--trabaja); }
+.chip.espera { color: var(--espera); }
+.chip.error { color: var(--error); }
+.chip.ok { color: var(--ok); }
+
+.btn { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 14px; border-radius: var(--radio-control); font: 600 13px/1 var(--ui); letter-spacing: .02em; }
+.btn.primario { background: var(--espera); color: var(--sobre-color); }
+.btn.primario:hover { filter: brightness(1.1); }
+.btn.secundario { border: 1px solid var(--borde-fuerte); color: var(--texto-2); }
+.btn.secundario:hover { color: var(--texto); border-color: var(--texto-3); }
+.btn .ic { width: 13px; height: 13px; }
+
+/* Área de trabajo: cabecera y grilla */
+.trabajo { grid-column: 2; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.cabecera { display: flex; align-items: center; gap: 12px; height: 38px; padding: 0 16px 0 20px; flex: none; border-bottom: 1px solid var(--borde-suave); }
+.cabecera h1 { font: 600 16px/1 var(--ui); color: var(--texto); }
+.cabecera .total { font: 500 12px/1 var(--mono); color: var(--texto-3); }
+.cabecera .raiz { color: var(--texto-3); font: 400 12px/1 var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.cabecera .der { margin-left: auto; display: flex; align-items: center; gap: 14px; flex: none; }
+
+/* Interruptor de archivados */
+.interruptor { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 6px; border-radius: var(--radio-control); color: var(--texto-2); font-size: var(--tam-chico); }
+.interruptor:hover { color: var(--texto); }
+.interruptor .pista { position: relative; width: 26px; height: 14px; border-radius: 7px; background: var(--medidor-fondo); border: 1px solid var(--borde-fuerte); transition: background .15s, border-color .15s; }
+.interruptor .pista::after { content: ""; position: absolute; top: 2px; left: 2px; width: 8px; height: 8px; border-radius: 50%; background: var(--texto-3); transition: transform .2s var(--sale), background .15s; }
+.interruptor[aria-checked="true"] .pista { background: var(--sel-fondo); border-color: var(--primario); }
+.interruptor[aria-checked="true"] .pista::after { transform: translateX(12px); background: var(--primario); }
+.interruptor .n { font: 500 12px/1 var(--mono); color: var(--texto-3); }
+
+/* Abajo deja lugar para el selector del prototipo */
+.lienzo { flex: 1; overflow-y: auto; padding: 20px 20px 72px; }
+.grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; max-width: 1480px; }
+
+/* La tarjeta de un proyecto: estado con ícono y palabra; el color solo para lo que avisa */
+.tarjeta { position: relative; display: grid; grid-template-rows: auto 1fr auto; gap: 10px; min-height: 148px; padding: 14px 14px 12px; border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--elevado); color: inherit; text-decoration: none; transition: background .12s, border-color .12s; }
+.tarjeta:hover { background: var(--hover); border-color: var(--borde-fuerte); }
+.tarjeta:focus-visible { outline: 1px solid var(--primario); outline-offset: 0; }
+.tarjeta .cab { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; }
+.tarjeta .icono { grid-row: 1 / 3; width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: var(--caja); display: grid; place-items: center; }
+.tarjeta .icono img { width: 100%; height: 100%; display: block; }
+.tarjeta .icono.vacio { border: 1px dashed var(--borde-fuerte); background: none; color: var(--texto-3); }
+.tarjeta .icono .inicial { font: 600 17px/1 var(--ui); color: var(--texto-2); }
+.tarjeta .nombre { grid-column: 2 / 4; font: 600 14.5px/1.3 var(--ui); color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; padding-top: 2px; }
+.tarjeta .estado { display: inline-flex; align-items: center; gap: 6px; font-size: var(--tam-chico); color: var(--texto-2); min-width: 0; white-space: nowrap; overflow: hidden; }
+.tarjeta .estado .ic { width: 13px; height: 13px; }
+.tarjeta .estado.desarrollo { color: var(--primario); }
+.tarjeta .estado.tenue { color: var(--texto-3); }
+.tarjeta .estado .hacia { color: var(--texto-2); overflow: hidden; text-overflow: ellipsis; }
+/* Estado y preguntas comparten línea; si no entran, las preguntas bajan en vez de cortar el estado */
+.tarjeta .linea2 { grid-column: 2 / 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; min-width: 0; }
+.tarjeta .desc { align-self: start; font-size: var(--tam-chico); line-height: 1.5; color: var(--texto-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tarjeta .pie { display: flex; align-items: center; gap: 8px; min-height: 22px; padding-top: 10px; border-top: 1px solid var(--borde-suave); font-size: var(--tam-chico); color: var(--texto-2); }
+.tarjeta .pie .hito { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tarjeta .pie .hito b { font: 500 12px/1 var(--mono); color: var(--texto); }
+.tarjeta .pie .sin { color: var(--texto-3); font-style: normal; }
+.tarjeta .pie .chip, .tarjeta .pie .en-sesion { margin-left: auto; }
+.tarjeta .pie .en-sesion { display: inline-flex; align-items: center; gap: 6px; color: var(--texto-2); white-space: nowrap; }
+.tarjeta .pie .en-sesion::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--texto-3); }
+.tarjeta .pie .archivada { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; color: var(--texto-3); }
+.tarjeta .pie .archivada .ic { width: 13px; height: 13px; }
+.tarjeta.archivado { background: none; }
+.tarjeta.archivado .icono img { opacity: .5; }
+.tarjeta.archivado .nombre { color: var(--texto-2); }
+.tarjeta.archivado .estado, .tarjeta.archivado .desc, .tarjeta.archivado .pie { color: var(--texto-3); }
+.tarjeta.danada { background: none; border-style: dashed; }
+.tarjeta.danada .nombre { color: var(--texto-2); }
+
+/* Cargando: siluetas quietas que respiran apenas; la grilla aparece de una vez */
+.silueta { pointer-events: none; }
+.silueta .icono, .silueta .linea { background: var(--medidor-fondo); border-radius: 4px; }
+.silueta .icono { border-radius: 8px; }
+.silueta .linea { height: 10px; }
+.silueta .cab { grid-template-columns: 40px 1fr; }
+.silueta .cab div:not(.icono) { display: grid; gap: 8px; padding-top: 4px; }
+.silueta .desc { display: grid; gap: 7px; }
+.carga { animation: respira 1.6s ease-in-out infinite; }
+@keyframes respira { 50% { opacity: .55; } }
+
+/* Vacío y error: un mensaje centrado con la ruta y la acción */
+.mensaje { max-width: 460px; margin: 12vh auto 0; display: grid; justify-items: start; gap: 10px; padding: 22px 24px; border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--elevado); }
+.mensaje.error { border-color: color-mix(in oklab, var(--error) 35%, var(--borde)); }
+.mensaje h2 { font: 600 16px/1.4 var(--ui); color: var(--texto); }
+.mensaje p { color: var(--texto-2); font-size: var(--tam-base); line-height: 1.6; }
+.mensaje .ruta { display: block; width: 100%; padding: 8px 10px; border-radius: var(--radio-control); background: var(--caja); border: 1px solid var(--borde-suave); font: 400 12.5px/1.4 var(--mono); color: var(--texto-2); overflow-wrap: anywhere; }
+.mensaje .acc { display: flex; gap: 8px; margin-top: 4px; }
+
+.estado-barra { grid-column: 1 / 3; display: flex; align-items: center; gap: 4px; background: var(--barra); border-top: 1px solid var(--borde); padding: 0 12px; font-size: var(--tam-chico); color: var(--texto-2); }
+.estado-barra .it { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 8px; white-space: nowrap; }
+.estado-barra .der { margin-left: auto; display: flex; gap: 6px; }
+/* Los medidores son lo único con brillo */
+.medidor .barra { position: relative; display: inline-block; width: 72px; height: 6px; border-radius: 3px; overflow: hidden; background: var(--medidor-fondo); }
+.medidor .barra b { position: absolute; inset: 0 auto 0 0; width: var(--v); border-radius: 3px; background: var(--medidor, var(--primario)); box-shadow: 0 0 8px var(--medidor, var(--primario)); }
+.medidor .pc { font: 500 12px/1 var(--mono); color: var(--texto); min-width: 34px; }
+
+/* Solo en el prototipo: elegir qué estado de la pantalla se ve */
+.demo { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 4px 4px 4px 12px; border: 1px dashed var(--borde-fuerte); border-radius: 8px; background: var(--barra); font-size: 12px; color: var(--texto-3); z-index: 10; }
+.demo button { height: 24px; padding: 0 9px; border-radius: 4px; color: var(--texto-2); font-size: 12px; }
+.demo button:hover { background: var(--hover); color: var(--texto); }
+.demo button[aria-pressed="true"] { background: var(--sel-fondo); color: var(--primario); }
+.oculto { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) { .gira, .carga { animation: none !important; } .tarjeta, .interruptor .pista, .interruptor .pista::after { transition: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-proyectos" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-pendientes" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-ajustes" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-error" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+  <symbol id="i-espera" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5"/><path d="M12 16h.01"/></symbol>
+  <symbol id="i-marca" viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><path d="m16 15 3 3-3 3" transform="translate(0 -3)"/></symbol>
+  <symbol id="i-punto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="currentColor"/></symbol>
+  <symbol id="i-idea" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></symbol>
+  <symbol id="i-pausa" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></symbol>
+  <symbol id="i-rescate" viewBox="0 0 24 24"><path d="M4 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+  <symbol id="i-descontinuado" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.7 5.7 12.6 12.6"/></symbol>
+  <symbol id="i-eliminar" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  <symbol id="i-archivo" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10h14V9M10 13h4"/></symbol>
+  <symbol id="i-carpeta" viewBox="0 0 24 24"><path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-reintentar" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></symbol>
+  <symbol id="i-ficha" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/></symbol>
+</svg>
+
+<div class="app">
+  <nav class="actividad" aria-label="Secciones">
+    <div class="marca-app" aria-hidden="true"><svg class="ic" style="width:22px;height:22px"><use href="#i-marca"/></svg></div>
+    <button class="act activo" title="Proyectos (Ctrl+1)" aria-label="Proyectos" aria-current="page"><svg class="ic"><use href="#i-proyectos"/></svg></button>
+    <button class="act" title="Pendientes (Ctrl+2) · 2 sin responder" aria-label="Pendientes, 2 sin responder"><svg class="ic"><use href="#i-pendientes"/></svg><span class="badge">2</span></button>
+    <button class="act abajo" title="Ajustes" aria-label="Ajustes"><svg class="ic"><use href="#i-ajustes"/></svg></button>
+  </nav>
+
+  <div class="sesiones" role="tablist" aria-label="Sesiones abiertas">
+    <div class="ses"><a class="pestana" role="tab" aria-selected="false" href="vista-proyecto.html" style="color:inherit;text-decoration:none"><span class="nom">Centro de Desarrollo</span><span class="chip trab"><svg class="ic gira"><use href="#i-sync"/></svg>Trabajando</span></a><button class="cerrar" title="Cerrar la sesión (Ctrl+W)" aria-label="Cerrar Centro de Desarrollo"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <div class="ses"><button class="pestana" role="tab" aria-selected="false"><span class="nom">Beta</span><span class="chip espera"><svg class="ic"><use href="#i-espera"/></svg>1 pregunta</span></button><button class="cerrar" title="Cerrar la sesión (Ctrl+W)" aria-label="Cerrar Beta"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <div class="ses"><button class="pestana" role="tab" aria-selected="false"><span class="nom">Gamma</span><span class="chip error"><svg class="ic"><use href="#i-error"/></svg>Error</span></button><button class="cerrar" title="Cerrar la sesión (Ctrl+W)" aria-label="Cerrar Gamma"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <span class="reloj">3 sesiones · <time>14:32</time></span>
+  </div>
+
+  <main class="trabajo">
+    <div class="cabecera">
+      <h1>Proyectos</h1>
+      <span class="total" id="total" aria-label="cantidad de proyectos">11</span>
+      <span class="raiz" id="raiz" title="C:\Proyectos">C:\Proyectos</span>
+      <div class="der">
+        <button class="interruptor" id="archivados" role="switch" aria-checked="false" title="Mostrar los archivados al final, más tenues"><span class="pista"></span>Archivados <span class="n" id="nArch">2</span></button>
+      </div>
+    </div>
+    <div class="lienzo" id="lienzo"></div>
+  </main>
+
+  <footer class="estado-barra">
+    <span class="it">3 sesiones abiertas</span>
+    <div class="der">
+      <span class="it medidor" title="Ventana de 5 horas · se libera a las 18:10">5 h <span class="barra" style="--v:34%"><b></b></span><span class="pc">34 %</span></span>
+      <span class="it medidor" title="Semana · se libera el lunes a las 09:00">Semana <span class="barra" style="--v:61%;--medidor:var(--espera)"><b></b></span><span class="pc">61 %</span></span>
+    </div>
+  </footer>
+</div>
+
+<div class="demo" role="group" aria-label="Estado de la pantalla, solo en el prototipo">
+  Prototipo:
+  <button data-estado="normal" aria-pressed="true">Normal</button>
+  <button data-estado="cargando">Cargando</button>
+  <button data-estado="vacio">Vacía</button>
+  <button data-estado="error">Error</button>
+  <button data-estado="extremos">Casos extremos</button>
+</div>
+
+<script>
+// Orden de los estados (04-ux.md › W-2 y D-022); dentro de cada uno, por nombre
+const ESTADOS = {
+  "en-desarrollo": { nombre: "en desarrollo", icono: "i-punto", clase: "desarrollo" },
+  "en-uso":        { nombre: "en uso",        icono: "i-check", clase: "" },
+  "idea":          { nombre: "idea",          icono: "i-idea", clase: "tenue" },
+  "pausado":       { nombre: "pausado",       icono: "i-pausa", clase: "tenue" },
+  "en-rescate":    { nombre: "en rescate",    icono: "i-rescate", clase: "" },
+  "descontinuado": { nombre: "descontinuado", icono: "i-descontinuado", clase: "tenue" },
+  "para-eliminar": { nombre: "para eliminar", icono: "i-eliminar", clase: "tenue" }
+};
+const ORDEN = Object.keys(ESTADOS);
+
+// Proyectos de muestra (D-082); sesión: trabaja · espera · error · terminó
+const Proyectos = [
+  { n: "Alfa", e: "en-desarrollo", i: "alfa.png", h: [10, "Operación"], d: "App de escritorio para ordenar una colección de archivos y armar paquetes propios con piezas de otros." },
+  { n: "Beta", e: "en-desarrollo", i: "beta.svg", h: [7, "Construcción"], p: 1, frena: true, s: "espera", d: "App personal para catalogar imágenes y videos, guardar pestañas del navegador y tomar notas simples." },
+  { n: "Centro de Desarrollo", e: "en-desarrollo", i: "centro-de-desarrollo.svg", h: [6, "UI"], s: "trabaja", d: "Iridium: plataforma de desarrollo humano + IA. Yo dirijo, la IA desarrolla y orienta." },
+  { n: "Delta", e: "en-uso", i: "delta.svg", h: [10, "Operación"], p: 1, d: "Extensión de editor que muestra los proyectos como tarjetas con su estado, para abrirlos y archivarlos." },
+  { n: "Scripts", e: "en-uso", i: "scripts.svg", d: "Scripts chicos sueltos en varios lenguajes." },
+  { n: "Skills", e: "en-uso", i: "skills.svg", d: "Las skills, instrucciones y configuración de Claude." },
+  { n: "Gamma", e: "idea", i: "gamma.svg", h: [1, "Exploración"], s: "error", d: "Centro personal para hacer todo con IA y verlo desde la PC o el celular." },
+  { n: "Ideas", e: "idea", i: "ideas.svg", d: "Lugar para hablar con Claude de todos los proyectos y anotar ideas sueltas antes de decidir en qué proyecto integrarlas." },
+  { n: "Épsilon", e: "en-rescate", i: "epsilon.svg", r: "Alfa", d: "Primer intento de lo que hoy hace Alfa. Su conocimiento pasa a Alfa." },
+  { n: "Zeta", e: "en-rescate", i: "zeta.svg", r: "Gamma", d: "Workspace anterior de Eta. Su historia ya se importó a Eta." },
+  { n: "Eta", e: "en-rescate", i: "eta.svg", r: "Gamma", h: [10, "Operación"], d: "Monorepo de una app de notas con backend, frontend y plugins." },
+  { n: "Theta", e: "en-uso", i: "theta.svg", a: true, d: "Scripts para rescatar archivos de un disco." },
+  { n: "Iota", e: "en-uso", i: "iota.svg", a: true, d: "Una página chica con una animación." }
+];
+// Casos extremos: nombre largo, más de 99 pendientes, estados poco comunes y una ficha dañada
+const EXTREMOS = [
+  { n: "Visor de planos y presupuestos para la reforma de la casa", e: "pausado", h: [3, "Investigación de dominio"], p: 124, frena: true, d: "Se dejó en pausa hasta tener los planos finales." },
+  { n: "Notas viejas", e: "descontinuado", d: "Primer intento de app de notas, reemplazado por las de Beta." },
+  { n: "prueba-electron", e: "para-eliminar", s: "terminó", d: "Carpeta de prueba de Electron, ya no hace falta." },
+  { n: "Lector de RSS", danada: "El .proyecto.json no se puede leer: falta una coma en la línea 4." }
+];
+
+const SESION = {
+  trabaja: '<span class="chip trab"><svg class="ic gira"><use href="#i-sync"/></svg>Trabajando</span>',
+  // Si la sesión espera, ya lo dice el aviso de preguntas: acá solo consta que está abierta
+  espera:  '<span class="en-sesion">Sesión abierta</span>',
+  error:   '<span class="chip error"><svg class="ic"><use href="#i-error"/></svg>Error</span>',
+  "terminó": '<span class="chip ok"><svg class="ic"><use href="#i-check"/></svg>Terminó</span>'
+};
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+function pendientes(p) {
+  if (!p.p) return "";
+  const n = p.p > 99 ? "99+" : p.p, txt = `${n} ${p.p === 1 ? "pregunta" : "preguntas"}${p.frena ? " · frena" : ""}`;
+  return `<span class="chip espera aviso-pend" title="${p.frena ? "Al menos una frena el proyecto" : "Sin responder"}"><svg class="ic"><use href="#i-espera"/></svg>${txt}</span>`;
+}
+
+function tarjeta(p) {
+  if (p.danada) return `<a class="tarjeta danada" href="#" title="${esc(p.n)} · ${esc(p.danada)}">
+      <div class="cab"><span class="icono vacio"><svg class="ic"><use href="#i-ficha"/></svg></span><span class="nombre">${esc(p.n)}</span>
+        <span class="estado"><span class="chip error"><svg class="ic"><use href="#i-error"/></svg>Ficha dañada</span></span></div>
+      <p class="desc">${esc(p.danada)} Se muestra al final hasta que se arregle.</p>
+      <div class="pie"><span class="hito sin">Pedile a la IA que la arregle</span></div></a>`;
+  const est = ESTADOS[p.e];
+  const hacia = p.r ? ` <span class="hacia">→ ${esc(p.r)}</span>` : "";
+  const hito = p.h ? `<span class="hito">Hito <b>${p.h[0]}</b> · ${esc(p.h[1])}</span>` : `<span class="hito sin">Sin estado</span>`;
+  const der = p.a ? `<span class="archivada"><svg class="ic"><use href="#i-archivo"/></svg>Archivado</span>` : (p.s ? SESION[p.s] : "");
+  const etiqueta = [p.n, est.nombre, p.r && "pasa a " + p.r, p.h ? `hito ${p.h[0]}, ${p.h[1]}` : "sin estado", p.p && `${p.p} pendientes`, p.a && "archivado"].filter(Boolean).join(" · ");
+  return `<a class="tarjeta${p.a ? " archivado" : ""}" href="vista-proyecto.html" title="${esc(etiqueta)}" aria-label="${esc(etiqueta)}">
+      <div class="cab">
+        <span class="icono">${p.i ? `<img src="iconos/${p.i}" alt="">` : `<span class="inicial">${esc(p.n[0].toUpperCase())}</span>`}</span>
+        <span class="nombre">${esc(p.n)}</span>
+        <span class="linea2"><span class="estado ${est.clase}"><svg class="ic"><use href="#${est.icono}"/></svg>${est.nombre}${hacia}</span>${pendientes(p)}</span>
+      </div>
+      <p class="desc">${esc(p.d)}</p>
+      <div class="pie">${hito}${der}</div></a>`;
+}
+
+const lienzo = document.getElementById("lienzo"), sw = document.getElementById("archivados");
+let estado = "normal";
+let verArchivados = false;
+try { verArchivados = localStorage.getItem("iridium.archivados") === "1"; } catch (e) {}
+
+function ordenar(lista) {
+  return lista.slice().sort((x, y) => (!!x.danada - !!y.danada) || (!!x.a - !!y.a) || (ORDEN.indexOf(x.e) - ORDEN.indexOf(y.e)) || x.n.localeCompare(y.n, "es", { sensitivity: "base" }));
+}
+
+function pintar() {
+  sw.setAttribute("aria-checked", verArchivados);
+  const cab = [document.getElementById("total"), document.getElementById("archivados")];
+  cab.forEach(x => x.classList.toggle("oculto", estado === "vacio" || estado === "error" || estado === "cargando"));
+  if (estado === "cargando") {
+    const s = `<div class="tarjeta silueta"><div class="cab"><span class="icono"></span><div><span class="linea" style="width:60%"></span><span class="linea" style="width:35%"></span></div></div><div class="desc"><span class="linea"></span><span class="linea" style="width:75%"></span></div><div class="pie"><span class="linea" style="width:40%"></span></div></div>`;
+    lienzo.innerHTML = `<div class="grilla carga" aria-busy="true" aria-label="Cargando proyectos">${s.repeat(9)}</div>`;
+    return;
+  }
+  if (estado === "vacio") {
+    lienzo.innerHTML = `<div class="mensaje" role="status"><h2>Esta carpeta no tiene proyectos</h2>
+      <p>Iridium busca proyectos en las carpetas que están dentro de:</p><span class="ruta">C:\\Proyectos</span>
+      <p>Creá una carpeta ahí o elegí otra carpeta de proyectos.</p>
+      <div class="acc"><button class="btn primario"><svg class="ic"><use href="#i-carpeta"/></svg>Elegir otra carpeta</button></div></div>`;
+    return;
+  }
+  if (estado === "error") {
+    lienzo.innerHTML = `<div class="mensaje error" role="alert"><span class="chip error"><svg class="ic"><use href="#i-error"/></svg>No se puede leer</span>
+      <h2>No encuentro la carpeta de proyectos</h2><span class="ruta">E:\\Proyectos</span>
+      <p>Puede que el disco no esté conectado o que la carpeta se haya movido.</p>
+      <div class="acc"><button class="btn primario"><svg class="ic"><use href="#i-carpeta"/></svg>Elegir la carpeta</button><button class="btn secundario"><svg class="ic"><use href="#i-reintentar"/></svg>Reintentar</button></div></div>`;
+    return;
+  }
+  const todos = estado === "extremos" ? Proyectos.concat(EXTREMOS) : Proyectos;
+  const visibles = ordenar(todos.filter(p => verArchivados || !p.a));
+  document.getElementById("total").textContent = todos.filter(p => !p.a).length;
+  document.getElementById("nArch").textContent = todos.filter(p => p.a).length;
+  lienzo.innerHTML = `<div class="grilla">${visibles.map(tarjeta).join("")}</div>`;
+}
+
+sw.addEventListener("click", () => {
+  verArchivados = !verArchivados;
+  try { localStorage.setItem("iridium.archivados", verArchivados ? "1" : "0"); } catch (e) {}
+  pintar();
+});
+document.querySelectorAll(".demo button").forEach(b => b.addEventListener("click", () => {
+  estado = b.dataset.estado;
+  document.querySelectorAll(".demo button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  pintar();
+}));
+const q = new URLSearchParams(location.search);
+if (q.has("archivados")) verArchivados = true;
+if (q.get("estado")) document.querySelector(`.demo button[data-estado="${q.get("estado")}"]`)?.click(); else pintar();
+</script>
+</body>
+</html>

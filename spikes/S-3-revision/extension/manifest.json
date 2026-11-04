@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "S-3 Revision (spike)",
+  "version": "0.0.1",
+  "background": { "service_worker": "sw.js" },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["http://localhost/*", "http://127.0.0.1/*", "<all_urls>"],
+  "content_scripts": [
+    { "matches": ["http://localhost/*", "http://127.0.0.1/*"], "js": ["principal.js"], "world": "MAIN", "run_at": "document_idle" },
+    { "matches": ["http://localhost/*", "http://127.0.0.1/*"], "js": ["aislado.js"], "run_at": "document_idle" }
+  ]
+}

@@ -1,0 +1,475 @@
+/* I-6: el uso en la barra de estado con su detalle (H-12, R-1), el modelo, el esfuerzo y el contexto en la
+   conversación (D-045), los errores del motor (F-5), los avisos (H-13) y cerrar con sesiones trabajando (F-6). */
+
+/* Medidores finos, lo único con brillo (D-032; prototipo ui/vista-mapa-docs.html) */
+.medidor {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  color: var(--texto-3);
+  font-size: 12px;
+}
+.medidor .barra,
+.ventana-uso .barra {
+  position: relative;
+  display: inline-block;
+  width: 64px;
+  height: 6px;
+  border-radius: var(--radio-medidor);
+  overflow: hidden;
+  background: var(--medidor-fondo);
+}
+.medidor .pc {
+  min-width: 30px;
+  font: 500 12px / 1 var(--mono);
+  color: var(--texto);
+}
+/* En la barra de estado: los dos medidores son un botón que despliega el detalle hacia arriba */
+.estado-barra .der {
+  display: inline-flex;
+  align-items: center;
+}
+.uso .menu-boton {
+  height: 22px;
+  gap: 14px;
+  padding: 0 8px;
+}
+.uso .menu-lista {
+  top: auto;
+  bottom: 28px;
+  left: auto;
+  right: 0;
+  width: 340px;
+  max-width: none;
+  padding: 4px 4px 8px;
+}
+.nota-uso {
+  color: var(--texto-3);
+}
+
+.detalle-uso {
+  display: grid;
+  gap: 2px;
+}
+.ventana-uso {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 6px 8px 8px;
+}
+.ventana-uso b {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto);
+}
+.ventana-uso .pc {
+  font: 500 12px / 1 var(--mono);
+  color: var(--texto-2);
+}
+.ventana-uso .barra {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+.ventana-uso .libera,
+.ventana-uso .nota {
+  grid-column: 1 / -1;
+  font-size: var(--tam-chico);
+  color: var(--texto-2);
+}
+.ritmo {
+  display: flex;
+  gap: 8px;
+  padding: 4px 8px 6px;
+  font-size: var(--tam-chico);
+  line-height: 1.5;
+  color: var(--texto-2);
+}
+.ritmo b {
+  color: var(--texto);
+  font-weight: 600;
+}
+.ritmo > svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--icono-ritmo, var(--ok));
+}
+.ritmo[data-alcanza="no"] {
+  --icono-ritmo: var(--espera);
+}
+.detalle-uso > .nota {
+  padding: 4px 8px 0;
+  font-size: 12px;
+}
+
+/* Q-77: el contexto es un círculo que se llena en el sentido del reloj, con los tokens y lo que le queda a la caché */
+.medidor-ctx {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font: 500 12px / 1 var(--mono);
+  color: var(--texto-2);
+  --medidor: var(--primario);
+}
+.medidor-ctx[data-nivel="alta"] {
+  --medidor: var(--espera);
+}
+.medidor-ctx[data-nivel="critica"] {
+  --medidor: var(--error);
+}
+.anillo {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+.anillo circle {
+  fill: none;
+  stroke-width: 2.6;
+}
+.anillo .fondo {
+  stroke: var(--medidor-fondo);
+}
+.anillo .lleno {
+  stroke: var(--medidor);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2px var(--medidor));
+}
+.medidor-ctx[data-nivel] .tok {
+  color: var(--medidor);
+}
+.medidor-ctx .vence {
+  color: var(--texto-3);
+}
+.medidor-ctx .vence[data-vencida] {
+  color: var(--espera);
+}
+.ctx .menu-lista {
+  left: auto;
+  right: 0;
+  width: 330px;
+  padding: 4px 4px 8px;
+}
+.detalle-ctx {
+  display: grid;
+  gap: 2px;
+}
+.detalle-ctx > .nota {
+  padding: 2px 8px 4px;
+  font-size: var(--tam-chico);
+}
+.desglose {
+  display: grid;
+  padding: 0 8px 4px;
+  list-style: none;
+}
+.desglose li {
+  display: grid;
+  grid-template-columns: 1fr auto 44px;
+  gap: 10px;
+  padding: 3px 0;
+  font-size: var(--tam-chico);
+  color: var(--texto-2);
+}
+.desglose li[data-clase="libre"],
+.desglose li[data-clase="reserva"] {
+  color: var(--texto-3);
+}
+.desglose .t,
+.desglose .p {
+  font: 500 12px / 1.4 var(--mono);
+  text-align: right;
+}
+.cache {
+  display: flex;
+  gap: 8px;
+  padding: 2px 8px 4px;
+  font-size: var(--tam-chico);
+  line-height: 1.5;
+  color: var(--texto-2);
+}
+.cache b {
+  color: var(--texto);
+  font-weight: 600;
+}
+.cache > svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--icono-cache, var(--ok));
+}
+.cache[data-vencida="si"] {
+  --icono-cache: var(--espera);
+}
+
+/* D-060: sin la carpeta Ideas, el lugar del chat general dice cómo tenerlo */
+.chat-falta {
+  display: grid;
+  gap: 8px;
+  margin: 20px 16px;
+  color: var(--texto-2);
+  line-height: 1.5;
+}
+.chat-falta b {
+  color: var(--texto);
+}
+
+/* El cuadro de la conversación: modelo y esfuerzo a la izquierda, el contexto y Enviar a la derecha */
+.compositor .fila {
+  min-width: 0;
+}
+.ajustes-ia {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+.selector .menu-boton {
+  height: 24px;
+  padding: 0 7px;
+  font-size: 12px;
+}
+.selector .nom {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+}
+.selector .menu-lista {
+  top: auto;
+  bottom: 30px;
+  width: 300px;
+  max-width: calc(var(--ancho-chat, 440px) - 40px);
+}
+.menu-lista > button.opcion-ia {
+  height: auto;
+  padding: 6px 10px;
+  display: grid;
+  gap: 1px;
+  text-align: left;
+  white-space: normal;
+}
+.opcion-ia b {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--texto);
+}
+.opcion-ia small {
+  font-size: 12px;
+  color: var(--texto-3);
+}
+.selector.ctx {
+  margin-left: 4px;
+}
+.contexto-alto {
+  align-items: center;
+}
+.contexto-alto > span {
+  flex: 1;
+}
+
+/* H-13: los avisos, abajo a la derecha (prototipo ui/vista-mapa-docs.html) */
+.avisos {
+  position: fixed;
+  right: 12px;
+  bottom: 36px;
+  z-index: 40;
+  display: grid;
+  gap: 8px;
+  width: 320px;
+}
+.aviso {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  gap: 4px 10px;
+  padding: 12px 10px 12px 14px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-tarjeta);
+  background: var(--elevado);
+  box-shadow: var(--sombra-flotante);
+  animation: llega-aviso 0.3s var(--sale) both;
+}
+.aviso[data-estado="espera"] {
+  border-color: var(--espera-borde);
+}
+.aviso > svg {
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+  color: var(--ok);
+}
+.aviso[data-estado="espera"] > svg {
+  color: var(--espera);
+}
+.aviso[data-estado="error"] > svg {
+  color: var(--error);
+}
+.aviso .t {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.aviso .x {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radio-control);
+  color: var(--texto-3);
+}
+.aviso .x svg {
+  width: 12px;
+  height: 12px;
+}
+.aviso .d {
+  grid-column: 2 / 4;
+  font-size: var(--tam-chico);
+  color: var(--texto-2);
+}
+.aviso .acc {
+  grid-column: 2 / 4;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 6px;
+}
+@keyframes llega-aviso {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* F-6: la confirmación de cerrar con sesiones trabajando */
+.velo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: oklch(0 0 0 / 0.55);
+}
+.dialogo {
+  width: min(440px, calc(100vw - 40px));
+  display: grid;
+  gap: 10px;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-tarjeta);
+  background: var(--elevado);
+  box-shadow: var(--sombra-menu);
+}
+.dialogo h2 {
+  font: 600 16px / 1.35 var(--ui);
+  color: var(--texto);
+}
+.dialogo p {
+  color: var(--texto-2);
+  line-height: 1.5;
+}
+.dialogo .acc {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+.btn.peligro {
+  background: var(--error);
+  color: var(--sobre-color);
+}
+.btn.peligro:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.aviso .x:hover {
+  background: var(--hover);
+  color: var(--texto);
+}
+
+/* Lo más específico, al final: Biome pide las reglas de menor a mayor especificidad */
+.medidor .barra b,
+.ventana-uso .barra b {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--v);
+  border-radius: var(--radio-medidor);
+  background: var(--medidor, var(--primario));
+  box-shadow: 0 0 8px var(--medidor, var(--primario));
+}
+.medidor[data-nivel="alta"],
+.ventana-uso[data-nivel="alta"] {
+  --medidor: var(--espera);
+}
+.medidor[data-nivel="alta"] .pc {
+  color: var(--espera);
+}
+.medidor[data-nivel="critica"],
+.medidor[data-nivel="agotada"],
+.ventana-uso[data-nivel="critica"],
+.ventana-uso[data-nivel="agotada"] {
+  --medidor: var(--error);
+}
+.medidor[data-nivel="critica"] .pc,
+.medidor[data-nivel="agotada"] .pc,
+.medidor .libera {
+  color: var(--error);
+}
+
+/* F-5: los errores del motor, con qué hacer */
+.falla-motor {
+  margin-top: 10px;
+  max-width: 72ch;
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in oklab, var(--error) 35%, var(--borde));
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in oklab, var(--error) 5%, var(--fondo));
+  font-size: var(--tam-base);
+  line-height: 1.5;
+  color: var(--texto-2);
+}
+.falla-motor[data-tipo="uso"] {
+  border-color: var(--espera-borde);
+  background: var(--espera-fondo);
+}
+.falla-motor .tit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--texto);
+}
+.falla-motor .tit > svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--error);
+}
+.falla-motor[data-tipo="uso"] .tit > svg {
+  color: var(--espera);
+}
+.falla-motor[data-tipo="resuelta"] {
+  border-color: color-mix(in oklab, var(--ok) 35%, var(--borde));
+  background: color-mix(in oklab, var(--ok) 5%, var(--fondo));
+}
+.falla-motor[data-tipo="resuelta"] .tit > svg {
+  color: var(--ok);
+}
+.falla-motor .acc {
+  display: flex;
+  gap: 8px;
+}
+
+.menu-lista > button.opcion-ia[aria-checked="true"] b {
+  color: var(--primario);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso {
+    animation: none;
+  }
+}

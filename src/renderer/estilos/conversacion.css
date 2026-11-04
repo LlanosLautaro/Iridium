@@ -1,0 +1,352 @@
+/* La conversación con la IA (04-ux.md › W-3; H-4, H-5, H-14). Sale de docs/ui/vista-proyecto.html.
+   Los íconos van al final, de menor a mayor especificidad. */
+/* D-061: lo tuyo en una burbuja a la derecha; lo de la IA a todo el ancho, con su proceso aparte de la respuesta */
+.turno {
+  padding: 12px 0;
+}
+.turno.usuario {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.turno.usuario .quien {
+  gap: 8px;
+}
+.turno.usuario .quien time {
+  margin-left: 0;
+}
+.quien {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font: 600 13px / 1 var(--ui);
+  letter-spacing: 0.02em;
+  color: var(--texto-2);
+}
+.quien.ia {
+  color: var(--primario);
+}
+.quien time {
+  margin-left: auto;
+  font: 400 12px / 1 var(--mono);
+  color: var(--texto-3);
+  letter-spacing: 0;
+}
+.propio {
+  max-width: min(88%, 64ch);
+  padding: 9px 14px;
+  border: 1px solid color-mix(in oklab, var(--primario) 22%, transparent);
+  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) var(--radio-control) var(--radio-tarjeta);
+  background: color-mix(in oklab, var(--primario) 8%, var(--elevado));
+  font-size: var(--tam-lectura);
+  line-height: 1.6;
+  color: var(--texto);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.turno.usuario .msg-com {
+  width: min(88%, 64ch);
+}
+
+/* El proceso: lo que hizo y fue contando en el camino, atenuado sobre un riel */
+.proceso-ia {
+  margin: 2px 0 4px;
+  padding-left: 12px;
+  border-left: 2px solid var(--borde-fuerte);
+}
+.proceso-ia.plegado {
+  border-left-color: var(--borde);
+}
+.proceso-ia .proceso-cab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 0 6px 0 0;
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+}
+.proceso-ia .proceso-cab:hover {
+  color: var(--texto-2);
+}
+.proceso-ia .proceso-cab .proceso-n {
+  font: 400 12px / 1 var(--mono);
+}
+.md.nota-ia {
+  font-size: var(--tam-base);
+  line-height: 1.55;
+  color: var(--texto-2);
+}
+.md.nota-ia code {
+  color: var(--texto-2);
+}
+.proceso-ia + .md,
+.proceso-ia + .linea-aviso {
+  margin-top: 10px;
+}
+
+/* Lo que usó la IA: una línea que se despliega */
+.herramientas {
+  margin: 6px 0 4px;
+}
+.herramientas > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 0 6px 0 2px;
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+  text-align: left;
+}
+.herramientas > button:hover {
+  color: var(--texto-2);
+}
+.herramientas ul {
+  list-style: none;
+  padding: 4px 0 0 20px;
+  display: grid;
+  gap: 3px;
+}
+.herramientas li {
+  display: flex;
+  gap: 8px;
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+  min-width: 0;
+}
+.cod {
+  font: 500 12px / 1.5 var(--mono);
+  color: var(--texto-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* El texto de la IA (Markdown) */
+.md {
+  font-size: var(--tam-lectura);
+  line-height: 1.65;
+  color: var(--texto);
+  max-width: 72ch;
+  overflow-wrap: anywhere;
+}
+.md + .md,
+.herramientas + .md {
+  margin-top: 8px;
+}
+.md > * + * {
+  margin-top: 8px;
+}
+.md ul,
+.md ol {
+  padding-left: 22px;
+}
+.md li + li {
+  margin-top: 3px;
+}
+.md h1,
+.md h2,
+.md h3,
+.md h4 {
+  font: 600 15px / 1.4 var(--ui);
+  margin-top: 14px;
+}
+.md strong {
+  font-weight: 600;
+}
+.md a {
+  color: var(--primario-texto);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.md code {
+  padding: 1px 5px;
+  background: var(--elevado);
+  color: var(--primario-texto);
+  font: 13px / 1.5 var(--mono);
+}
+.md pre {
+  padding: 10px 12px;
+  background: var(--elevado);
+  border-radius: var(--radio-bloque);
+  overflow-x: auto;
+}
+.md pre code {
+  padding: 0;
+  background: none;
+  color: var(--texto-2);
+}
+.md blockquote {
+  padding-left: 12px;
+  border-left: 2px solid var(--borde-fuerte);
+  color: var(--texto-2);
+}
+.md table {
+  border-collapse: collapse;
+  font-size: var(--tam-base);
+}
+.md th,
+.md td {
+  padding: 4px 10px;
+  border: 1px solid var(--borde);
+  text-align: left;
+}
+
+.ahora {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 4px;
+  color: var(--trabaja);
+  font-size: var(--tam-chico);
+}
+
+.ahora.reintentando {
+  color: var(--espera);
+}
+
+/* Detenida o error: una línea dentro del turno */
+.linea-aviso {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: var(--tam-base);
+  color: var(--texto-2);
+}
+.linea-aviso.error {
+  color: var(--error);
+}
+
+/* Las preguntas que dejó al terminar (H-5) */
+.pedido {
+  margin: 14px 0 4px;
+  max-width: 72ch;
+  border: 1px solid var(--espera-borde);
+  border-radius: var(--radio-tarjeta);
+  background: var(--espera-fondo);
+  padding: 14px 16px;
+  display: grid;
+  gap: 10px;
+}
+.pedido .meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lista-q {
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.fila-q {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: baseline;
+  gap: 10px;
+}
+.lista-q .q {
+  font: 700 12.5px / 1 var(--mono);
+  color: var(--texto);
+}
+.lista-q .tipo {
+  font-size: var(--tam-chico);
+  color: var(--espera);
+  white-space: nowrap;
+}
+.lista-q .texto {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.pedido .acc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.mas-arriba {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 12px;
+}
+.cargando {
+  margin-top: auto;
+  padding: 18px 0;
+}
+
+/* El aviso de D-027 sobre el compositor, si la conversación se usó hace poco fuera de Iridium */
+.retomar {
+  flex: none;
+  padding: 0 14px;
+}
+.retomar > * {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.aviso-afuera {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--espera-borde);
+  border-radius: var(--radio-bloque);
+  background: var(--espera-fondo);
+  color: var(--texto-2);
+  font-size: var(--tam-base);
+  line-height: 1.5;
+}
+
+/* Íconos */
+.ahora > svg,
+.linea-aviso > svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+.aviso-afuera > svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--espera);
+}
+.herramientas > button > svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  transition: transform 0.15s var(--sale);
+}
+.btn.detener > svg,
+.linea-aviso.detenida > svg {
+  fill: currentColor;
+  stroke: none;
+  width: 10px;
+  height: 10px;
+}
+.proceso-ia .proceso-cab > svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  transition: transform 0.15s var(--sale);
+}
+.proceso-ia[data-abierto] > .proceso-cab > svg {
+  transform: rotate(90deg);
+}
+.herramientas[data-abierta] > button > svg {
+  transform: rotate(90deg);
+}
+
+/* El nombre de quien habla (AJ-2): uno largo se corta con «…» y se ve entero al pasar el mouse. */
+.quien .nombre {
+  min-width: 0;
+  max-width: 24ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

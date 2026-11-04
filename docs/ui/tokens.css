@@ -1,0 +1,51 @@
+/* Tokens de Iridium (DESIGN.md). La app los importa tal cual en el hito 7; las pantallas de docs/ui los repiten en su <style>. */
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("fuentes/jetbrains-mono-100-800.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+
+:root { color-scheme: dark;
+  /* Superficies */
+  --fondo: #0a0f0e; --lateral: #070b0a; --barra: #060908; --elevado: #0e1513; --hover: #121c19;
+  --caja: #0f1714; --medidor-fondo: #17241f;
+  --borde: #18241f; --borde-suave: #121b18; --borde-fuerte: #24362f; --borde-control: #557068;
+  /* Texto */
+  --texto: #d9e6e0; --texto-2: #a3b8b0; --texto-3: #74908a;
+  /* Señales: verde activo y hecho, ámbar lo que espera del usuario, rojo error */
+  --primario: #3ee6a8; --primario-texto: #5cecb8; --trabaja: #3ee6a8; --ok: #3ee6a8;
+  --espera: #f5b13d; --espera-borde: #4a3c1a; --espera-fondo: #12170f;
+  --error: #ff5f57; --sobre-color: #0a0d0b;
+  --seleccion: #3ee6a844; --sel-fondo: #0f241d;
+  /* Colores del texto de Archivos (D-041): comentarios en texto-3, palabras clave en primario-texto, cadenas en este */
+  --cod-cadena: #c9b77a;
+  /* Letra: Chakra Petch para leer, JetBrains Mono solo para códigos y números */
+  --ui: "Chakra Petch", "Segoe UI", sans-serif; --mono: "JetBrains Mono", Consolas, monospace;
+  --tam-base: 13.5px; --tam-lectura: 15px; --tam-chico: 12.5px;
+  /* Esquinas */
+  --radio-medidor: 3px; --radio-control: 5px; --radio-fila: 6px; --radio-bloque: 8px; --radio-tarjeta: 10px; --radio-pildora: 11px;
+  /* Sombras: solo lo que flota sobre la interfaz (DESIGN.md › Shadow Vocabulary) */
+  --sombra-flotante: 0 6px 14px oklch(0 0 0 / .5); --sombra-menu: 0 10px 28px oklch(0 0 0 / .55);
+  --sombra-ventana: 0 24px 64px oklch(0 0 0 / .6);
+  /* Espacios */
+  --esp-xs: 4px; --esp-sm: 8px; --esp-md: 14px; --esp-lg: 20px; --esp-xl: 32px;
+  /* Movimiento: una sola curva de salida */
+  --sale: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* Tema Carbón (D-066): Grafito oscuro, letra del sistema, azul apagado solo para lo activo. Se activa con
+   data-tema="carbon" en <html>; sin el atributo rige el tema Iridium de arriba. Contraste en 06-ui.md › Contraste. */
+:root[data-tema="carbon"] {
+  --fondo: #111113; --lateral: #0d0d0f; --barra: #0a0a0b; --elevado: #18181b; --hover: #1e1e22;
+  --caja: #141416; --medidor-fondo: #242428;
+  --borde: #1f1f23; --borde-suave: #18181b; --borde-fuerte: #2d2d32; --borde-control: #64666f;
+  --texto: #e4e4e7; --texto-2: #a9aab1; --texto-3: #8b8c94;
+  --primario: #6c9eff; --primario-texto: #8fb4ff; --trabaja: #6c9eff; --ok: #5fbf8a;
+  --espera: #e0a84a; --espera-borde: #3e331d; --espera-fondo: #1b1915;
+  --error: #ef6a62; --sobre-color: #0b0b0c;
+  --seleccion: #6c9eff40; --sel-fondo: #1d263a;
+  --cod-cadena: #c9b27f;
+  --ui: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --tam-base: 13px; --tam-lectura: 14.5px; --tam-chico: 12px;
+  --radio-control: 6px; --radio-fila: 6px; --radio-bloque: 8px; --radio-tarjeta: 10px;
+}

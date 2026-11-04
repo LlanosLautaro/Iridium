@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pendientes</title>
+<style>
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("fuentes/chakra-petch-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("fuentes/jetbrains-mono-100-800.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+
+:root { color-scheme: dark;
+  /* Superficies */
+  --fondo: #0a0f0e; --lateral: #070b0a; --barra: #060908; --elevado: #0e1513; --hover: #121c19;
+  --caja: #0f1714; --medidor-fondo: #17241f;
+  --borde: #18241f; --borde-suave: #121b18; --borde-fuerte: #24362f; --borde-control: #557068;
+  /* Texto */
+  --texto: #d9e6e0; --texto-2: #a3b8b0; --texto-3: #74908a;
+  /* Señales: verde activo y hecho, ámbar lo que espera del usuario, rojo error */
+  --primario: #3ee6a8; --primario-texto: #5cecb8; --trabaja: #3ee6a8; --ok: #3ee6a8;
+  --espera: #f5b13d; --espera-borde: #4a3c1a; --espera-fondo: #12170f;
+  --error: #ff5f57; --sobre-color: #0a0d0b;
+  --seleccion: #3ee6a844; --sel-fondo: #0f241d;
+  /* Letra: Chakra Petch para leer, JetBrains Mono solo para códigos y números */
+  --ui: "Chakra Petch", "Segoe UI", sans-serif; --mono: "JetBrains Mono", Consolas, monospace;
+  --tam-base: 13.5px; --tam-lectura: 15px; --tam-chico: 12.5px;
+  /* Esquinas */
+  --radio-tarjeta: 10px; --radio-control: 5px;
+  --sale: cubic-bezier(.16, 1, .3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body { background: var(--fondo); color: var(--texto); font: 400 var(--tam-base)/1.5 var(--ui); font-variant-numeric: tabular-nums; min-width: 1024px; overflow: hidden; }
+::selection { background: var(--seleccion); color: var(--texto); }
+:focus-visible { outline: 1px solid var(--primario); outline-offset: -1px; }
+* { scrollbar-width: thin; scrollbar-color: var(--borde-fuerte) transparent; }
+button, input, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+.ic { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+code, .cod { font-family: var(--mono); font-size: 12.5px; color: var(--texto-2); }
+.gira { animation: gira 1.4s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+
+/* Marco: igual que la vista de proyecto (W-1) */
+.app { display: grid; grid-template-columns: 52px 1fr; grid-template-rows: 40px 1fr 28px; height: 100vh; }
+.actividad { grid-row: 1 / 3; background: var(--lateral); border-right: 1px solid var(--borde); display: flex; flex-direction: column; align-items: center; padding-bottom: 6px; }
+.marca-app { width: 52px; height: 40px; display: grid; place-items: center; border-bottom: 1px solid var(--borde); color: var(--primario); }
+.act { position: relative; width: 52px; height: 48px; display: grid; place-items: center; color: var(--texto-3); text-decoration: none; }
+.act .ic { width: 21px; height: 21px; }
+.act:hover { color: var(--texto); }
+.act.activo { color: var(--primario); }
+.act.activo::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 2px; background: var(--primario); }
+.act .badge { position: absolute; right: 8px; bottom: 8px; min-width: 17px; height: 17px; padding: 0 4px; display: grid; place-items: center; border-radius: var(--radio-control); background: var(--espera); color: var(--sobre-color); font: 700 11px/1 var(--mono); }
+.act.abajo { margin-top: auto; }
+
+.sesiones { grid-column: 2; display: flex; align-items: stretch; background: var(--barra); border-bottom: 1px solid var(--borde); min-width: 0; }
+.ses { display: flex; align-items: center; padding-right: 8px; border-right: 1px solid var(--borde); color: var(--texto-3); white-space: nowrap; position: relative; }
+.ses:hover { color: var(--texto-2); background: var(--hover); }
+.ses .pestana { align-self: stretch; display: flex; align-items: center; gap: 8px; padding: 0 6px 0 14px; }
+.ses .nom { font-weight: 600; }
+.ses .cerrar { width: 22px; height: 22px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.ses .cerrar .ic { width: 13px; height: 13px; }
+.ses .cerrar:hover { color: var(--texto); background: var(--hover); }
+.sesiones .reloj { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 16px; color: var(--texto-3); font-size: var(--tam-chico); }
+.sesiones .reloj::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--primario); }
+.sesiones .reloj time { font-family: var(--mono); font-size: 12px; }
+
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 7px; border: 1px solid color-mix(in oklab, currentColor 45%, transparent); border-radius: var(--radio-control); font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; white-space: nowrap; }
+.chip .ic { width: 12px; height: 12px; }
+.chip.trab { color: var(--trabaja); }
+.chip.espera { color: var(--espera); }
+.chip.error { color: var(--error); }
+.chip.ok { color: var(--ok); }
+.chip.neutro { color: var(--texto-2); }
+
+.btn { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 14px; border-radius: var(--radio-control); font: 600 13px/1 var(--ui); letter-spacing: .02em; white-space: nowrap; }
+.btn.primario { background: var(--espera); color: var(--sobre-color); }
+.btn.primario:hover { filter: brightness(1.1); }
+.btn.secundario { border: 1px solid var(--borde-fuerte); color: var(--texto-2); }
+.btn.secundario:hover { color: var(--texto); border-color: var(--texto-3); }
+/* «Seguí» se resalta cuando no queda nada sin responder: verde de contorno, nunca de fondo */
+.btn.secundario.resaltado { border-color: var(--primario); color: var(--primario); }
+.btn .ic { width: 13px; height: 13px; }
+.btn-ic { width: 30px; height: 30px; display: grid; place-items: center; border-radius: var(--radio-control); color: var(--texto-3); }
+.btn-ic:hover { background: var(--hover); color: var(--texto); }
+.enlace { color: var(--texto-2); font-size: var(--tam-chico); text-decoration: underline; text-decoration-color: var(--borde-fuerte); text-underline-offset: 3px; }
+.enlace:hover { color: var(--texto); text-decoration-color: var(--texto-3); }
+
+/* Área de trabajo: columna de proyectos, pendientes del elegido y panel del documento */
+.trabajo { grid-column: 2; min-width: 0; display: flex; min-height: 0; }
+.columna { flex: none; width: 236px; background: var(--lateral); border-right: 1px solid var(--borde); display: flex; flex-direction: column; min-height: 0; }
+.columna .titulo { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 14px 0 16px; flex: none; border-bottom: 1px solid var(--borde-suave); }
+.columna .titulo h1 { font: 600 14.5px/1 var(--ui); }
+.columna .titulo .n { font: 500 12px/1 var(--mono); color: var(--texto-3); }
+.columna .lista { flex: 1; overflow-y: auto; padding: 6px 0 12px; }
+.columna .seccion { display: flex; justify-content: space-between; padding: 12px 14px 6px 16px; font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; color: var(--texto-3); }
+.proy { width: calc(100% - 12px); margin: 0 6px; display: flex; align-items: center; gap: 9px; height: 32px; padding: 0 8px; border-radius: 6px; color: var(--texto-2); text-align: left; }
+.proy:hover { background: var(--hover); color: var(--texto); }
+.proy[aria-current="true"] { background: var(--sel-fondo); color: var(--texto); }
+.proy img, .proy .sin-icono { width: 20px; height: 20px; border-radius: 5px; flex: none; }
+.proy .sin-icono { display: grid; place-items: center; border: 1px dashed var(--borde-fuerte); color: var(--texto-3); }
+.proy .sin-icono .ic { width: 12px; height: 12px; }
+.proy .nom { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.proy .cuenta { display: inline-flex; align-items: center; gap: 5px; font: 500 12px/1 var(--mono); color: var(--texto-2); }
+.proy .cuenta .ic { width: 13px; height: 13px; }
+.proy .cuenta.frena { color: var(--espera); }
+.proy .cuenta.ok { color: var(--ok); }
+.proy .cuenta.error { color: var(--error); font-family: var(--ui); font-size: 12px; }
+.leyenda { flex: none; padding: 10px 16px 12px; border-top: 1px solid var(--borde-suave); display: grid; gap: 4px; color: var(--texto-3); font-size: 12px; }
+.leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+.leyenda .ic { width: 12px; height: 12px; }
+
+.principal { flex: 1; min-width: 420px; display: flex; flex-direction: column; min-height: 0; }
+.cab-proy { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 12px 0 20px; flex: none; border-bottom: 1px solid var(--borde-suave); min-width: 0; }
+.cab-proy img { width: 20px; height: 20px; border-radius: 5px; }
+.cab-proy h2 { font: 600 14.5px/1 var(--ui); white-space: nowrap; }
+.cab-proy .hito { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; }
+.cab-proy .hito b { font: 500 12px/1 var(--mono); color: var(--texto-2); }
+.cab-proy .der { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.pendientes { flex: 1; overflow-y: auto; padding: 20px 32px 72px; }
+.pendientes > * { max-width: 780px; margin-left: auto; margin-right: auto; }
+.grupo { margin: 22px auto 10px; font: 600 var(--tam-chico)/1 var(--ui); letter-spacing: .02em; color: var(--texto-3); }
+.grupo:first-child { margin-top: 0; }
+
+/* Un pendiente: tarjeta suave; las que esperan, con el tinte ámbar del pedido */
+.pend { border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--elevado); padding: 16px 18px; display: grid; gap: 12px; }
+.pend + .pend { margin-top: 12px; }
+.pend.abierta { border-color: var(--espera-borde); background: var(--espera-fondo); }
+.pend .meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pend .meta .q { font: 700 12.5px/1 var(--mono); color: var(--texto); }
+.pend .meta .tipo { color: var(--texto-2); font-size: var(--tam-chico); }
+.pend .meta .cuando { margin-left: auto; font: 400 12px/1 var(--mono); color: var(--texto-3); }
+.pend h3 { font: 600 16px/1.4 var(--ui); max-width: 72ch; }
+.pend h3.plegada { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mas { justify-self: start; margin-top: -6px; }
+
+/* Lo que cita el pendiente, con su texto ahí mismo */
+.citas { display: grid; gap: 8px; }
+.cita { border: 1px solid var(--borde-suave); border-radius: 8px; background: var(--caja); padding: 10px 12px; display: grid; gap: 6px; }
+.cita .cab { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.cita .ref { font: 500 12px/1.4 var(--mono); color: var(--primario-texto); white-space: nowrap; }
+.cita .nombre { font-size: var(--tam-chico); font-weight: 600; color: var(--texto-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.cita .cab .enlace { margin-left: auto; flex: none; }
+.cita p { font-size: 13.5px; line-height: 1.6; color: var(--texto-2); max-width: 72ch; }
+.cita p.plegada { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cita .plegar { justify-self: start; }
+.cita.falta { background: none; border-style: dashed; }
+.cita.falta .ref { color: var(--texto-2); }
+.cita.falta p { color: var(--texto-3); display: inline-flex; align-items: center; gap: 6px; font-size: var(--tam-chico); }
+.cita.falta p .ic { width: 13px; height: 13px; }
+
+/* Responder: opciones, lista de puntos con nota, texto libre */
+.responder { display: grid; gap: 8px; }
+.opcion { display: flex; align-items: center; gap: 10px; min-height: 38px; padding: 8px 12px; border: 1px solid var(--borde-fuerte); border-radius: 8px; cursor: pointer; }
+.opcion:hover { border-color: var(--texto-3); }
+.opcion:has(input:checked) { border-color: var(--primario); background: var(--sel-fondo); }
+.opcion input[type=radio] { accent-color: var(--primario); width: 15px; height: 15px; margin: 0; flex: none; }
+.opcion .l { font: 700 12.5px/1 var(--mono); color: var(--texto-2); }
+.opcion .t { font-size: 14px; color: var(--texto); }
+.opcion .por { color: var(--texto-3); font-size: var(--tam-chico); }
+.opcion .rec { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; color: var(--primario); font-size: var(--tam-chico); white-space: nowrap; }
+.opcion .rec .ic { width: 13px; height: 13px; }
+.opcion.otro input[type=text] { flex: 1; }
+.campo { height: 30px; padding: 0 10px; border: 1px solid var(--borde-control); border-radius: var(--radio-control); background: var(--fondo); color: var(--texto); font-size: 13.5px; outline: 0; min-width: 0; }
+.campo:focus { border-color: var(--primario); }
+.campo::placeholder { color: var(--texto-3); }
+textarea.campo { height: auto; min-height: 64px; padding: 8px 10px; resize: vertical; line-height: 1.5; }
+.fila-nota { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; margin-top: 2px; }
+.fila-nota label { color: var(--texto-3); font-size: var(--tam-chico); }
+
+.puntos { display: grid; gap: 6px; }
+.punto { display: grid; grid-template-columns: 22px minmax(0, 1fr) minmax(180px, 38%); align-items: center; gap: 10px; min-height: 38px; padding: 4px 6px 4px 12px; border: 1px solid var(--borde-fuerte); border-radius: 8px; }
+.punto:has(input:checked) { border-color: color-mix(in oklab, var(--primario) 45%, var(--borde-fuerte)); }
+.punto input[type=checkbox] { accent-color: var(--primario); width: 15px; height: 15px; margin: 0; }
+.punto label { font-size: 14px; cursor: pointer; }
+
+.acciones { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.acciones .ayuda { margin-right: auto; color: var(--texto-3); font-size: var(--tam-chico); }
+.falla { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid color-mix(in oklab, var(--error) 35%, var(--borde)); border-radius: 8px; font-size: var(--tam-chico); color: var(--texto-2); }
+.falla .acc { margin-left: auto; }
+
+/* Respondida, sin procesar: lo elegido, corregible hasta que la IA lo procesa */
+.respuesta { display: grid; gap: 4px; padding: 10px 12px; border-radius: 8px; background: var(--caja); border: 1px solid var(--borde-suave); }
+.respuesta .r { font-size: 14px; color: var(--texto); }
+.respuesta .r b { font: 700 12.5px/1 var(--mono); color: var(--texto-2); margin-right: 4px; }
+.respuesta .nota { color: var(--texto-2); font-size: var(--tam-chico); }
+
+/* Panel derecho: el documento entero, angosto (W-8) */
+.panel-der { flex: none; width: 380px; background: var(--lateral); border-left: 1px solid var(--borde); display: flex; flex-direction: column; min-height: 0; animation: abre .2s var(--sale); }
+@keyframes abre { from { opacity: 0; transform: translateX(12px); } }
+.cab-panel { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 8px 0 16px; flex: none; border-bottom: 1px solid var(--borde-suave); }
+.cab-panel .ruta { font: 500 12px/1 var(--mono); color: var(--texto-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cab-panel .btn-ic { margin-left: auto; }
+.doc { flex: 1; overflow-y: auto; padding: 14px 18px 20px; }
+.doc h3 { font: 600 16px/1.4 var(--ui); margin-bottom: 8px; }
+.doc h4 { font: 600 13.5px/1.4 var(--ui); margin: 14px 0 4px; color: var(--texto); }
+.doc p, .doc li { font-size: 13.5px; line-height: 1.6; color: var(--texto-2); }
+.doc p + p { margin-top: 8px; }
+.doc ol, .doc ul { padding-left: 18px; display: grid; gap: 4px; margin-top: 6px; }
+.doc .marcada { margin: 0 -8px; padding: 6px 8px; border-radius: 6px; background: var(--sel-fondo); }
+.doc a.cod { color: var(--primario-texto); text-decoration: underline; text-decoration-color: var(--borde-fuerte); text-underline-offset: 3px; }
+
+/* Vacío, error y cargando */
+.mensaje { max-width: 460px; margin: 14vh auto 0; display: grid; justify-items: start; gap: 10px; padding: 22px 24px; border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); background: var(--elevado); }
+.mensaje.error { border-color: color-mix(in oklab, var(--error) 35%, var(--borde)); }
+.mensaje h2 { font: 600 16px/1.4 var(--ui); }
+.mensaje p { color: var(--texto-2); line-height: 1.6; }
+.mensaje .ruta { display: block; width: 100%; padding: 8px 10px; border-radius: var(--radio-control); background: var(--caja); border: 1px solid var(--borde-suave); font: 400 12.5px/1.4 var(--mono); color: var(--texto-2); overflow-wrap: anywhere; }
+.silueta { background: var(--medidor-fondo); border-radius: 4px; height: 10px; }
+.carga { animation: respira 1.6s ease-in-out infinite; }
+@keyframes respira { 50% { opacity: .55; } }
+
+.estado-barra { grid-column: 1 / 3; display: flex; align-items: center; gap: 4px; background: var(--barra); border-top: 1px solid var(--borde); padding: 0 12px; font-size: var(--tam-chico); color: var(--texto-2); }
+.estado-barra .it { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 8px; white-space: nowrap; }
+.estado-barra .der { margin-left: auto; display: flex; gap: 6px; }
+/* Los medidores son lo único con brillo */
+.medidor .barra { position: relative; display: inline-block; width: 72px; height: 6px; border-radius: 3px; overflow: hidden; background: var(--medidor-fondo); }
+.medidor .barra b { position: absolute; inset: 0 auto 0 0; width: var(--v); border-radius: 3px; background: var(--medidor, var(--primario)); box-shadow: 0 0 8px var(--medidor, var(--primario)); }
+.medidor .pc { font: 500 12px/1 var(--mono); color: var(--texto); min-width: 34px; }
+
+/* Solo en el prototipo: elegir qué estado de la pantalla se ve */
+.demo { position: fixed; left: calc(52px + 236px + (100vw - 52px - 236px) / 2); bottom: 40px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 4px 4px 4px 12px; border: 1px dashed var(--borde-fuerte); border-radius: 8px; background: var(--barra); font-size: 12px; color: var(--texto-3); z-index: 10; white-space: nowrap; }
+.demo button { height: 24px; padding: 0 9px; border-radius: 4px; color: var(--texto-2); font-size: 12px; }
+.demo button:hover { background: var(--hover); color: var(--texto); }
+.demo button[aria-pressed="true"] { background: var(--sel-fondo); color: var(--primario); }
+.oculto { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) { .gira, .carga { animation: none !important; } .panel-der { animation: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-proyectos" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+  <symbol id="i-pendientes" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-ajustes" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-error" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+  <symbol id="i-espera" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5"/><path d="M12 16h.01"/></symbol>
+  <symbol id="i-marca" viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><path d="m16 15 3 3-3 3" transform="translate(0 -3)"/></symbol>
+  <symbol id="i-estrella" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+  <symbol id="i-abrir" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5v14l11-7z"/></symbol>
+  <symbol id="i-reintentar" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></symbol>
+  <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+  <symbol id="i-ficha" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/></symbol>
+</svg>
+
+<div class="app">
+  <nav class="actividad" aria-label="Secciones">
+    <div class="marca-app" aria-hidden="true"><svg class="ic" style="width:22px;height:22px"><use href="#i-marca"/></svg></div>
+    <a class="act" href="vista-proyectos.html" title="Proyectos (Ctrl+1)" aria-label="Proyectos"><svg class="ic"><use href="#i-proyectos"/></svg></a>
+    <button class="act activo" id="actPend" title="Pendientes (Ctrl+2)" aria-current="page"><svg class="ic"><use href="#i-pendientes"/></svg><span class="badge" id="badge">4</span></button>
+    <button class="act abajo" title="Ajustes" aria-label="Ajustes"><svg class="ic"><use href="#i-ajustes"/></svg></button>
+  </nav>
+
+  <div class="sesiones" role="tablist" aria-label="Sesiones abiertas">
+    <div class="ses"><a class="pestana" role="tab" aria-selected="false" href="vista-proyecto.html" style="color:inherit;text-decoration:none"><span class="nom">Centro de Desarrollo</span><span class="chip trab"><svg class="ic gira"><use href="#i-sync"/></svg>Trabajando</span></a><button class="cerrar" title="Cerrar la sesión (Ctrl+W)" aria-label="Cerrar Centro de Desarrollo"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <div class="ses"><button class="pestana" role="tab" aria-selected="false"><span class="nom">Gamma</span><span class="chip error"><svg class="ic"><use href="#i-error"/></svg>Error</span></button><button class="cerrar" title="Cerrar la sesión (Ctrl+W)" aria-label="Cerrar Gamma"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <span class="reloj">2 sesiones · <time>15:04</time></span>
+  </div>
+
+  <main class="trabajo" id="trabajo">
+    <nav class="columna" id="columna" aria-label="Proyectos con pendientes"></nav>
+    <section class="principal" id="principal" aria-live="polite"></section>
+    <aside class="panel-der oculto" id="panel" aria-label="Documento citado">
+      <div class="cab-panel"><span class="ruta" id="panelRuta"></span><button class="btn-ic" id="cerrarPanel" title="Cerrar (Esc)" aria-label="Cerrar el documento"><svg class="ic"><use href="#i-x"/></svg></button></div>
+      <div class="doc" id="panelDoc"></div>
+    </aside>
+  </main>
+
+  <footer class="estado-barra">
+    <span class="it">2 sesiones abiertas</span>
+    <div class="der">
+      <span class="it medidor" title="Ventana de 5 horas · se libera a las 18:10">5 h <span class="barra" style="--v:38%"><b></b></span><span class="pc">38 %</span></span>
+      <span class="it medidor" title="Semana · se libera el lunes a las 09:00">Semana <span class="barra" style="--v:62%;--medidor:var(--espera)"><b></b></span><span class="pc">62 %</span></span>
+    </div>
+  </footer>
+</div>
+
+<div class="demo" role="group" aria-label="Estado de la pantalla, solo en el prototipo">
+  Prototipo:
+  <button data-estado="normal" aria-pressed="true">Normal</button>
+  <button data-estado="respondido">Todo respondido</button>
+  <button data-estado="guardar">Error al guardar</button>
+  <button data-estado="cargando">Cargando</button>
+  <button data-estado="vacio">Vacía</button>
+  <button data-estado="extremos">Casos extremos</button>
+</div>
+
+<script>
+// Datos del prototipo: Q-69 y Q-3 son reales; el resto, de ejemplo
+const DATOS = () => [
+  { id: "beta", n: "Beta", i: "beta.svg", h: [7, "Construcción"], pend: [
+    { q: "Q-69", tipo: "prueba", frena: true, cuando: "hace 2 días", t: "¿Las pestañas relacionadas y «Explorar pestañas» funcionan como esperabas?",
+      ctx: [
+        { ref: "scripts.md › Instalar la última versión", texto: "Ejecutar: instalar.cmd en la carpeta del proyecto. Instala la versión 0.3.17 y deja la anterior como respaldo; la extensión del navegador no cambia." },
+        { ref: "07-construccion.md › I-14 › Para validarla a mano", texto: "1. Abrí una pestaña guardada y fijate que abajo aparezcan las relacionadas, ordenadas por parecido. 2. Tocá «Explorar pestañas»: tienen que verse todas las guardadas, agrupadas por sitio, con el buscador arriba. 3. En Brave, abrí el panel lateral y fijate cuánto tarda: con el arreglo de Q-68 tendría que abrir en menos de un segundo. 4. Cerrá y volvé a abrir la app: lo explorado sigue como estaba. 5. Si algo falla, anotá en qué punto y qué viste." },
+        { ref: "Q-68", nombre: "El panel de Brave tarda en abrir", texto: "Respondida el 2026-10-22: «tarda casi tres segundos». Se resolvió en I-14 cargando el panel antes de que se pida." }
+      ],
+      puntos: ["Al abrir una pestaña guardada aparecen las relacionadas", "«Explorar pestañas» muestra todas, agrupadas por sitio", "El panel de Brave abre en menos de un segundo", "Al volver a abrir la app, todo sigue como estaba"] },
+    { q: "Q-70", tipo: "decisión", cuando: "ayer", t: "¿Los sets de E-4 se ordenan por fecha o por nombre?",
+      ctx: [
+        { ref: "D-041", nombre: "Sets de imágenes parecidas", texto: "Un set junta las imágenes que la app encontró parecidas; vos lo confirmás o lo deshacés. Cada set tiene un nombre, que propone la app y se puede cambiar." },
+        { ref: "04-ux.md › W-9", nombre: "Sets", texto: "Grilla de sets con la miniatura de la primera imagen y cuántas tiene cada uno." }
+      ],
+      ops: [["A", "Por fecha, el más nuevo arriba", "lo último que guardaste queda a mano", true], ["B", "Por nombre", "más fácil buscar uno que ya conocés"]] }
+  ]},
+  { id: "carbon", n: "Gamma", i: "gamma.svg", h: [1, "Exploración"], sesion: "error", pend: [
+    { q: "Q-2", tipo: "decisión", frena: true, cuando: "hace 4 días", t: "¿Por qué área de Gamma empezamos la exploración?",
+      ctx: [
+        { ref: "00-idea.md › Áreas", texto: "Archivos de toda una vida, notas, hábitos y automatizaciones. Cada una puede ser un módulo, y se pueden sumar más después." },
+        { ref: "D-003", nombre: "Gamma se arma por módulos", texto: "El núcleo solo carga módulos; cada área llega como uno." }
+      ],
+      ops: [["A", "Archivos de toda una vida", "es la más grande y la que más vas a usar", true], ["B", "Notas y hábitos", "la más chica, se ve rápido"], ["C", "Automatizaciones", "depende de que las otras existan"]] }
+  ]},
+  { id: "gestor", n: "Delta", i: "delta.svg", h: [10, "Operación"], pend: [
+    { q: "Q-3", tipo: "prueba", cuando: "hace 6 días", estado: "medias", t: "¿La 1.2.0 funciona bien, con los scripts?",
+      ctx: [ { ref: "scripts.md › Abrir la carpeta de versiones", texto: "Abrir: la carpeta versiones/, con un .vsix por versión publicada." } ],
+      puntos: ["Después de recargar VS Code, abre «Documentación del proyecto»", "Los botones de Scripts funcionan", "Responder esta pregunta desde el visor sigue andando"],
+      borrador: { marcas: [true, false, false], notas: ["", "", ""] } }
+  ]},
+  { id: "centro", n: "Centro de Desarrollo", i: "centro-de-desarrollo.svg", h: [6, "UI"], sesion: "trabaja", pend: [
+    { q: "Q-49", tipo: "decisión", cuando: "hoy", estado: "respondida", t: "¿La pantalla de Proyectos (W-2) va así?",
+      ctx: [ { ref: "06-ui.md › Cómo se resolvió W-2", texto: "El estado del proyecto va con ícono y palabra en cada tarjeta, no con un borde de color: las tres señales de color quedan para avisar." } ],
+      ops: [["A", "Va así", "", true], ["B", "Cambiaría algo", ""]], borrador: { op: "A", nota: "" } }
+  ]}
+];
+const EXTRA_BETA = [
+  { q: "Q-71", cuando: "hoy", t: "Cuando importás una carpeta con miles de imágenes y la app tarda en generar las miniaturas, ¿preferís ver primero las que ya están listas, aunque el orden de la grilla cambie mientras se completan, o esperar con una barra de progreso hasta que estén todas y recién ahí ver la grilla ordenada de una vez?",
+    ctx: [ { ref: "05-arquitectura.md › Caché de miniaturas", falta: true } ] },
+  { q: "Q-72", tipo: "decisión", malformadas: true, cuando: "hoy", t: "¿Qué hacemos con los duplicados exactos al importar?",
+    ctx: [ { ref: "D-039", nombre: "Duplicados", texto: "Dos archivos con el mismo contenido son duplicados exactos, aunque tengan nombres distintos." } ] }
+];
+const EXTRA_ERROR = { id: "rss", n: "Lector de RSS", error: "No se puede leer docs/estado.md: el archivo está abierto en otro programa. Cerralo y volvé a esta sección.", pend: [] };
+
+// Texto de los documentos que se abren con «Ver entero»
+const DOCS = {
+  "07-construccion.md › I-14 › Para validarla a mano": `<h3>I-14 — Pestañas relacionadas</h3><p>Muestra, al abrir una pestaña guardada, las que se le parecen, y suma «Explorar pestañas» para recorrerlas por sitio.</p><h4 class="marcada">Para validarla a mano</h4><ol><li>Abrí una pestaña guardada y fijate que abajo aparezcan las relacionadas, ordenadas por parecido.</li><li>Tocá «Explorar pestañas»: tienen que verse todas las guardadas, agrupadas por sitio, con el buscador arriba.</li><li>En Brave, abrí el panel lateral y fijate cuánto tarda: con el arreglo de <a class="cod" href="#">Q-68</a> tendría que abrir en menos de un segundo.</li><li>Cerrá y volvé a abrir la app: lo explorado sigue como estaba.</li><li>Si algo falla, anotá en qué punto y qué viste.</li></ol><h4>Qué quedó afuera</h4><p>Las relacionadas entre dispositivos quedan para E-5 (<a class="cod" href="#">D-040</a>).</p>`
+};
+
+let proyectos, elegido, estado = "normal";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const ic = (id, extra = "") => `<svg class="ic ${extra}"><use href="#${id}"/></svg>`;
+const sinResponder = p => p.pend.filter(x => x.estado !== "respondida");
+const respondidas = p => p.pend.filter(x => x.estado === "respondida");
+
+function cargar() {
+  proyectos = DATOS();
+  proyectos.forEach(p => p.pend.forEach(x => { x.borrador = { op: "", otro: "", nota: "", marcas: (x.puntos || []).map(() => false), notas: (x.puntos || []).map(() => ""), texto: "", ...x.borrador }; x.estado ??= "abierta"; }));
+  if (estado === "respondido") proyectos[0].pend.forEach((x, k) => { x.estado = "respondida"; x.borrador.op = "A"; x.borrador.marcas = (x.puntos || []).map((_, j) => j !== 2); x.borrador.notas = (x.puntos || []).map((_, j) => j === 2 ? "tarda como dos segundos" : ""); });
+  if (estado === "guardar") { const x = proyectos[0].pend[0]; x.falla = true; x.borrador.marcas = [true, true, false, true]; x.borrador.notas = ["", "", "tarda como dos segundos", ""]; }
+  if (estado === "extremos") { proyectos[0].pend.push(...EXTRA_BETA.map(x => ({ ...x, estado: "abierta", borrador: { op: "", otro: "", nota: "", marcas: [], notas: [], texto: "" } }))); proyectos.push(EXTRA_ERROR); }
+  elegido = proyectos[0].id;
+}
+
+// Orden de la columna: primero los que frenan, después por el pendiente más viejo (el orden de los datos)
+function orden() {
+  const conPend = proyectos.filter(p => !p.error && sinResponder(p).length);
+  const frenan = conPend.filter(p => sinResponder(p).some(x => x.frena));
+  return { pend: [...frenan, ...conPend.filter(p => !frenan.includes(p))], errores: proyectos.filter(p => p.error), resp: proyectos.filter(p => !p.error && !sinResponder(p).length && respondidas(p).length) };
+}
+
+function iconoProy(p) { return p.i ? `<img src="iconos/${p.i}" alt="">` : `<span class="sin-icono">${ic("i-ficha")}</span>`; }
+
+function pintarColumna() {
+  const o = orden(), total = proyectos.reduce((n, p) => n + sinResponder(p).length, 0);
+  document.getElementById("badge").textContent = total;
+  document.getElementById("badge").classList.toggle("oculto", !total);
+  document.getElementById("actPend").setAttribute("aria-label", `Pendientes, ${total} sin responder`);
+  const fila = (p, tipo) => {
+    let cuenta;
+    if (tipo === "error") cuenta = `<span class="cuenta error">${ic("i-error")}Error</span>`;
+    else if (tipo === "resp") cuenta = `<span class="cuenta ok" title="Respondidas, sin procesar">${ic("i-check")}${respondidas(p).length}</span>`;
+    else { const n = sinResponder(p).length, fr = sinResponder(p).some(x => x.frena); cuenta = `<span class="cuenta ${fr ? "frena" : ""}" title="${n} sin responder${fr ? ", alguno frena" : ""}">${fr ? ic("i-espera") : ""}${n > 99 ? "99+" : n}</span>`; }
+    return `<button class="proy" data-id="${p.id}" aria-current="${p.id === elegido}"${tipo === "error" ? ' title="No se pudo leer: tocalo para ver el motivo"' : ""}>${iconoProy(p)}<span class="nom" title="${esc(p.n)}">${esc(p.n)}</span>${cuenta}</button>`;
+  };
+  document.getElementById("columna").innerHTML = `
+    <div class="titulo"><h1>Pendientes</h1><span class="n">${total}</span></div>
+    <div class="lista">
+      ${o.pend.map(p => fila(p)).join("")}${o.errores.map(p => fila(p, "error")).join("")}
+      ${o.resp.length ? `<div class="seccion"><span>Respondidas, sin procesar</span></div>${o.resp.map(p => fila(p, "resp")).join("")}` : ""}
+    </div>
+    <div class="leyenda"><span style="color:var(--espera)">${ic("i-espera")}<span style="color:var(--texto-3)">alguno frena el proyecto</span></span><span style="color:var(--ok)">${ic("i-check")}<span style="color:var(--texto-3)">respondidas; la IA todavía no las leyó</span></span></div>`;
+}
+
+function cita(c) {
+  if (c.falta) return `<div class="cita falta"><div class="cab"><span class="ref">${esc(c.ref)}</span></div><p>${ic("i-busca")}No se encontró la sección: puede que haya cambiado de nombre.</p></div>`;
+  const largo = c.texto.length > 190;
+  return `<div class="cita"><div class="cab"><span class="ref">${esc(c.ref)}</span>${c.nombre ? `<span class="nombre">${esc(c.nombre)}</span>` : ""}<button class="enlace" data-ver="${esc(c.ref)}">Ver entero</button></div>
+    <p class="${largo ? "plegada" : ""}">${esc(c.texto)}</p>${largo ? `<button class="enlace plegar" aria-expanded="false">Mostrar todo</button>` : ""}</div>`;
+}
+
+function formulario(x) {
+  const b = x.borrador, id = x.q;
+  const tipo = x.tipo || "consulta";
+  let cuerpo = "";
+  if (tipo === "decisión" && !x.malformadas) {
+    cuerpo = x.ops.map(([l, t, por, rec]) => `<label class="opcion"><input type="radio" name="${id}" value="${l}" ${b.op === l ? "checked" : ""}><span class="l">${l})</span><span class="t">${esc(t)}</span>${por ? `<span class="por">· ${esc(por)}</span>` : ""}${rec ? `<span class="rec">${ic("i-estrella")}recomendada</span>` : ""}</label>`).join("") +
+      `<label class="opcion otro"><input type="radio" name="${id}" value="Otro" ${b.op === "Otro" ? "checked" : ""}><span class="l">Otro</span><input type="text" class="campo" data-campo="otro" value="${esc(b.otro)}" placeholder="Contalo con tus palabras" aria-label="Otra respuesta"></label>
+      <div class="fila-nota"><label for="${id}-nota">Nota</label><input id="${id}-nota" type="text" class="campo" data-campo="nota" value="${esc(b.nota)}" placeholder="Opcional"></div>`;
+  } else if (tipo === "prueba" || tipo === "tarea") {
+    cuerpo = `<div class="puntos">${x.puntos.map((t, k) => `<div class="punto"><input type="checkbox" id="${id}-p${k}" data-marca="${k}" ${b.marcas[k] ? "checked" : ""}><label for="${id}-p${k}">${esc(t)}</label><input type="text" class="campo" data-nota="${k}" value="${esc(b.notas[k])}" placeholder="Nota, si falló" aria-label="Nota de: ${esc(t)}"></div>`).join("")}</div>
+      <div class="fila-nota"><label for="${id}-nota">Nota general</label><input id="${id}-nota" type="text" class="campo" data-campo="nota" value="${esc(b.nota)}" placeholder="Opcional"></div>`;
+  } else {
+    cuerpo = `${x.malformadas ? `<p style="color:var(--texto-3);font-size:var(--tam-chico)">Las opciones de esta pregunta no se pudieron leer; respondé con tus palabras.</p>` : ""}<textarea class="campo" data-campo="texto" aria-label="Tu respuesta" placeholder="Tu respuesta">${esc(b.texto)}</textarea>`;
+  }
+  const falla = x.falla ? `<div class="falla" role="alert"><span class="chip error">${ic("i-error")}No se guardó</span>No se pudo escribir respuestas/${x.q}.md: la carpeta es de solo lectura. Lo que escribiste sigue acá.<button class="btn secundario acc" data-reintentar>${ic("i-reintentar")}Reintentar</button></div>` : "";
+  const medias = (tipo === "prueba" || tipo === "tarea") ? `<button class="btn secundario" data-medias>Guardar a medias</button>` : "";
+  return `<div class="responder">${cuerpo}</div>${falla}<div class="acciones"><span class="ayuda">Se guarda en respuestas/${x.q}.md</span>${medias}<button class="btn primario" data-enviar>Enviar</button></div>`;
+}
+
+function resumen(x) {
+  const b = x.borrador;
+  let r;
+  if (x.ops && b.op) { const o = x.ops.find(o => o[0] === b.op); r = o ? `<b>${o[0]})</b>${esc(o[1])}` : `<b>Otro:</b>${esc(b.otro)}`; }
+  else if (x.puntos) r = x.puntos.map((t, k) => `${b.marcas[k] ? "✓" : "✗"} ${esc(t)}${b.notas[k] ? ` — «${esc(b.notas[k])}»` : ""}`).join("<br>");
+  else r = esc(b.texto);
+  return `<div class="respuesta"><span class="r">${r}</span>${b.nota ? `<span class="nota">Nota: ${esc(b.nota)}</span>` : ""}</div><div class="acciones"><span class="ayuda">La IA la lee cuando retome el proyecto</span><button class="btn secundario" data-corregir>Corregir</button></div>`;
+}
+
+function tarjeta(x) {
+  const tipo = x.tipo || "consulta";
+  const chipEstado = x.estado === "respondida" ? `<span class="chip ok">${ic("i-check")}Respondida, sin procesar</span>` : x.estado === "medias" ? `<span class="chip neutro">A medias</span>` : "";
+  const largo = x.t.length > 150;
+  return `<article class="pend ${x.estado === "respondida" ? "" : "abierta"}" data-q="${x.q}">
+    <div class="meta"><span class="q">${x.q}</span><span class="tipo">${tipo}${x.tipo ? "" : " · sin tipo"}</span>${x.frena && x.estado !== "respondida" ? `<span class="chip espera">${ic("i-espera")}Frena</span>` : ""}${chipEstado}<span class="cuando">${esc(x.cuando)}</span></div>
+    <h3 class="${largo ? "plegada" : ""}">${esc(x.t)}</h3>${largo ? `<button class="enlace mas" aria-expanded="false">Ver la pregunta entera</button>` : ""}
+    <div class="citas">${x.ctx.map(cita).join("")}</div>
+    ${x.estado === "respondida" && !x.corrigiendo ? resumen(x) : formulario(x)}
+  </article>`;
+}
+
+function pintarPrincipal() {
+  const p = proyectos.find(p => p.id === elegido), pr = document.getElementById("principal");
+  if (p.error) {
+    pr.innerHTML = `<div class="cab-proy">${iconoProy(p)}<h2>${esc(p.n)}</h2></div><div class="pendientes"><div class="mensaje error" role="alert"><span class="chip error">${ic("i-error")}No se pudo leer</span><h2>No puedo ver los pendientes de ${esc(p.n)}</h2><p>${esc(p.error)}</p><div class="acc"><button class="btn secundario">${ic("i-reintentar")}Reintentar</button></div></div></div>`;
+    return;
+  }
+  const abiertas = sinResponder(p), resp = respondidas(p);
+  const frenan = abiertas.filter(x => x.frena && x.estado !== "medias"), resto = abiertas.filter(x => !x.frena && x.estado !== "medias"), medias = abiertas.filter(x => x.estado === "medias");
+  const cuenta = abiertas.length ? `<span class="chip espera">${ic("i-espera")}${abiertas.length} sin responder</span>` : `<span class="chip ok">${ic("i-check")}Nada sin responder</span>`;
+  const segui = p.sesion === "trabaja" ? `<span class="chip trab">${ic("i-sync", "gira")}La IA trabaja</span>` : `<button class="btn secundario ${abiertas.length ? "" : "resaltado"}" data-segui title="Arranca la sesión del proyecto sin abrirlo">${ic("i-play")}Seguí</button>`;
+  const grupo = (titulo, xs) => xs.length ? `<div class="grupo">${titulo}</div>${xs.map(tarjeta).join("")}` : "";
+  pr.innerHTML = `<div class="cab-proy">${iconoProy(p)}<h2>${esc(p.n)}</h2><span class="hito">Hito <b>${p.h[0]}</b> · ${esc(p.h[1])}</span>${cuenta}
+      <div class="der"><a class="btn secundario" href="vista-proyecto.html" style="text-decoration:none">${ic("i-abrir")}Abrir</a>${segui}</div></div>
+    <div class="pendientes">${grupo("Frenan el proyecto", frenan)}${grupo(frenan.length ? "Sin responder" : "Sin responder", resto)}${grupo("A medias", medias)}${grupo("Respondidas, sin procesar", resp)}</div>`;
+}
+
+function pintar() {
+  const col = document.getElementById("columna"), pr = document.getElementById("principal");
+  col.classList.remove("oculto");
+  if (estado === "cargando") {
+    document.getElementById("badge").classList.add("oculto");
+    col.innerHTML = `<div class="titulo"><h1>Pendientes</h1></div><div class="lista carga" aria-busy="true">${[70, 55, 80].map(w => `<div style="display:flex;gap:9px;align-items:center;height:32px;padding:0 14px"><span class="silueta" style="width:20px;height:20px;border-radius:5px"></span><span class="silueta" style="width:${w}%"></span></div>`).join("")}</div>`;
+    pr.innerHTML = `<div class="cab-proy"><span class="silueta" style="width:180px"></span></div><div class="pendientes carga" aria-busy="true" aria-label="Cargando pendientes">${[1, 2].map(() => `<div class="pend" style="margin-bottom:12px"><span class="silueta" style="width:30%"></span><span class="silueta" style="width:80%;height:14px"></span><span class="silueta" style="height:48px;border-radius:8px"></span><span class="silueta" style="height:34px;border-radius:8px"></span><span class="silueta" style="height:34px;border-radius:8px"></span></div>`).join("")}</div>`;
+    return;
+  }
+  if (estado === "vacio") {
+    document.getElementById("badge").classList.add("oculto");
+    col.classList.add("oculto");
+    pr.innerHTML = `<div class="pendientes"><div class="mensaje" role="status"><span class="chip ok">${ic("i-check")}Al día</span><h2>Nada te espera</h2><p>Cuando la IA de un proyecto deje una pregunta, una prueba o una tarea, aparece acá y te llega un aviso.</p><div class="acc"><a class="btn secundario" href="vista-proyectos.html" style="text-decoration:none">${ic("i-proyectos")}Ir a Proyectos</a></div></div></div>`;
+    cerrarPanel();
+    return;
+  }
+  pintarColumna(); pintarPrincipal();
+}
+
+// Lo escrito se guarda en el borrador de cada pendiente: no se pierde al pasar a otro ni a otro proyecto
+function pendDe(el) { const a = el.closest(".pend"); if (!a) return null; for (const p of proyectos) { const x = p.pend.find(x => x.q === a.dataset.q); if (x) return x; } }
+document.getElementById("principal").addEventListener("input", e => {
+  const x = pendDe(e.target); if (!x) return; const b = x.borrador, t = e.target;
+  if (t.type === "radio") b.op = t.value;
+  else if (t.dataset.marca) b.marcas[+t.dataset.marca] = t.checked;
+  else if (t.dataset.nota) b.notas[+t.dataset.nota] = t.value;
+  else if (t.dataset.campo) { b[t.dataset.campo] = t.value; if (t.dataset.campo === "otro") { b.op = "Otro"; t.closest(".opcion").querySelector("input[type=radio]").checked = true; } }
+});
+document.getElementById("principal").addEventListener("click", e => {
+  const t = e.target.closest("button, a"); if (!t) return;
+  const x = pendDe(t);
+  if (t.matches(".plegar, .mas")) { const el = t.matches(".mas") ? t.previousElementSibling : t.previousElementSibling; const abre = el.classList.toggle("plegada") === false; t.setAttribute("aria-expanded", abre); t.textContent = abre ? (t.matches(".mas") ? "Plegar la pregunta" : "Plegar") : (t.matches(".mas") ? "Ver la pregunta entera" : "Mostrar todo"); return; }
+  if (t.dataset.ver !== undefined) { abrirPanel(t.dataset.ver, t.closest(".cita").querySelector("p").textContent); return; }
+  if (t.hasAttribute("data-enviar") || t.hasAttribute("data-reintentar")) {
+    if (estado === "guardar" && !t.hasAttribute("data-reintentar")) { x.falla = true; pintar(); return; }
+    x.falla = false; x.estado = "respondida"; x.corrigiendo = false; pintar(); return;
+  }
+  if (t.hasAttribute("data-medias")) { x.estado = "medias"; pintar(); return; }
+  if (t.hasAttribute("data-corregir")) { x.corrigiendo = true; pintar(); return; }
+  if (t.hasAttribute("data-segui")) { proyectos.find(p => p.id === elegido).sesion = "trabaja"; pintar(); return; }
+});
+document.getElementById("columna").addEventListener("click", e => {
+  const b = e.target.closest(".proy"); if (!b) return;
+  elegido = b.dataset.id; cerrarPanel(); pintar(); document.querySelector(".pendientes")?.scrollTo(0, 0);
+});
+
+const panel = document.getElementById("panel");
+function abrirPanel(ref, texto) {
+  document.getElementById("panelRuta").textContent = ref;
+  document.getElementById("panelDoc").innerHTML = DOCS[ref] || `<h3>${esc(ref.split("›").pop().trim())}</h3><p class="marcada">${esc(texto)}</p><p>El resto del documento se ve acá, como en Docs, en modo angosto. Los códigos de adentro también son enlaces.</p>`;
+  panel.classList.remove("oculto");
+}
+function cerrarPanel() { panel.classList.add("oculto"); }
+document.getElementById("cerrarPanel").addEventListener("click", cerrarPanel);
+document.addEventListener("keydown", e => { if (e.key === "Escape") cerrarPanel(); });
+
+document.querySelectorAll(".demo button").forEach(b => b.addEventListener("click", () => {
+  estado = b.dataset.estado;
+  document.querySelectorAll(".demo button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  cargar(); cerrarPanel(); pintar();
+}));
+const q = new URLSearchParams(location.search);
+cargar();
+if (q.get("estado")) document.querySelector(`.demo button[data-estado="${q.get("estado")}"]`)?.click(); else pintar();
+if (q.get("proyecto")) { elegido = q.get("proyecto"); pintar(); }
+if (q.has("panel")) document.querySelectorAll("[data-ver]")[1]?.click();
+</script>
+</body>
+</html>

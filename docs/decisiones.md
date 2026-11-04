@@ -1,0 +1,2018 @@
+# Registro de decisiones
+
+> Cada decisión relevante, con su contexto y su porqué. Las decisiones no se borran: si una cambia, se agrega una nueva que la reemplaza y se marca la anterior como "reemplazada por D-XXX".
+
+> **Ámbito:** "general" si afecta al proyecto completo, o el nombre del módulo. Una decisión de un módulo que cambia algo del núcleo (design system, arquitectura, perfil) es de ámbito general.
+
+## Índice
+| ID | Fecha | Ámbito | Hito/paso | Decisión | Estado |
+|---|---|---|---|---|---|
+| D-001 | 2026-10-21 | general | 0 | Consolidar en este proyecto las ideas de desarrollo con IA | vigente |
+| D-002 | 2026-10-21 | general | 0 | "Centro de Desarrollo" queda como nombre provisorio | reemplazada por D-033 |
+| D-003 | 2026-10-21 | general | 0 | El puente PC–celular es un módulo de este proyecto, para que lo usen otros | reemplazada por D-005 |
+| D-004 | 2026-10-21 | general | 0 | Plan de desarrollo propio: exploración y definición más a fondo | vigente |
+| D-005 | 2026-10-21 | general | 1 | El puente PC–celular es LocalSend más un envío automático desde la PC | vigente |
+| D-006 | 2026-10-21 | general | 1 | El Centro es una app propia para dirigir, con Claude Code (Agent SDK) como motor | vigente (ajustada por D-015) |
+| D-007 | 2026-10-21 | general | 1 | El Agent SDK se usa directo, pero aislado en un solo lugar de la app | vigente |
+| D-008 | 2026-10-21 | general | 1 | El plan se ve como un gráfico de fases y pasos leído de `docs/`; sin kanban ni canvas por ahora | vigente |
+| D-009 | 2026-10-21 | general | 1 | La guía de hitos suma las mejoras 1 a 6 tomadas de otros métodos | vigente |
+| D-010 | 2026-10-21 | general | 1 | Bandeja propia de pendientes; las `Q-n` suman tipo y si frenan; pruebas y tareas como listas | vigente (ajustada por D-022) |
+| D-011 | 2026-10-21 | general | 1 | Diseño: lienzo y biblioteca propios sobre `DESIGN.md`, armados con lo que ya existe | vigente |
+| D-012 | 2026-10-21 | general | 1 | Revisión de la app: extensión del navegador, comentarios en archivos planos | vigente |
+| D-013 | 2026-10-22 | general | 1 | El gestor anterior queda solo con mantenimiento hasta que el Centro lo cubra | vigente |
+| D-014 | 2026-10-22 | general | 1 | Skills locales donde la licencia lo permite; las de Anthropic que no se pueden copiar, desde la cuenta | vigente |
+| D-015 | 2026-10-22 | general | 2 | Una sesión de IA por proyecto; varios proyectos trabajando a la vez | vigente (ajustada por D-021) |
+| D-016 | 2026-10-22 | general | 2 | El MVP es dirigir proyectos conversando con la IA: cinco funcionalidades, once casos | vigente |
+| D-017 | 2026-10-22 | general | 2 | El Centro y el Gestor conviven hasta que el Centro lo cubra | vigente |
+| D-018 | 2026-10-22 | general | 2 | El Centro también edita las skills y la guía de hitos | vigente |
+| D-019 | 2026-10-22 | general | 3 | Formato de `docs/` para el Centro: portón como lista, estados con palabras fijas, `Tipo:` en las `Q-n` y pruebas con casillas | vigente |
+| D-020 | 2026-10-22 | general | 4 | Marco de la app: barra lateral de íconos, barra de sesiones arriba, conversación al centro y «Seguí» para arrancar | vigente (ajustada por D-022) |
+| D-021 | 2026-10-23 | general | 4 | La IA trabaja sin pedir permisos ni quedarse esperando: lo que necesita del usuario lo deja como `Q-n` y cierra | vigente |
+| D-022 | 2026-10-23 | general | 4 | Pendientes por proyecto con el contexto completo, avisos dentro de la app y Proyectos en una sola grilla | vigente (ajustada por D-034) |
+| D-023 | 2026-10-23 | general | 4 | El uso de la suscripción y el contexto de cada sesión, siempre a la vista | vigente |
+| D-024 | 2026-10-23 | general | 4 | El botón «Detener» la IA entra al MVP | vigente |
+| D-025 | 2026-10-23 | general | 5 | La frontera con el motor: una interfaz propia, sesiones en *bypass* con la instrucción del Centro, y Detener que no cuenta como error | vigente |
+| D-026 | 2026-10-23 | general | 5 | El código del Gestor se copia al Centro, no se comparte como paquete | vigente |
+| D-027 | 2026-10-23 | general | 5 | Una conversación usada hace poco fuera del Centro se avisa antes de retomarla | vigente |
+| D-028 | 2026-10-23 | general | 5 | El Centro se construye con Electron, TypeScript y React | vigente |
+| D-029 | 2026-10-23 | general | 6 | Dirección visual: cálida y tranquila, solo tema oscuro, design system propio con `impeccable` | vigente |
+| D-030 | 2026-10-23 | general | 6 | Mundo visual «Manual con pestañas»: el color es del hito y el estado se marca con la forma de la línea | reemplazada por D-031 |
+| D-031 | 2026-10-23 | general | 6 | La forma de VS Code con grises cálidos; la conversación sola y el mapa en un panel desplegable | vigente (colores reemplazados por D-032) |
+| D-032 | 2026-10-23 | general | 6 | Estilo «F4 Tarjetas»: casi negro con verde de fósforo, Chakra Petch y tarjetas suaves | vigente |
+| D-033 | 2026-10-23 | general | 6 | La app se llama «Iridium» | vigente |
+| D-034 | 2026-10-23 | general | 6 | En Proyectos, el estado de cada tarjeta va con ícono y palabra, sin color propio | vigente |
+| D-035 | 2026-10-23 | general | 6 | El Mapa muestra el estado del proyecto y Docs es un lector liviano | vigente |
+| D-036 | 2026-10-23 | general | 7 (I-1) | La app de uso diario es una carpeta con el ejecutable y un acceso directo, sin instalador | vigente |
+| D-037 | 2026-10-24 | general | 7 (I-2) | Cada sesión de la IA se cierra al terminar su turno y se reabre con la misma conversación | vigente |
+| D-038 | 2026-10-24 | general | 7 (I-2) | Sin rechazo automático de permisos: en *bypass* el SDK no los consulta | vigente |
+| D-039 | 2026-10-25 | general | 7 (I-3) | Lo guardado «a medias» queda en los datos de Iridium, fuera del proyecto | vigente |
+| D-040 | 2026-10-28 | general | 7 (I-3) | Nueva abre una conversación en blanco; no arranca Seguí sola | vigente |
+| D-041 | 2026-10-28 | general | 7 (entre I-3 e I-4) | Tres paneles: secciones del proyecto, vista principal y conversación; barra de título propia | vigente |
+| D-042 | 2026-10-28 | general | 7 (I-4) | Archivos colorea el código con un lector propio y un color nuevo del design system para las cadenas | vigente |
+| D-043 | 2026-10-28 | general | 7 (I-4) | Un proyecto abre en sus pendientes y scripts; los scripts son botones (C-11 entra al MVP); las pestañas de los proyectos abiertos quedan | vigente |
+| D-044 | 2026-10-28 | general | 7 (I-4) | Los scripts van en lista después de los pendientes y vuelven a tener su sección; los detalles de una pregunta, plegados | vigente |
+| D-045 | 2026-10-28 | general | 7 | La conversación muestra el contexto y elige el modelo y el esfuerzo; el uso queda en la barra de estado | vigente |
+| D-046 | 2026-10-28 | general | 7 | La Revisión de la app entra al MVP, antes de I-5 e I-6, como módulo | vigente |
+| D-047 | 2026-10-28 | Revisión | 7 (módulo, pasos 2 y 3) | La Revisión sirve en web y en Electron desde el principio, con la misma extensión | vigente |
+| D-048 | 2026-10-28 | Revisión | 7 (módulo, paso 5) | Los comentarios viven en `docs/revision/`; la IA se entera por la instrucción y la guía | vigente |
+| D-049 | 2026-10-29 | Revisión | 7 (módulo, paso 6) | El modo comentar se prende con F8, sin barra sobre la app | vigente |
+| D-050 | 2026-10-29 | Revisión | 7 (R-I1) | La extensión pide permiso sobre todos los sitios, solo para la captura | vigente |
+| D-051 | 2026-10-29 | Revisión | 7 (entre R-I1 y R-I2) | La Revisión es la norma en las apps Electron; el ayudante se adelanta | vigente |
+| D-052 | 2026-10-29 | Revisión | 7 (después de R-I3) | La Revisión también en las versiones armadas de Iridium y otra app | vigente (punto 5, cerrado por D-053) |
+| D-053 | 2026-10-29 | general | 7 (Q-70, Q-71) | otra app instalada sin Revisión; una pregunta acepta una sola opción y pasos numerados | vigente |
+| D-054 | 2026-10-29 | general | 7 (Q-72) | Iridium se prepara para compartir en una iteración corta después de I-6 | vigente |
+| D-055 | 2026-10-29 | general | 7 | La guía `hitos-desarrollo-app` pasa al formato 2026-10-29 con las mejoras pendientes | vigente |
+| D-056 | 2026-10-29 | general | 7 (Q-74) | «Aprobada provisional»: se sigue como si funcionara y la prueba a mano queda anotada | vigente |
+| D-057 | 2026-10-29 | general | 7 (Q-73) | El código de Iridium va público en GitHub, con `docs/` hablando solo de Iridium | vigente |
+| D-058 | 2026-10-29 | general | 7 (Q-75) | Git como el control de código de VS Code, y si el repositorio está en GitHub | vigente |
+| D-059 | 2026-10-29 | general | 7 (I-6) | El contexto de una conversación guardada se lee de su historial; el uso, el modelo, los avisos y el cierre, como se construyeron | vigente |
+| D-060 | 2026-10-30 | general | 7 (Q-77, R-3) | Lo escrito no se pierde, se vuelve al último proyecto, el contexto como círculo y un chat en la vista de Proyectos | vigente |
+| D-061 | 2026-10-30 | general | 7 | El chat se lee de un vistazo: lo tuyo en burbuja, el proceso de la IA aparte de su respuesta | vigente |
+| D-062 | 2026-10-30 | general | 7 | Ajustes del uso diario: Responder dentro del proyecto, el nombre de la ficha, las pruebas sin quitar el foco y el Gestor descontinuado | vigente |
+| D-063 | 2026-10-30 | general | 7; al procesar Q-79, Q-80 y Q-81 | Frentes en paralelo después del núcleo, y Postergar una prueba con un botón | vigente |
+| D-064 | 2026-10-30 | Skills | módulo Skills, paso 2; al procesar Q-83 | Skills: ver, editar con la IA y poner al día proyectos; elegir por proyecto, después | vigente |
+| D-065 | 2026-10-30 | Apariencia y ajustes | módulo Apariencia, paso 2; al procesar Q-84 | Ajustes como ventana flotante con nombre, IA, tono y tema | vigente |
+| D-066 | 2026-10-30 | general | módulo Apariencia, paso 6; al procesar Q-85 y Q-86 | Dos temas oscuros: Iridium (el de siempre) y Carbón | vigente |
+| D-067 | 2026-10-31 | Apariencia y ajustes | módulo Apariencia, paso 7 (AP-I1) | Cómo se construyó AP-I1: los ajustes viajan con las preferencias y «Normal» es el estilo de Claude Code | vigente |
+| D-068 | 2026-10-31 | Skills | módulo Skills, pasos 4 y 5; al procesar Q-89 | Skills: el chat de `Skills` al lado, y los atrasados por la fecha de formato que ya anota cada proyecto | vigente |
+| D-069 | 2026-10-31 | general | módulo Compartir, paso 1; al procesar Q-90 | Compartir, por ahora solo para el usuario: GitHub privado, actualización al cerrar e iniciar sesión desde Iridium | vigente |
+| D-070 | 2026-10-31 | general | módulo Compartir, paso 3; al procesar Q-91 y Q-92 | Las versiones se arman en la PC y GitHub guarda el código: `dev` para trabajar, `main` para lo que está en uso | vigente |
+| D-071 | 2026-11-01 | Compartir | módulo Compartir, paso 7; al procesar Q-99 | Iridium ofrece armar la versión nueva cuando hay commits sin armar; no arma solo | vigente |
+| D-072 | 2026-11-01 | general | 7, entre iteraciones; a pedido del usuario | Las pruebas abren Iridium fuera de la pantalla | vigente |
+| D-073 | 2026-11-01 | Revisión | 8, entre tandas; pedido de otra app (D-086 y Q-70 A), hecho desde el proyecto de otra app a pedido del usuario | El ayudante de la Revisión entra también en una interfaz propia, sin captura ni texto si la app lo pide | vigente |
+| D-074 | 2026-11-01 | general | 8, entre tandas; pedido del usuario | Una copia de prueba a mano para un conocido, sin esperar a Compartir | vigente |
+| D-075 | 2026-11-01 | general | 8, tanda 6 (Defecto 20, Q-107 A) | Los radios y las sombras sueltos pasan a los tokens del design system | vigente |
+| D-076 | 2026-11-02 | general | 8, tanda 6 (Defecto 6, Q-107 A) | Los fusibles de Electron: sin correr como Node ni `NODE_OPTIONS`; `--inspect` queda para las pruebas | vigente |
+| D-077 | 2026-11-02 | general | 9 (Q-109) | Iridium sigue sin número de versión por ahora: fecha y commit | vigente |
+| D-078 | 2026-11-02 | general | 9 (Q-110) | Volver atrás es armar la versión anterior, con `pnpm volver` | vigente |
+| D-079 | 2026-11-02 | general | 10 (Q-112) | Los frentes que siguen: Inicio, después Diseño y Capacidades | vigente |
+| D-080 | 2026-11-04 | general | 10 (Q-116) | La carpeta para compartir explica Iridium por dentro e instala el comprobador de preguntas | vigente |
+| D-081 | 2026-11-04 | general | 10 (Q-117) | La sección Git crea el repositorio y lo publica en GitHub, con la sesión de GitHub de git | vigente |
+| D-082 | 2026-11-04 | general | 10 (Q-119) | El repo de Iridium no nombra los otros proyectos del usuario | vigente |
+| D-083 | 2026-11-04 | general | 10 (Q-120) | Ideas y Skills viven en una carpeta «Iridium» aparte de los proyectos | vigente |
+| D-084 | 2026-11-04 | general | 10 (Q-121) | Al terminar la limpieza, el repo empieza de nuevo con un solo commit | vigente |
+| D-085 | 2026-11-04 | general (Compartir) | 10, a pedido del usuario | Las copias compartidas se actualizan solas desde las versiones publicadas en GitHub | vigente |
+
+---
+
+## D-001 — Consolidar en este proyecto las ideas de desarrollo con IA
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 0
+- **Estado:** vigente
+
+**Contexto:** en `Ideas/ideas.md` se acumularon varias ideas sobre cómo desarrollar con IA (app propia sobre Claude Code, comentarios sobre la app en desarrollo, preguntas estandarizadas, Claude Design propio), que ya apuntaban a un proyecto común de "herramientas de desarrollo". El usuario pidió juntarlas en un proyecto y sumar el puente PC–celular.
+
+**Decisión:** crear el proyecto (nombre provisorio "Centro de Desarrollo") con esas ideas en `00-idea.md`, y explorarlas antes de construir nada.
+
+**Motivo:** pedido del usuario; las ideas se cruzan entre sí y conviene pensarlas juntas.
+
+**Consecuencias:** las ideas pasan a "Integradas" en `Ideas/ideas.md`. Las de otra app y otro proyecto que usan el celular quedan en sus proyectos, pero dependen de lo que se decida sobre el puente (Q-3).
+
+---
+
+## D-002 — "Centro de Desarrollo" queda como nombre provisorio
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 0
+- **Estado:** reemplazada por D-033
+
+**Contexto:** el proyecto necesitaba una carpeta para existir; el nombre salió de las palabras del usuario (Q-2).
+
+**Opciones consideradas:**
+1. Dejarlo provisorio y decidir más adelante — no frena nada; cambiarlo es renombrar la carpeta.
+2. Elegir un nombre definitivo ahora — sin información suficiente sobre qué termina siendo.
+
+**Decisión:** queda "Centro de Desarrollo" como provisorio.
+
+**Motivo:** el nombre se elige mejor cuando el alcance esté claro.
+
+**Consecuencias:** revisar el nombre al cerrar el hito 2 (o el 6, con la identidad visual). Al cerrar el hito 2, el usuario eligió decidirlo en el hito 6, con la identidad visual (Q-32).
+
+---
+
+## D-003 — El puente PC–celular es un módulo de este proyecto, para que lo usen otros
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 0
+- **Estado:** reemplazada por D-005
+
+**Contexto:** el puente lo necesitan este proyecto, otro proyecto y otra app (Q-3).
+
+**Opciones consideradas:**
+1. Módulo de este proyecto, pensado para que lo usen otros y construible antes que el resto — hereda la documentación y las decisiones del proyecto; sale rápido.
+2. Proyecto propio aparte — más independiente, pero duplica perfil, design system y decisiones.
+3. Parte de otro proyecto — otro proyecto todavía está en exploración y su alcance es mucho más grande; el puente quedaría esperando.
+
+**Decisión:** opción 1.
+
+**Motivo:** es una herramienta de desarrollo (llevar al celular lo que se construye en la PC) y es la base que otros proyectos van a usar.
+
+**Consecuencias:** el módulo puede empezar su ciclo reducido apenas cierre el hito 2 general (`plan-desarrollo.md` › El puente PC–celular puede ir primero). En el hito 5 se diseña con una interfaz que otro proyecto y otra app puedan usar. Si en el hito 1 aparece algo existente que alcanza, se reconsidera.
+
+---
+
+## D-004 — Plan de desarrollo propio: exploración y definición más a fondo
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 0
+- **Estado:** vigente
+
+**Contexto:** el proyecto es una plataforma de largo plazo con varias áreas, y el usuario quiere explorar todo antes de construir (Q-4).
+
+**Opciones consideradas:**
+1. Plan propio, como el de otro proyecto (D-003 de otro proyecto) — más trabajo en los hitos 1 a 5, menos riesgo de una base que no aguanta.
+2. La guía de hitos normal — más rápido, pero pensada para apps con un caso de uso central.
+
+**Decisión:** opción 1, en `plan-desarrollo.md`.
+
+**Motivo:** el riesgo principal es construir una base equivocada o algo que ya existe.
+
+**Consecuencias:** el hito 1 explora alternativas por área y repasa las herramientas propias; el hito 2 arma un catálogo de casos de uso.
+
+---
+
+## D-005 — El puente PC–celular es LocalSend más un envío automático desde la PC
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (reemplaza a D-003)
+
+**Contexto:** la exploración del puente (`01-exploracion.md` › Área: Puente PC–celular) mostró que LocalSend ya resuelve el envío, y desde la 1.18 tiene línea de comandos. El usuario ya lo usa y le alcanza (Q-5); lo único que falta es que los archivos lleguen al celular sin mandarlos a mano desde la PC; no hace falta instalar solo (Q-6).
+
+**Opciones consideradas:**
+1. Usar LocalSend tal cual y agregar solo el envío automático: que la IA o un proyecto mande un archivo al celular sin intervención — mínimo trabajo, aprovecha lo que ya funciona.
+2. Módulo propio con app en el celular (D-003) — mucho más trabajo para algo que ya existe.
+3. ADB por Wi-Fi para instalar solo — el usuario no lo necesita y la conexión es frágil.
+
+**Decisión:** opción 1. El puente deja de ser un módulo: es una funcionalidad chica del Centro, que cualquier proyecto (otra app, otro proyecto) puede usar para mandar archivos al celular.
+
+**Motivo:** lo que existe alcanza; construir solo lo que falta.
+
+**Consecuencias:** desaparece el módulo "Puente PC–celular" previsto. En el hito 3 se hace un spike: probar que la línea de comandos de LocalSend manda un archivo sin interacción y que el celular lo acepta solo (dispositivo favorito). Si funciona, se puede usar enseguida, antes de construir el resto. Quedan para el hito 3 la verificación de desarrolladores de Android (que el APK se pueda instalar) y si hace falta Tailscale fuera de casa.
+
+---
+
+## D-006 — El Centro es una app propia para dirigir, con Claude Code (Agent SDK) como motor
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (ajustada por D-015: una sesión por proyecto, varios proyectos a la vez)
+
+**Contexto:** ninguna interfaz existente organiza el trabajo por proyecto y plan (`01-exploracion.md` › Área: Motor y marco). El usuario probó Claude Code Desktop: organiza por sesiones, y no deja ver sobre qué se trabaja, ni los docs, ni el design system sin ir al navegador (Q-8).
+
+**Opciones consideradas:**
+1. App propia para dirigir, con Claude Code como motor — un solo lugar con el proyecto, sus docs, el diseño y la conversación; más trabajo.
+2. Paneles propios dentro de Claude Code Desktop (mods) — menos trabajo, pero algo muy nuevo y no resuelve ver docs y diseño al lado.
+3. Hacer crecer el gestor anterior en VS Code — atado a lo que VS Code permite mostrar.
+
+**Decisión:** opción 1 (Q-7). La conversación con la IA vive **dentro** de la app, al lado de los docs y el diseño del proyecto, usando el Agent SDK (que es el motor de Claude Code empaquetado para usarlo desde otra app). No se copian las funciones de Claude Code Desktop que no hacen falta para dirigir (sesiones en la nube, Dispatch, muchas sesiones en paralelo): para eso se sigue usando Desktop o la CLI.
+
+**Motivo:** lo que le falta al usuario no es el chat, sino ver el proyecto mientras conversa. El Agent SDK da lo mismo que Claude Code (herramientas, skills, conectores, permisos) y deja la interfaz libre.
+
+**Consecuencias:** la app tiene que dibujar la conversación, los pedidos de permiso y los cambios de la IA (el SDK no trae interfaz). Se usa la suscripción, no la API (ver `01-exploracion.md` › Usar la suscripción y no la API), a confirmar en el hito 3. En el hito 5 se hace un spike: una conversación con el Agent SDK dentro de una ventana propia. Si Anthropic cambia la política, la app debe poder abrir Claude Code en lugar de manejarlo.
+
+---
+
+## D-007 — El Agent SDK se usa directo, pero aislado en un solo lugar de la app
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (completa a D-006)
+
+**Contexto:** Claude Code y su SDK van a cambiar, y mañana el mejor motor puede ser otro (Codex, modelos locales). El usuario planteó que, si la IA hace la adaptación, quizás no haga falta independizarse de antemano (Q-9, Q-10). Análisis en `01-exploracion.md` › Cuánto cuesta de verdad cambiar de motor, si la IA hace la adaptación.
+
+**Opciones consideradas:**
+1. Agent SDK directo, aislado en un solo lugar ("frontera") — todas las funciones de Claude, rápido de construir; cambiar de motor es que la IA reescriba esa pieza.
+2. Capa intermedia con ACP desde el principio — cambiar de motor es elegir otro, pero se pierden funciones de Claude y depende de adaptadores de terceros.
+3. Agent SDK directo sin cuidar dónde se usa — lo más rápido, lo más caro de cambiar.
+4. Motor propio que llama a cualquier modelo — rehacer Claude Code; descartado.
+
+**Decisión:** opción 1.
+
+**Motivo:** el costo de cambiar de motor es parecido en 1 y 2, y lo difícil de un cambio (funciones exclusivas, historial, comportamiento de la IA) pesa igual en las dos. La 1 da más hoy con menos piezas de terceros.
+
+**Consecuencias:**
+- En el hito 5 la arquitectura define la frontera: el único lugar de la app que habla con el SDK. Ninguna otra parte lo usa.
+- Las funciones exclusivas de Claude (modos de permiso, plan, subagentes, hooks) se pueden usar, pero se listan en la arquitectura y el centro de la app no depende de ellas.
+- La app guarda su propio resumen de cada sesión; no depende del historial interno de Claude.
+- Si ACP madura o hace falta usar varios motores, se agrega detrás de la misma frontera.
+
+---
+
+## D-008 — El plan se ve como un gráfico de fases y pasos leído de `docs/`; sin kanban ni canvas por ahora
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente
+
+**Contexto:** ninguna herramienta conoce el ciclo completo de la guía de hitos; las que funcionan guardan el plan en archivos y dibujan una vista encima (`01-exploracion.md` › Área: Proyectos y plan). El usuario respondió Q-11 y Q-12.
+
+**Opciones consideradas:**
+1. Mapa de hitos como gráfico de fases con sus pasos, cada uno enlazado a su documento — muestra dónde se está y qué falta.
+2. Tablero kanban de tareas — descartado: es la IA quien interpreta lo que quiere el usuario y ubica cada tarea; al usuario no le sirve moverlas.
+3. Gestor externo (Linear, Plane) — descartado: duplica el plan fuera del repo.
+4. Canvas para pensar las ideas (Excalidraw, tldraw, Miro) — postergado: el usuario todavía no sabe cómo lo estructuraría.
+
+**Decisión:** opción 1. La verdad del plan sigue en `docs/` (estado, hitos, áreas, iteraciones, decisiones, `Q-n`); el Centro la lee y la dibuja como **fases (hitos) con sus pasos** (áreas, iteraciones, pasos de un módulo), marcando lo hecho, lo que está en curso y lo pendiente. Cada fase y cada paso abre el documento o la sección que lo detalla. Los diagramas sueltos (arquitectura, flujos) los arma la IA en Mermaid dentro de los docs. No hay canvas por ahora.
+
+**Motivo:** el usuario quiere ver con claridad dónde está y bajar al detalle cuando lo necesita; no quiere administrar tareas, porque eso lo hace la IA.
+
+**Consecuencias:**
+- La forma exacta del gráfico se elige en los hitos 4 y 6; hay una prueba con tres variantes (Q-13). El usuario prefiere cajas dentro de cajas (opción A): los módulos van como otra caja y los hitos reabiertos se marcan. Mermaid alcanza para probar; en la app puede dibujarse con componentes propios (React Flow) si hace falta tocar cada paso.
+- La guía de hitos tiene que dejar los pasos de cada hito en un formato que el Centro pueda leer (tablas con estado); se revisa en el hito 3 (formato de la documentación).
+- El canvas queda en "Ideas para después" de `00-idea.md`, con Excalidraw como candidato (libre, se mete en la app).
+
+---
+
+## D-009 — La guía de hitos suma las mejoras 1 a 6 tomadas de otros métodos
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente
+
+**Contexto:** se comparó la guía con Spec Kit, BMAD, Kiro, OpenSpec, Task Master y Backlog.md (`01-exploracion.md` › Guía de hitos frente a otros métodos). La guía es mejor en alcance, en cómo trata a alguien que no programa y en el cuidado del contexto, pero confía en que se noten los huecos en vez de tener pasos que los busquen. El usuario respondió Q-14.
+
+**Opciones consideradas:**
+1. Las de valor alto y medio (1 a 6).
+2. Solo las dos de valor alto (revisión de coherencia y verificación de iteraciones).
+3. Todas, incluidas escenarios, retrospectiva y dependencias entre tareas — descartado: suma peso sin uso claro todavía.
+4. Ninguna por ahora.
+
+**Decisión:** opción 1. Se agregan a la guía: revisión de coherencia al cerrar el hito 6, verificación al cerrar cada iteración, procedimiento para corregir el rumbo, cambios como propuestas después del lanzamiento, pista corta para errores y cambios chicos, y contexto por iteración.
+
+**Motivo:** las dos de valor alto atacan los errores más caros (plan mal armado, iteración dada por buena sin funcionar); las cuatro medias resuelven huecos que ya aparecieron en proyectos reales, como volver atrás sin saber cómo.
+
+**Consecuencias:**
+- El trabajo se hace en el proyecto `Skills`, en una sesión aparte; desde acá no se toca.
+- La mejora 3 incluye el caso de Q-13: una funcionalidad que obliga a cambiar el motor y volver a un hito anterior (típico en juegos y en proyectos que pasan a plugins).
+- Las mejoras 7 a 9 quedan como posibles; la 9 (dependencias entre tareas) se revisa si el Centro corre varios agentes a la vez.
+
+---
+
+## D-010 — Bandeja propia de pendientes; las `Q-n` suman tipo y si frenan; pruebas y tareas como listas
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (ajustada por D-022)
+
+**Contexto:** ninguna herramienta junta lo que espera del usuario entre proyectos; las bandejas que existen son para aprobar acciones de agentes (`01-exploracion.md` › Área: Pendientes del usuario). El usuario respondió Q-16 y Q-17, contó que la IA sigue preguntando en el chat lo que debería ser una `Q-n`, y pidió listas con un campo de texto por punto para pruebas y tareas.
+
+**Opciones consideradas:**
+1. Bandeja propia que lee los archivos de cada proyecto, con un formato de `Q-n` más rico.
+2. Bandeja de terceros (Agent Inbox, HumanLayer) — descartado: son para aprobar acciones, atadas a otro marco o a la nube.
+3. Seguir con el visor del Gestor, proyecto por proyecto — se queda corto: no junta todos los proyectos.
+
+**Decisión:** opción 1.
+- La verdad queda en `estado.md` y `respuestas/` de cada proyecto; el Centro los junta. Muestra primero lo que frena a un proyecto y después el resto (Q-16).
+- Cada `Q-n` dice su **tipo** (decisión, consulta, prueba, tarea, formulario) y si **frena** el próximo paso.
+- Pruebas y tareas son **listas**: cada punto se marca y lleva un campo de texto.
+- Los formularios se usan para **arrancar un proyecto**: tipo (app, juego), plataformas y los datos del perfil; opcionales, por partes y con "no sé todavía" en cada campo (Q-17). Su forma se toma de la elicitación de MCP, escrita en los archivos: no se agrega ningún MCP ni skill.
+- Las preguntas del chat que no se contestan en el momento pasan a `Q-n` (el Centro lo hace solo; mientras tanto, lo dice la guía).
+
+**Motivo:** el usuario quiere un solo lugar donde ver qué espera de él y saber qué es urgente; las listas con nota evitan que varios problemas se mezclen en un "Otro"; y cuidar el contexto descarta un MCP o skill extra.
+
+**Consecuencias:**
+- Cambios de la guía, en `Skills`: tipos y "frena" en el formato de `Q-n`, listas con nota, regla de las preguntas del chat y formulario de arranque. El visor del gestor anterior tiene que entender el formato nuevo (proyecto aparte).
+- Los formatos exactos (cómo se escribe una lista o un formulario en markdown) se fijan en el hito 3 (formato de la documentación).
+
+## D-011 — Diseño: lienzo y biblioteca propios sobre `DESIGN.md`, armados con lo que ya existe
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (responde Q-18 y Q-19)
+
+**Contexto:** hoy se diseña en Claude Design, en la nube. Las alternativas locales (Open Design, Open CoDesign) generan diseños pero no tienen el lienzo con versiones lado a lado y comentarios que sirvió en otra app; las que lo tienen están en la nube. `DESIGN.md` ya es un formato abierto y es el que usa `impeccable` (`01-exploracion.md` › Área: Diseño).
+
+**Opciones consideradas:**
+1. Lienzo y biblioteca propios en el Centro; el diseño lo hace la IA con skills.
+2. Usar Open Design tal cual — sin lienzo, telemetría siempre encendida, datos fuera del proyecto.
+3. Seguir con Claude Design en la nube y que el Centro guarde solo la biblioteca — no es local y el producto cambia sin aviso.
+
+**Decisión:** opción 1, elegida por el usuario, **sin construir desde cero**:
+- El formato es `DESIGN.md` en cada proyecto. La biblioteca es una carpeta local: por cada estilo guardado, su captura y su `DESIGN.md` extraído de la página (Q-19).
+- Los prototipos son HTML dentro del proyecto; el Centro los muestra en un lienzo, lado a lado, con comentarios pegados a elementos y guardados en archivos. La pieza de comentarios es la misma que usará Revisión de la app.
+- Se toma código de Open Design (Apache-2.0) y Open CoDesign (MIT) donde sirva y la licencia lo permita, con aviso de autoría. De `impeccable` y de los tipos de Claude Design se toman las ideas y las instrucciones; el código del lienzo de Anthropic no es abierto y no se copia.
+- El diseño lo sigue haciendo Claude con skills (`impeccable` y un extractor de estilos adaptado); se refinan juntando lo mejor de las que existen.
+
+**Motivo:** el usuario quiere todo local y no reinventar lo que ya existe; lo que falta no es quién diseñe sino dónde ver, comparar, comentar y guardar.
+
+**Consecuencias:**
+- Hito 3: estudiar el código de Open Design y Open CoDesign, las skills de diseño y los tipos de Claude Design (`01-exploracion.md` › Pistas para la investigación técnica (hito 3)).
+- Las skills de diseño que se adapten viven en `Skills`, como el resto (idea 7).
+- Claude Design en la nube queda como respaldo mientras el Centro no exista.
+
+---
+
+## D-012 — Revisión de la app: extensión del navegador, comentarios en archivos planos
+
+- **Fecha:** 2026-10-21
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (responde Q-20 y Q-21); lo de «solo web» lo cambia D-047
+
+**Contexto:** señalar un elemento y pasárselo a la IA ya existe (panel de Claude Code Desktop, `impeccable live`, Agentation, React Grab), pero ninguna herramienta guarda el comentario en el proyecto para la sesión siguiente (`01-exploracion.md` › Área: Revisión de la app).
+
+**Opciones consideradas:**
+1. Pieza dentro del Centro, que abre la app desde afuera (web y Electron) y suma variantes en vivo con `impeccable` — más grande; depende de que el Centro exista.
+2. Agentation dentro de cada app — solo React, hay que tocar cada proyecto, notas fuera de los archivos.
+3. Panel de Claude Code Desktop con `impeccable live` — no guarda nada.
+4. Extensión del navegador, solo web, sin variantes — propuesta del usuario.
+
+**Decisión:** opción 4, propuesta por el usuario:
+- Una extensión del navegador: se selecciona un elemento como en Claude Design y se **deja** el comentario o se **envía en el momento** a la sesión abierta. Sin variantes.
+- Solo apps web en desarrollo (y los prototipos HTML de Diseño). Sirve con cualquier framework.
+- Cada comentario es un archivo plano en una carpeta del proyecto: texto, página, selector, texto visible, captura recortada y, cuando el framework lo marca en modo desarrollo, archivo y línea de origen. El `CLAUDE.md` del proyecto dice dónde están.
+- Un programa chico en la PC recibe los comentarios de la extensión y los escribe en el proyecto que corresponde; cuando exista el Centro, lo hace el Centro.
+- Ciclo (Q-21): la IA lo cierra al resolverlo y queda en el historial; se puede reabrir o dejar uno nuevo.
+
+**Motivo:** más simple que la opción 1 y sirve desde ya, sin esperar al Centro; el modo desarrollo da gratis la ubicación en el código.
+
+**Consecuencias:**
+- Electron y Android quedan fuera por ahora (`00-idea.md` › Ideas para después).
+- `impeccable live` sigue disponible por su cuenta; el Centro no lo integra.
+- Hito 3: extensión y programa local, marcas de origen por framework, cómo llega "enviar ahora" a la sesión (`01-exploracion.md` › Pistas para la investigación técnica (hito 3)).
+- El selector es el mismo que usará el lienzo de Diseño (D-011).
+
+---
+
+## D-013 — El gestor anterior queda solo con mantenimiento hasta que el Centro lo cubra
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (responde Q-22)
+
+**Contexto:** el Gestor (extensión de VS Code, 1.2.0) ya resuelve parte del Centro y su código, salvo una capa chica, no depende de VS Code (`01-exploracion.md` › Repaso de lo propio › el gestor anterior y su visor).
+
+**Opciones consideradas:**
+1. Solo mantenimiento — no se duplica trabajo; lo nuevo va al Centro.
+2. Seguir sumándole funciones — mejor mientras tanto, pero es trabajo que el Centro rehace.
+3. Congelarlo — dejaría de entender los formatos nuevos de la guía.
+
+**Decisión:** opción 1, elegida por el usuario: arreglos y lo necesario para entender los formatos nuevos de la guía (D-010). Las funciones nuevas se piensan para el Centro.
+
+**Motivo:** el Gestor es el primer pedazo del Centro; crecer en los dos lados es hacer dos veces lo mismo.
+
+**Consecuencias:**
+- La relación definitiva (incorporarlo, reemplazarlo o convivir) se decide en el hito 2; todo apunta a que el Centro lleve su código.
+- Las funciones pendientes del Gestor (búsqueda, grupos, abrir en ventana nueva) pasan a ser casos de uso a considerar para el Centro en el hito 2.
+- Los cambios al Gestor se hacen en su proyecto, cuando el usuario lo abra.
+
+---
+
+## D-014 — Skills locales donde la licencia lo permite; las de Anthropic que no se pueden copiar, desde la cuenta
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 1
+- **Estado:** vigente (responde Q-23)
+
+**Contexto:** de la cuenta de claude.ai bajan una segunda copia de `impeccable` (más nueva que la local), los plugins `design` y `engineering` y las skills de Anthropic. Las de Word, PDF, PowerPoint, Excel, navegador y control de la PC prohíben por licencia sacar copias fuera de los servicios de Anthropic (`01-exploracion.md` › Repaso de lo propio › Skills).
+
+**Opciones consideradas:**
+1. Local todo lo que la licencia permite; las que no, desde la cuenta como excepción; el resto se quita.
+2. Todo local sin excepción — se pierden las skills de documentos.
+3. Dejar todo como está — siguen las copias dobles.
+
+**Decisión:** opción 1, elegida por el usuario:
+- A `Skills`, con una sola copia: `impeccable` (la versión más nueva), `skill-creator` y lo que sirva de los plugins `design` y `engineering`, una vez confirmada su licencia.
+- Quedan desde la cuenta, como excepción: las de documentos (Word, PDF, PowerPoint, Excel) y las del navegador y el control de la PC, que tampoco se pueden copiar.
+- Se quita de la cuenta lo demás: lo que se trajo a local y lo que sin conectores no sirve en la PC (investigación, docs, Google Workspace, resumen de la mañana, importar memoria).
+
+**Motivo:** respeta la preferencia de tener todo en la PC (`00-idea.md`, idea 7) sin perder lo que no tiene reemplazo.
+
+**Consecuencias:**
+- Trabajo en una sesión de `Skills`: traer las skills, sacar la copia vieja de `impeccable` y decidir qué de `design` y `engineering` no choca con la guía de hitos.
+- Después, el usuario quita de su cuenta lo que ya no tiene que bajar.
+- El gestor de skills del Centro muestra de dónde viene cada una y avisa de las copias dobles.
+
+---
+
+## D-015 — Una sesión de IA por proyecto; varios proyectos trabajando a la vez
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 2
+- **Estado:** vigente (surge de la respuesta a Q-26; ajustada por D-021)
+
+**Contexto:** D-006 dejaba afuera "muchas sesiones en paralelo", pensando en varias sesiones dentro de un mismo proyecto, como hace Claude Code Desktop. Al revisar el catálogo, el usuario aclaró que quiere abrir un proyecto y trabajar enfocado en él, y también volver a la vista general y trabajar en otro mientras la IA del primero sigue trabajando.
+
+**Opciones consideradas:**
+1. Una sesión por proyecto, varios proyectos a la vez — cada proyecto tiene su conversación, que sigue aunque no esté a la vista.
+2. Una sola sesión a la vez en toda la app — más simple, pero obliga a esperar o cortar para cambiar de proyecto.
+3. Varias sesiones dentro de un mismo proyecto (como Desktop) — sigue afuera: pide copias aisladas del proyecto y revisar cambios cruzados; para eso queda Desktop o la CLI.
+
+**Decisión:** opción 1. La app tiene una **vista general** (todos los proyectos, la bandeja, la biblioteca de diseño, las skills) y una **vista por proyecto**, donde todo es de ese proyecto (docs, plan, conversación, diseño, comentarios). Cada proyecto tiene su propia sesión de IA, que sigue trabajando aunque se pase a otro; la vista general muestra cuáles están trabajando, esperando un permiso o terminadas.
+
+**Motivo:** el usuario dirige varios proyectos; esperar a que la IA termine en uno para pasar a otro desperdicia su tiempo.
+
+**Consecuencias:**
+- Base: B-4 tiene que manejar varias sesiones a la vez, y B-11, las dos vistas (`02-definicion.md` › Lo que la base tiene que dar). Casos C-49 a C-51.
+- Hito 3: confirmar que la suscripción permite varias sesiones del Agent SDK a la vez. Comparten el mismo límite de uso, así que varios proyectos trabajando lo gastan más rápido; la app tiene que mostrarlo (C-7).
+- Un pedido de permiso en un proyecto que no está a la vista lo frena hasta que se responde: por eso la vista general lo muestra, y C-51 avisa.
+- Hito 4: cómo se pasa de la vista general a la de un proyecto y cómo se ven las sesiones en marcha.
+
+---
+
+## D-016 — El MVP es dirigir proyectos conversando con la IA: cinco funcionalidades, once casos
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 2
+- **Estado:** vigente (responde Q-28)
+
+**Contexto:** el catálogo tiene 51 casos en siete áreas, revisado en tres tandas (Q-25 a Q-27). El riesgo mayor del proyecto es no terminar nunca (`01-exploracion.md` › Riesgos iniciales).
+
+**Opciones consideradas:**
+1. Solo los once casos *Must*: vista general, vista de proyecto con la IA, varios proyectos a la vez, mapa del plan, bandeja.
+2. Sumar lo que hoy hace el Gestor (scripts, fichas) — MVP más grande sin ganar nada, porque el Gestor sigue en uso.
+3. Sumar una parte de Diseño — es un área del tamaño de una app; Claude Design sigue de respaldo.
+
+**Decisión:** opción 1 (`02-definicion.md` › MVP en un párrafo). El envío de APK al celular (C-40) va aparte y puede hacerse antes.
+
+**Motivo:** es lo mínimo que ya cambia cómo trabaja el usuario: dirigir y responder desde un lugar, con la IA al lado del proyecto. Cinco funcionalidades está en el límite que recomienda la guía.
+
+**Consecuencias:**
+- Diseño, Revisión de la app y Skills quedan para después del MVP; cada una como módulo (`plan-desarrollo.md` › Qué cambia en cada hito).
+- La base igual se diseña para todo el catálogo (B-1 a B-12), aunque el MVP use solo una parte.
+
+---
+
+## D-017 — El Centro y el Gestor conviven hasta que el Centro lo cubra
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 2
+- **Estado:** vigente (responde Q-29; completa D-013)
+
+**Contexto:** D-013 dejó el Gestor solo con mantenimiento y la relación para este hito. El MVP (D-016) no trae scripts, fichas ni abrir en VS Code.
+
+**Opciones consideradas:**
+1. Conviven hasta que el Centro lo cubra; después el Gestor queda como acceso rápido en VS Code o se retira.
+2. El Centro lo reemplaza desde la primera versión — el MVP crece con scripts, fichas, búsqueda y grupos.
+3. Conviven siempre — dos herramientas que leen lo mismo y cada cambio de formato se hace dos veces.
+
+**Decisión:** opción 1, elegida por el usuario.
+
+**Motivo:** mantiene chico el MVP sin que el usuario pierda nada mientras tanto.
+
+**Consecuencias:**
+- Los dos leen y escriben los mismos archivos (`.proyecto.json`, `estado.md`, `respuestas/`): el Centro no puede cambiar esos formatos sin que el Gestor los entienda (B-2).
+- Cuando el Centro cubra C-8 a C-12, se decide si el Gestor queda como acceso rápido o se retira.
+- En el hito 5, que el Centro pueda llevarse el código del Gestor es un argumento a favor de TypeScript y React.
+
+---
+
+## D-018 — El Centro también edita las skills y la guía de hitos
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 2
+- **Estado:** vigente (surge de la respuesta a Q-31)
+
+**Contexto:** la definición decía que el Centro solo lee el formato de la guía y que los cambios se hacen en `Skills`. El usuario planteó que, si desde el Centro se ven y se quitan las skills locales, también se tienen que poder editar, y que `Skills` queda absorbido por el Centro.
+
+**Opciones consideradas:**
+1. El Centro edita las skills y la guía, con la IA, igual que trabaja en cualquier proyecto.
+2. El Centro solo las muestra y la edición sigue en sesiones aparte de `Skills`, desde VS Code.
+
+**Decisión:** opción 1. El área Skills suma editar una skill o la guía (C-52) y, cuando cambia el formato de la guía, mostrar qué proyectos quedaron atrás y ponerlos al día (C-53). Los archivos se quedan donde están (Q-33, opción A): las propias en `Skills/skills/`, instaladas como enlaces en `.claude\skills\`; el Centro las lee y edita por ahí, como hoy.
+
+**Motivo:** ver y quitar sin poder editar obliga a salir del Centro para lo que más cambia; y poner al día el formato de los proyectos ya es trabajo que se hace a mano.
+
+**Consecuencias:**
+- `02-definicion.md` › Fuera de alcance deja de excluir los cambios a la guía; B-12 suma editar las skills propias.
+- El Centro no mueve ni reinstala skills: distingue un enlace (propia, en `Skills`) de una carpeta real (copia de un tercero, como `impeccable`) o de una que baja de la cuenta (`synced`), y eso le dice de dónde viene cada una (C-44).
+- Mientras el Centro no exista, todo sigue igual: los cambios a la guía se hacen en una sesión de `Skills`.
+- El Centro edita skills que usan todos los proyectos: un error las rompe para todos, así que el cambio tiene que poder deshacerse (git) y probarse antes (hito 5).
+
+---
+
+## D-020 — Marco de la app: barra lateral de íconos, barra de sesiones arriba, conversación al centro y «Seguí» para arrancar
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 4
+- **Estado:** vigente (precisa D-015 y la funcionalidad *Must* «Vista de un proyecto»; ajustada por D-022)
+
+**Contexto:** D-015 dejó para el hito 4 cómo se pasa de la vista general a la de un proyecto y cómo se ven las sesiones en marcha. Se propusieron barra lateral con la lista de proyectos, inicio con tarjetas o pestañas; para la vista del proyecto, contenido con el chat a la derecha, chat grande o pestañas; y si la IA arranca sola al abrir un proyecto.
+
+**Decisión** (respuestas del usuario en el chat):
+- **Barra lateral compacta, solo íconos**: cada ícono es una sección de la app (Proyectos, Bandeja; después Diseño, Skills…).
+- **Barra de sesiones arriba a la derecha**, como una barra de tareas: una ficha por sesión abierta con su estado; tocarla abre ese proyecto.
+- **Proyectos se ve como el Gestor**: tarjetas agrupadas por estado, con el número de pendientes arriba a la derecha.
+- **Vista del proyecto con la conversación grande al centro** y el mapa o los docs al costado; un botón la pasa al panel derecho.
+- **Cambiar de proyecto o de sección no recarga nada.**
+- **La IA arranca con el botón «Seguí»**, no sola al abrir el proyecto.
+
+**Motivo:** los íconos dejan lugar a las áreas que vienen sin cambiar la navegación (B-11); la barra de sesiones muestra quién espera desde cualquier lugar (C-50) sin ocupar una columna; «Seguí» evita gastar uso de la suscripción al entrar solo a mirar o responder.
+
+**Consecuencias:**
+- `02-definicion.md` › Must: «que arranca sola» pasa a «que retoma con un botón «Seguí»».
+- `04-ux.md` › Arquitectura de información, W-1 a W-3 y H-1 a H-6.
+- Hito 5: cada proyecto abierto guarda su vista en memoria y las sesiones siguen aunque no estén a la vista.
+
+---
+
+## D-019 — Formato de `docs/` para el Centro: portón como lista, estados con palabras fijas, `Tipo:` en las `Q-n` y pruebas con casillas
+
+- **Fecha:** 2026-10-22
+- **Ámbito:** general
+- **Hito o paso:** 3
+- **Estado:** vigente (completa D-008 y D-010)
+
+**Contexto:** D-008 y D-010 dejaron para el hito 3 cómo escribir en `docs/` los pasos del mapa, el tipo y el "frena" de las `Q-n` y las listas. La revisión de los `docs/` reales y del lector del Gestor (`research/formato-documentacion.md`) mostró que casi todo ya se puede leer; faltan los pasos de los hitos que no son de construcción, el tipo de cada pregunta y la forma de las listas.
+
+**Opciones consideradas (pasos de los hitos 0 a 6, 8 y 9):**
+1. El portón: cada documento de hito termina con su checklist de salida, marcada a medida que se cumple.
+2. Una tabla de pasos propia en cada documento — más detalle, pero más trabajo y más variación entre proyectos.
+3. Solo el estado del hito, sin pasos.
+
+**Decisión:** opción 1, elegida por el usuario. Además, sin alternativas que valieran la pena:
+- Los estados empiezan por una palabra fija (pendiente · en curso · reabierto · bloqueado · aprobada provisional · completo · validado · saltado); lo que sigue es libre.
+- Cada `Q-n` lleva como primera línea del contexto `Tipo: <decisión · consulta · prueba · tarea · formulario>` y ` · frena` cuando no deja seguir el Próximo paso. Sin esa línea, es una consulta que no frena.
+- Pruebas y tareas: puntos `- [ ]` con sangría dentro del contexto; la respuesta repite cada punto marcado o no, con una nota después de ` — `.
+- El formulario de arranque se fija cuando se construya (fuera del MVP).
+
+**Motivo:** el portón ya lo revisa la IA en cada hito, así que escribirlo no suma trabajo y muestra cuánto falta para cerrar. El resto mantiene compatible el visor del Gestor (probado con su lector): nada viejo se rompe y nada nuevo lo confunde.
+
+**Consecuencias:**
+- Cambios a la guía, en `Skills` (se suman a los de D-009 y D-010): portón como lista al final de cada documento de hito, palabras de estado, línea `Tipo:`, listas con casillas y la forma de la respuesta. Va con una fecha de formato nueva, para que la auditoría vea qué proyectos quedaron atrás.
+- El Gestor no necesita cambios para convivir (D-017); mostrar el tipo o las casillas es una mejora opcional de ese proyecto.
+- El Centro lee con tolerancia, como el Gestor: por títulos y nombres de columna, y lo que no entiende lo muestra como texto.
+- Este proyecto ya puede escribir sus `Q-n` y sus portones así desde ahora.
+
+
+---
+
+## D-021 — La IA trabaja sin pedir permisos ni quedarse esperando: lo que necesita del usuario lo deja como `Q-n` y cierra
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 4
+- **Estado:** vigente (respuesta a Q-34 › F-2; cambia C-5 y ajusta D-015)
+
+**Contexto:** F-2 diseñaba cómo responder, en medio de una sesión, los permisos y las preguntas con opciones de la IA; mientras tanto la sesión espera sin límite (S-1). Al recorrerlo, el usuario dijo que no quiere tener la IA parada esperándolo, que no pasa nada si tiene que cerrar su iteración para preguntar, y que usa (y cree que siempre va a usar) el modo *bypass permissions*.
+
+**Opciones consideradas:**
+1. Sesiones sin pedidos de permiso (*bypass*) y sin preguntas en el chat: lo que la IA necesita del usuario lo escribe como `Q-n` y cierra su iteración.
+2. Como estaba: permisos y preguntas en la ventana; la sesión espera la respuesta.
+3. Un modo intermedio (acepta ediciones, o un clasificador decide): pregunta menos, pero igual puede quedar esperando.
+
+**Decisión:** opción 1, elegida por el usuario.
+- Todas las sesiones del Centro corren en modo *bypass*.
+- La herramienta de preguntas con opciones queda desactivada en el Centro. Cada sesión recibe la instrucción de anotar lo que necesita como `Q-n` en `estado.md` y cerrar la iteración (estado al día y **Próximo paso**), como ya pide la guía.
+- Si igual llega un pedido de permiso (Claude Code protege algunas rutas aun en este modo; se confirma en el hito 5), la sesión no espera: se rechaza solo, con un mensaje que le pide a la IA anotarlo como `Q-n`.
+- Los estados de una sesión quedan en tres: trabajando · terminada · error. Ya no existe «te espera».
+
+**Motivo:** una sesión esperando frena el proyecto sin que se note (es una de las señales de que el Centro no funciona, `02-definicion.md` › Criterios de éxito). Cerrar la iteración deja todo escrito, no gasta uso mientras el usuario no responde y se retoma con **Seguí**.
+
+**Consecuencias:**
+- C-5 pasa a «La IA trabaja sin pedir permisos ni esperarlo; lo que necesita lo deja como `Q-n`» (`02-definicion.md`). En `04-ux.md`: H-2, H-5, F-2, F-6, W-3 y W-4.
+- Seguridad: la IA ejecuta y borra sin preguntar. Los resguardos son git en cada proyecto y poder frenarla, por eso Q-35 (Detener) pesa más. Cambia el requisito de permisos de `perfil-proyecto.md` (el nivel sigue en P2).
+- Elegir otro modo de permisos por proyecto queda como idea para después, si algún día hace falta.
+- Hito 5: cómo se pasa la instrucción a cada sesión y qué pedidos pueden llegar igual en *bypass*.
+
+---
+
+## D-022 — Pendientes por proyecto con el contexto completo, avisos dentro de la app y Proyectos en una sola grilla
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 4
+- **Estado:** vigente, salvo el color de cada estado en Proyectos, reemplazado por D-034 (respuesta a Q-34 › F-3, W-2 y W-5; ajusta D-010 y D-020; la lectura de W-5, confirmada en Q-36)
+
+**Contexto:** W-5 era una bandeja con todas las `Q-n` de todos los proyectos en una lista plana, con el detalle de una a la vez y el contexto como enlaces. W-2 agrupaba los proyectos en secciones plegables, como el Gestor. El usuario pidió, para F-3: íconos a la izquierda, al lado una columna angosta de pendientes por proyecto y, en el área grande, el detalle de cada proyecto (no de una pregunta a la vez), con todo lo necesario para decidir ahí mismo y, si hace falta, un panel a la derecha. Para W-5: que no le interesa una bandeja completa, que le alcanza con avisos dentro de la app y con moverse entre proyectos sin recargar ni cortar sesiones. Para W-2: que ahora hay más lugar y se puede agrupar sin el anidamiento de pausado, archivado y en rescate, quizás solo con colores.
+
+**Opciones consideradas (Proyectos):**
+1. Una sola grilla ordenada por estado, con el color del estado y su nombre en cada tarjeta.
+2. Una columna por estado, una al lado de la otra — se ve el reparto, pero los estados con un solo proyecto desperdician una columna.
+3. Grupos plegables, como estaba.
+
+**Decisión** (respuestas del usuario en el chat):
+- **Pendientes** (antes Bandeja) se arma por proyecto. Junto a los íconos, una columna angosta con los proyectos que tienen pendientes, los que frenan primero. En el área grande, todos los pendientes del proyecto elegido, uno debajo del otro, cada uno con todo lo necesario para decidir: las secciones y decisiones que cita se ven ahí mismo, sin ir a buscarlas.
+- Un **panel derecho**, cerrado salvo que se pida, muestra un documento entero; más adelante, lo de Diseño (el lienzo).
+- Con los pendientes respondidos, **Seguí** desde ahí arranca la sesión del proyecto sin abrirlo.
+- **No hay bandeja de avisos.** Alcanzan avisos dentro de la app cuando una sesión termina, deja preguntas nuevas o falla, y la barra de sesiones para ir a cada proyecto sin recargar ni cortar nada. C-51 pasa a *Must*, solo dentro de la app; los avisos de Windows siguen para después.
+- **Proyectos:** opción 1. Sin grupos plegables; cada tarjeta lleva el color de su estado y el nombre del estado (el color solo no alcanza, `04-ux.md` › Accesibilidad). Los archivados se ocultan con un interruptor.
+
+**Motivo:** responder por proyecto mantiene en la cabeza el contexto de uno solo; ver las citas ahí evita saltar entre documentos para decidir; la ventana del Centro tiene mucho más lugar que el panel del Gestor.
+
+**Consecuencias:**
+- `02-definicion.md`: C-21 y C-51, la funcionalidad de pendientes y el glosario.
+- `04-ux.md`: H-1, H-9, H-13 (nueva), F-3, W-2, W-4, W-5 y W-6.
+- D-010 sigue (pendientes propios, tipo, frena, listas), pero la bandeja se ve por proyecto. D-020 sigue, salvo que Proyectos ya no se ve como el Gestor.
+- Hito 5: leer las secciones citadas para mostrarlas dentro; los lectores de códigos y citas del Gestor son la base.
+- Q-36 confirmó la sección propia (opción A) frente a una pestaña de pendientes en cada proyecto o las dos cosas.
+
+---
+
+## D-023 — El uso de la suscripción y el contexto de cada sesión, siempre a la vista
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 4
+- **Estado:** vigente (respuesta a Q-34 › F-5; C-7 pasa a *Must*)
+
+**Contexto:** F-5 mostraba el uso de la suscripción solo cuando se agotaba; C-7 (ver el uso) era *Could*. El usuario pidió que el porcentaje de uso y el de contexto estén siempre a la vista, y que el de contexto vaya con la conversación de cada sesión.
+
+**Opciones consideradas:**
+1. Siempre a la vista: el uso en la barra de arriba y el contexto en cada conversación.
+2. Solo cuando se agota, como estaba.
+3. En una pantalla de Ajustes.
+
+**Decisión:** opción 1, elegida por el usuario. La barra de arriba muestra el uso de la ventana de 5 horas y de la semana (al pasar el mouse, cuándo se libera cada una). Cada conversación muestra cuánto contexto lleva usado, y se marca cuando pasa el 80 %, que es cuando conviene un chat nuevo.
+
+**Motivo:** varias sesiones gastan el mismo límite (D-015), así que el uso importa en todo momento; el contexto dice cuándo una conversación ya rinde menos.
+
+**Consecuencias:**
+- C-7 pasa a *Must* (`02-definicion.md`). En `04-ux.md`: H-12 (nueva), F-5, W-1 y W-3.
+- Hito 5: el uso ya llega con cada respuesta (S-1); falta confirmar cómo se lee el contexto de una sesión y cómo se pide el uso al abrir la app sin gastar (`/usage`).
+
+---
+
+## D-024 — El botón «Detener» la IA entra al MVP
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 4
+- **Estado:** vigente (responde Q-35; separa de C-4 el frenar a la IA, como C-54)
+
+**Contexto:** frenar a la IA era parte de C-4 (*Should*). Con el modo *bypass* (D-021) la IA ya no pide permisos, así que sin un botón la única forma de frenarla era cerrar la app (F-6).
+
+**Opciones consideradas:**
+1. «Detener» entra al MVP; ver qué archivo toca la IA sigue en *Should* con C-4.
+2. Queda en *Should* con C-4.
+
+**Decisión:** opción 1, elegida por el usuario. Detener frena la sesión en el acto, sin confirmación; la conversación queda y se retoma con **Seguí**.
+
+**Motivo:** sin pedidos de permiso, es el único freno inmediato; y es poco trabajo, porque el SDK ya permite cortar una sesión.
+
+**Consecuencias:**
+- `02-definicion.md`: caso C-54 (*Must*), en la funcionalidad «Vista de un proyecto». `04-ux.md`: H-14, W-3 y Principios de interacción.
+- Hito 5: confirmar que cortar una sesión deja la conversación lista para retomar.
+
+---
+
+## D-025 — La frontera con el motor: una interfaz propia, sesiones en *bypass* con la instrucción del Centro, y Detener que no cuenta como error
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 5
+- **Estado:** vigente (concreta D-007, D-021 y D-024)
+
+**Contexto:** D-007 pidió definir en el hito 5 el único lugar que habla con el SDK. El hito 4 dejó para acá cómo pasar la instrucción a cada sesión, qué permisos llegan en *bypass*, cómo detener y cómo leer el uso y el contexto sin gastar (`04-ux.md` › Para el hito 5). S-2 lo probó.
+
+**Opciones consideradas:**
+1. Una interfaz `Motor` propia, en palabras de la app, y una sola carpeta (`motor/`) que la cumple con el SDK.
+2. Usar los tipos del SDK en toda la app — menos código hoy, pero cambiar de motor o de versión toca todo.
+
+**Decisión:** opción 1 (`05-arquitectura.md` › La interfaz `Motor`). Cada sesión se abre en modo *bypass*, con las configuraciones del usuario y del proyecto, sin la herramienta de preguntas con opciones y con una instrucción agregada al sistema: no esperar ni preguntar en el chat, anotar lo que necesite como `Q-n` y cerrar la iteración. Detener corta el turno; la frontera lo traduce a «detenida» (el SDK lo informa como error) y el próximo Seguí le avisa a la IA que fue el usuario.
+
+**Motivo:** S-2 mostró que todo esto funciona con el SDK actual; tenerlo en un solo lugar hace que una versión nueva del SDK o un motor distinto se resuelvan ahí.
+
+**Consecuencias:**
+- En *bypass* no llega ningún pedido de permiso: el SDK ni consulta a la app. El rechazo automático de D-021 queda solo como resguardo por si cambia.
+- La IA puede escribir en `.git/` y `.claude/` sin preguntar; los resguardos siguen siendo git y Detener (`perfil-proyecto.md`).
+- El uso se pide con un método experimental del SDK; si cambia, llega con cada respuesta.
+
+---
+
+## D-026 — El código del Gestor se copia al Centro, no se comparte como paquete
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 5
+- **Estado:** vigente (resuelve el riesgo de `research/codigo-gestor.md`)
+
+**Contexto:** el Centro se lleva los lectores de la guía del Gestor, con sus pruebas (`research/codigo-gestor.md`). Quedó para el hito 5 si se copian o se comparten en un paquete común.
+
+**Opciones consideradas:**
+1. Copiarlos, anotando de qué versión del Gestor sale cada archivo.
+2. Un paquete compartido que usen los dos — un solo lector, pero obliga a reorganizar el Gestor, que solo recibe mantenimiento (D-013).
+
+**Decisión:** opción 1.
+
+**Motivo:** el Gestor no se toca desde acá y va a retirarse o quedar como acceso rápido (D-017); armar un paquete común es trabajo para algo que se apaga. La guía cambia de formato pocas veces y con fecha.
+
+**Consecuencias:**
+- Mientras convivan, un cambio de formato de la guía se aplica en los dos (ya previsto en D-017).
+- Las 217 pruebas del Gestor se copian con el código.
+
+---
+
+## D-027 — Una conversación usada hace poco fuera del Centro se avisa antes de retomarla
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 5
+- **Estado:** vigente (resuelve `04-ux.md` › W-3 › Extremos)
+
+**Contexto:** el Centro y VS Code guardan las conversaciones en el mismo lugar. S-2 mostró que el SDK deja abrir la misma conversación dos veces a la vez y que las dos escriben en el mismo historial, que queda mezclado. Claude Code no tiene un candado que lo impida.
+
+**Opciones consideradas:**
+1. Dentro del Centro, una sola sesión por proyecto; y si la última conversación se tocó hace menos de 10 minutos fuera del Centro, avisar antes de retomarla y ofrecer **Nueva**.
+2. Seguí siempre empieza una conversación nueva — nunca se pisan, pero se pierde el contexto de la anterior.
+3. Sin aviso — lo más simple; el historial puede mezclarse sin que se note.
+
+**Decisión:** opción 1.
+
+**Motivo:** cubre el caso real (dejar VS Code abierto con la misma conversación) sin perder el contexto en el uso normal.
+
+**Consecuencias:**
+- El Centro guarda qué conversaciones empezó (resumen de sesión, `05-arquitectura.md` › Modelo de datos) para saber de dónde viene cada una (W-3).
+- Si VS Code abre una conversación que el Centro tiene en curso, el Centro no se entera; es un riesgo aceptado.
+
+---
+
+## D-028 — El Centro se construye con Electron, TypeScript y React
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 5
+- **Estado:** vigente (responde Q-38)
+
+**Contexto:** el hito 5 tenía que elegir la tecnología: app de escritorio en Windows que no cierre Linux, con el Agent SDK y el código del Gestor (`05-arquitectura.md` › Opciones de stack).
+
+**Opciones consideradas:**
+1. Electron + TypeScript + React — el SDK corre adentro (S-2), se lleva el código del Gestor, misma base que otras apps; pesa ~100 MB.
+2. Tauri + TypeScript + React — más liviana, pero necesita un Node aparte para el SDK y suma Rust.
+3. App web local en el navegador — depende de un servidor corriendo y de lo que permita el navegador.
+
+**Decisión:** opción 1, elegida por el usuario. Preguntó si Claude Desktop y Codex Desktop están hechas con Electron: sí, las dos.
+
+**Motivo:** es la única donde todo lo que ya existe encaja sin piezas extra; el peso no importa en una PC personal.
+
+**Consecuencias:**
+- Resto del stack, estructura del repo y despliegue: `05-arquitectura.md` (React 19, Zustand, Zod, markdown-it, Vitest, Playwright, Biome, pnpm, electron-builder).
+- En la primera iteración se prueba el SDK dentro del instalador.
+
+---
+
+## D-029 — Dirección visual: cálida y tranquila, solo tema oscuro, design system propio con `impeccable`
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 6
+- **Estado:** vigente salvo «cálida», reemplazada por D-032 (responde Q-40, Q-41 y Q-42)
+
+**Contexto:** primeras preguntas del hito 6, adelantadas mientras se cerraba el 5.
+
+**Opciones consideradas:**
+- Sensación: sobria y técnica · cálida y tranquila · con personalidad propia.
+- Tema: los dos siguiendo a Windows · solo oscuro · solo claro.
+- Base: propia con `impeccable` · partir de otra app · partir de otra app.
+
+**Decisión** (elegida por el usuario): cálida y tranquila (como Claude Desktop), **solo tema oscuro**, design system propio armado con `impeccable`.
+
+**Motivo:** es la app donde el usuario pasa más tiempo; un solo tema simplifica el diseño y las pruebas de contraste.
+
+**Consecuencias:**
+- El hito 6 arranca con `PRODUCT.md` desde `docs/` y la dirección visual con `impeccable`; `06-ui.md` enlaza a `DESIGN.md`.
+- El contraste se verifica solo en oscuro. Un tema claro, si algún día hace falta, sería un cambio de tokens.
+- No dio referencias además de Claude Desktop: se proponen en el hito 6.
+
+## D-030 — Mundo visual «Manual con pestañas»: el color es del hito y el estado se marca con la forma de la línea
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 6
+- **Estado:** reemplazada por D-031 (completaba D-029)
+
+**Contexto:** con `PRODUCT.md` aprobado, `impeccable` propuso direcciones cálidas y oscuras para la vista de un proyecto (W-3): Tenmoku y celadón (taller de cerámica), Libro de obra (dirección de obra), Manual con pestañas, Raya de emisión, la estándar «como Claude Desktop» y cuatro descartadas (grilla de Crouwel, catálogo Factory, mapa de orientación, billetera de pasajes). Al usuario le gustaron el Manual y la Raya.
+
+**Opciones consideradas:**
+1. Manual con pestañas solo: muy claro, pero el color por hito compite con el color del estado y es poco tranquilo.
+2. Raya de emisión sola: la más tranquila y accesible, pero fría.
+3. Manual de base con el estado como forma de línea de la Raya (recomendada).
+
+**Decisión** (elegida por el usuario): opción 3. El proyecto se ve como un manual abierto en su hito: fondo oscuro cálido, hojas de lectura algo más claras, y un riel de pestañas en el borde derecho con un color apagado por hito, alto según el largo del hito. El color identifica al hito; el estado (trabajando, frena, pendiente, detenido, error) se marca con la forma de la línea (llena, doble, cortada, tachada) y siempre con su palabra.
+
+**Motivo:** la guía de hitos ya es un manual por secciones; el riel de pestañas hace del mapa del plan una navegación que se ve siempre. Separar color (hito) y forma (estado) resuelve el punto débil del Manual y cumple «el estado nunca solo por color».
+
+**Consecuencias:**
+- Contrato de dirección en el brief de superficie de `docs/ui/vista-proyecto.html` (`.impeccable/`); `DESIGN.md` se escribe al terminar la primera pantalla, desde lo construido.
+- Sin generación de imágenes en esta PC: se construye directo en código (prototipo HTML en `docs/ui/`), sin bocetos previos.
+- El nombre definitivo se propone después de ver la primera pantalla (Q-32).
+
+## D-031 — La forma de VS Code con grises cálidos; la conversación sola y el mapa en un panel desplegable
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 6
+- **Estado:** vigente en la disposición; los colores y la tipografía, reemplazados por D-032 (reemplaza D-030; ajusta D-020 y dónde se ve el uso de D-023; responde Q-43)
+
+**Contexto:** el prototipo del Manual con pestañas (D-030) le gustó al usuario, pero lo sintió demasiado cargado: no conseguía enfocarse en lo importante (Q-43). Pidió probar algo más tipo VS Code.
+
+**Opciones consideradas:**
+1. La forma de VS Code con grises apenas cálidos y un solo acento suave (recomendada).
+2. VS Code tal cual, con sus grises neutros y su azul.
+Y para la vista de un proyecto: conversación con un mapa chico al costado · solo la conversación con el mapa desplegable · como el wireframe W-3.
+
+**Decisión** (elegida por el usuario): opción 1, y **solo la conversación a la vista; el mapa y los docs, en un panel desplegable**. El área principal siempre es la grande y el panel derecho el angosto, aunque se intercambie qué va en cada uno; el panel se puede ensanchar.
+
+- Marco como VS Code: barra de actividad a la izquierda (Proyectos, Pendientes, Ajustes); las sesiones abiertas como pestañas arriba (la del proyecto abierto, marcada); una barra de estado fina abajo con el estado de la sesión, el hito, el contexto y el uso (5 h y semana); los avisos abajo a la derecha.
+- Casi todo gris; el color solo avisa: ámbar para lo que espera del usuario (y el foco), verde para hecho, rojo para error, siempre con ícono y palabra.
+- El mapa es un árbol, como el explorador de VS Code: los hitos con su estado y el hito en curso abierto con sus pasos.
+- Las herramientas que usó la IA se pliegan en una línea («Usó 4 herramientas»).
+- Tipografía del sistema: Segoe UI y Cascadia Mono, como VS Code en Windows.
+
+**Motivo:** el usuario conoce de memoria la forma de VS Code y la usa todo el día; lo que necesita es poder enfocarse en la conversación. Los grises cálidos mantienen D-029 y lo distinguen de VS Code cuando están los dos abiertos.
+
+**Consecuencias:**
+- `04-ux.md` › W-1, W-3 y W-4 ajustados: sesiones como pestañas arriba, uso en la barra de estado, panel desplegable (`Ctrl+B`).
+- Segoe UI no existe en Linux: si llega una versión para Linux (Q-30), se elige una tipografía equivalente.
+- El prototipo nuevo reemplaza al anterior en `docs/ui/vista-proyecto.html` (el anterior queda en el historial de git).
+
+## D-032 — Estilo «F4 Tarjetas»: casi negro con verde de fósforo, Chakra Petch y tarjetas suaves
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 6
+- **Estado:** vigente (responde Q-44 a Q-47; reemplaza los colores y la tipografía de D-031 y «cálida» de D-029)
+
+**Contexto:** con la disposición de VS Code aprobada (D-031), al usuario no lo convencían los grises cálidos. Sumó tres referencias en `imagenes de prueba/` (consola de uso pixelada, centro de mando neón, diario en terminal) y el estilo se afinó en tres rondas (`docs/ui/alternativas/`): de las cuatro alternativas de la ronda 1 eligió partir de la síntesis (D) con la letra del centro de mando (B), por legibilidad; de la ronda 2, la versión en calma (E4) con piezas de la de paneles suaves (E3) y sin brillo de fondo; de la ronda 3, F4.
+
+**Opciones consideradas:** ronda 1: A consola pixel, B centro de mando, C diario terminal, D síntesis. Ronda 2: E1 a E4. Ronda 3: F1 redondeada, F2 medidores finos, F3 rótulos, F4 tarjetas. El detalle está en `06-ui.md`.
+
+**Decisión** (elegida por el usuario): **F4 Tarjetas**.
+- Casi negro con un tinte verde y un solo verde de fósforo para lo activo; ámbar para lo que espera del usuario, rojo para error, siempre con ícono y palabra.
+- Chakra Petch para todo lo que se lee (interfaz y conversación); JetBrains Mono solo para códigos, rutas y números.
+- Rótulos, chips y botones en minúscula normal, sin efectos de brillo ni rayas.
+- Esquinas redondeadas; el pedido de la IA y el campo para escribir como tarjetas suaves con un fondo apenas teñido; medidores de uso finos con un brillo leve; la fila seleccionada del mapa, redondeada.
+
+**Motivo:** el usuario quería la estética de consola de sus referencias, pero legible para usarla todo el día: la letra de B se lee mejor que una monoespaciada, y la calma de E4 evita que todo grite.
+
+**Consecuencias:**
+- Deja de ser «cálida» (D-029): sigue siendo solo oscura, tranquila y con design system propio.
+- `docs/ui/vista-proyecto.html` pasa a F4; las rondas quedan en `docs/ui/alternativas/` como registro.
+- Las fuentes (OFL) se guardan en `docs/ui/fuentes/` y van empaquetadas en la app (todo local).
+- Próximo: revisión final de `impeccable`, `DESIGN.md` y nombre definitivo (Q-32).
+
+## D-033 — La app se llama «Iridium»
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 6
+- **Estado:** vigente (reemplaza D-002; responde Q-48)
+
+**Contexto:** con la vista de proyecto revisada y `DESIGN.md` escrito, tocaba elegir el nombre (D-002 lo dejó para el hito 6, con la identidad visual).
+
+**Opciones consideradas:** Fósforo (recomendada), Mando, Bitácora, Rumbo, otro nombre o seguir con «Centro de Desarrollo».
+
+**Decisión** (elegida por el usuario, en Otro): **Iridium**, de iridio. «Por ahora»: se puede revisar más adelante sin costo.
+
+**Motivo:** suena bien. No describe la función, y no hace falta: es un nombre propio, corto y que no choca con los otros proyectos (de paso, hace familia de elementos con otro proyecto).
+
+**Consecuencias:**
+- `PRODUCT.md`, `DESIGN.md`, `.impeccable/design.json`, el `README.md` y la ficha del proyecto pasan a Iridium.
+- La carpeta sigue siendo `Centro de Desarrollo`: renombrarla cambia la tarjeta del Gestor y las rutas de VS Code y de la memoria de Claude, así que se hace solo si el usuario lo pide.
+- En la interfaz el nombre todavía no aparece (la marca de la barra de actividad es un ícono); un logo, si hace falta, se ve con las otras pantallas.
+
+## D-034 — En Proyectos, el estado de cada tarjeta va con ícono y palabra, sin color propio
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 6
+- **Estado:** vigente (ajusta D-022; responde Q-49)
+
+**Contexto:** D-022 y el boceto de `04-ux.md` › W-2 daban a cada estado de proyecto un color de borde, con su nombre. El estilo F4 (D-032, `DESIGN.md`) tiene solo tres señales de color y las reserva para avisar: verde activo, ámbar espera al usuario, rojo error. Siete colores de estado competirían con esas señales.
+
+**Opciones consideradas:**
+1. Un color por estado, como decía D-022 — rompe las tres señales de `DESIGN.md`.
+2. Ícono y palabra para cada estado; solo «en desarrollo» en verde, por ser lo activo (recomendada).
+
+**Decisión** (aprobada por el usuario al ver `docs/ui/vista-proyectos.html`): opción 2. El ámbar de la tarjeta queda para las preguntas sin responder y el rojo para la sesión con error o la ficha dañada.
+
+**Motivo:** el usuario mira primero qué lo espera; si los estados también tuvieran color, el ámbar de las preguntas se perdería entre los demás.
+
+**Consecuencias:**
+- `04-ux.md` › W-2: el borde de color pasa a ícono y palabra.
+- `06-ui.md` › Cómo se resolvió W-2 describe la tarjeta.
+
+## D-035 — El Mapa muestra el estado del proyecto y Docs es un lector liviano
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 6
+- **Estado:** vigente (precisa D-008 y D-031 para W-7 y W-8; responde Q-51 a Q-53)
+
+**Contexto:** el Mapa como árbol dejaba vacía el área grande; con un panel de detalle al costado repetía lo que ya está en Docs. Docs estaba demasiado cargada (las secciones de todos los documentos, enlaces verdes por todas partes). La revisión está en `06-ui.md` › Revisión del propósito de Mapa, Docs y Pendientes.
+
+**Opciones consideradas:** Mapa: estado del proyecto (recomendada), solo el árbol, o sin pestaña. Docs: lector liviano (recomendada) o como estaba con menos ruido. Pendientes: la respuesta primero o como está.
+
+**Decisión** (elegida por el usuario):
+- **Mapa = estado del proyecto.** Responde «¿en qué va y qué sigue?». Una línea con los hitos (tocar uno lo muestra) y, debajo, el hito actual: próximo paso, pasos, lo que te espera y lo último de la IA. No muestra secciones ni decisiones: eso es Docs.
+- **Docs = lector liviano.** Responde «¿qué dice tal cosa?». Elegir documento y «En esta página» son menús arriba; la hoja va centrada con su ancho elegible (Q-51); los enlaces van en el color del texto, subrayados con puntos, y el verde queda para lo activo; las tablas de más de seis filas arrancan plegadas.
+- **Pendientes queda como está** (el usuario se retractó de cambiarla).
+
+**Motivo:** cada área responde una sola pregunta; así no se repiten y cada una se lee de un vistazo.
+
+**Consecuencias:**
+- `04-ux.md` › W-7 y W-8: el árbol y la lista lateral de documentos pasan a esta forma.
+- `docs/ui/vista-mapa-docs.html` se rehízo; las versiones anteriores quedan en el historial de git.
+
+## D-036 — La app de uso diario es una carpeta con el ejecutable y un acceso directo, sin instalador
+
+- **Fecha:** 2026-10-23
+- **Ámbito:** general
+- **Hito o paso:** 7 (I-1)
+- **Estado:** vigente (precisa `05-arquitectura.md` › Despliegue)
+
+**Contexto:** la arquitectura pedía «un instalador de Windows con electron-builder, como otra app». otra app en realidad no usa instalador: arma una carpeta con el ejecutable y crea un acceso directo en el escritorio. El riesgo a probar en I-1 era que el SDK, que trae su propio Claude Code (un `claude.exe` de 300 MB), funcione desde la app armada.
+
+**Opciones consideradas:**
+1. Carpeta con el ejecutable y acceso directo, como otra app (elegida) — se arma en un minuto; una versión nueva se arma encima de la anterior; nada que desinstalar.
+2. Instalador clásico (NSIS) — se instala en la carpeta de programas del usuario y aparece en el menú Inicio, pero comprimir 650 MB tarda varios minutos en cada versión y no suma nada para una sola PC.
+
+**Decisión:** opción 1. `pnpm dist` arma `release/win-unpacked/Iridium.exe`; `pnpm acceso-directo` crea el acceso en el escritorio (`scripts.md`). El `claude.exe` del SDK queda fuera del archivo comprimido de la app (`app.asar.unpacked`) y la app le indica al SDK dónde está.
+
+**Motivo:** es lo mismo que ya funciona en otra app y cumple lo que importa: abrir la app de uso diario con doble clic y actualizarla sin pasos extra.
+
+**Consecuencias:**
+- Probado en I-1: desde la app armada, la grilla aparece en 1,8 a 2,9 s y el motor verifica la sesión y la suscripción sin mandar mensajes.
+- Para actualizar hay que cerrar Iridium antes de `pnpm dist` (Windows no deja reemplazar un programa abierto).
+- 2026-10-29: `pnpm actualizar` (`tools/actualizar.ps1`) lo resuelve solo: arma con Iridium abierto, lo cierra (espera también al Claude Code de sus sesiones), pone la versión nueva y lo vuelve a abrir. Se puede lanzar desde la sección Scripts de Iridium porque la consola no depende de la app.
+- 2026-11-01 (CO-I2, D-070): ya no lo cierra. Arma en `release/nueva` y la versión nueva entra al cerrar Iridium o con Reiniciar ahora (`modulos/compartir/diseno-tecnico.md` › Versión nueva lista).
+- Si algún día hace falta un instalador (otra PC, el menú Inicio), se agrega un destino a `electron-builder.yml` sin tocar la app.
+
+## D-037 — Cada sesión de la IA se cierra al terminar su turno y se reabre con la misma conversación
+
+- **Fecha:** 2026-10-24
+- **Ámbito:** general
+- **Hito o paso:** 7 (I-2)
+- **Estado:** vigente (precisa `05-arquitectura.md` › La interfaz `Motor`)
+
+**Contexto:** cada sesión del SDK es un Claude Code abierto (un proceso de 150 a 300 MB). Con una sesión por proyecto (D-015) y varios proyectos en el día, dejarlas abiertas entre un turno y otro llenaría la memoria de procesos que no hacen nada, porque ninguna sesión espera al usuario (D-021).
+
+**Opciones consideradas:**
+1. La sesión se cierra sola cuando termina el turno y no queda nada en cola; el próximo mensaje abre otra que retoma la misma conversación (elegida) — solo hay un Claude Code abierto por proyecto mientras trabaja.
+2. La sesión queda abierta hasta cerrar la ficha o la app — el siguiente mensaje arranca un segundo antes, pero cada proyecto tocado en el día deja un proceso abierto.
+
+**Decisión:** opción 1. Lo que el usuario escribe mientras la IA trabaja se suma al turno en curso (la sesión sigue abierta hasta terminarlo). Después de Detener, la sesión también se cierra; el próximo mensaje le avisa a la IA que fue el usuario quien la detuvo.
+
+**Motivo:** la conversación se guarda en el historial de Claude Code y se retoma entera (probado en S-2 y en I-2 con el motor real: retomar tarda alrededor de un segundo). El costo es ese segundo; la ganancia, que una PC con cinco proyectos en el día no tenga cinco Claude Code abiertos sin hacer nada.
+
+**Consecuencias:**
+- La ficha «terminada» no tiene un proceso detrás: cerrarla o no, no cambia la memoria.
+- Para saber si una conversación la tocó VS Code (D-027), Iridium anota cuándo terminó cada turno en `sesiones.json`.
+
+## D-038 — Sin rechazo automático de permisos: en *bypass* el SDK no los consulta
+
+- **Fecha:** 2026-10-24
+- **Ámbito:** general
+- **Hito o paso:** 7 (I-2)
+- **Estado:** vigente (cambia `04-ux.md` › H-5 y `05-arquitectura.md` › Seguridad)
+
+**Contexto:** H-5 pedía que, si igual llegaba un pedido de permiso, se rechazara solo con un mensaje para la IA. S-2 mostró que en *bypass* no llega ninguno. Con la versión fija del SDK (0.3.309), el propio SDK avisa al arrancar que en *bypass* nunca consulta a la app: la función que rechazaría los permisos no se llama jamás.
+
+**Opciones consideradas:**
+1. Quitar el rechazo automático (elegida) — no hay código que nunca se ejecuta ni el aviso del SDK en cada sesión.
+2. Dejarlo «por si cambia» — es código muerto, y si el SDK cambia, la prueba real que se hace al actualizarlo (`05-arquitectura.md` › Convenciones) lo muestra.
+
+**Decisión:** opción 1. El criterio de H-5 sobre los pedidos de permiso queda sin efecto mientras el SDK se comporte así.
+
+**Motivo:** el resguardo real ya está: la IA anota lo que necesita como `Q-n` por la instrucción del Centro (probado en I-2 con el motor real: ante una decisión del usuario, escribió la `Q-n` y cerró), git en cada proyecto y Detener.
+
+**Consecuencias:** si una versión nueva del SDK vuelve a consultar permisos, se agrega el rechazo en la frontera (`motor/sdk.ts`) sin tocar el resto.
+
+## D-039 — Lo guardado «a medias» queda en los datos de Iridium, fuera del proyecto
+
+- **Fecha:** 2026-10-25
+- **Ámbito:** general
+- **Hito o paso:** 7 (I-3)
+- **Estado:** vigente (precisa `04-ux.md` › W-6 y `05-arquitectura.md` › Responder una pregunta)
+
+**Contexto:** W-6 pide «Guardar a medias» para las pruebas largas: la respuesta queda guardada pero la IA no la procesa. La guía no tiene una forma de marcar una respuesta como borrador: todo lo que está en `docs/respuestas/Q-n.md` la IA lo toma como respondido, y el gestor anterior también.
+
+**Opciones consideradas:**
+1. Guardarlo en `borradores.json`, en la carpeta de datos de Iridium (elegida) — la IA y el Gestor no lo ven; no hace falta cambiar la guía.
+2. Escribir `docs/respuestas/Q-n.md` con una marca «a medias» — viaja con el proyecto, pero hay que enseñarle la marca a la guía, a la IA y al Gestor; mientras tanto, la tomarían como respondida.
+
+**Decisión:** opción 1. Enviar escribe la respuesta en el proyecto y borra lo guardado a medias. Si la IA cambia la pregunta, lo guardado deja de valer.
+
+**Motivo:** es lo único que cumple «la IA no lo procesa» sin tocar otros proyectos; Iridium es local, así que lo guardado sigue ahí al volver a abrirla.
+
+**Consecuencias:**
+- Lo que está a medias solo se ve en Iridium, en esta PC; desde el Gestor esa pregunta figura sin responder.
+- Lo escrito y todavía no guardado vive en la ventana: no se pierde al cambiar de proyecto o de sección, pero sí al cerrar la app.
+
+## D-040 — Nueva abre una conversación en blanco; no arranca Seguí sola
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** general
+- **Hito o paso:** 7 (I-3, por Q-59)
+- **Estado:** vigente (cambia `04-ux.md` › Flujo F-1 y W-3)
+
+**Contexto:** en I-2, **Nueva** empezaba una conversación nueva que arrancaba en el acto con «Seguí». El usuario quiere abrir un chat vacío en un proyecto, como en VS Code, para dejar una idea o una consulta aparte sin que la IA haga el próximo paso.
+
+**Opciones consideradas:**
+1. Nueva muestra una conversación en blanco: empieza con el primer mensaje que se escribe o con **Seguí**; **Volver a la anterior** la descarta (elegida).
+2. Dejar Nueva como estaba y sumar un tercer botón «Vacía» — dos botones casi iguales.
+
+**Decisión:** opción 1. Nueva no manda nada al modelo hasta que el usuario escribe o toca Seguí.
+
+**Motivo:** es lo que pidió el usuario y lo que hace VS Code; Seguí sigue a un toque en la conversación en blanco.
+
+**Consecuencias:**
+- Tocar Nueva por error no gasta uso ni corta nada.
+- Mientras no se escribe, la conversación anterior sigue siendo la del proyecto: al salir y volver, la vista en blanco sigue ahí hasta que se escriba o se vuelva a la anterior (vive en la ventana, como el resto de la vista).
+
+## D-041 — Tres paneles: secciones del proyecto, vista principal y conversación; barra de título propia
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** general
+- **Hito o paso:** 7 (entre I-3 e I-4)
+- **Estado:** vigente (reemplaza la disposición de D-031; ajusta D-020 y `04-ux.md` › Arquitectura de información, W-1, W-3, W-7 y W-8; suma C-55 a C-57)
+
+**Contexto:** con la conversación al centro y el Mapa y los Docs en un panel desplegable (D-031) no entraba bien lo que viene: el design system (C-31), los prototipos (C-32, C-34), los scripts (C-11). El usuario propuso darle el área grande a lo que mira y dejar la conversación al costado, como Claude en VS Code, que es como trabaja todo el día.
+
+**Opciones consideradas:**
+1. Tres paneles: la barra de íconos con las secciones del proyecto, la vista principal y la conversación a la derecha (elegida, propuesta por el usuario).
+2. Mantener D-031 y sumar pestañas al panel desplegable.
+Y para dar lugar a la conversación: llevarla al centro como «modo foco» o ensanchar su panel. El usuario eligió ensancharla: casi siempre está mirando otra cosa en el centro.
+
+**Decisión:**
+- **Barra de título propia** (sin el marco de Windows): las pestañas de las sesiones abiertas van en ella y se ahorra una fila. Los botones minimizar, maximizar y cerrar los dibuja Windows dentro de esa barra, así siguen el menú para acomodar ventanas y el arrastre a los bordes.
+- **El botón de arriba a la izquierda** (la marca, en el cruce de la barra de título y la de íconos) abre el inicio, con el número de preguntas sin responder en ámbar.
+- **La barra de íconos cambia según dónde se esté.** En el inicio: Proyectos y Pendientes (Pendientes queda como hoy, ahora como sección del inicio). Dentro de un proyecto: Mapa, Docs, Archivos, Git y Scripts; después se suman Diseño y Assets. Ajustes, abajo.
+- **La vista principal** muestra la sección elegida. Scripts, en el MVP, es `scripts.md` en el lector; los botones son C-11.
+- **La conversación va siempre a la derecha**, en todas las secciones del proyecto; se ensancha arrastrando su borde y la app recuerda el ancho. En su barra: **conversaciones anteriores** del proyecto (C-57), **Nueva** (D-040) y **Seguí**.
+- **Archivos (C-55):** el árbol del proyecto (sin `node_modules` ni `.git`) y un visor de solo lectura: texto con colores, imágenes y markdown.
+- **Git (C-56):** solo para mirar. La rama, los cambios sin guardar y el historial; cada commit (y los cambios sin guardar) con la lista de sus archivos; el antes y después de un archivo se ve solo al elegirlo, como en VS Code (Q-61). Sin botones de acción: guardar y subir lo hace la IA cuando se lo pide el usuario.
+
+**Motivo:** cada sección nueva es un ícono más, sin rediseñar; el contenido gana el área grande y la conversación queda en el lugar al que el usuario está acostumbrado. Archivos y Git le dan control para mirar «bajo el capó» sin tener que abrir VS Code.
+
+**Consecuencias:**
+- Ya no hay intercambio de paneles ni panel desplegable (`Ctrl+B`) en la vista del proyecto.
+- El plan cambia: I-4 arma el marco nuevo con Mapa, Docs, Archivos y las conversaciones anteriores; I-5 es Git; lo que era I-5 (uso, avisos y errores) pasa a I-6.
+- Prototipo: `ui/vista-proyecto.html` se rehízo (el anterior queda en el historial de git); Pendientes sigue en `ui/vista-pendientes.html`.
+- Una ventana sin marco necesita su zona de arrastre y no se puede mover desde las pestañas mismas; queda el espacio libre de la barra.
+
+## D-042 — Archivos colorea el código con un lector propio y un color nuevo del design system para las cadenas
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** general (design system)
+- **Hito o paso:** 7 (I-4)
+- **Estado:** vigente (completa D-041 › Archivos y H-15)
+
+**Contexto:** H-15 pide ver los archivos «con colores y números de línea». El design system no tenía colores para código: The Color Avisa Rule reserva el verde, el ámbar y el rojo para el estado. El prototipo aprobado (Q-61) ya coloreaba con tres tonos: comentarios en gris, palabras clave en verde texto y cadenas en un ocre (`#c9b77a`).
+
+**Opciones consideradas:**
+1. Un lector propio, chico, que reconoce comentarios, cadenas, números y palabras clave de los lenguajes comunes (TypeScript, JSON, CSS, HTML, Markdown, Python, PowerShell, YAML), con el ocre del prototipo como token nuevo (elegida).
+2. Una librería de colores (highlight.js o Shiki): más lenguajes y más fiel, pero una dependencia más (P2: cada dependencia se audita) y otro juego de colores que no sale del design system.
+
+**Decisión:** opción 1, tomada por la IA siguiendo el prototipo aprobado. El token `--cod-cadena` se usa solo en el visor de Archivos; no es un color de estado. El lector arma el HTML de cada línea en el proceso principal y lo escapa, como el de los documentos.
+
+**Motivo:** alcanza para leer el código «bajo el capó» sin abrir VS Code, sin dependencias nuevas y con los colores que el usuario ya aprobó.
+
+**Consecuencias:**
+- `DESIGN.md`, `.impeccable/design.json` y `ui/tokens.css` suman `cod-cadena`.
+- Un lenguaje que no reconoce se ve como texto, sin colores. Si algún día hace falta más fidelidad, se cambia el lector sin tocar la ventana.
+
+## D-043 — Un proyecto abre en sus pendientes y scripts; los scripts son botones; las pestañas de los proyectos abiertos quedan
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** general
+- **Hito o paso:** 7 (I-4, ajustes del usuario a la primera versión)
+- **Estado:** vigente (ajusta D-041 › barra de íconos y pestañas; pasa C-11 de *Should* a *Must*)
+
+**Contexto:** al ver I-4, el usuario pidió tres cambios: entrar a un proyecto y ver primero lo que tiene pendiente y los scripts, «para tener control de lo que tengo pendiente y decidir si debo actualizar la app»; que los scripts sean botones que los ejecuten, no texto para copiar a la consola; y que los proyectos que abre queden en las pestañas aunque no trabajen.
+
+**Decisión** (pedida por el usuario):
+- **Pendientes y scripts es la vista de entrada** de cada proyecto y el primer ícono de su barra (con el número de preguntas sin responder): a la izquierda, los pendientes del proyecto para responder ahí mismo (los de W-5); a la derecha, los scripts. Scripts deja de ser una sección aparte; `scripts.md` se sigue leyendo en Docs.
+- **Los scripts son botones (C-11, ahora *Must*):** **Ejecutar** corre el comando en una ventana de consola propia, a la vista, que queda abierta para leer lo que pasó; un archivo del proyecto (un instalador, un `.exe`) o **Abrir** se abren con Windows. El comando se busca de nuevo en `docs/scripts.md` al tocar el botón: la ventana no manda comandos. Si falta un archivo o una carpeta, el botón queda apagado y lo dice.
+- **Pestañas:** cada proyecto que se abre queda como pestaña, también al volver a abrir la app, hasta cerrarla con ×. Muestran si la IA trabaja, si falló, cuántas preguntas esperan al usuario, «Terminada» si terminó sin preguntas y todavía no se vio, o nada.
+
+**Motivo:** la pregunta de todos los días al entrar a un proyecto es «¿qué me espera y qué tengo que correr?»; el Mapa responde otra («¿en qué va?») y queda a un clic.
+
+**Consecuencias:**
+- `02-definicion.md`: C-11 pasa a *Must*. `04-ux.md` › W-3 y W-4 se ajustan con una nota.
+- Seguridad (P2): Iridium ejecuta lo que dice `docs/scripts.md`, que escribe la IA; siempre a la vista, en una consola, y solo al tocar el botón.
+- Armar Iridium desde su propio botón no puede reemplazar la app abierta (Windows bloquea sus archivos): queda en Pendientes reportados.
+
+## D-044 — Los scripts van en lista después de los pendientes y vuelven a tener su sección; los detalles de una pregunta, plegados
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** general
+- **Hito o paso:** 7 (I-4, ajustes del usuario por Q-62 y Q-63)
+- **Estado:** vigente (ajusta D-043 › vista de entrada)
+
+**Contexto:** al probar I-4 (Q-62), el usuario encontró que la vista de entrada en tres columnas (pendientes, scripts y conversación) no funcionaba: la de scripts le quitaba lugar a los pendientes. Y que cada pendiente mostraba demasiado texto antes de lo que hay que marcar: el contexto y el texto de cada cita, que casi nunca se leen.
+
+**Decisión** (pedida por el usuario):
+- **Scripts en lista, después de los pendientes:** en la vista de entrada, los pendientes ocupan el área entera y, a continuación, los scripts en lista: una fila por script con su nombre, la descripción en una línea y su botón, y **Ver con detalles**. (Primero fue una franja fija al pie con los botones; con siete scripts eran tres filas de botones y el usuario la descartó en Q-63.)
+- **Scripts vuelve a ser una sección** (último ícono de la barra del proyecto): cada script con su descripción, su botón y, si falta el archivo, por qué está apagado. Llegando desde **Ver con detalles** tiene **Atrás**.
+- **El botón lateral del mouse vuelve un paso**, como en el navegador, igual que **Atrás** y `Alt+←`, en cualquier sección del proyecto (Q-63).
+- **Detalles plegados:** cada pendiente muestra su código, la pregunta y lo que hay que marcar o elegir; el contexto y las citas con su texto quedan en **Mostrar detalles (contexto y N citas)**, cerrado al entrar. Vale para Pendientes del inicio y para la vista de entrada.
+- **Pestañas con el ícono del proyecto** (o su inicial, si no tiene).
+- **Cuadros de texto que crecen:** el de la conversación crece con lo que se escribe (hasta un tope, después se desplaza); las notas de Pendientes se vuelven a medir cuando cambia su ancho (al arrastrar el borde de la conversación), así no se corta lo escrito.
+
+**Motivo:** lo que se mira al entrar es «¿qué me espera?»; los scripts se usan, pero no se leen, y el contexto de una pregunta se consulta solo cuando hace falta.
+
+**Consecuencias:**
+- `04-ux.md` › W-3 suma una nota. La guía puede pedir puntos de prueba más cortos (acción y resultado), pero el formato de las `Q-n` no cambia: lo que pesaba era cómo se mostraba.
+
+---
+
+## D-045 — La conversación muestra el contexto y elige el modelo y el esfuerzo; el uso queda en la barra de estado
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** general
+- **Hito o paso:** 7 (al aprobar I-4)
+- **Estado:** vigente (responde Q-65; precisa D-023 y H-12)
+
+**Contexto:** el usuario pidió más datos en la conversación, como en la extensión de Claude Code para VS Code: el contexto usado, cuándo se libera el uso, y elegir el modelo y el nivel de esfuerzo. El contexto y el uso ya eran H-12 (I-6); elegir el modelo y el esfuerzo no estaba en la definición.
+
+**Opciones consideradas:**
+1. Todo en la barra de la conversación: contexto, uso con cuándo se libera, modelo y esfuerzo.
+2. El uso en la barra de estado; la conversación con el contexto, el modelo y el esfuerzo.
+3. Modelo y esfuerzo después del MVP.
+
+**Decisión:** opción 2, elegida por el usuario («básicamente la A, pero el uso va afuera del chat porque se comparte en toda la app»):
+- **Barra de la conversación:** el porcentaje de contexto usado (marcado pasado el 80 %, con la sugerencia de un chat nuevo) y los selectores de **modelo** y de **nivel de esfuerzo**. Cada proyecto recuerda los suyos; valen desde el próximo mensaje.
+- **Barra de estado (al pie):** el uso de la ventana de 5 horas y de la semana, con cuándo se libera cada una (como ya había movido D-031).
+
+**Motivo:** el contexto, el modelo y el esfuerzo son de cada conversación; el uso lo gastan todas las sesiones juntas.
+
+**Consecuencias:**
+- Nace C-58 (*Must*, `02-definicion.md`); H-12 cambia sus criterios (`04-ux.md`); entra en I-6.
+- En I-6 se confirma con el SDK qué modelos y niveles de esfuerzo ofrece la suscripción y cómo se cambian en una conversación que sigue.
+
+---
+
+## D-046 — La Revisión de la app entra al MVP, antes de I-5 e I-6, como módulo
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** general
+- **Hito o paso:** 7 (al aprobar I-4)
+- **Estado:** vigente (responde Q-66; cambia la prioridad de C-36 a C-39 y el orden de `07-construccion.md`)
+
+**Contexto:** la extensión del navegador para comentar la app en desarrollo (D-012, C-36 a C-39) era *Should*, para después del MVP. El usuario la quiere pronto, para comentar dentro de sus apps en modo desarrollo, como el selector de Claude Design.
+
+**Opciones consideradas:**
+1. Como I-7, al terminar el MVP y antes de las dos semanas de uso.
+2. Antes de I-5 e I-6.
+3. Después de las dos semanas de uso.
+
+**Decisión:** opción 2, elegida por el usuario. C-36 a C-39 pasan a *Must*. Como dice la arquitectura (`05-arquitectura.md` › Puntos de extensión), es un módulo de tipo producto hermano: `docs/modulos/revision/`, con su ciclo reducido (propuesta, definición, investigación, UX, diseño técnico) y sus iteraciones, que se construyen antes de I-5.
+
+**Motivo:** el usuario la va a usar en todos sus proyectos web desde el primer día; Git e I-6 no dependen de ella.
+
+**Consecuencias:**
+- `02-definicion.md`: C-36 a C-39 a *Must*. `07-construccion.md`: el módulo va antes de I-5. `estado.md`: tabla de módulos.
+- Las dos semanas de uso real siguen arrancando al terminar I-6.
+
+
+---
+
+## D-047 — La Revisión de la app sirve en web y en Electron desde el principio, con la misma extensión
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** módulo Revisión de la app (cambia D-012 en lo de «solo web»)
+- **Hito o paso:** 7; módulo Revisión, pasos 2 y 3
+- **Estado:** vigente (responde Q-67)
+
+**Contexto:** D-012 dejó la extensión solo para apps web, pero tres proyectos del usuario son Electron (Iridium, otra app, otro proyecto). El spike S-3 probó la misma extensión en Edge y en Electron 44: en Electron carga, lee archivo y línea y le habla a Iridium; solo le falta la captura de la pestaña (`modulos/revision/investigacion.md`).
+
+**Opciones consideradas:**
+1. Web y Electron desde el principio, con la misma extensión.
+2. Primero web; Electron en una iteración después, dentro del módulo.
+3. Solo web, como decía D-012.
+
+**Decisión:** opción 1, elegida por el usuario. En cada app Electron, una línea en modo desarrollo carga la extensión; esa misma pieza saca la captura (con la función de Electron que recorta la ventana) y dice a qué proyecto pertenece la app. Nunca llega a la versión armada.
+
+**Motivo:** la mitad de los proyectos en los que se va a usar son Electron, y S-3 mostró que el costo extra es solo la captura.
+
+**Consecuencias:**
+- `02-definicion.md` › C-36 dice «web o Electron»; `00-idea.md` › Ideas para después ya no deja Electron para después.
+- El diseño técnico del módulo define esa pieza: dónde vive la extensión, cómo la encuentra cada proyecto y cómo pide la captura.
+
+
+---
+
+## D-048 — Diseño técnico de la Revisión: los comentarios viven en `docs/revision/` y la IA se entera por la instrucción y la guía
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** módulo Revisión de la app; núcleo (escritura en proyectos, instrucción de la sesión, Archivos, conversación)
+- **Hito o paso:** 7; módulo Revisión, paso 5
+- **Estado:** vigente
+
+**Contexto:** el diseño técnico del módulo (`modulos/revision/diseno-tecnico.md`) tenía que decidir dónde se guardan los comentarios, cómo se enteran las sesiones y cómo encaja con el núcleo. Hasta ahora Iridium solo escribía `respuestas/` en los proyectos (`05-arquitectura.md` › Seguridad), y H-R6 pedía que el `CLAUDE.md` de cada proyecto dijera dónde están.
+
+**Opciones consideradas:**
+1. Comentarios en `docs/revision/R-n.md` del proyecto; la IA se entera por la instrucción de las sesiones de Iridium y por una regla de la guía; Iridium no toca el `CLAUDE.md`.
+2. Igual, pero Iridium agrega una línea al `CLAUDE.md` de cada proyecto con el primer comentario.
+3. Comentarios en los datos de Iridium, fuera del proyecto, y la IA los recibe solo por mensaje.
+
+**Decisión:** opción 1. Además: receptor en `127.0.0.1:47321` que acepta solo el origen de la extensión (id fijo); la extensión se instala desde una carpeta fija en los datos de Iridium; Enviar ahora manda un mensaje de texto que cita el `R-n` y la captura, sin cambiar la interfaz `Motor`; tres iteraciones (navegador, Revisión en Iridium, Electron).
+
+**Motivo:** con los comentarios en el proyecto, la IA los encuentra también desde VS Code y quedan en git. Editar el `CLAUDE.md` sería escribir un archivo del usuario sin que lo pida; la guía ya llega a todos los proyectos. La opción 3 dejaba a VS Code afuera.
+
+**Consecuencias:**
+- `05-arquitectura.md`: Iridium escribe también `docs/revision/`; entidad Comentario y `revision.json`; `extension/` en el repo; filas del receptor en Seguridad.
+- `modulos/revision/ux.md` › H-R6: el criterio del `CLAUDE.md` pasa a la instrucción y la guía.
+- Cambios a la guía: suma la regla de `docs/revision/` (Pendientes de `estado.md`).
+- Archivos abre un archivo en una línea; la conversación muestra los comentarios como tarjeta.
+
+## D-049 — El modo comentar se prende con F8 y no pone ninguna barra sobre la app
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** módulo Revisión de la app (UX y UI de la extensión)
+- **Hito o paso:** 7; módulo Revisión, paso 6
+- **Estado:** vigente
+
+**Contexto:** al recorrer el prototipo (Q-69), la barra fina de arriba del modo comentar aparecía y desaparecía mientras se elegía un elemento (se volvía a animar con cada movimiento del mouse) y, aunque anduviera bien, ocupa lugar de la app que se está revisando. El usuario pidió que no haya barra y que se active con una tecla F.
+
+**Opciones consideradas:**
+1. Sin barra; `F8` prende y apaga; un aviso chico abajo a la derecha al entrar, que se va solo; el proyecto y los avisos (Iridium cerrado, proyecto sin reconocer) pasan a la tarjeta.
+2. Sin barra ni aviso: solo el cursor y el resaltado.
+3. Otra tecla F: `F2` (renombrar en muchas apps), `F4`, `F9` (lector inmersivo en Edge).
+
+**Decisión:** opción 1, con `F8`.
+
+**Motivo:** `F8` no la usan Chrome, Edge, Iridium ni las apps del usuario, y solo pausa el depurador cuando el foco está en las herramientas de desarrollo, no en la página. Sin ningún aviso, al apretar F8 no queda claro si entró ni a qué proyecto va; un aviso que se va solo lo dice sin quedarse ocupando lugar.
+
+**Consecuencias:**
+- `modulos/revision/ux.md`: H-R1, H-R3, FR-1, FR-3, W-R1 y W-R2 sin barra; `Alt+Shift+C` pasa a `F8`; la pieza «Barra del modo comentar» pasa a «Aviso del modo comentar».
+- `modulos/revision/diseno-tecnico.md`: la tecla y los lugares donde se decía «la barra».
+- `DESIGN.md` › Revisión de la app y el prototipo `ui/vista-revision.html`.
+- Se pierde el contador «N dejados» mientras se comenta; cada tarjeta confirma lo suyo.
+
+## D-050 — La extensión de la Revisión pide permiso sobre todos los sitios, solo para poder sacar la captura
+
+- **Fecha:** 2026-10-28
+- **Ámbito:** módulo Revisión de la app (extensión, seguridad)
+- **Hito o paso:** 7; módulo Revisión, R-I1
+- **Estado:** vigente
+
+**Contexto:** el diseño técnico pedía que la extensión tuviera permiso solo sobre `localhost`, `127.0.0.1` y `[::1]` (`modulos/revision/diseno-tecnico.md` › Seguridad). Al construirla, la prueba en Edge mostró que con ese permiso Chrome y Edge no dejan sacar la captura de la pestaña: `captureVisibleTab` exige el permiso sobre todos los sitios (`<all_urls>`) o el permiso de la pestaña activa, que solo se da al tocar el botón de la extensión, no con F8.
+
+**Opciones consideradas:**
+1. Permiso sobre todos los sitios. Los scripts siguen corriendo solo en las direcciones de la PC y la extensión solo le habla a `127.0.0.1`; al instalarla, Edge avisa que «puede leer y cambiar datos de todos los sitios».
+2. Permiso de la pestaña activa: la captura sale solo si se entra con el botón de la extensión, no con F8.
+3. Sin captura en el navegador (la sacaría Iridium de la pantalla): más frágil y más trabajo.
+
+**Decisión:** opción 1.
+
+**Motivo:** la captura es parte de lo aprobado (C-36) y F8 es la forma de entrar (D-049). El permiso no cambia lo que hace la extensión: sigue sin correr en otros sitios ni mandar nada afuera de la PC (el código es nuestro y está en el repo).
+
+**Consecuencias:**
+- `extension/manifest.json`: `host_permissions` pasa a `<all_urls>`; los scripts siguen limitados a las direcciones locales.
+- `modulos/revision/diseno-tecnico.md` › Seguridad: la fila de la extensión lo dice.
+- `scripts.md` › Instalar la extensión de Revisión avisa del cartel de Edge.
+
+## D-051 — La Revisión es la norma en las apps Electron del usuario; el ayudante de Electron se adelanta a R-I2
+
+- **Fecha:** 2026-10-29
+- **Ámbito:** módulo Revisión de la app; otros proyectos (otras apps) y la guía `hitos-desarrollo-app`
+- **Hito o paso:** 7; módulo Revisión, entre R-I1 y R-I2
+- **Estado:** vigente
+
+**Contexto:** después de R-I1, el usuario pidió sumar la Revisión a otras apps e Iridium, y que sea la norma en las apps Electron que se desarrollen y en las compatibles. En Electron hace falta el ayudante, que el plan dejaba para R-I3.
+
+**Decisión:**
+1. El ayudante de Electron (carga de la extensión, captura y carpeta de la app) se construye ahora; de R-I3 quedan para R-I2 la detección en la sección Revisión («¿esta app ya la carga?») y **Pedírselo a la IA**, que viven en esa sección.
+2. La línea va en el proceso principal de cada app **solo con el servidor de desarrollo** (`ELECTRON_RENDERER_URL` con electron-vite, `OTRA_APP_URL_DESARROLLO` en otra app), no con `!app.isPackaged`: así las pruebas automáticas de cada app, que abren la versión compilada, no cargan la extensión.
+3. Una app que filtra los pedidos de su sesión (otra app) deja pasar, solo en desarrollo, la extensión y `http://127.0.0.1:47321/`.
+4. La norma queda en la guía (`hitos-desarrollo-app` › hito 7 › Antes de empezar), con la regla de los `R-n` (D-048). Una app web con servidor local no necesita nada: la comenta la extensión de Edge o Chrome.
+
+**Motivo:** pedido del usuario. Lo que no se adelanta depende de la sección Revisión, que es de R-I2.
+
+**Consecuencias:**
+- `extension/electron/` (ayudante y *preload* del service worker), que se copia con la extensión a `%APPDATA%\Centro de Desarrollo\extension\`.
+- La línea en Iridium, otra app (D-056 de ese proyecto) y otra app (D-085 de otra app); probado en las tres con el modo desarrollo real.
+- `/estado` y `/comentarios` reciben la carpeta de la app: el proyecto que la contiene manda, y la dirección no se recuerda (varias apps Electron usan el mismo puerto).
+- `modulos/revision/diseno-tecnico.md` › Ayudante de Electron y `modulos/revision/estado.md` › Iteraciones, al día.
+
+## D-052 — La Revisión también en las versiones armadas de Iridium y otra app
+
+- **Fecha:** 2026-10-29
+- **Ámbito:** módulo Revisión de la app (ayudante, extensión, seguridad); otra app
+- **Hito o paso:** 7; módulo Revisión, después de R-I3
+- **Estado:** vigente (cambia D-051 punto 2 y `modulos/revision/diseno-tecnico.md` › Seguridad, «Nada de esto llega a las versiones armadas»)
+
+**Contexto:** el usuario pidió aplicar la Revisión también a las versiones finales. Las versiones armadas de Iridium y otra app cargan la interfaz desde `file://` (dentro de `release/win-unpacked/`, en la carpeta del proyecto); la de otra app, desde `otra-app://` y se instala en `Programs`.
+
+**Decisión:**
+1. El ayudante corre también en la versión armada (sale solo con `IRIDIUM_REVISION=no`). La extensión actúa además en `file://` (en Edge y Chrome solo si se prende «Permitir acceso a URL de archivo», que viene apagado).
+2. La línea, sin condición en otra app (D-057 de ese proyecto); en Iridium, salvo en las pruebas (`IRIDIUM_DATOS`).
+3. Una app instalada fuera de los proyectos pregunta una vez y Iridium recuerda el proyecto por su carpeta (`revision.json` › `carpetas`).
+4. El ayudante recarga una ventana solo si le faltan los scripts (una marca que deja `pagina.js`), para no recargar en cada arranque.
+5. **otra app queda solo en desarrollo**, hasta que el usuario decida (Q-71): las extensiones no entran en `otra-app://`, y las capturas serían de su catálogo privado y quedarían en la carpeta del repo.
+
+**Motivo:** pedido del usuario. En la versión armada no hay archivo ni línea (React de producción no los da), pero sí componentes, elemento, página y captura.
+
+**Consecuencias:**
+- Las versiones armadas ejecutan al arrancar el ayudante de `%APPDATA%\Centro de Desarrollo\extension\`, una carpeta que puede escribir el mismo usuario: no da más permisos que los que ya tiene un programa del usuario, pero queda escrito en Seguridad.
+- `modulos/revision/diseno-tecnico.md` › Ayudante de Electron y › Seguridad; la guía (`hitos-desarrollo-app` › hito 7) con la línea sin condición.
+
+## D-053 — otra app instalada se queda sin Revisión; una pregunta se lee con una sola opción y con pasos numerados
+- **Fecha:** 2026-10-29
+- **Ámbito:** general (lector de preguntas de Pendientes); módulo Revisión; otra app (una idea en su lista)
+- **Hito o paso:** 7; al procesar Q-70 y Q-71
+- **Estado:** vigente (cierra D-052 punto 5)
+
+**Contexto:** en Q-71 el usuario eligió dejar la Revisión solo en otra app de desarrollo y pidió, como idea aparte, un botón en otra app instalada, junto al de bloqueo, para pasar a la de desarrollo. En Q-70 avisó que Pendientes le mostró la pregunta solo con el campo de texto: tenía una sola opción («A) Funciona») y los pasos de la prueba numerados (`1.`), y el lector pedía al menos dos opciones y puntos `- [ ]`.
+
+**Decisión:**
+1. La Revisión no se carga en otra app instalada (Q-71: A).
+2. El botón para pasar de otra app instalada a la de desarrollo es de otra app: quedó en su lista de ideas (`otra app/docs/07-construccion.md` › Pendientes e ideas); es posible, porque la instalada puede abrir el modo desarrollo de la carpeta del proyecto en una consola.
+3. El lector de preguntas acepta **una sola opción** (lo demás va en Otro, que siempre está) y toma los **pasos numerados** (`1.` o `1)`) como puntos de la prueba, igual que `- [ ]`.
+
+**Motivo:** el catálogo privado no sale de otra app y no hay que abrirle su sesión blindada. Una prueba con una sola opción es justo lo que pide quitar «B) Encontré algo» (Q-59), y la IA escribe los pasos numerados con naturalidad: que el lector los entienda evita que una pregunta pierda su formulario.
+
+**Consecuencias:**
+- Un contexto con una lista numerada que no son pasos también se muestra como casillas: se acepta, porque en una `Q-n` casi siempre son pasos.
+- La guía (cambios pendientes, Q-62) puede pedir pasos numerados o `- [ ]` indistintamente.
+
+## D-054 — Iridium se prepara para compartir en una iteración corta después de I-6
+- **Fecha:** 2026-10-29
+- **Ámbito:** general (plan de construcción)
+- **Hito o paso:** 7; al procesar Q-72
+- **Estado:** vigente
+
+**Contexto:** el usuario quiere compartir Iridium con conocidos, con ramas `dev` y `main`, un instalador y actualizaciones (`07-construccion.md` › Ideas nuevas). En Q-72 eligió cuándo.
+
+**Decisión:** se hace al cerrar el MVP, como la iteración I-7 «Compartir (beta)», después de I-6 y antes de las dos semanas de uso real: GitHub con las ramas `dev` y `main`, el instalador publicado con actualización al cerrar, elegir la carpeta de proyectos al primer arranque y repartir la guía `hitos-desarrollo-app`. Si el código es público o privado (con un repo público solo para los instaladores) se pregunta aparte (Q-73), antes de I-7.
+
+**Motivo:** a esa altura Iridium está completo, y la actualización al cerrar resuelve de paso el pendiente de armar Iridium con la app abierta.
+
+**Consecuencias:**
+- `02-definicion.md` suma C-59 como *Must*; el plan de `07-construccion.md` suma I-7; el pendiente «Armar Iridium no puede reemplazar la app abierta» pasa de I-6 a I-7.
+- El perfil del proyecto deja de ser «solo el usuario» al llegar a I-7: se revisa la protección (doble factor en GitHub, aviso de SmartScreen) en esa iteración.
+- Falta confirmar en I-7 que las condiciones de uso de Claude Code permitan usar la sesión de cada uno en una app repartida.
+
+## D-055 — La guía `hitos-desarrollo-app` pasa al formato 2026-10-29 con las mejoras pendientes
+- **Fecha:** 2026-10-29
+- **Ámbito:** general (la guía, en el proyecto `Skills`)
+- **Hito o paso:** 7; pendiente del hito, autorizado en Q-62
+- **Estado:** vigente (aplica D-009, D-010, D-019 y D-044; cierra Q-59)
+
+**Contexto:** desde el hito 1 quedaban cambios a la guía decididos y sin hacer. En Q-62 el usuario dijo que se pueden hacer desde acá. Se hicieron mientras R-I2 esperaba su prueba (Q-74).
+
+**Decisión:** se aplicaron (commit `262727b` de `Skills`):
+1. **Las `Q-n`:** línea `Tipo:` (decisión, consulta, prueba, tarea, formulario) con `frena`; pruebas y tareas como listas de puntos cortos, acción y resultado (D-044); una sola opción vale y no hace falta «Encontré algo», porque Otro siempre está (Q-59, D-053); la forma de la respuesta con los puntos marcados y su nota (D-019).
+2. **La IA no espera en el chat:** lo que necesita del usuario va como `Q-n` (D-010, D-021).
+3. **El portón** como lista `## Portón` al final de cada documento de hito, y los **estados con palabras fijas** (D-019).
+4. **Las mejoras 1 a 6 de D-009:** revisión de coherencia con veredicto al cerrar el hito 6; verificación de los criterios de aceptación antes de mostrar cada iteración; «Corregir el rumbo» (con el caso de Q-13); cambios como propuestas después del lanzamiento; pista corta para errores; **Leer antes** por iteración.
+5. Formato nuevo **2026-10-29**: `actualizar-formato.md` y las plantillas al día. Iridium ya lo cumplía: cambió la fecha de `docs/README.md` y dos reglas de su `CLAUDE.md`.
+
+**Motivo:** son las formas que Iridium ya lee y usa; escribirlas en la guía hace que los otros proyectos las sigan y que sus preguntas aparezcan bien en Pendientes.
+
+**Consecuencias:**
+- Los otros proyectos quedan con el formato 2026-10-16 hasta que se retomen o se pida ponerlos al día (`actualizar-formato.md`); desde acá no se tocan.
+- D-014 (traer skills a local) no era un cambio de la guía: queda como pendiente para una sesión de `Skills`.
+- Las mejoras 7 a 9 de D-009 siguen como posibles.
+
+## D-056 — «Aprobada provisional»: se sigue como si funcionara y la prueba a mano queda anotada
+- **Fecha:** 2026-10-29
+- **Ámbito:** general (cómo se aprueban las iteraciones)
+- **Hito o paso:** 7; al procesar Q-74
+- **Estado:** vigente
+
+**Contexto:** el usuario no podía probar R-I2 como estaba pedida: no usa Edge ni sus apps en el navegador, sino en Electron. Pidió darla por aprobada provisional y dejar la prueba a mano para más adelante, y dijo que es un estado que va a usar a menudo cuando lo que falta no frena.
+
+**Decisión:**
+1. **Aprobada provisional** (palabra fija de D-019) es una iteración que se sigue como si funcionara, con las pruebas automáticas pasando y la prueba a mano pendiente.
+2. Las pruebas pendientes van a `07-construccion.md` › Pruebas manuales pendientes (qué, por qué quedó, los puntos y la `Q-n` de origen). El hito 8 las recorre todas; el usuario puede hacerlas antes.
+3. R-I2 queda aprobada provisional y el paso 7 del módulo Revisión, completo.
+
+**Motivo:** que una prueba que no frena no detenga el plan, sin perderla.
+
+**Consecuencias:**
+- El Mapa la cuenta como hecha (empieza por «aprobad»).
+- Una sección de Iridium que junte los aprobados provisionales de todos los proyectos quedó como idea (`07-construccion.md` › Ideas nuevas). Si la forma funciona, se suma a la guía `hitos-desarrollo-app`.
+
+## D-057 — El código de Iridium va público en GitHub, con `docs/` hablando solo de Iridium
+- **Fecha:** 2026-10-29
+- **Ámbito:** general (I-7)
+- **Hito o paso:** 7; al procesar Q-73
+- **Estado:** vigente (completa D-054)
+
+**Contexto:** para compartir Iridium (D-054), los instaladores tienen que estar en un repo público. Q-73 preguntaba si el código también.
+
+**Decisión:** el repo es público (Q-73: B). Antes de publicar, en I-7, `docs/` se limpia para que solo hable de Iridium (pedido del usuario): lo que trata de otros proyectos se generaliza o sale, y también las rutas de la PC del usuario.
+
+**Motivo:** un solo repo es lo más simple para publicar y actualizar.
+
+**Consecuencias:**
+- I-7 suma la limpieza de `docs/` y la revisión del historial de git (es público con el repo: lo que ya se commiteó de otros proyectos sigue en el historial; si hace falta, se publica un historial nuevo).
+- Hasta I-7 se sigue escribiendo como ahora; la limpieza es una sola vez.
+
+## D-058 — Git como el control de código de VS Code, y si el repositorio está en GitHub
+- **Fecha:** 2026-10-29
+- **Ámbito:** general (I-5, H-16)
+- **Hito o paso:** 7; al procesar Q-75
+- **Estado:** vigente (completa D-041 y Q-61)
+
+**Contexto:** I-5 pasó la prueba (Q-75), y el usuario pidió que el panel de Git se parezca más al de VS Code y que diga si el repositorio está solo en la PC o también en GitHub.
+
+**Decisión:** el panel izquierdo de Git tiene, debajo de la rama, dónde está el repositorio («Solo en esta PC» o «En GitHub · dueño/repo», con cuántos commits faltan subir o bajar) y secciones que se pliegan: **Preparados** (solo si hay), **Cambios** (los archivos sin guardar, uno por fila con su carpeta y su letra) e **Historial** (los commits que no están en GitHub dicen «sin subir»). Un archivo elegido en Cambios se ve solo, con su antes y después a la vista; **Ver todos los cambios** vuelve a la lista. Cada proyecto recuerda qué secciones están plegadas.
+
+**Motivo:** es la forma que el usuario ya conoce de VS Code, y saber qué falta subir a GitHub es parte de controlar lo que hizo la IA.
+
+**Consecuencias:**
+- Lo de GitHub es lo que git sabe desde la última sincronización: Iridium no se conecta a internet para eso ni sube nada (sigue siendo solo para mirar). La dirección se muestra sin usuario ni clave.
+- H-16 suma un criterio de aceptación (`04-ux.md` › H-16).
+
+## D-059 — El contexto de una conversación guardada se lee de su historial; el uso, el modelo, los avisos y el cierre, como se construyeron
+- **Fecha:** 2026-10-29
+- **Ámbito:** general (I-6: H-12, H-13, F-5, F-6, C-58)
+- **Hito o paso:** 7; al construir I-6
+- **Estado:** vigente (precisa D-023, D-045, `04-ux.md` › W-4 y `05-arquitectura.md` › La interfaz `Motor`)
+
+**Contexto:** la arquitectura leía el contexto de cualquier conversación retomándola sin mandar nada (`getContextUsage`, S-2). Probado con el Claude Code real en I-6: retomar, aun sin mensajes, **agrega líneas al historial** (el costo de la sesión) y le cambia la fecha. Iridium escribiría en las conversaciones del usuario solo por mirarlas, y una conversación recién abierta en Iridium parecería usada en VS Code (D-027). Además, al construir I-6 aparecieron detalles que el diseño no fijaba.
+
+**Decisión:**
+1. **Contexto:** en una sesión abierta, al terminar cada turno, `getContextUsage` (resumen). En una conversación guardada, **se calcula de su historial, solo leyéndolo**: lo que entró al modelo en la última respuesta (con lo que estaba en caché), que da exactamente lo mismo que Claude Code (probado: 48 127 tokens en los dos). El tamaño de la ventana de cada modelo se le pregunta una vez a una sesión nueva sin mensajes (no escribe conversaciones ni gasta) o se aprende de las sesiones.
+2. **Uso:** se lee al abrir, con cada turno de cualquier sesión, cada 15 minutos y apenas se libera una ventana. *(Precisado el 2026-11-01 por el Defecto 16 de `08-calidad.md`: cada 5 minutos, cada 2 minutos mientras una sesión trabaja y al volver a la ventana si tiene más de un minuto.)* El detalle (R-1) se abre **tocando** los medidores, no al pasar el mouse como decía W-4. Desde el 90 % se marca en ámbar; agotado, en rojo con cuándo se libera.
+3. **Modelo y esfuerzo:** la lista es la que da Claude Code, tal cual (incluye modelos anteriores); «Predeterminado» es no elegir nada (lo que use Claude Code). Si el modelo elegido no tiene el esfuerzo guardado, vuelve al predeterminado. Se guardan por proyecto en `config.json`.
+4. **Sin sesión iniciada (F-5):** antes de abrir una sesión, si Claude Code no estaba listo se vuelve a verificar; si sigue sin sesión, no se manda nada y el aviso guarda lo escrito para **Reintentar**.
+5. **Avisos (H-13):** dentro de un proyecto aparecen a la izquierda de la conversación, para no tapar el cuadro de escribir (como pedía D-032 en el prototipo).
+6. **Cerrar con sesiones trabajando (F-6):** la confirmación es de Iridium (no la de Windows); **Cerrar igual** frena las sesiones y espera a que quede guardado que se las detuvo. `pnpm actualizar` la respeta: espera a que el usuario elija.
+
+**Motivo:** mirar no escribe nada en los proyectos ni en las conversaciones (`05-arquitectura.md` › Principios); lo demás sigue el diseño y lo que pidió el usuario en R-1.
+
+**Consecuencias:**
+- `05-arquitectura.md` › La interfaz `Motor` cambia la fila de `contexto`.
+- Claude Code crea una carpeta `memory` vacía en `~/.claude/projects/C--Users-<usuario>` al preguntar la ventana: no es una conversación.
+
+## D-060 — Lo escrito no se pierde, se vuelve al último proyecto, el contexto como círculo y un chat en la vista de Proyectos
+- **Fecha:** 2026-10-30
+- **Ámbito:** general (C-60, C-61; ajustes de I-6 pedidos en Q-77 y R-3)
+- **Hito o paso:** 7; después de I-6
+- **Estado:** vigente (precisa D-039, D-045 y D-059)
+
+**Contexto:** el usuario perdió lo que escribía en el chat al salir a Proyectos, y en Pendientes al cerrar Iridium (R-3). Pidió que Iridium abra en el proyecto que tenía abierto, un chat en la vista de Proyectos para ideas sin lugar y para hablar de varios proyectos, y, al probar I-6 (Q-77), colores para el uso, el contexto como círculo con tokens, su desglose y la caché, y el nombre del modelo y el esfuerzo que se usan en vez de «Predeterminado».
+
+**Decisión:**
+1. **Lo escrito:** el cuadro de cada conversación se guarda solo en `escritos.json` (datos de Iridium, fuera del proyecto) un momento después de dejar de escribir; al enviar se borra. En Pendientes, lo marcado y escrito se guarda a medias solo (D-039), igual que con el botón. Al cerrar, Iridium espera a que termine de guardarse.
+2. **Volver al proyecto:** `config.json` recuerda el proyecto abierto; al abrir, Iridium entra en él, en su sección principal. Si se cerró en el inicio, abre en el inicio.
+3. **Uso:** naranja desde el 75 % y rojo desde el 85 %, en la ventana de 5 horas y en la semana (antes, ámbar desde el 90 %).
+4. **Contexto:** un círculo que se llena en el sentido del reloj (naranja desde el 60 %, rojo desde el 80 %, cuando se sugiere Nueva), los tokens («76k/224k») y lo que le queda a la caché («42 min» o «caché vencida»). Tocándolo, el detalle: los tokens, el desglose de Claude Code (instrucciones, herramientas, `CLAUDE.md`, la conversación, libre) y la caché (cuándo vence y, si venció, cuántos tokens vuelve a cargar el próximo mensaje). La duración de la caché (5 minutos o 1 hora) la dice la respuesta del modelo; corre desde el último pedido. De una conversación guardada no hay desglose hasta el próximo turno.
+5. **Modelo y esfuerzo:** sin elegir, se ve el que usa Claude Code: el modelo de verdad («Opus 5.5») y el esfuerzo que guardó `/effort` en `~/.claude/settings.json` («Medio»). En la lista sigue la opción «Predeterminado (Opus 5.5)».
+6. **Chat en la vista de Proyectos:** a la derecha de la grilla, con el mismo ancho que en un proyecto, es la conversación de la carpeta `Ideas` de la carpeta de proyectos (ya existía para eso, con su `CLAUDE.md` y `ideas.md`). Sin Seguí (no tiene próximo paso); su instrucción le dice que converse y pregunte en el chat, no en un `estado.md`. Mientras se ve no avisa al terminar. Si la carpeta no está, el lugar dice cómo tenerla.
+
+**Motivo:** son pedidos del usuario; la carpeta `Ideas` ya tenía las reglas para ordenar ideas y crear proyectos, así que el chat general no necesita un lugar nuevo ni tocar la carpeta de proyectos.
+
+**Consecuencias:**
+- `02-definicion.md` suma C-60 y C-61; `05-arquitectura.md`, `escritos.json` y el desglose y la caché en `contexto`.
+- I-7 (compartir) tiene que crear la carpeta `Ideas` con su `CLAUDE.md` en la carpeta de proyectos de cada uno, o el chat general no aparece.
+- Desde el chat general la IA puede crear proyectos en la carpeta de proyectos; las reglas de `Ideas/CLAUDE.md` le prohíben modificar otros proyectos sin pedido explícito.
+
+## D-061 — El chat se lee de un vistazo: lo tuyo en burbuja, el proceso de la IA aparte de su respuesta
+- **Fecha:** 2026-10-30
+- **Ámbito:** general (W-3; ajuste pedido por el usuario)
+- **Hito o paso:** 7; después de I-6
+- **Estado:** vigente (precisa W-3 y la conversación de I-2)
+
+**Contexto:** el usuario dijo que leer a la IA era difícil: las herramientas que usa y lo que va contando en el camino se mezclaban con lo que le dice a él, y sus mensajes y los de la IA se veían iguales (solo cambiaba la etiqueta «Vos» o «IA»). Preguntó por colores o burbujas.
+
+**Opciones:**
+- A) Burbuja solo para lo tuyo, a la derecha; la IA a todo el ancho, con el proceso aparte (elegida).
+- B) Burbujas para los dos: el panel del chat es angosto (≈430 px) y una burbuja para la IA le quita ancho a lo que más se lee.
+- C) Solo colores de fondo distintos, sin burbujas: separa quién habla, pero no el proceso de la respuesta, que era la queja principal.
+
+**Decisión:**
+1. **Tus mensajes:** en una burbuja a la derecha, con un fondo apenas verde y su borde; arriba, «Vos» y la hora.
+2. **Un turno de la IA** se parte en dos: el **proceso** (todo hasta la última herramienta: las herramientas y las notas que escribió en el camino) y la **respuesta** (lo que escribió después, en letra de lectura).
+3. **El proceso** va atenuado, en letra más chica y sobre un riel a la izquierda. Mientras la IA trabaja se ve entero; al terminar con una respuesta queda plegado en una línea («Proceso · 2 herramientas · 1 nota») que se despliega con un clic.
+4. Los avisos, los errores del motor y las preguntas que dejó nunca quedan plegados. Si el turno termina sin texto (por ejemplo, detenido), el proceso queda abierto.
+
+**Motivo:** es como lo resuelven Claude y otros chats de agentes; separa lo que hay que leer de lo que se puede consultar, sin perder nada.
+
+**Consecuencias:**
+- Una cita a un documento dentro de una nota del proceso solo se toca después de desplegarlo.
+- Si a la IA le queda algo importante en una nota del camino y no lo repite al final, no se ve sin desplegar.
+
+## D-062 — Ajustes del uso diario: Responder dentro del proyecto, el nombre de la ficha, las pruebas sin quitar el foco y el Gestor descontinuado
+- **Fecha:** 2026-10-30
+- **Ámbito:** general (ajustes pedidos por el usuario al usar Iridium)
+- **Hito o paso:** 7; después de D-061
+- **Estado:** vigente (precisa H-13 y D-033)
+
+**Contexto:** con el uso diario, el usuario pidió que el aviso de un proyecto que dejó preguntas lleve a los pendientes de ese proyecto y no a los de todos; que la tarjeta diga «Iridium» y no «Centro de Desarrollo» sin renombrar la carpeta (cambia el repositorio y el nombre todavía puede cambiar); y dio por descontinuado el gestor anterior, que Iridium reemplaza. También contó que la ventana de las pruebas automáticas se pone adelante y lo interrumpe mientras usa la PC.
+
+**Decisión:**
+1. **Responder** (en el aviso, en la conversación, en el Mapa y en el número de la cabecera del proyecto) abre la primera sección del proyecto, «Pendientes y scripts», con sus preguntas. La sección Pendientes del inicio sigue juntando las de todos.
+2. **El nombre de la tarjeta** puede venir de la ficha: `"nombre"` en `.proyecto.json`. Si no está, es el de la carpeta, como hasta ahora. `reemplazadoPor` y todo lo que identifica al proyecto siguen usando la carpeta. Se guarda entre los campos que el formato del Gestor no conoce, así editar la ficha no lo pierde. La ficha de Iridium lo usa.
+3. **Las pruebas con la app abierta** abren sus ventanas sin quitarle el foco a lo que el usuario está usando (`IRIDIUM_SIN_FOCO`, que pone la configuración de Playwright; también la app de prueba de la Revisión). Lo que se escribe en otra ventana ya no cae en la de la prueba.
+4. **El gestor anterior** queda descontinuado y archivado en su ficha. No hay nada que rescatar: lo que servía ya se copió a Iridium (D-026).
+
+**Motivo:** son ajustes chicos que molestaban en el uso diario; ninguno cambia el alcance.
+
+**Consecuencias:**
+- La skill `gestor-proyectos` habla del Gestor como la extensión de VS Code y no conoce `"nombre"`: hay que ponerla al día en una sesión de `Skills` (Iridium pasa a ser quien muestra las fichas).
+- Las ventanas de prueba igual aparecen en la pantalla, pero sin tomar el teclado.
+
+
+## D-063 — Frentes en paralelo después del núcleo, y Postergar una prueba con un botón
+- **Fecha:** 2026-10-30
+- **Ámbito:** general (plan de construcción, Mapa, Pendientes; C-62, C-63)
+- **Hito o paso:** 7; al procesar Q-79, Q-80 y Q-81
+- **Estado:** vigente (cambia el plan de D-054; precisa D-056)
+
+**Contexto:** el usuario propuso que el núcleo sea un frente más y que los módulos compatibles avancen al mismo tiempo (`07-construccion.md` › Ideas nuevas › Frentes en paralelo). También pidió poder dejar para después una prueba sin perder lo que dice. Q-79 aprobó el chat de D-061.
+
+**Opciones (Q-80):** A) el núcleo cerrado con I-6, una iteración corta para que el Mapa y Pendientes muestren cada frente y después hasta dos frentes a la vez (elegida, con Skills y Apariencia y ajustes); B) terminar I-7 y las dos semanas de uso, y después los frentes de a uno; C) frentes sin límite.
+**Opciones (Q-81):** A) un botón **Postergar** en cada prueba (elegida); B) escribir «aprobada provisional» a mano, con la pista de la IA; C) pedir las pruebas que no frenan todas juntas al cerrar el hito.
+
+**Decisión:**
+1. **Frente** es el núcleo o un módulo de la guía (`docs/modulos/<nombre>/estado.md`). El núcleo se da por cerrado con I-6 (falta la prueba de Q-77); las dos semanas de uso real del hito 8 corren mientras se trabaja en los frentes.
+2. **I-8 — Frentes y Postergar**, corta y antes que cualquier frente: el Mapa muestra cada frente con su paso, sus pasos, su próximo paso y lo que espera del usuario; Pendientes dice de qué frente es cada pregunta; y el botón **Postergar**.
+3. **Hasta dos frentes activos a la vez:** primero **Skills** y **Apariencia y ajustes** (temas, configuración y perfil), que casi no tocan el núcleo. Los demás esperan: **Compartir** (lo que era I-7), **Diseño**, **Capacidades** (complementos, uso de la PC y del navegador) y el **inicio** con Ideas y Skills como paneles. Cuando uno termina, entra el siguiente.
+4. **Postergar** (en las preguntas de tipo prueba): escribe `respuestas/Q-n.md` con `**Opción:** Postergada` y lo marcado y anotado hasta ese momento. La línea misma le dice a la IA qué hacer: tomarla como aprobada provisional (D-056), anotarla con sus puntos en `07-construccion.md` › Pruebas manuales pendientes y sumarle **dónde mirar si falla** (archivo, decisión, prueba automática que lo cubre). La tabla suma esa columna.
+
+**Motivo:** el cuello de botella son las pruebas y decisiones del usuario y su cuota de uso, no la IA: dos frentes alcanzan para que siempre haya algo que avance mientras el otro espera, sin que el usuario tenga demasiadas cosas abiertas. Skills y Apariencia casi no tocan el núcleo, así que no se rompen con él. Postergar con un clic deja el contexto de la prueba para cuando haga falta.
+
+**Consecuencias:**
+- `07-construccion.md`: I-7 pasa a ser el frente Compartir (en espera; su detalle queda donde está) y se suma I-8. Una sesión por proyecto (D-015) hace que dos frentes del mismo proyecto se turnen, no que corran a la vez.
+- `02-definicion.md` suma C-62 (Postergar) y C-63 (frentes en el Mapa y Pendientes), el término «Frente» y los módulos previstos nuevos (Apariencia y ajustes, Compartir, Capacidades, Inicio).
+- Cambiar la guía `hitos-desarrollo-app` para que hable de frentes, de Postergar y de la columna nueva va en una sesión de `Skills`. Mientras, la línea de la respuesta explica sola lo que tiene que hacer la IA.
+
+
+## D-064 — Skills: ver, editar con la IA y poner al día proyectos; elegir por proyecto, después
+- **Fecha:** 2026-10-30
+- **Ámbito:** módulo Skills (C-44 a C-46, C-52, C-53)
+- **Hito o paso:** módulo Skills, paso 2; al procesar Q-83
+- **Estado:** vigente (precisa D-018)
+
+**Contexto:** la propuesta del módulo (`modulos/skills/propuesta.md`) ofrecía tres alcances para la primera tanda.
+
+**Opciones (Q-83):** A) ver, editar con la IA y poner al día proyectos, en ese orden (elegida); B) solo ver y avisar de las copias dobles; C) como A y además elegir qué skills usa cada proyecto.
+
+**Decisión:** la primera tanda es **ver** las skills con su origen y aviso de copias dobles, **pedir un cambio** a la IA desde una skill propia (abre la conversación de `Skills`) y **poner al día** los proyectos con la guía atrasada. Elegir skills por proyecto queda para después. El usuario lo resumió así: ver y editar skills, y ver cómo afectan a los proyectos para actualizarlos.
+
+**Motivo:** lo que más cambia es la guía, y cada cambio deja proyectos atrás sin que nadie avise.
+
+**Consecuencias:**
+- `modulos/skills/definicion.md` y la primera parte de `investigacion.md`.
+- Elegir skills por proyecto no pide inventar nada: Claude Code tiene `skillOverrides` por proyecto.
+- Saber qué proyecto está atrasado probablemente pida un número de formato en la guía (se decide en el diseño técnico; el cambio de la guía va en una sesión de `Skills`).
+
+
+## D-065 — Ajustes como ventana flotante con nombre, IA, tono y tema
+- **Fecha:** 2026-10-30
+- **Ámbito:** módulo Apariencia y ajustes
+- **Hito o paso:** módulo Apariencia, paso 2; al procesar Q-84
+- **Estado:** vigente (la parte de los temas reemplazará a D-029 cuando se elija la muestra, Q-85)
+
+**Contexto:** la propuesta (`modulos/apariencia/propuesta.md`) sugería juntar en Ajustes lo que está suelto, un tema sobrio y un perfil con nombre y foto.
+
+**Opciones (Q-84):** A) Ajustes con lo suelto y el tema, perfil con nombre y foto; B) como A y además editar lo que la IA sabe del usuario; C) primero solo el tema. El usuario eligió otra.
+
+**Decisión:**
+1. **Ajustes** es una ventana que flota sobre la app, como la de Obsidian o Claude Desktop: secciones a la izquierda, contenido a la derecha. Se abre con ⚙ en la barra de la izquierda y `Ctrl+,`.
+2. Tiene solo: el **nombre del usuario**, el **nombre de la IA** (opcional, por ahora solo se ve en la conversación), el **tono** y el **tema**. Nada más por ahora: el modelo, el esfuerzo y el ancho de Docs siguen donde están; no hay foto.
+3. **El tono** son los estilos de respuesta que ya trae Claude Code (*output styles*), porque existen; el usuario no quiere que se invente una personalidad. Vale solo para las sesiones de Iridium.
+4. **El tema sobrio** se elige entre tres muestras hechas con los proyectos reales (`docs/ui/alternativas/temas/`: Grafito, Obsidiana y Arcilla).
+
+**Motivo:** lo más chico que el usuario usa; el tono no cuesta nada porque Claude Code ya lo tiene.
+
+**Consecuencias:**
+- `modulos/apariencia/definicion.md`; la herramienta `tools/muestras-tema.ts` arma las muestras cambiando solo los tokens.
+- Con la muestra elegida: `06-ui.md` y `DESIGN.md` pasan de un tema a dos, con una decisión que reemplaza esa parte de D-029.
+
+
+## D-066 — Dos temas oscuros: Iridium (el de siempre) y Carbón
+- **Fecha:** 2026-10-30
+- **Ámbito:** general (`06-ui.md`, `DESIGN.md`, `docs/ui/tokens.css`); módulo Apariencia y ajustes
+- **Hito o paso:** módulo Apariencia, paso 6; al procesar Q-85 y Q-86
+- **Estado:** vigente (reemplaza «un solo tema» de D-029; sigue siendo solo oscuro)
+
+**Contexto:** el usuario pidió un tema mucho más sobrio (D-065). De tres muestras (Grafito, Obsidiana, Arcilla) eligió Grafito, más oscuro (Q-85), y de tres escalones más oscuros, el del medio (Q-86).
+
+**Opciones (Q-86):** A) Noche; B) Carbón, casi negro con los paneles separados por tono (elegida); C) Negro.
+
+**Decisión:** Iridium tiene dos temas, los dos oscuros: **Iridium** (el verde con Chakra Petch, el de siempre y el que rige si no se elige otro) y **Carbón** (grises casi negros, azul apagado solo para lo activo, letra del sistema Segoe UI, esquinas apenas más suaves). Carbón es un bloque de tokens en `docs/ui/tokens.css` que se activa con `data-tema="carbon"`; las pantallas no cambian. Para cumplir el contraste, el texto más tenue y el borde de los campos quedaron un poco más claros que en la muestra.
+
+**Motivo:** la app ya sacaba todo de los tokens, así que un tema es otro juego de valores; un segundo tema oscuro no suma pruebas de contraste nuevas más allá de su tabla.
+
+**Consecuencias:**
+- `06-ui.md` › Dirección visual y Contraste suman Carbón; `DESIGN.md` suma la sección de temas.
+- La maqueta de Ajustes (`docs/ui/vista-ajustes.html`) está hecha sobre una captura real de la app con el bloque Carbón aplicado.
+- Un tema claro sigue fuera hasta que haga falta.
+
+
+## D-067 — Cómo se construyó AP-I1: los ajustes viajan con las preferencias y «Normal» es el estilo de Claude Code
+- **Fecha:** 2026-10-31
+- **Ámbito:** módulo Apariencia y ajustes (`modulos/apariencia/diseno-tecnico.md`); `05-arquitectura.md` › Modelo de datos
+- **Hito o paso:** módulo Apariencia, paso 7 (AP-I1)
+- **Estado:** vigente (ajusta el diseño técnico del módulo)
+
+**Contexto:** al construir AP-I1 aparecieron tres detalles que el diseño técnico no fijaba o fijaba distinto.
+
+**Decisión:**
+- Los cuatro ajustes (`tema`, `nombreUsuario`, `nombreIa`, `tono`) son **preferencias más**: viajan por el mismo pedido que guarda los anchos y las pestañas, en vez de un `ajustes()` / `cambiarAjustes()` aparte. El puente valida el tono contra la lista de Claude Code y avisa al motor y a la ventana de Windows cuando cambian.
+- Claude Code trae cinco estilos, no tres: además de Explicativo y Aprendizaje, **Conciso** y **Proactivo** (comprobado con `tools/probar-motor.ts`). Se muestran todos, en castellano; los propios del usuario, con su nombre y su descripción.
+- **Normal** no le pasa nada a la sesión: rige el estilo que el usuario tenga en Claude Code (hoy, el normal).
+- Las pruebas pueden abrir con otro tema con `IRIDIUM_TEMA=carbon`, para correrlas todas en Carbón.
+
+**Motivo:** un solo camino para lo que se guarda en `config.json` es menos código y las mismas validaciones; mostrar los estilos que de verdad hay evita que falte uno.
+
+**Consecuencias:** `diseno-tecnico.md` del módulo queda con esta nota; el CLAUDE.md suma `IRIDIUM_TEMA` y `tools/miniaturas-tema.ts`.
+
+
+## D-068 — Skills: el chat de `Skills` al lado, y los atrasados por la fecha de formato que ya anota cada proyecto
+- **Fecha:** 2026-10-31
+- **Ámbito:** módulo Skills (`modulos/skills/ux.md`, `diseno-tecnico.md`); `04-ux.md` › Arquitectura de información
+- **Hito o paso:** módulo Skills, pasos 4 y 5; al procesar Q-89
+- **Estado:** vigente (precisa D-064)
+
+**Contexto:** el usuario aprobó la UX de Skills (Q-89) con un cambio: en vez del cuadro «Pedir un cambio», un chat a la derecha para hablar con la IA ahí. Para los proyectos atrasados eligió el número de formato, pero no en `estado.md` (lo lee la IA al empezar cada sesión) sino en un archivo que lea la app, como `.proyecto.json`.
+
+**Opciones (Q-89):** A) número de formato en la guía y en cada proyecto (elegida, en otro archivo); B) comparar con la plantilla; C) solo el aviso a mano en `CLAUDE.md`.
+
+**Decisión:**
+1. **El chat a la derecha:** la sección Skills tiene tres columnas: la lista, el detalle y la conversación de `Skills` (la misma que al entrar a ese proyecto), como el chat de Ideas en la vista de Proyectos (D-060). Con una skill elegida, el cuadro de escribir lleva arriba «Sobre la skill <nombre>» (se quita con ✕) y el mensaje sale con ese nombre al principio. «Pedir que la saquen» y «Pedir que lo arreglen» escriben el pedido en ese chat para mandarlo o cambiarlo.
+2. **La instrucción de esa sesión** es la de un chat que se mira (como la de Ideas): responde y pregunta en el chat, porque `Skills` no tiene `docs/estado.md`. Se elige por el nombre de la carpeta, así vale igual desde Skills y desde la vista del proyecto.
+3. **El formato de cada proyecto** es la línea `**Formato de la guía:** AAAA-MM-DD` de su `docs/README.md`, que la guía ya pide desde el 2026-10-29 y la IA no lee al empezar. La fecha hace de número: no hay que cambiar `.proyecto.json` ni la skill `gestor-proyectos`. **El vigente** es la fecha de «Formato de la documentación» del `SKILL.md` de la guía.
+4. **Atrasado** es un proyecto con `docs/estado.md`, no archivado, ni descontinuado, ni reemplazado, cuya fecha es anterior a la vigente, que no la tiene, o cuyo `CLAUDE.md` tiene el bloque «Actualización de formato pendiente». Hoy: otras apps (formato del 16 de octubre) y otro proyecto (sin fecha, con el bloque).
+5. **Poner al día** manda el pedido a la conversación de ese proyecto sin salir de Skills: la fila muestra ● trabajando y un enlace «Ver la conversación»; se pueden poner al día varios seguidos.
+
+**Motivo:** la línea ya existe en casi todos los proyectos y cumple lo que pidió el usuario (no la lee la IA al empezar, sí la app); un chat al lado deja conversar la idea antes de pedirla, en vez de un pedido de una sola vez.
+
+**Consecuencias:**
+- `modulos/skills/ux.md` cambia SK-3, SK-4 y SK-W1; `investigacion.md` › Proyectos atrasados suma lo encontrado.
+- `04-ux.md` suma Skills como tercer ícono del inicio (`Ctrl+3`).
+- Para la sesión pendiente de `Skills`: una línea fija `**Formato vigente:** AAAA-MM-DD` en el `SKILL.md` de la guía, para no depender de una frase; Iridium entiende las dos mientras tanto.
+
+## D-069 — Compartir, por ahora solo para el usuario: GitHub privado, actualización al cerrar e iniciar sesión desde Iridium
+- **Fecha:** 2026-10-31
+- **Ámbito:** general (I-7, frente Compartir: `modulos/compartir/`)
+- **Hito o paso:** módulo Compartir, paso 1; al procesar Q-90
+- **Estado:** vigente (deja en suspenso lo de repartir de D-054 y todo D-057)
+
+**Contexto:** la propuesta de Compartir encontró que, salvo aprobación de Anthropic, una app de terceros hecha con el Agent SDK no puede ofrecer el inicio de sesión de claude.ai: pide una clave de API (`modulos/compartir/propuesta.md` › Lo que cambia el plan). En Q-90 el usuario eligió A y agregó dos cosas: cree que sus conocidos podrían usar Iridium igual que él, con su propia suscripción; y cuando se le cerró la sesión de Claude, Iridium dejó de andar y tuvo que volver a entrar desde la extensión de VS Code.
+
+**Opciones (Q-90):** A) solo para el usuario por ahora (elegida); B) repartir con clave de API; C) pausar Compartir.
+
+**Decisión:**
+1. **Alcance de Compartir ahora:** el repo en GitHub **privado** con `dev` y `main` (copia y registro), que Iridium se actualice solo al cerrar, elegir la carpeta de proyectos en Ajustes y **iniciar sesión en Claude desde Iridium**.
+2. **Iniciar sesión desde Iridium:** el Claude Code que trae Iridium tiene `claude auth login`, que abre el navegador como la extensión de VS Code. Con eso, el aviso «Sin sesión de Claude» tiene un botón en vez de mandar a VS Code. Le sirve al usuario hoy y es lo que necesitaría cualquier otro.
+3. **Repartir queda para después**, como cosa aparte. Técnicamente funcionaría igual para un conocido (Iridium trae Claude Code y cada uno entra con su cuenta), pero la condición de Anthropic sigue: repartirlo usando la suscripción de cada uno es lo que no permite sin aprobación. Cuando el usuario quiera repartir, se decide con eso a la vista (clave de API o pedir aprobación).
+4. **D-057 queda en suspenso:** con el repo privado no hace falta limpiar `docs/` ni el historial; vuelve si se reparte.
+
+**Motivo:** lo que el usuario usa a diario no cambia, y lo que le molesta hoy (armar con la app abierta, la sesión caída, sin copia del repo) se resuelve sin depender de Anthropic.
+
+**Consecuencias:**
+- `07-construccion.md` › I-7 se reduce a eso; repartir la guía y crear la carpeta `Ideas` en la PC de otro esperan a repartir.
+- El perfil sigue en P2 («solo el usuario»); la cuenta de GitHub igual conviene con doble factor.
+- La definición del módulo (`modulos/compartir/definicion.md`) parte de acá.
+
+## D-070 — Las versiones se arman en la PC y GitHub guarda el código: `dev` para trabajar, `main` para lo que está en uso
+- **Fecha:** 2026-10-31
+- **Ámbito:** general (frente Compartir, CO-I2 y CO-I3)
+- **Hito o paso:** módulo Compartir, paso 3; al procesar Q-91 y Q-92
+- **Estado:** vigente (precisa D-069)
+
+**Contexto:** la investigación encontró dos formas de que entre una versión nueva: armarla en la PC o bajarla de un instalador en GitHub Releases (`modulos/compartir/investigacion.md` › Actualización). El usuario eligió armarla en la PC (Q-91: A) y agregó que más adelante, para repartir, GitHub podría tener el instalador listo y el código, para que sus amigos lo bajen o lo adapten con sus propios agentes; su copia, con una opción interna para no actualizarse desde GitHub. En Q-92 creó el repo privado `LlanosLautaro/Iridium`.
+
+**Decisión:**
+1. **La versión nueva se arma en la PC** (CO-I2): como hoy, sin internet ni claves, pero sin cerrar Iridium; entra al cerrar o con Reiniciar ahora.
+2. **GitHub es la copia del código:** `dev` es la rama de trabajo (antes `master`) y se sube después de cada commit; `main` marca lo que está en la app de uso diario y se mueve al armar una versión. Subido el 2026-10-31; el repo sigue privado.
+3. **Para cuando se reparta** (anotado, no se hace ahora): instalador y código en GitHub; las copias de otros se actualizan desde GitHub y la del usuario, con una opción interna, desde su PC.
+
+**Motivo:** es lo que el usuario ya usa a diario, sin pasos nuevos; lo de repartir queda pensado sin construir nada que hoy no sirve.
+
+**Consecuencias:**
+- `CLAUDE.md` del proyecto dice dónde está el repo y que se sube al commitear.
+- Mover `main` va con CO-I2, dentro de «Armar la última versión».
+- 2026-11-01 (CO-I2): `main` se mueve al terminar de armar, no cuando la versión entra (entre las dos cosas solo media cerrar Iridium). Si se armó con cambios sin commitear, `main` marca el commit de base; el aviso de Iridium lo dice.
+
+## D-071 — Iridium ofrece armar la versión nueva cuando hay commits sin armar; no arma solo
+- **Fecha:** 2026-11-01
+- **Ámbito:** módulo Compartir (CO-I6)
+- **Hito o paso:** módulo Compartir, paso 7; al procesar Q-99
+- **Estado:** vigente (precisa D-070)
+
+**Contexto:** con CO-I2, la versión nueva aparecía recién cuando alguien ejecutaba «Armar la última versión»; el usuario esperaba que Iridium avisara solo (Q-97, reporte). Q-99 ofreció que Iridium arme solo (A, recomendada), que lo ofrezca con un botón (B) o dejarlo como estaba (C).
+
+**Decisión:** B. Cuando el código de Iridium tiene commits que la app de uso diario no tiene (el último commit no es el de `main` ni el de la versión lista), abajo aparece «Hay cambios sin armar» con **Armar**. Armar corre «Armar la última versión» en una consola a la vista, como desde Scripts; mientras arma, el aviso dice «Armando la versión nueva…», y al terminar aparece «Versión nueva lista» (CO-2). Mientras la IA de ese proyecto trabaja no se ofrece, para no armar a mitad de camino. Los cambios sin commitear no cuentan.
+
+**Motivo:** elección del usuario: el control queda en sus manos, con un clic.
+
+**Consecuencias:**
+- `tools/actualizar.ps1` deja `release/armando.json` (con su proceso) mientras arma; si la consola se cierra, la marca deja de contar.
+- Solo en la app armada (en desarrollo no hay app de uso diario); las pruebas usan `IRIDIUM_RELEASE` e `IRIDIUM_ARMAR`.
+
+## D-072 — Las pruebas abren Iridium fuera de la pantalla
+- **Fecha:** 2026-11-01
+- **Ámbito:** general (pruebas y herramientas de la IA)
+- **Hito o paso:** 7, entre iteraciones; a pedido del usuario
+- **Estado:** vigente (amplía el punto 3 de D-062)
+
+**Contexto:** con `IRIDIUM_SIN_FOCO` (D-062) las ventanas de las pruebas ya no robaban el foco, pero seguían apareciendo y desapareciendo, una por prueba (más de sesenta por tanda), junto con las consolas de Scripts y la app de prueba de la Revisión; el usuario no podía usar la PC mientras corrían. Preguntó por abrirlas «headless». Electron no tiene un modo sin ventana como el navegador: la ventana tiene que existir para que la prueba la use y saque capturas.
+
+**Decisión:** `IRIDIUM_OCULTA=1` reemplaza a `IRIDIUM_SIN_FOCO`. La ventana se abre fuera de la pantalla (a 20.000 píxeles), sin botón en la barra de tareas y sin foco; para que Chromium la siga dibujando aunque la crea tapada, se le apaga el cálculo de ventanas tapadas y la pausa en segundo plano. Las consolas de Scripts corren escondidas y se cierran al terminar. La pone `playwright.config.ts` (con `IRIDIUM_OCULTA=0`, para mirar), la app de prueba de la Revisión la respeta y la usan las herramientas que abren la app (`capturas.ts`, `icono.ts`, `muestras-tema.ts`, `miniaturas-tema.ts`, `maqueta-ajustes.ts`). Fuera de las pruebas, Iridium no cambia: la consola de Armar y las de Scripts siguen a la vista.
+
+**Motivo:** es lo más cercano a «headless» que permite Electron, sin cambiar lo que se prueba: la ventana es la de siempre, con su tamaño, y las capturas salen igual. Otras salidas (ventanas escondidas del todo, otro escritorio de Windows, una máquina virtual) o no dibujan, o no evitan que aparezcan, o son mucho más pesadas.
+
+**Consecuencias:**
+- Las pruebas no se pueden mirar mientras corren, salvo con `IRIDIUM_OCULTA=0`; lo que ve el usuario siguen siendo las capturas.
+- Queda un parpadeo: la prueba del ayudante de CO-I2 (Vitest) lo lanza como en la app, con una consola minimizada que se esconde enseguida.
+- Verificado por el usuario en Q-104 (2026-11-01): mientras corrían, no apareció ninguna ventana ni consola.
+
+## D-073 — El ayudante de la Revisión entra también en una interfaz propia, sin captura ni texto si la app lo pide
+- **Fecha:** 2026-11-01
+- **Ámbito:** módulo Revisión (ayudante de Electron)
+- **Hito o paso:** 8, entre tandas; pedido de otra app (D-086 y Q-70 A), hecho desde el proyecto de otra app a pedido del usuario
+- **Estado:** vigente (amplía D-052)
+
+**Contexto:** otra app instalada carga su interfaz desde `otra-app://`. Las extensiones no entran ahí: los `matches` de un manifiesto no aceptan esquemas propios. Además, la ventana muestra la colección privada del usuario, y los comentarios van a `docs/revision/`, que se sube a GitHub.
+
+**Decisión:** `revision()` acepta opciones nuevas:
+- `esquemas` (p. ej. `['otra-app']`): el ayudante registra un *preload* de página (`preload-marco.cjs`) que deja un puente en un mundo aislado propio (1047, con su propia política de contenido) y, en cada carga, mete ahí el mismo selector de la extensión (`js/inyectado.js`: un reemplazo de `chrome.*` sobre el puente y el selector) y `pagina.js` en el mundo de la página. Los pedidos los atiende el proceso principal de la app, que habla con el receptor como la extensión (con su origen); la página no hace ningún pedido de red, así que una sesión blindada no tiene que abrir nada. Lo que no llega con Iridium cerrado queda en `%APPDATA%\Centro de Desarrollo
+evision-cola-electron.json` y sale cuando Iridium está.
+- `captura: false` y `textoElemento: false`: el proceso principal borra la captura y el texto del elemento antes de mandar, aunque la página los mande.
+- `extension: false`: no carga la extensión.
+- Devuelve `detener()`: apaga la Revisión sin cerrar la app (F8 deja de andar, se sale del modo comentar y el puente no contesta).
+- `capacidades.json` al lado del ayudante dice qué sabe hacer (`esquemas`, `sin-captura`, `sin-texto`, `detener`): la app lo lee sin ejecutar nada y no carga una versión vieja.
+
+**Motivo:** es lo que pidió otra app y no cambia nada para las apps que usan la línea de siempre (sin opciones, igual que antes). Meter el selector desde el ayudante reusa el mismo código de la extensión.
+
+**Consecuencias:**
+- En una versión compilada sin conservar los nombres, el componente sale abreviado; otra app los conserva al compilar.
+- Los borradores de la tarjeta viven mientras la app está abierta (no en `chrome.storage`).
+- Prueba nueva con la app abierta: `r3-electron.spec.ts` › interfaz propia (`luna-app://` con política de contenido estricta: llega sin captura ni texto, y `detener` la apaga). Captura: `tools/salida/revision-propia.png`.
+
+
+## D-074 — Una copia de prueba a mano para un conocido, sin esperar a Compartir
+- **Fecha:** 2026-11-01
+- **Ámbito:** general (frente Compartir)
+- **Hito o paso:** 8, entre tandas; pedido del usuario
+- **Estado:** vigente (adelanta una parte de lo que D-069 dejó para después)
+
+**Contexto:** el usuario quiere pasarle Iridium a un conocido ya, y dejar para más adelante el instalador, las actualizaciones y lo demás. Se le explicó antes la condición de Anthropic (D-069, punto 3): repartir Iridium usando la suscripción de cada uno no está permitido sin aprobación. Decidió seguir igual con una copia a mano.
+
+**Decisión:** en el escritorio del usuario queda la carpeta `Iridium para compartir`, con:
+- `Iridium/`: la app armada desde `dev` (e1e7b29) en una carpeta que no se llama `win-unpacked`, así que no busca versiones nuevas ni ofrece Armar.
+- `LEEME.txt`: los pasos para la persona (Git para Windows, copiar la app, crear la carpeta de proyectos con `Ideas` adentro, elegirla, iniciar sesión, pedir «Hacé la configuración inicial»).
+- `Ideas/`: la carpeta del chat general, con su ficha y su `CLAUDE.md`, y `configuracion-inicial/` con las skills `hitos-desarrollo-app` y `gestor-proyectos` (esta, sin las rutas del usuario y con Iridium en lugar del Gestor), una plantilla del `CLAUDE.md` global y `GUIA-PARA-CLAUDE.md` (cómo instalar todo y qué lee Iridium de cada proyecto).
+
+**Motivo:** el conocido puede empezar a usarlo hoy, y su Claude sabe instalar la guía y escribir con los formatos que Iridium lee, sin que el usuario le explique nada.
+
+**Consecuencias:**
+- No hay actualizaciones automáticas para esa copia: una versión nueva es otra carpeta `Iridium` que reemplaza a la vieja (los datos quedan en `%APPDATA%\Centro de Desarrollo`). Las actualizaciones desde GitHub siguen siendo de Compartir (D-070, punto 3).
+- Las skills copiadas no se actualizan con las del usuario. Si la guía cambia de formato, hay que pasarle la carpeta de la skill de nuevo.
+- Probado con el motor falso y una carpeta de proyectos nueva: sin carpeta, Iridium pide elegirla; con `Ideas` copiada, aparece la tarjeta con su ícono y el chat general. No se probó la configuración inicial con un Claude real: instalaría las skills en la carpeta de Claude del usuario.
+
+## D-075 — Los radios y las sombras sueltos pasan a los tokens del design system
+- **Fecha:** 2026-11-01
+- **Ámbito:** general (design system)
+- **Hito o paso:** 8, tanda 6 (Defecto 20, Q-107 A)
+- **Estado:** vigente
+
+**Contexto:** el detector de `impeccable` marcaba radios de 2, 4, 7 y 12 px y tres sombras escritos a mano en el CSS, que no estaban en `DESIGN.md`. `DESIGN.md` decía además que había una sola sombra, la del aviso, cuando los menús, los diálogos y Ajustes ya llevaban la suya.
+
+**Decisión:** ningún radio ni sombra se escribe a mano. Los radios van al más cercano de `rounded`: 2 y 3 px al de medidor (las marcas finitas), 4 px al de control, 7 px (la pista del interruptor, de 14 px de alto) al de píldora, 12 px (Ajustes) al de tarjeta. Las sombras pasan a tres tokens en `docs/ui/tokens.css`: `--sombra-flotante` (el aviso), `--sombra-menu` (menús y diálogos) y `--sombra-ventana` (Ajustes). `DESIGN.md` › Elevation & Depth las nombra; los anillos de foco y de selección no cuentan como sombras.
+
+**Motivo:** un solo lugar para cambiar el aspecto (los temas, D-065 y D-066, cambian tokens, no reglas sueltas); la diferencia a la vista es de un píxel.
+
+**Consecuencias:** Ajustes queda con esquinas de 10 px en vez de 12; el diálogo de confirmación usa la misma sombra que los menús (era casi igual). Un tema nuevo puede cambiar las sombras.
+
+## D-076 — Los fusibles de Electron: sin correr como Node ni `NODE_OPTIONS`; `--inspect` queda para las pruebas
+- **Fecha:** 2026-11-02
+- **Ámbito:** general (seguridad, armado)
+- **Hito o paso:** 8, tanda 6 (Defecto 6, Q-107 A)
+- **Estado:** vigente
+
+**Contexto:** el programa armado traía todos los «fusibles» de Electron como vienen: con `ELECTRON_RUN_AS_NODE`, `NODE_OPTIONS` o `--inspect`, otro programa de la PC podía usar `Iridium.exe` para correr su propio código. Playwright y las herramientas que miden o recorren la app armada (`tools/recorrido.ts`, `medir.ts`, `accesibilidad.ts`, `capturas.ts` con la ruta del `.exe`) la abren con `--inspect`.
+
+**Decisión:** `electron-builder.yml` › `electronFuses` apaga `runAsNode` y `enableNodeOptionsEnvironmentVariable`, y prende `onlyLoadAppFromAsar` (solo carga la app de su `app.asar`). `enableNodeCliInspectArguments` queda prendido.
+
+**Motivo:** los dos que se apagan son los que se usan para colar código sin que se note (una variable de entorno). `--inspect` necesita lanzar Iridium con ese argumento, lo mismo que haría falta para lanzar cualquier otro programa; apagarlo dejaría sin pruebas a la app de uso diario.
+
+**Consecuencias:** Iridium no usa ninguna de las dos cosas (Claude Code es su propio `claude.exe`; las consolas y el ayudante de la versión nueva ya sacaban `ELECTRON_RUN_AS_NODE` del entorno). Si algún día no hacen falta las pruebas sobre la app armada, se puede apagar `--inspect` también.
+
+## D-077 — Iridium sigue sin número de versión por ahora: fecha y commit
+- **Fecha:** 2026-11-02
+- **Ámbito:** general (lanzamiento)
+- **Hito o paso:** 9 (Q-109)
+- **Estado:** vigente
+
+**Contexto:** el hito 9 pide versión etiquetada y `CHANGELOG.md`. Hoy Ajustes › Acerca de y el aviso de la versión nueva muestran cuándo se armó y su commit (CO-I5).
+
+**Decisión:** por ahora queda así: sin número, sin etiquetas en git y sin `CHANGELOG.md`. Más adelante será la opción A de Q-109 (1.0.0 y sube sola con cada armado, `CHANGELOG.md` en palabras del usuario, el número en Acerca de y en el aviso).
+
+**Motivo:** el usuario lo eligió (Q-109): con una sola persona usándolo, la fecha y el commit alcanzan para saber qué está puesto.
+
+**Consecuencias:** el punto «Versión etiquetada y `CHANGELOG.md`» del portón del hito 9 queda como hueco aceptado. Lo que se puso y cuándo queda en `release\actualizacion.log` (cada «Versión nueva puesta»), y la tabla de `09-lanzamiento.md` › Historial de lanzamientos anota las que marcan algo (un hito, una vuelta atrás). `package.json` sigue en 0.1.0 sin que nadie lo lea.
+
+## D-078 — Volver atrás es armar la versión anterior, con `pnpm volver`
+- **Fecha:** 2026-11-02
+- **Ámbito:** general (lanzamiento)
+- **Hito o paso:** 9 (Q-110)
+- **Estado:** vigente
+
+**Contexto:** la versión anterior se borra apenas entra la nueva (`tools/cambiar-version.ps1`). Guardarla costaba unos 670 MB más; el usuario eligió no guardarla (Q-110, B).
+
+**Decisión:** `pnpm volver` (`tools/volver.ps1`, `scripts.md` › Volver a la versión anterior) arma un commit anterior y lo pone igual que una versión nueva. Sin decirle cuál, toma la versión que se puso antes que la de ahora, de `release\actualizacion.log`; con `-Commit <commit>`, la que se le diga. Arma en una copia aparte del código (un `git worktree` en `release\volver`, que se borra al terminar), así `dev` y los cambios sin commitear no se tocan. `main` vuelve a ese commit, también en GitHub (empujado a la fuerza: los commits siguen en `dev`).
+
+**Motivo:** no ocupa disco y reusa todo el camino de la actualización (armar al lado, entrar al cerrar, el aviso si no entra). Que `main` vuelva atrás mantiene lo que dice D-070 (`main` es lo que está en la app) y hace que Iridium ofrezca «Hay cambios sin armar» con lo que quedó afuera.
+
+**Consecuencias:** volver tarda lo que un armado más instalar las dependencias de esa versión (unos minutos) y necesita que ese commit arme bien. Mientras la versión mala no se arregle, no hay que tocar **Armar**: volvería a ponerla. Si la app no abre, se corre desde una consola en la carpeta del proyecto (o desde VS Code), no desde Iridium.
+
+## D-079 — Los frentes que siguen: Inicio, después Diseño y Capacidades
+- **Fecha:** 2026-11-02
+- **Ámbito:** general (plan de frentes, D-063; hito 10)
+- **Hito o paso:** 10 (Q-112)
+- **Estado:** vigente (cambia el orden de D-063)
+
+**Contexto:** con el hito 9 cerrado, el Backlog (`10-operacion.md`) tiene tres frentes en espera, que D-063 dejó en el orden Inicio, Capacidades y Diseño.
+
+**Opciones (Q-112):** A) Inicio (elegida); B) Capacidades; C) Diseño; D) ningún frente por ahora, solo mantenimiento.
+
+**Decisión:** primero Inicio, después Diseño y después Capacidades.
+
+**Motivo:** lo eligió el usuario.
+
+**Consecuencias:** se abre el módulo Inicio (`modulos/inicio/`), que es la próxima versión de `10-operacion.md`. `02-definicion.md` › Módulos previstos cambia el orden de los que esperan.
+
+## D-080 — La carpeta para compartir explica Iridium por dentro e instala el comprobador de preguntas
+- **Fecha:** 2026-11-04
+- **Ámbito:** general (la carpeta `Iridium para compartir`, D-074; hito 10)
+- **Hito o paso:** 10 (Q-116)
+- **Estado:** vigente (amplía D-074)
+
+**Contexto:** el Claude de la persona que recibió Iridium no sabía que trabajaba desde Iridium ni cómo escribir `docs/scripts.md`. La guía de la carpeta (`Ideas/configuracion-inicial/GUIA-PARA-CLAUDE.md`) solo la leía el chat general, una vez; en los proyectos, Iridium agrega una sola línea, y las instrucciones globales casi no hablaban de Iridium. Además, la configuración no instalaba el hook `Stop` que corre `comprobar-preguntas.mjs`, que el usuario tiene en su `settings.json`.
+
+**Opciones (Q-116):** A) solo la carpeta: una guía más completa y lo esencial en las instrucciones globales (elegida); B) solo la app: la línea que agrega Iridium nombra la skill y `scripts.md`; C) las dos. Se descartó también que Iridium instale las skills al abrirse.
+
+**Decisión:** A. La guía tiene tres partes: cómo funciona Iridium por dentro (el SDK con su propia CLI, `bypassPermissions`, qué configuración carga, los tres chats, de dónde sale cada sección), la configuración inicial en nueve pasos con una lista de comprobación final (suma Node y el hook del comprobador), y los formatos que lee Iridium con ejemplos. La plantilla del `CLAUDE.md` global suma «Trabajar desde Iridium», que llega a todos los chats. `Ideas/CLAUDE.md` revisa también esa sección, y el `LEEME.txt` pide Node y explica cómo repetir la revisión.
+
+**Motivo:** lo eligió el usuario: es más simple y no hay que armar la app de nuevo.
+
+**Consecuencias:**
+- Las memorias y el resto del `CLAUDE.md` del usuario no viajan: son personales. Lo único que faltaba de su configuración era el hook del comprobador; sus avisos de Windows (los otros hooks) no hacen falta en Iridium.
+- La carpeta solo está en el escritorio, no en el repo: si cambian los formatos que lee Iridium (`src/main/core/visor/`), hay que cambiar también la parte 3 de la guía.
+- Quien ya hizo la configuración copia `configuracion-inicial` y `CLAUDE.md` nuevos y pide «Revisá la configuración inicial».
+- El comprobador se probó con la copia de la carpeta: pasa con `Ideas` y con este proyecto, y marca una pregunta mal escrita. La configuración con un Claude real sigue sin probarse.
+
+## D-081 — La sección Git crea el repositorio y lo publica en GitHub, con la sesión de GitHub de git
+- **Fecha:** 2026-11-04
+- **Ámbito:** general (la sección Git, H-16; hito 10)
+- **Hito o paso:** 10 (Q-117)
+- **Estado:** vigente (ajusta D-041 y C-56: la sección Git deja de ser solo para mirar en estas dos acciones)
+
+**Contexto:** el usuario preguntó si Iridium hace lo que la extensión de git de VS Code: con una carpeta sin repositorio, ofrecer crearlo; con un repositorio solo local, ofrecer publicarlo en GitHub como privado o público; y que se pueda ignorar. La sección Git era solo para mirar (D-041) y para eso había que pedírselo a Claude.
+
+**Opciones (Q-117):** A) dos botones en Git: **Inicializar repositorio** y **Publicar en GitHub** (elegida); B) un botón que deja el pedido escrito en el chat; C) dejarlo como está. El usuario sumó: «facilitar la operación para que haga pocas cosas», y dejó a la IA decidir cómo se inicia la sesión de GitHub.
+
+**Cómo se inicia la sesión de GitHub** (lo decidió la IA, como pidió el usuario):
+1. **La sesión de git, con el Administrador de credenciales que trae Git para Windows (elegida).** Si no hay sesión, git abre su ventana para iniciarla; si hay, no pide nada. Es la misma que usan los `push` de la IA: una sola sesión para todo. No hace falta instalar nada más ni registrar una app en GitHub. Probado en esta PC: la sesión guardada tiene el permiso `repo`, que alcanza para crear repositorios.
+2. Una sesión propia de Iridium (el inicio con código de GitHub, como hace con Claude): hay que registrar una app de GitHub y guardar la clave; los `push` de la IA igual usan la de git, así que serían dos sesiones.
+3. El programa `gh` de GitHub: no viene instalado (tampoco en esta PC) y sería un paso más para quien recibe Iridium.
+
+**Decisión:**
+- **Inicializar repositorio**, en el lugar del aviso «Este proyecto no usa git»: crea el repositorio con la rama `main` y un primer commit («Primer commit») con todo lo que hay. Antes agrega al `.gitignore` `node_modules/` (si existe y no está ignorada) y los archivos que suelen tener claves (`.env` y parecidos, menos los de ejemplo; `.pem`, `.key`, `.pfx`, `.p12`, llaves SSH), y avisa cuáles quedaron afuera.
+- **Publicar en GitHub**, debajo de «Solo en esta PC» (solo con commits): un cuadro con la cuenta, el nombre (el de la carpeta, sin espacios ni acentos) y **Privado** (de entrada) o **Público**. Crea el repositorio en GitHub, lo pone como `origin` y sube la rama.
+- Nada más cambia el repositorio desde Iridium: los commits, ramas y `push` siguen siendo de la IA.
+
+**Motivo:** el usuario hace dos clics en lugar de explicar el pedido; la sesión es la que git ya usa.
+
+**Consecuencias:**
+- La clave de GitHub solo pasa por el proceso principal, en memoria: no se guarda, no se registra ni llega a la ventana. Si GitHub la rechaza, se le pide a git que la olvide, y la próxima vez se vuelve a iniciar.
+- Sin Git para Windows (o con otro git sin el Administrador de credenciales), Publicar avisa que hace falta.
+- Si GitHub crea el repositorio pero falla la subida, el aviso da la dirección y sugiere pedírselo a Claude.
+- Para las pruebas, `IRIDIUM_GITHUB=falso`: la cuenta «prueba» y repositorios en una carpeta temporal.
+
+## D-082 — El repo de Iridium no nombra los otros proyectos del usuario
+- **Fecha:** 2026-11-04
+- **Ámbito:** general
+- **Hito o paso:** 10 (Q-119)
+- **Estado:** vigente
+
+**Contexto:** el usuario notó que el repo nombra sus otros proyectos (un proyecto de catálogo, otro de juego, el gestor anterior, la carpeta de skills…) en las pruebas, el código, las herramientas y los documentos. «Una cosa es la app en uso y otra el proyecto de Iridium»: los proyectos que Iridium muestra son datos de quien lo usa, no parte del producto. Además confunden a la IA que trabaja en Iridium (no sabe si un nombre es una muestra o un proyecto real) y se filtran a quien recibe Iridium (D-080).
+
+**Opciones (Q-119):** A) limpieza total (elegida); B) solo código y pruebas, los documentos como historial; C) solo lo que ve quien recibe Iridium.
+
+**Decisión:** ningún archivo del repo nombra un proyecto del usuario ni su carpeta de proyectos.
+1. **Pruebas y muestras:** proyectos con nombres neutros (Alfa, Beta, Gamma, Delta…); las muestras copiadas de archivos reales (`tests/muestras/`) se reemplazan por textos inventados con el mismo formato.
+2. **Código y herramientas:** comentarios con ejemplos neutros; las herramientas que corren sobre una copia de los proyectos (`recorrido.ts`, `medir.ts`) eligen los proyectos de la copia sin nombrarlos.
+3. **Dependencias reales:** la carpeta de proyectos por defecto (hoy la ruta de esta PC) y las carpetas de Ideas y de Skills dejan de estar escritas en el código; dónde van se decide en Q-120.
+4. **Documentos:** donde se nombra otro proyecto se habla de «otra app» o se dice lo que importa para Iridium; lo que fue de otro proyecto (un pedido, una prueba en él) queda resumido en una línea o se mueve a ese proyecto. Es la única excepción a «las decisiones no se borran»: se cambian los nombres y se acorta el contexto ajeno, no lo que se decidió.
+5. **Lo que sí se nombra:** las skills que Iridium usa (la guía de hitos, la de la ficha del proyecto) son parte del método del producto, no proyectos.
+
+**Motivo:** el producto se entiende sin saber qué proyectos tiene su autor; la IA no mezcla muestras con datos reales; compartir Iridium no comparte la lista de proyectos.
+
+**Consecuencias:**
+- Se hace por etapas: pruebas y código, después las dependencias (con Q-120), después `docs/`.
+- `CLAUDE.md` suma la regla, y las pruebas nuevas usan nombres neutros.
+- El historial de git sigue teniendo los nombres viejos; qué hacer con él, en Q-121.
+
+## D-083 — Ideas y Skills viven en una carpeta «Iridium» aparte de los proyectos
+- **Fecha:** 2026-11-04
+- **Ámbito:** general (ajusta D-060, D-068 e IN-3)
+- **Hito o paso:** 10 (Q-120)
+- **Estado:** vigente
+
+**Contexto:** las carpetas del chat general (`Ideas`) y de la sección Skills estaban dentro de la carpeta de proyectos, con nombres fijos, y la grilla las escondía por nombre. El usuario pidió que no sean carpetas de proyecto: no se usan igual ni para lo mismo, y quien recibe Iridium no las tiene. Además, la carpeta de proyectos por defecto era la ruta de esta PC (D-082).
+
+**Opciones (Q-120):** A) una carpeta «Iridium» aparte con `Ideas` y `Skills`, que se cambia en Ajustes, y la mudanza de las del usuario una vez, con confirmación (elegida); B) dentro de los datos de Iridium (`AppData`); C) cada carpeta por separado en Ajustes.
+
+**Decisión:**
+1. **La carpeta Iridium** (`carpetaIridium` en `config.json`): de entrada `Documentos\Iridium`. Adentro, `Ideas` (el chat general y `ideas.md`) y `Skills` (el chat de Skills y las skills propias en `skills\`).
+2. **Al abrir**, si falta alguna de las dos, Iridium la crea con su `CLAUDE.md` y lo mínimo (`ideas.md`, `skills\`). No la crea si hay una para mudar.
+3. **La mudanza:** si en la carpeta de proyectos están las de antes (`Ideas`, `Skills`), el inicio avisa y ofrece **Mover**, con confirmación. Mover las lleva a la carpeta Iridium con su git, rehace los enlaces de `.claude\skills` que apuntaban a las skills propias, lleva las conversaciones de Claude Code de esas carpetas y cambia su ruta en lo que Iridium recuerda (sesiones, borradores, ajustes). Si algo falla, avisa y deja todo donde estaba.
+4. **Ajustes › General** muestra la carpeta Iridium y permite cambiarla: Cambiar mueve las dos carpetas a la elegida con la misma mudanza.
+5. **La grilla** muestra solo las carpetas de la carpeta de proyectos; Ideas y Skills llegan aparte en la lista y se abren con **Abrir como proyecto**, como hasta ahora.
+6. **La carpeta de proyectos por defecto** pasa a ser `Documentos\Proyectos`; ya no se lee de la configuración de otra app. Si no existe, el inicio ofrece elegirla, como antes.
+
+**Motivo:** lo que es de Iridium queda junto y aparte de los proyectos; quien recibe Iridium tiene las dos carpetas desde el primer día; el código no conoce rutas ni nombres del usuario.
+
+**Consecuencias:**
+- Las pruebas ponen la carpeta Iridium en su carpeta temporal (sin `carpetaIridium`, con `IRIDIUM_DATOS` va dentro de esa carpeta: nunca en Documentos).
+- La carpeta de skills del usuario deja de estar en la carpeta de proyectos: lo que la nombra fuera de Iridium (sus instrucciones globales, sus scripts) se pone al día en una sesión de esa carpeta.
+
+## D-084 — Al terminar la limpieza, el repo empieza de nuevo con un solo commit
+- **Fecha:** 2026-11-04
+- **Ámbito:** general
+- **Hito o paso:** 10 (Q-121)
+- **Estado:** vigente (ajusta D-078 hasta que haya versiones nuevas)
+
+**Contexto:** después de D-082 los archivos quedan limpios, pero los commits viejos siguen nombrando los otros proyectos.
+
+**Opciones (Q-121):** A) dejar el historial; B) reescribirlo; C) repo nuevo con un solo commit (elegida).
+
+**Decisión:** cuando terminen las tres etapas de D-082 y D-083, el repo arranca de nuevo: un commit «Iridium» con todo lo de ese momento, en `main` y en `dev`, subido a `LlanosLautaro/Iridium` reemplazando lo que había (no se puede borrar el repo de GitHub con la sesión de git, que no tiene ese permiso). Antes se guarda un respaldo del historial viejo en un solo archivo (`git bundle`) fuera del repo, en la carpeta Iridium; se borra cuando el usuario quiera.
+
+**Motivo:** el usuario prefiere un repo sin rastros de sus otros proyectos.
+
+**Consecuencias:**
+- Volver atrás (`pnpm volver`, D-078) no tiene a qué volver hasta la próxima versión armada.
+- Las referencias a commits viejos en `docs/` dejan de servir: la etapa 3 de D-082 las saca.
+
+## D-085 — Las copias compartidas se actualizan solas desde las versiones publicadas en GitHub
+- **Fecha:** 2026-11-04
+- **Ámbito:** general (frente Compartir; precisa D-070 punto 3 y D-074)
+- **Hito o paso:** 10, a pedido del usuario («compartir Iridium lo antes posible y asegurarnos de poder hacerle llegar actualizaciones bien a la otra persona»)
+- **Estado:** vigente (dónde se publica, en Q-123)
+
+**Contexto:** la copia que el usuario le pasó a otra persona (D-074) no se actualizaba: cada versión era otra carpeta para reemplazar a mano. D-070 ya había dejado pensado que, al repartir, las copias de otros se actualicen desde GitHub y la del usuario siga armándose en su PC.
+
+**Decisión:** lo que eligió la IA para cumplir el pedido, reusando lo que ya funciona en la copia del usuario (CO-I2):
+1. **Publicar** (`pnpm publicar`, `tools/publicar.ts`): sube la app de uso diario (lo que marca `main`) como versión de GitHub, un `.zip` con la carpeta `win-unpacked` y, adentro, `resources/actualizaciones.json` con el repositorio y el commit. La etiqueta es `iridium-AAAA-MM-DD-HHMM-<commit>`. Con `--desde`, publica una versión armada en otra carpeta sin tocar la app del usuario. Lo decide el usuario: no se publica solo.
+2. **La copia compartida** es la que trae ese archivo. Al abrir (a los 20 s) y cada seis horas mira la última versión publicada; si es otra, la baja a `release/nueva` con su `lista.json`, y desde ahí es lo de siempre: abajo dice «Versión nueva lista · entra al cerrar», y entra al cerrar Iridium o con **Reiniciar ahora**. No ofrece Armar (no tiene el código).
+3. **Acceso:** primero pregunta sin clave (sirve si el repositorio es público); si GitHub no lo deja ver, usa la sesión de GitHub que ya tiene git, sin abrir ninguna ventana. Sin acceso o sin internet, lo anota en el registro y vuelve a probar en la próxima vuelta.
+4. **La copia del usuario** no trae el archivo: se sigue armando en su PC (D-070, D-071).
+
+**Motivo:** la otra persona no hace nada para actualizarse, y el cambio de carpeta al cerrar ya está probado en el uso diario (CO-I2, Defecto 3).
+
+**Consecuencias:**
+- La primera vez, la otra persona necesita una copia que ya traiga `actualizaciones.json`: el `.zip` de la primera versión publicada, descomprimido de modo que quede `…\Iridium\win-unpacked\Iridium.exe`.
+- Con el repositorio privado, la otra persona necesita acceso (colaboradora) y la sesión de GitHub en su git; con uno público, nada. Se decide en Q-123.
+- Pruebas: `tests/d085-versiones-github.test.ts`, con un GitHub falso en la PC (misma versión, otra, una privada con y sin clave, sin internet). Las pruebas con la app usan `IRIDIUM_ACTUALIZACIONES` e `IRIDIUM_GITHUB_API`.

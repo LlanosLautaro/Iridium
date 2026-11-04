@@ -1,0 +1,37 @@
+# Diseño técnico del módulo: Compartir
+
+**Fecha:** 2026-10-31
+
+## Iniciar sesión (CO-I1)
+- `Motor.iniciarSesion()` (`src/main/motor/motor.ts`): termina cuando el login terminó o se abandonó; no dice el resultado, eso lo dice `verificar`. Solo `motor/` conoce Claude Code (D-025).
+- **Real** (`sdk.ts`): `cmd.exe /c ""claude.exe" auth login --claudeai || pause"` con consola propia (como Scripts, `infra/ejecutar.ts`), sin `ELECTRON_RUN_AS_NODE`. Usa el Claude Code de la app instalada (`rutaClaude`) o, en desarrollo, el que trae el SDK. Una sola a la vez; espera como máximo diez minutos.
+- **Falso:** si estaba sin sesión, a los dos pasos queda con sesión (se prueba con `IRIDIUM_FALSO_ESTADO=sin-sesion`).
+- **Canal** `motor:iniciar-sesion`: llama al motor, vuelve a verificar (avisa `motor:cambio` a la ventana) y devuelve el estado.
+- **Ventana:** `iniciandoSesion` e `iniciarSesion()` en el estado; el chip (`Marco.tsx`) y el aviso (`Conversacion.tsx` › `SinSesion`) los comparten.
+- **Verificar** (R-5): `claude auth status --json` corre a la par de la cuenta del SDK; si dice `loggedIn: false`, es «sin sesión» aunque la cuenta traiga el email de antes. Si no se puede leer, decide la cuenta como antes.
+- **Un turno sin sesión** llama `alPerderSesion` de `Conversaciones`: el puente pone el estado en «sin sesión» y avisa a la ventana.
+- `tools/claude.ts` (`pnpm claude …`) corre el mismo Claude Code, para cerrar la sesión y probar.
+
+## Versión nueva lista (CO-I2)
+- **Armar** (`tools/actualizar.ps1`): borra `release/nueva/lista.json`, arma en `release/nueva/win-unpacked` (electron-builder con otra salida) y al final escribe `lista.json` (fecha, commit, su primera línea y si había cambios sin commitear). Mientras falte `lista.json` nadie toma la carpeta: así no entra una versión a medio armar. Mueve `main` al commit armado y lo sube (D-070); sin internet, avisa y sigue.
+- **Después de armar:** con Iridium cerrado, corre el ayudante en el acto; abierto y con `resources/cambiar-version.ps1` (CO-I2 en adelante), lo deja lista; abierto y más viejo, lo cierra como antes (F-6 incluido) y corre el ayudante con `-Abrir`.
+- **Ayudante** (`tools/cambiar-version.ps1`, también en los recursos de la app): espera hasta un minuto a que nada corra desde `win-unpacked` (por ruta o por línea de comando: algunos procesos de Electron no dejan leer la ruta; los internos, `--type=…`, que quedaron sin su Iridium se cierran), borra las versiones viejas que pueda (`anterior*`), la renombra a `anterior-<fecha>` (nueva cada vez: una trabada no frena; Q-101), pone `nueva/win-unpacked` en su lugar (reintenta mientras Windows suelta los archivos; si no puede, vuelve atrás), borra `nueva`, abre Iridium con `-Abrir` y al final borra `anterior`. Anota en `release/actualizacion.log`. El acceso directo sigue sirviendo: la carpeta se llama igual.
+- **Iridium** (`infra/version-nueva.ts`): `VigiaVersionNueva` mira `lista.json` cada 5 s (un `stat`) y avisa a la ventana por `app:version-nueva-cambio`. Al salir (`will-quit`, después de guardar y de cerrar las sesiones) copia el ayudante a la carpeta temporal y lo lanza con `cmd /c start` y la consola escondida: lanzado directo, Node lo ata a Iridium y muere con él; suelto sin consola, PowerShell no arranca. Solo en la app armada (`win-unpacked`); las pruebas usan `IRIDIUM_RELEASE`.
+- **Reiniciar ahora** (`app:reiniciar-ahora`): marca reiniciar y cierra la ventana por el camino de siempre, así F-6 pregunta si hace falta; Cancelar (`app:cancelar-cierre`) quita la marca.
+- **Ventana:** `versionNueva`, `reiniciando` y `reiniciarAhora()` en el estado; el aviso es `VersionNuevaLista` en `Marco.tsx` y la confirmación de F-6 cambia sus palabras con `reiniciando`.
+
+## La versión a la vista (CO-I5)
+- `electron.vite.config.ts` define `__ARMADO__` en la ventana al armar: la hora (ms), `git log -1` (commit corto y primera línea) y si `git status` tenía algo. Sin git, commit vacío. No hacen falta canales: el número sale de `window.iridium.version`.
+- `marco/ajustes/Proyectos.tsx` › `VersionDeIridium`; con `import.meta.env.DEV`, el texto de modo desarrollo.
+
+## Cambios sin armar (CO-I6, D-071)
+- **Leer** (`infra/sin-armar.ts`, `leerSinArmar`): en la carpeta del código (la de `release`), `git log -1` y `git rev-parse main`; hay algo sin armar si el último commit no es `main` ni el de `nueva/lista.json`. Sin git, sin repo o sin `main`, nada.
+- **Armando:** `tools/actualizar.ps1` escribe `release/armando.json` con su PID al empezar y lo borra al terminar o fallar; cuenta mientras ese proceso vive (`process.kill(pid, 0)`), así una consola cerrada a mitad no deja la marca colgada. Después de tocar Armar, 30 s de «armando» aunque la marca no esté todavía.
+- **`VigiaSinArmar`:** mira cada 10 s y avisa a la ventana por `app:sin-armar-cambio` solo si cambió. `app:armar` corre `pnpm actualizar` con `ejecutarPlan` (la consola de Scripts); `IRIDIUM_ARMAR` lo reemplaza en las pruebas. Solo con `release` (la app armada o `IRIDIUM_RELEASE`).
+- **Ventana:** `sinArmar` en el estado; `CambiosSinArmar` en `Marco.tsx`, al lado de `VersionNuevaLista`. Se esconde si la ficha de esa carpeta está `trabajando` (salvo que ya esté armando).
+
+## Elegir la carpeta de proyectos (CO-I4)
+- **Sin canales nuevos:** usa `proyectos:elegir-carpeta` (el cuadro de Windows en `ipc/puente.ts`, que guarda `raiz` en `config.json` y devuelve la lista nueva) y `ListaProyectos.raiz` para mostrar la de ahora. `listar` ya cambia la vigilancia a la carpeta nueva y `proyecto()` deja de aceptar las de la anterior.
+- **Ventana:** `marco/ajustes/Proyectos.tsx`, la sección `proyectos` de `SECCIONES_AJUSTES`. Con la lista nueva llama a `ponerLista`, así la grilla, General y Skills se rehacen solos (salen de la lista).
+- **Con sesiones trabajando** (alguna ficha en `trabajando`) el botón queda desactivado: una sesión de la carpeta anterior no podría recibir mensajes nuevos, porque `proyecto()` los rechaza.
+- **Pruebas:** `co4-carpeta.spec.ts` reemplaza `dialog.showOpenDialog` en el proceso principal (desde Playwright) para no abrir el cuadro de Windows.

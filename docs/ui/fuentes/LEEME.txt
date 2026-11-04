@@ -1,0 +1,4 @@
+Fuentes de la interfaz (licencia SIL Open Font License 1.1, Google Fonts, subconjunto latino). Descargadas el 2026-10-23.
+- chakra-petch-*.woff2 — Chakra Petch (Cadson Demak). Interfaz y lectura (D-032).
+- jetbrains-mono-*.woff2 — JetBrains Mono (JetBrains). Códigos, rutas y números (D-032).
+- pixelify-sans-*.woff2, share-tech-mono-*.woff2 — solo para las alternativas A y C de la ronda 1 (registro).
