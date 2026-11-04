@@ -1995,6 +1995,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Consecuencias:**
 - Volver atrás (`pnpm volver`, D-078) no tiene a qué volver hasta la próxima versión armada.
 - Las referencias a commits viejos en `docs/` dejan de servir: la etapa 3 de D-082 las saca.
+- Hecho el 2026-11-04: commit «Iridium» (`1a2386a`) en `dev` y `main`, subido forzado. El respaldo quedó en `Respaldo de Iridium\historial-iridium-hasta-2026-11-04.bundle`, junto a la carpeta de proyectos ( no en la carpeta Iridium: todavía no está elegida, Q-125), con las capturas que salieron del repo. GitHub puede seguir guardando un tiempo los commits viejos por su número, aunque ya no los muestra.
 
 ## D-085 — Las copias compartidas se actualizan solas desde las versiones publicadas en GitHub
 - **Fecha:** 2026-11-04

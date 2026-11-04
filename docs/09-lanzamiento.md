@@ -39,7 +39,8 @@ La versión anterior se borra apenas entra la nueva (`tools/cambiar-version.ps1`
 ## Historial de lanzamientos
 | Versión | Fecha | Notas |
 |---|---|---|
-| a7c60ff | 2026-11-02 | La que cerró el hito 8 (Q-108): armada con Iridium abierto, entró al cerrarlo (`release\actualizacion.log`). |
+| a7c60ff | 2026-11-02 | La que cerró el hito 8 (Q-108): armada con Iridium abierto, entró al cerrarlo (`release\actualizacion.log`). Su commit quedó en el respaldo del historial viejo (D-084). |
+| aca3668 | 2026-11-04 | La primera publicada para compartir (D-085), en el repo nuevo: `iridium-2026-11-04-1759-aca3668` en GitHub. La copia de `Iridium para compartir` es esta. |
 
 ## Pendientes del hito
 - [x] Q-109: sin número por ahora (D-077).

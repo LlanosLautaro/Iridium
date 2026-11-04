@@ -14,6 +14,10 @@ Pone «Iridium» en el escritorio, apuntando a la app armada. Alcanza con hacerl
 Pone los últimos cambios en la app de uso diario (tarda un minuto). Sirve con Iridium cerrado o abierto, también desde su sección Scripts. Con Iridium abierto no lo cierra: al terminar, abajo aparece «Versión nueva lista · entra al cerrar», y entra la próxima vez que lo cerrás o ya con **Reiniciar ahora**. Iridium también lo ofrece: cuando hay commits sin armar, abajo aparece «Hay cambios sin armar» con **Armar**, que corre esto mismo. Con Iridium cerrado, la pone en el acto. También mueve `main` en GitHub a lo que se armó. Si algo falla, lo que pasó está en `release/actualizacion.log`.
 **Ejecutar:** `pnpm actualizar`
 
+## Publicar la versión para compartir
+Sube a GitHub la versión que tenés en uso (la última que armaste) para las copias de otras personas: la bajan solas y entra cuando cierran Iridium (D-085). Armá antes si hay cambios sin armar. Tarda unos minutos (sube unos 280 MB). Si dice que esa versión ya está publicada, no hay nada nuevo que mandar.
+**Ejecutar:** `pnpm publicar`
+
 ## Volver a la versión anterior
 Si una versión nueva falla, pone la que estaba antes (D-078). Dice cuál va a poner y espera un Enter; tarda unos minutos, porque la arma de nuevo. Como Armar: con Iridium abierto entra al cerrarlo, cerrado entra en el acto. Después Iridium muestra «Hay cambios sin armar» con lo que quedó afuera: no toques **Armar** hasta que la IA lo arregle, porque volvería a poner la versión que falla. Si Iridium no abre, ejecutalo desde una terminal en la carpeta del proyecto (o la de VS Code). Para volver a una versión precisa, agregá `-Commit` y el commit (el que muestra Acerca de).
 **Ejecutar:** `pnpm volver`

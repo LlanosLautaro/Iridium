@@ -14,6 +14,8 @@
 |---|---|---|
 | 2026-11-02 | Hito 8 (Q-108) | Tu recorrido completo sin problemas; los defectos que quedan abiertos son los dos menores de abajo |
 | 2026-11-04 | Q-117 | Faltaba lo de VS Code para crear el repositorio y publicarlo en GitHub: ajuste chico (D-081), construido; falta probarlo con GitHub de verdad (Q-118) |
+| 2026-11-04 | Pedido del usuario | Compartir Iridium ya y que las versiones nuevas le lleguen a la otra persona: repo nuevo (D-084, hecho), versiones en GitHub que la copia baja sola (D-085, hecho y probado); dónde publicar, en Q-123 |
+| 2026-11-04 | Q-115 | La sección Ideas, bien; sin Pedir que la integren. Dos ideas del usuario: la carpeta de Iridium como «vault» (Q-125) y una skill de Iridium que se carga solo en Iridium (Q-124). Las preguntas de prueba traían casillas y además «A) Todo bien»: desde ahora, las pruebas van solo con casillas |
 | 2026-11-04 | Q-119, Q-120, Q-121 | El repo nombraba los otros proyectos del usuario: limpieza total (D-082); Ideas y Skills pasan a una carpeta Iridium aparte (D-083, construida; falta Q-122); el repo empieza de nuevo al terminar (D-084) |
 
 ## Mantenimiento
@@ -41,6 +43,7 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 ### Could
 - Las Could de `02-definicion.md` (C-17, C-20, C-27, C-34, C-43, C-46 a C-48).
 - Las ideas de `07-construccion.md` › Ideas nuevas que no tienen frente: la sección de aprobados provisionales y el atajo a las ideas.
+- El `.zip` de `pnpm publicar` pesa unos 280 MB: probar a comprimirlo más (D-085).
 - Número de versión y `CHANGELOG.md` (D-077: la opción A de Q-109, cuando quieras).
 
 ### Defectos y deuda abiertos
@@ -52,9 +55,10 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 - Poner al día `gestor-proyectos` y la guía `hitos-desarrollo-app` (D-062, D-063, D-068, Defectos 13 y 14) y traer a `Skills` las skills que la licencia permite (D-014): van en sesiones de `Skills`.
 
 ## Próxima versión
-- **Objetivo:** el frente Inicio (Q-112, D-079): Ideas como sección del inicio y la grilla solo con proyectos. Después, Diseño y Capacidades.
+- **Objetivo:** compartir Iridium (D-084, D-085; Q-123 a Q-125). Después, Diseño y Capacidades (D-079).
 - **Incluye:** `modulos/inicio/propuesta.md` › Propuesta de alcance.
 - **Hitos a recorrer:** el ciclo reducido del módulo (`modulos/inicio/estado.md`); un ajuste chico va directo a 7 → 8 → 9.
+- **Ajuste mediano (D-085):** versiones para compartir, construido y probado con GitHub (7 → 8); la primera publicada el 2026-11-04 (`aca3668`).
 - **Ajuste mediano (D-083):** la carpeta Iridium con Ideas y Skills, Mover y Cambiar en Ajustes, construido (7 → 8); falta tu prueba con tus carpetas (Q-122).
 - **Ajuste chico (D-081):** Inicializar repositorio y Publicar en GitHub en la sección Git, construido (7 → 8); falta tu prueba con GitHub de verdad (Q-118).
-- **Propuestas:** módulo Inicio: propuesta (Q-113: B) y definición, UX y diseño (Q-114: A) aprobados; IN-I1 construida, esperando la prueba del usuario (Q-115).
+- **Propuestas:** módulo Inicio completo (Q-115, 2026-11-04).
