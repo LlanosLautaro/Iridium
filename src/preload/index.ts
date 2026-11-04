@@ -2,6 +2,7 @@
 import { contextBridge, ipcRenderer, webFrame } from 'electron'
 import { version } from '../../package.json'
 import {
+  type AccesoVersiones,
   type ApiIridium,
   CANALES,
   type CambioConversacion,
@@ -49,6 +50,9 @@ const api: ApiIridium = {
   sinArmar: () => ipcRenderer.invoke(CANALES.sinArmar),
   alCambiarSinArmar: (f) => escuchar<SinArmar>(CANALES.sinArmarCambio, f),
   armar: () => ipcRenderer.invoke(CANALES.armar),
+  accesoVersiones: () => ipcRenderer.invoke(CANALES.accesoVersiones),
+  alCambiarAccesoVersiones: (f) => escuchar<AccesoVersiones>(CANALES.accesoVersionesCambio, f),
+  entrarGithub: () => ipcRenderer.invoke(CANALES.entrarGithub),
   abrirConversacion: (ruta) => ipcRenderer.invoke(CANALES.abrirConversacion, ruta),
   anteriores: (ruta, tengo) => ipcRenderer.invoke(CANALES.anteriores, ruta, tengo),
   seguir: (ruta, pedido) => ipcRenderer.invoke(CANALES.seguir, ruta, pedido),

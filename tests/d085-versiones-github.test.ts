@@ -159,6 +159,43 @@ describe.runIf(process.platform === 'win32')('VigiaVersionGithub', () => {
     expect((await leerVersionNueva(release))?.commit).toBe('bbb2222')
   })
 
+  it('Q-123: sin sesión o sin invitación lo avisa; al iniciar sesión vuelve a mirar y baja', async () => {
+    privado = true
+    let clave: string | null = null
+    const cambios: string[] = []
+    const v = new VigiaVersionGithub({
+      release,
+      actualizaciones: { repo: 'alguien/Iridium', commit: 'aaa1111' },
+      anotar: (t) => anotado.push(t),
+      api,
+      clave: async () => clave,
+    })
+    v.vigilarAcceso((a) => cambios.push(a))
+    expect(v.ultimoAcceso()).toBe('ok')
+    await v.mirar()
+    expect(v.ultimoAcceso()).toBe('sin-sesion')
+    // Con una cuenta que no está invitada.
+    clave = 'otra-cuenta'
+    expect(await v.iniciarSesion(async () => ({ tipo: 'ok' }))).toEqual({
+      tipo: 'error',
+      mensaje: expect.stringMatching(/no tiene acceso/),
+    })
+    expect(v.ultimoAcceso()).toBe('sin-permiso')
+    // Si la ventana de git no inicia la sesión, se dice y no se mira.
+    expect(
+      await v.iniciarSesion(async () => ({ tipo: 'error', mensaje: 'No se inició la sesión en GitHub.' })),
+    ).toEqual({
+      tipo: 'error',
+      mensaje: 'No se inició la sesión en GitHub.',
+    })
+    // Con la cuenta invitada.
+    clave = 'clave-de-prueba'
+    expect(await v.iniciarSesion(async () => ({ tipo: 'ok' }))).toEqual({ tipo: 'ok' })
+    expect(v.ultimoAcceso()).toBe('ok')
+    expect((await leerVersionNueva(release))?.commit).toBe('bbb2222')
+    expect(cambios).toEqual(['sin-sesion', 'sin-permiso', 'ok'])
+  })
+
   it('sin internet no rompe: lo intenta en la próxima vuelta', async () => {
     const v = new VigiaVersionGithub({
       release,

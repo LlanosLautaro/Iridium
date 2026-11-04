@@ -2001,7 +2001,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-04
 - **Ámbito:** general (frente Compartir; precisa D-070 punto 3 y D-074)
 - **Hito o paso:** 10, a pedido del usuario («compartir Iridium lo antes posible y asegurarnos de poder hacerle llegar actualizaciones bien a la otra persona»)
-- **Estado:** vigente (dónde se publica, en Q-123)
+- **Estado:** vigente (Q-123: A, el repo privado con la otra persona como colaboradora)
 
 **Contexto:** la copia que el usuario le pasó a otra persona (D-074) no se actualizaba: cada versión era otra carpeta para reemplazar a mano. D-070 ya había dejado pensado que, al repartir, las copias de otros se actualicen desde GitHub y la del usuario siga armándose en su PC.
 
@@ -2015,5 +2015,5 @@ evision-cola-electron.json` y sale cuando Iridium está.
 
 **Consecuencias:**
 - La primera vez, la otra persona necesita una copia que ya traiga `actualizaciones.json`: el `.zip` de la primera versión publicada, descomprimido de modo que quede `…\Iridium\win-unpacked\Iridium.exe`.
-- Con el repositorio privado, la otra persona necesita acceso (colaboradora) y la sesión de GitHub en su git; con uno público, nada. Se decide en Q-123.
+- Con el repositorio privado, la otra persona necesita acceso (colaboradora) y la sesión de GitHub en su git. **Q-123: A** (2026-11-04): repo privado y colaboradora. Para eso, la copia compartida avisa abajo cuando no ve las versiones: sin sesión, «Para recibir versiones nuevas, iniciá sesión en GitHub» con **Iniciar sesión** (la ventana de git, como Publicar en GitHub, D-081); con una cuenta sin invitación, «Sin acceso a las versiones nuevas» con **Probar de nuevo**. Al iniciar sesión vuelve a mirar enseguida. Con otra API (las pruebas) nunca usa la clave de git: solo `IRIDIUM_GITHUB_CLAVE`.
 - Pruebas: `tests/d085-versiones-github.test.ts`, con un GitHub falso en la PC (misma versión, otra, una privada con y sin clave, sin internet). Las pruebas con la app usan `IRIDIUM_ACTUALIZACIONES` e `IRIDIUM_GITHUB_API`.

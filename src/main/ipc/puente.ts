@@ -2,6 +2,7 @@
 import { basename, dirname, join, normalize } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import {
+  type AccesoVersiones,
   CANALES,
   type EstadoMotor,
   type EstilosRespuesta,
@@ -42,7 +43,7 @@ import { type ArchivoConfig, preferenciasDe } from '../infra/config'
 import { ejecutarPlan } from '../infra/ejecutar'
 import type { ArchivoEscritos } from '../infra/escritos'
 import { leerCommit, leerDiferencia, leerGit } from '../infra/git'
-import { githubFalso, githubReal, inicializarRepo, publicarRepo } from '../infra/github'
+import { entrarGithub, githubFalso, githubReal, inicializarRepo, publicarRepo } from '../infra/github'
 import { existeCarpeta } from '../infra/raiz'
 import type { Registro } from '../infra/registro'
 import type { ArchivoSesiones } from '../infra/sesiones'
@@ -96,6 +97,14 @@ export interface Servicios {
     ultimo(): SinArmar
     vigilar(alCambiar: (s: SinArmar) => void): void
     armar(): Promise<{ tipo: 'ok'; mensaje: string } | { tipo: 'error'; mensaje: string }>
+  } | null
+  /** Las versiones de GitHub de una copia compartida (D-085, Q-123); null si no lo es. */
+  versionesGithub?: {
+    ultimoAcceso(): AccesoVersiones
+    vigilarAcceso(alCambiar: (a: AccesoVersiones) => void): void
+    iniciarSesion(
+      entrar: () => Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>,
+    ): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>
   } | null
   /** Reiniciar ahora: cierra la ventana como siempre (F-6 pregunta si hay sesiones) y al salir abre la versión nueva. */
   reiniciarAhora: () => void
@@ -362,6 +371,16 @@ export function registrarPuente(s: Servicios): Puente {
     if (!s.sinArmar) return { tipo: 'error', mensaje: 'En desarrollo no hay app de uso diario para armar.' }
     s.registro.escribir('Cambios sin armar: Armar')
     return s.sinArmar.armar()
+  })
+  ipcMain.handle(CANALES.accesoVersiones, () => s.versionesGithub?.ultimoAcceso() ?? null)
+  ipcMain.handle(CANALES.entrarGithub, async () => {
+    if (!s.versionesGithub) return { tipo: 'error', mensaje: 'Esta copia no se actualiza desde GitHub.' }
+    s.registro.escribir('Versiones de GitHub: Iniciar sesión')
+    return s.versionesGithub.iniciarSesion(entrarGithub)
+  })
+  s.versionesGithub?.vigilarAcceso((a) => {
+    s.registro.escribir(`Versiones de GitHub: acceso ${a}`)
+    enviar(CANALES.accesoVersionesCambio, a)
   })
   s.sinArmar?.vigilar((a) => {
     if (a.pendiente) s.registro.escribir(`Sin armar: ${a.pendiente.commit}${a.armando ? ' (armando)' : ''}`)

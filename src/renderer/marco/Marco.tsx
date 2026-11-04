@@ -402,6 +402,47 @@ function CambiosSinArmar() {
   )
 }
 
+/**
+ * Una copia compartida que no ve las versiones de GitHub (Q-123): sin sesión, Iniciar sesión abre la ventana de git;
+ * con una cuenta sin invitación, se dice a quién pedírsela.
+ */
+function AccesoVersionesGithub() {
+  const a = usarEstado((s) => s.accesoVersiones)
+  const [entrando, setEntrando] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  if (!a || a === 'ok') return null
+  const entrar = async () => {
+    setEntrando(true)
+    const r = await window.iridium.entrarGithub()
+    setEntrando(false)
+    setError(r.tipo === 'error' ? r.mensaje : null)
+  }
+  const sinPermiso = a === 'sin-permiso'
+  const ayuda = sinPermiso
+    ? 'Tu cuenta de GitHub no tiene acceso a Iridium: pedile a quien te lo pasó que te invite, aceptá la invitación y tocá Probar de nuevo.'
+    : 'Iridium baja sus versiones nuevas de GitHub: iniciá sesión una vez con la cuenta que invitaron.'
+  return (
+    <span className="it acceso-versiones" title={error ?? ayuda}>
+      <span className={`chip ${error ? 'error' : 'espera'}`}>
+        <Icono nombre={error ? 'error' : 'espera'} />
+        {sinPermiso
+          ? 'Sin acceso a las versiones nuevas'
+          : 'Para recibir versiones nuevas, iniciá sesión en GitHub'}
+      </span>
+      <button
+        type="button"
+        className="chip neutro"
+        disabled={entrando}
+        title={ayuda}
+        onClick={() => void entrar()}
+      >
+        <Icono nombre={entrando ? 'sync' : 'reintentar'} gira={entrando} />
+        {entrando ? 'Esperando a GitHub…' : sinPermiso ? 'Probar de nuevo' : 'Iniciar sesión'}
+      </button>
+    </span>
+  )
+}
+
 function BarraEstado({ children }: { children?: ReactNode }) {
   const motor = usarEstado((s) => s.motor)
   const n = usarEstado((s) => s.fichas.length)
@@ -412,6 +453,7 @@ function BarraEstado({ children }: { children?: ReactNode }) {
       </span>
       <VersionNuevaLista />
       <CambiosSinArmar />
+      <AccesoVersionesGithub />
       {children}
       <span className="der">
         <UsoEnLaBarra />

@@ -331,6 +331,22 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
     zoom = (await config.leer()).zoom
     const compartida = await actualizaciones
     if (release && !compartida) vigiaSinArmar = new VigiaSinArmar(dirname(release), release)
+    const vigiaGithub =
+      release && compartida
+        ? new VigiaVersionGithub({
+            release,
+            actualizaciones: compartida,
+            anotar: (t) => registro.escribir(t),
+            // Con otra API (las pruebas), nunca la clave de git: solo la de IRIDIUM_GITHUB_CLAVE, si hay.
+            ...(process.env.IRIDIUM_GITHUB_API
+              ? {
+                  api: process.env.IRIDIUM_GITHUB_API,
+                  clave: async () => process.env.IRIDIUM_GITHUB_CLAVE ?? null,
+                  primeraMs: 500,
+                }
+              : {}),
+          })
+        : null
     const puente = registrarPuente({
       config,
       sesiones: new ArchivoSesiones(join(carpetaDatos, 'sesiones.json')),
@@ -355,6 +371,7 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       },
       versionNueva: vigiaVersion,
       sinArmar: vigiaSinArmar,
+      versionesGithub: vigiaGithub,
       reiniciarAhora: () => {
         reiniciar = true
         ventana?.close()
@@ -365,15 +382,6 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
     })
     crearVentana(puente, tema)
     const revision = arrancarRevision(puente)
-    const vigiaGithub =
-      release && compartida
-        ? new VigiaVersionGithub({
-            release,
-            actualizaciones: compartida,
-            anotar: (t) => registro.escribir(t),
-            ...(process.env.IRIDIUM_GITHUB_API ? { api: process.env.IRIDIUM_GITHUB_API } : {}),
-          })
-        : null
     vigiaGithub?.vigilar()
     app.on('window-all-closed', () => app.quit())
     // Antes de salir se espera lo que la ventana mandó a guardar (D-060). Va acá y no en window-all-closed porque

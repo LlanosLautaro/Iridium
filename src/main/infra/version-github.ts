@@ -11,6 +11,7 @@ import { join } from 'node:path'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import type { ReadableStream } from 'node:stream/web'
+import type { AccesoVersiones } from '../../compartido/puente'
 import { commitDeEtiqueta } from '../../compartido/versiones'
 import { leerVersionNueva } from './version-nueva'
 
@@ -94,11 +95,17 @@ export interface OpcionesVigia {
   /** La API de GitHub; las pruebas ponen un servidor local. */
   api?: string
   clave?: () => Promise<string | null>
+  /** Cuánto espera para mirar la primera vez (las pruebas, menos). */
+  primeraMs?: number
 }
 
 export class VigiaVersionGithub {
   private reloj: ReturnType<typeof setTimeout> | null = null
   private mirando = false
+  /** Si el último pedido fue con la clave de git (para saber si falta la sesión o falta la invitación). */
+  private conClave = false
+  private acceso: AccesoVersiones = 'ok'
+  private alCambiarAcceso: ((a: AccesoVersiones) => void) | null = null
   private readonly api: string
   private readonly clave: () => Promise<string | null>
 
@@ -113,7 +120,7 @@ export class VigiaVersionGithub {
         void this.mirar().finally(() => vuelta(CADA_MS))
       }, ms)
     }
-    vuelta(PRIMERA_MS)
+    vuelta(this.o.primeraMs ?? PRIMERA_MS)
   }
 
   cerrar(): void {
@@ -121,13 +128,48 @@ export class VigiaVersionGithub {
     this.reloj = null
   }
 
+  /** Si esta copia puede ver las versiones (Q-123): sin sesión de GitHub, o con una cuenta sin invitación. */
+  ultimoAcceso(): AccesoVersiones {
+    return this.acceso
+  }
+
+  vigilarAcceso(alCambiar: (a: AccesoVersiones) => void): void {
+    this.alCambiarAcceso = alCambiar
+  }
+
+  private ponerAcceso(a: AccesoVersiones): void {
+    if (a === this.acceso) return
+    this.acceso = a
+    this.alCambiarAcceso?.(a)
+  }
+
+  /** Iniciar sesión en GitHub (con la ventana de git) y volver a mirar enseguida. */
+  async iniciarSesion(
+    entrar: () => Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>,
+  ): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }> {
+    const r = await entrar()
+    if (r.tipo === 'error') return r
+    await this.mirar()
+    return this.acceso === 'ok'
+      ? r
+      : {
+          tipo: 'error',
+          mensaje:
+            this.acceso === 'sin-permiso'
+              ? 'Esa cuenta de GitHub no tiene acceso a Iridium: pedile a quien te lo pasó que te invite.'
+              : 'No se inició la sesión en GitHub.',
+        }
+  }
+
   /** Un pedido a GitHub: primero sin clave (repositorio público); si no lo ve, con la de git (privado). */
   private async pedir(url: string, aceptar: string): Promise<Response> {
     const encabezados = { Accept: aceptar, 'User-Agent': 'Iridium', 'X-GitHub-Api-Version': '2022-11-28' }
+    this.conClave = false
     const r = await fetch(url, { headers: encabezados })
     if (r.status !== 404 && r.status !== 401) return r
     const clave = await this.clave()
     if (!clave) return r
+    this.conClave = true
     return fetch(url, { headers: { ...encabezados, Authorization: `Bearer ${clave}` } })
   }
 
@@ -145,8 +187,11 @@ export class VigiaVersionGithub {
       )
       if (!r.ok) {
         this.o.anotar(`Versiones de GitHub: ${this.o.actualizaciones.repo} respondió ${r.status}`)
-        return r.status === 404 || r.status === 401 || r.status === 403 ? 'sin-acceso' : 'falla'
+        if (r.status !== 404 && r.status !== 401 && r.status !== 403) return 'falla'
+        this.ponerAcceso(this.conClave ? 'sin-permiso' : 'sin-sesion')
+        return 'sin-acceso'
       }
+      this.ponerAcceso('ok')
       const publicada = leerPublicada(await r.json())
       if (!publicada || publicada.commit === this.o.actualizaciones.commit) return 'al-dia'
       if ((await leerVersionNueva(this.o.release))?.commit === publicada.commit) return 'lista'

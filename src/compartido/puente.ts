@@ -215,6 +215,12 @@ export interface VersionNueva {
   noEntro: { fecha: string; motivo: string } | null
 }
 
+/**
+ * Si una copia compartida puede ver las versiones publicadas (D-085, Q-123): `sin-sesion`, falta iniciar sesión en
+ * GitHub; `sin-permiso`, la cuenta no está invitada al repositorio.
+ */
+export type AccesoVersiones = 'ok' | 'sin-sesion' | 'sin-permiso'
+
 /** Commits de Iridium que la app de uso diario todavía no tiene (CO-I6): se ofrece Armar. */
 export interface SinArmar {
   /** La carpeta del código de Iridium (un proyecto más de la grilla: con su IA trabajando no se ofrece). */
@@ -695,6 +701,9 @@ export const CANALES = {
   sinArmar: 'app:sin-armar',
   sinArmarCambio: 'app:sin-armar-cambio',
   armar: 'app:armar',
+  accesoVersiones: 'app:acceso-versiones',
+  accesoVersionesCambio: 'app:acceso-versiones-cambio',
+  entrarGithub: 'app:entrar-github',
   leerEscritos: 'escritos:leer',
   guardarEscrito: 'escritos:guardar',
   estilos: 'ajustes:estilos',
@@ -752,6 +761,11 @@ export interface ApiIridium {
   alCambiarSinArmar(escuchar: (s: SinArmar) => void): () => void
   /** Armar (CO-I6): «Armar la última versión» en una consola a la vista; Iridium sigue abierto. */
   armar(): Promise<{ tipo: 'ok'; mensaje: string } | { tipo: 'error'; mensaje: string }>
+  /** Si la copia compartida ve las versiones (Q-123); null si no es una copia compartida. */
+  accesoVersiones(): Promise<AccesoVersiones | null>
+  alCambiarAccesoVersiones(escuchar: (a: AccesoVersiones) => void): () => void
+  /** Inicia sesión en GitHub con la ventana de git y vuelve a mirar las versiones. */
+  entrarGithub(): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>
   /** La conversación del proyecto; no manda nada al modelo (D-020). */
   abrirConversacion(ruta: string): Promise<ConversacionProyecto>
   /** Las entradas anteriores a las `tengo` últimas. */
