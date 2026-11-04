@@ -1,7 +1,7 @@
 # Estado del módulo: Inicio
 
 **Tipo:** sección
-**Última actualización:** 2026-11-02
+**Última actualización:** 2026-11-04
 **Nivel de protección:** hereda P2 (solo lee `Ideas/ideas.md`; no suma nada que salga de la PC).
 
 ## Progreso
@@ -14,19 +14,19 @@
 | 5. Diseño técnico | completo (Q-114: A) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | saltado: se arma con las piezas de Skills; el ícono nuevo va con la construcción | — |
 | 7. Construcción | completo (IN-I1) | este archivo |
-| 8. Calidad | en curso: pruebas pasan; falta tu prueba (Q-115) | este archivo |
-| 9. Lanzamiento | pendiente | este archivo |
+| 8. Calidad | completo (Q-115: bien, salvo Pedir que la integren, que se sacó) | este archivo |
+| 9. Lanzamiento | completo (entra con Armar, como cada versión) | este archivo |
 
 ## En qué estamos ahora
-Q-114 aprobada (A). IN-I1 construida: el ícono Ideas (`Ctrl+4`) con la lista por sección, el detalle y el chat general con «Sobre la idea …»; Pedir que la integren; los proyectos que toca como enlaces; la lista que se actualiza sola; la grilla sin `Ideas` ni `Skills`, y **Abrir como proyecto** en Ideas y en Skills.
+Módulo completo (2026-11-04). Con Q-115 probaste IN-I1: todo bien menos **Pedir que la integren**, que no querías (para eso está el chat): se sacó. **Abrir como proyecto** te llevó a pensar la carpeta de Iridium como un «vault» (`.iridium` con Ideas, Skills y los datos internos, y respaldo opcional en GitHub): eso es Q-125, en `docs/estado.md`. Las ideas y las skills de cada proyecto (R-8) quedaron en el Backlog de `10-operacion.md`.
 
-Verificado: `pnpm test` (543, con `tests/in1-ideas.test.ts` sobre una copia del `ideas.md` real), `pnpm e2e` (78, con `tests/e2e/in1-ideas.spec.ts`, también en Carbón), typecheck y lint. Capturas con las carpetas reales en `tools/salida/10-*.png`. Un ajuste propio: al tocar Pedir que la integren se saca «Sobre la idea …», porque el pedido ya la nombra. `tools/medir.ts` entra a `Ideas` y `Skills` con Abrir como proyecto.
+Verificado: `pnpm test` (564), `pnpm e2e` (81), typecheck y lint.
 
 ## Pendientes
-- [ ] Con Q-115: cerrar Calidad y Lanzamiento del módulo y el frente en `10-operacion.md`.
+(ninguno)
 
 ## Preguntas abiertas
-(en `docs/estado.md`: Q-115)
+(ninguna)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -40,8 +40,7 @@ Verificado: `pnpm test` (543, con `tests/in1-ideas.test.ts` sobre una copia del 
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| IN-I1 | La sección Ideas (`Ctrl+4`), la grilla solo con proyectos y Abrir como proyecto (IN-1 a IN-3) | construida; esperando tu prueba (Q-115) |
+| IN-I1 | La sección Ideas (`Ctrl+4`), la grilla solo con proyectos y Abrir como proyecto (IN-1 a IN-3) | aprobada (Q-115), sin Pedir que la integren |
 
 ## Próximo paso
-Con Q-115: si está bien, cerrar los pasos 8 y 9 del módulo y el frente Inicio en `10-operacion.md`, y proponer el próximo frente (Diseño, D-079); si algo falla, arreglarlo con la pista corta.
-**Leer antes:** `docs/respuestas/Q-115.md`.
+Ninguno: el módulo está completo. Lo que sigue del frente está en `docs/estado.md` (Q-125) y en el Backlog de `10-operacion.md`.

@@ -349,7 +349,7 @@ Pantalla IN-W1 (`docs/modulos/inicio/ux.md`): se arma con las piezas de Skills (
 - **Ícono Ideas:** una lamparita con tres rayos cortos arriba, mismo trazo que los demás; cuarto de la barra del inicio, `Ctrl+4`, sin contador. (La lamparita sin rayos sigue siendo el estado «idea» de una tarjeta.)
 - **Título de la columna:** «Ideas» y, en mono gris liquen, «N sin integrar»; a la derecha, **Abrir como proyecto** como botón de ícono de 26 px (la flecha que sale de un cuadro), el mismo que lleva la columna de Skills.
 - **Fila de idea:** la de Skills: el título en 13 px y, debajo, la fecha corta y los proyectos que toca en 12 px gris liquen. Integradas empieza plegada.
-- **Detalle:** el título entero en 600 17 px (corta en varias líneas, no con «…»), debajo la sección en singular y la fecha larga; el cuerpo como en Docs en gris salvia, a 68ch. Abajo, separadas por una línea suave, las filas **Toca a** (los proyectos como enlaces en verde con subrayado punteado; el que no existe, texto común) y **Fue a**. **Pedir que la integren**, botón secundario chico a la derecha, solo en las que faltan integrar.
+- **Detalle:** el título entero en 600 17 px (corta en varias líneas, no con «…»), debajo la sección en singular y la fecha larga; el cuerpo como en Docs en gris salvia, a 68ch. Abajo, separadas por una línea suave, las filas **Toca a** (los proyectos como enlaces en verde con subrayado punteado; el que no existe, texto común) y **Fue a**.
 - **«Sobre la idea «…»»:** la etiqueta de «Sobre la skill …», con el título entre comillas.
 
 ### Movimiento

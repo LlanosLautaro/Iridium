@@ -20,7 +20,7 @@ Como usuario quiero ver las ideas anotadas en el inicio, para leerlas sin abrir 
 Como usuario quiero conversar sobre una idea al lado de la lista.
 - [ ] A la derecha está el chat general: la misma conversación que al lado de la grilla, con su historial, su estado y Detener.
 - [ ] Con una idea elegida, arriba del cuadro dice **Sobre la idea «…»** con una ✕; el mensaje sale con ese título al principio.
-- [ ] En una suelta o para un proyecto existente, **Pedir que la integren** escribe en el chat el pedido de pasarla a su proyecto; lo mando o lo cambio antes. En una integrada no está.
+- [ ] ~~En una suelta o para un proyecto existente, **Pedir que la integren** escribe en el chat el pedido de pasarla a su proyecto; lo mando o lo cambio antes. En una integrada no está.~~ (sacado con Q-115)
 - [ ] Cada proyecto que toca la idea es un enlace a ese proyecto.
 
 ### IN-3 — La grilla, solo proyectos

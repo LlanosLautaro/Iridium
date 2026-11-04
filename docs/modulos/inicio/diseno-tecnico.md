@@ -35,7 +35,7 @@ Nada nuevo en disco salvo `anchoListaIdeas` en `config.json` (como `anchoListaSk
 
 ## Mensajes que escribe en el chat
 - **Sobre la idea:** `Sobre la idea «<título>»: <lo escrito>`.
-- **Pedir que la integren:** `Integrá la idea «<título>» donde corresponda, con las reglas de CLAUDE.md › Cuando una idea madura.` Queda escrito en el cuadro, sin mandar.
+- ~~**Pedir que la integren:**~~ sacado con Q-115. Era: `Integrá la idea «<título>» donde corresponda, con las reglas de CLAUDE.md › Cuando una idea madura.` Queda escrito en el cuadro, sin mandar.
 
 ## Seguridad
 P2 sin cambios: lee un archivo de la carpeta de proyectos. La ruta de `ideas.md` la arma el proceso principal (la ventana no manda rutas). El cuerpo se muestra con el mismo render que Docs, que no deja pasar HTML del archivo.

@@ -30,7 +30,9 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 ### Should
 - **Frentes, en el orden de D-079:** Inicio (en curso, `modulos/inicio/`), después Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 - **Mantenimiento:** subir los parches (React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316) con las pruebas completas y armar.
-- **Lo del Gestor que falta en Iridium:** búsqueda entre proyectos, grupos y filtros, fichas y proyecto nuevo (C-8 a C-10, C-12).
+- **Lo del Gestor que falta en Iridium:** primero lo de R-7: el clic derecho en la tarjeta (abrir en VS Code y en el explorador, estado, archivar, ícono; C-9, C-12) y **Nuevo proyecto** arriba de la grilla (C-10). Después, búsqueda entre proyectos y grupos y filtros (C-8, C-9).
+- **Ideas y skills del proyecto (R-8):** un ícono en la barra del proyecto con sus ideas sueltas (`00-idea.md` › Ideas para después y `07-construccion.md` › Ideas nuevas); y las skills del proyecto (`.claude/skills/` de cada uno), con su ícono solo si tiene alguna (lo de «elegir por proyecto» de D-064).
+- **Revisión:** la línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto (D-082).
 - **Seguir a la IA y el cierre de sesión con comprobación** (C-4, C-6); avisos de Windows (C-51).
 - **Plan completo:** decisiones, módulos como caja, todos los planes en una vista, diagramas (C-15, C-16, C-18, C-19).
 - **Pendientes completos:** adjuntos, formulario de arranque, respuestas que la IA toma sola, preguntas del chat que pasan a `Q-n` (C-24 a C-26, C-28).

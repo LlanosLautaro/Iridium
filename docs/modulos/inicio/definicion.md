@@ -19,7 +19,7 @@ Que el inicio muestre cada cosa en su lugar: la grilla, solo los proyectos; las 
 - **El chat de la grilla se queda** (Q-113: B).
 
 ### Should
-- **Pedir que la integren:** en una idea suelta o para un proyecto existente, un botón que escribe en el chat el pedido de pasarla a su proyecto (las reglas de `Ideas/CLAUDE.md` › Cuando una idea madura), para mandarlo o cambiarlo.
+- ~~**Pedir que la integren:**~~ sacado con Q-115 (para eso está el chat de al lado). Era: en una idea suelta o para un proyecto existente, un botón que escribe en el chat el pedido de pasarla a su proyecto (las reglas de `Ideas/CLAUDE.md` › Cuando una idea madura), para mandarlo o cambiarlo.
 - **Los proyectos que toca, como enlaces:** cada nombre abre ese proyecto.
 
 ### Could
