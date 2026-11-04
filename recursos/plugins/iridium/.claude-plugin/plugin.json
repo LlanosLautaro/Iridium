@@ -1,0 +1,5 @@
+{
+  "name": "iridium",
+  "version": "1.0.0",
+  "description": "Cómo trabajar desde Iridium y los formatos que lee. Lo carga Iridium solo en sus propias conversaciones (D-086)."
+}

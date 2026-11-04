@@ -51,6 +51,8 @@ export interface OpcionesSdk {
   modelo?: string
   /** Cada cuánto informa el uso una sesión mientras trabaja (ms); las pruebas a mano lo acortan. */
   releerUsoMs?: number
+  /** Las carpetas de los complementos que se cargan en cada conversación (D-086): la skill de Iridium y la guía. */
+  plugins?: string[]
 }
 
 /**
@@ -664,6 +666,10 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
         allowDangerouslySkipPermissions: true,
         disallowedTools: ['AskUserQuestion'],
         systemPrompt: { type: 'preset', preset: 'claude_code', append: instruccion },
+        // Solo en las conversaciones de Iridium: el Claude de VS Code o de la terminal no los ve (D-086).
+        ...(opciones.plugins?.length
+          ? { plugins: opciones.plugins.map((path) => ({ type: 'local' as const, path })) }
+          : {}),
         // Sin `canUseTool`: en *bypass* el SDK no consulta permisos nunca (lo avisa él mismo; S-2, D-021).
         ...(conversacion ? { resume: conversacion } : {}),
         ...modeloYEsfuerzo(ajuste),

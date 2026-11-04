@@ -92,6 +92,7 @@
 | D-083 | 2026-11-04 | general | 10 (Q-120) | Ideas y Skills viven en una carpeta «Iridium» aparte de los proyectos | vigente |
 | D-084 | 2026-11-04 | general | 10 (Q-121) | Al terminar la limpieza, el repo empieza de nuevo con un solo commit | vigente |
 | D-085 | 2026-11-04 | general (Compartir) | 10, a pedido del usuario | Las copias compartidas se actualizan solas desde las versiones publicadas en GitHub | vigente |
+| D-086 | 2026-11-04 | general | 10 (Q-124) | Una skill «iridium» viaja con Iridium y se carga solo en sus conversaciones, con la guía de hitos si falta | vigente |
 
 ---
 
@@ -2017,3 +2018,26 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - La primera vez, la otra persona necesita una copia que ya traiga `actualizaciones.json`: el `.zip` de la primera versión publicada, descomprimido de modo que quede `…\Iridium\win-unpacked\Iridium.exe`.
 - Con el repositorio privado, la otra persona necesita acceso (colaboradora) y la sesión de GitHub en su git. **Q-123: A** (2026-11-04): repo privado y colaboradora. Para eso, la copia compartida avisa abajo cuando no ve las versiones: sin sesión, «Para recibir versiones nuevas, iniciá sesión en GitHub» con **Iniciar sesión** (la ventana de git, como Publicar en GitHub, D-081); con una cuenta sin invitación, «Sin acceso a las versiones nuevas» con **Probar de nuevo**. Al iniciar sesión vuelve a mirar enseguida. Con otra API (las pruebas) nunca usa la clave de git: solo `IRIDIUM_GITHUB_CLAVE`.
 - Pruebas: `tests/d085-versiones-github.test.ts`, con un GitHub falso en la PC (misma versión, otra, una privada con y sin clave, sin internet). Las pruebas con la app usan `IRIDIUM_ACTUALIZACIONES` e `IRIDIUM_GITHUB_API`.
+
+## D-086 — Una skill «iridium» viaja con Iridium y se carga solo en sus conversaciones, con la guía de hitos si falta
+- **Fecha:** 2026-11-04
+- **Ámbito:** general (motor; reemplaza parte de la configuración inicial de D-080)
+- **Hito o paso:** 10 (Q-124)
+- **Estado:** vigente
+
+**Contexto:** el Claude que trabaja desde Iridium no siempre escribía los formatos que Iridium lee (Q-115: pruebas con casillas y además «A) Todo bien»), y el de la persona que recibe Iridium dependía de una configuración inicial a mano (D-080). El usuario preguntó si una skill de Iridium interferiría con el Claude de afuera, porque las skills se instalan en la carpeta de Claude.
+
+**Opciones (Q-124):** A) una skill «iridium» que viaja con Iridium y se carga solo dentro de Iridium (elegida); B) varias skills chicas; C) como antes, skills globales y configuración inicial.
+
+**Decisión:**
+1. **Complementos de la sesión:** el SDK carga «plugins» por sesión. Iridium pasa los suyos en cada conversación; el Claude de VS Code o de la terminal no los ve.
+2. **`iridium`** (`recursos/plugins/iridium`): la skill `iridium:iridium` con cómo trabajar desde Iridium (los tres chats) y los formatos que lee: `estado.md`, las `Q-n` (las pruebas y tareas, **solo con casillas**), las respuestas, `scripts.md`, códigos y frentes, los comentarios de la Revisión y la ficha `.proyecto.json`.
+3. **`guia`**: la guía de hitos (`hitos-desarrollo-app`), copiada al armar de la carpeta de skills de quien arma (`tools/armar-plugins.mjs`). Se carga solo si la PC no la tiene instalada: así no aparece dos veces para el usuario y llega sola a quien recibe Iridium.
+4. **La de la ficha (`gestor-proyectos`) no viaja tal cual:** está escrita para la PC del usuario (sus rutas y sus proyectos). Lo que Iridium necesita de la ficha va en la skill `iridium`.
+
+**Motivo:** el formato lo pone Iridium, que es quien lo lee; el Claude de afuera queda como estaba; quien recibe Iridium no instala nada para que su Claude trabaje bien.
+
+**Consecuencias:**
+- Si la guía cambia, entra en la próxima versión armada (y publicada). La skill `iridium` se cambia junto con lo que Iridium lee (`src/main/core/visor/`, pendientes, scripts): reemplaza al pendiente de D-080 sobre la guía de la carpeta para compartir.
+- La configuración inicial de la carpeta para compartir se achica: ya no hace falta instalar la guía.
+- Probado: `tests/d086-complementos.test.ts` y `tools/probar-complementos.ts` con el Claude Code real, sin mandar mensajes: suma `iridium:iridium` e `iridium-guia:hitos-desarrollo-app`.

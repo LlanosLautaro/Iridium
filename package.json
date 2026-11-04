@@ -8,9 +8,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "set ELECTRON_RUN_AS_NODE=&& electron-vite dev",
-    "build": "electron-vite build && node extension/armar.mjs",
+    "build": "electron-vite build && node extension/armar.mjs && node tools/armar-plugins.mjs",
     "start": "set ELECTRON_RUN_AS_NODE=&& electron-vite preview",
-    "dist": "electron-vite build && node extension/armar.mjs && electron-builder --win --config electron-builder.yml",
+    "dist": "electron-vite build && node extension/armar.mjs && node tools/armar-plugins.mjs && electron-builder --win --config electron-builder.yml",
     "actualizar": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/actualizar.ps1",
     "publicar": "node --experimental-strip-types tools/publicar.ts",
     "volver": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/volver.ps1",
@@ -20,7 +20,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "cobertura": "vitest run --coverage",
-    "e2e": "electron-vite build && node extension/armar.mjs && playwright test",
+    "e2e": "electron-vite build && node extension/armar.mjs && node tools/armar-plugins.mjs && playwright test",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.extension.json",
     "lint": "biome check .",
     "format": "biome check --write ."

@@ -8,6 +8,7 @@ directories:
 files:
   - out/**
   - '!out/extension/**'
+  - '!out/plugins/**'
   - package.json
 # La extensión de la Revisión va suelta: Iridium la copia a su carpeta fija al arrancar. El ayudante que pone la
 # versión nueva al cerrar (CO-I2) también: Iridium lo copia a la carpeta temporal y lo lanza.
@@ -16,6 +17,9 @@ extraResources:
     to: extension
   - from: tools/cambiar-version.ps1
     to: cambiar-version.ps1
+  # Los complementos de las conversaciones (D-086): la skill de Iridium y la guía de hitos.
+  - from: out/plugins
+    to: plugins
 asar: true
 # El SDK trae su propio Claude Code (claude.exe): tiene que quedar fuera del archivo comprimido para poder
 # ejecutarse (riesgo de la arquitectura probado en I-1).

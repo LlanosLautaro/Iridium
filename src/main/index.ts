@@ -1,4 +1,5 @@
 // Ventana, menú y ciclo de vida de la app (05-arquitectura.md › Estructura del repo).
+import { existsSync } from 'node:fs'
 import { readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { homedir, tmpdir } from 'node:os'
@@ -8,6 +9,7 @@ import { app, BrowserWindow, Menu, shell } from 'electron'
 import { TEMAS, type Tema } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
+import { elegirComplementos } from './core/complementos'
 import { zoomSiguiente } from './core/zoom'
 import { ArchivoBorradores } from './infra/borradores'
 import { ArchivoConfig } from './infra/config'
@@ -144,7 +146,12 @@ function crearMotor(): Motor {
   }
   try {
     const rutaClaude = rutaClaudeInstalado()
-    return crearMotorSdk(rutaClaude ? { rutaClaude } : {})
+    const plugins = elegirComplementos(
+      app.isPackaged ? join(process.resourcesPath, 'plugins') : join(app.getAppPath(), 'out', 'plugins'),
+      process.env.IRIDIUM_CLAUDE ?? join(homedir(), '.claude'),
+      existsSync,
+    )
+    return crearMotorSdk({ ...(rutaClaude ? { rutaClaude } : {}), plugins })
   } catch (e) {
     return crearMotorQueFalla(
       `No encuentro el Claude Code que trae la app: ${e instanceof Error ? e.message : String(e)}`,
