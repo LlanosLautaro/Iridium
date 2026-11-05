@@ -28,7 +28,8 @@ export function armarMensaje(c: {
     `[Comentario ${c.codigo} de la Revisión · docs/revision/${c.codigo}.md]`,
     c.texto.trim(),
     ...(pistas.length ? [pistas.join(' · ')] : []),
-    'Al resolverlo, cerralo en su archivo: Estado `cerrado` y una línea en Historia con lo que hiciste.',
+    'Al resolverlo, cerralo en su archivo: Estado `cerrado` y una línea en Historia con lo que hiciste ' +
+      '(si no lo hacés ahora, Estado `anotado` y dónde quedó).',
   ].join('\n')
 }
 

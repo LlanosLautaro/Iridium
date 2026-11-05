@@ -1,7 +1,11 @@
 // El comentario de la Revisión como archivo: `docs/revision/R-n.md` (modulos/revision/diseno-tecnico.md › Datos).
 // Se escribe con un formato fijo y se lee con tolerancia, como el resto de `docs/` (D-019).
 
-export type EstadoComentario = 'abierto' | 'cerrado'
+/**
+ * `anotado` (R-9): la IA no lo resolvió todavía, lo dejó anotado en un plan (el Backlog, una iteración). No espera a
+ * la IA en cada sesión como un abierto, pero tampoco cuenta como cerrado: se cierra cuando se hace de verdad.
+ */
+export type EstadoComentario = 'abierto' | 'anotado' | 'cerrado'
 
 export interface DatosComentario {
   numero: number
@@ -124,8 +128,8 @@ function seccion(texto: string, nombre: string): string | null {
 
 /**
  * Lee un `R-n.md` con tolerancia: lo que falte queda vacío. Devuelve null si no se puede saber ni el número ni el
- * estado (el archivo no es un comentario). Un estado que no es «cerrado» cuenta como abierto: si la IA escribió
- * otra palabra, el comentario sigue a la vista.
+ * estado (el archivo no es un comentario). Un estado que no es «cerrado» ni «anotado» cuenta como abierto: si la IA
+ * escribió otra palabra, el comentario sigue a la vista.
  */
 export function leerComentario(nombreArchivo: string, texto: string): Comentario | null {
   const numero = Number(/^R-(\d+)\.md$/i.exec(nombreArchivo)?.[1])
@@ -146,7 +150,7 @@ export function leerComentario(nombreArchivo: string, texto: string): Comentario
     numero,
     id: idDe(texto),
     titulo,
-    estado: /^cerrad/i.test(estadoTexto.replace(/[`*]/g, '')) ? 'cerrado' : 'abierto',
+    estado: estadoDe(estadoTexto),
     texto: desescaparTitulos(seccion(texto, 'Comentario') ?? titulo),
     archivo: archivoM ? { ruta: archivoM[1] ?? '', linea: Number(archivoM[2]) } : null,
     componentes: (campo(texto, 'Componentes') ?? '')
@@ -158,6 +162,11 @@ export function leerComentario(nombreArchivo: string, texto: string): Comentario
     captura: captura ? (/\(([^)]+)\)/.exec(captura)?.[1] ?? null) : null,
     historia,
   }
+}
+
+function estadoDe(texto: string): EstadoComentario {
+  const t = texto.replace(/[`*]/g, '').trim()
+  return /^cerrad/i.test(t) ? 'cerrado' : /^anotad/i.test(t) ? 'anotado' : 'abierto'
 }
 
 /** Cambia la línea **Estado** (si falta, la agrega debajo del título). */
@@ -194,6 +203,14 @@ export function cierreDe(c: Comentario): { fecha: string; que: string } | null {
   const h = [...c.historia].reverse().find((x) => /^cerrad/i.test(x.texto))
   if (!h) return null
   return { fecha: h.fecha, que: h.texto.replace(/^cerrad[oa]\s*(por la IA)?\s*:?\s*/i, '').trim() }
+}
+
+/** Dónde quedó anotado (R-9): la última línea «anotado…» de la historia, con su fecha y lo que dice. */
+export function anotacionDe(c: Comentario): { fecha: string; que: string } | null {
+  if (c.estado !== 'anotado') return null
+  const h = [...c.historia].reverse().find((x) => /^anotad/i.test(x.texto))
+  if (!h) return null
+  return { fecha: h.fecha, que: h.texto.replace(/^anotad[oa]\s*(por la IA)?\s*:?\s*/i, '').trim() }
 }
 
 /** ¿Se reabrió y sigue abierto? */

@@ -109,9 +109,9 @@ el botón queda muy pegado al título; separalo
 - 2026-10-28 14:50 — cerrado por la IA: separó el título con 12 px
 ```
 - El título lleva las primeras palabras del comentario (hasta 60 caracteres); el texto entero va en **Comentario**.
-- **Estado:** `abierto` o `cerrado` (palabras fijas). Lo que falte (archivo y línea, componentes, captura) no se escribe; nunca se inventa.
+- **Estado:** `abierto`, `anotado` o `cerrado` (palabras fijas; `anotado` desde R-9, D-088). Lo que falte (archivo y línea, componentes, captura) no se escribe; nunca se inventa.
 - **Numeración:** el próximo `R-n` es el mayor de la carpeta más uno. Los comentarios de un proyecto se guardan de a uno (una cola por proyecto en el proceso principal), así dos que llegan juntos no se pisan.
-- **Cerrar (la IA):** cambia **Estado** a `cerrado` y suma a **Historia** «cerrado por la IA: <qué hizo>». **Reabrir (Iridium):** **Estado** a `abierto` y «reabierto: <nota>». Nadie borra un comentario desde la app.
+- **Cerrar (la IA):** cambia **Estado** a `cerrado` y suma a **Historia** «cerrado por la IA: <qué hizo>». **Anotar (la IA, D-088):** si no lo hace ahora, **Estado** a `anotado` y «anotado por la IA: <dónde quedó y por qué>»; no cuenta como abierto (no se le pide en cada sesión) y se cierra cuando se hace. **Reabrir (Iridium):** **Estado** a `abierto` y «reabierto: <nota>». Nadie borra un comentario desde la app.
 - **Captura:** PNG del elemento recortado, a lo sumo 1600 px de ancho. Si falta, no hay línea **Captura**.
 
 ### Datos del Centro: `revision.json`
@@ -196,7 +196,8 @@ Iridium prueba en este orden y se queda con el primero que da un solo proyecto:
 4. **El proyecto:** `/estado`, `/comentarios` y `/direcciones` llevan la carpeta de la app y manda el proyecto que la contiene (paso 1 de «Qué proyecto es»); si no está dentro de ninguno (una app instalada), el que se eligió para esa carpeta (`revision.json` › `carpetas`). La dirección no se recuerda: varias apps Electron usan `localhost:5173` en distintos momentos.
    En la versión armada no hay archivo ni línea (React de producción no deja la pila), pero sí componentes, elemento, página y captura.
 5. **Sesiones blindadas:** si la app filtra los pedidos (`webRequest`, como otra app), en desarrollo deja pasar `chrome-extension://lnjpddimnapkmhoggokbjkoleaanbfhd/` y `http://127.0.0.1:47321/`.
-6. **Interfaz propia (D-073):** con `revision({ esquemas: ['otra-app'], captura: false, textoElemento: false, extension: false })` el ayudante no usa la extensión. Registra `preload-marco.cjs` (puente `iridiumPuente` en el mundo aislado 1047, con política de contenido propia) y, en cada carga de una página de esos esquemas, mete `js/pagina.js` en el mundo de la página y `js/inyectado.js` (reemplazo de `chrome.*` sobre el puente + el selector) en el 1047; si la página cargó antes que el puente, la recarga una vez. El proceso principal atiende `estado`, `dejar` y `direccion` como el service worker (con el origen de la extensión ante el receptor), borra la captura y el texto si la app no los permite y guarda la cola en `%APPDATA%\Centro de Desarrolloevision-cola-electron.json`. `detener()` la apaga sin cerrar la app. `capacidades.json` dice qué soporta, para que la app lo lea sin ejecutar nada.
+6. **Interfaz propia (D-073):** con `revision({ esquemas: ['otra-app'], captura: false, textoElemento: false, extension: false })` el ayudante no usa la extensión. Registra `preload-marco.cjs` (puente `iridiumPuente` en el mundo aislado 1047, con política de contenido propia) y, en cada carga de una página de esos esquemas, mete `js/pagina.js` en el mundo de la página y `js/inyectado.js` (reemplazo de `chrome.*` sobre el puente + el selector) en el 1047; si la página cargó antes que el puente, la recarga una vez. El proceso principal atiende `estado`, `dejar` y `direccion` como el service worker (con el origen de la extensión ante el receptor), borra la captura y el texto si la app no los permite y guarda la cola en `%APPDATA%\Centro de Desarrollo
+evision-cola-electron.json`. `detener()` la apaga sin cerrar la app. `capacidades.json` dice qué soporta, para que la app lo lea sin ejecutar nada.
 - **Riesgo resuelto (Electron 44):** el *preload* del service worker habla con el proceso principal. No tiene `location`: no puede saber de qué worker es, por eso el filtro está del lado principal (a los service workers de la app, `invoke` les falla).
 
 ### ¿Esta app es Electron y ya la carga? (H-R7)
@@ -210,7 +211,7 @@ Iridium prueba en este orden y se queda con el primero que da un solo proyecto:
 3. Iridium **no edita el `CLAUDE.md` de los proyectos** (D-048): lo cubren la instrucción y la guía.
 
 ### Sección Revisión (W-R3)
-1. Lee `docs/revision/*.md` del proyecto (con `core/revision/comentario.ts`) y arma Abiertos y Cerrados.
+1. Lee `docs/revision/*.md` del proyecto (con `core/revision/comentario.ts`) y arma Abiertos, Anotados (D-088) y Cerrados.
 2. La vigilancia ya mira `docs/`: cuando la IA cierra uno, la lista y el contador cambian solos.
 3. El enlace del archivo abre Archivos en esa línea; si el archivo ya no está, el enlace dice «ya no está».
 4. «Extensión: conectada por última vez…» sale de `revision.json`.

@@ -3,7 +3,7 @@
 > Este archivo es lo primero que lee la IA en cada sesión. Mantenerlo corto y al día.
 
 **Proyecto:** Iridium (carpeta «Centro de Desarrollo», D-033)
-**Última actualización:** 2026-11-04
+**Última actualización:** 2026-11-05
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
@@ -38,15 +38,15 @@ Estados posibles: pendiente · en curso · completo · saltado (con motivo) · r
 En espera, en este orden (D-079): Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 
 ## En qué estamos ahora
-Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las versiones que la copia compartida baja sola (D-085) y, con tus respuestas, el aviso para iniciar sesión en GitHub (Q-123), la skill de Iridium que se carga solo en sus conversaciones junto con la guía de hitos (D-086, Q-124) e Ideas y Skills en `.iridium` dentro de la carpeta de proyectos (D-087, Q-125). Publicada `c012989` y probada de punta a punta con GitHub; la carpeta `Iridium para compartir` del escritorio trae esa versión y su LEEME explica la invitación. Las tres pruebas de `r3-electron` volvieron a fallar juntas en la tanda completa y pasaron solas (Defecto 1, con una pista nueva).
+Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las versiones que la copia compartida baja sola (D-085) y, con tus respuestas, el aviso para iniciar sesión en GitHub (Q-123), la skill de Iridium que se carga solo en sus conversaciones junto con la guía de hitos (D-086, Q-124) e Ideas y Skills en `.iridium` dentro de la carpeta de proyectos (D-087, Q-125). Publicada `c012989` y probada de punta a punta con GitHub; la carpeta `Iridium para compartir` del escritorio trae esa versión y su LEEME explica la invitación. Las tres pruebas de `r3-electron` volvieron a fallar juntas en la tanda completa y pasaron solas (Defecto 1, con una pista nueva). Q-127 dio todo bien: Ideas y Skills ya están en `.iridium`. Con R-9, los comentarios de la Revisión que quedan para después ahora son «anotados», no cerrados (D-088).
 
 ## Pendientes del hito actual
 - [ ] Respaldo de `.iridium` en GitHub con un botón en Ajustes (D-087; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub). En el Backlog.
-- [ ] D-082: queda `src/main/core/carpeta-iridium.ts` con el nombre viejo de tu carpeta de skills, que Mover necesita; se saca después de Q-127.
+- [ ] D-082: sacar de `src/main/core/carpeta-iridium.ts` el nombre viejo de tu carpeta de skills (Q-127 ya dio bien la mudanza).
 - [ ] La skill `iridium` (`recursos/plugins/iridium`) se cambia junto con lo que Iridium lee (D-086). La guía de `Iridium para compartir` puesta al día con D-085 a D-087 el 2026-11-04.
 - [ ] Poner al día la skill `gestor-proyectos` y la guía `hitos-desarrollo-app` (D-062, D-063, D-068, Defectos 13 y 14 del hito 8; y que las pruebas vayan solo con casillas, Q-115). Va en el chat de Skills.
 - [ ] Traer a la carpeta Skills las skills que la licencia permite y sacar las copias dobles (D-014): va en el chat de Skills.
-- [ ] Con Q-127, después de Mover: en el chat de Skills, poner al día las rutas que nombran la carpeta vieja; en el chat general, la sección «Dónde están los demás proyectos» del `CLAUDE.md` de Ideas.
+- [ ] Después de Mover (Q-127): en el chat de Skills, poner al día las rutas que nombran la carpeta vieja; en el chat general, la sección «Dónde están los demás proyectos» del `CLAUDE.md` de Ideas.
 
 ## Preguntas abiertas
 - **Q-126 — Invitá a la otra persona al repo de Iridium**
@@ -55,15 +55,12 @@ Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las v
   - [ ] Le pasé la carpeta `Iridium para compartir` del escritorio (o el `.zip` de la última versión en GitHub)
   - [ ] En `github.com/LlanosLautaro/Iridium` › Settings › Collaborators › Add people, la invité con su usuario
   - [ ] Aceptó la invitación y en su Iridium tocó **Iniciar sesión** abajo; el aviso desapareció
-- **Q-127 — Probá Mover Ideas y Skills a `.iridium`**
+- **Q-128 — Mirá los comentarios anotados en Revisión**
   Tipo: prueba
-  Contexto: D-087 (Q-125); reemplaza a Q-122. Antes, armá la última versión (**Armar** abajo en Iridium) y cerrá y abrí Iridium. Que la IA no esté trabajando en el chat general ni en el de Skills. Fijate:
-  - [ ] Arriba de la grilla aparece el aviso con **Mover** y nombra `.iridium` dentro de tu carpeta de proyectos
-  - [ ] Mover pide confirmación y dice «Listo»; en la carpeta de proyectos ya no están `Ideas` ni la de skills, y la grilla no muestra `.iridium`
-  - [ ] Ideas (`Ctrl+4`) muestra tus ideas y el chat general sigue con la conversación de antes
-  - [ ] Skills (`Ctrl+3`) muestra tus propias como «Propia · enlace a la carpeta Skills», sin enlaces rotos
-  - [ ] En un chat nuevo de Claude Code fuera de Iridium tus skills siguen apareciendo
-  - [ ] Ajustes › Proyectos muestra «Carpeta de Iridium» con la ruta de `.iridium`
+  Contexto: D-088 (R-9). Armá la última versión (**Armar** abajo en Iridium) y abrí Revisión en Iridium. Fijate:
+  - [ ] Arriba hay tres grupos: Abiertos, Anotados y Cerrados
+  - [ ] R-7 y R-8 están en Anotados, con el chip gris «anotado» y dónde quedaron; R-9 está en Cerrados
+  - [ ] El contador del ícono de Revisión no cuenta los anotados
 - **Q-118 — Probá crear y publicar un repositorio con tu GitHub**
   Tipo: prueba
   Contexto: D-081 (Q-117). Armá la última versión (**Armar** abajo en Iridium) y abrila. Usá una carpeta de prueba (con **Abrir como proyecto**) o un proyecto que quieras subir. Fijate:
@@ -74,8 +71,8 @@ Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las v
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Con Q-126: si me pasaste el usuario, invitarlo (API de GitHub con la sesión de git) y confirmar que su copia ve las versiones; con Q-127, cerrar la mudanza y sacar el nombre viejo de la carpeta de skills del código (D-082). Después, el próximo frente (Diseño, D-079).
-**Leer antes:** `docs/respuestas/` (Q-126, Q-127, Q-118) y D-085 a D-087 en `decisiones.md`.
+Sacar del código el nombre viejo de la carpeta de skills (D-082, `carpeta-iridium.ts`), y con Q-126, si me pasaste el usuario, invitarlo y confirmar que su copia ve las versiones. Después, el próximo frente (Diseño, D-079).
+**Leer antes:** `docs/respuestas/` (Q-126, Q-128, Q-118) y D-085 a D-088 en `decisiones.md`.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

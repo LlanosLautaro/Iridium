@@ -622,7 +622,8 @@ export type ResultadoScript = { tipo: 'ok' | 'error'; mensaje: string }
 export interface VistaComentario {
   codigo: string
   numero: number
-  estado: 'abierto' | 'cerrado'
+  /** `anotado` (R-9): quedó en un plan, todavía no está hecho. */
+  estado: 'abierto' | 'anotado' | 'cerrado'
   texto: string
   /** El archivo y la línea; `existe` es false si el archivo ya no está en el proyecto. */
   archivo: { ruta: string; linea: number; existe: boolean } | null
@@ -635,6 +636,8 @@ export interface VistaComentario {
   /** Cuándo se dejó («2026-10-28 14:32»), de la historia. */
   dejado: string | null
   cierre: { fecha: string; que: string } | null
+  /** Dónde quedó anotado, de la historia (R-9). */
+  anotacion: { fecha: string; que: string } | null
   reabierto: boolean
 }
 

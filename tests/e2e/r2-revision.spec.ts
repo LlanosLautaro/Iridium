@@ -252,6 +252,30 @@ test('Enviar ahora desde Revisión, la IA lo cierra y pasa a Cerrados; se reabre
   await expect(seccion().locator('.fila-com', { hasText: 'R-1' }).locator('.reab')).toContainText('reabierto')
 })
 
+test('R-9: lo que la IA deja para después queda en Anotados, no en Cerrados ni entre los abiertos', async () => {
+  const r1 = join(revisionAlfa(), 'R-1.md')
+  const md = await readFile(r1, 'utf8')
+  await writeFile(
+    r1,
+    `${md
+      .replace('**Estado:** abierto', '**Estado:** anotado')
+      .trimEnd()}\n- 2026-10-29 16:00 — anotado por la IA: \`10-operacion.md\` › Backlog (Should)\n`,
+  )
+  await expect(botonRevision().locator('.badge')).toHaveText('1')
+  await seccion()
+    .getByRole('button', { name: /^Anotados/ })
+    .click()
+  const anotado = seccion().locator('.fila-com', { hasText: 'R-1' })
+  await expect(anotado.locator('.chip.neutro')).toContainText('anotado')
+  await expect(anotado.locator('.hizo.anotado')).toContainText('Backlog (Should)')
+  await expect(seccion().getByRole('button', { name: /^Cerrados/ })).toContainText('0')
+  await win.screenshot({ path: join(SALIDA, 'revision-r9-anotados.png') })
+  await anotado.click()
+  await expect(seccion().locator('.det-barra')).toContainText('anotado')
+  await expect(seccion().getByRole('button', { name: 'Enviar ahora' })).toBeVisible()
+  await seccion().getByRole('button', { name: 'Atrás' }).click()
+})
+
 test('un proyecto Electron sin la línea: Revisión lo dice y Pedírselo a la IA escribe el pedido sin enviarlo', async () => {
   await win.getByRole('button', { name: /^Inicio/ }).click()
   await win.locator('.tarjeta', { hasText: 'Gamma' }).click()

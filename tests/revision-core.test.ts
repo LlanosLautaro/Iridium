@@ -1,7 +1,9 @@
 // Reglas puras de la Revisión: el `R-n.md`, la pila de React y el proyecto (modulos/revision/diseno-tecnico.md › Pruebas).
 import { describe, expect, test } from 'vitest'
 import {
+  anotacionDe,
   armarComentario,
+  cierreDe,
   leerComentario,
   proximoNumero,
   tituloDe,
@@ -76,6 +78,16 @@ describe('el archivo R-n.md', () => {
     expect(c?.estado).toBe('cerrado')
     expect(c?.historia.at(-1)?.texto).toBe('cerrado por la IA: separó el título con 12 px')
     expect(leerComentario('R-14.md', cerrado.replace('cerrado\n', 'en revisión\n'))?.estado).toBe('abierto')
+  })
+
+  test('anotado por la IA (R-9): no es abierto ni cerrado, y se lee dónde quedó', () => {
+    const anotado = armarComentario(BASE)
+      .replace('**Estado:** abierto', '**Estado:** anotado')
+      .replace('— dejado', '— dejado\n- 2026-10-28 14:50 — anotado por la IA: `10-operacion.md` › Backlog')
+    const c = leerComentario('R-14.md', anotado)
+    expect(c?.estado).toBe('anotado')
+    expect(c && anotacionDe(c)).toEqual({ fecha: '2026-10-28 14:50', que: '`10-operacion.md` › Backlog' })
+    expect(c && cierreDe(c)).toBeNull()
   })
 
   test('un archivo que no es un comentario no se lee', () => {

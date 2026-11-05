@@ -2066,3 +2066,19 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Respaldo en GitHub:** hoy ya se puede con lo que hay: Ideas y Skills son repos git; **Abrir como proyecto** › Git › **Publicar en GitHub** (D-081) sube cada una como repo privado. Un botón único en Ajustes queda en el Backlog.
 - Q-122 (probar Mover) se reescribe para `.iridium`. La carpeta para compartir copia `Ideas` adentro de la carpeta de proyectos y Mover la lleva a `.iridium`.
 - Pruebas: `tests/d083-carpeta-iridium.test.ts` (traer de una carpeta anterior) y `tests/e2e/d083-carpeta-iridium.spec.ts` (Mover a `.iridium`; cambiar la carpeta de proyectos y traerla).
+
+## D-088 — Un comentario de la Revisión se cierra solo cuando está hecho; lo que queda para después es «anotado»
+- **Fecha:** 2026-11-05
+- **Ámbito:** módulo Revisión (`modulos/revision/diseno-tecnico.md` › Datos)
+- **Hito o paso:** 10 (R-9)
+- **Estado:** vigente
+
+**Contexto:** R-9: la IA cerraba los comentarios que solo dejaba anotados en el Backlog (R-7, R-8, con «cerrado por la IA: anotado en…»), porque la skill `iridium` decía «si no lo resolvés ahora, igual lo cerrás». Para el usuario, cerrado tiene que querer decir arreglado.
+
+**Decisión:** un tercer estado, `anotado`. La IA cierra un comentario solo cuando lo hizo; si lo deja para un plan, escribe **Estado** `anotado` y en la Historia «anotado por la IA: <dónde y por qué>». Iridium lo muestra en un grupo aparte (Abiertos · Anotados · Cerrados), con el chip gris «anotado» y dónde quedó; no lo cuenta entre los abiertos (no se le pide a la IA en cada sesión); se puede **Enviar ahora** para que se haga. Cuando se hace, la IA lo cierra.
+
+**Motivo:** el usuario distingue de un vistazo lo arreglado de lo prometido, sin que los anotados vuelvan a cada sesión como si fueran nuevos.
+
+**Consecuencias:**
+- La skill `iridium`, la instrucción de las sesiones y el mensaje de Enviar ahora dicen la regla. R-7 y R-8 pasan a `anotado`.
+- Pruebas: `tests/revision-core.test.ts` (leer `anotado`) y `tests/e2e/r2-revision.spec.ts` (el grupo Anotados).

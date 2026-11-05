@@ -1,7 +1,7 @@
 # Estado del módulo: Revisión de la app
 
 **Tipo:** producto hermano (extensión del navegador; la recibe Iridium)
-**Última actualización:** 2026-11-02
+**Última actualización:** 2026-11-05
 **Nivel de protección:** hereda P2. Iridium escucha a la extensión solo en `127.0.0.1:47321` y solo con su origen (`diseno-tecnico.md` › Seguridad).
 
 ## Progreso
@@ -18,7 +18,7 @@
 | 9. Lanzamiento | completo (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
 
 ## En qué estamos ahora
-Construcción y calidad completas: R-I2 quedó validada con tu recorrido (Q-108) y la prueba intermitente de Electron era un caso real, arreglado (Defecto 7: con la PC ocupada un comentario podía salir sin archivo ni línea). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10).
+Construcción y calidad completas: R-I2 quedó validada con tu recorrido (Q-108) y la prueba intermitente de Electron era un caso real, arreglado (Defecto 7: con la PC ocupada un comentario podía salir sin archivo ni línea). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). 2026-11-05: tercer estado «anotado» para lo que queda en un plan sin hacer (R-9, D-088).
 
 ## Pendientes
 (ninguno: lo que sigue es la calidad, con el hito 8)

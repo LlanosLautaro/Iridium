@@ -48,8 +48,8 @@ Diseña la definición aprobada (`definicion.md`, Q-68). Hay dos lugares: **la a
 ### H-R5 — Ver los comentarios de un proyecto y reabrir uno
 - Como usuario quiero ver en Iridium qué comenté, qué resolvió la IA y reabrir lo que no quedó bien (C-38).
   - Criterios de aceptación:
-    - [ ] **Revisión**, en la barra del proyecto, muestra los comentarios en dos grupos: **Abiertos** y **Cerrados**, del más nuevo al más viejo; el ícono cuenta los abiertos.
-    - [ ] Cada fila: la captura chica, el texto (dos líneas), dónde está (archivo y línea, o la página) y la fecha. En los cerrados, cuándo los cerró la IA y una línea de lo que hizo.
+    - [ ] **Revisión**, en la barra del proyecto, muestra los comentarios en tres grupos: **Abiertos**, **Anotados** (quedaron en un plan sin hacer, D-088) y **Cerrados**, del más nuevo al más viejo; el ícono cuenta los abiertos.
+    - [ ] Cada fila: la captura chica, el texto (dos líneas), dónde está (archivo y línea, o la página) y la fecha. En los cerrados, cuándo los cerró la IA y una línea de lo que hizo; en los anotados, cuándo y dónde quedaron.
     - [ ] Al elegir uno se ve entero: la captura grande, el texto, todas las pistas y su historia (dejado, enviado, cerrado, reabierto).
     - [ ] El archivo y la línea son un enlace que abre Archivos en esa línea.
     - [ ] Un abierto se puede **Enviar ahora** desde acá. Un cerrado se puede **Reabrir**, con una nota opcional de qué falta; vuelve a Abiertos.

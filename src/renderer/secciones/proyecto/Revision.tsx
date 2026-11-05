@@ -1,6 +1,7 @@
-// Revisión (modulos/revision/ux.md › W-R3, H-R5, H-R7): los comentarios que el usuario dejó sobre la app, en Abiertos y
-// Cerrados, del más nuevo al más viejo. Uno elegido se ve entero: la captura grande, el texto, las pistas y su historia;
-// un abierto se puede Enviar ahora y un cerrado, Reabrir con una nota. La lista se relee sola cuando la IA cierra uno.
+// Revisión (modulos/revision/ux.md › W-R3, H-R5, H-R7): los comentarios que el usuario dejó sobre la app, en Abiertos,
+// Anotados (R-9: quedaron en un plan, sin hacer) y Cerrados, del más nuevo al más viejo. Uno elegido se ve entero: la
+// captura grande, el texto, las pistas y su historia; un abierto o anotado se puede Enviar ahora y un cerrado, Reabrir
+// con una nota. La lista se relee sola cuando la IA cierra uno.
 // Nada se borra desde acá.
 import { useCallback, useEffect, useState } from 'react'
 import type { ListaComentarios, ResultadoEnvio, VistaComentario } from '../../../compartido/puente'
@@ -92,6 +93,7 @@ export function Captura({
 function Fila({ ruta, c }: { ruta: string; c: VistaComentario }) {
   const abrirComentario = usarEstado((s) => s.abrirComentario)
   const cerrado = c.estado === 'cerrado'
+  const anotado = c.estado === 'anotado'
   return (
     <button type="button" className="fila-com" onClick={() => abrirComentario(ruta, c.codigo)}>
       <Captura ruta={ruta} codigo={c.codigo} conCaptura={c.conCaptura} />
@@ -106,12 +108,18 @@ function Fila({ ruta, c }: { ruta: string; c: VistaComentario }) {
           ) : (
             <span>{c.pagina ?? 'sin archivo ni página'}</span>
           )}
-          {cerrado && c.dejado && <span>· dejado {fechaComentario(c.dejado)}</span>}
+          {(cerrado || anotado) && c.dejado && <span>· dejado {fechaComentario(c.dejado)}</span>}
         </div>
         {c.cierre?.que && (
           <div className="hizo">
             <Icono nombre="check" />
             <span>{c.cierre.que}</span>
+          </div>
+        )}
+        {c.anotacion?.que && (
+          <div className="hizo anotado">
+            <Icono nombre="docs" />
+            <span>{c.anotacion.que}</span>
           </div>
         )}
       </div>
@@ -120,6 +128,11 @@ function Fila({ ruta, c }: { ruta: string; c: VistaComentario }) {
           <span className="chip ok">
             <Icono nombre="check" />
             cerrado{c.cierre ? ` ${fechaComentario(c.cierre.fecha)}` : ''}
+          </span>
+        ) : anotado ? (
+          <span className="chip neutro" title="Quedó en un plan: se cierra cuando esté hecho">
+            <Icono nombre="docs" />
+            anotado{c.anotacion ? ` ${fechaComentario(c.anotacion.fecha)}` : ''}
           </span>
         ) : (
           <time>{fechaComentario(c.dejado)}</time>
@@ -272,7 +285,15 @@ function Reabrir({ ruta, codigo, cerrar }: { ruta: string; codigo: string; cerra
 }
 
 const ICONO_HISTORIA = (t: string) =>
-  /^cerrad/i.test(t) ? 'check' : /^reabiert/i.test(t) ? 'reabrir' : /^enviad/i.test(t) ? 'enviar' : 'circulo'
+  /^cerrad/i.test(t)
+    ? 'check'
+    : /^anotad/i.test(t)
+      ? 'docs'
+      : /^reabiert/i.test(t)
+        ? 'reabrir'
+        : /^enviad/i.test(t)
+          ? 'enviar'
+          : 'circulo'
 
 function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre: string }) {
   const abrirArchivo = usarEstado((s) => s.abrirArchivo)
@@ -298,6 +319,11 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
           <span className="chip ok">
             <Icono nombre="check" />
             cerrado
+          </span>
+        ) : c.estado === 'anotado' ? (
+          <span className="chip neutro" title="Quedó en un plan: se cierra cuando esté hecho">
+            <Icono nombre="docs" />
+            anotado
           </span>
         ) : (
           <span className="chip neutro">
@@ -440,7 +466,7 @@ export function Revision({ ruta }: { ruta: string }) {
     s.lista?.tipo === 'lista' ? (s.lista.proyectos.find((p) => p.ruta === ruta)?.nombre ?? '') : '',
   )
   const [l, setL] = useState<ListaComentarios | null>(() => leidas.get(ruta) ?? null)
-  const [grupo, setGrupo] = useState<'abiertos' | 'cerrados'>('abiertos')
+  const [grupo, setGrupo] = useState<'abiertos' | 'anotados' | 'cerrados'>('abiertos')
   const leer = useCallback(() => {
     void window.iridium.comentarios(ruta).then((r) => {
       leidas.set(ruta, r)
@@ -478,8 +504,9 @@ export function Revision({ ruta }: { ruta: string }) {
   if (l.comentarios.length === 0 && l.ilegibles.length === 0) return <Vacio ruta={ruta} l={l} />
 
   const abiertos = l.comentarios.filter((c) => c.estado === 'abierto')
+  const anotados = l.comentarios.filter((c) => c.estado === 'anotado')
   const cerrados = l.comentarios.filter((c) => c.estado === 'cerrado')
-  const mostrar = grupo === 'abiertos' ? abiertos : cerrados
+  const mostrar = grupo === 'abiertos' ? abiertos : grupo === 'anotados' ? anotados : cerrados
   return (
     <div className="rev">
       <div className="rev-cab">
@@ -487,6 +514,14 @@ export function Revision({ ruta }: { ruta: string }) {
         <fieldset className="grupos" aria-label="Grupo">
           <button type="button" aria-pressed={grupo === 'abiertos'} onClick={() => setGrupo('abiertos')}>
             Abiertos <span>{abiertos.length}</span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={grupo === 'anotados'}
+            title="Quedaron en un plan: se cierran cuando estén hechos"
+            onClick={() => setGrupo('anotados')}
+          >
+            Anotados <span>{anotados.length}</span>
           </button>
           <button type="button" aria-pressed={grupo === 'cerrados'} onClick={() => setGrupo('cerrados')}>
             Cerrados <span>{cerrados.length}</span>

@@ -6,6 +6,7 @@ import { join } from 'node:path'
 import { armarMensaje } from '../../../compartido/mensaje-revision'
 import type { ListaComentarios, ResultadoEnvio, VistaComentario } from '../../../compartido/puente'
 import {
+  anotacionDe,
   CARPETA_REVISION,
   type Comentario,
   cierreDe,
@@ -178,6 +179,7 @@ export class Comentarios {
       historia: c.historia,
       dejado: c.historia.find((h) => /^dejado/i.test(h.texto))?.fecha ?? c.historia[0]?.fecha ?? null,
       cierre: cierreDe(c),
+      anotacion: anotacionDe(c),
       reabierto: fueReabierto(c),
     }
   }

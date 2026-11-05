@@ -32,8 +32,8 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 ### Should
 - **Frentes, en el orden de D-079:** Inicio (en curso, `modulos/inicio/`), después Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 - **Mantenimiento:** subir los parches (React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316) con las pruebas completas y armar.
-- **Lo del Gestor que falta en Iridium:** primero lo de R-7: el clic derecho en la tarjeta (abrir en VS Code y en el explorador, estado, archivar, ícono; C-9, C-12) y **Nuevo proyecto** arriba de la grilla (C-10). Después, búsqueda entre proyectos y grupos y filtros (C-8, C-9).
-- **Ideas y skills del proyecto (R-8):** un ícono en la barra del proyecto con sus ideas sueltas (`00-idea.md` › Ideas para después y `07-construccion.md` › Ideas nuevas); y las skills del proyecto (`.claude/skills/` de cada uno), con su ícono solo si tiene alguna (lo de «elegir por proyecto» de D-064).
+- **Lo del Gestor que falta en Iridium:** primero lo de R-7: el clic derecho en la tarjeta (abrir en VS Code y en el explorador, estado, archivar, ícono; C-9, C-12) y **Nuevo proyecto** arriba de la grilla (C-10); al hacerlo, cerrar R-7 (está en Anotados, D-088). Después, búsqueda entre proyectos y grupos y filtros (C-8, C-9).
+- **Ideas y skills del proyecto (R-8):** un ícono en la barra del proyecto con sus ideas sueltas (`00-idea.md` › Ideas para después y `07-construccion.md` › Ideas nuevas); y las skills del proyecto (`.claude/skills/` de cada uno), con su ícono solo si tiene alguna (lo de «elegir por proyecto» de D-064). Al hacerlo, cerrar R-8 (en Anotados, D-088).
 - **Respaldo de `.iridium` en GitHub (D-087):** un botón en Ajustes › Proyectos que publique Ideas y Skills como repos privados y los suba solo; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub.
 - **Revisión:** la línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto (D-082).
 - **Seguir a la IA y el cierre de sesión con comprobación** (C-4, C-6); avisos de Windows (C-51).

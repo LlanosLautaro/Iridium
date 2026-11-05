@@ -125,7 +125,13 @@ El usuario comenta la interfaz de una app con F8 y el comentario llega como `doc
 - AAAA-MM-DD HH:MM — cerrado por la IA: qué hiciste
 ```
 
-Si no lo resolvés ahora, igual lo cerrás diciendo dónde quedó anotado.
+**Cerrado es solo lo que quedó hecho de verdad.** Si no lo resolvés ahora (va a un plan, al Backlog, a otra iteración), no lo cierres: poné `**Estado:** anotado` y una línea que diga dónde quedó y por qué:
+
+```markdown
+- AAAA-MM-DD HH:MM — anotado por la IA: `10-operacion.md` › Backlog (Should); se hace después de compartir
+```
+
+Iridium muestra los anotados aparte (ni abiertos ni cerrados) y no te los vuelve a pedir en cada sesión. Cuando hagas lo anotado, cerralo con su línea «cerrado por la IA».
 
 ## La ficha del proyecto: `.proyecto.json`
 
