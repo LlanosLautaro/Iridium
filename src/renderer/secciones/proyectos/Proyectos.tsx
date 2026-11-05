@@ -9,6 +9,7 @@ import { cambiarAncho, Divisor } from '../../ui/Divisor'
 import { Icono } from '../../ui/Icono'
 import { type Punto, puntoDelMenu } from '../../ui/MenuContextual'
 import { ChatGeneral } from '../inicio/ChatGeneral'
+import { EliminarProyecto } from './EliminarProyecto'
 import { type AvisoGrilla, MenuTarjeta } from './MenuTarjeta'
 import { NuevoProyecto } from './NuevoProyecto'
 import { Tarjeta } from './Tarjeta'
@@ -98,6 +99,8 @@ export function Proyectos() {
   const [menu, setMenu] = useState<{ p: TarjetaProyecto; en: Punto } | null>(null)
   const [aviso, setAviso] = useState<AvisoGrilla | null>(null)
   const [nuevo, setNuevo] = useState(false)
+  const [eliminando, setEliminando] = useState<TarjetaProyecto | null>(null)
+  const cerrarEliminar = useCallback(() => setEliminando(null), [])
   const cerrarMenu = useCallback(() => setMenu(null), [])
   const cerrarNuevo = useCallback(() => setNuevo(false), [])
   const creado = async (ruta: string, avisoIa: string | null) => {
@@ -264,6 +267,18 @@ export function Proyectos() {
             abrir={() => abrirProyecto(menu.p.ruta)}
             ponerLista={ponerLista}
             avisar={setAviso}
+            eliminar={() => setEliminando(menu.p)}
+          />
+        )}
+        {eliminando && (
+          <EliminarProyecto
+            p={eliminando}
+            cerrar={cerrarEliminar}
+            listo={(lista) => {
+              ponerLista(lista)
+              setAviso({ texto: `«${eliminando.nombre}» está en la papelera de Windows.`, error: false })
+              setEliminando(null)
+            }}
           />
         )}
         {nuevo && <NuevoProyecto cerrar={cerrarNuevo} listo={(r, a) => void creado(r, a)} />}

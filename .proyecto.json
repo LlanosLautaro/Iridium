@@ -1,6 +1,5 @@
 {
   "version": 1,
-  "nombre": "Iridium",
   "descripcion": "Plataforma de desarrollo humano + IA. Yo dirijo, la IA desarrolla y orienta. Junta proyectos, plan, diseño, preguntas pendientes y el puente PC–celular",
   "estado": "en-uso",
   "etiquetas": [
@@ -9,5 +8,6 @@
   ],
   "icono": ".proyecto-icono.svg",
   "archivado": false,
-  "reemplazadoPor": null
+  "reemplazadoPor": null,
+  "nombre": "Iridium"
 }

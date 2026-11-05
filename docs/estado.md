@@ -38,7 +38,7 @@ Estados posibles: pendiente · en curso · completo · saltado (con motivo) · r
 En espera, en este orden (D-079): Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 
 ## En qué estamos ahora
-Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las versiones que la copia compartida baja sola (D-085) y, con tus respuestas, el aviso para iniciar sesión en GitHub (Q-123), la skill de Iridium que se carga solo en sus conversaciones junto con la guía de hitos (D-086, Q-124) e Ideas y Skills en `.iridium` dentro de la carpeta de proyectos (D-087, Q-125). Publicada `c012989` y probada de punta a punta con GitHub; la carpeta `Iridium para compartir` del escritorio trae esa versión y su LEEME explica la invitación. Las tres pruebas de `r3-electron` volvieron a fallar juntas en la tanda completa y pasaron solas (Defecto 1, con una pista nueva). Q-127 dio todo bien: Ideas y Skills ya están en `.iridium`. Con R-9, los comentarios de la Revisión que quedan para después ahora son «anotados», no cerrados (D-088). A tu pedido se hicieron los dos anotados (D-089): R-7, el clic derecho de la tarjeta y **Nuevo proyecto**; R-8, **Ideas del proyecto** y **Skills del proyecto** en la barra del proyecto. Los dos quedaron cerrados; falta tu prueba (Q-129).
+Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las versiones que la copia compartida baja sola (D-085) y, con tus respuestas, el aviso para iniciar sesión en GitHub (Q-123), la skill de Iridium que se carga solo en sus conversaciones junto con la guía de hitos (D-086, Q-124) e Ideas y Skills en `.iridium` dentro de la carpeta de proyectos (D-087, Q-125). Publicada `c012989` y probada de punta a punta con GitHub; la carpeta `Iridium para compartir` del escritorio trae esa versión y su LEEME explica la invitación. Las tres pruebas de `r3-electron` volvieron a fallar juntas en la tanda completa y pasaron solas (Defecto 1, con una pista nueva). Q-127 dio todo bien: Ideas y Skills ya están en `.iridium`. Con R-9, los comentarios de la Revisión que quedan para después ahora son «anotados», no cerrados (D-088). El clic derecho de la tarjeta, **Nuevo proyecto** e **Ideas** y **Skills del proyecto** (D-089) dieron todo bien (Q-129). Con R-10, el menú suma **Eliminar…**, con confirmación y a la papelera (D-090; falta tu prueba, Q-130). A tu pedido, una crítica de la gestión de ideas: qué hacer, en Q-131.
 
 ## Pendientes del hito actual
 - [ ] Respaldo de `.iridium` en GitHub con un botón en Ajustes (D-087; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub). En el Backlog.
@@ -55,16 +55,17 @@ Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las v
   - [ ] Le pasé la carpeta `Iridium para compartir` del escritorio (o el `.zip` de la última versión en GitHub)
   - [ ] En `github.com/LlanosLautaro/Iridium` › Settings › Collaborators › Add people, la invité con su usuario
   - [ ] Aceptó la invitación y en su Iridium tocó **Iniciar sesión** abajo; el aviso desapareció
-- **Q-129 — Probá el clic derecho, Nuevo proyecto y las ideas y skills del proyecto**
+- **Q-131 — ¿Qué hacemos con la gestión de ideas?**
+  Tipo: decisión
+  Contexto: `10-operacion.md` › Crítica de la gestión de ideas. Hoy hay dos sistemas que no se hablan, las ideas no tienen estado y en operación las del proyecto se pierden en el Backlog. Cambiar el formato toca también la guía de hitos (chat de Skills).
+  Opciones: A) Arreglos chicos ya: Ideas del proyecto lee también el Backlog, separa las hechas y muestra las de `ideas.md` que lo tocan · B) Rediseño como frente corto antes de Diseño: un formato y un lugar por proyecto (con la guía), estados, anotar sin la IA y una vista de todas (recomendada) · C) Dejarlo como está y rediseñarlo después de Diseño y Capacidades
+- **Q-130 — Probá Eliminar desde el clic derecho**
   Tipo: prueba
-  Contexto: D-089 (R-7, R-8); reemplaza a Q-128, porque R-7 y R-8 ya no están anotados. Armá la última versión (**Armar** abajo en Iridium) y abrila. Fijate:
-  - [ ] Clic derecho en una tarjeta: el menú con Abrir, Abrir en VS Code, Abrir la carpeta, el estado, Archivar y Cambiar ícono…
-  - [ ] **Abrir en VS Code** abre el proyecto en VS Code y **Abrir la carpeta**, el explorador
-  - [ ] Cambiar el estado mueve la tarjeta a su grupo; **Archivar** la saca y **Deshacer** la devuelve
-  - [ ] **Nuevo proyecto** (arriba de la grilla) con un nombre de prueba: se abre el proyecto y la IA arranca con la guía, la ficha y el ícono (después borrá la carpeta, si querés)
-  - [ ] Dentro de un proyecto, el ícono de la lamparita (**Ideas del proyecto**) muestra sus ideas
-  - [ ] **Skills del proyecto** sale solo en un proyecto con `.claude/skills/`
-  - [ ] En Revisión, R-7, R-8 y R-9 están en Cerrados, y R-7 y R-8 dicen en su historia que antes quedaron anotados
+  Contexto: D-090 (R-10). Armá la última versión (**Armar** abajo en Iridium) y abrila. Usá un proyecto de prueba (con **Nuevo proyecto**, por ejemplo). Fijate:
+  - [ ] Clic derecho en su tarjeta › **Eliminar…** abre la confirmación con cuántos archivos van a la papelera
+  - [ ] **Cancelar** (o Esc) no toca nada
+  - [ ] **Eliminar** saca la tarjeta y el aviso dice que está en la papelera
+  - [ ] La carpeta está en la papelera de Windows y **Restaurar** la devuelve a la grilla
 - **Q-118 — Probá crear y publicar un repositorio con tu GitHub**
   Tipo: prueba
   Contexto: D-081 (Q-117). Armá la última versión (**Armar** abajo en Iridium) y abrila. Usá una carpeta de prueba (con **Abrir como proyecto**) o un proyecto que quieras subir. Fijate:
@@ -75,8 +76,8 @@ Hito 10, Operación. Compartir Iridium está hecho: el repo nuevo (D-084), las v
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Procesar Q-129 si llegó (lo que falle se arregla con la pista corta). Después, sacar del código el nombre viejo de la carpeta de skills (D-082, `carpeta-iridium.ts`), y con Q-126, si me pasaste el usuario, invitarlo y confirmar que su copia ve las versiones. Después, el próximo frente (Diseño, D-079).
-**Leer antes:** `docs/respuestas/` (Q-126, Q-129, Q-118) y D-085 a D-089 en `decisiones.md`.
+Procesar Q-131 (gestión de ideas) y Q-130 si llegaron; con B en Q-131, abrir el frente de Ideas antes de Diseño. Si no, sacar del código el nombre viejo de la carpeta de skills (D-082, `carpeta-iridium.ts`) y, con Q-126, invitar a la otra persona.
+**Leer antes:** `docs/respuestas/` (Q-126, Q-130, Q-131, Q-118), `10-operacion.md` › Crítica de la gestión de ideas y D-089 a D-090 en `decisiones.md`.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

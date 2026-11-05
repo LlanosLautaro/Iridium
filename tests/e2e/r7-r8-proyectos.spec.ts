@@ -1,5 +1,5 @@
 // R-7 y R-8 (D-089): el menú del clic derecho en la tarjeta, Nuevo proyecto y las ideas y las skills del proyecto.
-import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
@@ -32,6 +32,7 @@ async function abrir(): Promise<{ app: ElectronApplication; win: Page }> {
     IRIDIUM_MOTOR: 'falso',
     IRIDIUM_REVISION: 'no',
     IRIDIUM_VSCODE: 'falso',
+    IRIDIUM_PAPELERA: join(datos, 'papelera'),
   } as Record<string, string>
   delete env.ELECTRON_RUN_AS_NODE
   const app = await electron.launch({ args: ['.'], env })
@@ -143,6 +144,44 @@ test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cam
   await menuAlfa.getByRole('menuitem', { name: 'Abrir en VS Code' }).click()
   await expect(menuAlfa).toHaveCount(0)
   await expect(win.locator('.aviso-grilla.error')).toHaveCount(0)
+  await app.close()
+})
+
+test('Eliminar pide confirmación, borra lo regenerable y manda el resto a la papelera (R-10)', async () => {
+  await escribir('Alfa/package.json', '{ "name": "alfa" }\n')
+  await escribir('Alfa/node_modules/libreria/index.js', 'module.exports = 1\n')
+  const { app, win } = await abrir()
+  const alfa = win.locator('.tarjeta', { hasText: 'Alfa' })
+  const menu = win.getByRole('menu', { name: 'Acciones de Alfa' })
+  const dialogo = win.getByRole('alertdialog', { name: '¿Eliminar «Alfa»?' })
+
+  // Cancelar (y Enter, que empieza en Cancelar) no toca nada.
+  await alfa.click({ button: 'right' })
+  await menu.getByRole('menuitem', { name: 'Eliminar…' }).click()
+  await expect(dialogo).toContainText('papelera de Windows')
+  await expect(dialogo).toContainText('node_modules')
+  await expect(dialogo.getByRole('button', { name: 'Cancelar' })).toBeFocused()
+  await win.screenshot({ path: join(SALIDA, 'r10-eliminar.png') })
+  await win.keyboard.press('Enter')
+  await expect(dialogo).toHaveCount(0)
+  await expect(alfa).toBeVisible()
+  expect((await stat(join(raiz, 'Alfa'))).isDirectory()).toBe(true)
+
+  await alfa.click({ button: 'right' })
+  await menu.getByRole('menuitem', { name: 'Eliminar…' }).click()
+  await dialogo.getByRole('button', { name: 'Eliminar', exact: true }).click()
+  await expect(dialogo).toHaveCount(0)
+  await expect(alfa).toHaveCount(0)
+  await expect(win.locator('.aviso-grilla')).toContainText('«Alfa» está en la papelera de Windows.')
+  await expect(stat(join(raiz, 'Alfa'))).rejects.toThrow()
+  // En la papelera, todo menos lo regenerable.
+  const [enPapelera] = await readdir(join(datos, 'papelera'))
+  expect(enPapelera).toMatch(/-Alfa$/)
+  const carpeta = join(datos, 'papelera', enPapelera ?? '')
+  expect(JSON.parse(await readFile(join(carpeta, '.proyecto.json'), 'utf8'))).toMatchObject({
+    descripcion: 'Una app de prueba',
+  })
+  await expect(stat(join(carpeta, 'node_modules'))).rejects.toThrow()
   await app.close()
 })
 

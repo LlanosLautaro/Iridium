@@ -154,7 +154,7 @@ La tarjeta sale de `.proyecto.json` en la raíz del proyecto. Sin ficha, o con e
 - Obligatorios: `version` (1) y `estado`, uno de `idea`, `en-desarrollo`, `en-uso`, `pausado`, `descontinuado`, `en-rescate`, `para-eliminar`. El estado decide el grupo de la grilla.
 - `icono`: ruta relativa dentro del proyecto (svg, png, jpg, webp, gif, ico), nunca absoluta ni con `..`; `null` es el genérico. De costumbre, un `.proyecto-icono.svg` cuadrado y simple.
 - `reemplazadoPor`: el nombre de la carpeta del proyecto que lo reemplaza, o `null`. Los campos que no conozcas, dejalos como están.
-- El usuario puede cambiar `estado`, `archivado` e `icono` desde el menú de la tarjeta en Iridium: releé la ficha antes de tocarla. Con **Nuevo proyecto**, Iridium crea la carpeta vacía y te manda el primer mensaje: arrancá con la guía y creá la ficha y el ícono.
+- El usuario puede cambiar `estado`, `archivado` e `icono` desde el menú de la tarjeta en Iridium, y eliminar el proyecto (va a la papelera): releé la ficha antes de tocarla. Con **Nuevo proyecto**, Iridium crea la carpeta vacía y te manda el primer mensaje: arrancá con la guía y creá la ficha y el ícono.
 
 ## Al cerrar cada sesión de un proyecto
 

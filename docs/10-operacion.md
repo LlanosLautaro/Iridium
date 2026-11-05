@@ -17,12 +17,28 @@
 | 2026-11-04 | Pedido del usuario | Compartir Iridium ya y que las versiones nuevas le lleguen a la otra persona: repo nuevo (D-084, hecho), versiones en GitHub que la copia baja sola (D-085, hecho y probado); dónde publicar, en Q-123 |
 | 2026-11-04 | Q-115 | La sección Ideas, bien; sin Pedir que la integren. Dos ideas del usuario: la carpeta de Iridium como «vault» (Q-125) y una skill de Iridium que se carga solo en Iridium (Q-124). Las preguntas de prueba traían casillas y además «A) Todo bien»: desde ahora, las pruebas van solo con casillas |
 | 2026-11-05 | R-7, R-8 | El clic derecho de la tarjeta, Nuevo proyecto y las ideas y skills de cada proyecto: hechos a pedido (D-089); falta tu prueba (Q-129, que reemplaza a Q-128: ya no quedan anotados para mirar) |
+| 2026-11-05 | Q-129 | El clic derecho, Nuevo proyecto y las ideas y skills del proyecto: todo bien |
+| 2026-11-05 | R-10 | Eliminar desde el menú de la tarjeta, con confirmación: hecho (D-090); falta probarlo con la papelera de verdad (Q-130) |
+| 2026-11-05 | Pedido del usuario | Una crítica de la gestión de ideas: `10-operacion.md` › Crítica de la gestión de ideas; qué hacer, en Q-131 |
 | 2026-11-04 | Q-119, Q-120, Q-121 | El repo nombraba los otros proyectos del usuario: limpieza total (D-082); Ideas y Skills pasan a una carpeta Iridium aparte (D-083, construida; falta Q-122); el repo empieza de nuevo al terminar (D-084) |
 
 ## Mantenimiento
 | Fecha | Qué se actualizó | Motivo |
 |---|---|---|
 | 2026-11-02 | Nada: revisado. `pnpm audit`: las 4 moderadas de `minimatch` dentro de `electron-builder` (Defecto 4). `pnpm outdated`: parches de React, Zustand, Vitest y el SDK de Claude Code (0.3.309 → 0.3.316); versiones mayores de Electron (45), Vite (8) y electron-vite (6) | Primera revisión del hito 10. Los parches van al Backlog (Should); las mayores, cuando haga falta |
+
+## Crítica de la gestión de ideas
+2026-11-05, a pedido del usuario. Lo que hay: la sección **Ideas** (el chat general y `.iridium/Ideas/ideas.md`, con un formato rico: grupos, fecha, `Toca a:` y la línea `→` cuando pasa a un proyecto) e **Ideas del proyecto** (D-089: lee `07-construccion.md` › Ideas nuevas y `00-idea.md` › Ideas para después). Bien: todo en archivos legibles sin la app, y en `ideas.md` se ve de dónde vino cada idea y a dónde fue.
+
+Problemas, de más a menos grave:
+1. **Dos sistemas que no se hablan.** Una idea con `Toca a: Alfa` en `ideas.md` no aparece en **Ideas del proyecto** de Alfa; y lo que se anota en Alfa no aparece en Ideas. Pasar de una a otra lo hace la IA a mano, y nada avisa si quedó a medias.
+2. **El lugar depende del hito, y en operación se pierde.** Antes del hito 2, `00-idea.md`; en la construcción, `07-construccion.md`; en operación (este proyecto), las ideas nuevas van a `10-operacion.md` › Backlog, que Ideas del proyecto no lee. Ideas del proyecto muestra justo lo que ya no se usa.
+3. **Las ideas no tienen estado.** «Ideas nuevas (pendientes de evaluar)» junta las ya hechas («hecho en D-089»), las que pasaron a una iteración y las sin mirar; el número de la insignia las cuenta a todas. Nadie las evalúa: la guía no tiene un momento después del hito 2 en que se repasen.
+4. **No se puede anotar una idea sin la IA.** «Para sumar una, contásela en la conversación»: arranca una sesión (gasta uso) y la IA puede ponerse a trabajar en ella. Anotar una idea tendría que ser instantáneo y gratis, como una nota.
+5. **Sin vista de todos los proyectos.** Pendientes junta las `Q-n` de todos; las ideas de cada proyecto solo se ven entrando de a uno.
+6. **Sin identidad.** Una idea de proyecto es un punto de una lista, sin código ni fecha fija: no se puede citar («la idea X pasó a D-n») ni seguir.
+
+Qué haría falta (Q-131): un solo formato (el de `ideas.md`: título con fecha, `Toca a`, `→`, y un estado: nueva · aceptada · hecha · descartada), un solo lugar por proyecto que no cambie con el hito, anotar sin la IA y ver las de todos juntas.
 
 ## Backlog
 Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que faltan del alcance están en `02-definicion.md` › Funcionalidades (Should y Could) y se agrupan en los frentes en espera de D-063.

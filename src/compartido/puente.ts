@@ -4,7 +4,7 @@
 import type { IdeasProyecto, ListaIdeas } from './ideas'
 import type { Borrador } from './respuestas'
 import type { Atrasados, ListaSkills, SkillProyecto } from './skills'
-import type { Estado } from './tipos'
+import type { Estado, PlanEliminacion } from './tipos'
 import type { ContenidoDocumento, OpcionPregunta, ScriptVista } from './visor'
 
 /** Lo que la tarjeta de un proyecto necesita para dibujarse (04-ux.md › W-2). La ventana no decide nada. */
@@ -731,6 +731,8 @@ export const CANALES = {
   abrirEnVsCode: 'proyectos:vscode',
   abrirCarpetaProyecto: 'proyectos:explorador',
   nuevoProyecto: 'proyectos:nuevo',
+  planEliminarProyecto: 'proyectos:plan-eliminar',
+  eliminarProyecto: 'proyectos:eliminar',
   ideasProyecto: 'proyecto:ideas',
   skillsProyecto: 'proyecto:skills',
 } as const
@@ -748,6 +750,9 @@ export type ResultadoAbrir = { tipo: 'ok' } | { tipo: 'error'; mensaje: string }
 export type ResultadoNuevo =
   | { tipo: 'ok'; ruta: string; lista: ListaProyectos; aviso: string | null }
   | { tipo: 'error'; mensaje: string }
+
+/** Lo que muestra la confirmación de Eliminar (R-10, D-090): qué se borra y qué va a la papelera, ya medido. */
+export type ResultadoPlanEliminar = { tipo: 'ok'; plan: PlanEliminacion } | { tipo: 'error'; mensaje: string }
 
 /** Lo que la ventana encuentra en `window.iridium`. */
 export interface ApiIridium {
@@ -880,6 +885,13 @@ export interface ApiIridium {
   abrirCarpetaProyecto(ruta: string): Promise<ResultadoAbrir>
   /** Crea la carpeta y le pide a la IA que lo arranque con la guía, con la idea escrita (C-10). */
   nuevoProyecto(nombre: string, idea: string): Promise<ResultadoNuevo>
+  /** Mira la carpeta antes de eliminarla (R-10): qué se borra definitivamente y qué va a la papelera. No toca nada. */
+  planEliminarProyecto(ruta: string): Promise<ResultadoPlanEliminar>
+  /**
+   * Ya confirmado: borra lo regenerable y manda el resto a la papelera de Windows (D-006, D-090). Usa el plan que
+   * armó `planEliminarProyecto` del lado principal: la ventana no dice qué borrar.
+   */
+  eliminarProyecto(ruta: string): Promise<ResultadoFicha>
   /** Las ideas sueltas del proyecto (R-8). */
   ideasProyecto(ruta: string): Promise<IdeasProyecto>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */

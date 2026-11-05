@@ -96,6 +96,7 @@
 | D-086 | 2026-11-04 | general | 10 (Q-124) | Una skill «iridium» viaja con Iridium y se carga solo en sus conversaciones, con la guía de hitos si falta | vigente |
 | D-088 | 2026-11-05 | Revisión | 10 (R-9) | Un comentario de la Revisión se cierra solo cuando está hecho; lo que queda para después es «anotado» | vigente |
 | D-089 | 2026-11-05 | general | 10 (R-7, R-8), a pedido del usuario | El menú del clic derecho en la tarjeta, Nuevo proyecto, y las ideas y las skills de cada proyecto | vigente |
+| D-090 | 2026-11-05 | general | 10 (R-10) | Eliminar un proyecto desde el menú de la tarjeta, con confirmación y a la papelera | vigente |
 
 ---
 
@@ -2107,3 +2108,23 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - La skill `iridium` dice que el usuario puede cambiar esos campos desde Iridium y qué muestran las dos secciones nuevas.
 - Sigue pendiente de C-8 y C-9: buscar entre proyectos, agruparlos y filtrarlos (`10-operacion.md` › Backlog).
 - Pruebas: `tests/r7-r8-proyectos.test.ts`, `tests/gestor/core-edicion.test.ts`, `tests/gestor/app-edicion.test.ts` y `tests/e2e/r7-r8-proyectos.spec.ts` (capturas `tools/salida/r7-*.png` y `r8-*.png`). `IRIDIUM_VSCODE=falso` hace que las pruebas no abran VS Code ni el explorador.
+
+## D-090 — Eliminar un proyecto desde el menú de la tarjeta, con confirmación y a la papelera
+- **Fecha:** 2026-11-05
+- **Ámbito:** general (Proyectos; C-12)
+- **Hito o paso:** 10 (R-10)
+- **Estado:** vigente
+
+**Contexto:** R-10: el menú del clic derecho (D-089) tenía que poder eliminar el proyecto, con confirmación. El caso de uso Eliminar del Gestor (D-006 de esa app, copiado con D-026) ya estaba en el código y probado, sin usar.
+
+**Decisión:**
+1. **Eliminar…** va al final del menú de la tarjeta, en rojo, también con la ficha dañada o sin ficha.
+2. Antes de tocar nada, Iridium mira la carpeta y muestra la confirmación: cuántos archivos van a la **papelera de Windows** (y si va el historial de Git) y qué carpetas regenerables (`node_modules`, `out`, `.venv`… con su marcador al lado) se borran definitivamente, con su tamaño. El foco empieza en **Cancelar**: Enter o Esc no borran.
+3. Con **Eliminar**, se ejecuta el plan que armó el proceso principal (la ventana no dice qué borrar). Si la IA de ese proyecto está trabajando, no se elimina. Un aviso dice «está en la papelera de Windows».
+
+**Motivo:** lo que se pide sin salir de Iridium, sin perder nada por un clic de más: todo lo que no se regenera se puede recuperar de la papelera.
+
+**Consecuencias:**
+- `05-arquitectura.md` › Seguridad: Iridium manda un proyecto a la papelera cuando el usuario lo confirma.
+- `IRIDIUM_PAPELERA` (una carpeta): en las pruebas, lo que iría a la papelera se mueve ahí.
+- Pruebas: `tests/e2e/r7-r8-proyectos.spec.ts` (Eliminar, captura `tools/salida/r10-eliminar.png`) y las del caso de uso en `tests/gestor/`.

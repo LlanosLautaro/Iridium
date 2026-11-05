@@ -1,5 +1,5 @@
 // El menú del clic derecho en una tarjeta (R-7, C-9, C-12, D-089): abrir el proyecto, en VS Code o su carpeta; y de la
-// ficha, el estado, archivar y el ícono. En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
+// ficha, el estado, archivar y el ícono; y eliminarlo, con confirmación (R-10). En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
 import type { ListaProyectos, ResultadoFicha, TarjetaProyecto } from '../../../compartido/puente'
 import { ESTADOS, type Estado, NOMBRE_ESTADO } from '../../../compartido/tipos'
 import { Icono } from '../../ui/Icono'
@@ -21,6 +21,7 @@ export function MenuTarjeta({
   abrir,
   ponerLista,
   avisar,
+  eliminar,
 }: {
   p: TarjetaProyecto
   en: Punto
@@ -28,6 +29,8 @@ export function MenuTarjeta({
   abrir: () => void
   ponerLista: (l: ListaProyectos) => void
   avisar: (a: AvisoGrilla | null) => void
+  /** Abre la confirmación de Eliminar (R-10). */
+  eliminar: () => void
 }) {
   const danada = p.problema !== null
   /** La ficha se toca desde acá solo si existe y está sana (el estado la crea). */
@@ -127,6 +130,11 @@ export function MenuTarjeta({
           </button>
         </>
       )}
+      <hr />
+      <button type="button" role="menuitem" className="peligro" onClick={hacer(async () => eliminar())}>
+        <Icono nombre="eliminar" />
+        Eliminar…
+      </button>
     </MenuContextual>
   )
 }

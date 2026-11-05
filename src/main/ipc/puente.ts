@@ -1,4 +1,5 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
+import { mkdir, rename } from 'node:fs/promises'
 import { basename, dirname, join, normalize } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { z } from 'zod'
@@ -14,15 +15,18 @@ import {
   type ResultadoFicha,
   type ResultadoMudanza,
   type ResultadoNuevo,
+  type ResultadoPlanEliminar,
   type SinArmar,
   type Tema,
   type VersionNueva,
 } from '../../compartido/puente'
 import { MENSAJE_PONER_AL_DIA } from '../../compartido/skills'
+import type { PlanEliminacion } from '../../compartido/tipos'
 import { Conversaciones } from '../app/conversacion'
 import { crearProyecto } from '../app/creacion'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
+import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
 import { ideasDelProyecto, leerSeccionIdeas } from '../app/ideas'
 import { mapaDe } from '../app/mapa'
 import { Pendientes } from '../app/pendientes'
@@ -600,6 +604,38 @@ export function registrarPuente(s: Servicios): Puente {
     if (process.env.IRIDIUM_VSCODE === 'falso') return { tipo: 'ok' }
     const error = await shell.openPath(r)
     return error ? { tipo: 'error', mensaje: `Windows no la pudo abrir: ${error}` } : { tipo: 'ok' }
+  })
+  // Eliminar (R-10, D-090): primero el plan, que queda de este lado; con la confirmación, se ejecuta ese mismo plan.
+  // Lo regenerable se borra; el resto va a la papelera de Windows (o, en las pruebas, a `IRIDIUM_PAPELERA`).
+  const planes = new Map<string, PlanEliminacion>()
+  const trabajando = (r: string) => conversaciones.enMarcha().some((c) => normalize(c) === r)
+  ipcMain.handle(CANALES.planEliminarProyecto, async (_, ruta: unknown): Promise<ResultadoPlanEliminar> => {
+    const r = await deLaRaiz(ruta)
+    if (trabajando(r))
+      return { tipo: 'error', mensaje: 'La IA de ese proyecto está trabajando: frenala primero.' }
+    const p = await prepararEliminacion(await raiz(), r, undefined)
+    if (!p.ok) return { tipo: 'error', mensaje: p.mensaje }
+    const plan = await medirRegenerables(p.ruta, p.plan)
+    planes.set(r, plan)
+    return { tipo: 'ok', plan }
+  })
+  ipcMain.handle(CANALES.eliminarProyecto, async (_, ruta: unknown): Promise<ResultadoFicha> => {
+    const r = await deLaRaiz(ruta)
+    const plan = planes.get(r)
+    planes.delete(r)
+    if (!plan)
+      return { tipo: 'error', mensaje: 'Primero hay que revisar la carpeta: volvé a elegir Eliminar.' }
+    if (trabajando(r))
+      return { tipo: 'error', mensaje: 'La IA de ese proyecto está trabajando: frenala primero.' }
+    const prueba = process.env.IRIDIUM_PAPELERA
+    const papelera = prueba
+      ? async (p: string) => {
+          await mkdir(prueba, { recursive: true })
+          await rename(p, join(prueba, `${Date.now()}-${basename(p)}`))
+        }
+      : (p: string) => shell.trashItem(p)
+    s.registro.escribir(`Eliminar: ${basename(r)}`)
+    return ficha(await ejecutarEliminacion(await raiz(), r, plan, undefined, papelera))
   })
   ipcMain.handle(
     CANALES.nuevoProyecto,

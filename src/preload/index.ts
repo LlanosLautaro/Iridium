@@ -98,6 +98,8 @@ const api: ApiIridium = {
   abrirEnVsCode: (ruta) => ipcRenderer.invoke(CANALES.abrirEnVsCode, ruta),
   abrirCarpetaProyecto: (ruta) => ipcRenderer.invoke(CANALES.abrirCarpetaProyecto, ruta),
   nuevoProyecto: (nombre, idea) => ipcRenderer.invoke(CANALES.nuevoProyecto, nombre, idea),
+  planEliminarProyecto: (ruta) => ipcRenderer.invoke(CANALES.planEliminarProyecto, ruta),
+  eliminarProyecto: (ruta) => ipcRenderer.invoke(CANALES.eliminarProyecto, ruta),
   ideasProyecto: (ruta) => ipcRenderer.invoke(CANALES.ideasProyecto, ruta),
   skillsProyecto: (ruta) => ipcRenderer.invoke(CANALES.skillsProyecto, ruta),
 }
