@@ -97,6 +97,8 @@
 | D-088 | 2026-11-05 | Revisión | 10 (R-9) | Un comentario de la Revisión se cierra solo cuando está hecho; lo que queda para después es «anotado» | vigente |
 | D-089 | 2026-11-05 | general | 10 (R-7, R-8), a pedido del usuario | El menú del clic derecho en la tarjeta, Nuevo proyecto, y las ideas y las skills de cada proyecto | vigente |
 | D-090 | 2026-11-05 | general | 10 (R-10) | Eliminar un proyecto desde el menú de la tarjeta, con confirmación y a la papelera | vigente |
+| D-091 | 2026-11-05 | general | 10, a pedido del usuario (y Q-131) | Un frente «Orden» con prioridad máxima: auditoría, un solo modelo y la UX rehecha; las funciones nuevas esperan | vigente |
+| D-092 | 2026-11-05 | general | 10, a pedido del usuario | La guía de hitos y la skill de Iridium se funden en un solo marco, el de Iridium, con un control de formato | vigente |
 
 ---
 
@@ -2128,3 +2130,46 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - `05-arquitectura.md` › Seguridad: Iridium manda un proyecto a la papelera cuando el usuario lo confirma.
 - `IRIDIUM_PAPELERA` (una carpeta): en las pruebas, lo que iría a la papelera se mueve ahí.
 - Pruebas: `tests/e2e/r7-r8-proyectos.spec.ts` (Eliminar, captura `tools/salida/r10-eliminar.png`) y las del caso de uso en `tests/gestor/`.
+
+## D-091 — Un frente «Orden» con prioridad máxima: auditoría, un solo modelo y la UX rehecha; las funciones nuevas esperan
+- **Fecha:** 2026-11-05
+- **Ámbito:** general
+- **Hito o paso:** 10, a pedido del usuario; responde también Q-131 (en el chat)
+- **Estado:** vigente
+
+**Contexto:** el usuario notó una caída de la UX a medida que avanzó la app, `Q-n` que a veces llegan mal escritas, ideas que no se pueden citar (Q-131) y frentes mal mostrados (Q-126 es de Compartir y aparece en el núcleo). La causa común: todo creció a parches, una decisión por pedido, sin que nadie mire el conjunto (`modulos/orden/propuesta.md`).
+
+**Decisión:**
+1. Un frente nuevo, **Orden** (`modulos/orden/`), activo y primero. Va en este orden: auditoría (la UX de la app real y la forma de trabajo), un solo modelo (todo lo que se sigue tiene código, frente y estado; los frentes terminados siguen «en operación»), un solo marco (D-092), la UX sobre ese modelo (`04-ux.md` reescrito sin capas) y construir.
+2. **Se frenan las funciones nuevas** mientras dure: los `R-n` y los ajustes nuevos se anotan y se resuelven por tandas en una ronda de UX. Siguen las pruebas pedidas (Q-118, Q-130) y la invitación (Q-126).
+3. **Diseño no se adelanta:** es una herramienta para diseñar otros proyectos, no arregla la UX de Iridium. Diseño y Capacidades quedan detrás de Orden (cambia el orden de D-079).
+4. **Q-131 queda adentro** con su opción B ampliada: las ideas con un formato y un lugar por proyecto, estado, código propio, anotables sin la IA y todas juntas.
+5. Pedido del usuario que ya entra: **Pendientes agrupados por frente**, con filtros arriba («Todos · Núcleo · Compartir…» con su cuenta) en vez de una pestaña por frente que escondería lo que frena en otro. Primero hace falta el dato: que cada `Q-n` sepa su frente.
+
+**Motivo:** seguir sumando funciones sobre un modelo y una UX desordenados agranda el problema; ordenar primero hace que lo que venga después (Diseño, Capacidades) caiga en un lugar claro.
+
+**Consecuencias:**
+- `02-definicion.md` › Módulos previstos y `10-operacion.md` › Backlog: Orden primero.
+- La guía suma una ronda de UX periódica en operación (va con D-092).
+
+## D-092 — La guía de hitos y la skill de Iridium se funden en un solo marco, el de Iridium, con un control de formato
+- **Fecha:** 2026-11-05
+- **Ámbito:** general
+- **Hito o paso:** 10, a pedido del usuario
+- **Estado:** vigente
+
+**Contexto:** hay dos reglamentos: la guía `hitos-desarrollo-app` (cómo se desarrolla un proyecto) y la skill `iridium` (cómo lo lee Iridium, D-086); se pisan en los formatos y la skill dice «si no coinciden, manda esta». Las reglas de la ficha están además en `gestor-proyectos`. El usuario: la guía queda reemplazada por el marco de Iridium y esas skills se eliminan.
+
+**Decisión:**
+1. **Un solo marco**, el de Iridium: el método por hitos, los formatos que Iridium lee y la ficha. Su fuente está en el repo de Iridium (`recursos/plugins/`), viaja con cada versión y la copia compartida lo recibe sola.
+2. **Liviano:** lo que se usa en cada sesión, en la skill; el detalle de cada hito, en referencias que se leen cuando hacen falta, para no cargar todo en cada conversación.
+3. **Un control:** Iridium ya lee las `Q-n` y el resto de los formatos; marca lo que no los cumple y, al cerrar la sesión, se lo devuelve a la IA para que lo corrija. Cada error nuevo corrige la regla del marco y lo que revisa el control, nunca un parche suelto.
+4. **Las skills viejas** (`hitos-desarrollo-app`, `gestor-proyectos`) se eliminan cuando el marco funcione, en el chat de Skills; las instrucciones globales y los `CLAUDE.md` de los proyectos pasan a citar el marco.
+
+**Motivo:** una sola fuente de verdad: nada que se contradiga ni que mantener dos veces, y el formato se corrige en un solo lugar.
+
+**Consecuencias:**
+- Reemplaza la parte de D-086 que carga la guía de hitos aparte, cuando el marco esté hecho.
+- Los pendientes de «poner al día la guía y `gestor-proyectos`» (D-062, D-063, D-068, Defectos 13 y 14, Q-115) pasan al marco.
+- Cómo se trabaja fuera de Iridium (VS Code, la terminal) con el marco: Q-132.
+

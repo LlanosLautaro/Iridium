@@ -8,4 +8,5 @@
 | Skills | sección | en operación (con el hito 10) | `modulos/skills/` |
 | Apariencia y ajustes | sección | en operación (con el hito 10) | `modulos/apariencia/` |
 | Compartir | sección | en operación (con el hito 10) | `modulos/compartir/` |
-| Inicio | sección | 1. Propuesta | `modulos/inicio/` |
+| Inicio | sección | en operación (con el hito 10) | `modulos/inicio/` |
+| Orden | sección | 3. Investigación (la auditoría) | `modulos/orden/` |

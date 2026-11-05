@@ -20,6 +20,7 @@
 | 2026-11-05 | Q-129 | El clic derecho, Nuevo proyecto y las ideas y skills del proyecto: todo bien |
 | 2026-11-05 | R-10 | Eliminar desde el menú de la tarjeta, con confirmación: hecho (D-090); falta probarlo con la papelera de verdad (Q-130) |
 | 2026-11-05 | Pedido del usuario | Una crítica de la gestión de ideas: `10-operacion.md` › Crítica de la gestión de ideas; qué hacer, en Q-131 |
+| 2026-11-05 | Pedido del usuario (y Q-131) | La UX se degradó y la forma de trabajo tiene huecos: frente Orden con prioridad máxima (D-091); la guía de hitos y la skill de Iridium, un solo marco (D-092); las funciones nuevas esperan |
 | 2026-11-04 | Q-119, Q-120, Q-121 | El repo nombraba los otros proyectos del usuario: limpieza total (D-082); Ideas y Skills pasan a una carpeta Iridium aparte (D-083, construida; falta Q-122); el repo empieza de nuevo al terminar (D-084) |
 
 ## Mantenimiento
@@ -38,7 +39,7 @@ Problemas, de más a menos grave:
 5. **Sin vista de todos los proyectos.** Pendientes junta las `Q-n` de todos; las ideas de cada proyecto solo se ven entrando de a uno.
 6. **Sin identidad.** Una idea de proyecto es un punto de una lista, sin código ni fecha fija: no se puede citar («la idea X pasó a D-n») ni seguir.
 
-Qué haría falta (Q-131): un solo formato (el de `ideas.md`: título con fecha, `Toca a`, `→`, y un estado: nueva · aceptada · hecha · descartada), un solo lugar por proyecto que no cambie con el hito, anotar sin la IA y ver las de todos juntas.
+Qué haría falta (Q-131; desde D-091, dentro del frente Orden): un solo formato (el de `ideas.md`: título con fecha, `Toca a`, `→`, y un estado: nueva · aceptada · hecha · descartada), un solo lugar por proyecto que no cambie con el hito, anotar sin la IA y ver las de todos juntas.
 
 ## Backlog
 Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que faltan del alcance están en `02-definicion.md` › Funcionalidades (Should y Could) y se agrupan en los frentes en espera de D-063.
@@ -47,7 +48,7 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 - (nada: no hay defectos bloqueantes ni graves abiertos)
 
 ### Should
-- **Frentes, en el orden de D-079:** Inicio (en curso, `modulos/inicio/`), después Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
+- **Frentes (D-091):** Orden, activo y primero (`modulos/orden/`); después Diseño y Capacidades (`02-definicion.md` › Módulos previstos). Mientras dure Orden, los `R-n` y los ajustes nuevos se anotan acá y se resuelven por tandas en su ronda de UX.
 - **Mantenimiento:** subir los parches (React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316) con las pruebas completas y armar.
 - **Lo del Gestor que falta en Iridium:** búsqueda entre proyectos, grupos y filtros (C-8, C-9). El menú del clic derecho y Nuevo proyecto ya están (D-089).
 - **Respaldo de `.iridium` en GitHub (D-087):** un botón en Ajustes › Proyectos que publique Ideas y Skills como repos privados y los suba solo; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub.
@@ -69,7 +70,7 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 - **Deuda** (`07-construccion.md` › Deuda técnica): lo copiado del Gestor sin usar (se usa con C-9 y C-10, o se borra) y la ventana sin minificar (si el arranque pasa de 2 s).
 
 ### Fuera de este proyecto
-- Poner al día `gestor-proyectos` y la guía `hitos-desarrollo-app` (D-062, D-063, D-068, Defectos 13 y 14) y traer a `Skills` las skills que la licencia permite (D-014): van en sesiones de `Skills`.
+- Lo de poner al día `gestor-proyectos` y la guía `hitos-desarrollo-app` (D-062, D-063, D-068, Defectos 13 y 14) pasa al marco único (D-092), y las dos se eliminan cuando funcione. Traer a `Skills` las skills que la licencia permite (D-014): van en sesiones de `Skills`.
 
 ## Próxima versión
 - **Objetivo:** compartir Iridium (D-084 a D-087): hecho; falta invitar a la otra persona (Q-126). Después, Diseño y Capacidades (D-079).
