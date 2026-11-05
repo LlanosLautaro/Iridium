@@ -7,7 +7,7 @@
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
-10 — Operación — en curso: frente Orden con prioridad máxima (D-091), en la auditoría
+10 — Operación — en curso: frente Orden con prioridad máxima (D-091), en la definición
 
 ## Progreso de hitos
 | # | Hito | Estado | Documento |
@@ -34,18 +34,18 @@ Estados posibles: pendiente · en curso · completo · saltado (con motivo) · r
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | completo |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | completo |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | completo |
-| **Orden** (`modulos/orden/estado.md`), activo | sección | 3. Investigación (UX hecha; falta la forma de trabajo) | en curso |
+| **Orden** (`modulos/orden/estado.md`), activo | sección | 2. Definición (auditoría hecha) | en curso |
 
 En espera, detrás de Orden (D-091): Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 
 ## En qué estamos ahora
-Hito 10, Operación. Abriste el frente **Orden** con prioridad máxima (D-091): la UX se degradó y la forma de trabajo tiene huecos (ideas sin estado ni código, `Q-n` sin frente, formatos sin control). El plan, en `modulos/orden/propuesta.md`: auditoría, un solo modelo, un solo marco, la UX rehecha y recién después construir. Mientras tanto no se suman funciones nuevas; Diseño y Capacidades esperan. Q-131 (ideas) queda adentro de Orden. La guía de hitos y la skill de Iridium se funden en un solo marco, el de Iridium, con un control que marca lo mal escrito (D-092), que vive solo dentro de Iridium (D-093). La auditoría de UX está hecha: doce hallazgos (`modulos/orden/auditoria.md` › Parte 1). Compartir Iridium sigue hecho y publicado (`c012989`); falta la invitación (Q-126).
+Hito 10, Operación. Abriste el frente **Orden** con prioridad máxima (D-091): la UX se degradó y la forma de trabajo tiene huecos (ideas sin estado ni código, `Q-n` sin frente, formatos sin control). El plan, en `modulos/orden/propuesta.md`: auditoría, un solo modelo, un solo marco, la UX rehecha y recién después construir. Mientras tanto no se suman funciones nuevas; Diseño y Capacidades esperan. Q-131 (ideas) queda adentro de Orden. La guía de hitos y la skill de Iridium se funden en un solo marco, el de Iridium, con un control que marca lo mal escrito (D-092), que vive solo dentro de Iridium (D-093). La auditoría está hecha: la UX y la forma de trabajo, 23 hallazgos (`modulos/orden/auditoria.md`); lo más grave, que la guía y la skill se contradicen en las pruebas y el control de preguntas no ve las mal escritas. Compartir Iridium sigue hecho y publicado (`c012989`); falta la invitación (Q-126).
 
 ## Pendientes del hito actual
 - [ ] Respaldo de `.iridium` en GitHub con un botón en Ajustes (D-087; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub). En el Backlog.
 - [ ] D-082: sacar de `src/main/core/carpeta-iridium.ts` el nombre viejo de tu carpeta de skills (Q-127 ya dio bien la mudanza).
 - [ ] La skill `iridium` (`recursos/plugins/iridium`) se cambia junto con lo que Iridium lee (D-086). La guía de `Iridium para compartir` puesta al día con D-085 a D-087 el 2026-11-04.
-- [ ] Frente Orden: la auditoría de la forma de trabajo (`modulos/orden/estado.md` › Pendientes).
+- [ ] Frente Orden: `definicion.md`, el modelo y el marco únicos (`modulos/orden/estado.md` › Pendientes).
 - [ ] Lo pendiente de la guía y `gestor-proyectos` (D-062, D-063, D-068, Defectos 13 y 14, Q-115) pasa al marco único (D-092); las dos se eliminan cuando funcione, en el chat de Skills.
 - [ ] Traer a la carpeta Skills las skills que la licencia permite y sacar las copias dobles (D-014): va en el chat de Skills.
 - [ ] Después de Mover (Q-127): en el chat de Skills, poner al día las rutas que nombran la carpeta vieja; en el chat general, la sección «Dónde están los demás proyectos» del `CLAUDE.md` de Ideas.
@@ -74,8 +74,8 @@ Hito 10, Operación. Abriste el frente **Orden** con prioridad máxima (D-091): 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, paso 3: la auditoría de la forma de trabajo en `modulos/orden/auditoria.md` › Parte 2 (las `Q-n` mal escritas de todos los proyectos, dónde se pierden ideas y pendientes, qué repiten la guía y la skill de Iridium).
-**Leer antes:** `modulos/orden/estado.md`, `modulos/orden/auditoria.md`, D-091 a D-093 en `decisiones.md`, la skill de Iridium (`recursos/plugins/iridium`). Si llegaron, `respuestas/` (Q-126, Q-130, Q-118).
+Orden, paso 2: escribir `modulos/orden/definicion.md` (el modelo único y el marco único) con las conclusiones de la auditoría, y las decisiones tuyas como `Q-n`.
+**Leer antes:** `modulos/orden/estado.md`, `modulos/orden/auditoria.md` › Lo que dice… (las dos partes), `modulos/orden/propuesta.md`, D-091 a D-093 en `decisiones.md`, la skill de Iridium (`recursos/plugins/iridium`). Si llegaron, `respuestas/` (Q-126, Q-130, Q-118).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
