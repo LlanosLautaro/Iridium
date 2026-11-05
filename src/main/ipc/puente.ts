@@ -1,6 +1,7 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
 import { basename, dirname, join, normalize } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { z } from 'zod'
 import {
   type AccesoVersiones,
   CANALES,
@@ -9,23 +10,29 @@ import {
   type EstilosRespuesta,
   type ListaProyectos,
   type Preferencias,
+  type ResultadoAbrir,
+  type ResultadoFicha,
   type ResultadoMudanza,
+  type ResultadoNuevo,
   type SinArmar,
   type Tema,
   type VersionNueva,
 } from '../../compartido/puente'
 import { MENSAJE_PONER_AL_DIA } from '../../compartido/skills'
 import { Conversaciones } from '../app/conversacion'
+import { crearProyecto } from '../app/creacion'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
-import { leerSeccionIdeas } from '../app/ideas'
+import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
+import { ideasDelProyecto, leerSeccionIdeas } from '../app/ideas'
 import { mapaDe } from '../app/mapa'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
-import { leerSeccionSkills, proyectosAtrasados } from '../app/skills'
+import { leerSeccionSkills, proyectosAtrasados, skillsDelProyecto } from '../app/skills'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
+import { mensajeProyectoNuevo } from '../core/creacion'
 import {
   INSTRUCCION_CENTRO,
   INSTRUCCION_SKILLS,
@@ -49,6 +56,7 @@ import { existeCarpeta } from '../infra/raiz'
 import type { Registro } from '../infra/registro'
 import type { ArchivoSesiones } from '../infra/sesiones'
 import { type Vigilancia, vigilar } from '../infra/vigilancia'
+import { abrirEnVsCode } from '../infra/vscode'
 import type { Motor } from '../motor/motor'
 import {
   CambioPreferencias,
@@ -58,9 +66,12 @@ import {
   Documento,
   Escrito,
   EsquemaBorrador,
+  EstadoFicha,
   HashCommit,
   IdConversacion,
+  IdeaProyecto,
   IdScript,
+  NombreProyecto,
   NotaReabrir,
   Pedido,
   PedidoPublicar,
@@ -538,6 +549,75 @@ export function registrarPuente(s: Servicios): Puente {
       html: async (texto) => (await docs.de(carpeta)).html(texto, 'ideas.md'),
     })
   })
+
+  // Las ideas y las skills de un proyecto (R-8): solo leen.
+  ipcMain.handle(CANALES.ideasProyecto, async (_, ruta: unknown) =>
+    ideasDelProyecto(await docs.de(await proyecto(ruta))),
+  )
+  ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
+
+  // El menú de la tarjeta y Nuevo proyecto (R-7, D-089). Solo sobre carpetas de la carpeta de proyectos (no Ideas ni
+  // Skills) y, en la ficha, solo estado, archivado e ícono.
+  const deLaRaiz = async (dato: unknown): Promise<string> => {
+    const ruta = normalize(Ruta.parse(dato))
+    if (dirname(ruta) !== (await raiz()) || !(await existeCarpeta(ruta)))
+      throw new Error('Ese proyecto no está en la carpeta de proyectos')
+    return ruta
+  }
+  const ficha = async (r: { ok: true } | { ok: false; mensaje: string }): Promise<ResultadoFicha> => {
+    if (!r.ok) return { tipo: 'error', mensaje: r.mensaje }
+    return { tipo: 'ok', lista: await listar() }
+  }
+  ipcMain.handle(CANALES.estadoProyecto, async (_, ruta: unknown, estado: unknown) => {
+    const r = await deLaRaiz(ruta)
+    return ficha(await cambiarEstadoProyecto(await raiz(), r, EstadoFicha.parse(estado)))
+  })
+  ipcMain.handle(CANALES.archivarProyecto, async (_, ruta: unknown, archivado: unknown) => {
+    const r = await deLaRaiz(ruta)
+    return ficha(await archivarProyecto(await raiz(), r, z.boolean().parse(archivado)))
+  })
+  ipcMain.handle(CANALES.iconoProyecto, async (_, ruta: unknown): Promise<ResultadoFicha> => {
+    const r = await deLaRaiz(ruta)
+    const v = s.ventana()
+    const opciones = {
+      title: 'Elegir el ícono del proyecto',
+      defaultPath: r,
+      filters: [{ name: 'Imágenes', extensions: ['svg', 'png', 'jpg', 'jpeg', 'webp', 'gif', 'ico'] }],
+    }
+    const elegido = await (v ? dialog.showOpenDialog(v, { ...opciones, properties: ['openFile'] }) : null)
+    const archivo = elegido && !elegido.canceled ? elegido.filePaths[0] : undefined
+    if (!archivo) return { tipo: 'cancelada' }
+    return ficha(await cambiarIconoProyecto(await raiz(), r, archivo))
+  })
+  ipcMain.handle(CANALES.abrirEnVsCode, async (_, ruta: unknown): Promise<ResultadoAbrir> => {
+    const r = await deLaRaiz(ruta)
+    s.registro.escribir(`Abrir en VS Code: ${basename(r)}`)
+    if (process.env.IRIDIUM_VSCODE === 'falso') return { tipo: 'ok' }
+    return abrirEnVsCode(r)
+  })
+  ipcMain.handle(CANALES.abrirCarpetaProyecto, async (_, ruta: unknown): Promise<ResultadoAbrir> => {
+    const r = await deLaRaiz(ruta)
+    if (process.env.IRIDIUM_VSCODE === 'falso') return { tipo: 'ok' }
+    const error = await shell.openPath(r)
+    return error ? { tipo: 'error', mensaje: `Windows no la pudo abrir: ${error}` } : { tipo: 'ok' }
+  })
+  ipcMain.handle(
+    CANALES.nuevoProyecto,
+    async (_, nombre: unknown, idea: unknown): Promise<ResultadoNuevo> => {
+      const texto = IdeaProyecto.parse(idea)
+      const creado = await crearProyecto(await raiz(), NombreProyecto.parse(nombre))
+      if (!creado.ok) return { tipo: 'error', mensaje: creado.mensaje }
+      s.registro.escribir(`Proyecto nuevo: ${creado.nombre}`)
+      const lista = await listar()
+      let aviso: string | null = null
+      try {
+        await conversaciones.seguir(creado.ruta, { texto: mensajeProyectoNuevo(creado.nombre, texto) })
+      } catch (e) {
+        aviso = `La carpeta está creada, pero la IA no pudo arrancar: ${e instanceof Error ? e.message : String(e)}`
+      }
+      return { tipo: 'ok', ruta: creado.ruta, lista, aviso }
+    },
+  )
 
   // La carpeta Iridium (D-083): mudar las de antes y cambiarla de lugar. Lo que depende de la ruta se muda con ellas.
   const mudarCarpetas = async (

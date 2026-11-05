@@ -79,7 +79,7 @@ function BarraActividad() {
   if (seccion === 'proyecto' && ruta)
     return (
       <nav className="actividad" aria-label="Secciones del proyecto">
-        {SECCIONES_PROYECTO.map((s) => (
+        {SECCIONES_PROYECTO.filter((s) => !s.soloSi || (tarjeta && s.soloSi(tarjeta))).map((s) => (
           <BotonActividad
             key={s.id}
             activa={seccionProyecto === s.id}

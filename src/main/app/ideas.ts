@@ -1,12 +1,13 @@
 // El caso de uso de la sección Ideas (modulos/inicio/diseno-tecnico.md): lee `Ideas/ideas.md`, pinta el cuerpo de
 // cada idea con el markdown de Docs y marca qué proyectos que toca existen. Solo lee.
 import { basename } from 'node:path'
-import type { Idea, ListaIdeas } from '../../compartido/ideas'
+import type { Idea, IdeasProyecto, ListaIdeas } from '../../compartido/ideas'
 import type { TarjetaProyecto } from '../../compartido/puente'
 import { type IdeaLeida, leerIdeas } from '../core/ideas'
+import { SECCIONES_IDEAS, seccionDeIdeas } from '../core/ideas-proyecto'
 import { leerArchivoIdeas } from '../infra/ideas'
 import { existeCarpeta } from '../infra/raiz'
-import { LIMITE_DOCUMENTO_BYTES, motivo } from './visor'
+import { type DocumentosProyecto, LIMITE_DOCUMENTO_BYTES, motivo } from './visor'
 
 export interface FuenteIdeas {
   /** La carpeta Ideas dentro de la carpeta de proyectos. */
@@ -46,4 +47,23 @@ export async function leerSeccionIdeas(f: FuenteIdeas): Promise<ListaIdeas> {
   } catch (e) {
     return { tipo: 'error', mensaje: motivo(e) }
   }
+}
+
+/** Las ideas sueltas de un proyecto (R-8): las secciones de la guía, pintadas como en Docs. Solo lee. */
+export function ideasDelProyecto(d: DocumentosProyecto): IdeasProyecto {
+  const secciones = SECCIONES_IDEAS.flatMap(({ documento, prefijo }) => {
+    const texto = d.texto(documento)
+    const s = texto === null ? null : seccionDeIdeas(texto, prefijo)
+    if (!s) return []
+    return [
+      {
+        documento,
+        titulo: s.titulo,
+        ancla: d.anclaDeTitulo(documento, s.titulo),
+        html: d.html(s.cuerpo, documento),
+        cantidad: s.cantidad,
+      },
+    ]
+  })
+  return { secciones }
 }

@@ -1,4 +1,6 @@
-// La tarjeta de un proyecto (04-ux.md › W-2, D-034): estado con ícono y palabra; el ámbar, para lo que espera.
+// La tarjeta de un proyecto (04-ux.md › W-2, D-034): estado con ícono y palabra; el ámbar, para lo que espera. Con el
+// clic derecho (o la tecla de menú), sus acciones (R-7).
+import type { MouseEvent } from 'react'
 import type { FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
 import type { Estado } from '../../../compartido/tipos'
 import { ChipSesion } from '../../marco/Marco'
@@ -31,6 +33,8 @@ interface Props {
   /** La sesión del proyecto, si tiene una abierta: la tarjeta muestra el mismo estado que su ficha (H-2). */
   ficha: FichaSesion | null
   abrir: () => void
+  /** El clic derecho: abre el menú de la tarjeta (R-7). */
+  menu?: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 const PALABRA_SESION = {
@@ -39,10 +43,16 @@ const PALABRA_SESION = {
   error: 'IA con error',
 } as const
 
-export function Tarjeta({ p, ficha, abrir }: Props) {
+export function Tarjeta({ p, ficha, abrir, menu }: Props) {
   if (p.problema !== null) {
     return (
-      <button type="button" className="tarjeta danada" title={`${p.nombre} · ${p.problema}`} onClick={abrir}>
+      <button
+        type="button"
+        className="tarjeta danada"
+        title={`${p.nombre} · ${p.problema}`}
+        onClick={abrir}
+        onContextMenu={menu}
+      >
         <div className="cab">
           <span className="icono vacio">
             <Icono nombre="ficha" />
@@ -85,7 +95,9 @@ export function Tarjeta({ p, ficha, abrir }: Props) {
       className={p.archivado ? 'tarjeta archivado' : 'tarjeta'}
       title={etiqueta}
       aria-label={etiqueta}
+      aria-haspopup="menu"
       onClick={abrir}
+      onContextMenu={menu}
     >
       <div className="cab">
         <span className="icono">

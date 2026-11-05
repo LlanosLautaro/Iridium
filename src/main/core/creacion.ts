@@ -25,3 +25,26 @@ export function problemaNombreProyecto(nombre: string, existentes: readonly stri
     return 'Ya hay una carpeta con ese nombre.'
   return null
 }
+
+/** Lo que se escribe sobre el proyecto nuevo (C-10): una idea suelta, sin límite práctico. */
+export const LIMITE_IDEA_PROYECTO = 20_000
+
+/**
+ * El primer mensaje a la IA de un proyecto recién creado desde Iridium (R-7, D-089): que arranque con la guía y deje la
+ * ficha y el ícono (los formatos los trae la skill `iridium`).
+ */
+export function mensajeProyectoNuevo(nombre: string, idea: string): string {
+  const texto = idea.trim()
+  const conIdea = texto
+    ? `La idea, como la escribió el usuario:\n\n${texto
+        .split(/\r?\n/)
+        .map((l) => `> ${l}`)
+        .join('\n')}`
+    : 'El usuario todavía no escribió la idea: anotá en una Q-n de qué se trata y para quién es.'
+  return (
+    `Es un proyecto nuevo, «${nombre}», recién creado desde Iridium: la carpeta está vacía. Arrancalo con la guía ` +
+    '`hitos-desarrollo-app` (hito 0, la idea cruda), con `docs/` y el `CLAUDE.md` de la raíz. Creá también su ficha ' +
+    '`.proyecto.json` (estado `idea`, una descripción de una línea) y un ícono `.proyecto-icono.svg`, como dice la ' +
+    `skill \`iridium\`.\n\n${conIdea}`
+  )
+}

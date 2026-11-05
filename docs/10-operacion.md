@@ -16,6 +16,7 @@
 | 2026-11-04 | Q-117 | Faltaba lo de VS Code para crear el repositorio y publicarlo en GitHub: ajuste chico (D-081), construido; falta probarlo con GitHub de verdad (Q-118) |
 | 2026-11-04 | Pedido del usuario | Compartir Iridium ya y que las versiones nuevas le lleguen a la otra persona: repo nuevo (D-084, hecho), versiones en GitHub que la copia baja sola (D-085, hecho y probado); dónde publicar, en Q-123 |
 | 2026-11-04 | Q-115 | La sección Ideas, bien; sin Pedir que la integren. Dos ideas del usuario: la carpeta de Iridium como «vault» (Q-125) y una skill de Iridium que se carga solo en Iridium (Q-124). Las preguntas de prueba traían casillas y además «A) Todo bien»: desde ahora, las pruebas van solo con casillas |
+| 2026-11-05 | R-7, R-8 | El clic derecho de la tarjeta, Nuevo proyecto y las ideas y skills de cada proyecto: hechos a pedido (D-089); falta tu prueba (Q-129, que reemplaza a Q-128: ya no quedan anotados para mirar) |
 | 2026-11-04 | Q-119, Q-120, Q-121 | El repo nombraba los otros proyectos del usuario: limpieza total (D-082); Ideas y Skills pasan a una carpeta Iridium aparte (D-083, construida; falta Q-122); el repo empieza de nuevo al terminar (D-084) |
 
 ## Mantenimiento
@@ -32,8 +33,7 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 ### Should
 - **Frentes, en el orden de D-079:** Inicio (en curso, `modulos/inicio/`), después Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 - **Mantenimiento:** subir los parches (React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316) con las pruebas completas y armar.
-- **Lo del Gestor que falta en Iridium:** primero lo de R-7: el clic derecho en la tarjeta (abrir en VS Code y en el explorador, estado, archivar, ícono; C-9, C-12) y **Nuevo proyecto** arriba de la grilla (C-10); al hacerlo, cerrar R-7 (está en Anotados, D-088). Después, búsqueda entre proyectos y grupos y filtros (C-8, C-9).
-- **Ideas y skills del proyecto (R-8):** un ícono en la barra del proyecto con sus ideas sueltas (`00-idea.md` › Ideas para después y `07-construccion.md` › Ideas nuevas); y las skills del proyecto (`.claude/skills/` de cada uno), con su ícono solo si tiene alguna (lo de «elegir por proyecto» de D-064). Al hacerlo, cerrar R-8 (en Anotados, D-088).
+- **Lo del Gestor que falta en Iridium:** búsqueda entre proyectos, grupos y filtros (C-8, C-9). El menú del clic derecho y Nuevo proyecto ya están (D-089).
 - **Respaldo de `.iridium` en GitHub (D-087):** un botón en Ajustes › Proyectos que publique Ideas y Skills como repos privados y los suba solo; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub.
 - **Revisión:** la línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto (D-082).
 - **Seguir a la IA y el cierre de sesión con comprobación** (C-4, C-6); avisos de Windows (C-51).
@@ -43,7 +43,7 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 
 ### Could
 - Las Could de `02-definicion.md` (C-17, C-20, C-27, C-34, C-43, C-46 a C-48).
-- Las ideas de `07-construccion.md` › Ideas nuevas que no tienen frente: la sección de aprobados provisionales y el atajo a las ideas.
+- Las ideas de `07-construccion.md` › Ideas nuevas que no tienen frente: la sección de aprobados provisionales.
 - El `.zip` de `pnpm publicar` pesa unos 280 MB: probar a comprimirlo más (D-085).
 - Número de versión y `CHANGELOG.md` (D-077: la opción A de Q-109, cuando quieras).
 
@@ -63,4 +63,5 @@ Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que 
 - **Ajustes medianos (D-086, D-087):** la skill de Iridium y la guía como complementos de las conversaciones; Ideas y Skills en `.iridium`. Construidos y probados (7 → 8); falta tu prueba (Q-127).
 - **Ajuste mediano (D-083):** la carpeta Iridium con Ideas y Skills y Mover; desde D-087, en `.iridium` (Q-127).
 - **Ajuste chico (D-081):** Inicializar repositorio y Publicar en GitHub en la sección Git, construido (7 → 8); falta tu prueba con GitHub de verdad (Q-118).
+- **Ajuste mediano (D-089, R-7 y R-8):** el menú de la tarjeta, Nuevo proyecto, Ideas y Skills del proyecto; construido y probado (7 → 8); falta tu prueba (Q-129).
 - **Propuestas:** módulo Inicio completo (Q-115, 2026-11-04).

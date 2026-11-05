@@ -92,6 +92,14 @@ const api: ApiIridium = {
   archivoSkill: (id, archivo) => ipcRenderer.invoke(CANALES.archivoSkill, id, archivo),
   alCambiarSkills: (f) => escuchar<null>(CANALES.skillsCambiaron, () => f()),
   ideas: () => ipcRenderer.invoke(CANALES.ideas),
+  estadoProyecto: (ruta, estado) => ipcRenderer.invoke(CANALES.estadoProyecto, ruta, estado),
+  archivarProyecto: (ruta, archivado) => ipcRenderer.invoke(CANALES.archivarProyecto, ruta, archivado),
+  iconoProyecto: (ruta) => ipcRenderer.invoke(CANALES.iconoProyecto, ruta),
+  abrirEnVsCode: (ruta) => ipcRenderer.invoke(CANALES.abrirEnVsCode, ruta),
+  abrirCarpetaProyecto: (ruta) => ipcRenderer.invoke(CANALES.abrirCarpetaProyecto, ruta),
+  nuevoProyecto: (nombre, idea) => ipcRenderer.invoke(CANALES.nuevoProyecto, nombre, idea),
+  ideasProyecto: (ruta) => ipcRenderer.invoke(CANALES.ideasProyecto, ruta),
+  skillsProyecto: (ruta) => ipcRenderer.invoke(CANALES.skillsProyecto, ruta),
 }
 
 contextBridge.exposeInMainWorld('iridium', api)

@@ -1141,3 +1141,13 @@ button.nodo:hover {
 .nodo[aria-expanded="true"] .chev .ic {
   transform: rotate(90deg);
 }
+
+/* Las ideas y las skills del proyecto (R-8): como los scripts, una caja por sección o por skill */
+.seccion-ideas h4 .n {
+  margin-left: 4px;
+  color: var(--texto-3);
+  font-weight: 500;
+}
+.seccion-ideas .doc-texto {
+  font-size: 13.5px;
+}

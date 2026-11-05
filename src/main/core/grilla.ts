@@ -26,6 +26,8 @@ export interface DatosProyecto {
   preguntas: { sinResponder: number; frenan: number; respondidas: number }
   /** Comentarios de la Revisión abiertos; 0 si no se dice. */
   revision?: number
+  /** Las skills de `.claude/skills/`; 0 si no se dice. */
+  skills?: number
 }
 
 export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
@@ -42,6 +44,7 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
     hito: d.guia ? { numero: d.guia.hito, nombre: d.guia.nombreHito, proximoPaso: d.guia.proximoPaso } : null,
     preguntas: d.preguntas,
     revision: d.revision ?? 0,
+    skills: d.skills ?? 0,
   }
   if (d.metadatos === null) return base
   if (d.metadatos.tipo === 'danado') return { ...base, problema: d.metadatos.motivo }

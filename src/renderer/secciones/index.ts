@@ -2,7 +2,7 @@
 // agregar su carpeta y una línea acá; las demás no se tocan. La barra cambia según dónde se esté (D-041): en el
 // inicio, Proyectos, Pendientes, Skills e Ideas; dentro de un proyecto, las suyas.
 import type { ComponentType } from 'react'
-import type { ListaProyectos } from '../../compartido/puente'
+import type { ListaProyectos, TarjetaProyecto } from '../../compartido/puente'
 import { type SeccionProyecto, totalSinResponder } from '../estado'
 import type { NombreIcono } from '../ui/Icono'
 import { Ideas } from './ideas/Ideas'
@@ -62,15 +62,22 @@ export interface SeccionDeProyecto {
   id: SeccionProyecto
   nombre: string
   icono: NombreIcono
+  /** Si está solo en algunos proyectos: cuándo sale en la barra. */
+  soloSi?: (p: TarjetaProyecto) => boolean
 }
 
-/** Dentro de un proyecto (D-041, D-043, Q-62; Revisión, D-046); después se suman Diseño y Assets. */
+/**
+ * Dentro de un proyecto (D-041, D-043, Q-62; Revisión, D-046; Ideas y Skills, R-8); después se suman Diseño y Assets.
+ * Skills, solo si el proyecto tiene alguna propia.
+ */
 export const SECCIONES_PROYECTO: readonly SeccionDeProyecto[] = [
   { id: 'pendientes', nombre: 'Pendientes y scripts', icono: 'pendientes' },
   { id: 'mapa', nombre: 'Mapa', icono: 'mapa' },
   { id: 'docs', nombre: 'Docs', icono: 'docs' },
+  { id: 'ideas', nombre: 'Ideas del proyecto', icono: 'ideas' },
   { id: 'archivos', nombre: 'Archivos', icono: 'archivos' },
   { id: 'revision', nombre: 'Revisión', icono: 'revision' },
   { id: 'git', nombre: 'Git', icono: 'git' },
   { id: 'scripts', nombre: 'Scripts', icono: 'scripts' },
+  { id: 'skills', nombre: 'Skills del proyecto', icono: 'skills', soloSi: (p) => p.skills > 0 },
 ]

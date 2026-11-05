@@ -157,3 +157,30 @@ export async function leerSkills(carpetaClaude: string): Promise<SkillsCrudas> {
   ])
   return { carpetas: [...sueltasLeidas, ...cuenta, ...complementos], errores }
 }
+
+/** La carpeta de las skills de un proyecto, que Claude Code carga solo en él (R-8). */
+export const SKILLS_DEL_PROYECTO = ['.claude', 'skills'] as const
+
+/** Las carpetas de `.claude/skills/` del proyecto que tienen `SKILL.md`, por nombre. Sin carpeta, ninguna. */
+export async function skillsEnProyecto(proyecto: string): Promise<string[]> {
+  const raiz = join(proyecto, ...SKILLS_DEL_PROYECTO)
+  let entradas: Dirent[]
+  try {
+    entradas = await readdir(raiz, { withFileTypes: true })
+  } catch {
+    return []
+  }
+  const con = await Promise.all(
+    entradas
+      .filter((e) => !seSalta(e.name) && (e.isDirectory() || e.isSymbolicLink()))
+      .map(async (e) =>
+        (await stat(join(raiz, e.name, 'SKILL.md')).catch(() => null))?.isFile() ? e.name : null,
+      ),
+  )
+  return con.filter((n) => n !== null).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }))
+}
+
+/** El `SKILL.md` de una skill del proyecto; null si no se puede leer. */
+export function textoSkillDelProyecto(proyecto: string, nombre: string): Promise<string | null> {
+  return texto(join(proyecto, ...SKILLS_DEL_PROYECTO, nombre, 'SKILL.md'))
+}

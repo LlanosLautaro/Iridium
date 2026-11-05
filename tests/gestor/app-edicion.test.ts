@@ -8,6 +8,7 @@ import type { DatosEdicion } from '../../src/compartido/tipos'
 import {
   archivarProyecto,
   cambiarEstadoProyecto,
+  cambiarIconoProyecto,
   guardarProyecto,
   iconoRelativo,
 } from '../../src/main/app/edicion'
@@ -99,9 +100,38 @@ describe('cambiarEstadoProyecto', () => {
     expect(await leer('Alfa')).toMatchObject({ estado: 'en-uso', descripcion: 'Una app.', etiquetas: ['ts'] })
   })
 
-  it('un proyecto sin clasificar pide el formulario', async () => {
-    const r = await cambiarEstadoProyecto(raiz, join(raiz, 'Alfa'), 'en-uso')
+  it('un proyecto sin clasificar estrena la ficha con ese estado (R-7)', async () => {
+    expect(await cambiarEstadoProyecto(raiz, join(raiz, 'Alfa'), 'en-uso')).toEqual({ ok: true })
+    expect(await leer('Alfa')).toMatchObject({
+      version: 1,
+      estado: 'en-uso',
+      descripcion: '',
+      archivado: false,
+    })
+  })
+
+  it('no escribe fuera de la carpeta de proyectos', async () => {
+    const r = await cambiarEstadoProyecto(raiz, join(tmpdir(), 'Alfa'), 'en-uso')
     expect(r.ok).toBe(false)
+  })
+})
+
+describe('cambiarIconoProyecto (R-7)', () => {
+  it('guarda la imagen elegida como ruta relativa', async () => {
+    await guardarProyecto(raiz, join(raiz, 'Alfa'), datos())
+    const r = await cambiarIconoProyecto(raiz, join(raiz, 'Alfa'), join(raiz, 'Alfa', 'img', 'logo.svg'))
+    expect(r).toEqual({ ok: true })
+    expect(await leer('Alfa')).toMatchObject({ icono: 'img/logo.svg', descripcion: 'Una app.' })
+  })
+
+  it('rechaza una imagen de otra carpeta o un proyecto sin ficha', async () => {
+    await guardarProyecto(raiz, join(raiz, 'Alfa'), datos())
+    expect((await cambiarIconoProyecto(raiz, join(raiz, 'Alfa'), join(raiz, 'Beta', 'logo.svg'))).ok).toBe(
+      false,
+    )
+    expect((await cambiarIconoProyecto(raiz, join(raiz, 'Beta'), join(raiz, 'Beta', 'logo.svg'))).ok).toBe(
+      false,
+    )
   })
 })
 

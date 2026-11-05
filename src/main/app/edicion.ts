@@ -5,6 +5,7 @@ import type { DatosEdicion, ErroresFormulario, Estado } from '../../compartido/t
 import {
   cambiarArchivado,
   cambiarEstado,
+  cambiarIcono,
   mezclarEdicion,
   serializarMetadatos,
   validarEdicion,
@@ -97,6 +98,21 @@ export function cambiarEstadoProyecto(raiz: string, ruta: string, estado: Estado
 /** Archivar (true) o restaurar / deshacer (false). La carpeta no se mueve (D-004). */
 export function archivarProyecto(raiz: string, ruta: string, archivado: boolean): Promise<ResultadoSimple> {
   return modificarProyecto(raiz, ruta, (actual) => cambiarArchivado(actual, archivado))
+}
+
+/** El ícono de la ficha (R-7): la imagen elegida en el cuadro, que tiene que estar dentro de la carpeta del proyecto. */
+export async function cambiarIconoProyecto(
+  raiz: string,
+  ruta: string,
+  archivo: string,
+): Promise<ResultadoSimple> {
+  const icono = iconoRelativo(ruta, archivo)
+  if (icono === null)
+    return {
+      ok: false,
+      mensaje: 'El ícono tiene que ser una imagen (SVG, PNG, JPG…) dentro de la carpeta del proyecto.',
+    }
+  return modificarProyecto(raiz, ruta, (actual) => cambiarIcono(actual, icono))
 }
 
 /**

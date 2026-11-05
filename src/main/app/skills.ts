@@ -3,17 +3,18 @@
 import { access, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { TarjetaProyecto } from '../../compartido/puente'
-import type { Atrasados, ListaSkills, ProyectoAtrasado } from '../../compartido/skills'
+import type { Atrasados, ListaSkills, ProyectoAtrasado, SkillProyecto } from '../../compartido/skills'
 import {
   formatoAtrasado,
   formatoVigente,
+  leerEncabezado,
   marcarDobles,
   nombreBase,
   ordenarSkills,
   SKILL_GUIA,
   skillDe,
 } from '../core/skills'
-import { leerSkills } from '../infra/skills'
+import { leerSkills, SKILLS_DEL_PROYECTO, skillsEnProyecto, textoSkillDelProyecto } from '../infra/skills'
 
 async function textoSiExiste(ruta: string): Promise<string | null> {
   try {
@@ -81,4 +82,20 @@ export async function proyectosAtrasados(
     }),
   )
   return { vigente, proyectos: filas.filter((f) => f !== null) }
+}
+
+/** Las skills del proyecto (R-8), con el nombre y la descripción de su `SKILL.md`. Solo lee. */
+export async function skillsDelProyecto(proyecto: string): Promise<SkillProyecto[]> {
+  const nombres = await skillsEnProyecto(proyecto)
+  return Promise.all(
+    nombres.map(async (carpeta) => {
+      const texto = await textoSkillDelProyecto(proyecto, carpeta)
+      const e = texto === null ? { name: null, description: null } : leerEncabezado(texto)
+      return {
+        nombre: e.name?.trim() || carpeta,
+        descripcion: e.description?.trim() || null,
+        archivo: [...SKILLS_DEL_PROYECTO, carpeta, 'SKILL.md'].join('/'),
+      }
+    }),
+  )
 }

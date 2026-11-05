@@ -1,9 +1,9 @@
 // El puente entre la ventana y el proceso principal (05-arquitectura.md › Componentes): una lista cerrada de
 // pedidos y eventos. Los tipos los ven los dos lados; lo que llega desde la ventana se valida en `main/ipc/`.
 
-import type { ListaIdeas } from './ideas'
+import type { IdeasProyecto, ListaIdeas } from './ideas'
 import type { Borrador } from './respuestas'
-import type { Atrasados, ListaSkills } from './skills'
+import type { Atrasados, ListaSkills, SkillProyecto } from './skills'
 import type { Estado } from './tipos'
 import type { ContenidoDocumento, OpcionPregunta, ScriptVista } from './visor'
 
@@ -29,6 +29,8 @@ export interface TarjetaProyecto {
   preguntas: { sinResponder: number; frenan: number; respondidas: number }
   /** Los comentarios de la Revisión abiertos (`docs/revision/`): esperan a la IA, no al usuario. */
   revision: number
+  /** Las skills del proyecto (`.claude/skills/`): con alguna, su barra muestra Skills (R-8). */
+  skills: number
 }
 
 /**
@@ -723,7 +725,29 @@ export const CANALES = {
   archivoSkill: 'skills:archivo',
   skillsCambiaron: 'skills:cambiaron',
   ideas: 'ideas:lista',
+  estadoProyecto: 'proyectos:estado',
+  archivarProyecto: 'proyectos:archivar',
+  iconoProyecto: 'proyectos:icono',
+  abrirEnVsCode: 'proyectos:vscode',
+  abrirCarpetaProyecto: 'proyectos:explorador',
+  nuevoProyecto: 'proyectos:nuevo',
+  ideasProyecto: 'proyecto:ideas',
+  skillsProyecto: 'proyecto:skills',
 } as const
+
+/** Lo que vuelve de una acción del menú de la tarjeta (R-7): la lista ya releída, para verla al instante. */
+export type ResultadoFicha =
+  | { tipo: 'ok'; lista: ListaProyectos }
+  | { tipo: 'cancelada' }
+  | { tipo: 'error'; mensaje: string }
+
+/** Abrir el proyecto en VS Code o en el explorador (C-12). */
+export type ResultadoAbrir = { tipo: 'ok' } | { tipo: 'error'; mensaje: string }
+
+/** Crear un proyecto (C-10): su ruta, con la lista ya releída; `aviso` si la IA no pudo arrancar. */
+export type ResultadoNuevo =
+  | { tipo: 'ok'; ruta: string; lista: ListaProyectos; aviso: string | null }
+  | { tipo: 'error'; mensaje: string }
 
 /** Lo que la ventana encuentra en `window.iridium`. */
 export interface ApiIridium {
@@ -846,4 +870,18 @@ export interface ApiIridium {
   alCambiarSkills(escuchar: () => void): () => void
   /** Las ideas de `Ideas/ideas.md` por sección (IN-1); se releen con `alCambiarDocs` de la carpeta Ideas. */
   ideas(): Promise<ListaIdeas>
+  /** El menú de la tarjeta (R-7, D-089): cambia el estado de la ficha (sin ficha, la crea). */
+  estadoProyecto(ruta: string, estado: Estado): Promise<ResultadoFicha>
+  /** Archivar (true) o desarchivar (false): la carpeta no se mueve. */
+  archivarProyecto(ruta: string, archivado: boolean): Promise<ResultadoFicha>
+  /** Abre el cuadro para elegir una imagen del proyecto como ícono. */
+  iconoProyecto(ruta: string): Promise<ResultadoFicha>
+  abrirEnVsCode(ruta: string): Promise<ResultadoAbrir>
+  abrirCarpetaProyecto(ruta: string): Promise<ResultadoAbrir>
+  /** Crea la carpeta y le pide a la IA que lo arranque con la guía, con la idea escrita (C-10). */
+  nuevoProyecto(nombre: string, idea: string): Promise<ResultadoNuevo>
+  /** Las ideas sueltas del proyecto (R-8). */
+  ideasProyecto(ruta: string): Promise<IdeasProyecto>
+  /** Las skills de `.claude/skills/` del proyecto (R-8). */
+  skillsProyecto(ruta: string): Promise<SkillProyecto[]>
 }

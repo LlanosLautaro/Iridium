@@ -18,7 +18,7 @@
 | 9. Lanzamiento | completo (entra con Armar, como cada versión) | este archivo |
 
 ## En qué estamos ahora
-Módulo completo (2026-11-04). Con Q-115 probaste IN-I1: todo bien menos **Pedir que la integren**, que no querías (para eso está el chat): se sacó. **Abrir como proyecto** te llevó a pensar la carpeta de Iridium como un «vault» (`.iridium` con Ideas, Skills y los datos internos, y respaldo opcional en GitHub): eso es Q-125, en `docs/estado.md`. Las ideas y las skills de cada proyecto (R-8) quedaron en el Backlog de `10-operacion.md`.
+Módulo completo (2026-11-04). Con Q-115 probaste IN-I1: todo bien menos **Pedir que la integren**, que no querías (para eso está el chat): se sacó. **Abrir como proyecto** te llevó a pensar la carpeta de Iridium como un «vault» (`.iridium` con Ideas, Skills y los datos internos, y respaldo opcional en GitHub): eso es Q-125, en `docs/estado.md`. Las ideas y las skills de cada proyecto (R-8) se hicieron después, en D-089.
 
 Verificado: `pnpm test` (564), `pnpm e2e` (81), typecheck y lint.
 

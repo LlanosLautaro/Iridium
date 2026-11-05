@@ -94,6 +94,8 @@
 | D-085 | 2026-11-04 | general (Compartir) | 10, a pedido del usuario | Las copias compartidas se actualizan solas desde las versiones publicadas en GitHub | vigente |
 | D-087 | 2026-11-04 | general | 10 (Q-125) | Ideas y Skills viven en `.iridium`, dentro de la carpeta de proyectos, como un vault | vigente |
 | D-086 | 2026-11-04 | general | 10 (Q-124) | Una skill «iridium» viaja con Iridium y se carga solo en sus conversaciones, con la guía de hitos si falta | vigente |
+| D-088 | 2026-11-05 | Revisión | 10 (R-9) | Un comentario de la Revisión se cierra solo cuando está hecho; lo que queda para después es «anotado» | vigente |
+| D-089 | 2026-11-05 | general | 10 (R-7, R-8), a pedido del usuario | El menú del clic derecho en la tarjeta, Nuevo proyecto, y las ideas y las skills de cada proyecto | vigente |
 
 ---
 
@@ -2082,3 +2084,26 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Consecuencias:**
 - La skill `iridium`, la instrucción de las sesiones y el mensaje de Enviar ahora dicen la regla. R-7 y R-8 pasan a `anotado`.
 - Pruebas: `tests/revision-core.test.ts` (leer `anotado`) y `tests/e2e/r2-revision.spec.ts` (el grupo Anotados).
+
+## D-089 — El menú del clic derecho en la tarjeta, Nuevo proyecto, y las ideas y las skills de cada proyecto
+- **Fecha:** 2026-11-05
+- **Ámbito:** general (Proyectos y la vista del proyecto; C-9, C-10, C-12)
+- **Hito o paso:** 10 (R-7 y R-8, anotados en D-088; el usuario pidió hacerlos)
+- **Estado:** vigente
+
+**Contexto:** R-7 pedía el clic derecho de la tarjeta con las opciones que tenía el Gestor y un botón para crear proyectos; R-8, un ícono con las ideas del proyecto y otro con sus skills, este solo si existen. Hasta ahora Iridium solo leía las fichas (`05-arquitectura.md` › Modelo de datos: «el Centro solo lee en el MVP»).
+
+**Decisión:**
+1. **Clic derecho** (o la tecla de menú, o Mayús+F10) en una tarjeta: **Abrir**, **Abrir en VS Code**, **Abrir la carpeta**; el **Estado** (todos menos En rescate, que necesita decir qué proyecto lo reemplaza: eso se le pide a la IA), **Archivar** / **Desarchivar** (con **Deshacer** en el aviso) y **Cambiar ícono…** (una imagen de la carpeta del proyecto). Elegir un estado en un proyecto sin ficha la crea; archivar y el ícono esperan a que tenga una. Con la ficha dañada, solo abrir.
+2. **Iridium escribe la ficha** solo en esos tres campos, con el código del Gestor (D-026): de forma atómica y conservando lo que no conoce. Descripción, etiquetas y reemplazo siguen siendo de la IA.
+3. **Nuevo proyecto**, arriba de la grilla (y en la carpeta vacía): el nombre y, si se quiere, la idea. Iridium crea la carpeta, la abre y le manda a la IA el primer mensaje: que lo arranque con la guía (hito 0) y haga la ficha y el ícono. No hay formulario de la ficha: lo hace la IA, como en el resto.
+4. **VS Code** se abre lanzando `Code.exe` directo (se busca al lado del `code` del PATH y en las dos instalaciones de siempre), sin consola.
+5. **En la barra del proyecto**, **Ideas del proyecto** (siempre) muestra las secciones de la guía donde se anotan las ideas: `07-construccion.md` › Ideas nuevas y `00-idea.md` › Ideas para después, como en Docs y con un botón a su documento. **Skills del proyecto** aparece solo si el proyecto tiene alguna en `.claude/skills/` (Claude Code las carga solo ahí; es lo de «elegir por proyecto» que D-064 dejó para después, solo para verlas): nombre, descripción y **Ver** en Archivos.
+
+**Motivo:** lo del Gestor que más se usa, sin salir de Iridium; las ideas, a un clic en vez de buscarlas en Docs; las skills del proyecto, a la vista solo donde las hay.
+
+**Consecuencias:**
+- `05-arquitectura.md` › Modelo de datos y Seguridad: Iridium escribe estado, archivado e ícono de `.proyecto.json` y crea la carpeta de un proyecto nuevo.
+- La skill `iridium` dice que el usuario puede cambiar esos campos desde Iridium y qué muestran las dos secciones nuevas.
+- Sigue pendiente de C-8 y C-9: buscar entre proyectos, agruparlos y filtrarlos (`10-operacion.md` › Backlog).
+- Pruebas: `tests/r7-r8-proyectos.test.ts`, `tests/gestor/core-edicion.test.ts`, `tests/gestor/app-edicion.test.ts` y `tests/e2e/r7-r8-proyectos.spec.ts` (capturas `tools/salida/r7-*.png` y `r8-*.png`). `IRIDIUM_VSCODE=falso` hace que las pruebas no abran VS Code ni el explorador.

@@ -119,7 +119,7 @@ Los archivos de cada proyecto son la fuente de verdad: el Centro los lee y los m
 
 | Entidad | Qué tiene | Dónde vive | Quién escribe |
 |---|---|---|---|
-| **Proyecto** | Carpeta, nombre, ficha (estado, descripción, ícono, archivado) | `la carpeta de proyectos/<proyecto>/` y `.proyecto.json` | El Gestor y la IA; el Centro solo lee en el MVP |
+| **Proyecto** | Carpeta, nombre, ficha (estado, descripción, ícono, archivado) | `la carpeta de proyectos/<proyecto>/` y `.proyecto.json` | La IA; Iridium cambia el estado, archivado y el ícono desde el menú de la tarjeta y crea la carpeta de un proyecto nuevo (D-089) |
 | **Estado** | Hito actual, tabla de hitos con su estado, en qué estamos, pendientes, preguntas abiertas, próximo paso | `docs/estado.md` | La IA |
 | **Hito** | Número, nombre, estado (palabra fija, D-019), documento, portón como lista | Tabla de `estado.md` + el documento del hito | La IA |
 | **Pregunta (`Q-n`)** | Código, pregunta, tipo, si frena, contexto, opciones, casillas, citas a otras secciones | `estado.md` › Preguntas abiertas | La IA |
@@ -197,7 +197,7 @@ Los archivos de cada proyecto son la fuente de verdad: el Centro los lee y los m
 |---|---|
 | Dependencias confiables y al día | Versiones fijas; pocas dependencias; revisión de vulnerabilidades con `pnpm audit` en cada iteración |
 | Backups de lo difícil de recuperar | En el MVP los datos del Centro se pueden rehacer; la biblioteca de diseño (después) se respalda cuando exista |
-| No borrar ni sobrescribir archivos del usuario sin confirmación | El Centro solo escribe `respuestas/`, `docs/revision/` (D-048) y sus propios datos. Si una respuesta ya existe, se pregunta antes de reemplazarla. Lo que hace la IA queda en git (D-021). En git, Iridium solo crea el repositorio y lo publica, cuando lo pide el usuario; al crearlo, agrega al `.gitignore` las dependencias y los archivos con claves (D-081) |
+| No borrar ni sobrescribir archivos del usuario sin confirmación | El Centro solo escribe `respuestas/`, `docs/revision/` (D-048), el estado, archivado e ícono de `.proyecto.json` (de forma atómica y conservando lo demás, D-089) y sus propios datos; crea la carpeta de un proyecto nuevo, sin pisar una que exista. Si una respuesta ya existe, se pregunta antes de reemplazarla. Lo que hace la IA queda en git (D-021). En git, Iridium solo crea el repositorio y lo publica, cuando lo pide el usuario; al crearlo, agrega al `.gitignore` las dependencias y los archivos con claves (D-081) |
 | Secretos fuera del código | El Centro no guarda credenciales: el inicio de sesión lo maneja Claude Code, y el de GitHub, el Administrador de credenciales de git (Iridium usa la clave en memoria para crear el repositorio, D-081). Al arrancar verifica que no haya una clave de API pisando la suscripción y avisa si la hay |
 | Comunicación cifrada | La hace Claude Code por HTTPS |
 | Validar todo contenido externo | La ventana no ejecuta Node ni tiene acceso al disco: pide todo por el puente, que valida cada pedido. Los `.md` se muestran con `markdown-it` sin HTML crudo. Los enlaces externos se abren en el navegador, solo `http`/`https`. Política de contenido que no carga nada de internet |

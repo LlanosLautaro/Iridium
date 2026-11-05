@@ -34,6 +34,8 @@ Si algo de Iridium falla (no del proyecto), no intentes arreglar la app: anotalo
 | **Pendientes** | Las `Q-n` sin responder, con un formulario | «Preguntas abiertas» de cada `estado.md` y `docs/respuestas/` |
 | **Docs** y **Mapa** | Los documentos y el avance por hitos, frentes e iteraciones | `docs/*.md` y `docs/modulos/*/estado.md` |
 | **Scripts** | Un botón por script | `docs/scripts.md` |
+| **Ideas del proyecto** | Las ideas para después, a un clic | `07-construccion.md` › «Ideas nuevas…» y `00-idea.md` › «Ideas para después…» (el `## ` tiene que empezar así; cada punto de la lista, una idea) |
+| **Skills del proyecto** | Las skills propias del proyecto; el ícono sale solo si hay alguna | `.claude/skills/<skill>/SKILL.md` (`name` y `description`) |
 | **Git** | Los commits y si está en GitHub | el repo del proyecto |
 | **Revisión** | Los comentarios del usuario sobre la interfaz | `docs/revision/R-n.md` |
 | **Skills** | Las skills y si cada proyecto está al día con la guía | la carpeta de skills y `**Formato de la guía:**` de `docs/README.md` |
@@ -152,6 +154,7 @@ La tarjeta sale de `.proyecto.json` en la raíz del proyecto. Sin ficha, o con e
 - Obligatorios: `version` (1) y `estado`, uno de `idea`, `en-desarrollo`, `en-uso`, `pausado`, `descontinuado`, `en-rescate`, `para-eliminar`. El estado decide el grupo de la grilla.
 - `icono`: ruta relativa dentro del proyecto (svg, png, jpg, webp, gif, ico), nunca absoluta ni con `..`; `null` es el genérico. De costumbre, un `.proyecto-icono.svg` cuadrado y simple.
 - `reemplazadoPor`: el nombre de la carpeta del proyecto que lo reemplaza, o `null`. Los campos que no conozcas, dejalos como están.
+- El usuario puede cambiar `estado`, `archivado` e `icono` desde el menú de la tarjeta en Iridium: releé la ficha antes de tocarla. Con **Nuevo proyecto**, Iridium crea la carpeta vacía y te manda el primer mensaje: arrancá con la guía y creá la ficha y el ícono.
 
 ## Al cerrar cada sesión de un proyecto
 

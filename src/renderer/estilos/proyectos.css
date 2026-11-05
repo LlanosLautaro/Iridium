@@ -332,3 +332,103 @@
     opacity: 0.55;
   }
 }
+
+/* Lo que pasó con una acción del menú de la tarjeta (R-7): archivado con Deshacer, o el error */
+.aviso-grilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 var(--esp-lg);
+  padding: 8px 8px 8px 14px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-bloque);
+  background: var(--elevado);
+  color: var(--texto-2);
+  line-height: 1.5;
+}
+.aviso-grilla > .ic {
+  flex: none;
+  color: var(--ok);
+}
+.aviso-grilla.error > .ic {
+  color: var(--error);
+}
+.aviso-grilla .btn-ic {
+  margin-left: auto;
+}
+
+/* El menú del clic derecho (R-7): los menús de la app, donde está el mouse */
+.menu-contextual {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  min-width: 220px;
+  max-height: calc(100vh - 16px);
+}
+.menu-contextual button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--radio-control);
+  color: var(--texto-2);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.menu-contextual button .ic {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--texto-3);
+}
+.menu-contextual button:disabled {
+  opacity: 0.45;
+}
+.menu-contextual hr {
+  margin: 4px 6px;
+  border: 0;
+  border-top: 1px solid var(--borde);
+}
+.menu-contextual .marca {
+  display: inline-flex;
+  width: 14px;
+  flex: none;
+}
+.menu-contextual button:hover:not(:disabled),
+.menu-contextual button:focus-visible {
+  background: var(--hover);
+  color: var(--texto);
+  outline: none;
+}
+.menu-contextual button[aria-checked="true"] {
+  color: var(--primario);
+}
+.menu-contextual button[aria-checked="true"] .ic {
+  color: var(--primario);
+}
+
+/* Nuevo proyecto (R-7, C-10) */
+.nuevo-proyecto {
+  width: min(500px, calc(100vw - 40px));
+}
+.campo-nuevo {
+  display: grid;
+  gap: 5px;
+  color: var(--texto-2);
+  font-size: var(--tam-chico);
+}
+.campo-nuevo small {
+  color: var(--texto-3);
+}
+.campo-nuevo textarea.campo {
+  padding: 8px 10px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.error-nuevo {
+  color: var(--error);
+  font-size: var(--tam-chico);
+}

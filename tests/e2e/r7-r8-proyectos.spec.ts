@@ -1,0 +1,209 @@
+// R-7 y R-8 (D-089): el menú del clic derecho en la tarjeta, Nuevo proyecto y las ideas y las skills del proyecto.
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
+
+const SALIDA = join(process.cwd(), 'tools', 'salida')
+let raiz: string
+let datos: string
+
+async function escribir(relativa: string, texto: string) {
+  await mkdir(join(raiz, relativa, '..'), { recursive: true })
+  await writeFile(join(raiz, relativa), texto)
+}
+const ficha = (estado: string, descripcion: string) =>
+  JSON.stringify({
+    version: 1,
+    descripcion,
+    estado,
+    etiquetas: [],
+    icono: null,
+    archivado: false,
+    reemplazadoPor: null,
+  })
+const leerFicha = async (nombre: string) =>
+  JSON.parse(await readFile(join(raiz, nombre, '.proyecto.json'), 'utf8')) as Record<string, unknown>
+
+async function abrir(): Promise<{ app: ElectronApplication; win: Page }> {
+  const env = {
+    ...process.env,
+    IRIDIUM_DATOS: datos,
+    IRIDIUM_MOTOR: 'falso',
+    IRIDIUM_REVISION: 'no',
+    IRIDIUM_VSCODE: 'falso',
+  } as Record<string, string>
+  delete env.ELECTRON_RUN_AS_NODE
+  const app = await electron.launch({ args: ['.'], env })
+  const win = await app.firstWindow()
+  await win.setViewportSize({ width: 1440, height: 900 })
+  return { app, win }
+}
+
+test.beforeEach(async () => {
+  raiz = await mkdtemp(join(tmpdir(), 'iridium-e2e-r7-'))
+  datos = await mkdtemp(join(tmpdir(), 'iridium-e2e-r7-datos-'))
+  await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz }))
+  await escribir('Alfa/.proyecto.json', ficha('en-desarrollo', 'Una app de prueba'))
+  await escribir(
+    'Alfa/logo.svg',
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8"/></svg>',
+  )
+  await escribir(
+    'Alfa/docs/estado.md',
+    '# Estado\n\n## Hito actual\n7 — Construcción — en curso\n\n## Preguntas abiertas\n(ninguna)\n',
+  )
+  await escribir(
+    'Alfa/docs/00-idea.md',
+    '# Idea\n\n## Ideas para después (sin compromiso)\n- Un **canvas** para pensar.\n\n## Otra\nNada.\n',
+  )
+  await escribir(
+    'Alfa/docs/07-construccion.md',
+    '# Construcción\n\n## Ideas nuevas (pendientes de evaluar)\n- Exportar a PDF.\n- Modo oscuro.\n\n## Deuda técnica\n- x\n',
+  )
+  await escribir(
+    'Alfa/.claude/skills/publicar-alfa/SKILL.md',
+    '---\nname: publicar-alfa\ndescription: Cómo publicar una versión de Alfa.\n---\n\n# Publicar\n',
+  )
+  await escribir('Beta/.proyecto.json', ficha('idea', 'Otra app'))
+  await mkdir(join(raiz, 'Gamma'))
+})
+
+test.afterEach(async () => {
+  await rm(raiz, { recursive: true, force: true })
+  await rm(datos, { recursive: true, force: true })
+})
+
+test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cambia el ícono y abre afuera (R-7)', async () => {
+  const { app, win } = await abrir()
+  const beta = win.locator('.tarjeta', { hasText: 'Beta' })
+  await beta.click({ button: 'right' })
+  const menu = win.getByRole('menu', { name: 'Acciones de Beta' })
+  await expect(menu).toBeVisible()
+  await expect(menu.getByRole('menuitemradio', { name: 'Idea' })).toHaveAttribute('aria-checked', 'true')
+  await expect(menu.getByRole('menuitemradio', { name: 'En rescate' })).toHaveCount(0)
+  await win.screenshot({ path: join(SALIDA, 'r7-menu.png') })
+
+  await menu.getByRole('menuitemradio', { name: 'Pausado' }).click()
+  await expect(menu).toHaveCount(0)
+  await expect(beta).toContainText('pausado')
+  expect(await leerFicha('Beta')).toMatchObject({ estado: 'pausado', descripcion: 'Otra app' })
+
+  // Archivar: sale de la grilla y el aviso deja deshacerlo.
+  await beta.click({ button: 'right' })
+  await menu.getByRole('menuitem', { name: 'Archivar' }).click()
+  await expect(beta).toHaveCount(0)
+  await expect(win.locator('.aviso-grilla')).toContainText('«Beta» archivado.')
+  expect(await leerFicha('Beta')).toMatchObject({ archivado: true })
+  await win.locator('.aviso-grilla').getByRole('button', { name: 'Deshacer' }).click()
+  await expect(beta).toBeVisible()
+  await expect.poll(async () => (await leerFicha('Beta')).archivado).toBe(false)
+
+  // Sin ficha: archivar e ícono esperan a que tenga estado; elegir uno la crea.
+  const gamma = win.locator('.tarjeta', { hasText: 'Gamma' })
+  await gamma.click({ button: 'right' })
+  const menuGamma = win.getByRole('menu', { name: 'Acciones de Gamma' })
+  await expect(menuGamma.getByRole('menuitem', { name: 'Archivar' })).toBeDisabled()
+  await expect(menuGamma.getByRole('menuitem', { name: 'Cambiar ícono…' })).toBeDisabled()
+  await menuGamma.getByRole('menuitemradio', { name: 'En desarrollo' }).click()
+  await expect(gamma).toContainText('en desarrollo')
+  expect(await leerFicha('Gamma')).toMatchObject({ version: 1, estado: 'en-desarrollo', descripcion: '' })
+
+  // Cambiar ícono: el cuadro de Windows se reemplaza por uno que elige el logo del proyecto.
+  const logo = join(raiz, 'Alfa', 'logo.svg')
+  await app.evaluate(({ dialog }, ruta) => {
+    dialog.showOpenDialog = (async () => ({
+      canceled: false,
+      filePaths: [ruta],
+    })) as typeof dialog.showOpenDialog
+  }, logo)
+  const alfa = win.locator('.tarjeta', { hasText: 'Alfa' })
+  await expect(alfa.locator('.icono img')).toHaveCount(0)
+  await alfa.click({ button: 'right' })
+  await win
+    .getByRole('menu', { name: 'Acciones de Alfa' })
+    .getByRole('menuitem', { name: 'Cambiar ícono…' })
+    .click()
+  await expect(alfa.locator('.icono img')).toHaveCount(1)
+  expect(await leerFicha('Alfa')).toMatchObject({ icono: 'logo.svg' })
+
+  // Con el teclado: Mayús+F10 abre el menú en la tarjeta con el foco; Esc lo cierra y el foco vuelve a la tarjeta.
+  await alfa.focus()
+  await win.keyboard.press('Shift+F10')
+  const menuAlfa = win.getByRole('menu', { name: 'Acciones de Alfa' })
+  await expect(menuAlfa.getByRole('menuitem', { name: 'Abrir', exact: true })).toBeFocused()
+  await win.keyboard.press('ArrowDown')
+  await expect(menuAlfa.getByRole('menuitem', { name: 'Abrir en VS Code' })).toBeFocused()
+  await win.keyboard.press('Escape')
+  await expect(menuAlfa).toHaveCount(0)
+  await expect(alfa).toBeFocused()
+
+  // VS Code y el explorador (con IRIDIUM_VSCODE=falso no se abre nada): sin error.
+  await alfa.click({ button: 'right' })
+  await menuAlfa.getByRole('menuitem', { name: 'Abrir en VS Code' }).click()
+  await expect(menuAlfa).toHaveCount(0)
+  await expect(win.locator('.aviso-grilla.error')).toHaveCount(0)
+  await app.close()
+})
+
+test('Nuevo proyecto crea la carpeta, la abre y la IA arranca con la idea (R-7, C-10)', async () => {
+  const { app, win } = await abrir()
+  await win.getByRole('button', { name: 'Nuevo proyecto' }).click()
+  const cuadro = win.getByRole('dialog', { name: 'Nuevo proyecto' })
+  await expect(cuadro.getByRole('textbox', { name: 'Nombre' })).toBeFocused()
+  await cuadro.getByRole('textbox', { name: 'Nombre' }).fill('alfa')
+  await cuadro.getByRole('button', { name: 'Crear' }).click()
+  await expect(cuadro.getByRole('alert')).toHaveText('Ya hay una carpeta con ese nombre.')
+
+  await cuadro.getByRole('textbox', { name: 'Nombre' }).fill('Delta')
+  await cuadro.getByRole('textbox', { name: /La idea/ }).fill('Una app para anotar recetas.')
+  await win.screenshot({ path: join(SALIDA, 'r7-nuevo.png') })
+  await cuadro.getByRole('button', { name: 'Crear' }).click()
+  await expect(cuadro).toHaveCount(0)
+  await expect(win.locator('.principal > .cabecera h1')).toHaveText('Delta')
+  expect((await stat(join(raiz, 'Delta'))).isDirectory()).toBe(true)
+  await expect(win.locator('.turno').first()).toContainText('Es un proyecto nuevo, «Delta»')
+  await expect(win.locator('.turno').first()).toContainText('Una app para anotar recetas.')
+  // Que termine el turno: cerrar con la IA trabajando pregunta antes (F-6).
+  await expect(win.locator('.ses', { hasText: 'Delta' })).not.toContainText('Trabajando', { timeout: 30_000 })
+  await app.close()
+})
+
+test('el proyecto muestra sus ideas y, si tiene, sus skills (R-8)', async () => {
+  const { app, win } = await abrir()
+  const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
+
+  // Beta no tiene skills: su barra no muestra el ícono.
+  await win.locator('.tarjeta', { hasText: 'Beta' }).click()
+  await expect(barra.getByRole('button', { name: 'Ideas del proyecto' })).toBeVisible()
+  await expect(barra.getByRole('button', { name: 'Skills del proyecto' })).toHaveCount(0)
+  await barra.getByRole('button', { name: 'Ideas del proyecto' }).click()
+  await expect(win.locator('[data-seccion="ideas"]')).toContainText('todavía no tiene una sección de ideas')
+
+  // Una skill nueva en Beta hace aparecer el ícono solo.
+  await escribir('Beta/.claude/skills/probar/SKILL.md', '---\nname: probar\ndescription: Prueba.\n---\n')
+  await expect(barra.getByRole('button', { name: 'Skills del proyecto' })).toBeVisible()
+
+  await win.locator('button.inicio').click()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await barra.getByRole('button', { name: 'Ideas del proyecto' }).click()
+  const ideas = win.locator('[data-seccion="ideas"]')
+  await expect(ideas.locator('.seccion-ideas h4')).toHaveText([
+    'Ideas nuevas (pendientes de evaluar) 2',
+    'Ideas para después (sin compromiso) 1',
+  ])
+  await expect(ideas.locator('.seccion-ideas').first()).toContainText('Exportar a PDF.')
+  await expect(ideas.locator('.seccion-ideas').first()).not.toContainText('Deuda técnica')
+  await win.screenshot({ path: join(SALIDA, 'r8-ideas.png') })
+  await ideas.getByRole('button', { name: '07-construccion.md' }).click()
+  await expect(win.locator('[data-seccion="docs"] .barra-doc .nom')).toHaveText('07-construccion.md')
+
+  await barra.getByRole('button', { name: 'Skills del proyecto' }).click()
+  const skills = win.locator('[data-seccion="skills"]')
+  await expect(skills.locator('.skill-proyecto h4')).toHaveText(['publicar-alfa'])
+  await expect(skills).toContainText('Cómo publicar una versión de Alfa.')
+  await win.screenshot({ path: join(SALIDA, 'r8-skills.png') })
+  await skills.getByRole('button', { name: 'Ver' }).click()
+  await expect(win.locator('[data-seccion="archivos"]')).toContainText('SKILL.md')
+  await app.close()
+})

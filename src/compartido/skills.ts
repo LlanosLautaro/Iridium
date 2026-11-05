@@ -71,3 +71,12 @@ export interface Atrasados {
 export const MENSAJE_PONER_AL_DIA =
   'Poné al día el formato de la documentación de este proyecto: seguí `references/actualizar-formato.md` de la ' +
   'guía `hitos-desarrollo-app`.'
+
+/** Una skill del proyecto (R-8): de su `.claude/skills/`, que Claude Code carga solo en ese proyecto. */
+export interface SkillProyecto {
+  /** Como la nombra el `SKILL.md` (o su carpeta, si no lo dice). */
+  nombre: string
+  descripcion: string | null
+  /** El `SKILL.md`, relativo al proyecto con `/`: se abre en Archivos. */
+  archivo: string
+}

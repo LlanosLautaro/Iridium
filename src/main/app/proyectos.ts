@@ -10,6 +10,7 @@ import type { CarpetaProyecto } from '../core/proyectos'
 import { CARPETA_REVISION, leerComentario } from '../core/revision/comentario'
 import type { CarpetasEnDisco } from '../infra/carpeta-iridium'
 import { leerArchivoGuia, leerArchivoMetadatos, leerCarpetas, RaizNoEncontrada } from '../infra/raiz'
+import { skillsEnProyecto } from '../infra/skills'
 
 /** Un ícono más grande que esto no se manda a la ventana: se muestra la inicial. */
 const LIMITE_ICONO_BYTES = 512 * 1024
@@ -105,10 +106,11 @@ export async function contarRevisionAbiertos(ruta: string): Promise<number> {
 }
 
 async function tarjetaDe(c: CarpetaProyecto): Promise<TarjetaProyecto> {
-  const [icono, preguntas, revision] = await Promise.all([
+  const [icono, preguntas, revision, skills] = await Promise.all([
     leerIcono(c),
     leerPendientes(c.ruta),
     contarRevisionAbiertos(c.ruta),
+    skillsEnProyecto(c.ruta),
   ])
   return armarTarjeta({
     nombre: c.nombre,
@@ -118,6 +120,7 @@ async function tarjetaDe(c: CarpetaProyecto): Promise<TarjetaProyecto> {
     icono,
     preguntas,
     revision,
+    skills: skills.length,
   })
 }
 

@@ -4,6 +4,7 @@ import type { DatosEdicion } from '../../src/compartido/tipos'
 import {
   cambiarArchivado,
   cambiarEstado,
+  cambiarIcono,
   camposDesconocidos,
   mezclarEdicion,
   serializarMetadatos,
@@ -117,9 +118,22 @@ describe('cambiarEstado (menú)', () => {
     })
   })
 
-  it('no sirve sin datos válidos ni para En rescate', () => {
-    expect(typeof cambiarEstado(null, 'pausado')).toBe('string')
+  it('sin ficha, la estrena con ese estado (R-7, D-089)', () => {
+    expect(cambiarEstado(null, 'pausado')).toEqual({
+      version: 1,
+      descripcion: '',
+      estado: 'pausado',
+      etiquetas: [],
+      icono: null,
+      archivado: false,
+      reemplazadoPor: null,
+      otros: {},
+    })
+  })
+
+  it('no sirve con la ficha dañada ni para En rescate', () => {
     expect(typeof cambiarEstado(leerMetadatos('{ roto'), 'pausado')).toBe('string')
+    expect(typeof cambiarEstado(null, 'en-rescate')).toBe('string')
     expect(typeof cambiarEstado(ok, 'en-rescate')).toBe('string')
   })
 })
@@ -138,5 +152,24 @@ describe('cambiarArchivado (D-004)', () => {
   it('un proyecto sin datos válidos se clasifica primero', () => {
     expect(typeof cambiarArchivado(null, true)).toBe('string')
     expect(typeof cambiarArchivado(leerMetadatos('{ roto'), true)).toBe('string')
+  })
+})
+
+describe('cambiarIcono (R-7)', () => {
+  const actual = leerMetadatos(JSON.stringify({ version: 1, estado: 'en-uso', descripcion: 'x', extra: 1 }))
+
+  it('pone la ruta relativa con «/» y conserva el resto', () => {
+    expect(cambiarIcono(actual, 'img\\logo.svg')).toMatchObject({
+      icono: 'img/logo.svg',
+      estado: 'en-uso',
+      otros: { extra: 1 },
+    })
+  })
+
+  it('no acepta lo que no es una imagen del proyecto ni un proyecto sin ficha usable', () => {
+    expect(typeof cambiarIcono(actual, '../afuera.svg')).toBe('string')
+    expect(typeof cambiarIcono(actual, 'notas.txt')).toBe('string')
+    expect(typeof cambiarIcono(null, 'logo.svg')).toBe('string')
+    expect(typeof cambiarIcono(leerMetadatos('{ roto'), 'logo.svg')).toBe('string')
   })
 })

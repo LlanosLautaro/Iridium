@@ -31,7 +31,16 @@ export type SeccionAjustes = 'perfil' | 'ia' | 'apariencia' | 'proyectos' | 'ace
 
 /** Las secciones de la barra de íconos dentro de un proyecto (D-041). */
 /** La primera, «pendientes», es la de entrada: lo que espera del usuario y, al pie, los scripts (D-043, Q-62). */
-export type SeccionProyecto = 'pendientes' | 'mapa' | 'docs' | 'archivos' | 'revision' | 'git' | 'scripts'
+export type SeccionProyecto =
+  | 'pendientes'
+  | 'mapa'
+  | 'docs'
+  | 'ideas'
+  | 'archivos'
+  | 'revision'
+  | 'git'
+  | 'scripts'
+  | 'skills'
 
 /** Un lugar de Docs: el documento, su sección y, al volver con Atrás, la posición en la que se lo dejó. */
 export interface LugarDoc extends Destino {

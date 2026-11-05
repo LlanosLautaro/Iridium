@@ -402,7 +402,7 @@ Lo que se aprobó provisionalmente (D-056) o se postergó con el botón de Pendi
 
 ## Ideas nuevas (pendientes de evaluar en la definición)
 - **Una sección de aprobados provisionales (2026-10-29, Q-74).** Ver en Iridium, de todos los proyectos, lo que quedó aprobado provisional con sus pruebas a mano pendientes, y poder marcarlas cuando se hacen. Hoy viven en la tabla «Pruebas manuales pendientes» de cada `07-construccion.md`.
-- **Un atajo a las ideas en la barra de la izquierda (2026-10-29, Q-74).** Un ícono que abre las ideas del proyecto (`07-construccion.md` › Ideas nuevas; antes del hito 2, `00-idea.md` › Ideas para después) sin buscarlas en Docs.
+- **Un atajo a las ideas en la barra de la izquierda (2026-10-29, Q-74; hecho en D-089, «Ideas del proyecto»).** Un ícono que abre las ideas del proyecto (`07-construccion.md` › Ideas nuevas; antes del hito 2, `00-idea.md` › Ideas para después) sin buscarlas en Docs.
 - **Compartir Iridium con conocidos, con actualizaciones (2026-10-29, Q-72 → I-7, D-054).** Subir el repo a GitHub con dos ramas (`dev` para trabajar, `main` para lo que se reparte), versiones marcadas como beta (hoy 0.1.0), un instalador publicado en GitHub Releases y que Iridium se actualice solo o avise («hay una versión nueva, ¿instalar al cerrar?»). Lo que hoy no está y haría falta:
   - **GitHub:** el repo es solo local (no tiene remoto). Si el código es privado, los conocidos no pueden bajar las actualizaciones sin una clave; la salida habitual es un repo público solo con los instaladores, o hacer público el código (incluye `docs/`, con tus notas y decisiones).
   - **Carpeta de proyectos:** está fija en la tuya (`RAIZ_DEL_GESTOR`); hay que dejar elegirla al primer arranque.
@@ -448,7 +448,7 @@ Lo que se aprobó provisionalmente (D-056) o se postergó con el botón de Pendi
 ## Deuda técnica
 | Qué | Por qué se aceptó | Cuándo resolverla |
 |---|---|---|
-| Del Gestor se copió también lo que el Centro todavía no usa (crear, editar y eliminar proyectos; la lista por secciones de `app/casos.ts`) | Las pruebas del Gestor se cruzan entre esas partes; copiarlo entero deja las 217 pasando sin reescribir pruebas. Nada de eso está conectado a la ventana | Cuando el Centro edite fichas (después del MVP) se usa; si no, se borra al cerrar el MVP |
+| Del Gestor se copió también lo que el Centro todavía no usa (editar con el formulario y eliminar proyectos; la lista por secciones de `app/casos.ts`). Crear, cambiar el estado, archivar y el ícono ya se usan (D-089) | Las pruebas del Gestor se cruzan entre esas partes; copiarlo entero deja las 217 pasando sin reescribir pruebas. Nada de eso está conectado a la ventana | Cuando el Centro edite fichas (después del MVP) se usa; si no, se borra al cerrar el MVP |
 | ~~La prueba del receptor de la Revisión elige un puerto al azar (47400 a 47899) y falló una vez en la corrida completa (pasa sola)~~ | Pasó en cuatro corridas seguidas; no afecta a la app | Resuelta en el hito 8, tanda 1: el receptor acepta el puerto 0 y dice cuál tomó (`08-calidad.md` › Defectos 2) |
 | La ventana no se minifica (680 KB) | Es una app local que carga de disco; no cambia nada para el usuario | Si el arranque pasa de 2 s |
 

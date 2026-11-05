@@ -73,6 +73,8 @@ export function BotonAtras({ ruta }: { ruta: string }) {
           revision: paso.comentario ? paso.comentario : 'Revisión',
           git: 'Git',
           scripts: 'Scripts',
+          ideas: 'las Ideas',
+          skills: 'las Skills',
         }[paso.seccion]
   return (
     <button

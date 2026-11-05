@@ -1,12 +1,16 @@
 // Proyectos (H-1, 04-ux.md › W-2): los proyectos en una grilla, con su hito y lo que esperan del usuario. Ideas y
 // Skills están en la carpeta Iridium, aparte (D-083). A la derecha, el chat general (D-060): la conversación de la
-// carpeta Ideas, para ideas sueltas, proyectos nuevos y lo que toca a varios.
-import { type CSSProperties, type ReactNode, useState } from 'react'
-import type { ListaProyectos } from '../../../compartido/puente'
+// carpeta Ideas, para ideas sueltas, proyectos nuevos y lo que toca a varios. Arriba, Nuevo proyecto; en cada tarjeta, el
+// menú del clic derecho (R-7).
+import { type CSSProperties, type ReactNode, useCallback, useState } from 'react'
+import type { ListaProyectos, TarjetaProyecto } from '../../../compartido/puente'
 import { fichaDe, usarEstado } from '../../estado'
 import { cambiarAncho, Divisor } from '../../ui/Divisor'
 import { Icono } from '../../ui/Icono'
+import { type Punto, puntoDelMenu } from '../../ui/MenuContextual'
 import { ChatGeneral } from '../inicio/ChatGeneral'
+import { type AvisoGrilla, MenuTarjeta } from './MenuTarjeta'
+import { NuevoProyecto } from './NuevoProyecto'
 import { Tarjeta } from './Tarjeta'
 
 /**
@@ -91,6 +95,17 @@ export function Proyectos() {
   const fichas = usarEstado((s) => s.fichas)
   const ponerLista = usarEstado((s) => s.ponerLista)
   const [eligiendo, setEligiendo] = useState(false)
+  const [menu, setMenu] = useState<{ p: TarjetaProyecto; en: Punto } | null>(null)
+  const [aviso, setAviso] = useState<AvisoGrilla | null>(null)
+  const [nuevo, setNuevo] = useState(false)
+  const cerrarMenu = useCallback(() => setMenu(null), [])
+  const cerrarNuevo = useCallback(() => setNuevo(false), [])
+  const creado = async (ruta: string, avisoIa: string | null) => {
+    setNuevo(false)
+    setAviso(avisoIa ? { texto: avisoIa, error: true } : null)
+    ponerLista(await window.iridium.listarProyectos())
+    abrirProyecto(ruta)
+  }
 
   const elegirCarpeta = async () => {
     setEligiendo(true)
@@ -138,9 +153,13 @@ export function Proyectos() {
         <h2>Esta carpeta no tiene proyectos</h2>
         <p>Iridium busca proyectos en las carpetas que están dentro de:</p>
         <span className="ruta">{lista.raiz}</span>
-        <p>Creá una carpeta ahí o elegí otra carpeta de proyectos.</p>
+        <p>Creá un proyecto nuevo ahí o elegí otra carpeta de proyectos.</p>
         <div className="acc">
-          <button type="button" className="btn primario" onClick={elegirCarpeta} disabled={eligiendo}>
+          <button type="button" className="btn primario" onClick={() => setNuevo(true)}>
+            <Icono nombre="mas" />
+            Nuevo proyecto
+          </button>
+          <button type="button" className="btn secundario" onClick={elegirCarpeta} disabled={eligiendo}>
             <Icono nombre="carpeta" />
             Elegir otra carpeta
           </button>
@@ -151,7 +170,16 @@ export function Proyectos() {
     contenido = (
       <div className="grilla">
         {visibles.map((p) => (
-          <Tarjeta key={p.ruta} p={p} ficha={fichaDe(fichas, p.ruta)} abrir={() => abrirProyecto(p.ruta)} />
+          <Tarjeta
+            key={p.ruta}
+            p={p}
+            ficha={fichaDe(fichas, p.ruta)}
+            abrir={() => abrirProyecto(p.ruta)}
+            menu={(e) => {
+              e.preventDefault()
+              setMenu({ p, en: puntoDelMenu(e) })
+            }}
+          />
         ))}
       </div>
     )
@@ -173,26 +201,72 @@ export function Proyectos() {
               {lista.raiz}
             </span>
           )}
-          {conGrilla && (
+          {lista?.tipo === 'lista' && (
             <div className="der">
-              <button
-                type="button"
-                className="interruptor"
-                role="switch"
-                aria-checked={verArchivados}
-                title="Mostrar los archivados al final, más tenues"
-                onClick={() => guardarPreferencias({ verArchivados: !verArchivados })}
-              >
-                <span className="pista" />
-                Archivados <span className="n">{archivados}</span>
+              <button type="button" className="btn secundario chico" onClick={() => setNuevo(true)}>
+                <Icono nombre="mas" />
+                Nuevo proyecto
               </button>
+              {conGrilla && (
+                <button
+                  type="button"
+                  className="interruptor"
+                  role="switch"
+                  aria-checked={verArchivados}
+                  title="Mostrar los archivados al final, más tenues"
+                  onClick={() => guardarPreferencias({ verArchivados: !verArchivados })}
+                >
+                  <span className="pista" />
+                  Archivados <span className="n">{archivados}</span>
+                </button>
+              )}
             </div>
           )}
         </div>
         <div className="lienzo">
           {lista && <Mudanza lista={lista} />}
+          {aviso && (
+            <p
+              className={aviso.error ? 'aviso-grilla error' : 'aviso-grilla'}
+              role={aviso.error ? 'alert' : 'status'}
+            >
+              <Icono nombre={aviso.error ? 'error' : 'check'} />
+              {aviso.texto}
+              {aviso.deshacer && (
+                <button
+                  type="button"
+                  className="enlace"
+                  onClick={() => {
+                    aviso.deshacer?.()
+                    setAviso(null)
+                  }}
+                >
+                  Deshacer
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn-ic"
+                aria-label="Cerrar el aviso"
+                onClick={() => setAviso(null)}
+              >
+                <Icono nombre="x" />
+              </button>
+            </p>
+          )}
           {contenido}
         </div>
+        {menu && (
+          <MenuTarjeta
+            p={menu.p}
+            en={menu.en}
+            cerrar={cerrarMenu}
+            abrir={() => abrirProyecto(menu.p.ruta)}
+            ponerLista={ponerLista}
+            avisar={setAviso}
+          />
+        )}
+        {nuevo && <NuevoProyecto cerrar={cerrarNuevo} listo={(r, a) => void creado(r, a)} />}
       </section>
       <Divisor ancho={ancho} cambiar={cambiarAncho} />
       <aside className="chat" aria-label="Chat general">
