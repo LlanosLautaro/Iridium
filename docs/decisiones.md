@@ -2171,5 +2171,22 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Consecuencias:**
 - Reemplaza la parte de D-086 que carga la guía de hitos aparte, cuando el marco esté hecho.
 - Los pendientes de «poner al día la guía y `gestor-proyectos`» (D-062, D-063, D-068, Defectos 13 y 14, Q-115) pasan al marco.
-- Cómo se trabaja fuera de Iridium (VS Code, la terminal) con el marco: Q-132.
+- Fuera de Iridium no hay marco (D-093, Q-132).
 
+
+## D-093 — El marco de Iridium vive solo dentro de Iridium; afuera no hay marco
+- **Fecha:** 2026-11-05
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden (Q-132)
+- **Estado:** vigente
+
+**Contexto:** D-092 funde la guía de hitos y la skill de Iridium en un solo marco, que hoy Iridium carga solo en sus conversaciones. Al eliminar la guía, una sesión en VS Code o en la terminal se queda sin método. Opciones: A) Iridium además instala el marco como skill en la carpeta de Claude del usuario · B) todo se trabaja desde Iridium.
+
+**Decisión:** B. El marco se carga solo en las conversaciones de Iridium; no se instala en `%USERPROFILE%\.claude` ni se mantiene una versión para afuera.
+
+**Motivo:** el usuario: Iridium tiene que reemplazar a las otras apps; VS Code ya no tiene sentido para él y Claude Code a secas le queda chico para un flujo de trabajo propio como este.
+
+**Consecuencias:**
+- El marco puede dar por hecho lo que Iridium ofrece (Pendientes, el control de formato, Scripts): no necesita explicar cómo se trabaja sin la app.
+- Las instrucciones globales y los `CLAUDE.md` de los proyectos dejan de describir el método: dicen que el proyecto se trabaja desde Iridium (paso 2 de Orden).
+- Una sesión abierta fuera de Iridium no tiene método; no es un caso que se cuide. «Abrir en VS Code» (D-089) sigue para mirar archivos.
