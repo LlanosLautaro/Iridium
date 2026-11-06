@@ -2190,3 +2190,54 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - El marco puede dar por hecho lo que Iridium ofrece (Pendientes, el control de formato, Scripts): no necesita explicar cómo se trabaja sin la app.
 - Las instrucciones globales y los `CLAUDE.md` de los proyectos dejan de describir el método: dicen que el proyecto se trabaja desde Iridium (paso 2 de Orden).
 - Una sesión abierta fuera de Iridium no tiene método; no es un caso que se cuide. «Abrir en VS Code» (D-089) sigue para mirar archivos.
+
+
+## D-094 — Las ideas y los pendientes de la IA van en una sola lista, «Trabajo»
+- **Fecha:** 2026-11-06
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden, paso 2 (Q-133)
+- **Estado:** vigente
+
+**Contexto:** las ideas viven en hasta ocho lugares por proyecto y los pendientes de la IA en cinco, repetidos y sin estado (A-18, A-19). Opciones: A) una sola lista con estados · B) dos listas, ideas y pendientes.
+
+**Decisión:** A. Cada proyecto tiene `docs/trabajo.md`, con un ítem `T-n` por idea o pendiente y un estado del vocabulario único (`nueva · pendiente · en curso · en pausa · hecho · descartado`). Una idea aceptada no se mueve: cambia su estado.
+
+**Motivo:** nada se copia de un lado a otro, lo hecho no queda mezclado con lo que falta y una sola lista se lee, se filtra y se controla con una regla.
+
+**Consecuencias:**
+- «Ideas para después» (`00-idea.md`), «Ideas del brainstorming» (`01-exploracion.md`), «Ideas nuevas» y «Pendientes reportados» (`07-construccion.md`), el Pendientes de `estado.md` y el Backlog de `10-operacion.md` dejan de ser listas propias: pasan a `trabajo.md` al pasar al marco.
+- «Ideas del proyecto» se vuelve la sección **Trabajo** del proyecto (OR-4).
+- Q-131 (B) queda resuelta acá.
+
+## D-095 — Siguen el marco las carpetas con `docs/estado.md`; las demás son carpetas simples hasta que se sumen
+- **Fecha:** 2026-11-06
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden, paso 2 (Q-134)
+- **Estado:** vigente
+
+**Contexto:** de las catorce carpetas de la grilla, ocho no siguen la guía: scripts sueltos y carpetas personales (A-23). Las instrucciones globales dicen que todo proyecto la sigue, y no se cumple. Opciones: A) todas pasan al marco · B) solo las que tienen `docs/estado.md` · C) esas, y las demás se suman con un botón.
+
+**Decisión:** C. Una carpeta con `docs/estado.md` es un **proyecto**: sigue el marco y Iridium le muestra todo. Una sin él es una **carpeta simple**: tarjeta, Archivos, Git, Scripts y la conversación, sin Mapa, sin Trabajo y sin preguntas. **Pasar al marco** (desde la tarjeta o la carpeta abierta) la convierte en proyecto cuando el usuario quiera.
+
+**Motivo:** no obliga a documentar un script suelto y deja el camino abierto con un clic.
+
+**Consecuencias:**
+- La regla «todo proyecto se desarrolla con la guía» de las instrucciones globales se cambia por esta, en el chat de Skills (D-092.4).
+- El control no corre sobre las carpetas simples.
+- La grilla las muestra igual que a los proyectos, con «carpeta» en lugar del hito.
+
+## D-096 — La ronda de UX se hace al terminar cada frente y cada cinco comentarios de la Revisión juntados
+- **Fecha:** 2026-11-06
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden, paso 2 (Q-135)
+- **Estado:** vigente
+
+**Contexto:** D-091 pide una ronda de UX periódica en operación para que la interfaz no vuelva a crecer a parches. Opciones: A) cada dos semanas · B) al terminar cada frente y cada cinco comentarios de la Revisión juntados · C) solo cuando la pida el usuario.
+
+**Decisión:** B. La ronda toca cuando un frente pasa a `hecho` o cuando se juntan cinco `R-n` anotados para la ronda (D-091). Revisa toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y deja sus hallazgos en `trabajo.md`.
+
+**Motivo:** se hace cuando algo cambió de verdad, no por calendario, y no depende de que el usuario se acuerde.
+
+**Consecuencias:**
+- El marco lo dice en su referencia de operación (OR-9) y el control lo avisa: «toca la ronda de UX».
+- La ronda gasta una sesión; no se hace en medio de una iteración.

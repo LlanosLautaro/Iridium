@@ -1,7 +1,7 @@
 # Definición del módulo: Orden
 
 **Fecha:** 2026-11-06
-**Base:** `propuesta.md`, `auditoria.md` (A-1 a A-23 y sus dos «Lo que dice…»), D-091 a D-093.
+**Base:** `propuesta.md`, `auditoria.md` (A-1 a A-23 y sus dos «Lo que dice…»), D-091 a D-096.
 
 ## Objetivo del módulo
 Que todo lo que se sigue en un proyecto tenga **un lugar, un código, un frente y un estado**, escrito con **una sola regla** que Iridium lee y **controla**, y que la app se ordene sobre ese modelo. Al terminar, el usuario ve en un solo número lo que espera de él, sabe de qué frente es cada cosa, anota ideas sin la IA, y la IA no puede dejar una pregunta mal escrita sin que Iridium se lo devuelva.
@@ -16,7 +16,7 @@ Lo que se sigue en un proyecto son cuatro cosas. Cada una vive en **un solo luga
 | **Comentario** de la Revisión | `R-n` | `revision/R-n.md` | el usuario (F8); la IA lo procesa | nuevo · hecho · → `T-n` (pasó a trabajo) |
 | **Decisión** | `D-n` | `decisiones.md` | la IA, con lo que decidió el usuario | vigente · reemplazada |
 
-(La forma de `docs/trabajo.md` depende de Q-133: si las ideas y los pendientes van juntos, como se recomienda, es esta; si no, las ideas tienen su propio archivo con los mismos estados menos `pendiente` y `en curso`.)
+Las ideas y los pendientes van en una sola lista (D-094): una idea aceptada cambia de estado, no de archivo.
 
 - **El frente** es un dato de cada cosa, no un lugar: una línea `Frente: Compartir` en la pregunta o en el trabajo; sin esa línea, es del núcleo. Así Pendientes puede agrupar y filtrar por frente (D-091.5) y las `Q-n` siguen en un solo `estado.md`. Los frentes terminados siguen existiendo **en operación** y reciben su trabajo.
 - **Las preguntas en pausa:** `Tipo: consulta · en pausa`. Iridium las muestra aparte y no las cuenta (A-15).
@@ -51,7 +51,7 @@ Desaparecen `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada provision
 - **Liviano:** `SKILL.md` con lo de cada sesión (dónde estás, el modelo, los formatos, el cierre); una referencia por hito y por tipo de trabajo (módulo, operación, ronda de UX) que se lee cuando toca; las plantillas al lado.
 - **Cada formato se escribe una vez.** Lo que hoy repiten la guía y la skill con otras palabras (A-22) queda en un solo párrafo.
 - **Da por hecho Iridium** (D-093): no explica cómo trabajar sin la app; cita Pendientes, Scripts y el control.
-- **Ronda de UX:** el marco la pide en operación, para que la app no vuelva a crecer a parches (D-091; cada cuánto, Q-135).
+- **Ronda de UX:** el marco la pide en operación, para que la app no vuelva a crecer a parches (D-091): al terminar cada frente y cada cinco comentarios de la Revisión juntados (D-096). El control avisa cuando toca.
 - **Los proyectos dicen que se trabajan desde Iridium:** el `CLAUDE.md` de cada proyecto y las instrucciones globales dejan de describir el método y citan el marco. `docs/README.md` cambia `**Formato de la guía:**` por `**Marco:** AAAA-MM-DD`.
 
 ## El control
@@ -70,7 +70,8 @@ Desaparecen `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada provision
 
 ## Pasar al marco (A-9, A-23)
 - «Poner al día» de Skills se vuelve **Pasar al marco**: una pasada guiada por proyecto que mueve las ideas y pendientes a `trabajo.md`, cambia los estados al vocabulario, arregla lo que marque el control y pone la fecha del marco. Termina con el control en cero.
-- Iridium es el primero, al construir. Los demás proyectos se pasan cuando el usuario los abra o lo pida (qué carpetas, Q-134); antes no se tocan.
+- Iridium es el primero, al construir. Los demás proyectos se pasan cuando el usuario los abra o lo pida; antes no se tocan.
+- **Proyecto o carpeta simple (D-095):** una carpeta con `docs/estado.md` es un proyecto y sigue el marco. Una sin él es una carpeta simple: tarjeta, Archivos, Git, Scripts (si tiene `scripts.md`) y la conversación, sin Mapa, Trabajo ni preguntas, y el control no corre sobre ella. **Pasar al marco** la vuelve proyecto cuando el usuario quiera.
 
 ## Criterios de éxito
 - Ningún formato está escrito en dos lugares: una regla, en el marco; un lector, en Iridium.
@@ -91,7 +92,7 @@ Desaparecen `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada provision
 - **OR-5** Un vocabulario de estados, que es el único que lee el Mapa; el chip del frente muestra el paso en curso (A-5).
 - **OR-6** Pendientes agrupados por frente, con filtros y su cuenta (D-091.5).
 - **OR-7** La UX rehecha: `04-ux.md` sin capas, primero la arquitectura de información y después las pantallas, resolviendo A-1 a A-8 (un número que manda, el amarillo solo para lo que frena, Scripts en un lugar, el Mapa en operación, la conversación que se achica, una cabecera de sección).
-- **OR-8** Pasar al marco desde Skills, y este proyecto pasado al marco.
+- **OR-8** Pasar al marco desde Skills, desde la tarjeta y desde una carpeta simple abierta (D-095), y este proyecto pasado al marco.
 - **OR-9** La ronda de UX en el marco.
 
 ### Should
@@ -120,7 +121,8 @@ Sin cambios: P2. No hay datos nuevos ni contenido de terceros. El control lee ar
 | Control | Lo que Iridium revisa de los archivos de un proyecto contra el marco; le devuelve a la IA lo mal escrito |
 | Trabajo | Las ideas y los pendientes de la IA de un proyecto, con código `T-n`, en `docs/trabajo.md` |
 | En operación | Un frente terminado que sigue recibiendo trabajo |
-| Ronda de UX | Una revisión de toda la interfaz cada tanto, para que no crezca a parches |
+| Ronda de UX | Una revisión de toda la interfaz al terminar un frente o cada cinco comentarios de la Revisión, para que no crezca a parches (D-096) |
+| Carpeta simple | Una carpeta de la grilla sin `docs/estado.md`: se ve y se conversa, pero no sigue el marco (D-095) |
 | Pasar al marco | La pasada que pone un proyecto en el formato del marco; reemplaza «Poner al día» |
 
 ## Preguntas abiertas para investigar

@@ -219,7 +219,14 @@ Además de lo que está en *Won't*:
 ## Glosario
 | Término | Significado en esta app |
 |---|---|
-| Proyecto | Una carpeta de la carpeta de proyectos que sigue la guía de hitos, con su `docs/` y su ficha |
+| Proyecto | Una carpeta de la carpeta de proyectos con `docs/estado.md` y su ficha; sigue el marco (D-095) |
+| Carpeta simple | Una carpeta de la grilla sin `docs/estado.md`: se ve y se conversa, pero no sigue el marco; **Pasar al marco** la vuelve proyecto (D-095) |
+| Marco | Las reglas para trabajar un proyecto desde Iridium: el método, los formatos y la ficha; reemplaza la guía de hitos (D-092, D-093) |
+| Control | Lo que Iridium revisa de los archivos de un proyecto contra el marco; le devuelve a la IA lo mal escrito al terminar el turno (D-092) |
+| Trabajo | Las ideas y los pendientes de la IA de un proyecto, con código `T-n` y un estado, en `docs/trabajo.md` (D-094) |
+| En operación | Un frente terminado que sigue recibiendo trabajo |
+| Ronda de UX | Una revisión de toda la interfaz al terminar un frente o cada cinco comentarios de la Revisión (D-096) |
+| Pasar al marco | La pasada que pone un proyecto en el formato del marco; reemplaza «Poner al día» de Skills |
 | Vista general | La pantalla con lo de todos los proyectos: la lista, los pendientes, la biblioteca de diseño, las skills (D-015) |
 | Vista de proyecto | La pantalla de un proyecto abierto, donde todo es de ese proyecto (D-015) |
 | Sesión | La conversación con la IA de un proyecto; hay una por proyecto y sigue aunque no esté a la vista |
@@ -232,7 +239,7 @@ Además de lo que está en *Won't*:
 | Paso | Una parte de un hito que el mapa muestra: un área, una iteración, un paso de un módulo |
 | Frente | Una línea de trabajo del proyecto con su propio estado: el núcleo o un módulo. Avanzan hasta dos a la vez (D-063) |
 | Origen (de una skill) | De dónde viene: propia, copia de un tercero, desde la cuenta o de un complemento (módulo Skills, D-064) |
-| Formato de la guía | La forma de los documentos que pide `hitos-desarrollo-app`; cuando cambia, los proyectos hechos antes quedan atrasados (D-064) |
+| Formato de la guía | La forma de los documentos que pide `hitos-desarrollo-app` (D-064); con el marco pasa a ser la fecha del marco (D-092) |
 | Tema | El juego de colores, letra y esquinas de toda la app, los tokens de `docs/ui/tokens.css` (módulo Apariencia, D-065) |
 | Tono | El estilo de respuesta de Claude Code (*output style*) que usan las sesiones de Iridium (D-065) |
 | Pendiente | Lo que espera del usuario; se escribe como `Q-n` en `estado.md` (D-010) |
