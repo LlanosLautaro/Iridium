@@ -101,6 +101,15 @@
         ],
         "createdAt": "2026-10-29T01:42:37.292Z",
         "reason": "Claude: las pestañas de sesión llenan el alto de su barra como en VS Code (D-031), mismo marco y excepción que vista-proyecto.html; las teclas kbd, chips y la app de ejemplo otra app son compactas a propósito"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/ui/vista-orden.html"
+        ],
+        "createdAt": "2026-11-06T12:40:59.278Z",
+        "reason": "Claude: chips, cuentas y filtros compactos con el relleno del design system (DESIGN.md › Chips: 7 px; contador del badge)"
       }
     ]
   }
