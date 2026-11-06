@@ -68,7 +68,7 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 - La entrada «control» en la conversación (W-12): plegable, en gris, con ✓ por lo corregido y «!» por lo que quedó; al volver a abrir la conversación se ve igual, no como un mensaje del usuario.
 - El motor falso con `IRIDIUM_FALSO_MAL=1` (corrige) y `=terco` (no corrige).
 
-**Pruebas:** `tests/or1-control.test.ts` (17: el vocabulario, las preguntas, `trabajo.md` y cada regla con los casos de la auditoría) y `tests/or1-devolucion.test.ts` (3: corrige en el mismo turno, la terca deja el aviso sin un segundo envío, sin framework no corre). Todas las de Vitest pasan (608).
+**Pruebas:** `tests/or1-control.test.ts` (17: el vocabulario, las preguntas, `trabajo.md` y cada regla con los casos de la auditoría) y `tests/or1-devolucion.test.ts` (3: corrige en el mismo turno, la terca deja el aviso sin un segundo envío, sin framework no corre). Todas las de Vitest pasan (608). Playwright: 90 de 90 (en la corrida completa fallaron tres de la Revisión por la carga, que pasan solas, y la de Acerca de porque la app se había armado antes del commit; rearmada, pasa).
 
 **Falta:** ver Pendientes.
 
