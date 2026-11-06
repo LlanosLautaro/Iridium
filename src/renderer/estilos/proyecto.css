@@ -304,6 +304,7 @@
   color: var(--espera);
 }
 .h.h-saltado,
+.h.h-en-pausa,
 .h.h-otro {
   border-style: dashed;
 }
@@ -435,6 +436,7 @@
 }
 .chip.hito-pendiente,
 .chip.hito-saltado,
+.chip.hito-en-pausa,
 .chip.hito-otro {
   color: var(--texto-2);
 }
@@ -990,6 +992,7 @@
   border-color: var(--espera-borde);
 }
 .leyenda-linea i.h-saltado,
+.leyenda-linea i.h-en-pausa,
 .leyenda-linea i.h-otro {
   border-style: dashed;
 }

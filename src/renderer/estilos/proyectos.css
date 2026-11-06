@@ -273,6 +273,43 @@
   width: 13px;
   height: 13px;
 }
+/* El framework (W-2, 06-ui.md › Frente Orden): la etiqueta del viejo, punteada; los avisos, en gris al pie */
+.tarjeta .pie .viejo {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border: 1px dashed var(--borde-control);
+  border-radius: var(--radio-control);
+  font-size: 12px;
+  color: var(--texto-2);
+  white-space: nowrap;
+}
+.tarjeta .aviso-fw {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-top: 8px;
+  border-top: 1px solid var(--borde-suave);
+  font-size: var(--tam-chico);
+  color: var(--texto);
+}
+.tarjeta .aviso-fw .signo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--texto-2);
+  font: 700 10.5px / 1 var(--ui);
+}
+.tarjeta .aviso-fw .texto {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
 /* Archivados: grises del sistema, sin transparencia (06-ui.md › Contraste) */
 .tarjeta.archivado {
   background: none;

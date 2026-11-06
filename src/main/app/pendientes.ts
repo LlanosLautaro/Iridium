@@ -84,10 +84,11 @@ export class Pendientes {
         borrador = ajustar(medias.borrador, puntos.length)
       }
     }
+    const tipo = leerTipo(q.contexto)
     return {
       codigo: q.codigo,
       pregunta: q.pregunta,
-      ...leerTipo(q.contexto),
+      ...tipo,
       estado,
       contextoHtml: d.enLinea(texto, documento),
       citas: d.citas(texto, documento, q.codigo).map((c) => citaVista(d, c)),
@@ -96,7 +97,8 @@ export class Pendientes {
       puntosHtml: puntos.map((punto) => d.enLinea(punto, documento)),
       borrador,
       huella: huellaDe(respuesta, q.pregunta),
-      frente: frenteDe(d, documento),
+      // El de su línea `Frente:` (OR-3); sin ella, el del `estado.md` donde está escrita (D-063).
+      frente: tipo.frente ?? frenteDe(d, documento),
       postergada: estado === 'respondida' && leida?.opcion === POSTERGADA,
     }
   }

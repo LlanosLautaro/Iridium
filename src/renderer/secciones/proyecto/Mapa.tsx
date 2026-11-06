@@ -26,6 +26,7 @@ const HITO: Record<EstadoHito, { icono: NombreIcono; palabra: string }> = {
   reabierto: { icono: 'reintentar', palabra: 'reabierto' },
   saltado: { icono: 'x', palabra: 'saltado' },
   bloqueado: { icono: 'error', palabra: 'bloqueado' },
+  'en-pausa': { icono: 'pausa', palabra: 'en pausa' },
   otro: { icono: 'duda', palabra: '' },
 }
 
@@ -36,6 +37,7 @@ const PASO: Record<EstadoPaso, { icono: NombreIcono; palabra: string }> = {
   pendiente: { icono: 'circulo', palabra: 'pendiente' },
   saltado: { icono: 'x', palabra: 'saltado' },
   reabierto: { icono: 'reintentar', palabra: 'reabierto' },
+  'en-pausa': { icono: 'pausa', palabra: 'en pausa' },
   otro: { icono: 'duda', palabra: '' },
 }
 
@@ -530,6 +532,12 @@ export function Mapa({ ruta }: { ruta: string }) {
                 <span>
                   <i className="h-reabierto" />
                   reabierto
+                </span>
+              )}
+              {hay('en-pausa') && (
+                <span>
+                  <i className="h-en-pausa" />
+                  en pausa
                 </span>
               )}
               {hay('saltado') && (

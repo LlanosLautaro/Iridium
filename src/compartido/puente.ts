@@ -31,6 +31,11 @@ export interface TarjetaProyecto {
   revision: number
   /** Las skills del proyecto (`.claude/skills/`): con alguna, su barra muestra Skills (R-8). */
   skills: number
+  /**
+   * El framework (frente Orden, W-2): con él, lo que el control encuentra mal escrito ahora, como lo ve la IA
+   * (`docs/estado.md:12 — …`); `'viejo'`, todavía no pasó; null, sin `docs/estado.md`.
+   */
+  framework: { avisos: string[] } | 'viejo' | null
 }
 
 /**
@@ -443,10 +448,19 @@ export type EstadoHito =
   | 'reabierto'
   | 'saltado'
   | 'bloqueado'
+  | 'en-pausa'
   | 'otro'
 
 /** El estado de un paso: un ítem del portón o una iteración. `espera`: espera la prueba del usuario. */
-export type EstadoPaso = 'hecho' | 'en-curso' | 'espera' | 'pendiente' | 'saltado' | 'reabierto' | 'otro'
+export type EstadoPaso =
+  | 'hecho'
+  | 'en-curso'
+  | 'espera'
+  | 'pendiente'
+  | 'saltado'
+  | 'reabierto'
+  | 'en-pausa'
+  | 'otro'
 
 export interface PasoMapa {
   texto: string
@@ -474,7 +488,7 @@ export interface FrenteMapa {
   nombre: string
   /** Su `estado.md`. */
   documento: string
-  /** El paso en que está (el primero sin hacer); null si no tiene la tabla Progreso o los hizo todos. */
+  /** El paso en que está: el `en curso` y, si ninguno lo está, el primero sin hacer (A-5); null si los hizo todos. */
   paso: string | null
   pasos: PasoMapa[]
   /** Su plan de iteraciones (`R-I1`…), si tiene. */

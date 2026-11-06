@@ -2,6 +2,7 @@
 // portón, D-019, o sus iteraciones en el hito 7) y su estado en palabras. Se lee con tolerancia, como el Gestor:
 // por títulos y nombres de columna; lo que no se entiende se muestra tal cual. Sin disco.
 import type { EstadoHito, EstadoPaso } from '../../compartido/puente'
+import { type Estado, leerEstado, leerEstadoViejo } from './estados'
 import { lineasFueraDeCodigo, partirLineas, textoPlano } from './visor/lineas'
 
 function sinAcentos(t: string): string {
@@ -67,15 +68,26 @@ export function tablas(lineas: readonly string[]): { columnas: string[]; filas: 
   return r
 }
 
-/** Un estado de la guía en palabras fijas (D-019): pendiente, en curso, completo… Lo demás, `otro`. */
-export function clasificarHito(texto: string): EstadoHito {
+/**
+ * Un estado con el vocabulario único (`core/estados.ts`, A-21). Con `framework`, solo sus palabras: lo de afuera es
+ * `null` y se muestra tal cual. Sin él (framework viejo), las de antes se traducen con la tabla de transición.
+ */
+function vocabulario(texto: string, framework: boolean): Estado | null {
+  return framework ? leerEstado(texto) : leerEstadoViejo(texto)
+}
+
+/** Un estado de hito: el vocabulario, con los nombres de la pantalla. Lo que no se entiende, `otro`. */
+export function clasificarHito(texto: string, framework = false): EstadoHito {
   const t = sinAcentos(textoPlano(texto))
-  if (/^(completo|validado|aprobad[oa])/.test(t)) return 'completo'
-  if (/^en curso/.test(t)) return 'en-curso'
-  if (/^pendiente/.test(t)) return 'pendiente'
-  if (/^reabierto/.test(t)) return 'reabierto'
-  if (/^saltado/.test(t)) return 'saltado'
-  if (/^bloqueado/.test(t)) return 'bloqueado'
+  // Con framework viejo, «reabierto» y «bloqueado» conservan su dibujo.
+  if (!framework && /^reabierto/.test(t)) return 'reabierto'
+  if (!framework && /^bloqueado/.test(t)) return 'bloqueado'
+  const e = vocabulario(texto, framework)
+  if (e === 'hecho') return 'completo'
+  if (e === 'descartado') return 'saltado'
+  if (e === 'en curso') return 'en-curso'
+  if (e === 'en pausa') return 'en-pausa'
+  if (e === 'pendiente' || e === 'nueva') return 'pendiente'
   return 'otro'
 }
 
@@ -90,7 +102,7 @@ export interface HitoLeido {
 }
 
 /** La tabla «Progreso de hitos» de `estado.md` (columnas #, Hito, Estado y Documento, en cualquier orden). */
-export function leerHitos(estado: string): HitoLeido[] {
+export function leerHitos(estado: string, framework = false): HitoLeido[] {
   const tabla = tablas(seccionDeTitulo(estado, 'Progreso de hitos')).find(
     (t) => t.columnas.includes('hito') && t.columnas.includes('estado'),
   )
@@ -110,7 +122,7 @@ export function leerHitos(estado: string): HitoLeido[] {
       numero,
       nombre: textoPlano(f[iHito] ?? ''),
       estadoTexto,
-      estado: clasificarHito(estadoTexto),
+      estado: clasificarHito(estadoTexto, framework),
       documento: doc ?? null,
     })
   }
@@ -142,17 +154,22 @@ export function leerPorton(texto: string): PasoLeido[] {
   return r
 }
 
-/** El estado de una iteración en palabras: aprobada → hecha; «espera la prueba» → espera al usuario. */
-export function clasificarIteracion(texto: string): EstadoPaso {
+/**
+ * El estado de un paso o una iteración con el vocabulario único: aprobada → hecha; «espera la prueba» → espera al
+ * usuario (eso no es un estado: lo que falta es una `Q-n`, pero se sigue leyendo en los proyectos de antes).
+ */
+export function clasificarIteracion(texto: string, framework = false): EstadoPaso {
   const t = sinAcentos(textoPlano(texto))
-  if (/^(aprobad|complet|hech|validad|cerrad|terminad)/.test(t)) return 'hecho'
+  const e = vocabulario(texto, framework)
+  if (e === 'hecho') return 'hecho'
   // «construida; espera la prueba del usuario (Q-62)»: lo que falta es del usuario.
   if (/espera (la|tu) prueba|falta (la|tu) prueba/.test(t)) return 'espera'
-  if (/^en curso/.test(t)) return 'en-curso'
-  if (/^(probad|en prueba|espera|falta probar|lista para probar)/.test(t)) return 'espera'
-  if (/^(pendiente|por empezar)/.test(t)) return 'pendiente'
-  if (/^saltad/.test(t)) return 'saltado'
-  if (/^reabiert/.test(t)) return 'reabierto'
+  if (!framework && /^reabiert/.test(t)) return 'reabierto'
+  if (e === 'en curso') return 'en-curso'
+  if (!framework && /^(probad|en prueba|espera|falta probar|lista para probar)/.test(t)) return 'espera'
+  if (e === 'pendiente' || e === 'nueva') return 'pendiente'
+  if (e === 'en pausa') return 'en-pausa'
+  if (e === 'descartado') return 'saltado'
   return 'otro'
 }
 
@@ -163,7 +180,7 @@ const ITERACION = /^(?:I-\d+|[A-Z]{1,3}-I\d+)$/
  * Las iteraciones del plan (la tabla con una columna ID y filas `I-n`). `actual`: lo que dice «Hito actual»; la
  * iteración que nombra y todavía no empezó en la tabla se muestra en curso.
  */
-export function leerIteraciones(texto: string, actual: string | null): PasoLeido[] {
+export function leerIteraciones(texto: string, actual: string | null, framework = false): PasoLeido[] {
   const lineas = partirLineas(texto)
   const tabla = tablas(lineas).find(
     (t) => t.columnas[0] === 'id' && t.filas.some((f) => ITERACION.test(f[0] ?? '')),
@@ -177,7 +194,7 @@ export function leerIteraciones(texto: string, actual: string | null): PasoLeido
     const codigo = f[0] ?? ''
     if (!ITERACION.test(codigo)) continue
     const estadoTexto = iEstado >= 0 ? textoPlano(f[iEstado] ?? '') : ''
-    let estado = clasificarIteracion(estadoTexto)
+    let estado = clasificarIteracion(estadoTexto, framework)
     if (enCurso.has(codigo) && (estado === 'pendiente' || estado === 'otro')) estado = 'en-curso'
     r.push({ texto: `${codigo} — ${textoPlano(f[iObjetivo] ?? '')}`, estado, estadoTexto, codigo })
   }
@@ -205,7 +222,10 @@ export function nombreDeModulo(estado: string, carpeta: string): string {
  * Los pasos del ciclo reducido de un módulo: la tabla «Progreso» de su `estado.md` (columnas Paso y Estado; Documento,
  * si está). Se leen con las palabras de las iteraciones: «completo» y «aprobada provisional» están hechos.
  */
-export function leerPasosDeModulo(estado: string): (PasoLeido & { documento: string | null })[] {
+export function leerPasosDeModulo(
+  estado: string,
+  framework = false,
+): (PasoLeido & { documento: string | null })[] {
   const tabla = tablas(seccionDeTitulo(estado, 'Progreso')).find(
     (t) => t.columnas.includes('paso') && t.columnas.includes('estado'),
   )
@@ -220,7 +240,7 @@ export function leerPasosDeModulo(estado: string): (PasoLeido & { documento: str
       const doc = iDoc >= 0 ? /`([^`\s]+\.(?:md|html))`/.exec(f[iDoc] ?? '')?.[1] : undefined
       return {
         texto: textoPlano(f[iPaso] ?? ''),
-        estado: clasificarIteracion(estadoTexto),
+        estado: clasificarIteracion(estadoTexto, framework),
         estadoTexto,
         codigo: null,
         documento: doc ?? null,

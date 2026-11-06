@@ -23,6 +23,13 @@ export function textoPreguntas(p: TarjetaProyecto['preguntas']): string | null {
   return `${n} ${p.sinResponder === 1 ? 'pregunta' : 'preguntas'}${p.frenan > 0 ? ' · frena' : ''}`
 }
 
+/** «! 2 avisos del framework» (W-2): lo que el control encontró mal escrito; null sin avisos. */
+export function textoAvisos(f: TarjetaProyecto['framework']): string | null {
+  if (f === null || f === 'viejo' || f.avisos.length === 0) return null
+  const n = f.avisos.length
+  return `${n > 99 ? '99+' : n} ${n === 1 ? 'aviso' : 'avisos'} del framework`
+}
+
 export function textoHito(h: NonNullable<TarjetaProyecto['hito']>): string {
   if (h.numero === null) return h.nombre ?? 'Sin hito'
   return `Hito ${h.numero}${h.nombre ? ` · ${h.nombre}` : ''}`
@@ -77,12 +84,15 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
 
   const est = p.estado ? ESTADOS[p.estado] : SIN_FICHA
   const preguntas = textoPreguntas(p.preguntas)
+  const avisos = textoAvisos(p.framework)
   const etiqueta = [
     p.nombre,
     est.nombre,
     p.reemplazadoPor && `pasa a ${p.reemplazadoPor}`,
     p.hito ? textoHito(p.hito) : 'sin estado',
+    p.framework === 'viejo' && 'framework viejo',
     preguntas,
+    avisos,
     ficha && PALABRA_SESION[ficha.estado],
     p.archivado && 'archivado',
   ]
@@ -137,6 +147,7 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
         ) : (
           <span className="hito sin">Sin estado</span>
         )}
+        {p.framework === 'viejo' && <span className="viejo">framework viejo</span>}
         {ficha && (
           <span className="sesion">
             <ChipSesion ficha={ficha} />
@@ -149,6 +160,14 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
           </span>
         )}
       </div>
+      {avisos && p.framework !== null && p.framework !== 'viejo' && (
+        <div className="aviso-fw" title={p.framework.avisos.join('\n')}>
+          <span className="signo" aria-hidden="true">
+            !
+          </span>
+          <span className="texto">{avisos}</span>
+        </div>
+      )}
     </button>
   )
 }

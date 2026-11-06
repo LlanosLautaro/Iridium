@@ -3,6 +3,7 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { basename, extname, join } from 'node:path'
 import type { CarpetasIridium, ListaProyectos, PreguntaNueva, TarjetaProyecto } from '../../compartido/puente'
+import { dondeDe } from '../core/control'
 import { armarTarjeta, ordenarTarjetas } from '../core/grilla'
 import { rutaIconoSegura } from '../core/metadatos'
 import { contarPendientes, preguntasSinResponder } from '../core/pendientes'
@@ -11,6 +12,7 @@ import { CARPETA_REVISION, leerComentario } from '../core/revision/comentario'
 import type { CarpetasEnDisco } from '../infra/carpeta-iridium'
 import { leerArchivoGuia, leerArchivoMetadatos, leerCarpetas, RaizNoEncontrada } from '../infra/raiz'
 import { skillsEnProyecto } from '../infra/skills'
+import { controlarProyecto } from './control'
 
 /** Un ícono más grande que esto no se manda a la ventana: se muestra la inicial. */
 const LIMITE_ICONO_BYTES = 512 * 1024
@@ -105,12 +107,20 @@ export async function contarRevisionAbiertos(ruta: string): Promise<number> {
   return n
 }
 
+/** Los avisos del control, que se calculan al leer la tarjeta y no se guardan (W-2); `'viejo'` sin framework. */
+async function leerFramework(c: CarpetaProyecto): Promise<TarjetaProyecto['framework']> {
+  if (c.guia === null) return null
+  const avisos = await controlarProyecto(c.ruta)
+  return avisos === null ? 'viejo' : { avisos: avisos.map((a) => `${dondeDe(a)} — ${a.texto}`) }
+}
+
 async function tarjetaDe(c: CarpetaProyecto): Promise<TarjetaProyecto> {
-  const [icono, preguntas, revision, skills] = await Promise.all([
+  const [icono, preguntas, revision, skills, framework] = await Promise.all([
     leerIcono(c),
     leerPendientes(c.ruta),
     contarRevisionAbiertos(c.ruta),
     skillsEnProyecto(c.ruta),
+    leerFramework(c),
   ])
   return armarTarjeta({
     nombre: c.nombre,
@@ -121,6 +131,7 @@ async function tarjetaDe(c: CarpetaProyecto): Promise<TarjetaProyecto> {
     preguntas,
     revision,
     skills: skills.length,
+    framework,
   })
 }
 

@@ -28,6 +28,8 @@ export interface DatosProyecto {
   revision?: number
   /** Las skills de `.claude/skills/`; 0 si no se dice. */
   skills?: number
+  /** El framework y sus avisos (W-2); null si no se dice. */
+  framework?: TarjetaProyecto['framework']
 }
 
 export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
@@ -45,6 +47,7 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
     preguntas: d.preguntas,
     revision: d.revision ?? 0,
     skills: d.skills ?? 0,
+    framework: d.framework ?? null,
   }
   if (d.metadatos === null) return base
   if (d.metadatos.tipo === 'danado') return { ...base, problema: d.metadatos.motivo }

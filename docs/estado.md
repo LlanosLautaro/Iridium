@@ -39,7 +39,7 @@ Estados posibles: pendiente · en curso · completo · saltado (con motivo) · r
 En espera, detrás de Orden (D-091): Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 
 ## En qué estamos ahora
-Hito 10, Operación, con el frente **Orden** primero (D-091): la UX se degradó y la forma de trabajo tiene huecos; no se suman funciones nuevas y Diseño y Capacidades esperan. La guía de hitos y la skill de Iridium se funden en un solo **framework** con un control (D-092, D-093; el nombre, D-099). Hechas la auditoría, la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas que aprobaste en Q-139. El diseño técnico está escrito (`modulos/orden/diseno-tecnico.md`), con cuatro iteraciones: el modelo y el control, el esqueleto y la Bandeja de entrada (con Actualizar, R-12), Trabajo e Ideas, y el Mapa con Skills › Framework. El paso 6 cerró con Q-140 (D-100: el amarillo solo para lo que frena y el botón principal claro). OR-I1 va por la mitad: el control ya revisa lo que escribe la IA al terminar cada turno y se lo devuelve para que lo corrija. Compartir está publicado (`c012989`); falta la invitación (Q-126).
+Hito 10, Operación, con el frente **Orden** primero (D-091): la UX se degradó y la forma de trabajo tiene huecos; no se suman funciones nuevas y Diseño y Capacidades esperan. La guía de hitos y la skill de Iridium se funden en un solo **framework** con un control (D-092, D-093; el nombre, D-099). Hechas la auditoría, la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas que aprobaste en Q-139. El diseño técnico está escrito (`modulos/orden/diseno-tecnico.md`), con cuatro iteraciones: el modelo y el control, el esqueleto y la Bandeja de entrada (con Actualizar, R-12), Trabajo e Ideas, y el Mapa con Skills › Framework. El paso 6 cerró con Q-140 (D-100: el amarillo solo para lo que frena y el botón principal claro). OR-I1 va por las tres cuartas partes: el control revisa lo que escribe la IA al terminar cada turno y se lo devuelve para que lo corrija; lo que queda se ve en la tarjeta como «! N avisos del framework», y el Mapa ya lee los estados con el vocabulario único. Compartir está publicado (`c012989`); falta la invitación (Q-126).
 
 ## Pendientes del hito actual
 - [ ] Respaldo de `.iridium` en GitHub con un botón en Ajustes (D-087; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub). En el Backlog.
@@ -69,7 +69,7 @@ Hito 10, Operación, con el frente **Orden** primero (D-091): la UX se degradó 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, OR-I1: los avisos del framework en la tarjeta y el Mapa con el vocabulario único; después el framework reordenado y pasar Iridium al framework.
+Orden, OR-I1: el framework reordenado (la skill de Iridium con `referencias/` y `plantillas/`, sin cargar la guía); después pasar Iridium al framework.
 **Leer antes:** `modulos/orden/estado.md` › Log de iteraciones y Pendientes, `modulos/orden/diseno-tecnico.md` (y Q-126, Q-118 si llegaron).
 
 ## Hitos con huecos aceptados
