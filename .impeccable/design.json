@@ -430,9 +430,9 @@
       "name": "Botón primario",
       "kind": "button",
       "refersTo": "button-primario",
-      "description": "Ámbar lleno: la acción que responde al usuario (Responder).",
-      "html": "<button class=\"ds-btn ds-btn-primario\">Responder</button>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-btn{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 14px;border-radius:var(--radio-control);font:600 13px/1 var(--ui);letter-spacing:.02em;border:0;background:none;cursor:pointer}.ds-btn:focus-visible{outline:1px solid var(--primario);outline-offset:-1px}.ds-btn-primario{background:var(--espera);color:var(--sobre-color)}.ds-btn-primario:hover{filter:brightness(1.1)}"
+      "description": "Claro, sin color: la acción principal de la pantalla (Enviar, Responder; D-100).",
+      "html": "<button class=\"ds-btn ds-btn-primario\">Enviar</button>",
+      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-btn{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 14px;border-radius:var(--radio-control);font:600 13px/1 var(--ui);letter-spacing:.02em;border:0;background:none;cursor:pointer}.ds-btn:focus-visible{outline:1px solid var(--primario);outline-offset:-1px}.ds-btn-primario{background:var(--texto);color:var(--sobre-color)}.ds-btn-primario:hover{filter:brightness(1.1)}"
     },
     {
       "name": "Botón secundario",
@@ -521,8 +521,13 @@
         "section": "colors"
       },
       {
-        "name": "The Ámbar Llama Rule",
-        "body": "La acción que responde al usuario va en ámbar lleno, no en verde. El verde marca, no pide.",
+        "name": "The Ámbar Frena Rule",
+        "body": "El ámbar es solo para lo que frena: sin la respuesta del usuario, la IA no sigue. Lo que espera sin frenar (una cuenta, una pregunta, una prueba) va en gris (D-100).",
+        "section": "colors"
+      },
+      {
+        "name": "The Botón Claro Rule",
+        "body": "El botón principal es claro y sin color (fondo del texto principal, tinta sobre color): pide sin avisar. Ni ámbar, que avisa, ni verde, que marca (D-100).",
         "section": "colors"
       },
       {
@@ -543,7 +548,7 @@
     ],
     "dos": [
       "Do usar el verde fósforo solo para lo activo, lo hecho y el foco.",
-      "Do poner en ámbar todo lo que espera del usuario, y en ámbar lleno la acción que lo responde.",
+      "Do poner en ámbar solo lo que frena, y en gris lo que espera sin frenar; el botón principal, claro (D-100).",
       "Do acompañar cada estado con ícono y palabra.",
       "Do separar superficies por tono (barra, lateral, fondo) y bordes de 1 px.",
       "Do escribir códigos, horas y porcentajes en JetBrains Mono, y todo lo demás en Chakra Petch.",

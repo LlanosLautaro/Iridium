@@ -95,7 +95,7 @@ describe('Conversaciones', () => {
     await c.seguir(alfa, {})
     await hasta(() => (fichaDe(alfa)?.preguntas.length ?? 0) > 0)
     expect(fichaDe(alfa)?.preguntas).toEqual([
-      { codigo: 'Q-2', pregunta: '¿Nueva?', tipo: 'prueba', frena: true },
+      { codigo: 'Q-2', pregunta: '¿Nueva?', tipo: 'prueba', frena: true, enPausa: false, frente: null },
     ])
     const ultima = cambios.at(-1)?.entradas.at(-1)
     expect(ultima).toMatchObject({ tipo: 'preguntas', preguntas: [{ codigo: 'Q-2' }] })

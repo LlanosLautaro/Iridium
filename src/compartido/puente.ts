@@ -254,6 +254,9 @@ export interface PreguntaNueva {
   pregunta: string
   tipo: string
   frena: boolean
+  enPausa: boolean
+  /** El de su línea `Frente:`; null es del núcleo. */
+  frente: string | null
 }
 
 /** El estado de la sesión de un proyecto, para su ficha (H-2). Detenida cuenta como terminada (H-14). */
@@ -293,6 +296,19 @@ export type Entrada =
   | { tipo: 'sin-sesion'; id: string; reintentar: string | null; enviado: boolean }
   | { tipo: 'uso-agotado'; id: string; libera: number | null }
   | { tipo: 'preguntas'; id: string; preguntas: PreguntaNueva[] }
+  /**
+   * El control de Iridium le devolvió a la IA lo mal escrito (W-12, OR-2). `quedo`: null mientras corrige o si no se
+   * sabe (una conversación vieja); si no, lo que siguió mal al terminar la corrección.
+   */
+  | { tipo: 'control'; id: string; avisos: AvisoControl[]; corrigiendo: boolean }
+
+/** Una cosa mal escrita que encontró el control: dónde (`docs/estado.md:12`) y qué arreglar. */
+export interface AvisoControl {
+  donde: string
+  texto: string
+  /** true = siguió mal después de la corrección; false = quedó corregida; null = no se sabe todavía. */
+  quedo: boolean | null
+}
 
 /** La conversación de un proyecto al abrirlo: la de la sesión en marcha o la última guardada (H-4). */
 export interface ConversacionProyecto {

@@ -97,15 +97,18 @@ describe('ordenarTarjetas (H-1)', () => {
 
 describe('leerTipo (D-019)', () => {
   it('lee el tipo y si frena de la primera línea', () => {
-    expect(leerTipo('Tipo: prueba · frena\nContexto: x')).toEqual({ tipo: 'prueba', frena: true })
-    expect(leerTipo('Tipo: decision')).toEqual({ tipo: 'decisión', frena: false })
-    expect(leerTipo('Tipo: decisión · frena (el diseño técnico)')).toEqual({ tipo: 'decisión', frena: true })
-    expect(leerTipo('Tipo: prueba · no frena')).toEqual({ tipo: 'prueba', frena: false })
+    expect(leerTipo('Tipo: prueba · frena\nContexto: x')).toMatchObject({ tipo: 'prueba', frena: true })
+    expect(leerTipo('Tipo: decision')).toMatchObject({ tipo: 'decisión', frena: false })
+    expect(leerTipo('Tipo: decisión · frena (el diseño técnico)')).toMatchObject({
+      tipo: 'decisión',
+      frena: true,
+    })
+    expect(leerTipo('Tipo: prueba · no frena')).toMatchObject({ tipo: 'prueba', frena: false })
   })
   it('sin línea Tipo, o con un tipo raro, es una consulta que no frena', () => {
-    expect(leerTipo('Contexto: D-1. Opciones: A) a · B) b')).toEqual({ tipo: 'consulta', frena: false })
-    expect(leerTipo('Tipo: otra cosa · frena')).toEqual({ tipo: 'consulta', frena: true })
-    expect(leerTipo('')).toEqual({ tipo: 'consulta', frena: false })
+    expect(leerTipo('Contexto: D-1. Opciones: A) a · B) b')).toMatchObject({ tipo: 'consulta', frena: false })
+    expect(leerTipo('Tipo: otra cosa · frena')).toMatchObject({ tipo: 'consulta', frena: true })
+    expect(leerTipo('')).toMatchObject({ tipo: 'consulta', frena: false })
   })
 })
 

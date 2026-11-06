@@ -51,7 +51,7 @@ export function celdas(linea: string): string[] {
 }
 
 /** Las tablas de unas líneas: encabezado (en minúsculas y sin acentos) y filas. */
-function tablas(lineas: readonly string[]): { columnas: string[]; filas: string[][] }[] {
+export function tablas(lineas: readonly string[]): { columnas: string[]; filas: string[][] }[] {
   const r: { columnas: string[]; filas: string[][] }[] = []
   for (let i = 0; i < lineas.length; i++) {
     const cab = lineas[i] ?? ''

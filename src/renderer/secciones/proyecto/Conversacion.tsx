@@ -67,17 +67,22 @@ type Turno =
   | { quien: 'usuario'; clave: string; entrada: Extract<Entrada, { tipo: 'usuario' }> }
   | { quien: 'ia'; clave: string; entradas: Exclude<Entrada, { tipo: 'usuario' }>[] }
 
-/** Junta las entradas en turnos: lo que escribió el usuario y, después, todo lo que hizo la IA. */
+/**
+ * Junta las entradas en turnos: lo que escribió el usuario y, después, todo lo que hizo la IA. La entrada del control
+ * cierra el turno de la IA: lo que corrige después es otro turno (W-12).
+ */
 function enTurnos(entradas: readonly Entrada[]): Turno[] {
   const turnos: Turno[] = []
+  let cortar = false
   for (const e of entradas) {
     if (e.tipo === 'usuario') {
       turnos.push({ quien: 'usuario', clave: e.id, entrada: e })
       continue
     }
     const ultimo = turnos.at(-1)
-    if (ultimo?.quien === 'ia') ultimo.entradas.push(e)
+    if (ultimo?.quien === 'ia' && !cortar) ultimo.entradas.push(e)
     else turnos.push({ quien: 'ia', clave: e.id, entradas: [e] })
+    cortar = e.tipo === 'control'
   }
   return turnos
 }
@@ -280,7 +285,47 @@ function Final({ e, ruta }: { e: Exclude<EntradaIa, Paso>; ruta: string }) {
     )
   if (e.tipo === 'sin-sesion') return <SinSesion entrada={e} ruta={ruta} />
   if (e.tipo === 'uso-agotado') return <UsoAgotado entrada={e} />
+  if (e.tipo === 'control') return <Control entrada={e} />
   return <Preguntas entrada={e} ruta={ruta} />
+}
+
+/**
+ * Lo que el control de Iridium le devolvió a la IA (W-12): plegado, en gris (le habla a la IA, no al usuario). Mientras
+ * corrige, el ícono que gira; al terminar, ✓ por lo corregido y «!» por lo que quedó como aviso del framework.
+ */
+function Control({ entrada }: { entrada: Extract<Entrada, { tipo: 'control' }> }) {
+  const [abierto, setAbierto] = useState(entrada.corrigiendo)
+  const n = entrada.avisos.length
+  const quedan = entrada.avisos.filter((a) => a.quedo === true).length
+  const sabido = !entrada.corrigiendo && entrada.avisos.every((a) => a.quedo !== null)
+  const cosas = n === 1 ? '1 cosa mal escrita' : `${n} cosas mal escritas`
+  const titulo = !sabido
+    ? `El control encontró ${cosas}; la IA ${entrada.corrigiendo ? 'las corrige' : 'las corrigió'}`
+    : quedan === 0
+      ? `El control encontró ${cosas}; la IA ${n === 1 ? 'la corrigió' : 'las corrigió'}`
+      : `Corrigió ${n - quedan} de ${n}; ${quedan === 1 ? 'queda 1 aviso' : `quedan ${quedan} avisos`} del framework`
+  return (
+    <div className={`control-ia${sabido && quedan === 0 ? ' ok' : ''}`} data-abierto={abierto || undefined}>
+      <button type="button" aria-expanded={abierto} onClick={() => setAbierto(!abierto)}>
+        <Icono nombre={entrada.corrigiendo ? 'sync' : 'check'} gira={entrada.corrigiendo} />
+        {titulo}
+        <Icono nombre="chev" />
+      </button>
+      {abierto && (
+        <ul>
+          {entrada.avisos.map((a) => (
+            <li
+              key={`${a.donde} ${a.texto}`}
+              className={a.quedo === true ? 'queda' : a.quedo === false ? 'hecho' : undefined}
+            >
+              {a.texto}
+              <span className="donde">{a.donde}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
 }
 
 /** El nombre de quien habla (AJ-2): el que se eligió en Ajustes o «Vos» e «IA»; largo, se corta y se ve entero al pasar. */

@@ -27,7 +27,14 @@ describe('usadaAfuera (D-027)', () => {
 
 describe('preguntasNuevas (H-5)', () => {
   it('son las sin responder que no estaban al empezar', () => {
-    const q = (codigo: string) => ({ codigo, pregunta: '¿?', tipo: 'decisión', frena: false })
+    const q = (codigo: string) => ({
+      codigo,
+      pregunta: '¿?',
+      tipo: 'decisión',
+      frena: false,
+      enPausa: false,
+      frente: null,
+    })
     expect(preguntasNuevas(new Set(['Q-1']), [q('Q-1'), q('Q-2')])).toEqual([q('Q-2')])
     expect(preguntasNuevas(new Set(['Q-1']), [])).toEqual([])
   })

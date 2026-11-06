@@ -79,7 +79,7 @@ spacing:
   xl: "32px"
 components:
   button-primario:
-    backgroundColor: "{colors.espera}"
+    backgroundColor: "{colors.texto}"
     textColor: "{colors.sobre-color}"
     typography: "{typography.etiqueta}"
     rounded: "{rounded.control}"
@@ -169,7 +169,7 @@ El estilo es F4 (D-032): esquinas redondeadas, tarjetas suaves con fondo apenas 
 
 **Key Characteristics:**
 - Solo oscuro. No hay tema claro. Dos temas: este, **Iridium**, y **Carbón** (abajo, «Themes»; D-066).
-- Tres señales y nada más: verde (activo, hecho, foco), ámbar (espera al usuario), rojo (error).
+- Tres señales y nada más: verde (activo, hecho, foco), ámbar (frena: sin el usuario no se sigue), rojo (error). Lo que espera al usuario sin frenar va en gris (D-100).
 - Chakra Petch para todo lo que se lee; JetBrains Mono solo para códigos y números.
 - Densidad de herramienta de escritorio: base de 13,5 px, lectura de 15 px.
 - Profundidad por tono, no por sombra.
@@ -192,9 +192,9 @@ Una familia de casi negros verdosos, grises salvia para el texto y tres señales
 - **Fósforo Claro** (primario-texto): solo el código en línea dentro de la conversación.
 
 ### Secondary
-- **Ámbar de Espera** (espera): lo que espera del usuario. Chip «N preguntas» o «Frena», contador de la barra de actividad, el botón lleno «Responder» y el medidor que se acerca al límite.
-- **Ámbar Hundido** (espera-borde): borde de la tarjeta del pedido y del aviso.
-- **Fondo de Pedido** (espera-fondo): fondo apenas teñido de la tarjeta del pedido.
+- **Ámbar de Espera** (espera): solo lo que frena (D-100). Chip «Frena», la cuenta con «!» cuando algo frena y el medidor que se acerca al límite. Las cuentas que no frenan van en gris y ningún botón es ámbar.
+- **Ámbar Hundido** (espera-borde): borde del aviso flotante. La pregunta que frena lleva el borde entero en ámbar al 55 %.
+- **Fondo de Pedido** (espera-fondo): fondo apenas teñido de la pregunta que frena.
 
 ### Tertiary
 - **Rojo Señal** (error): solo errores, en chip con ícono y palabra.
@@ -215,16 +215,18 @@ Una familia de casi negros verdosos, grises salvia para el texto y tres señales
 - **Blanco Ceniza Verde** (texto): texto principal.
 - **Gris Salvia** (texto-2): texto secundario, autor «Vos», nodos del mapa, docs.
 - **Gris Liquen** (texto-3): lo terciario: horas, íconos en reposo, ayudas, placeholder.
-- **Tinta sobre Color** (sobre-color): texto sobre el ámbar lleno.
+- **Tinta sobre Color** (sobre-color): texto sobre un fondo lleno: el botón principal claro.
 - **Selección Fósforo** (seleccion): la selección de texto, verde al 27 %.
 - **Cadena de Código** (cod-cadena): solo en el visor de Archivos, las cadenas y los números del código (D-042). Los comentarios van en gris liquen y las palabras clave en verde texto; no es un color de estado.
 
 ### Named Rules
-**The Color Avisa Rule.** El color solo señala estado: verde activo, ámbar espera, rojo error. Todo lo demás es gris verdoso (D-031).
+**The Color Avisa Rule.** El color solo señala estado: verde activo, ámbar frena, rojo error. Todo lo demás es gris verdoso (D-031, D-100).
 
 **The Ícono y Palabra Rule.** Ningún estado va solo con color: cada chip y cada nodo lleva ícono y palabra («Trabajando», «2 preguntas», «Error», «pendiente»).
 
-**The Ámbar Llama Rule.** La acción que responde al usuario va en ámbar lleno, no en verde. El verde marca, no pide.
+**The Ámbar Frena Rule.** El ámbar es solo para lo que frena: sin la respuesta del usuario, la IA no sigue. Lo que espera sin frenar (una cuenta, una pregunta, una prueba) va en gris (D-100).
+
+**The Botón Claro Rule.** El botón principal es claro y sin color (fondo del texto principal, tinta sobre color): pide sin avisar. Ni ámbar, que avisa, ni verde, que marca (D-100).
 
 ## Typography
 
@@ -287,17 +289,17 @@ Esquinas redondeadas y discretas. Controles a 5 px (botones, chips, botón de í
 ### Buttons
 Compactos y de escritorio.
 - **Shape:** control (5 px), 30 px de alto, 14 px a los costados, etiqueta de 13 px.
-- **Primario:** ámbar lleno con tinta oscura. Es la acción que responde al usuario («Responder», «Responder en otra app»). Hover: brillo al 110 %.
+- **Primario:** claro, sin color: fondo del texto principal con tinta sobre color (D-100). Es la acción principal de la pantalla («Enviar», «Responder», «Responder en otra app»). Hover: brillo al 110 %.
 - **Secundario:** sin fondo, borde firme, texto gris salvia. Hover: texto principal y borde gris liquen. «Detener» es secundario con ícono cuadrado relleno.
 - **Botón de ícono:** 30 × 30, gris liquen; hover con velo y texto principal; presionado, en verde.
 - **Foco:** contorno de 1 px en verde, hacia adentro.
 
 ### Chips
 - **Style:** sin fondo, 20 px de alto, borde de 1 px del color del texto al 45 %, ícono de 12 px más palabra, etiqueta de 12,5 px.
-- **Estados:** trabaja (verde, ícono que gira), espera (ámbar), error (rojo), ok (verde). En las migas el chip es píldora y es un botón que lleva a Pendientes.
+- **Estados:** trabaja (verde, ícono que gira), espera (gris), frena (ámbar), error (rojo), ok (verde). En las migas el chip es píldora y es un botón que lleva a Pendientes.
 
 ### Cards / Containers
-- **Pedido (Q-n):** tarjeta (10 px), fondo de pedido, borde ámbar hundido, 14 × 16 px de relleno, máximo 72ch. Adentro: código Q-n en mono 700 con su chip, la pregunta en título, el contexto citado en chico y las acciones.
+- **Pedido (Q-n):** tarjeta (10 px), con borde firme; la que frena, con el fondo de pedido y el borde entero en ámbar al 55 % (D-100); 14 × 16 px de relleno, máximo 72ch. Adentro: código Q-n en mono 700 con su chip, la pregunta en título, el contexto citado en chico y las acciones.
 - **Aviso:** 320 px, fijo abajo a la derecha, superficie elevada, borde ámbar hundido, sombra flotante. Entra subiendo 8 px en 0,3 s con medio segundo de demora. Se cierra con Esc.
 
 ### Inputs / Fields
@@ -305,10 +307,10 @@ Compactos y de escritorio.
 - **Foco:** todo el borde de la tarjeta pasa a verde. El área de texto no tiene contorno propio.
 
 ### Navigation
-- **Barra de actividad:** íconos de 21 px en gris liquen; el activo en verde con barra de 2 px a la izquierda; contador ámbar abajo a la derecha del ícono.
-- **Barra de título (D-041):** 36 px en negro barra, sin el marco de Windows. A la izquierda, el botón de inicio (la marca en verde, con el contador ámbar); después las pestañas; el espacio libre arrastra la ventana; a la derecha, los tres botones que dibuja Windows del mismo color.
+- **Barra de actividad:** íconos de 21 px en gris liquen; el activo en verde con barra de 2 px a la izquierda; contador abajo a la derecha del ícono, en gris, y en ámbar con «!» cuando algo frena (D-100).
+- **Barra de título (D-041):** 36 px en negro barra, sin el marco de Windows. A la izquierda, el botón de inicio (la marca en verde, con el contador: gris, o ámbar con «!» si algo frena); después las pestañas; el espacio libre arrastra la ventana; a la derecha, los tres botones que dibuja Windows del mismo color.
 - **Pestañas de sesión:** sobre negro barra, nombre en 600 y chip de estado. La activa toma el fondo y una barra verde de 2 px arriba. Botón de cerrar de 20 px. El proyecto abierto sin sesión también tiene su pestaña, sin chip.
-- **Cabecera del proyecto:** 40 px; el nombre en 600, el hito en gris liquen y el chip ámbar de las preguntas, que lleva a Pendientes.
+- **Cabecera del proyecto:** 40 px; el nombre en 600, el hito en gris liquen y el chip de las preguntas (gris, o ámbar si alguna frena), que lleva a Pendientes.
 - **Divisor de la conversación:** 5 px entre la vista y la conversación; al pasar, arrastrar o enfocarlo se tiñe de verde.
 - **Menús (Docs, conversaciones anteriores):** superficie elevada, borde firme, sombra y radio de bloque; la opción actual en verde.
 - **Barra de estado:** chico, gris salvia; el estado de la IA a la izquierda, los medidores a la derecha.
@@ -359,7 +361,7 @@ Una sola curva de salida, `cubic-bezier(.16, 1, .3, 1)`. El panel entra en 0,2 s
 
 ### Do:
 - **Do** usar el verde fósforo solo para lo activo, lo hecho y el foco.
-- **Do** poner en ámbar todo lo que espera del usuario, y en ámbar lleno la acción que lo responde.
+- **Do** poner en ámbar solo lo que frena, y en gris lo que espera sin frenar; el botón principal, claro (D-100).
 - **Do** acompañar cada estado con ícono y palabra.
 - **Do** separar superficies por tono (barra, lateral, fondo) y bordes de 1 px.
 - **Do** escribir códigos, horas y porcentajes en JetBrains Mono, y todo lo demás en Chakra Petch.

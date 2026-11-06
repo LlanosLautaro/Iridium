@@ -14,6 +14,7 @@ import type {
   PedidoSeguir,
   PreguntaNueva,
 } from '../../compartido/puente'
+import { type Aviso, dondeDe, leerMensajeDelControl, mensajeDelControl } from '../core/control'
 import {
   AVISO_DETENIDA,
   htmlDeMensaje,
@@ -62,6 +63,11 @@ export interface DependenciasConversacion {
   alPerderSesion?: () => void
   /** El uso que informa una sesión al terminar cada turno. */
   alUso?: (uso: UsoMotor) => void
+  /**
+   * El control del proyecto (OR-2): lo mal escrito al terminar un turno, o null si no corre ahí (sin framework, el
+   * chat general, el de Skills). Sin esto, no hay control.
+   */
+  control?: (ruta: string) => Promise<Aviso[] | null>
   /** Una línea para el registro del día (errores del motor; nunca el texto de la conversación). */
   registrar?: (texto: string) => void
   ahora?: () => number
@@ -91,6 +97,12 @@ interface Proyecto {
   turno: Promise<unknown>
   /** Cuánto contexto lleva la conversación; null si no se sabe todavía. */
   contexto: ContextoConversacion | null
+  /** La entrada del control mientras la IA corrige lo que le devolvió (una vez por turno, sin ciclos). */
+  controlando: Extract<Entrada, { tipo: 'control' }> | null
+  /** El turno terminó y corre el control: la sesión que se cierra mientras tanto no es un error. */
+  revisando: boolean
+  /** Cuántos mensajes mandó el usuario: si cambia mientras corre el control, ese turno sigue y se revisa después. */
+  envios: number
 }
 
 export class Conversaciones {
@@ -127,6 +139,9 @@ export class Conversaciones {
         antes: new Set(),
         turno: Promise.resolve(),
         contexto: null,
+        controlando: null,
+        revisando: false,
+        envios: 0,
       }
       this.proyectos.set(ruta, p)
     }
@@ -147,6 +162,14 @@ export class Conversaciones {
   private entradaDe(p: Proyecto, m: MensajeMotor): Entrada {
     switch (m.tipo) {
       case 'usuario': {
+        const control = leerMensajeDelControl(m.texto)
+        if (control)
+          return {
+            tipo: 'control',
+            id: this.id(),
+            avisos: control.map((a) => ({ ...a, quedo: null })),
+            corrigiendo: false,
+          }
         const texto = m.texto.startsWith(AVISO_DETENIDA)
           ? m.texto.slice(AVISO_DETENIDA.length).trim()
           : m.texto
@@ -229,6 +252,9 @@ export class Conversaciones {
         entradas: [],
         detenida: false,
         contexto: null,
+        controlando: null,
+        revisando: false,
+        envios: 0,
       })
       return
     }
@@ -329,6 +355,7 @@ export class Conversaciones {
           entradas: [],
           detenida: false,
           contexto: null,
+          controlando: null,
         })
         reiniciar = true
       } else if (!p.cargado) await this.cargar(p)
@@ -365,9 +392,18 @@ export class Conversaciones {
         p.antes = new Set((await this.d.preguntas(ruta)).map((q) => q.codigo))
         p.ficha = { ruta, estado: 'trabajando', preguntas: [], motivo: null }
       }
+      p.envios++
       this.emitir(p, [{ tipo: 'usuario', id: this.id(), texto, cuando: this.ahora() }], reiniciar)
 
-      if (p.sesion?.enviar(mensaje)) return
+      await this.mandar(p, mensaje)
+    })
+  }
+
+  /** Manda un mensaje a la sesión abierta o abre una con la misma conversación (D-037). */
+  private async mandar(p: Proyecto, mensaje: string): Promise<void> {
+    const ruta = p.ruta
+    if (p.sesion?.enviar(mensaje)) return
+    {
       const base = this.d.instruccionBase?.(ruta) ?? INSTRUCCION_CENTRO
       const extra = await this.d.instruccion?.(ruta).catch(() => null)
       const ajuste = (await this.d.ajuste?.(ruta).catch(() => null)) ?? SIN_AJUSTE
@@ -384,7 +420,7 @@ export class Conversaciones {
       )
       p.sesion = sesion
       sesion.enviar(mensaje)
-    })
+    }
   }
 
   /** Frena a la IA en el acto, sin confirmación (H-14). */
@@ -490,12 +526,100 @@ export class Conversaciones {
         return
       case 'cerrada':
         p.sesion = null
-        if (this.trabajando(p)) this.terminarTurno(p, 'error', 'Claude Code se cerró sin terminar el turno.')
+        if (this.trabajando(p) && !p.revisando)
+          this.terminarTurno(p, 'error', 'Claude Code se cerró sin terminar el turno.')
         return
     }
   }
 
   private terminarTurno(
+    p: Proyecto,
+    resultado: 'ok' | 'detenida' | 'error',
+    motivo: string | null,
+    falla?: FallaMotor,
+  ): void {
+    const control = this.d.control
+    if (control && p.controlando) {
+      p.revisando = true
+      void this.enFila(p, () => this.terminarCorreccion(p, control, resultado, motivo, falla))
+      return
+    }
+    if (control && resultado === 'ok') {
+      p.revisando = true
+      void this.enFila(p, () => this.revisar(p, control, motivo)).finally(() => {
+        p.revisando = false
+      })
+      return
+    }
+    this.cerrarTurno(p, resultado, motivo, falla)
+  }
+
+  /**
+   * Al terminar un turno bien, el control revisa lo que escribió la IA; si encontró algo, se lo devuelve a la misma
+   * conversación y la pestaña sigue trabajando (`diseno-tecnico.md` › Cómo se le devuelve a la IA).
+   */
+  private async revisar(
+    p: Proyecto,
+    control: (ruta: string) => Promise<Aviso[] | null>,
+    motivo: string | null,
+  ): Promise<void> {
+    const envios = p.envios
+    const avisos = await control(p.ruta).catch(() => null)
+    // Mientras corría el control, el usuario pudo mandar otro mensaje: ese turno sigue y se revisa al terminar.
+    if (!this.trabajando(p) || p.envios !== envios) return
+    if (!avisos?.length) {
+      this.cerrarTurno(p, 'ok', motivo)
+      return
+    }
+    const entrada: Entrada & { tipo: 'control' } = {
+      tipo: 'control',
+      id: this.id(),
+      avisos: avisos.map((a) => ({ donde: dondeDe(a), texto: a.texto, quedo: null })),
+      corrigiendo: true,
+    }
+    p.controlando = entrada
+    this.emitir(p, [entrada])
+    await this.mandar(p, mensajeDelControl(avisos))
+  }
+
+  /** Terminó la corrección: lo que sigue mal queda marcado (y en la tarjeta) y el turno se cierra como siempre. */
+  private async terminarCorreccion(
+    p: Proyecto,
+    control: (ruta: string) => Promise<Aviso[] | null>,
+    resultado: 'ok' | 'detenida' | 'error',
+    motivo: string | null,
+    falla?: FallaMotor,
+  ): Promise<void> {
+    const entrada = p.controlando
+    p.controlando = null
+    if (entrada) {
+      const quedan = resultado === 'ok' ? await control(p.ruta).catch(() => null) : null
+      const siguen = new Set(quedan?.map((a) => a.texto))
+      this.reemplazar(p, {
+        ...entrada,
+        corrigiendo: false,
+        avisos: entrada.avisos.map((a) => ({ ...a, quedo: quedan ? siguen.has(a.texto) : null })),
+      })
+    }
+    p.revisando = false
+    this.cerrarTurno(p, resultado, motivo, falla)
+  }
+
+  /** Cambia una entrada que ya estaba (la del control, al terminar de corregir). */
+  private reemplazar(p: Proyecto, entrada: Entrada): void {
+    const i = p.entradas.findIndex((e) => e.id === entrada.id)
+    if (i >= 0) p.entradas[i] = entrada
+    this.d.alCambio({
+      ruta: p.ruta,
+      id: p.id,
+      reiniciar: false,
+      entradas: [entrada],
+      ficha: p.ficha,
+      contexto: p.contexto,
+    })
+  }
+
+  private cerrarTurno(
     p: Proyecto,
     resultado: 'ok' | 'detenida' | 'error',
     motivo: string | null,

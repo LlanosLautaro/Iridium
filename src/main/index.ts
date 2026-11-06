@@ -10,6 +10,7 @@ import { TEMAS, type Tema } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
 import { elegirComplementos } from './core/complementos'
+import { ENCABEZADO_CONTROL } from './core/control'
 import { zoomSiguiente } from './core/zoom'
 import { ArchivoBorradores } from './infra/borradores'
 import { ArchivoConfig } from './infra/config'
@@ -118,6 +119,25 @@ async function dejarPreguntaFalsa(carpeta: string): Promise<void> {
 }
 
 /**
+ * Con IRIDIUM_FALSO_MAL=1, la IA falsa deja una `Q-n` sin la línea «Tipo:» y la corrige cuando el control se la
+ * devuelve (OR-2); con IRIDIUM_FALSO_MAL=terco, no la corrige.
+ */
+async function escribirMalFalso(carpeta: string, texto: string): Promise<void> {
+  const modo = process.env.IRIDIUM_FALSO_MAL
+  if (modo !== '1' && modo !== 'terco') return
+  const ruta = join(carpeta, 'docs', 'estado.md')
+  const antes = await readFile(ruta, 'utf8')
+  if (texto.startsWith(ENCABEZADO_CONTROL)) {
+    if (modo === '1')
+      await writeFile(ruta, antes.replace('  Contexto: sin tipo.', '  Tipo: consulta\n  Contexto: con tipo.'))
+    return
+  }
+  const n = Math.max(0, ...[...antes.matchAll(/Q-(\d+)/g)].map((m) => Number(m[1]))) + 1
+  const q = `- **Q-${n} — ¿La escribió mal el motor falso?**\n  Contexto: sin tipo.\n`
+  await writeFile(ruta, antes.replace(/(## Preguntas abiertas\r?\n)(\(ninguna\)\r?\n)?/, `$1${q}`))
+}
+
+/**
  * La IA falsa, con el pedido de Poner al día (SK-4), escribe en `docs/README.md` el formato de hoy: así las pruebas ven
  * que el proyecto sale de la lista de atrasados.
  */
@@ -139,6 +159,7 @@ function crearMotor(): Motor {
       pasoMs,
       alTurno: async (carpeta, texto) => {
         await dejarPreguntaFalsa(carpeta)
+        await escribirMalFalso(carpeta, texto)
         await ponerAlDiaFalso(carpeta, texto)
       },
       ...(estado ? { estado } : {}),

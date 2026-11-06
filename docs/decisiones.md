@@ -2293,3 +2293,20 @@ evision-cola-electron.json` y sale cuando Iridium está.
 
 **Consecuencias:**
 - `modulos/orden/definicion.md`, `modulos/orden/ux.md`, `04-ux.md` y el glosario de `02-definicion.md` dicen «framework». D-092 a D-096 y los documentos anteriores quedan como se escribieron: donde dicen «marco», es el framework.
+
+## D-100 — El ámbar es solo para lo que frena y el botón principal es claro
+- **Fecha:** 2026-11-06
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden, paso 6 (Q-140)
+- **Estado:** vigente
+
+**Contexto:** hasta ahora el ámbar marcaba todo lo que espera al usuario y el botón que lo responde iba en ámbar lleno (`DESIGN.md` › The Ámbar Llama Rule). Con la Bandeja de entrada (D-097) casi todo espera algo del usuario, y el ámbar en todas partes dejó de distinguir lo urgente (`modulos/orden/auditoria.md` › A-2). La hoja de piezas (`ui/vista-orden.html`) propuso dejar el ámbar solo para lo que frena y dos opciones para el botón principal: claro, sin color, o del color de lo activo.
+
+**Decisión:** el usuario eligió la A en Q-140. El ámbar es solo para lo que frena (el chip «Frena», la cuenta con «!» cuando algo frena, la pregunta que frena con el borde entero en ámbar al 55 % y el fondo de pedido, y el medidor cerca del límite). Las cuentas y lo que espera sin frenar van en gris. El botón principal (**Enviar**, **Responder**) es claro: fondo del texto principal y tinta sobre color, en los dos temas. Las demás piezas de la hoja van como están.
+
+**Motivo:** el color sigue siendo solo para avisar, y el aviso vuelve a significar algo. Un botón verde o azul rompía «el verde marca, no pide».
+
+**Consecuencias:**
+- `DESIGN.md` (y `.impeccable/design.json`): The Ámbar Llama Rule pasa a The Ámbar Frena Rule y The Botón Claro Rule; el botón primario, los contadores, el chip de la cabecera y la tarjeta del pedido, al día.
+- El código cambia con las iteraciones del frente: el botón primario y las cuentas en OR-I2 (el esqueleto y la Bandeja). Hasta entonces la app sigue con el ámbar de antes.
+- El ⚠ ámbar de Skills (lo que está dos veces o con el enlace roto) no frena: pasa a gris con OR-I4 (Skills › Framework).

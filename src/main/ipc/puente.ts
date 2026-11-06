@@ -22,6 +22,7 @@ import {
 } from '../../compartido/puente'
 import { MENSAJE_PONER_AL_DIA } from '../../compartido/skills'
 import type { PlanEliminacion } from '../../compartido/tipos'
+import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
 import { crearProyecto } from '../app/creacion'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
@@ -298,6 +299,11 @@ export function registrarPuente(s: Servicios): Puente {
       enviar(CANALES.motorCambio, estadoMotor)
     },
     alUso: (u) => uso.poner(u),
+    // El control corre en las sesiones de proyecto con framework (OR-2), no en el chat general ni en el de Skills.
+    control: (ruta) =>
+      ruta === enDisco.rutas.ideas || ruta === enDisco.rutas.skills
+        ? Promise.resolve(null)
+        : controlarProyecto(ruta),
     registrar: (texto) => s.registro.escribir(texto),
     // Los mensajes de la IA con los códigos y las citas del proyecto como enlaces (F-4).
     html: async (ruta) => {

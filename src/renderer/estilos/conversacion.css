@@ -350,3 +350,63 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* W-12: lo que el control le devolvió a la IA. En gris: le habla a la IA, no al usuario (D-100). */
+.control-ia {
+  margin-top: 10px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-bloque);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.control-ia > button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  color: var(--texto-2);
+  text-align: left;
+}
+.control-ia > button:hover {
+  color: var(--texto);
+}
+.control-ia > button .ic:last-child {
+  margin-left: auto;
+  color: var(--texto-3);
+  transition: transform 0.12s var(--sale);
+}
+.control-ia[data-abierto] > button .ic:last-child {
+  transform: rotate(90deg);
+}
+.control-ia.ok > button {
+  color: var(--texto-3);
+}
+.control-ia ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 10px 9px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--texto-2);
+}
+.control-ia li .donde {
+  display: block;
+  font: 400 11.5px / 1.4 var(--mono);
+  color: var(--texto-3);
+}
+.control-ia li.hecho::before {
+  content: "✓ ";
+  color: var(--ok);
+}
+.control-ia li.queda::before {
+  content: "! ";
+  color: var(--texto);
+  font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  .control-ia > button .ic:last-child {
+    transition: none;
+  }
+}

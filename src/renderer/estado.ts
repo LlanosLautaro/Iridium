@@ -9,6 +9,7 @@ import {
   type CambioConversacion,
   type ConversacionProyecto,
   type Destino,
+  type Entrada,
   type EstadoMotor,
   type FichaSesion,
   type ListaProyectos,
@@ -493,7 +494,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
             ...base,
             id: cambio.id,
             usadaAfuera: null,
-            entradas: [...base.entradas, ...cambio.entradas],
+            entradas: juntarEntradas(base.entradas, cambio.entradas),
             contexto: cambio.contexto,
           }
       return {
@@ -657,4 +658,12 @@ export function columnaPendientes(lista: ListaProyectos | null): {
     ],
     respondidas: vivos.filter((p) => p.preguntas.sinResponder === 0 && p.preguntas.respondidas > 0),
   }
+}
+
+/** Suma las entradas nuevas; una que ya estaba (la del control al terminar de corregir, W-12) se cambia en su lugar. */
+function juntarEntradas(antes: readonly Entrada[], nuevas: readonly Entrada[]): Entrada[] {
+  const porId = new Map(nuevas.map((e) => [e.id, e]))
+  const r = antes.map((e) => porId.get(e.id) ?? e)
+  const vistas = new Set(antes.map((e) => e.id))
+  return [...r, ...nuevas.filter((e) => !vistas.has(e.id))]
 }
