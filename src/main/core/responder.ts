@@ -76,7 +76,7 @@ export function borradorDeRespuesta(texto: string, q: PreguntaParaResponder): Bo
   const b = borradorVacio(q.puntos.length)
   const conLetra = q.opciones.some((o) => o.letra === leida.opcion)
   if (conLetra || (leida.opcion === OTRO && q.opciones.length > 0)) b.opcion = leida.opcion
-  if (b.opcion === OTRO) b.otro = /^\s*\*\*Opción:\*\*\s*Otro\s*[:—–-]\s*(.+?)\s*$/im.exec(texto)?.[1] ?? ''
+  if (b.opcion === OTRO) b.otro = leida.otro
 
   const resto: string[] = []
   let siguiente = 0

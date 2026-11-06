@@ -221,6 +221,7 @@ Además de lo que está en *Won't*:
 |---|---|
 | Proyecto | Una carpeta de la carpeta de proyectos con `docs/estado.md` y su ficha; sigue el marco (D-095) |
 | Carpeta simple | Una carpeta de la grilla sin `docs/estado.md`: se ve y se conversa, pero no sigue el marco; **Pasar al marco** la vuelve proyecto (D-095) |
+| Bandeja de entrada | La sección con lo que espera del usuario: las `Q-n` de todos los proyectos o de uno; reemplaza el nombre «Pendientes» (D-097) |
 | Marco | Las reglas para trabajar un proyecto desde Iridium: el método, los formatos y la ficha; reemplaza la guía de hitos (D-092, D-093) |
 | Control | Lo que Iridium revisa de los archivos de un proyecto contra el marco; le devuelve a la IA lo mal escrito al terminar el turno (D-092) |
 | Trabajo | Las ideas y los pendientes de la IA de un proyecto, con código `T-n` y un estado, en `docs/trabajo.md` (D-094) |

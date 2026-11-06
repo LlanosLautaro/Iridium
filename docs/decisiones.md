@@ -2241,3 +2241,33 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Consecuencias:**
 - El marco lo dice en su referencia de operación (OR-9) y el control lo avisa: «toca la ronda de UX».
 - La ronda gasta una sesión; no se hace en medio de una iteración.
+
+## D-097 — Lo que espera del usuario se llama «Bandeja de entrada»
+- **Fecha:** 2026-11-06
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden, paso 4 (Q-137)
+- **Estado:** vigente
+
+**Contexto:** con D-094, «pendiente» es un estado del trabajo de la IA, y la sección Pendientes muestra lo que espera del usuario: la misma palabra para dos cosas. Se propuso «Te espera»; el usuario la encontró demasiado informal y dijo que «Bandeja de entrada» o «Pendientes» le van bien.
+
+**Decisión:** «Bandeja de entrada». La sección (general y de cada proyecto) se llama así; la cuenta se dice «3 en la bandeja»; el bloque del Mapa, «En tu bandeja». El estado `pendiente` del trabajo no cambia.
+
+**Motivo:** de las dos que propuso el usuario, es la que no choca con el vocabulario de estados ya decidido (D-094): con «Pendientes» habría que cambiar `pendiente` por «por hacer» en todos los estados. Si prefiere «Pendientes», se cambia antes de construir.
+
+**Consecuencias:**
+- `modulos/orden/ux.md` › Parte 1 y Parte 2 (PO-4) usan «Bandeja de entrada»; `04-ux.md` y el glosario lo toman al reescribirse.
+
+## D-098 — La conversación queda siempre a la vista, más angosta
+- **Fecha:** 2026-11-06
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden, paso 4 (Q-136)
+- **Estado:** vigente
+
+**Contexto:** la conversación ocupa un tercio del ancho aunque esté vacía (A-6). Opciones: A) una franja que se abre al tocarla · B) se esconde y la abre un botón · C) como hoy, más angosta.
+
+**Decisión:** C. La conversación sigue a la derecha, siempre a la vista, con 360 px en vez de 440 (300 px en ventanas de menos de 1100 px). Su borde se arrastra entre 300 px y la mitad de la ventana, y la app recuerda el ancho de la vista general, de Skills y de cada proyecto. Vacía, dice en una línea qué hace Seguí (A-7).
+
+**Motivo:** el usuario la quiere a mano, sin un paso más para abrirla; achicarla devuelve el espacio a la sección.
+
+**Consecuencias:**
+- `modulos/orden/ux.md` › PO-9.

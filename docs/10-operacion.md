@@ -19,6 +19,9 @@
 | 2026-11-05 | R-7, R-8 | El clic derecho de la tarjeta, Nuevo proyecto y las ideas y skills de cada proyecto: hechos a pedido (D-089); falta tu prueba (Q-129, que reemplaza a Q-128: ya no quedan anotados para mirar) |
 | 2026-11-05 | Q-129 | El clic derecho, Nuevo proyecto y las ideas y skills del proyecto: todo bien |
 | 2026-11-05 | R-10 | Eliminar desde el menú de la tarjeta, con confirmación: hecho (D-090); falta probarlo con la papelera de verdad (Q-130) |
+| 2026-11-06 | Q-130 | Eliminar desde el clic derecho, con la papelera de verdad: todo bien |
+| 2026-11-06 | R-11 | «Otro» escrito sin nota volvía a aparecer como sin responder (el archivo se guardaba bien, pero Iridium no lo contaba como respuesta): arreglado, con su prueba |
+| 2026-11-06 | R-12 | Un solo botón «Actualizar» que arma y reinicia: anotado en el frente Orden (`modulos/orden/ux.md` › PO-1), se construye con sus iteraciones (D-091) |
 | 2026-11-05 | Pedido del usuario | Una crítica de la gestión de ideas: `10-operacion.md` › Crítica de la gestión de ideas; qué hacer, en Q-131 |
 | 2026-11-05 | Pedido del usuario (y Q-131) | La UX se degradó y la forma de trabajo tiene huecos: frente Orden con prioridad máxima (D-091); la guía de hitos y la skill de Iridium, un solo marco (D-092); las funciones nuevas esperan |
 | 2026-11-04 | Q-119, Q-120, Q-121 | El repo nombraba los otros proyectos del usuario: limpieza total (D-082); Ideas y Skills pasan a una carpeta Iridium aparte (D-083, construida; falta Q-122); el repo empieza de nuevo al terminar (D-084) |

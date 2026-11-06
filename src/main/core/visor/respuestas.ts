@@ -18,6 +18,8 @@ import { partirLineas } from './lineas'
 export interface RespuestaLeida {
   /** Letra de la opción, `Otro` o null. */
   opcion: string | null
+  /** Lo escrito en la misma línea, `**Opción:** Otro: …` (así lo escribe el formulario de Pendientes). */
+  otro: string
   texto: string
   /** Relativas a `docs/respuestas/`. */
   imagenes: string[]
@@ -50,6 +52,7 @@ export function leerRespuesta(texto: string, codigo: string): RespuestaLeida {
   const imagen = new RegExp(String.raw`^\s*!\[[^\]]*\]\(\s*<?(${codigo}/[^)>\s]+)>?\s*\)\s*$`)
   let procesada: RespuestaLeida['procesada'] = null
   let opcion: string | null = null
+  let otro = ''
   const imagenes: string[] = []
   const resto: string[] = []
   let titulo = false
@@ -66,6 +69,7 @@ export function leerRespuesta(texto: string, codigo: string): RespuestaLeida {
     const o = OPCION.exec(linea)
     if (o && opcion === null) {
       opcion = leerOpcionElegida(o[1] ?? '')
+      if (opcion === OTRO) otro = (o[1] ?? '').replace(/^otro\s*(?:[:—–-]\s*)?/i, '')
       continue
     }
     const im = imagen.exec(linea)
@@ -75,7 +79,7 @@ export function leerRespuesta(texto: string, codigo: string): RespuestaLeida {
     }
     resto.push(linea)
   }
-  return { opcion, texto: recortarLineasVacias(resto).join('\n'), imagenes, procesada }
+  return { opcion, otro, texto: recortarLineasVacias(resto).join('\n'), imagenes, procesada }
 }
 
 /** `A) 3D` → `A`; `Otro` → `Otro`; `Postergada: …` → `Postergada` (D-063). */
@@ -94,9 +98,12 @@ function recortarLineasVacias(lineas: string[]): string[] {
   return lineas.slice(a, b).map((l) => l.trimEnd())
 }
 
-/** ¿La respuesta dice algo? Una opción con letra cuenta; Otro, solo con texto o imágenes. */
-export function tieneContenido(r: Pick<RespuestaLeida, 'opcion' | 'texto' | 'imagenes'>): boolean {
+/** ¿La respuesta dice algo? Una opción con letra cuenta; Otro, solo con lo escrito en su línea, texto o imágenes (R-11). */
+export function tieneContenido(
+  r: Pick<RespuestaLeida, 'opcion' | 'texto' | 'imagenes'> & { otro?: string },
+): boolean {
   if (r.opcion !== null && r.opcion !== OTRO) return true
+  if (r.opcion === OTRO && (r.otro ?? '').trim() !== '') return true
   return r.texto.trim() !== '' || r.imagenes.length > 0
 }
 

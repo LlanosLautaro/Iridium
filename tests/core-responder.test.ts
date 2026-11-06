@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { borradorVacio, puedeEnviar, tieneAlgo } from '../src/compartido/respuestas'
 import { armarRespuestaDe, borradorDeRespuesta, partesDelContexto } from '../src/main/core/responder'
 import { leerOpciones } from '../src/main/core/visor/preguntas'
-import { leerRespuesta } from '../src/main/core/visor/respuestas'
+import { estadoDe, leerRespuesta } from '../src/main/core/visor/respuestas'
 
 const opciones = leerOpciones('A) Funciona, se aprueba (recomendada) · B) Encontré algo')
 const prueba = {
@@ -75,6 +75,9 @@ describe('armarRespuestaDe', () => {
     })
     expect(texto).toBe('# Q-7 — ¿3D o plana?\n\n**Opción:** Otro: las dos, según el caso\n')
     expect(leerRespuesta(texto, 'Q-7').opcion).toBe('Otro')
+    // R-11: sin nota, lo escrito en Otro ya es una respuesta (antes la pregunta volvía a quedar vacía).
+    expect(estadoDe(leerRespuesta(texto, 'Q-7'))).toBe('respondida')
+    expect(estadoDe(leerRespuesta('# Q-7 — ¿3D o plana?\n\n**Opción:** Otro\n', 'Q-7'))).toBe('sin-responder')
   })
 
   it('una prueba repite cada punto, marcado o no, con su nota después de « — » (D-019)', () => {

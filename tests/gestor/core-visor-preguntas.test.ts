@@ -159,6 +159,7 @@ describe('respuestas', () => {
     )
     expect(leerRespuesta(texto, 'Q-7')).toEqual({
       opcion: null,
+      otro: '',
       texto: 'Prefiero 3D.\n\nMirá la captura.',
       imagenes: ['Q-7/captura-1.png'],
       procesada: null,
@@ -196,6 +197,7 @@ describe('respuestas', () => {
     )
     expect(r).toEqual({
       opcion: null,
+      otro: '',
       texto: 'Sí, la 3D.\nMás texto.',
       imagenes: ['Q-7/foto.png'],
       procesada: { fecha: '2026-10-10', destino: 'D-33' },

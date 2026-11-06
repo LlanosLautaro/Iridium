@@ -133,7 +133,7 @@ const secciones = await win
   .catch(() => [] as string[])
 console.log('secciones del proyecto:', secciones)
 for (const s of secciones) {
-  const corto = s.split(',')[0].trim()
+  const corto = (s.split(',')[0] ?? s).trim()
   await paso(`proyecto-${corto.toLowerCase().replace(/\s+/g, '-')}`, async () => {
     await delProyecto(s).click()
     await win.waitForTimeout(1000)
