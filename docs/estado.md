@@ -34,18 +34,18 @@ Estados posibles: pendiente · en curso · completo · saltado (con motivo) · r
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | completo |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | completo |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | completo |
-| **Orden** (`modulos/orden/estado.md`), activo | sección | 6. UI (UX y diseño técnico hechos) | en curso |
+| **Orden** (`modulos/orden/estado.md`), activo | sección | 6. UI (maqueta lista, espera Q-140) | en curso |
 
 En espera, detrás de Orden (D-091): Diseño y Capacidades (`02-definicion.md` › Módulos previstos).
 
 ## En qué estamos ahora
-Hito 10, Operación, con el frente **Orden** primero (D-091): la UX se degradó y la forma de trabajo tiene huecos; no se suman funciones nuevas y Diseño y Capacidades esperan. La guía de hitos y la skill de Iridium se funden en un solo **framework** con un control (D-092, D-093; el nombre, D-099). Hechas la auditoría, la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas que aprobaste en Q-139. El diseño técnico está escrito (`modulos/orden/diseno-tecnico.md`), con cuatro iteraciones: el modelo y el control, el esqueleto y la Bandeja de entrada (con Actualizar, R-12), Trabajo e Ideas, y el Mapa con Skills › Framework. R-13 arreglado: los dibujos en texto se ven alineados (la letra de ancho fijo ahora tiene las líneas de cuadro). Compartir está publicado (`c012989`); falta la invitación (Q-126).
+Hito 10, Operación, con el frente **Orden** primero (D-091): la UX se degradó y la forma de trabajo tiene huecos; no se suman funciones nuevas y Diseño y Capacidades esperan. La guía de hitos y la skill de Iridium se funden en un solo **framework** con un control (D-092, D-093; el nombre, D-099). Hechas la auditoría, la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas que aprobaste en Q-139. El diseño técnico está escrito (`modulos/orden/diseno-tecnico.md`), con cuatro iteraciones: el modelo y el control, el esqueleto y la Bandeja de entrada (con Actualizar, R-12), Trabajo e Ideas, y el Mapa con Skills › Framework. Paso 6: la hoja de piezas nuevas está en `ui/vista-orden.html` y `06-ui.md`; espera tu visto bueno y la elección del botón principal (Q-140). Compartir está publicado (`c012989`); falta la invitación (Q-126).
 
 ## Pendientes del hito actual
 - [ ] Respaldo de `.iridium` en GitHub con un botón en Ajustes (D-087; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub). En el Backlog.
 - [ ] D-082: sacar de `src/main/core/carpeta-iridium.ts` el nombre viejo de tu carpeta de skills (Q-127 ya dio bien la mudanza).
 - [ ] La skill `iridium` (`recursos/plugins/iridium`) se cambia junto con lo que Iridium lee (D-086). La guía de `Iridium para compartir` puesta al día con D-085 a D-087 el 2026-11-04.
-- [ ] Frente Orden: el paso 6, UI, y después OR-I1 a OR-I4 (`modulos/orden/estado.md` › Pendientes).
+- [ ] Frente Orden: cerrar el paso 6 con Q-140 (`DESIGN.md` y la decisión) y después OR-I1 a OR-I4 (`modulos/orden/estado.md` › Pendientes).
 - [ ] En el chat de Skills, cuando el control funcione: sacar el hook `comprobar-preguntas.mjs` de la configuración global (D-092.4).
 - [ ] En el chat de Skills: la regla global «todo proyecto sigue la guía» pasa a la de D-095.
 - [ ] Lo pendiente de la guía y `gestor-proyectos` (D-062, D-063, D-068, Defectos 13 y 14, Q-115) pasa al marco único (D-092); las dos se eliminan cuando funcione, en el chat de Skills.
@@ -53,6 +53,10 @@ Hito 10, Operación, con el frente **Orden** primero (D-091): la UX se degradó 
 - [ ] Después de Mover (Q-127): en el chat de Skills, poner al día las rutas que nombran la carpeta vieja; en el chat general, la sección «Dónde están los demás proyectos» del `CLAUDE.md` de Ideas.
 
 ## Preguntas abiertas
+- **Q-140 — ¿Las piezas nuevas de Orden van así?**
+  Tipo: decisión · frena
+  Contexto: `06-ui.md` › Frente Orden: las piezas nuevas. Miralas con `scripts.md` › Ver las piezas nuevas de Orden (o las capturas). Como el amarillo queda solo para lo que frena, **Enviar** deja de ser ámbar: A lo pone claro y sin color, así el color sigue siendo solo para avisar; B lo pone verde (azul en Carbón), más visible pero con el color de «activo» pidiendo algo. Si algo de las otras piezas no te convence, decilo en la nota.
+  Opciones: A) Van así, con Enviar claro (recomendada) · B) Van así, con Enviar del color de lo activo · C) Hay que cambiar algo (en la nota)
 - **Q-126 — Invitá a la otra persona al repo de Iridium**
   Tipo: tarea · frena
   Contexto: D-085 y Q-123 (A). Sin la invitación, su Iridium no ve las versiones nuevas (le aparece «Sin acceso a las versiones nuevas»). Si preferís, pasame su usuario de GitHub en la respuesta y la invito yo.
@@ -69,8 +73,8 @@ Hito 10, Operación, con el frente **Orden** primero (D-091): la UX se degradó 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, paso 6: sumar a `06-ui.md` las piezas nuevas de las pantallas, con una maqueta y capturas para tu visto bueno.
-**Leer antes:** `respuestas/` (Q-126 y Q-118, si llegaron), `modulos/orden/estado.md`, `modulos/orden/diseno-tecnico.md` › Para el paso 6, `04-ux.md` › Pantallas, `06-ui.md`.
+Orden: con Q-140, cerrar el paso 6 (reglas de color de `DESIGN.md`, la decisión) y empezar OR-I1, el modelo y el control.
+**Leer antes:** `respuestas/Q-140.md` (y Q-126, Q-118 si llegaron), `modulos/orden/estado.md`, `06-ui.md` › Frente Orden: las piezas nuevas, `modulos/orden/diseno-tecnico.md`.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

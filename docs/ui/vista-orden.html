@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orden: las piezas nuevas</title>
+<!-- Frente Orden, paso 6 (modulos/orden/diseno-tecnico.md › Para el paso 6). Los tokens y la base son los de la app:
+     docs/ui/tokens.css y src/renderer/estilos/base.css. ?tema=carbon cambia el tema; #pieza muestra solo esa pieza. -->
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="../../src/renderer/estilos/base.css">
+<style>
+body { overflow: auto; min-width: 0; }
+.hoja { max-width: 1180px; margin: 0 auto; padding: 28px 32px 64px; }
+.hoja > header { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+.hoja > header h1 { font: 600 18px/1.3 var(--ui); }
+.hoja > header p { color: var(--texto-3); font-size: var(--tam-chico); }
+.temas { margin-left: auto; display: flex; gap: 6px; }
+.pieza { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--borde); }
+.pieza > h2 { font: 600 14px/1.3 var(--ui); display: flex; gap: 10px; align-items: baseline; }
+.pieza > h2 .cod { color: var(--texto-3); font-size: 12px; }
+.pieza > p.regla { color: var(--texto-2); font-size: var(--tam-chico); margin: 4px 0 14px; max-width: 92ch; }
+.estados { display: flex; flex-wrap: wrap; gap: 18px 22px; align-items: flex-start; }
+.estado { display: flex; flex-direction: column; gap: 7px; }
+.estado > .rot { font: 400 12px/1.35 var(--ui); color: var(--texto-3); }
+.lienzo { background: var(--fondo); border: 1px dashed var(--borde-fuerte); border-radius: var(--radio-bloque); padding: 12px; }
+:root.solo .pieza { display: none; border: 0; margin: 0; padding: 0; }
+:root.solo .pieza.visible { display: block; }
+:root.solo .hoja > header { display: none; }
+
+/* ── El botón principal (la regla del amarillo, D-097 y 04-ux.md › Un número que manda) ── */
+.btn.principal { background: var(--texto); color: var(--sobre-color); }
+.btn.principal:hover { filter: brightness(1.08); }
+.btn.principal-verde { background: var(--primario); color: var(--sobre-color); }
+.btn.segui { border: 1px solid color-mix(in oklab, var(--primario) 55%, transparent); color: var(--primario); }
+.btn.chico { height: 26px; padding: 0 10px; font-size: 12.5px; }
+
+/* ── La cuenta: neutra, o amarilla con «!» si algo frena ── */
+.cuenta { display: inline-flex; align-items: center; gap: 2px; min-width: 18px; height: 18px; padding: 0 5px; justify-content: center;
+  border-radius: var(--radio-control); font: 700 11px/1 var(--mono); background: var(--borde-fuerte); color: var(--texto); }
+.cuenta.frena { background: var(--espera); color: var(--sobre-color); }
+.cuenta.frena::after { content: "!"; font-family: var(--ui); font-weight: 700; }
+
+/* Barra de título en miniatura: el botón de inicio y las pestañas */
+.titulo-mini { display: flex; align-items: stretch; height: 36px; background: var(--barra); border: 1px solid var(--borde); border-radius: var(--radio-bloque); overflow: hidden; width: 620px; }
+.inicio { position: relative; width: 52px; display: grid; place-items: center; color: var(--primario); border-right: 1px solid var(--borde); }
+.inicio .cuenta { position: absolute; right: 3px; bottom: 3px; height: 15px; min-width: 15px; font-size: 10px; padding: 0 3px; }
+.pest { display: flex; align-items: center; gap: 7px; padding: 0 8px 0 13px; border-right: 1px solid var(--borde); color: var(--texto-3); font-weight: 600; position: relative; white-space: nowrap; }
+.pest.activa { background: var(--fondo); color: var(--texto); }
+.pest.activa::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--primario); }
+.pest .x { color: var(--texto-3); width: 18px; text-align: center; }
+.pest .ses { font: 600 12px/1 var(--ui); display: inline-flex; align-items: center; gap: 4px; }
+.pest .ses.trab { color: var(--trabaja); } .pest .ses.ok { color: var(--ok); } .pest .ses.error { color: var(--error); }
+
+/* ── W-9: la cabecera de una sección ── */
+.cabecera { width: 760px; background: var(--fondo); border: 1px solid var(--borde); border-radius: var(--radio-bloque); }
+.cab-1 { display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 12px 0 18px; }
+.cab-1 h3 { font: 600 15px/1 var(--ui); }
+.cab-1 .n { font: 500 12.5px/1 var(--mono); color: var(--texto-3); }
+.cab-1 .der { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.cab-2 { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px 0 14px; border-bottom: 1px solid var(--borde-suave); }
+.filtro { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: var(--radio-pildora); color: var(--texto-2); font: 500 12.5px/1 var(--ui); border: 1px solid transparent; }
+.filtro .n { font: 500 11.5px/1 var(--mono); color: var(--texto-3); }
+.filtro:hover { background: var(--hover); color: var(--texto); }
+.filtro.sel { background: var(--sel-fondo); border-color: color-mix(in oklab, var(--primario) 35%, transparent); color: var(--texto); }
+.filtro.sel .n { color: var(--texto-2); }
+.filtro.menu { margin-left: auto; border-color: var(--borde-fuerte); border-radius: var(--radio-control); }
+.cab-vacia { padding: 22px 18px 26px; color: var(--texto-2); font-size: 13.5px; }
+.cab-vacia a { color: var(--texto); text-decoration: underline dotted; text-underline-offset: 3px; cursor: pointer; }
+
+/* ── W-10: el campo de anotar con su selector ── */
+.anotar { display: flex; gap: 6px; align-items: center; width: 760px; padding: 8px; background: var(--caja); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-tarjeta); position: relative; }
+.anotar:focus-within { border-color: var(--primario); }
+.anotar input { flex: 1; min-width: 0; height: 30px; background: none; border: 0; outline: 0; color: var(--texto); font: 400 14px/1 var(--ui); padding: 0 8px; caret-color: var(--primario); }
+.anotar input::placeholder { color: var(--texto-3); }
+.selector { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 8px 0 10px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto-2); font: 500 13px/1 var(--ui); }
+.selector img { width: 16px; height: 16px; border-radius: 3px; }
+.menu-flota { position: absolute; top: 44px; right: 76px; width: 230px; padding: 5px; background: var(--elevado); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu); z-index: 2; }
+.menu-flota .op { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 9px; border-radius: var(--radio-fila); color: var(--texto-2); }
+.menu-flota .op img { width: 16px; height: 16px; border-radius: 3px; }
+.menu-flota .op.actual { color: var(--primario); }
+.menu-flota .op.foco { background: var(--hover); color: var(--texto); }
+.menu-flota .op .ok { margin-left: auto; }
+.menu-flota hr { border: 0; border-top: 1px solid var(--borde-suave); margin: 4px 2px; }
+.menu-flota .ayuda { padding: 4px 9px 3px; color: var(--texto-3); font-size: 12px; }
+.bajo-campo { display: flex; align-items: center; gap: 8px; margin-top: 7px; font-size: var(--tam-chico); color: var(--texto-2); padding-left: 6px; }
+.bajo-campo.error { color: var(--error); }
+.lista-ideas { width: 760px; margin-top: 8px; }
+.grupo-t { display: flex; gap: 8px; align-items: baseline; padding: 10px 6px 4px; font: 600 12.5px/1 var(--ui); color: var(--texto-2); }
+.grupo-t .n { font: 500 11.5px/1 var(--mono); color: var(--texto-3); }
+.item { display: grid; grid-template-columns: 52px 1fr auto auto 14px; gap: 10px; align-items: center; height: 34px; padding: 0 8px; border-radius: var(--radio-fila); color: var(--texto); }
+.item:hover { background: var(--hover); }
+.item .t { font: 700 12px/1 var(--mono); color: var(--texto-3); }
+.item .f { font: 400 12px/1 var(--mono); color: var(--texto-3); }
+.item .fr { font-size: 12px; color: var(--texto-3); }
+.item .ch { color: var(--texto-3); }
+.item.recien { background: var(--sel-fondo); }
+.item.recien .t { color: var(--primario); }
+
+/* ── W-12: la entrada del control en la conversación ── */
+.conv { width: 360px; background: var(--fondo); border: 1px solid var(--borde); border-radius: var(--radio-bloque); padding: 12px 16px; font-size: 14px; line-height: 1.6; }
+.turno-aut { display: flex; justify-content: space-between; font: 600 13px/1 var(--ui); color: var(--primario); margin-bottom: 6px; }
+.turno-aut .h { font: 500 11.5px/1 var(--mono); color: var(--texto-3); }
+.turno p { color: var(--texto); }
+.control { margin-top: 10px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-bloque); font-size: 12.5px; line-height: 1.45; }
+.control > button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 7px 10px; color: var(--texto-2); }
+.control > button .ch { margin-left: auto; color: var(--texto-3); transition: transform .12s var(--sale); }
+.control.abierto > button .ch { transform: rotate(90deg); }
+.control ul { list-style: none; padding: 0 10px 9px 32px; display: flex; flex-direction: column; gap: 6px; color: var(--texto-2); }
+.control li .cod { font-size: 11.5px; color: var(--texto-3); display: block; }
+.control li.hecho::before { content: "✓ "; color: var(--ok); }
+.control li.queda::before { content: "! "; color: var(--texto); font-weight: 700; }
+.control.ok > button { color: var(--texto-3); }
+
+/* ── W-2: la tarjeta con la línea del frente y los avisos ── */
+.tarjetas { display: flex; gap: 14px; flex-wrap: wrap; }
+.tarjeta { width: 262px; padding: 13px 14px 12px; background: var(--caja); border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); display: flex; flex-direction: column; gap: 6px; position: relative; }
+.tarjeta:hover, .tarjeta.hover { border-color: var(--borde-fuerte); background: var(--hover); }
+.tar-1 { display: flex; align-items: center; gap: 9px; }
+.tar-1 img { width: 26px; height: 26px; border-radius: 5px; }
+.tar-1 .nom { font: 600 14.5px/1.2 var(--ui); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tar-l { font-size: 12.5px; color: var(--texto-2); }
+.tar-l.tenue { color: var(--texto-3); }
+.tar-l .fr { color: var(--texto); font-weight: 600; }
+.etq-viejo { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; margin-left: 6px; border: 1px dashed var(--borde-control); border-radius: var(--radio-control); font-size: 12px; color: var(--texto-2); }
+.aviso-fw { display: flex; align-items: center; gap: 7px; margin-top: 2px; padding-top: 7px; border-top: 1px solid var(--borde-suave); font-size: 12.5px; color: var(--texto); }
+.aviso-fw .marca { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--texto-2); font: 700 10.5px/1 var(--ui); color: var(--texto); }
+.aviso-fw u { text-decoration: underline dotted; text-underline-offset: 3px; }
+.tarjeta .chip { align-self: flex-start; }
+.tarjeta .pasar { margin-top: 6px; align-self: flex-start; }
+.tarjeta.carpeta .pasar { visibility: hidden; }
+.tarjeta.carpeta.hover .pasar { visibility: visible; }
+
+/* ── W-3: el recuadro de la carpeta simple ── */
+.recuadro { width: 520px; padding: 14px 16px; background: var(--caja); border: 1px dashed var(--borde-control); border-radius: var(--radio-tarjeta); display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: end; }
+.recuadro b { font: 600 14px/1.3 var(--ui); grid-column: 1; }
+.recuadro p { grid-column: 1; color: var(--texto-2); font-size: 13px; }
+.recuadro .btn { grid-column: 2; grid-row: 1 / 3; }
+
+/* ── W-7: el bloque de frentes ── */
+.mapa { width: 820px; }
+.hitos { display: flex; align-items: center; gap: 4px; margin-bottom: 12px; font-size: 12.5px; color: var(--texto-3); }
+.hitos .h { width: 26px; height: 24px; display: grid; place-items: center; border-radius: var(--radio-control); font: 500 11.5px/1 var(--mono); }
+.hitos .h.hecho { background: color-mix(in oklab, var(--ok) 12%, transparent); color: var(--texto-2); }
+.hitos .h.curso { border: 1px solid var(--primario); color: var(--texto); }
+.hitos .tot { margin-left: auto; font-family: var(--mono); font-size: 12px; }
+.frentes { border: 1px solid var(--borde-fuerte); border-radius: var(--radio-tarjeta); background: var(--caja); }
+.fr-activo { padding: 14px 16px 12px; }
+.fr-cab { display: flex; align-items: center; gap: 10px; }
+.fr-cab .rot { font: 600 12px/1 var(--ui); color: var(--texto-3); letter-spacing: .02em; }
+.fr-cab .nom { font: 600 16px/1 var(--ui); }
+.fr-cab .paso { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--texto-2); }
+.fr-cab .paso .ic { width: 13px; height: 13px; color: var(--primario); }
+.fr-cab .btn { margin-left: auto; }
+.fr-prox { margin-top: 12px; }
+.fr-prox .rot, .fr-col .rot { font: 600 12px/1 var(--ui); color: var(--texto-3); margin-bottom: 5px; display: flex; gap: 6px; }
+.fr-prox p { font-size: 14px; color: var(--texto); max-width: 72ch; }
+.fr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+.fr-col .fila { display: flex; gap: 9px; align-items: center; height: 30px; padding: 0 6px; margin: 0 -6px; border-radius: var(--radio-fila); font-size: 13px; }
+.fr-col .fila:hover { background: var(--hover); }
+.fr-col .fila .cod { font-weight: 700; font-size: 12px; color: var(--texto-3); }
+.fr-col .fila .ch { margin-left: auto; color: var(--texto-3); }
+.fr-col .fila .cuenta.frena { height: 17px; font-size: 10px; }
+.fr-otros { border-top: 1px solid var(--borde-suave); padding: 9px 16px 10px; display: grid; grid-template-columns: 110px 1fr; gap: 6px 10px; font-size: 13px; }
+.fr-otros .rot { color: var(--texto-3); }
+.fr-otros a { color: var(--texto-2); text-decoration: underline dotted; text-underline-offset: 3px; cursor: pointer; }
+.fr-otros a:hover { color: var(--texto); }
+.fr-otros .sep { color: var(--texto-3); margin: 0 6px; }
+.ultimo { margin-top: 10px; font-size: 12.5px; color: var(--texto-3); display: flex; gap: 8px; align-items: center; }
+.ultimo q { color: var(--texto-2); }
+
+/* ── W-1: Actualizar en la barra de estado ── */
+.barra-est { display: flex; align-items: center; gap: 14px; height: 28px; padding: 0 12px; width: 760px; background: var(--barra); border: 1px solid var(--borde); border-radius: var(--radio-control); font-size: 12px; color: var(--texto-2); }
+.barra-est .med { margin-left: auto; display: flex; gap: 12px; font: 500 11.5px/1 var(--mono); color: var(--texto-3); }
+.actualizar { display: inline-flex; align-items: center; gap: 6px; height: 20px; padding: 0 8px; border-radius: var(--radio-control); border: 1px solid color-mix(in oklab, var(--primario) 50%, transparent); color: var(--primario); font: 600 12px/1 var(--ui); }
+.actualizar:hover { background: var(--sel-fondo); }
+.actualizar .ic { width: 12px; height: 12px; }
+.actualizar[disabled] { border-color: var(--borde-fuerte); color: var(--texto-3); }
+.armando { display: inline-flex; align-items: center; gap: 6px; color: var(--texto-2); }
+.armando .ic { width: 12px; height: 12px; color: var(--primario); }
+.armando .t { font: 500 11.5px/1 var(--mono); color: var(--texto-3); }
+.mini-link { color: var(--texto-2); text-decoration: underline dotted; text-underline-offset: 3px; font-size: 12px; cursor: pointer; }
+.mini-link:hover { color: var(--texto); }
+.globo { position: relative; margin-top: 8px; margin-left: 140px; width: 300px; padding: 8px 10px; background: var(--elevado); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); box-shadow: var(--sombra-menu); font-size: 12px; color: var(--texto-2); }
+
+/* ── W-5: las preguntas en la Bandeja de entrada ── */
+.bandeja { width: 760px; display: flex; flex-direction: column; gap: 10px; }
+.preg { padding: 13px 16px 12px; background: var(--caja); border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); }
+.preg.frena { background: var(--espera-fondo); border-color: var(--espera-borde); border-left: 3px solid var(--espera); }
+.preg-1 { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--texto-3); }
+.preg-1 .cod { font: 700 12px/1 var(--mono); color: var(--texto-2); }
+.preg-1 .fr { color: var(--texto-2); }
+.preg h4 { font: 600 15px/1.4 var(--ui); margin: 6px 0 4px; }
+.preg .ctx { font-size: 12.5px; color: var(--texto-2); }
+.opcs { display: flex; flex-direction: column; gap: 5px; margin: 10px 0; }
+.opc { display: flex; align-items: center; gap: 9px; height: 32px; padding: 0 10px; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-bloque); font-size: 13.5px; }
+.opc .bola { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--borde-control); }
+.opc.sel { border-color: var(--primario); background: var(--sel-fondo); }
+.opc.sel .bola { border-color: var(--primario); box-shadow: inset 0 0 0 3px var(--caja); background: var(--primario); }
+.opc .rec { margin-left: auto; font-size: 12px; color: var(--texto-3); }
+.acciones { display: flex; justify-content: flex-end; gap: 6px; }
+.pausa { display: flex; align-items: center; gap: 8px; padding: 6px 4px; color: var(--texto-3); font: 600 12.5px/1 var(--ui); }
+.pausa .n { font: 500 11.5px/1 var(--mono); }
+.comparar { display: flex; gap: 26px; }
+</style>
+</head>
+<body>
+<div class="hoja">
+<header>
+  <h1>Orden: las piezas nuevas</h1>
+  <p>Frente Orden, paso 6. Cada pieza con sus estados; los dibujos de <code>04-ux.md</code> › Pantallas dicen dónde va.</p>
+  <div class="temas"><button class="btn secundario chico" data-tema="iridium">Iridium</button><button class="btn secundario chico" data-tema="carbon">Carbón</button></div>
+</header>
+
+<!-- 1 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="principal">
+  <h2>El botón principal <span class="cod">W-5 · Un número que manda</span></h2>
+  <p class="regla">El amarillo queda solo para lo que frena, así que <b>Enviar</b> deja de ser ámbar. Dos maneras de que siga siendo el botón que manda en la pregunta:</p>
+  <div class="comparar">
+    <div class="estado"><span class="rot">A) claro, sin color (recomendada): el color sigue siendo solo para avisar</span>
+      <div class="lienzo"><div class="acciones"><button class="btn secundario">Postergar</button><button class="btn principal">Enviar</button></div></div></div>
+    <div class="estado"><span class="rot">B) del color de lo activo: verde en Iridium, azul en Carbón</span>
+      <div class="lienzo"><div class="acciones"><button class="btn secundario">Postergar</button><button class="btn principal-verde">Enviar</button></div></div></div>
+    <div class="estado"><span class="rot">Seguí no cambia: contorno del color de lo activo</span>
+      <div class="lienzo"><div class="acciones"><button class="btn secundario">Abrir</button><button class="btn segui"><svg class="ic" viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z"/></svg>Seguí</button></div></div></div>
+  </div>
+</section>
+
+<!-- 2 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="cuentas">
+  <h2>La cuenta y el amarillo <span class="cod">W-1 · W-2 · W-4</span></h2>
+  <p class="regla">Un solo total, en el botón de inicio. Sin nada que frene, la cuenta es gris; con algo que frena, amarilla y con «!». La pestaña activa se marca con la línea, nunca en amarillo.</p>
+  <div class="estados">
+    <div class="estado"><span class="rot">Nada frena: todo neutro</span>
+      <div class="titulo-mini">
+        <div class="inicio"><svg class="ic" viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M12 2l9 5v10l-9 5-9-5V7z"/></svg><span class="cuenta">3</span></div>
+        <div class="pest activa">Alfa <span class="cuenta">2</span><span class="x">×</span></div>
+        <div class="pest">Beta <span class="cuenta">1</span><span class="x">×</span></div>
+      </div></div>
+    <div class="estado"><span class="rot">Algo frena en Beta: el total y la pestaña de Beta, amarillos</span>
+      <div class="titulo-mini">
+        <div class="inicio"><svg class="ic" viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M12 2l9 5v10l-9 5-9-5V7z"/></svg><span class="cuenta frena">3</span></div>
+        <div class="pest activa">Alfa <span class="cuenta">2</span><span class="x">×</span></div>
+        <div class="pest">Beta <span class="cuenta frena">1</span><span class="x">×</span></div>
+      </div></div>
+    <div class="estado"><span class="rot">La sesión de cada pestaña, sin preguntas</span>
+      <div class="titulo-mini">
+        <div class="inicio"><svg class="ic" viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M12 2l9 5v10l-9 5-9-5V7z"/></svg></div>
+        <div class="pest activa">Alfa <span class="ses trab"><svg class="ic gira" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg>Trabajando</span><span class="x">×</span></div>
+        <div class="pest">Beta <span class="ses ok">✓ Terminó</span><span class="x">×</span></div>
+        <div class="pest">Gamma <span class="ses error">✕ Error</span><span class="x">×</span></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- 3 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="cabecera">
+  <h2>La cabecera de una sección <span class="cod">W-9</span></h2>
+  <p class="regla">La misma en todas: título y cuenta, una o dos acciones y lo demás en «…»; los filtros abajo, como píldoras con su cuenta. El elegido, con el fondo de selección. «Frente ▾» solo si hay más de uno.</p>
+  <div class="estados" style="flex-direction:column">
+    <div class="estado"><span class="rot">Con contenido (Trabajo)</span>
+      <div class="cabecera">
+        <div class="cab-1"><h3>Trabajo</h3><span class="n">34</span><div class="der"><button class="btn secundario chico"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Anotar una idea</button><button class="btn-ic" title="Más">…</button></div></div>
+        <div class="cab-2"><button class="filtro sel">Todos <span class="n">25</span></button><button class="filtro">Nuevas <span class="n">6</span></button><button class="filtro">Pendientes <span class="n">9</span></button><button class="filtro">En curso <span class="n">2</span></button><button class="filtro">En pausa <span class="n">1</span></button><button class="filtro">Hechos <span class="n">7</span></button><button class="filtro menu">Frente ▾</button></div>
+      </div></div>
+    <div class="estado"><span class="rot">Vacía: una línea de para qué es, con la acción</span>
+      <div class="cabecera">
+        <div class="cab-1"><h3>Trabajo</h3><div class="der"><button class="btn secundario chico"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Anotar una idea</button></div></div>
+        <div class="cab-vacia">Acá van las ideas y lo que la IA va a hacer. <a>Anotar una idea</a></div>
+      </div></div>
+  </div>
+</section>
+
+<!-- 4 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="anotar">
+  <h2>Anotar una idea <span class="cod">W-10 · W-11</span></h2>
+  <p class="regla">Un campo como el de la conversación, con el proyecto al lado. Anotar no gasta uso: Iridium la escribe y aparece arriba de su grupo, marcada un momento.</p>
+  <div class="estados" style="flex-direction:column; gap: 22px">
+    <div class="estado"><span class="rot">Eligiendo el proyecto (empieza en el último elegido)</span>
+      <div style="position:relative; height: 236px">
+        <div class="anotar"><input value="Exportar el plan como imagen"><span class="selector"><img src="iconos/beta.svg" alt="">Alfa ▾</span><button class="btn secundario">Anotar</button>
+          <div class="menu-flota">
+            <div class="op actual"><img src="iconos/beta.svg" alt="">Alfa <span class="ok">✓</span></div>
+            <div class="op foco"><img src="iconos/delta.svg" alt="">Beta</div>
+            <div class="op"><img src="iconos/epsilon.svg" alt="">Delta</div>
+            <div class="op"><img src="iconos/zeta.svg" alt="">Épsilon</div>
+            <hr><div class="op"><img src="iconos/ideas.svg" alt="">Suelta</div>
+            <div class="ayuda">Solo los proyectos que siguen el framework</div>
+          </div></div>
+      </div></div>
+    <div class="estado"><span class="rot">Recién anotada: el campo se vacía y la idea queda arriba de su grupo</span>
+      <div class="anotar"><input placeholder="Una idea…"><span class="selector"><img src="iconos/beta.svg" alt="">Alfa ▾</span><button class="btn secundario">Anotar</button></div>
+      <div class="lista-ideas">
+        <div class="grupo-t">Alfa <span class="n">6</span></div>
+        <div class="item recien"><span class="t">T-42</span><span>Exportar el plan como imagen</span><span class="fr"></span><span class="f">2026-11-06</span><span class="ch">›</span></div>
+        <div class="item"><span class="t">T-38</span><span>Un atajo para Seguí desde la grilla</span><span class="fr"></span><span class="f">2026-11-02</span><span class="ch">›</span></div>
+      </div></div>
+    <div class="estado"><span class="rot">No se pudo anotar: el texto queda</span>
+      <div class="anotar" style="border-color: color-mix(in oklab, var(--error) 55%, transparent)"><input value="Exportar el plan como imagen"><span class="selector"><img src="iconos/beta.svg" alt="">Alfa ▾</span><button class="btn secundario">Anotar</button></div>
+      <div class="bajo-campo error">✕ No se pudo escribir en <code style="color:inherit">docs/trabajo.md</code>: el archivo está abierto en otro programa. <button class="mini-link" style="color:var(--texto-2)">Reintentar</button></div></div>
+  </div>
+</section>
+
+<!-- 5 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="control">
+  <h2>El control en la conversación <span class="cod">W-12 · F-8</span></h2>
+  <p class="regla">Una línea gris debajo del turno: le habla a la IA, no al usuario, así que no lleva ámbar. Plegada por defecto; abierta, la lista con dónde está cada cosa.</p>
+  <div class="estados">
+    <div class="estado"><span class="rot">Recién devuelto (plegado)</span>
+      <div class="conv"><div class="turno"><div class="turno-aut">IA <span class="h">14:32</span></div><p>Escribí las pantallas de Orden y dejé la Q-140.</p></div>
+        <div class="control"><button><svg class="ic" viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>El control encontró 2 cosas mal escritas; la IA las corrige<span class="ch">›</span></button></div></div></div>
+    <div class="estado"><span class="rot">Abierto, mientras la IA corrige</span>
+      <div class="conv"><div class="turno"><div class="turno-aut">IA <span class="h">14:32</span></div><p>Escribí las pantallas de Orden y dejé la Q-140.</p></div>
+        <div class="control abierto"><button><svg class="ic gira" viewBox="0 0 24 24" style="color:var(--trabaja)"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg>El control encontró 2 cosas mal escritas; la IA las corrige<span class="ch">›</span></button>
+          <ul><li>La Q-140 no tiene la línea «Tipo:»<span class="cod">estado.md › Preguntas abiertas</span></li><li>«terminado» no es un estado: hecho, en curso, pendiente…<span class="cod">modulos/orden/estado.md › Progreso</span></li></ul></div></div></div>
+    <div class="estado"><span class="rot">Al terminar: lo que quedó pasa a aviso del framework</span>
+      <div class="conv"><div class="turno"><div class="turno-aut">IA <span class="h">14:33</span></div><p>Corregí la Q-140.</p></div>
+        <div class="control ok abierto"><button><svg class="ic" viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/></svg>Corrigió 1 de 2; queda 1 aviso del framework<span class="ch">›</span></button>
+          <ul><li class="hecho">La Q-140 no tiene la línea «Tipo:»</li><li class="queda">«terminado» no es un estado<span class="cod">modulos/orden/estado.md › Progreso</span></li></ul></div></div></div>
+  </div>
+</section>
+
+<!-- 6 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="tarjeta">
+  <h2>La tarjeta: el frente y los avisos <span class="cod">W-2</span></h2>
+  <p class="regla">La línea del frente activo reemplaza al Próximo paso cuando hay frentes. Los avisos del framework van al pie, en gris con un «!» en un círculo: no esperan al usuario, pero se ven. «framework viejo» es una etiqueta punteada junto al hito.</p>
+  <div class="tarjetas">
+    <div class="estado"><span class="rot">Con frente activo, trabajando y un aviso</span>
+      <div class="tarjeta"><div class="tar-1"><img src="iconos/beta.svg" alt=""><span class="nom">Alfa</span><span class="cuenta frena">2</span></div>
+        <div class="tar-l">Hito 10 · Operación</div><div class="tar-l"><span class="fr">Orden</span> · 4. UX</div>
+        <span class="chip trab"><svg class="ic gira" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg>Trabajando · 2 min</span>
+        <div class="aviso-fw"><span class="marca">!</span><u>2 avisos del framework</u></div></div></div>
+    <div class="estado"><span class="rot">Sin frentes: el Próximo paso; cuenta neutra</span>
+      <div class="tarjeta"><div class="tar-1"><img src="iconos/delta.svg" alt=""><span class="nom">Beta</span><span class="cuenta">1</span></div>
+        <div class="tar-l">Hito 7 · Construcción</div><div class="tar-l tenue">Próximo: probar la I-3</div></div></div>
+    <div class="estado"><span class="rot">Framework viejo</span>
+      <div class="tarjeta"><div class="tar-1"><img src="iconos/epsilon.svg" alt=""><span class="nom">Delta</span></div>
+        <div class="tar-l">Hito 4 · UX <span class="etq-viejo">framework viejo</span></div><div class="tar-l tenue">Próximo: las pantallas</div></div></div>
+    <div class="estado"><span class="rot">Carpeta simple, con el mouse encima</span>
+      <div class="tarjeta carpeta hover"><div class="tar-1"><img src="iconos/gamma.svg" alt=""><span class="nom">Gamma</span></div>
+        <div class="tar-l tenue">carpeta</div><button class="btn secundario chico pasar">Pasar al framework</button></div></div>
+  </div>
+</section>
+
+<!-- 7 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="carpeta">
+  <h2>El recuadro de la carpeta simple <span class="cod">W-3</span></h2>
+  <p class="regla">Arriba de Archivos. Borde punteado como lo que todavía no está ordenado; el botón dice que gasta uso en su título.</p>
+  <div class="recuadro"><b>Esta carpeta no sigue el framework</b><p>Se ve y se conversa, sin Mapa, Trabajo ni preguntas.</p>
+    <button class="btn secundario" title="Le manda el pedido a la IA de esta carpeta: gasta uso">Pasar al framework</button></div>
+</section>
+
+<!-- 8 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="frentes">
+  <h2>El bloque de frentes del Mapa <span class="cod">W-7</span></h2>
+  <p class="regla">En operación manda el frente activo: su paso en curso, su Próximo paso, su trabajo en curso y sus preguntas. Debajo, en una línea cada uno, los que esperan y los que están en operación; cada nombre abre su <code>estado.md</code>.</p>
+  <div class="mapa">
+    <div class="hitos">Hitos <span class="h hecho">0</span><span class="h hecho">1</span><span class="h hecho">2</span><span class="h hecho">3</span><span class="h hecho">4</span><span class="h hecho">5</span><span class="h hecho">6</span><span class="h hecho">7</span><span class="h hecho">8</span><span class="h hecho">9</span><span class="h curso">10</span><span class="tot">9 de 10 hechos</span></div>
+    <div class="frentes">
+      <div class="fr-activo">
+        <div class="fr-cab"><span class="rot">Frente activo</span><span class="nom">Orden</span><span class="paso"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>6. UI · en curso</span><button class="btn secundario chico">Abrir estado.md</button></div>
+        <div class="fr-prox"><div class="rot">Próximo paso</div><p>Sumar a 06-ui.md las piezas nuevas de las pantallas, con una maqueta y capturas.</p></div>
+        <div class="fr-cols">
+          <div class="fr-col"><div class="rot">En curso <span class="cod" style="font-size:11.5px">1</span></div>
+            <div class="fila"><span class="cod">T-12</span>Bandeja agrupada por frente<span class="ch">›</span></div></div>
+          <div class="fr-col"><div class="rot">En tu bandeja <span class="cod" style="font-size:11.5px">1</span></div>
+            <div class="fila"><span class="cod">Q-140</span>¿Las piezas nuevas van así?<span class="cuenta frena" style="margin-left:auto"></span><span class="ch" style="margin-left:6px">›</span></div></div>
+        </div>
+      </div>
+      <div class="fr-otros">
+        <span class="rot">En espera</span><span><a>Diseño</a><span class="sep">·</span><a>Capacidades</a></span>
+        <span class="rot">En operación</span><span><a>Compartir</a><span class="sep">·</span><a>Skills</a><span class="sep">·</span><a>Inicio</a><span class="sep">·</span><a>Apariencia</a><span class="sep">·</span><a>Revisión</a></span>
+      </div>
+    </div>
+    <div class="ultimo">Lo último de la IA: <q>Escribí la maqueta de las piezas de Orden…</q> · hace 10 min <button class="mini-link">Ver</button></div>
+  </div>
+</section>
+
+<!-- 9 ─────────────────────────────────────────────────────────── -->
+<section class="pieza" id="actualizar">
+  <h2>Actualizar en la barra de estado <span class="cod">W-1 · F-7 · R-12</span></h2>
+  <p class="regla">Reemplaza a «Armar» y a «Reiniciar ahora». Contorno del color de lo activo: es una acción disponible, no algo que espere al usuario. El detalle va en el título, al pasar el mouse.</p>
+  <div class="estados" style="flex-direction:column">
+    <div class="estado"><span class="rot">Hay algo para poner (con el mouse encima)</span>
+      <div class="barra-est"><span>✓ Claude · Pro</span><span>Hito 10 · Operación</span><button class="actualizar"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Actualizar</button><span class="med"><span>5 h 15 %</span><span>Sem 22 %</span></span></div>
+      <div class="globo">Trae «Orden: la maqueta del paso 6» (abc123) y lo anterior que falte</div></div>
+    <div class="estado"><span class="rot">Armando: la app se sigue usando y reinicia sola al terminar</span>
+      <div class="barra-est"><span>✓ Claude · Pro</span><span>Hito 10 · Operación</span><span class="armando"><svg class="ic gira" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg>Actualizando… <span class="t">1 min</span></span><button class="mini-link">Cancelar</button><span class="med"><span>5 h 15 %</span><span>Sem 22 %</span></span></div></div>
+    <div class="estado"><span class="rot">Falló el armado</span>
+      <div class="barra-est"><span>✓ Claude · Pro</span><span>Hito 10 · Operación</span><span class="chip error" title="pnpm build terminó con un error">✕ No se pudo actualizar</span><button class="mini-link">Reintentar</button><button class="mini-link">Ver la consola</button><span class="med"><span>5 h 15 %</span><span>Sem 22 %</span></span></div></div>
+    <div class="estado"><span class="rot">La IA de Iridium está trabajando</span>
+      <div class="barra-est"><span>✓ Claude · Pro</span><span>Hito 10 · Operación</span><button class="actualizar" disabled title="Espera a que la IA de Iridium termine"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Actualizar</button><span style="color:var(--texto-3)">espera a que la IA de Iridium termine</span><span class="med"><span>5 h 15 %</span><span>Sem 22 %</span></span></div></div>
+  </div>
+</section>
+
+<!-- 10 ────────────────────────────────────────────────────────── -->
+<section class="pieza" id="bandeja">
+  <h2>Las preguntas en la Bandeja de entrada <span class="cod">W-5 · W-6</span></h2>
+  <p class="regla">Solo la que frena lleva el ámbar: borde a la izquierda, fondo apenas teñido y el chip «Frena». Las demás, como cualquier tarjeta. Las en pausa, al final y plegadas, sin contar. Con la opción A del botón principal.</p>
+  <div class="cabecera" style="width:760px; margin-bottom:10px">
+    <div class="cab-1"><h3>Alfa</h3><span class="cuenta frena">2</span><div class="der"><button class="btn secundario chico">Abrir</button><button class="btn segui chico"><svg class="ic" viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z"/></svg>Seguí</button></div></div>
+    <div class="cab-2"><button class="filtro sel">Todos <span class="n">2</span></button><button class="filtro">Núcleo <span class="n">1</span></button><button class="filtro">Compartir <span class="n">1</span></button></div>
+  </div>
+  <div class="bandeja">
+    <div class="preg frena">
+      <div class="preg-1"><span class="cod">Q-126</span>tarea · <span class="fr">Compartir</span><span class="chip espera" style="margin-left:auto">! Frena</span></div>
+      <h4>Invitá a la otra persona al repo de Iridium</h4>
+      <div class="ctx">Sin la invitación, su Iridium no ve las versiones nuevas. › Mostrar detalles</div>
+      <div class="acciones" style="margin-top:10px"><button class="btn secundario">Guardar a medias</button><button class="btn secundario">Postergar</button><button class="btn principal">Enviar</button></div>
+    </div>
+    <div class="preg">
+      <div class="preg-1"><span class="cod">Q-141</span>decisión</div>
+      <h4>¿Las ideas sueltas también van a la Bandeja?</h4>
+      <div class="ctx">W-10: hoy solo se ven en Ideas. › Mostrar detalles</div>
+      <div class="opcs"><div class="opc sel"><span class="bola"></span>A) No, solo en Ideas<span class="rec">★ recomendada</span></div><div class="opc"><span class="bola"></span>B) Sí, como pregunta</div></div>
+      <div class="acciones"><button class="btn secundario">Postergar</button><button class="btn principal">Enviar</button></div>
+    </div>
+    <div class="pausa">› En pausa <span class="n">2</span></div>
+  </div>
+</section>
+</div>
+<script>
+const p = new URLSearchParams(location.search)
+const poner = (t) => { if (t === 'carbon') document.documentElement.dataset.tema = 'carbon'; else delete document.documentElement.dataset.tema }
+poner(p.get('tema'))
+document.querySelectorAll('[data-tema]').forEach((b) => b.addEventListener('click', () => poner(b.dataset.tema)))
+document.querySelectorAll('.control > button').forEach((b) => b.addEventListener('click', () => b.parentElement.classList.toggle('abierto')))
+if (location.hash) { document.documentElement.classList.add('solo'); document.querySelector(location.hash)?.classList.add('visible') }
+</script>
+</body>
+</html>

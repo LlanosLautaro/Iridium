@@ -38,6 +38,14 @@ Hace falta una vez, o cuando la IA lo pida.
 Una vez, en Edge o Chrome. Deja la extensión al día en su carpeta, la abre y copia su ruta. En Edge escribí `edge://extensions` en la barra de direcciones (Edge no deja abrirla desde un script), prendé **Modo de desarrollador**, tocá **Cargar descomprimida** y pegá la ruta o elegí la carpeta que se abrió. Edge avisa que puede leer datos de todos los sitios: lo pide solo para la captura y solo corre en las apps de tu PC (D-050). Si un día Iridium dice «Hay una versión nueva de la extensión», ejecutá esto otra vez y tocá **Recargar** en esa página. Las apps Electron (Iridium, otras apps) la cargan solas en modo desarrollo.
 **Ejecutar:** `pnpm extension`
 
+## Ver las piezas nuevas de Orden
+La hoja con las piezas nuevas del frente Orden, cada una con sus estados. Arriba a la derecha cambia entre Iridium y Carbón; en el control de la conversación, tocá la línea para plegarla.
+**Abrir:** `docs/ui/vista-orden.html`
+
+## Ver las capturas de Orden
+Las mismas piezas como imágenes, una por pieza y por tema (`todo-…` es la hoja entera).
+**Abrir:** `docs/ui/capturas-orden`
+
 ## Ver el prototipo de la vista de proyecto
 Los tres paneles de D-041 en el navegador: la barra de íconos del proyecto, la vista grande y la conversación a la derecha, con su borde que se arrastra y las conversaciones anteriores en el botón del reloj.
 **Abrir:** `docs/ui/vista-proyecto.html`

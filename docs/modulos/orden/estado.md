@@ -12,7 +12,7 @@
 | 3. Investigación | completo (2026-11-05): la UX y la forma de trabajo, A-1 a A-23 | `auditoria.md` |
 | 4. UX | completo (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | completo (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
-| 6. UI | pendiente | — |
+| 6. UI | en curso (2026-11-06): hoja de piezas lista, espera Q-140 | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
 | 7. Construcción | pendiente | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
@@ -30,11 +30,12 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 - [x] Con Q-136 a Q-138: `ux.md` › Parte 1 ajustada (D-097, D-098) y la Parte 2, las pantallas PO-1 a PO-10.
 - [x] Con Q-139: `04-ux.md` reescrito sin capas (las PO-n pasaron a W-n) y D-099.
 - [x] Paso 5, diseño técnico (`diseno-tecnico.md`).
-- [ ] Paso 6, UI: las piezas nuevas de `diseno-tecnico.md` › Para el paso 6 en `06-ui.md` y una maqueta.
+- [x] Paso 6, UI: las piezas nuevas en `06-ui.md` y la hoja `ui/vista-orden.html` con capturas en los dos temas.
+- [ ] Con Q-140: reescribir las reglas de color de `DESIGN.md` (el ámbar solo para lo que frena, el botón principal), registrar la decisión y cerrar el paso 6.
 - [ ] R-12 (un solo botón Actualizar, W-1): en OR-I2.
 
 ## Preguntas abiertas
-Van en `docs/estado.md`: ninguna del frente por ahora.
+Van en `docs/estado.md`: Q-140 (el visto bueno de las piezas y el botón principal).
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -55,4 +56,4 @@ Van en `docs/estado.md`: ninguna del frente por ahora.
 | OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | pendiente |
 
 ## Próximo paso
-Paso 6, UI: sumar a `06-ui.md` las piezas nuevas (`diseno-tecnico.md` › Para el paso 6) con una maqueta en `docs/ui/` y capturas, y pedir el visto bueno.
+Con Q-140: `DESIGN.md` y la decisión, cerrar el paso 6 y empezar OR-I1 (el modelo y el control).
