@@ -99,6 +99,13 @@
 | D-090 | 2026-11-05 | general | 10 (R-10) | Eliminar un proyecto desde el menú de la tarjeta, con confirmación y a la papelera | vigente |
 | D-091 | 2026-11-05 | general | 10, a pedido del usuario (y Q-131) | Un frente «Orden» con prioridad máxima: auditoría, un solo modelo y la UX rehecha; las funciones nuevas esperan | vigente |
 | D-092 | 2026-11-05 | general | 10, a pedido del usuario | La guía de hitos y la skill de Iridium se funden en un solo marco, el de Iridium, con un control de formato | vigente |
+| D-093 | 2026-11-05 | general | 10, frente Orden (Q-132) | El marco de Iridium vive solo dentro de Iridium; afuera no hay marco | vigente |
+| D-094 | 2026-11-06 | general | 10, frente Orden, paso 2 (Q-133) | Las ideas y los pendientes de la IA van en una sola lista, «Trabajo» | vigente |
+| D-095 | 2026-11-06 | general | 10, frente Orden, paso 2 (Q-134) | Siguen el marco las carpetas con `docs/estado.md`; las demás son carpetas simples hasta que se sumen | vigente |
+| D-096 | 2026-11-06 | general | 10, frente Orden, paso 2 (Q-135) | La ronda de UX se hace al terminar cada frente y cada cinco comentarios de la Revisión juntados | vigente |
+| D-097 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-137) | Lo que espera del usuario se llama «Bandeja de entrada» | vigente |
+| D-098 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-136) | La conversación queda siempre a la vista, más angosta | vigente |
+| D-099 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-139) | El marco se llama «framework» | vigente |
 
 ---
 
@@ -2271,3 +2278,18 @@ evision-cola-electron.json` y sale cuando Iridium está.
 
 **Consecuencias:**
 - `modulos/orden/ux.md` › PO-9.
+
+## D-099 — El marco se llama «framework»
+- **Fecha:** 2026-11-06
+- **Ámbito:** general
+- **Hito o paso:** 10, frente Orden, paso 4 (Q-139)
+- **Estado:** vigente
+
+**Contexto:** D-092 llamó «marco» a las reglas para trabajar un proyecto desde Iridium (el método, los formatos y la ficha). Al aprobar las pantallas (Q-139, A), el usuario preguntó si «marco» era «framework» y dijo que prefiere «framework». Además, «marco» ya nombraba el esqueleto de la app (W-1, «Marco de la app»).
+
+**Decisión:** se llama **framework**, en la app y en los documentos: Skills › **Framework**, **Pasar al framework**, «framework viejo», «avisos del framework», y en `docs/README.md` la línea `**Framework:** AAAA-MM-DD`. El esqueleto de la app (W-1) pasa a llamarse «esqueleto». El control conserva su nombre.
+
+**Motivo:** es la palabra que el usuario usa y reconoce, y saca la doble lectura de «marco».
+
+**Consecuencias:**
+- `modulos/orden/definicion.md`, `modulos/orden/ux.md`, `04-ux.md` y el glosario de `02-definicion.md` dicen «framework». D-092 a D-096 y los documentos anteriores quedan como se escribieron: donde dicen «marco», es el framework.

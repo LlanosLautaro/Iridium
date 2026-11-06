@@ -10,43 +10,49 @@
 | 1. Propuesta | completo (el usuario abrió la operación en el chat, 2026-11-05) | `propuesta.md` |
 | 2. Definición | completo (2026-11-06; Q-133 a Q-135 → D-094 a D-096) | `definicion.md` |
 | 3. Investigación | completo (2026-11-05): la UX y la forma de trabajo, A-1 a A-23 | `auditoria.md` |
-| 4. UX | en curso: la arquitectura de información aprobada (Q-138, con D-097 y D-098) y las pantallas escritas (PO-1 a PO-10, 2026-11-06); espera Q-139 y después `04-ux.md` reescrito | `ux.md` |
-| 5. Diseño técnico | pendiente | — |
+| 4. UX | completo (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
+| 5. Diseño técnico | completo (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | pendiente | — |
 | 7. Construcción | pendiente | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas quedan frenadas y Diseño espera. La guía de hitos y la skill de Iridium se funden en un solo marco (D-092). Q-131 (ideas) queda adentro de este frente. La auditoría (paso 3) va antes que la definición: el modelo sale de lo que encuentre. La auditoría está hecha: la UX (`auditoria.md` › Parte 1, A-1 a A-12) y la forma de trabajo (Parte 2, A-13 a A-23: reglas contrarias entre la guía y la skill, preguntas que Iridium no ve, un control que no ve nada de eso, ideas en hasta ocho lugares, tres vocabularios de estados), cada una con sus conclusiones para el modelo. Fuera de Iridium no hay marco (D-093). La definición está escrita: cuatro cosas que se siguen (preguntas, trabajo, comentarios, decisiones), cada una en un lugar con código, frente y estado; un vocabulario de estados; el marco único con su control, que le devuelve a la IA lo mal escrito al terminar el turno; y «Pasar al marco» en lugar de «Poner al día». Con tus respuestas: ideas y pendientes en una sola lista, `trabajo.md` (D-094); siguen el marco las carpetas con `estado.md` y las demás son carpetas simples hasta que se sumen (D-095); la ronda de UX al terminar cada frente y cada cinco comentarios (D-096). La UX (paso 4) empezó por la arquitectura de información (`ux.md` › Parte 1): un lugar que muestra entera cada cosa, un solo total, el amarillo solo para lo que frena, la conversación que se pliega, Te espera · Mapa · Trabajo · Revisión arriba y el proyecto por dentro abajo, el Mapa con los frentes en operación. Con Q-136 a Q-138 quedó aprobada: la conversación sigue a la vista, más angosta (D-098), y lo que espera del usuario se llama Bandeja de entrada (D-097). Las pantallas están escritas (`ux.md` › Parte 2, PO-1 a PO-10), con el botón único Actualizar de R-12; espera Q-139. R-11 (Otro sin nota se perdía) se arregló aparte, porque rompía el uso.
+Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa.
 
 ## Pendientes
 - [x] Auditoría de UX (`auditoria.md` › Parte 1; capturas con `tools/auditoria-ux.ts`).
 - [ ] El chip del frente en el Mapa muestra el primer paso sin completar en vez del que está en curso (A-5): con la primera iteración.
 - [x] Auditoría de la forma de trabajo (`auditoria.md` › Parte 2).
-- [x] `definicion.md`: el modelo único y el marco único (OR-1 a OR-12), con Q-133 a Q-135.
+- [x] `definicion.md`: el modelo único y el framework único (OR-1 a OR-12), con Q-133 a Q-135.
 - [x] Con Q-133 a Q-135: `definicion.md` ajustada, D-094 a D-096 y el glosario de `02-definicion.md`.
 - [x] `ux.md` › Parte 1, la arquitectura de información.
 - [x] Con Q-136 a Q-138: `ux.md` › Parte 1 ajustada (D-097, D-098) y la Parte 2, las pantallas PO-1 a PO-10.
-- [ ] Con Q-139: `04-ux.md` reescrito sin capas (las PO-n pasan a W-n) y el paso 4 completo.
-- [ ] Paso 5, diseño técnico: el control, `trabajo.md` (leer y escribir desde Iridium), los frentes en el Mapa y Actualizar (`ux.md` › Para el diseño técnico).
-- [ ] R-12 (un solo botón Actualizar, PO-1): con las iteraciones.
+- [x] Con Q-139: `04-ux.md` reescrito sin capas (las PO-n pasaron a W-n) y D-099.
+- [x] Paso 5, diseño técnico (`diseno-tecnico.md`).
+- [ ] Paso 6, UI: las piezas nuevas de `diseno-tecnico.md` › Para el paso 6 en `06-ui.md` y una maqueta.
+- [ ] R-12 (un solo botón Actualizar, W-1): en OR-I2.
 
 ## Preguntas abiertas
-Van en `docs/estado.md`: Q-139 (frena).
+Van en `docs/estado.md`: ninguna del frente por ahora.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|
 | `02-definicion.md` › Módulos previstos | Orden, activo y primero; Diseño y Capacidades detrás | D-091 | sí |
 | `10-operacion.md` › Backlog | Orden en los frentes; los `R-n` nuevos esperan la ronda de UX | D-091 | sí |
-| `04-ux.md` | Reescrito sin capas | D-091 | no (paso 4) |
-| La skill de Iridium y la guía de hitos | Un solo marco, con control | D-092 | no (paso 2 en adelante) |
+| `04-ux.md` | Reescrito sin capas | D-091, D-097 a D-099 | sí |
+| `05-arquitectura.md` | Trabajo en el modelo de datos, `anchoConversacion` y el control al terminar un turno | D-092, D-094, D-098 | sí |
+| `02-definicion.md` › Glosario | «Framework» en lugar de «Marco» | D-099 | sí |
+| La skill de Iridium y la guía de hitos | Un solo framework, con control | D-092 | no (paso 2 en adelante) |
 
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| (todavía ninguna) | | |
+| OR-I1 | El modelo y el control | pendiente |
+| OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | pendiente |
+| OR-I3 | Trabajo e Ideas, anotar sin la IA | pendiente |
+| OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | pendiente |
 
 ## Próximo paso
-Con Q-139, reescribir `04-ux.md` sin capas sobre `ux.md`; mientras tanto, el paso 5 (diseño técnico).
+Paso 6, UI: sumar a `06-ui.md` las piezas nuevas (`diseno-tecnico.md` › Para el paso 6) con una maqueta en `docs/ui/` y capturas, y pedir el visto bueno.

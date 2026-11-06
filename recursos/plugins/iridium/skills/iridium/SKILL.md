@@ -115,6 +115,7 @@ Una vez, o cuando la IA lo pida.
 ## Docs, Mapa, códigos y frentes
 
 - Los códigos (`D-n`, `Q-n`, `H-n`, `I-n`, `R-n`…) se vuelven enlaces si nacen en un título que empieza por ellos (`## D-4 — …`). Para citar una sección: `archivo.md` › Título.
+- Los dibujos en texto (wireframes en un bloque ```) se ven en Docs con una letra de ancho fijo que tiene las líneas de cuadro (`─│┌┐└┘├┤┬┴┼`), las figuras (`■□▪▫◆◇◈●○◉▲▼▶◀`), las flechas (`←→↑↓↔`), `✓✕✗✶…·›` y el texto latino. Cualquier otro símbolo (emojis, `⚙ ✉ ⌂ ▦ ↻ ⑂ ☰ ⚠ ▢`) sale de otra letra con otro ancho y desarma el cuadro: para un ícono, usá una figura de esa lista o una palabra entre corchetes (`[Ajustes]`).
 - El Mapa sale de la tabla de hitos de `estado.md` y, dentro de cada hito, de su `## Portón` (en el de construcción, de la tabla de iteraciones con columna ID y filas `I-n`). No cambies los títulos ni las columnas de las plantillas.
 - **Frentes:** cada módulo tiene `docs/modulos/<nombre>/estado.md`, con su tabla de pasos y sus iteraciones; el Mapa muestra una fila con el núcleo y cada módulo. En el `estado.md` general, la tabla «Módulos» dice cuál es el frente activo. Las `Q-n` de un módulo van igual en el `estado.md` general.
 - `docs/README.md` lleva `**Formato de la guía:** AAAA-MM-DD`: la sección Skills marca los proyectos atrasados.

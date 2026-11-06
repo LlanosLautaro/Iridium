@@ -46,13 +46,13 @@ Las mismas palabras para hitos, pasos de un frente, iteraciones, frentes y traba
 
 Desaparecen `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada provisional`, `validado`, `aprobada` y los sinónimos que el Mapa aceptaba sin que estuvieran escritos («cerrado», «terminado», «por empezar»). Un frente `hecho` se muestra como «en operación». El Mapa lee solo estas palabras, y el chip de un frente muestra el paso `en curso` (A-5).
 
-## El marco único (D-092, D-093)
-- **Una fuente:** la skill de Iridium (`recursos/plugins/iridium`) pasa a ser el marco entero: el método por hitos y frentes, los formatos que Iridium lee y la ficha. La guía `hitos-desarrollo-app` y `gestor-proyectos` dejan de cargarse; se eliminan en el chat de Skills cuando el marco funcione.
+## El framework único (D-092, D-093)
+- **Una fuente:** la skill de Iridium (`recursos/plugins/iridium`) pasa a ser el framework entero: el método por hitos y frentes, los formatos que Iridium lee y la ficha. La guía `hitos-desarrollo-app` y `gestor-proyectos` dejan de cargarse; se eliminan en el chat de Skills cuando el framework funcione.
 - **Liviano:** `SKILL.md` con lo de cada sesión (dónde estás, el modelo, los formatos, el cierre); una referencia por hito y por tipo de trabajo (módulo, operación, ronda de UX) que se lee cuando toca; las plantillas al lado.
 - **Cada formato se escribe una vez.** Lo que hoy repiten la guía y la skill con otras palabras (A-22) queda en un solo párrafo.
 - **Da por hecho Iridium** (D-093): no explica cómo trabajar sin la app; cita Pendientes, Scripts y el control.
-- **Ronda de UX:** el marco la pide en operación, para que la app no vuelva a crecer a parches (D-091): al terminar cada frente y cada cinco comentarios de la Revisión juntados (D-096). El control avisa cuando toca.
-- **Los proyectos dicen que se trabajan desde Iridium:** el `CLAUDE.md` de cada proyecto y las instrucciones globales dejan de describir el método y citan el marco. `docs/README.md` cambia `**Formato de la guía:**` por `**Marco:** AAAA-MM-DD`.
+- **Ronda de UX:** el framework la pide en operación, para que la app no vuelva a crecer a parches (D-091): al terminar cada frente y cada cinco comentarios de la Revisión juntados (D-096). El control avisa cuando toca.
+- **Los proyectos dicen que se trabajan desde Iridium:** el `CLAUDE.md` de cada proyecto y las instrucciones globales dejan de describir el método y citan el framework. `docs/README.md` cambia `**Formato de la guía:**` por `**Framework:** AAAA-MM-DD`.
 
 ## El control
 - **Vive en Iridium y lee con el mismo código** que la pantalla (no una copia, A-16). Reemplaza el hook `comprobar-preguntas.mjs` de la carpeta de Claude, que se saca.
@@ -64,18 +64,19 @@ Desaparecen `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada provision
   - cada respuesta de una pregunta que ya salió tiene su línea «Procesada» (A-17);
   - `trabajo.md`: cada ítem con código, `Estado:` del vocabulario y `Frente:` válido; ningún código repetido;
   - las tablas de estados usan solo el vocabulario;
-  - `estado.md` tiene sus campos (fecha, hito actual, Próximo paso de una línea).
+  - `estado.md` tiene sus campos (fecha, hito actual, Próximo paso de una línea);
+  - los dibujos en texto (bloques de código con líneas de cuadro) usan solo caracteres que tiene la letra de ancho fijo de Iridium; uno de afuera desarma el cuadro (R-13).
 - **Al terminar cada turno** de una sesión de proyecto, si el control encuentra algo, Iridium se lo devuelve a la IA en un mensaje (una vez por turno, para no entrar en un ciclo) y la IA lo corrige. Lo que quede sin corregir se ve en la tarjeta del proyecto.
-- **Cada error nuevo** que llegue mal se arregla en la regla del marco y en el control, nunca suelto.
+- **Cada error nuevo** que llegue mal se arregla en la regla del framework y en el control, nunca suelto.
 
-## Pasar al marco (A-9, A-23)
-- «Poner al día» de Skills se vuelve **Pasar al marco**: una pasada guiada por proyecto que mueve las ideas y pendientes a `trabajo.md`, cambia los estados al vocabulario, arregla lo que marque el control y pone la fecha del marco. Termina con el control en cero.
+## Pasar al framework (A-9, A-23)
+- «Poner al día» de Skills se vuelve **Pasar al framework**: una pasada guiada por proyecto que mueve las ideas y pendientes a `trabajo.md`, cambia los estados al vocabulario, arregla lo que marque el control y pone la fecha del framework. Termina con el control en cero.
 - Iridium es el primero, al construir. Los demás proyectos se pasan cuando el usuario los abra o lo pida; antes no se tocan.
-- **Proyecto o carpeta simple (D-095):** una carpeta con `docs/estado.md` es un proyecto y sigue el marco. Una sin él es una carpeta simple: tarjeta, Archivos, Git, Scripts (si tiene `scripts.md`) y la conversación, sin Mapa, Trabajo ni preguntas, y el control no corre sobre ella. **Pasar al marco** la vuelve proyecto cuando el usuario quiera.
+- **Proyecto o carpeta simple (D-095):** una carpeta con `docs/estado.md` es un proyecto y sigue el framework. Una sin él es una carpeta simple: tarjeta, Archivos, Git, Scripts (si tiene `scripts.md`) y la conversación, sin Mapa, Trabajo ni preguntas, y el control no corre sobre ella. **Pasar al framework** la vuelve proyecto cuando el usuario quiera.
 
 ## Criterios de éxito
-- Ningún formato está escrito en dos lugares: una regla, en el marco; un lector, en Iridium.
-- El control corre sobre Iridium y sobre cada proyecto pasado al marco y no marca nada; sobre los casos de la auditoría (pruebas con opciones, preguntas sueltas, `### Q-n`, respuestas sin rastro) marca cada uno.
+- Ningún formato está escrito en dos lugares: una regla, en el framework; un lector, en Iridium.
+- El control corre sobre Iridium y sobre cada proyecto pasado al framework y no marca nada; sobre los casos de la auditoría (pruebas con opciones, preguntas sueltas, `### Q-n`, respuestas sin rastro) marca cada uno.
 - Una pregunta mal escrita en una sesión llega corregida al final del turno, sin que el usuario la vea mal.
 - Cada idea y pendiente de un proyecto está en un solo lugar, con código y estado; nada «hecho» aparece entre lo pendiente.
 - El usuario anota una idea desde Iridium sin abrir una sesión, y ve las de todos los proyectos juntas.
@@ -85,31 +86,31 @@ Desaparecen `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada provision
 
 ## Funcionalidades
 ### Must (MVP del módulo)
-- **OR-1** El marco único en `recursos/plugins/iridium`: `SKILL.md`, referencias y plantillas; deja de cargarse la guía aparte (D-086 en esa parte).
+- **OR-1** El framework único en `recursos/plugins/iridium`: `SKILL.md`, referencias y plantillas; deja de cargarse la guía aparte (D-086 en esa parte).
 - **OR-2** El control: las reglas de arriba con el lector de Iridium, devuelto a la IA al terminar el turno, visible en la tarjeta; se saca el hook viejo.
 - **OR-3** Preguntas con `Frente:` y `en pausa`; respuestas con rastro.
 - **OR-4** `trabajo.md`: el lector, la sección del proyecto que lo muestra (reemplaza Ideas del proyecto), anotar una idea sin la IA y la vista de todas juntas.
 - **OR-5** Un vocabulario de estados, que es el único que lee el Mapa; el chip del frente muestra el paso en curso (A-5).
 - **OR-6** Pendientes agrupados por frente, con filtros y su cuenta (D-091.5).
 - **OR-7** La UX rehecha: `04-ux.md` sin capas, primero la arquitectura de información y después las pantallas, resolviendo A-1 a A-8 (un número que manda, el amarillo solo para lo que frena, Scripts en un lugar, el Mapa en operación, la conversación que se achica, una cabecera de sección).
-- **OR-8** Pasar al marco desde Skills, desde la tarjeta y desde una carpeta simple abierta (D-095), y este proyecto pasado al marco.
-- **OR-9** La ronda de UX en el marco.
+- **OR-8** Pasar al framework desde Skills, desde la tarjeta y desde una carpeta simple abierta (D-095), y este proyecto pasado al framework.
+- **OR-9** La ronda de UX en el framework.
 
 ### Should
 - **OR-10** Un nombre visible en la ficha (`nombre`), para que este proyecto se vea como Iridium y no como su carpeta (A-12).
 - **OR-11** Docs: tablas que usan el ancho (A-10).
 
 ### Could
-- **OR-12** Repensar qué va en Ajustes cuando lleguen el respaldo (D-087) y lo que salga del marco (A-11).
+- **OR-12** Repensar qué va en Ajustes cuando lleguen el respaldo (D-087) y lo que salga del framework (A-11).
 
 ### Won't (por ahora)
-- Un marco para trabajar fuera de Iridium — D-093.
-- Pasar los otros proyectos al marco sin que el usuario los abra o lo pida — no se tocan desde acá (CLAUDE.md, A-23).
+- Un framework para trabajar fuera de Iridium — D-093.
+- Pasar los otros proyectos al framework sin que el usuario los abra o lo pida — no se tocan desde acá (CLAUDE.md, A-23).
 - Funciones nuevas que no salgan de la auditoría — D-091.2; esperan en `trabajo.md`.
 
 ## Fuera de alcance
 - El módulo Diseño y Capacidades (D-091.3).
-- Borrar las skills viejas y poner al día las instrucciones globales: se hace en el chat de Skills cuando el marco funcione (D-092.4).
+- Borrar las skills viejas y poner al día las instrucciones globales: se hace en el chat de Skills cuando el framework funcione (D-092.4).
 
 ## Impacto en el perfil
 Sin cambios: P2. No hay datos nuevos ni contenido de terceros. El control lee archivos del proyecto que Iridium ya lee. Lo único que cambia es que, cuando el control encuentra algo, Iridium manda un mensaje más a la IA en la misma sesión: gasta un poco de uso, solo cuando hubo un error.
@@ -117,17 +118,17 @@ Sin cambios: P2. No hay datos nuevos ni contenido de terceros. El control lee ar
 ## Términos nuevos (se agregan al glosario general)
 | Término | Significado |
 |---|---|
-| Marco | Las reglas para trabajar un proyecto desde Iridium: el método, los formatos y la ficha; reemplaza la guía de hitos (D-092) |
-| Control | Lo que Iridium revisa de los archivos de un proyecto contra el marco; le devuelve a la IA lo mal escrito |
+| Framework | Las reglas para trabajar un proyecto desde Iridium: el método, los formatos y la ficha; reemplaza la guía de hitos (D-092) |
+| Control | Lo que Iridium revisa de los archivos de un proyecto contra el framework; le devuelve a la IA lo mal escrito |
 | Trabajo | Las ideas y los pendientes de la IA de un proyecto, con código `T-n`, en `docs/trabajo.md` |
 | En operación | Un frente terminado que sigue recibiendo trabajo |
 | Ronda de UX | Una revisión de toda la interfaz al terminar un frente o cada cinco comentarios de la Revisión, para que no crezca a parches (D-096) |
-| Carpeta simple | Una carpeta de la grilla sin `docs/estado.md`: se ve y se conversa, pero no sigue el marco (D-095) |
-| Pasar al marco | La pasada que pone un proyecto en el formato del marco; reemplaza «Poner al día» |
+| Carpeta simple | Una carpeta de la grilla sin `docs/estado.md`: se ve y se conversa, pero no sigue el framework (D-095) |
+| Pasar al framework | La pasada que pone un proyecto en el formato del framework; reemplaza «Poner al día» |
 
 ## Preguntas abiertas para investigar
 Para el diseño técnico (paso 5):
 - Cómo sabe Iridium que terminó un turno y cómo le manda la corrección a la IA sin que se mezcle con lo que el usuario escribe.
 - Cómo se lee `trabajo.md` sin romper Docs, el Mapa y los códigos (`T-n` nace en un título).
 - Cómo escribe Iridium una idea en `trabajo.md` mientras una sesión puede estar escribiendo el mismo archivo.
-- Qué se hace con los 34 archivos de `respuestas/` de este proyecto sin línea «Procesada»: se revisan una vez al pasar al marco.
+- Qué se hace con los 34 archivos de `respuestas/` de este proyecto sin línea «Procesada»: se revisan una vez al pasar al framework.

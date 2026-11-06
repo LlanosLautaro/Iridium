@@ -124,13 +124,14 @@ Los archivos de cada proyecto son la fuente de verdad: el Centro los lee y los m
 | **Hito** | Número, nombre, estado (palabra fija, D-019), documento, portón como lista | Tabla de `estado.md` + el documento del hito | La IA |
 | **Pregunta (`Q-n`)** | Código, pregunta, tipo, si frena, contexto, opciones, casillas, citas a otras secciones | `estado.md` › Preguntas abiertas | La IA |
 | **Respuesta** | La elegida, notas, casillas marcadas, adjuntos | `docs/respuestas/Q-n.md` y `Q-n/` | **El Centro** (y el Gestor) |
+| **Trabajo (`T-n`)** | Ideas y trabajo de la IA: código, título, estado del vocabulario, frente, fecha, origen y texto (D-094) | `docs/trabajo.md` | La IA; **Iridium** agrega ideas `nueva` sin abrir una sesión, sin pisar lo que escribe una sesión (`modulos/orden/diseno-tecnico.md` › `trabajo.md`) |
 | **Código y cita** | Dónde nace cada `D-n`, `H-n`, `W-n`…; las citas `archivo.md` › Título | Índice armado al leer `docs/` | Nadie: se calcula |
 | **Conversación** | Mensajes, herramientas usadas, resultados | `%USERPROFILE%\.claude\projects\…\<id>.jsonl` (lo guarda Claude Code, igual que en VS Code) | El motor |
 | **Comentario (`R-n`)** | Texto, estado (abierto · cerrado), pistas (página, elemento, componentes, archivo y línea), captura, historia. Módulo Revisión (D-048) | `docs/revision/R-n.md` y `R-n.png` | **El Centro** (guardar, reabrir) y la IA (cerrar) |
 | **Respuesta a medias** | Lo marcado y escrito de una pregunta, guardado sin enviar (D-039) | Datos del Centro, `borradores.json` | El Centro |
 | **Resumen de sesión** | Por conversación: proyecto, quién la empezó (Centro o VS Code), último estado, cuándo, preguntas que dejó, si se detuvo | Datos del Centro, `sesiones.json` | El Centro (D-007: no depende del historial interno) |
 | **Uso** | % de la ventana de 5 horas y de la semana, cuándo se libera cada una | En memoria; se pide al abrir, llega con cada respuesta (y cada 2 minutos mientras una sesión trabaja), se relee cada 5 minutos y al volver a la ventana (Defecto 16) | — |
-| **Preferencias** | La carpeta de proyectos (`raiz`) y la carpeta Iridium (`carpetaIridium`, D-083), anchos de la vista (la conversación y las listas de Skills y de Ideas: `anchoListaSkills`, `anchoListaIdeas`), archivados visibles, pestañas y el proyecto abierto, modelo y esfuerzo por proyecto; y los Ajustes (D-065): `tema` (`iridium` o `carbon`), `nombreUsuario`, `nombreIa` y `tono` (el nombre de un estilo de Claude Code; vacío, el suyo) | Datos del Centro, `config.json`; un valor roto vuelve al de siempre sin perder los demás | El Centro |
+| **Preferencias** | La carpeta de proyectos (`raiz`) y la carpeta Iridium (`carpetaIridium`, D-083), anchos de la vista (la conversación por vista, `anchoConversacion`, D-098, y las listas de Skills y de Ideas: `anchoListaSkills`, `anchoListaIdeas`), archivados visibles, pestañas y el proyecto abierto, modelo y esfuerzo por proyecto; y los Ajustes (D-065): `tema` (`iridium` o `carbon`), `nombreUsuario`, `nombreIa` y `tono` (el nombre de un estilo de Claude Code; vacío, el suyo) | Datos del Centro, `config.json`; un valor roto vuelve al de siempre sin perder los demás | El Centro |
 
 **Skills (D-068):** se leen de la carpeta de Claude (`%USERPROFILE%\.claude`; en las pruebas, la variable `IRIDIUM_CLAUDE`) cada vez que se entra a la sección; no se guarda nada (`modulos/skills/diseno-tecnico.md`).
 
@@ -178,6 +179,9 @@ Los archivos de cada proyecto son la fuente de verdad: el Centro los lee y los m
 1. `core` arma el índice de códigos y secciones de todos los `docs/` del proyecto (lectores del Gestor).
 2. Por cada `Q-n`, encuentra las citas (`D-021`, `04-ux.md` › W-3) y extrae el texto de cada una para mostrarlo dentro.
 3. Todo es puro: se prueba con los `docs/` reales copiados como muestras.
+
+### El control al terminar un turno (F-8, D-092)
+En un proyecto con framework, al terminar cada turno con resultado `ok`, el control corre las reglas del framework con los lectores de la pantalla. Si encuentra algo, Iridium le manda a la misma conversación la lista como mensaje de origen `control` (una vez por turno) y la IA lo corrige; lo que quede se ve como avisos en la tarjeta. Los avisos no se guardan: se calculan al leer. Detalle en `modulos/orden/diseno-tecnico.md` › El control.
 
 ### Cerrar la app (F-6)
 1. Si hay sesiones trabajando, la ventana pide confirmación.

@@ -1,4 +1,4 @@
-Fuentes de la interfaz (licencia SIL Open Font License 1.1, Google Fonts, subconjunto latino). Descargadas el 2026-10-23.
+Fuentes de la interfaz (licencia SIL Open Font License 1.1). Chakra Petch: Google Fonts, subconjunto latino, descargada el 2026-10-23.
 - chakra-petch-*.woff2 — Chakra Petch (Cadson Demak). Interfaz y lectura (D-032).
-- jetbrains-mono-*.woff2 — JetBrains Mono (JetBrains). Códigos, rutas y números (D-032).
+- jetbrains-mono-*.woff2 — JetBrains Mono 2.304 (JetBrains, github.com/JetBrains/JetBrainsMono). Códigos, rutas y números (D-032). Subconjunto latino más flechas (U+2190–21FF), líneas de cuadro y figuras (U+2500–25FF) y símbolos (U+2700–27BF), para que los dibujos en texto de los documentos tengan todos los caracteres del mismo ancho (R-13, 2026-11-06).
 - pixelify-sans-*.woff2, share-tech-mono-*.woff2 — solo para las alternativas A y C de la ronda 1 (registro).
