@@ -105,6 +105,7 @@ const api: ApiIridium = {
   trabajoProyecto: (ruta) => ipcRenderer.invoke(CANALES.trabajoProyecto, ruta),
   anotarTrabajo: (ruta, texto) => ipcRenderer.invoke(CANALES.anotarTrabajo, ruta, texto),
   anotarSuelta: (texto) => ipcRenderer.invoke(CANALES.anotarSuelta, texto),
+  ideasNuevas: () => ipcRenderer.invoke(CANALES.ideasNuevas),
   skillsProyecto: (ruta) => ipcRenderer.invoke(CANALES.skillsProyecto, ruta),
 }
 

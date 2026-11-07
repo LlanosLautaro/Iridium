@@ -90,7 +90,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   await expect(aviso).toContainText('Ideas y Skills y Claude siguen donde estaban antes')
   await expect(aviso).toContainText(join(raiz, '.iridium'))
   await win.keyboard.press('Control+4')
-  await expect(win.getByRole('navigation', { name: 'Ideas' }).getByTitle('Una idea vieja')).toBeVisible()
+  await expect(win.getByRole('region', { name: 'Ideas' }).getByTitle('Una idea vieja')).toBeVisible()
   // Una conversación en el chat general antes de mover.
   const chat = win.getByRole('complementary', { name: 'Chat general' })
   await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('Hola')
@@ -122,7 +122,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
 
   // Ideas sigue, con la misma conversación.
   await win.keyboard.press('Control+4')
-  await expect(win.getByRole('navigation', { name: 'Ideas' }).getByTitle('Una idea vieja')).toBeVisible()
+  await expect(win.getByRole('region', { name: 'Ideas' }).getByTitle('Una idea vieja')).toBeVisible()
   await expect(chat.locator('.hilo')).toContainText('Hola')
   // Skills reconoce la propia en su lugar nuevo.
   await win.keyboard.press('Control+3')

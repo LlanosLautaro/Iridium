@@ -1,7 +1,14 @@
 // El trabajo de un proyecto (frente Orden, W-11, H-19) y anotar una idea sin la IA (W-10, H-18). Leer usa los
 // documentos ya cargados; anotar escribe sin pisar a una sesión (`infra/trabajo.ts`).
 import { join } from 'node:path'
-import type { ResultadoAnotar, TrabajoProyecto } from '../../compartido/trabajo'
+import type { TarjetaProyecto } from '../../compartido/puente'
+import type {
+  IdeasDelInicio,
+  IdeasNuevasProyecto,
+  ItemTrabajoVista,
+  ResultadoAnotar,
+  TrabajoProyecto,
+} from '../../compartido/trabajo'
 import { tieneFramework } from '../core/control'
 import { fechaDelDia } from '../core/creacion'
 import { conIdeaSuelta } from '../core/ideas'
@@ -32,6 +39,39 @@ export function trabajoDelProyecto(d: DocumentosProyecto): TrabajoProyecto {
       html: i.texto ? d.html(i.texto, TRABAJO) : '',
     })),
   }
+}
+
+/** Lo más nuevo arriba; sin fecha, por código (el mismo orden de Trabajo). */
+function masNueva(a: ItemTrabajoVista, b: ItemTrabajoVista): number {
+  return (b.fecha ?? '').localeCompare(a.fecha ?? '') || Number(b.codigo.slice(2)) - Number(a.codigo.slice(2))
+}
+
+/**
+ * Ideas del inicio (W-10): las ideas `nueva` de los proyectos con framework que no están archivados, agrupadas por
+ * proyecto (el de la idea más reciente primero), y los nombres de los que todavía no pasaron al framework.
+ */
+export async function ideasDelInicio(
+  proyectos: readonly TarjetaProyecto[],
+  trabajoDe: (ruta: string) => Promise<TrabajoProyecto>,
+): Promise<IdeasDelInicio> {
+  const activos = proyectos.filter((p) => !p.archivado)
+  const conFramework = activos.filter((p) => p.framework !== null && p.framework !== 'viejo')
+  const leidos = await Promise.all(
+    conFramework.map(async (p): Promise<IdeasNuevasProyecto> => {
+      const t = await trabajoDe(p.ruta).catch(() => null)
+      const ideas = t?.tipo === 'trabajo' ? t.items.filter((i) => i.estado === 'nueva').sort(masNueva) : []
+      return { ruta: p.ruta, nombre: p.nombre, ideas }
+    }),
+  )
+  const grupos = leidos
+    .filter((g) => g.ideas.length > 0)
+    .sort(
+      (a, b) =>
+        (b.ideas[0]?.fecha ?? '').localeCompare(a.ideas[0]?.fecha ?? '') ||
+        a.nombre.localeCompare(b.nombre, 'es'),
+    )
+  const viejos = activos.filter((p) => p.framework === 'viejo').map((p) => p.nombre)
+  return { grupos, viejos }
 }
 
 /** El texto del campo: una línea, sin espacios de más; vacío no se anota. */

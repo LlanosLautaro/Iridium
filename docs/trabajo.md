@@ -210,3 +210,7 @@ El pedido de Skills cita `referencias/pasar-al-framework.md` en vez de `actualiz
 ## T-50 — Pasar Iridium al framework
 Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: OR-I1
 Con `referencias/pasar-al-framework.md`, hasta que el control dio cero (`modulos/orden/estado.md` › OR-I1).
+
+## T-51 — «Ver en Framework» en Ideas
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-07 · Origen: W-10
+La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Va con OR-I4, cuando exista esa sección; hasta entonces la línea muestra los nombres al pasar el mouse.

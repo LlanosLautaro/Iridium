@@ -135,12 +135,12 @@ export interface VistaSkills {
 
 /** Lo que recuerda la sección Ideas mientras Iridium está abierto (H-6). */
 export interface VistaIdeas {
-  /** La idea elegida, por su título (si la IA la cambia de sección, sigue elegida); null = la primera suelta. */
-  elegida: string | null
-  /** Las secciones plegadas, por título; null = como empiezan (Integradas, plegada). */
-  plegados: string[] | null
-  /** La idea a la que se le sacó «Sobre la idea …» con la ✕; al elegir otra, vuelve. */
-  sinSobre: string | null
+  /** A dónde va lo que se anota (W-10): la ruta de un proyecto o `suelta`; null = el primero de la lista. */
+  destino: string | null
+  /** Las sueltas desplegadas, por título. */
+  abiertas: string[]
+  /** La suelta de la que habla el chat general («Sobre la idea …», con Hablar de esta idea); null = ninguna. */
+  sobre: string | null
 }
 
 interface EstadoApp {
@@ -286,7 +286,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   },
   skills: { elegida: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
   cambiarSkills: (cambio) => set((s) => ({ skills: { ...s.skills, ...cambio } })),
-  ideas: { elegida: null, plegados: null, sinSobre: null },
+  ideas: { destino: null, abiertas: [], sobre: null },
   cambiarIdeas: (cambio) => set((s) => ({ ideas: { ...s.ideas, ...cambio } })),
   ajustes: { abierta: false, seccion: 'perfil' },
   abrirAjustes: (seccion) =>

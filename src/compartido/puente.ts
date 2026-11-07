@@ -6,7 +6,7 @@ import type { ListaIdeas } from './ideas'
 import type { Borrador } from './respuestas'
 import type { Atrasados, ListaSkills, SkillProyecto } from './skills'
 import type { Estado, PlanEliminacion } from './tipos'
-import type { ResultadoAnotar, TrabajoProyecto } from './trabajo'
+import type { IdeasDelInicio, ResultadoAnotar, TrabajoProyecto } from './trabajo'
 import type { ContenidoDocumento, OpcionPregunta, ScriptVista } from './visor'
 
 /** Lo que la tarjeta de un proyecto necesita para dibujarse (04-ux.md › W-2). La ventana no decide nada. */
@@ -783,6 +783,7 @@ export const CANALES = {
   trabajoProyecto: 'proyecto:trabajo',
   anotarTrabajo: 'proyecto:anotar',
   anotarSuelta: 'ideas:anotar',
+  ideasNuevas: 'ideas:nuevas',
   skillsProyecto: 'proyecto:skills',
 } as const
 
@@ -951,6 +952,8 @@ export interface ApiIridium {
   anotarTrabajo(ruta: string, texto: string): Promise<ResultadoAnotar>
   /** Anota una idea suelta en `ideas.md` de la carpeta Ideas, sin la IA (W-10). */
   anotarSuelta(texto: string): Promise<ResultadoAnotar>
+  /** Las ideas `nueva` de los proyectos con framework y los que todavía no pasaron (W-10). */
+  ideasNuevas(): Promise<IdeasDelInicio>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */
   skillsProyecto(ruta: string): Promise<SkillProyecto[]>
 }

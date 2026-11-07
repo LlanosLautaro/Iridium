@@ -1,7 +1,7 @@
-// IN-I1 con la app abierta y el motor falso (modulos/inicio/diseno-tecnico.md › Pruebas): Ctrl+4, los grupos con
-// Integradas plegada, el chat general con «Sobre la idea …» (sin Pedir que la integren, Q-115), los enlaces a proyectos, la lista
-// que se actualiza sola, la grilla solo con proyectos (Ideas y Skills están en la carpeta Iridium, D-083) y Abrir como
-// proyecto desde Ideas y Skills.
+// Ideas del inicio con la app abierta y el motor falso (frente Orden, 04-ux.md › W-10; antes IN-I1): Ctrl+4, las ideas
+// nuevas de cada proyecto con framework y las sueltas, anotar con el selector de proyecto, Hablar de esta idea en el
+// chat general, una de un proyecto que abre su Trabajo, la lista que se actualiza sola, la grilla solo con proyectos
+// (Ideas y Skills están en la carpeta Iridium, D-083) y Abrir como proyecto desde Ideas y Skills.
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -32,6 +32,18 @@ const ficha = (estado = 'en-desarrollo') =>
     reemplazadoPor: null,
   })
 const estado = '# Estado\n\n## Hito actual\n7 — Construcción\n\n## Preguntas abiertas\n(ninguna)\n'
+const FRAMEWORK = '# Docs\n\n**Framework:** 2026-11-06\n'
+const TRABAJO_ALFA = `# Trabajo
+
+## T-1 — Un atajo para la grilla
+Estado: nueva · Fecha: 2026-11-01
+
+## T-2 — Respaldo en GitHub
+Estado: pendiente · Fecha: 2026-11-04
+
+## T-3 — Exportar el plan como imagen
+Estado: nueva · Fecha: 2026-11-06
+`
 
 async function abrir(extra: Record<string, string> = {}): Promise<{ app: ElectronApplication; win: Page }> {
   const env = {
@@ -61,6 +73,18 @@ test.beforeEach(async () => {
   await proyecto('Skills', { '.proyecto.json': ficha(), 'CLAUDE.md': '# Skills\n' }, iridium)
   await proyecto('Ideas', { '.proyecto.json': ficha('idea'), 'CLAUDE.md': '# Ideas\n' }, iridium)
   await copyFile(join('tests', 'muestras', 'ideas.md'), join(iridium, 'Ideas', 'ideas.md'))
+  await proyecto('Alfa', {
+    '.proyecto.json': ficha(),
+    'docs/estado.md': estado,
+    'docs/README.md': FRAMEWORK,
+    'docs/trabajo.md': TRABAJO_ALFA,
+  })
+  await proyecto('Delta', {
+    '.proyecto.json': ficha(),
+    'docs/estado.md': estado,
+    'docs/README.md': FRAMEWORK,
+    'docs/trabajo.md': '# Trabajo\n\n## T-1 — Modo oscuro\nEstado: nueva · Fecha: 2026-11-07\n',
+  })
   await proyecto('Beta', { '.proyecto.json': ficha(), 'docs/estado.md': estado })
   await proyecto('Gamma', { '.proyecto.json': ficha(), 'docs/estado.md': estado })
   await mkdir(datos, { recursive: true })
@@ -84,101 +108,106 @@ test('la grilla solo con proyectos y el chat general al lado (IN-3)', async () =
   await expect(grilla.locator('.tarjeta', { hasText: 'Beta' })).toBeVisible()
   await expect(grilla.locator('.tarjeta', { hasText: 'Ideas' })).toHaveCount(0)
   await expect(grilla.locator('.tarjeta', { hasText: 'Skills' })).toHaveCount(0)
-  await expect(grilla.locator('.cab-1 > .n')).toHaveText('2')
+  await expect(grilla.locator('.cab-1 > .n')).toHaveText('4')
   await expect(win.getByRole('complementary', { name: 'Chat general' }).locator('.chat-cab')).toContainText(
     'Ideas y proyectos',
   )
   await app.close()
 })
 
-test('Ctrl+4: las ideas por sección, el detalle y el chat con «Sobre la idea …» (IN-1, IN-2)', async () => {
+test('Ctrl+4: las nuevas de cada proyecto y las sueltas, anotar con el selector y Hablar de esta idea (W-10)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+4')
 
-  const lista = win.getByRole('navigation', { name: 'Ideas' })
-  await expect(lista.getByRole('heading', { name: 'Ideas' })).toBeVisible()
-  await expect(lista.getByText('7 sin integrar')).toBeVisible()
-  await expect(lista.getByRole('button', { name: /Sueltas\s*3/ })).toHaveAttribute('aria-expanded', 'true')
-  await expect(lista.getByRole('button', { name: /Para proyectos existentes\s*4/ })).toBeVisible()
-  await expect(lista.getByRole('button', { name: /Integradas\s*5/ })).toHaveAttribute(
-    'aria-expanded',
-    'false',
+  const ideas = win.getByRole('region', { name: 'Ideas' })
+  await expect(ideas.getByRole('heading', { name: 'Ideas', level: 1 })).toBeVisible()
+  // Delta tiene la más reciente: va primero. Las pendientes y las integradas no salen.
+  await expect(ideas.locator('.tb-grupo-t')).toHaveText(['Delta 1', 'Alfa 2', 'Sueltas 7'])
+  await expect(ideas.locator('.cab-1 > .n')).toHaveText('10')
+  await expect(ideas.getByText('Respaldo en GitHub')).toHaveCount(0)
+  await expect(ideas.getByText('Puente entre el celular y la PC')).toHaveCount(0)
+  await expect(ideas.locator('.id-viejos')).toHaveText(
+    'Las ideas de 2 proyectos no aparecen: todavía no pasaron al framework.',
   )
-  await expect(lista.getByText('Puente entre el celular y la PC')).toHaveCount(0)
 
-  // La primera vez: la primera suelta.
-  const detalle = win.getByRole('region', { name: /^La idea Planificador de comidas/ })
-  await expect(detalle.getByText('Suelta · 30 de octubre de 2026')).toBeVisible()
-  await expect(detalle.getByText(/^Para más adelante\./)).toBeVisible()
+  // El selector: los proyectos con framework y, separada, Suelta. Empieza en el primero.
+  const selector = ideas.locator('.destino .menu-boton')
+  await expect(selector.locator('.nom')).toHaveText('Alfa')
+  await selector.click()
+  const menu = ideas.getByRole('menu')
+  await expect(menu.locator('.op-destino .nom')).toHaveText(['Alfa', 'Delta', 'Suelta'])
+  await expect(menu).toContainText('Solo los proyectos que siguen el framework')
+  await win.screenshot({ path: 'test-results/w10-selector.png' })
+  await menu.getByRole('menuitemradio', { name: 'Delta' }).click()
+
+  // Anotar en Delta: un T-n nueva al final de su trabajo.md, arriba de su grupo y marcada.
+  const campo = ideas.getByLabel('Anotar una idea en Delta')
+  await campo.fill('Un atajo para Seguí')
+  await campo.press('Enter')
+  await expect(campo).toHaveValue('')
+  await expect(ideas.locator('.tb-grupo-t').first()).toHaveText('Delta 2')
+  await expect(ideas.locator('.tb-item.recien')).toContainText('Un atajo para Seguí')
+  await expect(ideas.locator('.tb-item').first()).toContainText('T-2')
+  expect(await readFile(join(raiz, 'Delta', 'docs', 'trabajo.md'), 'utf8')).toMatch(
+    /## T-2 — Un atajo para Seguí\r?\nEstado: nueva · Fecha: \d{4}-\d\d-\d\d\r?\n$/,
+  )
+  await win.screenshot({ path: 'test-results/w10-anotada.png' })
+
+  // Suelta: arriba de Sueltas en ideas.md.
+  await selector.click()
+  await ideas.getByRole('menuitemradio', { name: 'Suelta' }).click()
+  await ideas.getByLabel('Anotar una idea suelta').fill('Una app de recetas con fotos')
+  await ideas.getByLabel('Anotar una idea suelta').press('Enter')
+  await expect(ideas.locator('.tb-grupo-t').last()).toHaveText('Sueltas 8')
+  await expect(ideas.locator('.tb-item.recien')).toContainText('Una app de recetas con fotos')
+  expect((await readFile(join(iridium, 'Ideas', 'ideas.md'), 'utf8')).replace(/\r\n/g, '\n')).toContain(
+    'Ideas que todavía no tienen proyecto.\n\n### Una app de recetas con fotos — ',
+  )
+
+  // Una suelta se despliega con Hablar de esta idea, que la pone arriba del cuadro del chat general.
+  await ideas.getByRole('button', { name: /Planificador de comidas de la semana/ }).click()
+  await expect(ideas.getByText(/^Para más adelante\./)).toBeVisible()
   const chat = win.getByRole('complementary', { name: 'Chat general' })
+  await expect(chat.locator('.sobre-skill')).toHaveCount(0)
+  await ideas.getByRole('button', { name: 'Hablar de esta idea' }).click()
   await expect(chat.locator('.sobre-skill')).toBeVisible()
-  await win.screenshot({ path: 'test-results/in1-ideas.png' })
-
-  // El mensaje sale con el título de la idea.
-  await win.getByLabel('Mensaje para la IA').fill('¿Esto podría ser un módulo de Iridium?')
+  await win.screenshot({ path: 'test-results/w10-hablar.png' })
+  await win.getByLabel('Mensaje para la IA').fill('¿Esto podría ser un proyecto?')
   await win.keyboard.press('Enter')
   await expect(
-    chat.locator('.propio', {
-      hasText: 'Sobre la idea «Planificador de comidas de la semana»: ¿Esto',
-    }),
+    chat.locator('.propio', { hasText: 'Sobre la idea «Planificador de comidas de la semana»: ¿Esto' }),
   ).toBeVisible()
   await expect(chat.getByText('Listo: dejé el estado al día.')).toBeVisible()
 
-  // Una para un proyecto existente: los proyectos que toca; el que no existe, sin enlace.
-  await lista.getByTitle(/^Alfa y Beta como servidores/).click()
-  const alfa = win.getByRole('region', { name: /^La idea Alfa y Beta/ })
-  await expect(alfa.getByText('Para un proyecto existente · 16 de octubre de 2026')).toBeVisible()
-  await expect(alfa.locator('span.id-proyecto', { hasText: 'Delta' })).toBeVisible()
-  // Sin Pedir que la integren (Q-115): eso se le pide al chat.
-  await expect(win.getByRole('button', { name: 'Pedir que la integren' })).toHaveCount(0)
-  // Con la ✕, el mensaje sale tal cual.
-  await lista.getByTitle(/^Control de volumen por app/).click()
-  await expect(chat.locator('.sobre-skill')).toBeVisible()
-  await chat.getByRole('button', { name: 'Que el mensaje no sea sobre esa idea' }).click()
-  await expect(chat.locator('.sobre-skill')).toHaveCount(0)
+  // Una de un proyecto abre su Trabajo, en ese ítem.
+  await ideas.getByRole('button', { name: /T-3\s*Exportar el plan como imagen/ }).click()
+  const trabajo = win.locator('[data-seccion="trabajo"]')
+  await expect(trabajo.locator('.tb-item.abierto[data-codigo="T-3"]')).toBeVisible()
 
-  // Una integrada: a dónde fue.
-  await lista.getByRole('button', { name: /Integradas/ }).click()
-  await lista.getByTitle('Puente entre el celular y la PC').click()
-  const puente = win.getByRole('region', { name: 'La idea Puente entre el celular y la PC' })
-  await expect(puente.getByText('Fue a')).toBeVisible()
-  await expect(puente.getByText(/pasó al proyecto nuevo/)).toBeVisible()
-
-  // El enlace a un proyecto lo abre.
-  await puente.getByRole('button', { name: 'Beta' }).click()
-  await expect(win.locator('.ses.activa, .pestana.activa, [aria-current="page"]').first()).toBeVisible()
-  await expect(win.getByRole('navigation', { name: 'Ideas' })).toHaveCount(0)
+  // De vuelta, el selector sigue en el último elegido.
+  await win.keyboard.press('Control+4')
+  await expect(win.getByRole('region', { name: 'Ideas' }).locator('.destino .menu-boton')).toHaveText(
+    'Suelta',
+  )
   await app.close()
 })
 
-test('la lista se actualiza sola y la idea elegida sigue elegida (IN-1)', async () => {
+test('la lista se actualiza sola: una idea que la IA pasa a pendiente sale (W-10)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+4')
-  const lista = win.getByRole('navigation', { name: 'Ideas' })
-  await lista.getByTitle('Lanzador de juegos propio').click()
-  await expect(win.getByRole('region', { name: 'La idea Lanzador de juegos propio' })).toBeVisible()
+  const ideas = win.getByRole('region', { name: 'Ideas' })
+  await expect(ideas.locator('.tb-grupo-t')).toHaveText(['Delta 1', 'Alfa 2', 'Sueltas 7'])
 
-  // La IA suma una idea arriba y pasa la elegida a otra sección.
-  const archivo = join(iridium, 'Ideas', 'ideas.md')
-  const texto = (await readFile(archivo, 'utf8'))
-    .replace(
-      '## Sueltas\nIdeas que todavía no tienen proyecto.\n',
-      '## Sueltas\nIdeas que todavía no tienen proyecto.\n\n### Una idea nueva — 2026-11-02\nRecién anotada.\n',
-    )
-    .replace(/### Lanzador de juegos propio — 2026-10-16\n[^\n]*\n/, '')
-    .replace(
-      '## Integradas\n',
-      '## Integradas\n\n### Lanzador de juegos propio — 2026-10-16\nUn launcher.\n→ 2026-11-02: pasó a `Beta`.\n',
-    )
-  await writeFile(archivo, texto)
-
-  await expect(lista.getByTitle('Una idea nueva')).toBeVisible()
-  await expect(lista.getByText('7 sin integrar')).toBeVisible()
-  const detalle = win.getByRole('region', { name: 'La idea Lanzador de juegos propio' })
-  await expect(detalle.getByText(/^Integrada/)).toBeVisible()
-  await expect(detalle.getByText('Un launcher.')).toBeVisible()
+  const archivo = join(raiz, 'Alfa', 'docs', 'trabajo.md')
+  const texto = await readFile(archivo, 'utf8')
+  await writeFile(
+    archivo,
+    texto.replace('Estado: nueva · Fecha: 2026-11-06', 'Estado: pendiente · Fecha: 2026-11-06'),
+  )
+  await expect(ideas.locator('.tb-grupo-t')).toHaveText(['Delta 1', 'Alfa 1', 'Sueltas 7'])
+  await expect(ideas.getByText('Exportar el plan como imagen')).toHaveCount(0)
   await app.close()
 })
 
@@ -187,7 +216,7 @@ test('Abrir como proyecto desde Ideas y desde Skills (IN-3), en Carbón', async 
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+4')
   await win
-    .getByRole('navigation', { name: 'Ideas' })
+    .getByRole('region', { name: 'Ideas' })
     .getByRole('button', { name: 'Abrir como proyecto' })
     .click()
   // La vista de proyecto de Ideas, con sus íconos (Docs, Git…).
@@ -205,7 +234,7 @@ test('Abrir como proyecto desde Ideas y desde Skills (IN-3), en Carbón', async 
 
   // De vuelta en Ideas, en Carbón.
   await win.keyboard.press('Control+4')
-  await expect(win.getByRole('navigation', { name: 'Ideas' })).toBeVisible()
+  await expect(win.getByRole('region', { name: 'Ideas' })).toBeVisible()
   await win.screenshot({ path: 'test-results/in1-ideas-carbon.png' })
   await app.close()
 })
@@ -215,7 +244,10 @@ test('sin ideas.md; sin la carpeta Ideas se crea; si no se puede, lo dice', asyn
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+4')
-  await expect(win.getByText('Todavía no hay ideas anotadas').first()).toBeVisible()
+  await expect(win.getByRole('region', { name: 'Ideas' }).locator('.tb-grupo-t')).toHaveText([
+    'Delta 1',
+    'Alfa 2',
+  ])
   await app.close()
 
   // Sin la carpeta, Iridium la crea con su CLAUDE.md y un ideas.md vacío (D-083).
@@ -223,7 +255,10 @@ test('sin ideas.md; sin la carpeta Ideas se crea; si no se puede, lo dice', asyn
   const nueva = await abrir()
   await expect(nueva.win.getByText('Gamma').first()).toBeVisible()
   await nueva.win.keyboard.press('Control+4')
-  await expect(nueva.win.getByText('Todavía no hay ideas anotadas').first()).toBeVisible()
+  await expect(nueva.win.getByRole('region', { name: 'Ideas' }).locator('.tb-grupo-t')).toHaveText([
+    'Delta 1',
+    'Alfa 2',
+  ])
   await expect(nueva.win.locator('.chat-cab').first()).toContainText('Ideas y proyectos')
   expect(await readFile(join(iridium, 'Ideas', 'CLAUDE.md'), 'utf8')).toContain('## Cuando una idea madura')
   await nueva.app.close()
@@ -234,7 +269,7 @@ test('sin ideas.md; sin la carpeta Ideas se crea; si no se puede, lo dice', asyn
   const otra = await abrir()
   await expect(otra.win.getByText('Gamma').first()).toBeVisible()
   await otra.win.keyboard.press('Control+4')
-  await expect(otra.win.getByText('No está la carpeta Ideas')).toBeVisible()
+  await expect(otra.win.getByText(/no pudo crearla/).first()).toBeVisible()
   await expect(otra.win.locator('.chat-falta')).toContainText('Chat general')
   await expect(otra.win.getByRole('button', { name: 'Abrir como proyecto' })).toHaveCount(0)
   await otra.app.close()

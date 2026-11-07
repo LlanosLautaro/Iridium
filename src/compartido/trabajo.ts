@@ -30,3 +30,18 @@ export type TrabajoProyecto =
 
 /** Lo que vuelve de anotar una idea (H-18): su código, o el motivo con el texto que quedó en el campo. */
 export type ResultadoAnotar = { tipo: 'ok'; codigo: string } | { tipo: 'error'; mensaje: string }
+
+/** Las ideas `nueva` de un proyecto con framework, para Ideas del inicio (W-10): lo más nuevo arriba. */
+export interface IdeasNuevasProyecto {
+  ruta: string
+  nombre: string
+  ideas: ItemTrabajoVista[]
+}
+
+/** Lo que Ideas del inicio (W-10) junta de los proyectos. */
+export interface IdeasDelInicio {
+  /** Solo los que tienen alguna; el de la idea más reciente primero. */
+  grupos: IdeasNuevasProyecto[]
+  /** Los nombres de los proyectos con framework viejo: sus ideas no aparecen. */
+  viejos: string[]
+}

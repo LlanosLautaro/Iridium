@@ -151,7 +151,10 @@ await win.setViewportSize({ width: ancho, height: alto })
 // Otro proyecto cualquiera (el segundo de la grilla), para ver uno que no es Iridium.
 await paso('otro-proyecto', async () => {
   await win.keyboard.press('Control+1')
-  await win.locator(`.tarjeta:not(${ESTE.split(', ').join('):not(')})`).first().click()
+  await win
+    .locator(`.tarjeta:not(${ESTE.split(', ').join('):not(')})`)
+    .first()
+    .click()
   await win.waitForTimeout(1500)
 })
 await paso('otro-proyecto-mapa', () => delProyecto('Mapa').click())

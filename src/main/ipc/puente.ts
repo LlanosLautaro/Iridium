@@ -34,7 +34,7 @@ import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
 import { leerSeccionSkills, proyectosAtrasados, skillsDelProyecto } from '../app/skills'
-import { anotarEnProyecto, anotarSuelta, trabajoDelProyecto } from '../app/trabajo'
+import { anotarEnProyecto, anotarSuelta, ideasDelInicio, trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
@@ -587,6 +587,13 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.anotarSuelta, async (_, texto: unknown) => {
     const lista = await listar()
     return anotarSuelta(enDisco.rutas.ideas ?? join(lista.iridium.carpeta, 'Ideas'), TextoIdea.parse(texto))
+  })
+  // Ideas del inicio (W-10): las `nueva` de cada proyecto con framework, de los documentos ya cargados.
+  ipcMain.handle(CANALES.ideasNuevas, async () => {
+    const lista = await listar()
+    return ideasDelInicio(lista.tipo === 'lista' ? lista.proyectos : [], async (r) =>
+      trabajoDelProyecto(await docs.de(r)),
+    )
   })
   ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
 

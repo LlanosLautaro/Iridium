@@ -1,6 +1,6 @@
 // El borde entre el área grande y la conversación (D-041), en un proyecto, en Proyectos e Ideas (D-060) y en Skills:
 // se arrastra o se mueve con las flechas, hasta la mitad de la ventana, y cada vista recuerda su ancho (D-098). El
-// mismo borde, del lado izquierdo, cambia el ancho de la lista de Skills (R-6) y el de la de Ideas.
+// mismo borde, del lado izquierdo, cambia el ancho de la lista de Skills (R-6).
 import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react'
 import {
   ANCHO_CONVERSACION,
@@ -9,7 +9,7 @@ import {
   conAncho,
   type VistaConversacion,
 } from '../../compartido/ancho-conversacion'
-import { ANCHO_LISTA_IDEAS, ANCHO_LISTA_SKILLS } from '../../compartido/puente'
+import { ANCHO_LISTA_SKILLS } from '../../compartido/puente'
 import { usarEstado } from '../estado'
 
 /** La vista principal necesita al menos esto (D-041): la conversación no la aplasta. */
@@ -146,20 +146,6 @@ export function DivisorListaSkills({ ancho }: { ancho: number }) {
   )
 }
 
-/** El borde derecho de la lista de Ideas: como el de Skills, con su propio ancho. */
-export function DivisorListaIdeas({ ancho }: { ancho: number }) {
-  return (
-    <Borde
-      ancho={ancho}
-      cambiar={cambiarAnchoListaIdeas}
-      lado="izquierda"
-      limites={ANCHO_LISTA_IDEAS}
-      clase="divisor-columna"
-      nombre="la lista de ideas"
-    />
-  )
-}
-
 /** El ancho de la conversación de una vista: mientras se arrastra solo se ve; al soltar, se guarda. */
 function cambiarAncho(vista: VistaConversacion, px: number, guardar: boolean): void {
   const s = usarEstado.getState()
@@ -172,10 +158,4 @@ function cambiarAnchoListaSkills(px: number, guardar: boolean): void {
   const s = usarEstado.getState()
   if (guardar) s.guardarPreferencias({ anchoListaSkills: px })
   else s.ponerPreferencias({ ...s.preferencias, anchoListaSkills: px })
-}
-
-function cambiarAnchoListaIdeas(px: number, guardar: boolean): void {
-  const s = usarEstado.getState()
-  if (guardar) s.guardarPreferencias({ anchoListaIdeas: px })
-  else s.ponerPreferencias({ ...s.preferencias, anchoListaIdeas: px })
 }

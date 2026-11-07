@@ -1,7 +1,7 @@
-/* Ideas (modulos/inicio/ux.md › IN-W1): se arma con las piezas de Skills (la columna con grupos plegables, el detalle y
-   el chat); acá solo lo propio: Abrir como proyecto, el título largo de la idea y las filas Toca a y Fue a. */
+/* Ideas del inicio (04-ux.md › W-10): se arma con las piezas de Trabajo (el campo de anotar, los grupos y las filas,
+   en trabajo.css); acá solo lo propio: Abrir como proyecto, el selector de a qué va y las líneas del final. */
 
-/* Abrir como proyecto, a la derecha del título de la columna (Ideas y Skills) */
+/* Abrir como proyecto, a la derecha del título (Ideas y la columna de Skills) */
 .columna .titulo .abrir-como-proyecto {
   flex: none;
   margin: 0 -8px 0 auto;
@@ -16,49 +16,92 @@
   height: 14px;
 }
 
-/* El nombre de la sección, cortado si la columna es angosta */
-.id-columna .sk-grupo-tit .nom {
+/* El selector de a qué va: ícono, nombre y ▾, con borde firme (vista-orden.html › Anotar una idea) */
+.anotar .destino .menu-boton {
+  height: 30px;
+  max-width: 200px;
+  padding: 0 8px 0 10px;
+  border: 1px solid var(--borde-fuerte);
+  font-size: 13px;
+  font-weight: 500;
+}
+.destino .nom {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* El detalle: el título entero (las ideas tienen títulos largos) y el cuerpo como en Docs */
-.id-detalle h2 {
-  white-space: normal;
-  overflow-wrap: anywhere;
+.destino .marca,
+.destino .menu-boton > .ic:first-child,
+.destino .op-destino > .ic:first-child {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
 }
-.id-detalle .cuerpo {
-  gap: 16px;
-}
-.id-detalle .md {
-  max-width: 68ch;
+.destino .marca.inicial {
+  display: inline-grid;
+  place-items: center;
+  background: var(--caja);
+  border: 1px solid var(--borde-fuerte);
+  font: 600 10px / 1 var(--ui);
   color: var(--texto-2);
 }
-
-/* Toca a y Fue a: la etiqueta en chico gris liquen; los proyectos, enlaces */
-.id-fila {
-  max-width: 68ch;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding-top: 12px;
+.destino .menu-lista {
+  left: auto;
+  right: 0;
+  min-width: 230px;
+}
+.destino .menu-lista hr {
+  border: 0;
   border-top: 1px solid var(--borde-suave);
+  margin: 4px 2px;
 }
-.id-fila .et {
-  flex: none;
-  width: 52px;
-  color: var(--texto-3);
+.destino .menu-lista .nota {
+  padding: 4px 9px 3px;
   font-size: var(--tam-chico);
+  color: var(--texto-3);
 }
-.id-fila .valor {
-  min-width: 0;
+.menu-lista > button.op-destino {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 14px;
-  font-size: 13.5px;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 9px;
 }
+.menu-lista > button.op-destino[aria-checked="true"] {
+  color: var(--primario);
+}
+.op-destino > .ic:last-child:not(:first-child) {
+  margin-left: auto;
+  width: 13px;
+  height: 13px;
+}
+
+/* La lista vacía, las sueltas que no se pueden mostrar y los proyectos con framework viejo, en gris */
+.id-vacia,
+.id-viejos {
+  padding: 14px 8px 0;
+  font-size: var(--tam-chico);
+  color: var(--texto-3);
+}
+.id-vacia {
+  font-size: 13.5px;
+  color: var(--texto-2);
+}
+.ideas-inicio .script-msg {
+  padding: 6px 8px 0;
+}
+.ideas-inicio .script-msg .btn {
+  margin-left: auto;
+}
+.ideas-inicio .carga {
+  display: grid;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+/* Los proyectos que toca una suelta: enlaces */
 .id-proyecto {
   color: var(--primario-texto);
   text-decoration: underline dotted;
@@ -66,29 +109,4 @@
 }
 .id-proyecto:hover {
   text-decoration-style: solid;
-}
-.id-proyecto.falta {
-  color: var(--texto-2);
-  text-decoration: none;
-}
-.id-fila .md.id-destino {
-  font-size: 13.5px;
-  line-height: 1.55;
-}
-
-/* Lo que va al medio cuando no hay idea para mostrar */
-.id-mensaje {
-  max-width: 52ch;
-  display: grid;
-  gap: 6px;
-  color: var(--texto-2);
-  font-size: 13.5px;
-  line-height: 1.55;
-}
-.id-mensaje b {
-  font: 600 15px / 1.3 var(--ui);
-  color: var(--texto);
-}
-.id-mensaje code {
-  font: 12.5px / 1.4 var(--mono);
 }

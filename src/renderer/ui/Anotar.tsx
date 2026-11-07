@@ -13,8 +13,8 @@ export function Anotar({
   etiqueta = 'Anotar una idea',
 }: {
   anotar: (texto: string) => Promise<ResultadoAnotar>
-  /** Ya escrita: el código que le tocó (vacío si es suelta). */
-  alAnotar?: (codigo: string) => void
+  /** Ya escrita: el código que le tocó (vacío si es suelta) y el texto anotado. */
+  alAnotar?: (codigo: string, texto: string) => void
   /** A qué va (W-10); en Trabajo, nada: es este proyecto. */
   selector?: ReactNode
   campo?: RefObject<HTMLInputElement | null>
@@ -39,7 +39,7 @@ export function Anotar({
     if (r.tipo === 'error') return setError(r.mensaje)
     setError(null)
     setTexto('')
-    alAnotar?.(r.codigo)
+    alAnotar?.(r.codigo, t)
   }
 
   return (

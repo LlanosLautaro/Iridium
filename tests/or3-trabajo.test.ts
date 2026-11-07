@@ -1,10 +1,13 @@
-// OR-I3: el trabajo de un proyecto (W-11, H-19) y anotar una idea sin la IA, sin pisar a una sesión (H-18).
+// OR-I3: el trabajo de un proyecto (W-11, H-19), anotar una idea sin la IA, sin pisar a una sesión (H-18), y las ideas
+// nuevas de todos los proyectos para Ideas del inicio (W-10).
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import type { TarjetaProyecto } from '../src/compartido/puente'
+import type { ItemTrabajoVista, TrabajoProyecto } from '../src/compartido/trabajo'
 import { Documentos } from '../src/main/app/documentos'
-import { anotarEnProyecto, anotarSuelta, trabajoDelProyecto } from '../src/main/app/trabajo'
+import { anotarEnProyecto, anotarSuelta, ideasDelInicio, trabajoDelProyecto } from '../src/main/app/trabajo'
 import { conIdeaSuelta, leerIdeas } from '../src/main/core/ideas'
 import { conIdeaNueva, leerTrabajo } from '../src/main/core/trabajo'
 import { cambiarSinPisar } from '../src/main/infra/trabajo'
@@ -165,5 +168,59 @@ describe('trabajoDelProyecto', () => {
     expect(t.tipo === 'viejo' && t.ideas.secciones[0]?.cantidad).toBe(2)
     await rm(join(raiz, 'docs'), { recursive: true })
     expect(trabajoDelProyecto(await new Documentos().de(raiz))).toEqual({ tipo: 'sin-docs' })
+  })
+})
+
+describe('ideasDelInicio', () => {
+  const tarjeta = (nombre: string, framework: TarjetaProyecto['framework'], archivado = false) =>
+    ({ nombre, ruta: join('P', nombre), archivado, framework }) as TarjetaProyecto
+  const item = (codigo: string, estado: ItemTrabajoVista['estado'], fecha: string | null) =>
+    ({ codigo, titulo: codigo, estado, fecha }) as ItemTrabajoVista
+  const trabajos: Record<string, TrabajoProyecto> = {
+    [join('P', 'Alfa')]: {
+      tipo: 'trabajo',
+      existe: true,
+      items: [
+        item('T-1', 'nueva', '2026-11-01'),
+        item('T-2', 'pendiente', '2026-11-09'),
+        item('T-5', 'nueva', '2026-11-03'),
+      ],
+    },
+    [join('P', 'Beta')]: { tipo: 'trabajo', existe: true, items: [item('T-7', 'nueva', '2026-11-05')] },
+    [join('P', 'Gamma')]: { tipo: 'trabajo', existe: true, items: [item('T-1', 'hecho', '2026-11-08')] },
+    [join('P', 'Zeta')]: { tipo: 'trabajo', existe: true, items: [item('T-1', 'nueva', '2026-11-20')] },
+  }
+  const trabajoDe = async (r: string) => {
+    const t = trabajos[r]
+    if (!t) throw new Error('no se lee')
+    return t
+  }
+
+  it('solo las nuevas, la más reciente arriba y el proyecto de la más reciente primero', async () => {
+    const r = await ideasDelInicio(
+      [tarjeta('Alfa', { avisos: [] }), tarjeta('Beta', { avisos: [] }), tarjeta('Gamma', { avisos: [] })],
+      trabajoDe,
+    )
+    expect(r.grupos.map((g) => [g.nombre, g.ideas.map((i) => i.codigo)])).toEqual([
+      ['Beta', ['T-7']],
+      ['Alfa', ['T-5', 'T-1']],
+    ])
+    expect(r.viejos).toEqual([])
+  })
+
+  it('sin los archivados ni los que no siguen el framework; cuenta los viejos; uno que no se lee no frena', async () => {
+    const r = await ideasDelInicio(
+      [
+        tarjeta('Alfa', { avisos: ['docs/estado.md:3 — algo'] }),
+        tarjeta('Zeta', { avisos: [] }, true),
+        tarjeta('Delta', 'viejo'),
+        tarjeta('Épsilon', 'viejo', true),
+        tarjeta('Eta', null),
+        tarjeta('Theta', { avisos: [] }),
+      ],
+      trabajoDe,
+    )
+    expect(r.grupos.map((g) => g.nombre)).toEqual(['Alfa'])
+    expect(r.viejos).toEqual(['Delta'])
   })
 })
