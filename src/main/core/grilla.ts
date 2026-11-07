@@ -52,8 +52,12 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
   if (d.metadatos === null) return base
   if (d.metadatos.tipo === 'danado') return { ...base, problema: d.metadatos.motivo }
   const m = d.metadatos.metadatos
+  // `nombre` es opcional (OR-10, A-12): el nombre visible si no es el de la carpeta. Queda en `otros`, así que se
+  // conserva al guardar la ficha sin que la edición lo conozca.
+  const nombre = typeof m.otros.nombre === 'string' ? m.otros.nombre.trim() : ''
   return {
     ...base,
+    ...(nombre ? { nombre, inicial: inicialDe(nombre) } : {}),
     estado: m.estado,
     descripcion: m.descripcion,
     archivado: m.archivado,

@@ -635,9 +635,17 @@ export function tarjetaDe(lista: ListaProyectos | null, ruta: string | null): Ta
 }
 
 /** Las preguntas sin responder de los proyectos no archivados: el número del ícono de Pendientes. */
-export function totalSinResponder(lista: ListaProyectos | null): number {
-  if (lista?.tipo !== 'lista') return 0
-  return lista.proyectos.filter((p) => !p.archivado).reduce((n, p) => n + p.preguntas.sinResponder, 0)
+/** El único total de la app (04-ux.md › Un número que manda): lo de los proyectos no archivados y cuánto frena. */
+export function totalBandeja(lista: ListaProyectos | null): { n: number; frenan: number } {
+  if (lista?.tipo !== 'lista') return { n: 0, frenan: 0 }
+  let n = 0
+  let frenan = 0
+  for (const p of lista.proyectos) {
+    if (p.archivado) continue
+    n += p.preguntas.sinResponder
+    frenan += p.preguntas.frenan
+  }
+  return { n, frenan }
 }
 
 /**

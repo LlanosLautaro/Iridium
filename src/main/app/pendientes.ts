@@ -23,8 +23,9 @@ import { type DocumentosProyecto, motivo } from './visor'
 
 const numero = (codigo: string) => Number(codigo.slice(2))
 
-/** Grupos de W-5, en orden: frenan, sin responder, a medias y respondidas sin procesar. */
+/** Grupos de W-5, en orden: frenan, sin responder, a medias, respondidas sin procesar y en pausa. */
 function grupo(p: PendienteVista): number {
+  if (p.enPausa && p.estado !== 'respondida') return 4
   if (p.estado === 'respondida') return 3
   if (p.estado === 'a-medias') return 2
   return p.frena ? 0 : 1

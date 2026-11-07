@@ -137,7 +137,7 @@ test('al cambiar de pantalla con un atajo o abrir un proyecto con Enter, el foco
   const { app, win } = await abrir()
   // Sin nada que responder, Pendientes no tiene título de columna: el foco va a «Nada te espera».
   await win.keyboard.press('Control+2')
-  await expect(win.getByRole('heading', { name: 'Nada te espera' })).toBeFocused()
+  await expect(win.getByRole('heading', { name: 'Nada en tu bandeja' })).toBeFocused()
   await win.keyboard.press('Control+1')
   await expect(win.getByRole('heading', { name: 'Proyectos', level: 1 })).toBeFocused()
 

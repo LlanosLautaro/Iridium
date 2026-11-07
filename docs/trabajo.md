@@ -196,8 +196,8 @@ Estado: pendiente · Frente: Orden · Fecha: 2026-11-06 · Origen: R-12
 Arma y reinicia, con sus estados (W-1). En OR-I2.
 
 ## T-47 — D-100 en el código
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-06 · Origen: D-100
-El botón primario claro y las cuentas en gris (OR-2, en OR-I2), y el ⚠ de Skills en gris (OR-I4).
+Estado: en curso · Frente: Orden · Fecha: 2026-11-06 · Origen: D-100
+El botón primario claro y las cuentas en gris (OR-2, en OR-I2: hecho), y el ⚠ de Skills en gris (OR-I4).
 
 ## T-48 — Tocar «! N avisos del framework» abre la lista en Docs
 Estado: pendiente · Frente: Orden · Fecha: 2026-11-06 · Origen: W-2

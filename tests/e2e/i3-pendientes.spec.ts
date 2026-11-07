@@ -85,7 +85,7 @@ test('la columna, los pendientes con lo que citan y «Ver entero» en el panel (
   const { app, win } = await abrir()
   await win
     .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Pendientes/ })
+    .getByRole('button', { name: /^Bandeja de entrada/ })
     .click()
   const columna = win.locator('.columna')
   // Primero el que tiene alguno que frena; aparte, el que solo tiene respondidas sin procesar.
@@ -125,7 +125,7 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   const { app, win } = await abrir()
   await win
     .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Pendientes/ })
+    .getByRole('button', { name: /^Bandeja de entrada/ })
     .click()
   const q7 = win.locator('.pend[data-q="Q-7"]')
   const enviar7 = q7.getByRole('button', { name: 'Enviar' })
@@ -137,8 +137,8 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-7.md'), 'utf8')).toBe(
     '# Q-7 — ¿La miniatura muestra el modelo 3D o la textura plana?\n\n**Opción:** B) plana\n\nMás liviana.\n',
   )
-  // Baja el número del ícono y de la columna, que se reordena; la vista sigue en Alfa.
-  await expect(win.locator('.act .badge')).toHaveText('2')
+  // Baja el total del inicio y el número de la columna, que se reordena; la vista sigue en Alfa.
+  await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('2')
   await expect(win.locator('.proy', { hasText: 'Alfa' })).toContainText('1')
   await expect(win.locator('.cab-proy h2')).toHaveText('Alfa')
 
@@ -184,7 +184,7 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   // Nada sin responder: Seguí resaltado; arranca la sesión sin abrir el proyecto.
   const segui = win.locator('.cab-proy').getByRole('button', { name: 'Seguí' })
   await expect(segui).toHaveClass(/resaltado/)
-  await expect(win.locator('.cab-proy')).toContainText('Nada sin responder')
+  await expect(win.locator('.cab-proy .cuenta-bandeja')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/i3-todo-respondido.png' })
   await segui.click()
   await expect(win.locator('.cab-proy')).toContainText('La IA trabaja')
@@ -206,7 +206,7 @@ test('si la respuesta cambió afuera, pregunta antes de reemplazarla', async () 
   const { app, win } = await abrir()
   await win
     .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Pendientes/ })
+    .getByRole('button', { name: /^Bandeja de entrada/ })
     .click()
   await win.locator('.proy', { hasText: 'Beta' }).click()
   const q2 = win.locator('.pend[data-q="Q-2"]')
@@ -227,14 +227,12 @@ test('si la respuesta cambió afuera, pregunta antes de reemplazarla', async () 
   await app.close()
 })
 
-test('Responder en la conversación y el número de la cabecera llevan a los pendientes del proyecto', async () => {
+test('Responder en la conversación y la Bandeja de entrada llevan a las preguntas del proyecto', async () => {
   const { app, win } = await abrir({ IRIDIUM_FALSO_PREGUNTA: '1' })
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  await win
-    .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
-    .click()
-  await win.locator('.principal > .cabecera .chip.espera').click()
+  const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
+  await secciones.getByRole('button', { name: 'Mapa' }).click()
+  await secciones.getByRole('button', { name: /^Bandeja de entrada/ }).click()
   await expect(win.locator('.principal > .cabecera h1')).toHaveText('Beta')
   await expect(win.locator('.resumen .pend').first()).toBeVisible()
 
@@ -249,7 +247,7 @@ test('Responder en la conversación y el número de la cabecera llevan a los pen
   await app.close()
 })
 
-test('sin nada que responder: «Nada te espera»', async () => {
+test('sin nada que responder: «Nada en tu bandeja»', async () => {
   await rm(join(raiz, 'Alfa'), { recursive: true })
   await rm(join(raiz, 'Beta'), { recursive: true })
   await rm(join(raiz, 'Gestor'), { recursive: true })
@@ -257,8 +255,8 @@ test('sin nada que responder: «Nada te espera»', async () => {
   const { app, win } = await abrir()
   await win
     .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Pendientes/ })
+    .getByRole('button', { name: /^Bandeja de entrada/ })
     .click()
-  await expect(win.locator('.mensaje h2')).toHaveText('Nada te espera')
+  await expect(win.locator('.mensaje h2')).toHaveText('Nada en tu bandeja')
   await app.close()
 })

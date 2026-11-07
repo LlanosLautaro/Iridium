@@ -407,6 +407,8 @@ export interface PendienteVista {
   frente: string | null
   /** La respuesta guardada es «Postergada» (D-063). */
   postergada: boolean
+  /** `en pausa` en su línea `Tipo:` (OR-6): va al final, plegada, y no cuenta. */
+  enPausa: boolean
 }
 
 export type PendientesProyecto =

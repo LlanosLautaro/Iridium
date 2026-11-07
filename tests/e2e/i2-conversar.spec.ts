@@ -69,10 +69,10 @@ test('Seguí trabaja, termina y muestra las preguntas que dejó con Responder (H
   await expect(win.locator('.pedido')).toContainText('Q-1')
   await expect(win.locator('.pedido')).toContainText('prueba · frena')
   await expect(win.locator('.pedido').getByRole('button', { name: 'Responder' })).toBeVisible()
-  await expect(pestana).toContainText('1 pregunta')
-  // La IA escribió la pregunta en el estado.md del proyecto; la cabecera la cuenta.
+  // La IA escribió la pregunta en el estado.md del proyecto; la pestaña la cuenta, en amarillo porque frena.
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'estado.md'), 'utf8')).toContain('- **Q-1 — ')
-  await expect(win.locator('.principal > .cabecera .chip.espera')).toHaveText('1 pregunta · frena')
+  await expect(pestana.locator('.cuenta-bandeja')).toHaveText('1')
+  await expect(pestana.locator('.cuenta-bandeja')).toHaveClass(/frena/)
   await expect(win.locator('.chat-cab')).toContainText('empezada en Iridium')
   await win.screenshot({ path: 'test-results/i2-terminada.png' })
   await app.close()

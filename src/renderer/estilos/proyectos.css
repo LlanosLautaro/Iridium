@@ -178,7 +178,7 @@
   color: var(--texto-2);
 }
 .tarjeta .nombre {
-  grid-column: 2 / 4;
+  grid-column: 2 / 3;
   font: 600 14.5px / 1.3 var(--ui);
   color: var(--texto);
   overflow: hidden;
@@ -213,6 +213,12 @@
   text-overflow: ellipsis;
 }
 /* Estado y preguntas comparten línea; si no entran, las preguntas bajan en vez de cortar el estado */
+/* La cuenta de la bandeja, arriba a la derecha (W-2) */
+.tarjeta .cuenta-bandeja.en-tarjeta {
+  grid-column: 3;
+  grid-row: 1;
+  margin-top: 1px;
+}
 .tarjeta .linea2 {
   grid-column: 2 / 4;
   display: flex;

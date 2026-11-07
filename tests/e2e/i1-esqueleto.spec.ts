@@ -63,9 +63,12 @@ test('la grilla muestra los proyectos en orden, con hito y preguntas; los archiv
   await expect(nombres).toHaveText(['Alfa', 'Gestor', 'Beta'])
   const alfa = win.locator('.tarjeta', { hasText: 'Alfa' })
   await expect(alfa).toContainText('Hito 7 · Construcción')
-  await expect(alfa.locator('.chip.espera')).toHaveText('2 preguntas · frena')
+  // La cuenta arriba a la derecha, amarilla y con «!» porque una frena (D-100); el total, solo en el inicio.
+  await expect(alfa.locator('.cuenta-bandeja')).toHaveText('2')
+  await expect(alfa.locator('.cuenta-bandeja')).toHaveClass(/frena/)
   await expect(win.locator('.tarjeta', { hasText: 'Gestor' })).toContainText('Sin estado')
-  await expect(win.locator('[aria-label^="Pendientes"] .badge')).toHaveText('2')
+  await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('2')
+  await expect(win.locator('[aria-label^="Bandeja de entrada"] .badge')).toHaveCount(0)
   await expect(win.locator('[data-motor]')).toHaveText('Claude · max')
 
   await win.getByRole('switch', { name: /Archivados/ }).click()
@@ -84,11 +87,12 @@ test('la grilla se actualiza sola cuando cambia un estado.md o llega una respues
   await expect(beta).toContainText('Hito 1 · Exploración')
   await writeFile(join(raiz, 'Beta', 'docs', 'estado.md'), estado('2 — Definición', '- **Q-1 — ¿Nombre?**'))
   await expect(beta).toContainText('Hito 2 · Definición')
-  await expect(beta.locator('.chip.espera')).toHaveText('1 pregunta')
+  await expect(beta.locator('.cuenta-bandeja')).toHaveText('1')
+  await expect(beta.locator('.cuenta-bandeja')).not.toHaveClass(/frena/)
 
   await mkdir(join(raiz, 'Beta', 'docs', 'respuestas'))
   await writeFile(join(raiz, 'Beta', 'docs', 'respuestas', 'Q-1.md'), '# Q-1 — ¿Nombre?\n\nBeta.\n')
-  await expect(beta.locator('.chip.espera')).toHaveCount(0)
+  await expect(beta.locator('.cuenta-bandeja')).toHaveCount(0)
 
   await proyecto('Nuevo', { '.proyecto.json': ficha('idea') })
   await expect(win.locator('.tarjeta', { hasText: 'Nuevo' })).toBeVisible()
@@ -101,14 +105,15 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
   const cabecera = win.locator('.principal > .cabecera')
   await expect(cabecera.locator('h1')).toHaveText('Alfa')
   await expect(cabecera).toContainText('Hito 7 · Construcción')
-  await expect(cabecera.locator('.chip.espera')).toHaveText('2 preguntas · frena')
+  // La cabecera no repite la cuenta: la tiene la pestaña (W-3).
+  await expect(cabecera.locator('.cuenta-bandeja')).toHaveCount(0)
   await expect(win.locator('.sin-conversacion')).toContainText('Hacer la grilla.')
   // La barra de íconos es la del proyecto; nada de otro proyecto.
   const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
-  for (const nombre of ['Pendientes y scripts', 'Mapa', 'Docs', 'Archivos', 'Git', 'Scripts'])
+  for (const nombre of ['Bandeja de entrada', 'Mapa', 'Docs', 'Archivos', 'Git', 'Scripts'])
     await expect(secciones.getByRole('button', { name: new RegExp(`^${nombre}`) })).toBeVisible()
-  // Se entra a sus pendientes y scripts (D-043).
-  await expect(secciones.getByRole('button', { name: /^Pendientes y scripts/ })).toHaveAttribute(
+  // Se entra a su Bandeja de entrada (D-043).
+  await expect(secciones.getByRole('button', { name: /^Bandeja de entrada/ })).toHaveAttribute(
     'aria-current',
     'page',
   )
@@ -118,7 +123,7 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
   await expect(win.locator('.chat .compositor')).toBeVisible()
 
   // Las pestañas de los proyectos abiertos quedan (D-043), con sus preguntas; también al volver a abrir la app.
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('2 preguntas')
+  await expect(win.locator('.ses', { hasText: 'Alfa' }).locator('.cuenta-bandeja')).toHaveText('2')
   await win.getByRole('button', { name: /^Inicio/ }).click()
   await expect(win.locator('.grilla')).toBeVisible()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()

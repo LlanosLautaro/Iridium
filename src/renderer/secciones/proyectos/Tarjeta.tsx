@@ -1,9 +1,12 @@
-// La tarjeta de un proyecto (04-ux.md › W-2, D-034): estado con ícono y palabra; el ámbar, para lo que espera. Con el
+// La tarjeta de un proyecto (04-ux.md › W-2, D-034): estado con ícono y palabra; la cuenta de la bandeja arriba a la
+// derecha, amarilla solo si algo frena (D-100). Con el
 // clic derecho (o la tecla de menú), sus acciones (R-7).
 import type { MouseEvent } from 'react'
+import { textoDeCuenta } from '../../../compartido/cuentas'
 import type { FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
 import type { Estado } from '../../../compartido/tipos'
 import { ChipSesion } from '../../marco/Marco'
+import { Cuenta } from '../../ui/Cuenta'
 import { Icono, type NombreIcono } from '../../ui/Icono'
 
 const ESTADOS: Record<Estado, { nombre: string; icono: NombreIcono; clase: string }> = {
@@ -19,8 +22,7 @@ const SIN_FICHA = { nombre: 'sin clasificar', icono: 'ficha', clase: 'tenue' } a
 
 export function textoPreguntas(p: TarjetaProyecto['preguntas']): string | null {
   if (p.sinResponder === 0) return null
-  const n = p.sinResponder > 99 ? '99+' : String(p.sinResponder)
-  return `${n} ${p.sinResponder === 1 ? 'pregunta' : 'preguntas'}${p.frenan > 0 ? ' · frena' : ''}`
+  return textoDeCuenta(p.sinResponder, p.frenan)
 }
 
 /** «! 2 avisos del framework» (W-2): lo que el control encontró mal escrito; null sin avisos. */
@@ -114,21 +116,13 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
           {p.icono ? <img src={p.icono} alt="" /> : <span className="inicial">{p.inicial}</span>}
         </span>
         <span className="nombre">{p.nombre}</span>
+        <Cuenta n={p.preguntas.sinResponder} frenan={p.preguntas.frenan} clase="en-tarjeta" />
         <span className="linea2">
           <span className={`estado ${est.clase}`}>
             <Icono nombre={est.icono} />
             {est.nombre}
             {p.reemplazadoPor && <span className="hacia"> → {p.reemplazadoPor}</span>}
           </span>
-          {preguntas && (
-            <span
-              className="chip espera"
-              title={p.preguntas.frenan > 0 ? 'Al menos una frena el proyecto' : 'Sin responder'}
-            >
-              <Icono nombre="espera" />
-              {preguntas}
-            </span>
-          )}
         </span>
       </div>
       <p className="desc">{p.descripcion}</p>

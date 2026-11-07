@@ -1,11 +1,14 @@
-// Pendientes (H-9, F-3, 04-ux.md › W-5): la columna de proyectos que esperan algo, todos los pendientes del elegido
-// con lo que citan y, con «Ver entero», el documento en un panel a la derecha. Lo escrito vive en el estado de la
-// ventana (no se pierde al cambiar de proyecto); se guarda en el disco solo con Enviar o Guardar a medias.
+// La Bandeja de entrada (H-9, F-3, 04-ux.md › W-5): la columna de proyectos que esperan algo, todas las preguntas del
+// elegido con lo que citan, filtros por frente y las en pausa al final y, con «Ver entero», el documento en un panel a
+// la derecha. Lo escrito vive en el estado de la ventana (no se pierde al cambiar de proyecto ni de filtro); se guarda
+// en el disco solo con Enviar o Guardar a medias.
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import type { PendienteVista, TarjetaProyecto } from '../../../compartido/puente'
 import { columnaPendientes, fichaDe, usarEstado } from '../../estado'
+import { Cuenta } from '../../ui/Cuenta'
 import { Icono } from '../../ui/Icono'
 import { textoHito } from '../proyectos/Tarjeta'
+import { enPausa, filtrosPorFrente, NUCLEO, TODOS } from './filtros'
 import { type Destino, PanelDocumento } from './PanelDocumento'
 import { Pendiente } from './Pendiente'
 
@@ -32,15 +35,7 @@ function Columna({
   const total = conPendientes.reduce((n, p) => n + p.preguntas.sinResponder, 0)
   const fila = (p: TarjetaProyecto, tipo: 'pendientes' | 'respondidas') => {
     const { sinResponder, frenan, respondidas: r } = p.preguntas
-    let cuenta = (
-      <span
-        className={frenan > 0 ? 'cuenta frena' : 'cuenta'}
-        title={`${sinResponder} sin responder${frenan > 0 ? ', alguno frena' : ''}`}
-      >
-        {frenan > 0 && <Icono nombre="espera" />}
-        {sinResponder > 99 ? '99+' : sinResponder}
-      </span>
-    )
+    let cuenta: ReactNode = <Cuenta n={sinResponder} frenan={frenan} />
     if (conError.has(p.ruta))
       cuenta = (
         <span className="cuenta error">
@@ -72,9 +67,9 @@ function Columna({
     )
   }
   return (
-    <nav className="columna" aria-label="Proyectos con pendientes">
+    <nav className="columna" aria-label="Proyectos con algo en la bandeja">
       <div className="titulo">
-        <h1>Pendientes</h1>
+        <h1>Bandeja de entrada</h1>
         <span className="n">{total}</span>
       </div>
       <div className="lista">
@@ -88,8 +83,8 @@ function Columna({
       </div>
       <div className="leyenda">
         <span className="frena">
-          <Icono nombre="espera" />
-          <span>alguno frena el proyecto</span>
+          <span className="cuenta-bandeja frena" aria-hidden="true" />
+          <span>frena el proyecto</span>
         </span>
         <span className="ok">
           <Icono nombre="check" />
@@ -130,18 +125,8 @@ function Proyecto({ p, abrirDoc }: { p: TarjetaProyecto; abrirDoc: (d: Destino) 
     <div className="cab-proy">
       <IconoProyecto p={p} />
       <h2 title={p.nombre}>{p.nombre}</h2>
+      <Cuenta n={n} frenan={p.preguntas.frenan} />
       {p.hito && <span className="hito">{textoHito(p.hito)}</span>}
-      {n > 0 ? (
-        <span className="chip espera">
-          <Icono nombre="espera" />
-          {n} sin responder
-        </span>
-      ) : (
-        <span className="chip ok">
-          <Icono nombre="check" />
-          Nada sin responder
-        </span>
-      )}
       <div className="der">
         <button type="button" className="btn secundario" onClick={() => abrirProyecto(p.ruta)}>
           <Icono nombre="abrir" />
@@ -188,6 +173,7 @@ export function ListaPendientes({
 }) {
   const datos = usarEstado((s) => s.pendientes[p.ruta])
   const ponerPendientes = usarEstado((s) => s.ponerPendientes)
+  const [filtro, setFiltro] = useState(TODOS)
   if (!datos) return <Siluetas />
   if (datos.tipo === 'error')
     return (
@@ -197,7 +183,7 @@ export function ListaPendientes({
             <Icono nombre="error" />
             No se pudo leer
           </span>
-          <h2>No puedo ver los pendientes de {p.nombre}</h2>
+          <h2>No puedo ver la bandeja de {p.nombre}</h2>
           <p>{datos.mensaje}</p>
           <div className="acc">
             <button
@@ -212,16 +198,37 @@ export function ListaPendientes({
         </div>
       </div>
     )
+  const filtros = filtrosPorFrente(datos.pendientes)
+  // Si el frente elegido ya no tiene preguntas, vuelve a Todos.
+  const elegido = filtros.some((f) => f.clave === filtro) ? filtro : TODOS
+  const delFiltro = (x: PendienteVista) => elegido === TODOS || (x.frente ?? NUCLEO) === elegido
+  const activas = datos.pendientes.filter((x) => !enPausa(x) && delFiltro(x))
+  const pausadas = datos.pendientes.filter(enPausa)
   return (
     <div className="pendientes">
-      {datos.pendientes.length === 0 && (
+      {filtros.length > 0 && (
+        <fieldset className="filtros" aria-label="Filtrar por frente">
+          {filtros.map((f) => (
+            <button
+              key={f.clave}
+              type="button"
+              className={f.clave === elegido ? 'filtro sel' : 'filtro'}
+              aria-pressed={f.clave === elegido}
+              onClick={() => setFiltro(f.clave)}
+            >
+              {f.nombre} <span className="n">{f.n}</span>
+            </button>
+          ))}
+        </fieldset>
+      )}
+      {datos.pendientes.length === pausadas.length && (
         <div className="mensaje" role="status">
-          <h2>Nada te espera en {p.nombre}</h2>
-          <p>No hay preguntas sin responder ni respuestas sin procesar.</p>
+          <h2>Nada en tu bandeja</h2>
+          <p>Cuando la IA necesite algo de vos, aparece acá.</p>
         </div>
       )}
       {GRUPOS.map((g) => {
-        const ps = datos.pendientes.filter(g.de)
+        const ps = activas.filter(g.de)
         if (ps.length === 0) return null
         return (
           <div key={g.titulo} className="grupo-pend">
@@ -232,6 +239,16 @@ export function ListaPendientes({
           </div>
         )
       })}
+      {pausadas.length > 0 && (
+        <details className="grupo-pend en-pausa">
+          <summary className="grupo">
+            En pausa <span className="n">{pausadas.length}</span>
+          </summary>
+          {pausadas.map((x) => (
+            <Pendiente key={x.codigo} ruta={p.ruta} p={x} abrirDoc={abrirDoc} />
+          ))}
+        </details>
+      )}
       {pie}
     </div>
   )
@@ -287,9 +304,9 @@ export function Pendientes() {
     return (
       <main className="trabajo">
         <div className="pend-vista">
-          <nav className="columna" aria-label="Proyectos con pendientes">
+          <nav className="columna" aria-label="Proyectos con algo en la bandeja">
             <div className="titulo">
-              <h1>Pendientes</h1>
+              <h1>Bandeja de entrada</h1>
             </div>
             <div className="lista carga" aria-busy="true">
               {[70, 55, 80].map((w) => (
@@ -316,8 +333,8 @@ export function Pendientes() {
               <Icono nombre="check" />
               Al día
             </span>
-            <h2>Nada te espera</h2>
-            <p>Cuando la IA de un proyecto deje una pregunta, una prueba o una tarea, aparece acá.</p>
+            <h2>Nada en tu bandeja</h2>
+            <p>Cuando la IA necesite algo de vos, aparece acá.</p>
             <div className="acc">
               <button type="button" className="btn secundario" onClick={() => irA('proyectos')}>
                 <Icono nombre="proyectos" />

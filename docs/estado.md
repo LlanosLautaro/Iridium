@@ -32,12 +32,12 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I1 espera Q-141; sigue OR-I2) | en curso |
+| Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I2 en curso) | en curso |
 
 En espera, detrás de Orden (D-091): Diseño (T-5) y Capacidades (T-28).
 
 ## En qué estamos ahora
-Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está terminada: el framework único (D-092, D-099) con su control al terminar cada turno, los avisos en la tarjeta y el Mapa con el vocabulario de estados. Iridium ya pasó al framework: las ideas y los pendientes están en `trabajo.md` (T-1 a T-50) y el control da cero. Falta tu prueba (Q-141). Sigue OR-I2: el esqueleto y la Bandeja de entrada, con Actualizar (T-46). Compartir está publicado; falta la invitación (Q-126).
+Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 va por la mitad: la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, y el nombre de la ficha. Faltan Actualizar (T-46), el esqueleto, la cabecera común y la conversación de 360 px. Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
 - **Q-126 — Invitá a la otra persona al repo de Iridium**
@@ -52,18 +52,12 @@ Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no
   - [ ] Sin git, **Inicializar repositorio** hace el primer commit sin `node_modules` ni `.env`
   - [ ] **Publicar en GitHub** muestra tu cuenta (o abre la ventana de git para iniciar sesión)
   - [ ] Privado y Publicar: aparece «En GitHub · tu-usuario/nombre», y el repositorio está en GitHub como privado
-- **Q-141 — Probá el control del framework en las tarjetas**
-  Tipo: prueba · Frente: Orden
-  Contexto: OR-I1 (`modulos/orden/estado.md` › OR-I1). Armá la última versión (`scripts.md` › Armar la última versión) y abrila. Fijate:
-  - [ ] La tarjeta de Iridium no dice «framework viejo» ni «avisos del framework»
-  - [ ] Las tarjetas de tus otros proyectos con `docs/` dicen «framework viejo» junto al hito
-  - [ ] En el Mapa de Iridium, los hitos y los frentes se ven como antes (hechos, Orden en curso)
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, OR-I2: el esqueleto y la Bandeja de entrada, con Actualizar.
-**Leer antes:** `modulos/orden/estado.md` › Próximo paso, `modulos/orden/diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-1, W-5 y W-9, `modulos/orden/diseno-tecnico.md` › Actualizar, `trabajo.md` › T-46 y T-47 (y Q-141, Q-126, Q-118 si llegaron).
+Orden, OR-I2: Actualizar (T-46), un solo botón que arma y reinicia.
+**Leer antes:** `modulos/orden/estado.md` › OR-I2 y Próximo paso, `modulos/orden/diseno-tecnico.md` › Actualizar, `04-ux.md` › W-1 y F-7, `06-ui.md` › Frente Orden (Actualizar), `trabajo.md` › T-46 (y Q-126, Q-118 si llegaron).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

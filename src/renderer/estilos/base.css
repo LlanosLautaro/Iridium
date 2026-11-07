@@ -118,12 +118,13 @@ code,
   font: 600 13px / 1 var(--ui);
   letter-spacing: 0.02em;
 }
+/* El botón principal es claro, sin color: el color queda para avisar (D-100, The Botón Claro Rule) */
 .btn.primario {
-  background: var(--espera);
+  background: var(--texto);
   color: var(--sobre-color);
 }
 .btn.primario:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
 }
 .btn.secundario {
   border: 1px solid var(--borde-fuerte);
@@ -207,4 +208,69 @@ code,
     /* biome-ignore lint/complexity/noImportantStyles: ídem */
     transition: none !important;
   }
+}
+
+/* Los filtros de una sección (W-9): píldoras sin borde con su cuenta en mono gris; el elegido, con el fondo de
+   selección y un borde del color de lo activo */
+.filtros {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radio-pildora);
+  color: var(--texto-2);
+  font: 500 12.5px / 1 var(--ui);
+}
+.filtro .n {
+  font: 500 11.5px / 1 var(--mono);
+  color: var(--texto-3);
+}
+.filtro:hover {
+  background: var(--hover);
+  color: var(--texto);
+}
+.filtro.sel {
+  background: var(--sel-fondo);
+  border-color: color-mix(in oklab, var(--primario) 35%, transparent);
+  color: var(--texto);
+}
+.filtro.sel .n {
+  color: var(--texto-2);
+}
+
+/* La cuenta de la bandeja (04-ux.md › Un número que manda, D-100): gris; amarilla y con «!» solo si algo frena */
+.cuenta-bandeja {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  flex: none;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radio-control);
+  background: var(--borde-fuerte);
+  color: var(--texto);
+  font: 700 11px / 1 var(--mono);
+}
+.cuenta-bandeja.frena {
+  background: var(--espera);
+  color: var(--sobre-color);
+}
+.cuenta-bandeja.frena::after {
+  content: "!";
+  font-family: var(--ui);
+  font-weight: 700;
 }

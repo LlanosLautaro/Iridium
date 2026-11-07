@@ -374,7 +374,7 @@ export function Pendiente({
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: solo delega los clics de los enlaces de adentro, que ya son enfocables.
     <article
-      className={p.estado === 'respondida' ? 'pend' : 'pend abierta'}
+      className={`pend${p.estado === 'respondida' ? '' : ' abierta'}${p.frena && p.estado !== 'respondida' && !p.enPausa ? ' frena' : ''}`}
       data-q={p.codigo}
       aria-label={`${p.codigo}: ${p.pregunta}`}
       onClick={(e) => alTocarEnlace(e, abrirDoc)}
@@ -382,7 +382,7 @@ export function Pendiente({
       <div className="meta">
         <span className="q">{p.codigo}</span>
         <span className="tipo">{p.tipo}</span>
-        {p.frena && p.estado !== 'respondida' && (
+        {p.frena && p.estado !== 'respondida' && !p.enPausa && (
           <span className="chip espera">
             <Icono nombre="espera" />
             Frena
@@ -396,7 +396,7 @@ export function Pendiente({
         )}
         {p.estado === 'a-medias' && <span className="chip neutro">A medias</span>}
         {p.frente && (
-          <span className="frente-q" title={`Es del módulo ${p.frente}`}>
+          <span className="frente-q" title={`Es del frente ${p.frente}`}>
             {p.frente}
           </span>
         )}

@@ -66,7 +66,7 @@ export function BotonAtras({ ruta }: { ruta: string }) {
     : paso.seccion === 'docs' && paso.doc
       ? nombreDoc(paso.doc.documento)
       : {
-          pendientes: 'Pendientes',
+          pendientes: 'la Bandeja de entrada',
           mapa: 'el Mapa',
           docs: 'Docs',
           archivos: 'Archivos',

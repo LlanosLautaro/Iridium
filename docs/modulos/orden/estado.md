@@ -13,12 +13,12 @@
 | 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 espera la prueba (Q-141); sigue OR-I2 | este archivo |
+| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta y la Bandeja hechas) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y espera tu prueba (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). Lo que queda del frente está en `trabajo.md` (T-46 a T-49).
+Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y probada (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). Lo que queda del frente está en `trabajo.md` (T-46 a T-49).
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -33,13 +33,13 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| OR-I1 | El modelo y el control | en curso (hecha; espera Q-141) |
-| OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | pendiente |
+| OR-I1 | El modelo y el control | hecho (Q-141, 2026-11-06) |
+| OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | en curso |
 | OR-I3 | Trabajo e Ideas, anotar sin la IA | pendiente |
 | OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | pendiente |
 
 ## Log de iteraciones
-### OR-I1 — El modelo y el control (en curso desde 2026-11-06)
+### OR-I1 — El modelo y el control (2026-11-06, hecha)
 **Hecho:**
 - `core/estados.ts`: el vocabulario (`pendiente`, `en curso`, `en pausa`, `hecho`, `descartado`, `nueva`) y la tabla de transición de las palabras viejas.
 - Las preguntas leen `Frente:` (en la línea `Tipo:` o en una propia) y `en pausa`; las en pausa no cuentan ni avisan.
@@ -61,8 +61,19 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Criterios verificados** (con la app armada, los proyectos reales y el motor falso, `tools/auditoria-ux.ts`): la tarjeta de Iridium sin «framework viejo» ni avisos; las de los otros proyectos con `docs/`, con «framework viejo»; el Mapa de Iridium con los hitos 0 a 9 hechos, el 10 en curso, los frentes hechos y Orden en «7. Construcción» con Q-141. Vitest 617 de 617 y typecheck limpio.
 
-**Falta:** la prueba del usuario (Q-141).
+**Prueba del usuario:** Q-141, las tres casillas bien (2026-11-06).
+
+### OR-I2 — El esqueleto y la Bandeja de entrada, con Actualizar (en curso desde 2026-11-06)
+**Hecho:**
+- **Un número que manda** (04-ux.md › Un número que manda, D-100): `compartido/cuentas.ts` con `colorDeCuenta` y el texto («3 en la bandeja; una frena el proyecto») y la pieza `ui/Cuenta.tsx`. El total de la bandeja está solo en el botón de inicio; el ícono de la Bandeja ya no lleva número (ni en el inicio ni en el proyecto); la tarjeta lleva su cuenta arriba a la derecha, la pestaña la suya y la cabecera del proyecto no la repite (W-3). Gris, y amarilla con «!» solo si algo frena. El número de Revisión queda en gris.
+- **El botón principal claro** (D-100): `.btn.primario` con el fondo del texto y la tinta oscura, sin ámbar.
+- **La Bandeja de entrada** (W-5): se llama así en todos lados (la barra, la columna, Atrás, Nuevo proyecto); filtros por frente con su cuenta («Todos 3 · Núcleo 1 · Compartir 2») solo si hay más de un frente; solo la pregunta que frena lleva el borde ámbar, el fondo de pedido y «Frena»; las en pausa van al final, plegadas, sin contar; vacía, «Nada en tu bandeja». Los filtros son la pieza común de W-9 (`.filtros` y `.filtro` en `base.css`).
+- **El nombre de la ficha** (OR-10): `nombre` en `.proyecto.json` es el nombre visible de la tarjeta, la pestaña y la Bandeja; se conserva al cambiar la ficha desde Iridium.
+
+**Pruebas:** `tests/or2-bandeja.test.ts` (8: la regla de la cuenta, el orden con la en pausa al final, los filtros por frente, la respondida que no suma y el nombre de la ficha). Playwright, `tests/e2e/or2-bandeja.spec.ts` (2: el total, las tarjetas y la pestaña con su color; los filtros, el ámbar solo en la que frena y la en pausa plegada) y las de I-1 a I-8, D-060, H-8, R-2 y OR-1 al día con los nombres nuevos (33 de 33).
+
+**Falta:** el esqueleto (la barra del proyecto en dos grupos y entrar a la Bandeja o al Mapa), la cabecera común (W-9) en las demás secciones, la línea del frente activo en la tarjeta, la conversación de 360 px por vista (D-098) y Actualizar (T-46).
 
 ## Próximo paso
-OR-I2: el esqueleto y la Bandeja de entrada, con Actualizar (T-46) y D-100 en el código (T-47).
+OR-I2, lo que falta: Actualizar (T-46), después el esqueleto, la cabecera común (W-9), el frente activo en la tarjeta y la conversación de 360 px por vista.
 **Leer antes:** `diseno-tecnico.md` › Iteraciones y › Actualizar, `04-ux.md` › W-1, W-5 y W-9, `06-ui.md` › Frente Orden.

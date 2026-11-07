@@ -1,15 +1,19 @@
 // Lo que está siempre (04-ux.md › W-1, D-041): la barra de título con el inicio y las sesiones, la barra de íconos
 // (cambia entre el inicio y el proyecto abierto) y la de estado.
 import { type ReactNode, useEffect, useState } from 'react'
+import { textoDeCuenta } from '../../compartido/cuentas'
 import { fechaExacta } from '../../compartido/fechas'
 import type { EstadoMotor, FichaSesion } from '../../compartido/puente'
-import { tarjetaDe, totalSinResponder, usarEstado, vistaDe } from '../estado'
+import { tarjetaDe, totalBandeja, usarEstado, vistaDe } from '../estado'
 import { SECCIONES, SECCIONES_PROYECTO } from '../secciones'
 import { mismaRuta } from '../secciones/proyecto/enlaces'
+import { Cuenta } from '../ui/Cuenta'
 import { Icono, type NombreIcono } from '../ui/Icono'
 import { Ajustes } from './Ajustes'
 import { Avisos, ConfirmarCierre } from './Avisos'
 import { UsoEnLaBarra } from './Uso'
+
+const SIN_PREGUNTAS = { sinResponder: 0, frenan: 0 }
 
 function BotonActividad({
   activa,
@@ -17,8 +21,7 @@ function BotonActividad({
   detalle,
   icono,
   n,
-  queCuenta = 'sin responder',
-  neutro = false,
+  queCuenta = 'abiertos',
   alTocar,
 }: {
   activa: boolean
@@ -28,8 +31,6 @@ function BotonActividad({
   n: number
   /** Qué cuenta el número, para el lector de pantalla. */
   queCuenta?: string
-  /** El número en gris: espera a la IA, no al usuario (los comentarios abiertos de la Revisión). */
-  neutro?: boolean
   alTocar: () => void
 }) {
   return (
@@ -42,7 +43,9 @@ function BotonActividad({
       onClick={alTocar}
     >
       <Icono nombre={icono} />
-      {n > 0 && <span className={neutro ? 'badge neutro' : 'badge'}>{n > 99 ? '99+' : n}</span>}
+      {/* Solo los comentarios abiertos de la Revisión, en gris: esperan a la IA, no al usuario. La bandeja no lleva
+      número en su ícono: el total está en el botón de inicio y el de cada proyecto, en su pestaña. */}
+      {n > 0 && <span className="badge neutro">{n > 99 ? '99+' : n}</span>}
     </button>
   )
 }
@@ -74,7 +77,6 @@ function BarraActividad() {
   const irA = usarEstado((s) => s.irA)
   const irASeccion = usarEstado((s) => s.irASeccion)
   const tarjeta = tarjetaDe(lista, ruta)
-  const sinResponder = tarjeta?.preguntas.sinResponder ?? 0
   const revision = tarjeta?.revision ?? 0
   if (seccion === 'proyecto' && ruta)
     return (
@@ -90,9 +92,8 @@ function BarraActividad() {
                 : ''
             }
             icono={s.icono}
-            n={s.id === 'pendientes' ? sinResponder : s.id === 'revision' ? revision : 0}
-            queCuenta={s.id === 'revision' ? (revision === 1 ? 'abierto' : 'abiertos') : 'sin responder'}
-            neutro={s.id === 'revision'}
+            n={s.id === 'revision' ? revision : 0}
+            queCuenta={revision === 1 ? 'abierto' : 'abiertos'}
             alTocar={() => irASeccion(ruta, s.id)}
           />
         ))}
@@ -101,20 +102,17 @@ function BarraActividad() {
     )
   return (
     <nav className="actividad" aria-label="Secciones">
-      {SECCIONES.map((s) => {
-        const n = s.contador(lista)
-        return (
-          <BotonActividad
-            key={s.id}
-            activa={seccion === s.id}
-            nombre={s.nombre}
-            detalle={` (Ctrl+${s.atajo})${n > 0 ? ` · ${n} sin responder` : ''}`}
-            icono={s.icono}
-            n={n}
-            alTocar={() => irA(s.id)}
-          />
-        )
-      })}
+      {SECCIONES.map((s) => (
+        <BotonActividad
+          key={s.id}
+          activa={seccion === s.id}
+          nombre={s.nombre}
+          detalle={` (Ctrl+${s.atajo})`}
+          icono={s.icono}
+          n={0}
+          alTocar={() => irA(s.id)}
+        />
+      ))}
       <BotonAjustes />
     </nav>
   )
@@ -162,39 +160,44 @@ export function ChipSesion({ ficha }: { ficha: FichaSesion }) {
   )
 }
 
-/** El botón de arriba a la izquierda (D-041): el inicio, con las preguntas sin responder en ámbar. */
+/**
+ * El botón de arriba a la izquierda (D-041): el inicio, con el único total de la bandeja de la app (04-ux.md › Un
+ * número que manda); gris, o amarillo con «!» si algo frena.
+ */
 function BotonInicio() {
   const seccion = usarEstado((s) => s.seccion)
   const lista = usarEstado((s) => s.lista)
   const irAlInicio = usarEstado((s) => s.irAlInicio)
-  const n = totalSinResponder(lista)
+  const { n, frenan } = totalBandeja(lista)
+  const detalle = n > 0 ? `, ${textoDeCuenta(n, frenan)}` : ''
   return (
     <button
       type="button"
       className={seccion === 'proyecto' ? 'inicio' : 'inicio activo'}
-      title={`Proyectos y Pendientes${n > 0 ? ` (${n} ${n === 1 ? 'pregunta' : 'preguntas'} sin responder)` : ''}`}
-      aria-label={`Inicio${n > 0 ? `, ${n} sin responder` : ''}`}
+      title={`Proyectos y Bandeja de entrada${detalle}`}
+      aria-label={`Inicio${detalle}`}
       onClick={irAlInicio}
     >
       <Icono nombre="marca" />
-      {n > 0 && <span className="badge">{n > 99 ? '99+' : n}</span>}
+      <Cuenta n={n} frenan={frenan} clase="en-inicio" />
     </button>
   )
 }
 
 /**
- * El estado de un proyecto en su pestaña (D-043): trabajando, con error, con preguntas que esperan al usuario, o
- * terminada si todavía no se vio. Si no hay nada de eso, solo el nombre.
+ * El estado de un proyecto en su pestaña (D-043, W-4): trabajando o con error; si no, su cuenta de la bandeja (la
+ * misma regla de color que el inicio) o, sin nada, terminada si todavía no se vio. Si no hay nada de eso, solo el
+ * nombre.
  */
-function EstadoPestana({ ficha, preguntas }: { ficha: FichaSesion | null; preguntas: number }) {
+function EstadoPestana({
+  ficha,
+  preguntas,
+}: {
+  ficha: FichaSesion | null
+  preguntas: { sinResponder: number; frenan: number }
+}) {
   if (ficha?.estado === 'trabajando' || ficha?.estado === 'error') return <ChipSesion ficha={ficha} />
-  if (preguntas > 0)
-    return (
-      <span className="chip espera">
-        <Icono nombre="espera" />
-        {preguntas} {preguntas === 1 ? 'pregunta' : 'preguntas'}
-      </span>
-    )
+  if (preguntas.sinResponder > 0) return <Cuenta n={preguntas.sinResponder} frenan={preguntas.frenan} />
   if (ficha) return <ChipSesion ficha={ficha} />
   return null
 }
@@ -240,7 +243,7 @@ function BarraTitulo() {
                   {tarjeta?.icono ? <img src={tarjeta.icono} alt="" /> : (tarjeta?.inicial ?? nombre[0])}
                 </span>
                 <span className="nom">{nombre}</span>
-                <EstadoPestana ficha={ficha} preguntas={tarjeta?.preguntas.sinResponder ?? 0} />
+                <EstadoPestana ficha={ficha} preguntas={tarjeta?.preguntas ?? SIN_PREGUNTAS} />
               </button>
               {ficha?.estado !== 'trabajando' && (
                 <button

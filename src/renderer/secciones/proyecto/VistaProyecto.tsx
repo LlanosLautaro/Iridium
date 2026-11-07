@@ -4,9 +4,8 @@
 import { type CSSProperties, useEffect } from 'react'
 import { type SeccionProyecto, tarjetaDe, usarEstado, vistaDe } from '../../estado'
 import { cambiarAncho, Divisor } from '../../ui/Divisor'
-import { Icono } from '../../ui/Icono'
 import { SECCIONES_PROYECTO } from '..'
-import { textoHito, textoPreguntas } from '../proyectos/Tarjeta'
+import { textoHito } from '../proyectos/Tarjeta'
 import { Archivos } from './Archivos'
 import { Conversacion } from './Conversacion'
 import { Docs } from './Docs'
@@ -50,7 +49,6 @@ export function VistaProyecto() {
   const seccion = usarEstado((s) => (ruta ? vistaDe(s.vistas, ruta).seccion : 'pendientes'))
   const ancho = usarEstado((s) => s.preferencias.anchoConversacion)
   const irA = usarEstado((s) => s.irA)
-  const responderEn = usarEstado((s) => s.responderEn)
   const volver = usarEstado((s) => s.volver)
   const p = tarjetaDe(lista, ruta)
 
@@ -104,7 +102,6 @@ export function VistaProyecto() {
     abiertas.set(ruta, vistas)
   }
   vistas.add(seccion)
-  const preguntas = textoPreguntas(p.preguntas)
 
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
@@ -112,17 +109,6 @@ export function VistaProyecto() {
         <div className="cabecera">
           <h1 title={p.nombre}>{p.nombre}</h1>
           {p.hito && <span className="sub">{textoHito(p.hito)}</span>}
-          {preguntas && (
-            <button
-              type="button"
-              className="chip espera"
-              title="Responderlas en Pendientes"
-              onClick={() => responderEn(p.ruta)}
-            >
-              <Icono nombre="espera" />
-              {preguntas}
-            </button>
-          )}
         </div>
         <div className="vista">
           {SECCIONES_PROYECTO.filter((s) => vistas.has(s.id)).map((s) => (

@@ -107,7 +107,7 @@ test.afterEach(async () => {
 
 test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y de vuelta (H-7, F-4)', async () => {
   const { app, win } = await abrir()
-  await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.badge')).toHaveText('1')
+  await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('1')
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
     .getByRole('navigation', { name: 'Secciones del proyecto' })

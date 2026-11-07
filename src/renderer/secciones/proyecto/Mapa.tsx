@@ -162,7 +162,7 @@ function TeEspera({ ruta, preguntas }: { ruta: string; preguntas: PreguntaNueva[
               key={q.codigo}
               type="button"
               className="fila espera-fila"
-              title="Responder en Pendientes"
+              title="Responder en la Bandeja de entrada"
               onClick={() => responderEn(ruta)}
             >
               <span className="q">{q.codigo}</span>

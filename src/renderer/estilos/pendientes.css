@@ -288,8 +288,36 @@
 .grupo-pend:first-child .grupo {
   margin-top: 0;
 }
+.pendientes > .filtros {
+  margin-bottom: 14px;
+}
+/* En pausa (OR-6): al final, plegadas, sin contar */
+.en-pausa > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.en-pausa > summary::before {
+  content: "›";
+  display: inline-block;
+  transition: transform 0.12s;
+}
+.en-pausa[open] > summary::before {
+  transform: rotate(90deg);
+}
+.en-pausa > summary .n {
+  font-family: var(--mono);
+}
+.en-pausa > summary + .pend {
+  margin-top: 0;
+}
+.en-pausa > .pend {
+  opacity: 0.85;
+}
 
-/* Un pendiente: tarjeta suave; los que esperan, con el tinte ámbar del pedido */
+/* Una pregunta: tarjeta suave; solo la que frena lleva el ámbar (D-100): el borde, el fondo de pedido y «Frena» */
 .pend {
   border: 1px solid var(--borde);
   border-radius: var(--radio-tarjeta);
@@ -302,8 +330,8 @@
 .silueta-pend + .silueta-pend {
   margin-top: 12px;
 }
-.pend.abierta {
-  border-color: var(--espera-borde);
+.pend.frena {
+  border-color: color-mix(in oklab, var(--espera) 55%, transparent);
   background: var(--espera-fondo);
 }
 .pend .meta {
@@ -679,8 +707,11 @@ textarea.campo.crece {
   width: 13px;
   height: 13px;
 }
-.leyenda .frena .ic {
-  color: var(--espera);
+.leyenda .frena .cuenta-bandeja {
+  min-width: 13px;
+  height: 13px;
+  padding: 0 2px;
+  font-size: 10px;
 }
 .leyenda .ok .ic,
 .r-puntos .si .ic {

@@ -49,6 +49,18 @@
   width: 138px;
 }
 
+/* El total de la bandeja, en el botón de inicio (04-ux.md › Un número que manda) */
+.inicio .cuenta-bandeja.en-inicio {
+  position: absolute;
+  right: 3px;
+  bottom: 4px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  font-size: 10px;
+}
+
+/* El número de un ícono de la barra: solo los comentarios abiertos de la Revisión, en gris */
 .badge {
   position: absolute;
   right: 5px;
@@ -59,8 +71,8 @@
   display: grid;
   place-items: center;
   border-radius: var(--radio-control);
-  background: var(--espera);
-  color: var(--sobre-color);
+  background: var(--borde-fuerte);
+  color: var(--texto);
   font: 700 10.5px / 1 var(--mono);
 }
 
@@ -175,10 +187,6 @@
   bottom: 11px;
   width: 2px;
   background: var(--primario);
-}
-.badge.neutro {
-  background: var(--borde-fuerte);
-  color: var(--texto);
 }
 .act .badge {
   right: 7px;

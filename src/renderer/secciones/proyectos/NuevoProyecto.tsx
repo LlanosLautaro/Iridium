@@ -81,7 +81,7 @@ export function NuevoProyecto({
         </label>
         <label className="campo-nuevo">
           <span>
-            La idea <small>(opcional; si no, la IA te la pregunta en Pendientes)</small>
+            La idea <small>(opcional; si no, la IA te la pregunta en la Bandeja de entrada)</small>
           </span>
           <textarea
             className="campo"
