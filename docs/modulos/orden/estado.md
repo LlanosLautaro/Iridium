@@ -110,6 +110,13 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Prueba del usuario:** Q-145, las seis casillas bien (2026-11-07).
 
+### OR-I4 — El Mapa con frentes, Skills › Framework y Pasar al framework (en curso desde 2026-11-07)
+**Hecho:**
+- **El Mapa con frentes** (W-7, A-5, H-7, 2026-11-07): arriba, la fila de hitos (un casillero por hito, «Hitos» a la izquierda y «N de M hechos» a la derecha; tocar uno muestra su detalle en lugar del bloque y **Volver** lo saca); en la cabecera, **Abrir** el documento del hito actual. Con un frente `en curso` manda el bloque de frentes: el activo con su paso, su Próximo paso, sus `T-n` `en curso` (cada uno abre Trabajo en ese ítem) y sus preguntas («En tu bandeja», con el «!» ámbar en la que frena); debajo, una línea por estado (También en curso, En espera, En pausa, En operación, Sin estado), cada nombre a su `estado.md`, y «Sin frente» con las preguntas del núcleo. Sin frente en curso, el detalle del hito actual, con las líneas debajo si hay frentes. Al pie, «Lo último de la IA» en una línea con **Ver** (lleva al final de la conversación). Se fueron las pestañas de frentes de D-063 y la leyenda de la línea de hitos; las palabras del Mapa son las del vocabulario («hecho», «descartado»).
+- Los frentes salen de la tabla «Módulos» de `estado.md` (`leerFrentes` en `core/mapa.ts`, que también usa la tarjeta), en su orden, cada uno con su carpeta si la fila la cita o si un módulo se llama igual; los módulos con carpeta que la tabla no nombra van al final con el estado de sus pasos (los proyectos de antes). Un frente sin carpeta (Diseño, Capacidades) también recibe sus preguntas por `Frente:`. En `docs/estado.md` de Iridium, Diseño y Capacidades pasan a ser filas `pendiente` de la tabla (antes eran una línea suelta).
+
+**Pruebas del Mapa:** `tests/or4-mapa.test.ts` (5: la tabla con y sin framework, sin tabla, los frentes con su carpeta, su trabajo en curso y sus preguntas, y el módulo que la tabla no nombra). Playwright, `tests/e2e/or4-mapa.spec.ts` (1: el bloque de un proyecto en operación, un frente en operación a Docs, un `T-n` a Trabajo y una pregunta a la Bandeja) y `i8-frentes` e `i4-tres-paneles` al día (7 de 7). Vitest 671; typecheck limpio; el control sobre Iridium, cero.
+
 ## Próximo paso
 OR-I3: procesar la prueba del usuario (Q-145). Si algo falla, arreglarlo; si anda, cerrar OR-I3 y empezar OR-I4 (el Mapa con frentes, Skills › Framework y Pasar al framework, con T-47 a T-49 y T-51).
 **Leer antes:** `respuestas/Q-145.md` y, para OR-I4, `diseno-tecnico.md` › OR-I4 y `04-ux.md` › W-7 y W-13.

@@ -496,13 +496,21 @@ export interface HitoMapa {
   pasos: PasoMapa[]
 }
 
-/** Un módulo del proyecto como frente (D-063, C-63): su ciclo reducido, en qué está y lo que espera del usuario. */
+/**
+ * Un frente del proyecto (D-063, frente Orden › A-5): una fila de la tabla «Módulos» de `estado.md` o un módulo con su
+ * carpeta, con su estado del vocabulario, su paso, su Próximo paso, su trabajo en curso y lo que espera del usuario.
+ */
 export interface FrenteMapa {
-  /** La carpeta del módulo (`revision`): lo identifica. */
-  carpeta: string
+  /** Lo identifica: la carpeta del módulo (`revision`) o, si no tiene, su nombre. */
+  clave: string
+  /** La carpeta del módulo; null si el frente está solo en la tabla (todavía sin `docs/modulos/<nombre>/`). */
+  carpeta: string | null
   nombre: string
-  /** Su `estado.md`. */
-  documento: string
+  /** Su `estado.md`; null si no tiene carpeta. */
+  documento: string | null
+  /** Del vocabulario (`en curso` es el activo); null si no se entiende. */
+  estado: 'pendiente' | 'en curso' | 'en pausa' | 'hecho' | 'descartado' | 'nueva' | null
+  estadoTexto: string
   /** El paso en que está: el `en curso` y, si ninguno lo está, el primero sin hacer (A-5); null si los hizo todos. */
   paso: string | null
   pasos: PasoMapa[]
@@ -511,11 +519,12 @@ export interface FrenteMapa {
   /** «En qué estamos ahora» y el Próximo paso, en HTML seguro. */
   enQueHtml: string
   proximoHtml: string
+  /** Sus `T-n` `en curso` de `trabajo.md`. */
+  trabajo: { codigo: string; titulo: string }[]
   /** Sus `Q-n` sin responder. */
   preguntas: PreguntaNueva[]
 }
 
-/** El Mapa de un proyecto (H-7, D-035): la línea de hitos y lo del hito actual. */
 export type MapaProyecto =
   | {
       tipo: 'mapa'
@@ -526,9 +535,12 @@ export type MapaProyecto =
       detalleActual: string | null
       /** El Próximo paso en HTML seguro, con los códigos y las citas como enlaces. */
       proximoHtml: string
-      /** Lo que espera del usuario: las `Q-n` sin responder. */
+      /** Lo que espera del usuario y no es de ningún frente: las `Q-n` sin responder del núcleo. */
       preguntas: PreguntaNueva[]
-      /** Los módulos del proyecto como frentes (D-063); el núcleo es el resto del mapa. */
+      /**
+       * Los frentes (D-063, A-5): los de la tabla «Módulos» de `estado.md`, en su orden, y después los módulos con
+       * carpeta que la tabla no nombra. El activo es el primero `en curso`.
+       */
       frentes: FrenteMapa[]
     }
   /** Sin `docs/estado.md` (W-7: «no sigue la guía todavía»): sus documentos, si tiene. */

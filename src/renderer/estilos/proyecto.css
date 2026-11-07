@@ -261,27 +261,35 @@
   display: grid;
   gap: 16px;
 }
-.linea {
-  display: grid;
-  gap: 8px;
-}
-.linea .cab {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
+/* La fila de hitos (W-7): un casillero por hito y la cuenta de hechos a la derecha */
 .hitos {
   display: flex;
+  align-items: center;
   gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+}
+.hitos .rot {
+  margin-right: 6px;
+}
+.hitos .tot {
+  margin-left: auto;
+  padding-left: 12px;
+  font: 500 12px / 1 var(--mono);
+  white-space: nowrap;
 }
 .h {
   position: relative;
-  flex: 1;
-  min-width: 0;
-  height: 30px;
+  flex: none;
+  width: 30px;
+  height: 26px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--borde-fuerte);
+  border: 1px solid var(--borde);
   border-radius: var(--radio-control);
   color: var(--texto-3);
   font: 500 12px / 1 var(--mono);
@@ -291,13 +299,13 @@
   color: var(--texto);
 }
 .h.h-completo {
-  border-color: color-mix(in oklab, var(--primario) 30%, var(--borde));
-  background: var(--sel-fondo);
-  color: var(--primario);
+  border-color: transparent;
+  background: color-mix(in oklab, var(--ok) 12%, transparent);
+  color: var(--texto-2);
 }
 .h.h-en-curso {
   border-color: var(--primario);
-  color: var(--primario);
+  color: var(--texto);
   font-weight: 700;
 }
 .h.h-reabierto {
@@ -319,80 +327,168 @@
   position: absolute;
   left: 6px;
   right: 6px;
-  bottom: -7px;
+  bottom: -6px;
   height: 2px;
   border-radius: var(--radio-medidor);
   background: var(--texto-2);
 }
-.leyenda-linea {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 14px;
-  margin-top: 6px;
-  color: var(--texto-3);
-  font-size: 12px;
+.h.h-en-curso[aria-current="true"]::after {
+  background: var(--primario);
 }
-.leyenda-linea span {
+
+/* El bloque de frentes (W-7, A-5): el activo arriba; debajo, una línea por estado */
+.bloque-frentes {
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-tarjeta);
+  background: var(--caja);
+}
+.fr-activo {
+  display: grid;
+  gap: 14px;
+  padding: 14px 16px 14px;
+}
+.fr-cab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.fr-cab .rot {
+  font: 600 12px / 1 var(--ui);
+  color: var(--texto-3);
+  letter-spacing: 0.02em;
+}
+.fr-cab h3 {
+  font: 600 16px / 1.2 var(--ui);
+}
+.fr-paso {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-}
-.leyenda-linea i {
-  width: 14px;
-  height: 10px;
-  border-radius: var(--radio-medidor);
-  border: 1px solid var(--borde-fuerte);
-}
-/* Frentes (D-063): el núcleo y cada módulo, como pestañas sobre el plan */
-.frentes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.frente {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-  max-width: 100%;
-  padding: 7px 12px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-control);
-  background: transparent;
+  font-size: 13px;
   color: var(--texto-2);
-  font: 500 var(--tam-chico) / 1.2 var(--ui);
-  text-align: left;
 }
-.frente:hover {
-  background: var(--hover);
+.fr-paso .ic {
+  width: 13px;
+  height: 13px;
+  color: var(--primario);
 }
-.frente[aria-pressed="true"] {
-  border-color: var(--borde-fuerte);
-  background: var(--sel-fondo);
+.fr-cab .btn {
+  margin-left: auto;
+}
+.bloque-frentes h4 {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 5px;
+  font: 600 12px / 1 var(--ui);
+  letter-spacing: 0.02em;
+  color: var(--texto-3);
+}
+.bloque-frentes .n {
+  font: 500 11.5px / 1 var(--mono);
+}
+.doc-texto.fr-texto {
+  max-width: 72ch;
+  font-size: 14px;
   color: var(--texto);
 }
-.frente .nom {
-  font-weight: 600;
+.fr-otros {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 6px 10px;
+  padding: 9px 16px 10px;
+  font-size: 13px;
 }
-.frente .det {
+.fr-activo + .fr-otros {
+  border-top: 1px solid var(--borde-suave);
+}
+.fr-otros:empty {
+  display: none;
+}
+.fr-otros .rot {
   color: var(--texto-3);
+}
+.fr-otros .nombres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 0;
+}
+.fr-otros .sep {
+  margin: 0 6px;
+  color: var(--texto-3);
+}
+.fr-otros .sin-carpeta {
+  color: var(--texto-2);
+}
+.enlace-frente {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--texto-2);
+  font: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.enlace-frente:hover {
+  color: var(--texto);
+}
+/* Lo que frena: el «!» ámbar de la cuenta (D-100), no solo color */
+.frena-punto {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  border-radius: var(--radio-control);
+  background: var(--espera);
+  color: var(--sobre-color);
+  font: 700 11px / 1 var(--ui);
+}
+
+/* Lo último de la IA (D-035): una línea al pie */
+.ultimo-ia {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--texto-3);
+}
+.ultimo-ia q {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.frente .cuenta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font: 500 12px / 1 var(--mono);
   color: var(--texto-2);
 }
-.frente .cuenta.frena {
-  color: var(--espera);
+.ultimo-ia .rot {
+  flex: none;
 }
-.frente .cuenta .ic {
-  width: 12px;
-  height: 12px;
+.ultimo-ia .trabaja {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--trabaja);
+}
+.ultimo-ia .trabaja .ic {
+  width: 13px;
+  height: 13px;
+}
+.mini-link {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--texto-2);
+  font: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.mini-link:hover {
+  color: var(--texto);
 }
 
 .hito-card {
@@ -965,34 +1061,6 @@
   margin-left: auto;
   display: flex;
   gap: 6px;
-}
-.linea .cab h3 {
-  font: 600 var(--tam-chico) / 1 var(--ui);
-  letter-spacing: 0.02em;
-  color: var(--texto-2);
-}
-.linea .cab .cuenta {
-  margin-left: auto;
-  font: 500 12px / 1 var(--mono);
-  color: var(--texto-3);
-}
-.h.h-en-curso[aria-current="true"]::after {
-  background: var(--primario);
-}
-.leyenda-linea i.h-completo {
-  background: var(--sel-fondo);
-  border-color: color-mix(in oklab, var(--primario) 30%, var(--borde));
-}
-.leyenda-linea i.h-en-curso {
-  border-color: var(--primario);
-}
-.leyenda-linea i.h-reabierto {
-  border-color: var(--espera-borde);
-}
-.leyenda-linea i.h-saltado,
-.leyenda-linea i.h-en-pausa,
-.leyenda-linea i.h-otro {
-  border-style: dashed;
 }
 .hito-card .cab .num {
   font: 500 12px / 1 var(--mono);

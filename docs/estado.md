@@ -32,9 +32,9 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I3 en curso) | en curso |
-
-En espera, detrás de Orden (D-091): Diseño (T-5) y Capacidades (T-28).
+| Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4 en curso) | en curso |
+| Diseño (T-5) | sección | 1. Propuesta (detrás de Orden, D-091) | pendiente |
+| Capacidades (T-28) | sección | 1. Propuesta (detrás de Orden, D-091) | pendiente |
 
 ## En qué estamos ahora
 Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 está hecha y probada (Q-144): la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha, **Actualizar** (T-46; probado en Q-142), el esqueleto (la barra del proyecto en dos grupos; se entra a la Bandeja si hay algo, si no al Mapa), la cabecera común de las secciones (W-9), el frente activo en la tarjeta (W-2) y la conversación de 360 px, que recuerda el ancho de cada vista (D-098). OR-I3 está construida y espera tu prueba (Q-145): la sección **Trabajo** de cada proyecto (los `T-n` con filtros), anotar una idea sin la IA e **Ideas** del inicio, con las ideas nuevas de todos los proyectos, las sueltas y el selector de a qué proyecto va. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).

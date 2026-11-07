@@ -1,8 +1,9 @@
-// El Mapa (H-7, D-035, 04-ux.md › W-7): ¿en qué va y qué sigue? La línea de hitos (tocar uno lo muestra) y, debajo,
-// el hito: en el actual, el próximo paso, los pasos, lo que te espera y lo último de la IA. Tocar un paso abre su
-// sección en Docs (F-4). Arriba, los frentes (D-063): el núcleo y cada módulo con su propia tarjeta. Se relee solo
-// cuando cambia un documento del proyecto.
-import { useCallback, useEffect, useState } from 'react'
+// El Mapa (H-7, D-035, 04-ux.md › W-7): ¿en qué va y qué sigue? Arriba, la fila de hitos (tocar uno muestra su
+// detalle). Con un frente en curso manda el bloque de frentes (frente Orden, A-5): el activo con su paso, su Próximo
+// paso, su trabajo en curso y sus preguntas, y debajo los que esperan y los que están en operación, cada uno a su
+// `estado.md`. Sin frente en curso, el detalle del hito actual. Al pie, lo último de la IA. Tocar un paso abre su
+// sección en Docs (F-4). Se relee solo cuando cambia un documento del proyecto.
+import { type MouseEvent, useCallback, useEffect, useState } from 'react'
 import type {
   EstadoHito,
   EstadoPaso,
@@ -21,11 +22,11 @@ import { nombreDoc, tocarEnlace, useDocsCambian } from './enlaces'
 const PASOS_VISIBLES = 8
 
 const HITO: Record<EstadoHito, { icono: NombreIcono; palabra: string }> = {
-  completo: { icono: 'check', palabra: 'completo' },
+  completo: { icono: 'check', palabra: 'hecho' },
   'en-curso': { icono: 'sync', palabra: 'en curso' },
   pendiente: { icono: 'circulo', palabra: 'pendiente' },
   reabierto: { icono: 'reintentar', palabra: 'reabierto' },
-  saltado: { icono: 'x', palabra: 'saltado' },
+  saltado: { icono: 'x', palabra: 'descartado' },
   bloqueado: { icono: 'error', palabra: 'bloqueado' },
   'en-pausa': { icono: 'pausa', palabra: 'en pausa' },
   otro: { icono: 'duda', palabra: '' },
@@ -36,7 +37,7 @@ const PASO: Record<EstadoPaso, { icono: NombreIcono; palabra: string }> = {
   'en-curso': { icono: 'sync', palabra: 'en curso' },
   espera: { icono: 'espera', palabra: 'espera tu prueba' },
   pendiente: { icono: 'circulo', palabra: 'pendiente' },
-  saltado: { icono: 'x', palabra: 'saltado' },
+  saltado: { icono: 'x', palabra: 'descartado' },
   reabierto: { icono: 'reintentar', palabra: 'reabierto' },
   'en-pausa': { icono: 'pausa', palabra: 'en pausa' },
   otro: { icono: 'duda', palabra: '' },
@@ -47,7 +48,7 @@ function ChipHito({ h }: { h: HitoMapa }) {
   return (
     <span
       className={`chip hito-${h.estado}`}
-      title={h.estado === 'otro' ? 'Se muestra tal cual: no es un estado de la guía' : h.estadoTexto}
+      title={h.estado === 'otro' ? 'Se muestra tal cual: no es un estado del framework' : h.estadoTexto}
     >
       <Icono nombre={e.icono} />
       {e.palabra || h.estadoTexto}
@@ -147,15 +148,16 @@ function Pasos({ ruta, h }: { ruta: string; h: HitoMapa }) {
   )
 }
 
-function TeEspera({ ruta, preguntas }: { ruta: string; preguntas: PreguntaNueva[] }) {
+/** Las preguntas sin responder: cada una lleva a la Bandeja de entrada; la que frena, con el «!» ámbar (D-100). */
+function EnTuBandeja({ ruta, preguntas }: { ruta: string; preguntas: PreguntaNueva[] }) {
   const responderEn = usarEstado((s) => s.responderEn)
   return (
     <div>
       <h4>
-        Te espera <span className="n">{preguntas.length}</span>
+        En tu bandeja <span className="n">{preguntas.length}</span>
       </h4>
       {preguntas.length === 0 ? (
-        <span className="vacio">Nada te espera.</span>
+        <span className="vacio">Nada en tu bandeja.</span>
       ) : (
         <div className="filas">
           {preguntas.map((q) => (
@@ -163,15 +165,12 @@ function TeEspera({ ruta, preguntas }: { ruta: string; preguntas: PreguntaNueva[
               key={q.codigo}
               type="button"
               className="fila espera-fila"
-              title="Responder en la Bandeja de entrada"
+              title={`Responder en la Bandeja de entrada${q.frena ? ' · frena el proyecto' : ''}`}
               onClick={() => responderEn(ruta)}
             >
               <span className="q">{q.codigo}</span>
               <span className="t">{q.pregunta}</span>
-              <span className="est">
-                {q.tipo}
-                {q.frena && ' · frena'}
-              </span>
+              {q.frena ? <span className="frena-punto">!</span> : <span className="est">{q.tipo}</span>}
               <Icono nombre="chev" />
             </button>
           ))}
@@ -184,52 +183,51 @@ function TeEspera({ ruta, preguntas }: { ruta: string; preguntas: PreguntaNueva[
 const hora = (ms: number) =>
   new Date(ms).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
 
-function textoPlano(html: string): string {
-  return (
-    new DOMParser().parseFromString(html, 'text/html').body.textContent?.replace(/\s+/g, ' ').trim() ?? ''
-  )
+/** La primera línea con texto de una respuesta, sin el formato. */
+function primeraLinea(html: string): string {
+  const cuerpo = new DOMParser().parseFromString(html, 'text/html').body
+  const primero = [...cuerpo.children].find((n) => n.textContent?.trim()) ?? cuerpo
+  return primero.textContent?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
-/** Lo último de la IA: lo que hace ahora, si trabaja, y sus últimos mensajes de la conversación abierta. */
+/**
+ * Lo último de la IA (W-7, D-035): lo que hace ahora, si trabaja, o la primera línea de su última respuesta, con
+ * **Ver**, que lleva al final de la conversación. Sin conversación, nada.
+ */
 function LoUltimo({ ruta }: { ruta: string }) {
   const c = usarEstado((s) => s.conversaciones[ruta])
   const ficha = usarEstado((s) => fichaDe(s.fichas, ruta))
   const entradas = c?.entradas ?? []
   const trabajando = ficha?.estado === 'trabajando'
   const herramienta = [...entradas].reverse().find((e) => e.tipo === 'herramienta')
-  const ultimos = entradas
-    .filter((e) => e.tipo === 'ia')
-    .slice(-3)
-    .reverse()
+  const ultima = [...entradas].reverse().find((e) => e.tipo === 'ia')
+  const ver = (e: MouseEvent<HTMLButtonElement>) => {
+    const chat = e.currentTarget.closest('main')?.querySelector('aside.chat')
+    const hilo = chat?.querySelector<HTMLElement>('.hilo')
+    if (hilo) hilo.scrollTop = hilo.scrollHeight
+    chat?.querySelector<HTMLTextAreaElement>('textarea:not(:disabled)')?.focus()
+  }
+  if (!trabajando && ultima?.tipo !== 'ia') return null
+  const texto = ultima?.tipo === 'ia' ? primeraLinea(ultima.html) : ''
   return (
-    <div>
-      <h4>Lo último de la IA</h4>
-      {!trabajando && ultimos.length === 0 ? (
-        <span className="vacio">Todavía no hay conversación en este proyecto.</span>
+    <div className="ultimo-ia">
+      {trabajando ? (
+        <span className="trabaja">
+          <Icono nombre="sync" gira />
+          Trabajando
+          {herramienta?.tipo === 'herramienta' &&
+            ` · ${herramienta.accion}${herramienta.objeto ? ` ${herramienta.objeto}` : ''}`}
+        </span>
       ) : (
-        <div className="filas">
-          {trabajando && (
-            <div className="fila trabaja">
-              <Icono nombre="sync" gira />
-              <span className="t">
-                Trabajando
-                {herramienta?.tipo === 'herramienta' &&
-                  ` · ${herramienta.accion}${herramienta.objeto ? ` ${herramienta.objeto}` : ''}`}
-              </span>
-              <span className="hora">ahora</span>
-            </div>
-          )}
-          {ultimos.map(
-            (e) =>
-              e.tipo === 'ia' && (
-                <div key={e.id} className="fila" title={textoPlano(e.html)}>
-                  <span className="t tenue">{textoPlano(e.html)}</span>
-                  {e.cuando !== null && <span className="hora">{hora(e.cuando)}</span>}
-                </div>
-              ),
-          )}
-        </div>
+        <>
+          <span className="rot">Lo último de la IA:</span>
+          <q title={texto}>{texto}</q>
+          {ultima?.tipo === 'ia' && ultima.cuando !== null && <span>· {hora(ultima.cuando)}</span>}
+        </>
       )}
+      <button type="button" className="mini-link" onClick={ver}>
+        Ver
+      </button>
     </div>
   )
 }
@@ -257,14 +255,14 @@ function TarjetaHito({
         <ChipHito h={h} />
         <div className="der">
           {volver && (
-            <button type="button" className="btn secundario" onClick={volver}>
-              Ver el hito actual
+            <button type="button" className="btn secundario chico" onClick={volver}>
+              Volver
             </button>
           )}
-          {documento && (
+          {documento && !actual && (
             <button
               type="button"
-              className="btn secundario"
+              className="btn secundario chico"
               onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
             >
               <Icono nombre="docs" />
@@ -280,13 +278,7 @@ function TarjetaHito({
           <div>
             <h4>Próximo paso</h4>
             {m.proximoHtml ? (
-              // biome-ignore lint/a11y/useKeyWithClickEvents lint/a11y/noStaticElementInteractions: solo delega los clics de los enlaces de adentro, que ya son enfocables.
-              <div
-                className="proximo doc-texto"
-                onClick={(e) => tocarEnlace(e, ruta)}
-                // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
-                dangerouslySetInnerHTML={{ __html: m.proximoHtml }}
-              />
+              <TextoDoc ruta={ruta} html={m.proximoHtml} clase="proximo" />
             ) : (
               <span className="vacio">
                 <code>estado.md</code> no dice el próximo paso.
@@ -295,10 +287,7 @@ function TarjetaHito({
           </div>
           <div className="dos">
             {pasos}
-            <div className="columna-mapa">
-              <TeEspera ruta={ruta} preguntas={m.preguntas} />
-              <LoUltimo ruta={ruta} />
-            </div>
+            <EnTuBandeja ruta={ruta} preguntas={m.preguntas} />
           </div>
         </>
       ) : (
@@ -321,107 +310,161 @@ function TextoDoc({ ruta, html, clase }: { ruta: string; html: string; clase: st
   )
 }
 
-/** Un módulo como frente (D-063): en qué está, qué sigue, sus pasos, sus iteraciones y lo que te espera. */
-function TarjetaFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
+/** El nombre de un frente: con `estado.md`, un enlace a él; sin carpeta, el nombre solo. */
+function NombreFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
   const abrirDoc = usarEstado((s) => s.abrirDoc)
+  const documento = f.documento
+  if (!documento)
+    return (
+      <span className="sin-carpeta" title="Todavía no tiene su carpeta en docs/modulos">
+        {f.nombre}
+      </span>
+    )
   return (
-    <section className="hito-card" aria-label={`Frente ${f.nombre}`}>
-      <div className="cab">
-        <span className="num">Módulo</span>
-        <h3>{f.nombre}</h3>
-        {f.paso ? (
-          <span className="chip neutro">{f.paso}</span>
-        ) : (
-          <span className="chip ok">
-            <Icono nombre="check" />
-            todos los pasos hechos
-          </span>
-        )}
-        <div className="der">
-          <button
-            type="button"
-            className="btn secundario"
-            onClick={() => abrirDoc(ruta, { documento: f.documento, ancla: '' })}
-          >
-            <Icono nombre="docs" />
-            Abrir su estado
-          </button>
-        </div>
-      </div>
-      {f.enQueHtml && <TextoDoc ruta={ruta} html={f.enQueHtml} clase="detalle" />}
-      <div>
-        <h4>Próximo paso</h4>
-        {f.proximoHtml ? (
-          <TextoDoc ruta={ruta} html={f.proximoHtml} clase="proximo" />
-        ) : (
-          <span className="vacio">
-            Su <code>estado.md</code> no dice el próximo paso.
-          </span>
-        )}
-      </div>
-      <div className="dos">
-        <div className="columna-mapa">
-          <ListaPasos
-            ruta={ruta}
-            titulo="Pasos del módulo"
-            pasos={f.pasos}
-            vacio="Su estado.md no tiene la tabla Progreso."
-          />
-          {f.iteraciones.length > 0 && (
-            <ListaPasos ruta={ruta} titulo="Iteraciones" pasos={f.iteraciones} vacio="" />
-          )}
-        </div>
-        <div className="columna-mapa">
-          <TeEspera ruta={ruta} preguntas={f.preguntas} />
-        </div>
-      </div>
-    </section>
+    <button
+      type="button"
+      className="enlace-frente"
+      title={`${f.paso ? `${f.paso} · ` : ''}abrir ${documento}`}
+      onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
+    >
+      {f.nombre}
+    </button>
   )
 }
 
-/** La fila de frentes (D-063): el núcleo y cada módulo, con en qué está y cuántas preguntas tiene. */
-function Frentes({
-  m,
-  elegido,
-  elegir,
-}: {
-  m: Extract<MapaProyecto, { tipo: 'mapa' }>
-  elegido: string | null
-  elegir: (carpeta: string | null) => void
-}) {
-  const actual = m.hitos.find((h) => h.numero === m.actual)
-  const boton = (clave: string | null, nombre: string, detalle: string | null, qs: PreguntaNueva[]) => {
-    const frena = qs.some((q) => q.frena)
-    return (
-      <button
-        key={clave ?? ''}
-        type="button"
-        className="frente"
-        aria-pressed={elegido === clave}
-        title={`${nombre}${detalle ? ` · ${detalle}` : ''}${qs.length > 0 ? ` · ${qs.length} sin responder` : ''}`}
-        onClick={() => elegir(clave)}
-      >
-        <span className="nom">{nombre}</span>
-        {detalle && <span className="det">{detalle}</span>}
-        {qs.length > 0 && (
-          <span className={frena ? 'cuenta frena' : 'cuenta'}>
-            {frena && <Icono nombre="espera" />}
-            {qs.length}
-          </span>
-        )}
-      </button>
-    )
-  }
+/** Los frentes en un estado, en una línea («En espera   Diseño · Capacidades»). */
+function LineaFrentes({ ruta, rotulo, frentes }: { ruta: string; rotulo: string; frentes: FrenteMapa[] }) {
+  if (frentes.length === 0) return null
   return (
-    <nav className="frentes" aria-label="Frentes">
-      {boton(
-        null,
-        'Núcleo',
-        m.actual !== null ? `Hito ${m.actual}${actual ? ` · ${actual.nombre}` : ''}` : null,
-        m.preguntas,
+    <>
+      <span className="rot">{rotulo}</span>
+      <span className="nombres">
+        {frentes.map((f, i) => (
+          <span key={f.clave}>
+            {i > 0 && <span className="sep">·</span>}
+            <NombreFrente ruta={ruta} f={f} />
+          </span>
+        ))}
+      </span>
+    </>
+  )
+}
+
+/**
+ * El bloque de frentes (W-7, A-5): el activo arriba, grande, con su paso, su Próximo paso, su trabajo en curso y sus
+ * preguntas; debajo, una línea por estado (otros en curso, en espera, en pausa, en operación) y lo de la bandeja que no
+ * es de ningún frente. Sin activo (se mira el hito actual), solo las líneas.
+ */
+function BloqueFrentes({
+  ruta,
+  m,
+  activo,
+}: {
+  ruta: string
+  m: Extract<MapaProyecto, { tipo: 'mapa' }>
+  activo: FrenteMapa | null
+}) {
+  const abrirDoc = usarEstado((s) => s.abrirDoc)
+  const abrirTrabajo = usarEstado((s) => s.abrirTrabajo)
+  const responderEn = usarEstado((s) => s.responderEn)
+  const con = (e: FrenteMapa['estado']) => m.frentes.filter((f) => f.estado === e && f !== activo)
+  const documento = activo?.documento ?? null
+  const sinFrente = m.preguntas
+  return (
+    <section className="bloque-frentes" aria-label="Frentes">
+      {activo && (
+        <div className="fr-activo">
+          <div className="fr-cab">
+            <span className="rot">Frente activo</span>
+            <h3>{activo.nombre}</h3>
+            {activo.paso && (
+              <span className="fr-paso">
+                <Icono nombre="cuadro" />
+                {activo.paso} · en curso
+              </span>
+            )}
+            {documento && (
+              <button
+                type="button"
+                className="btn secundario chico"
+                onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
+              >
+                <Icono nombre="docs" />
+                Abrir estado.md
+              </button>
+            )}
+          </div>
+          <div>
+            <h4>Próximo paso</h4>
+            {activo.proximoHtml ? (
+              <TextoDoc ruta={ruta} html={activo.proximoHtml} clase="fr-texto" />
+            ) : (
+              <span className="vacio">
+                {documento ? (
+                  <>
+                    Su <code>estado.md</code> no dice el próximo paso.
+                  </>
+                ) : (
+                  'Todavía no tiene su carpeta en docs/modulos.'
+                )}
+              </span>
+            )}
+          </div>
+          <div className="dos">
+            <div>
+              <h4>
+                En curso <span className="n">{activo.trabajo.length}</span>
+              </h4>
+              {activo.trabajo.length === 0 ? (
+                <span className="vacio">Ningún trabajo en curso.</span>
+              ) : (
+                <div className="filas">
+                  {activo.trabajo.map((t) => (
+                    <button
+                      key={t.codigo}
+                      type="button"
+                      className="fila"
+                      title="Abrir en Trabajo"
+                      onClick={() => abrirTrabajo(ruta, t.codigo)}
+                    >
+                      <span className="q">{t.codigo}</span>
+                      <span className="t">{t.titulo}</span>
+                      <Icono nombre="chev" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <EnTuBandeja ruta={ruta} preguntas={activo.preguntas} />
+          </div>
+        </div>
       )}
-      {m.frentes.map((f) => boton(f.carpeta, f.nombre, f.paso ?? 'hecho', f.preguntas))}
-    </nav>
+      <div className="fr-otros">
+        <LineaFrentes ruta={ruta} rotulo="También en curso" frentes={con('en curso')} />
+        <LineaFrentes ruta={ruta} rotulo="En espera" frentes={[...con('pendiente'), ...con('nueva')]} />
+        <LineaFrentes ruta={ruta} rotulo="En pausa" frentes={con('en pausa')} />
+        <LineaFrentes ruta={ruta} rotulo="En operación" frentes={con('hecho')} />
+        <LineaFrentes ruta={ruta} rotulo="Sin estado" frentes={con(null)} />
+        {activo && sinFrente.length > 0 && (
+          <>
+            <span className="rot">Sin frente</span>
+            <span className="nombres">
+              <button
+                type="button"
+                className="enlace-frente"
+                title={`Responder en la Bandeja de entrada: ${sinFrente.map((q) => q.codigo).join(', ')}`}
+                onClick={() => responderEn(ruta)}
+              >
+                {sinFrente.length === 1
+                  ? `${sinFrente[0]?.codigo} en tu bandeja`
+                  : `${sinFrente.length} en tu bandeja`}
+              </button>
+              {sinFrente.some((q) => q.frena) && <span className="frena-punto">!</span>}
+            </span>
+          </>
+        )}
+      </div>
+    </section>
   )
 }
 
@@ -436,19 +479,35 @@ function useMapa(ruta: string): MapaProyecto | null {
 }
 
 export function Mapa({ ruta }: { ruta: string }) {
+  const m = useMapa(ruta)
+  const abrirDoc = usarEstado((s) => s.abrirDoc)
+  const actual = m?.tipo === 'mapa' ? m.hitos.find((h) => h.numero === m.actual) : undefined
+  const documento = actual?.documento ?? null
   return (
     <>
-      <Cabecera titulo="Mapa" />
-      <CuerpoMapa ruta={ruta} />
+      <Cabecera
+        titulo="Mapa"
+        acciones={
+          documento && (
+            <button
+              type="button"
+              className="btn secundario chico"
+              onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
+            >
+              <Icono nombre="docs" />
+              Abrir {nombreDoc(documento)}
+            </button>
+          )
+        }
+      />
+      <CuerpoMapa ruta={ruta} m={m} />
     </>
   )
 }
 
-function CuerpoMapa({ ruta }: { ruta: string }) {
-  const m = useMapa(ruta)
+function CuerpoMapa({ ruta, m }: { ruta: string; m: MapaProyecto | null }) {
   const abrirDoc = usarEstado((s) => s.abrirDoc)
   const [mirado, setMirado] = useState<number | null>(null)
-  const [frente, setFrente] = useState<string | null>(null)
 
   if (!m) return <div className="mapa carga" aria-busy="true" />
   if (m.tipo === 'error')
@@ -464,7 +523,7 @@ function CuerpoMapa({ ruta }: { ruta: string }) {
     return (
       <div className="mapa">
         <div className="sin-guia">
-          <h3>Este proyecto no sigue la guía todavía</h3>
+          <h3>Este proyecto no sigue el framework todavía</h3>
           <p>
             No tiene <code>docs/estado.md</code>, así que no hay hitos para mostrar.
             {m.documentos.length > 0 ? ' Estos son los documentos que tiene:' : ' Tampoco tiene documentos.'}
@@ -484,95 +543,49 @@ function CuerpoMapa({ ruta }: { ruta: string }) {
               ))}
             </div>
           )}
-          <p className="nota">
-            Para ponerlo al día, pedile a la IA en la conversación que lo audite con la guía de hitos.
-          </p>
         </div>
       </div>
     )
 
-  const numero = mirado ?? m.actual ?? m.hitos[0]?.numero ?? null
-  const h = m.hitos.find((x) => x.numero === numero) ?? null
-  const completos = m.hitos.filter((x) => x.estado === 'completo').length
-  const hay = (e: EstadoHito) => m.hitos.some((x) => x.estado === e)
-  // El frente elegido; si ya no está (se borró su carpeta), se vuelve al núcleo.
-  const f = m.frentes.find((x) => x.carpeta === frente) ?? null
+  const h = m.hitos.find((x) => x.numero === (mirado ?? m.actual)) ?? null
+  const hechos = m.hitos.filter((x) => x.estado === 'completo').length
+  const activo = m.frentes.find((x) => x.estado === 'en curso') ?? null
+  // Con un frente en curso manda el bloque; tocar un hito muestra su detalle en su lugar (Volver lo saca).
+  const verHito = mirado !== null || !activo
   return (
     <div className="mapa">
       <div className="mapa-int">
-        {m.frentes.length > 0 && <Frentes m={m} elegido={f?.carpeta ?? null} elegir={setFrente} />}
-        {f && <TarjetaFrente ruta={ruta} f={f} />}
-        {!f && m.hitos.length > 0 && (
-          <div className="linea">
-            <div className="cab">
-              <h3>Plan</h3>
-              <span className="cuenta">
-                {completos} de {m.hitos.length} completos
-              </span>
-            </div>
-            <div className="hitos">
-              {m.hitos.map((x) => (
-                <button
-                  key={x.numero}
-                  type="button"
-                  className={`h h-${x.estado}`}
-                  aria-current={x.numero === numero}
-                  title={`Hito ${x.numero} · ${x.nombre} · ${x.estadoTexto}`}
-                  aria-label={`Hito ${x.numero}, ${x.nombre}, ${x.estadoTexto}`}
-                  onClick={() => setMirado(x.numero)}
-                >
-                  {x.numero}
-                </button>
-              ))}
-            </div>
-            <div className="leyenda-linea">
-              <span>
-                <i className="h-completo" />
-                completo
-              </span>
-              <span>
-                <i className="h-en-curso" />
-                en curso
-              </span>
-              <span>
-                <i />
-                pendiente
-              </span>
-              {hay('reabierto') && (
-                <span>
-                  <i className="h-reabierto" />
-                  reabierto
-                </span>
-              )}
-              {hay('en-pausa') && (
-                <span>
-                  <i className="h-en-pausa" />
-                  en pausa
-                </span>
-              )}
-              {hay('saltado') && (
-                <span>
-                  <i className="h-saltado" />
-                  saltado
-                </span>
-              )}
-              {hay('otro') && (
-                <span>
-                  <i className="h-otro" />
-                  no se entiende: se muestra tal cual
-                </span>
-              )}
-            </div>
-          </div>
+        {m.hitos.length > 0 && (
+          <fieldset className="hitos" aria-label="Hitos">
+            <span className="rot">Hitos</span>
+            {m.hitos.map((x) => (
+              <button
+                key={x.numero}
+                type="button"
+                className={`h h-${x.estado}`}
+                aria-current={verHito && x.numero === h?.numero}
+                title={`Hito ${x.numero} · ${x.nombre} · ${x.estadoTexto}`}
+                aria-label={`Hito ${x.numero}, ${x.nombre}, ${x.estadoTexto}`}
+                onClick={() => setMirado(x.numero === mirado ? null : x.numero)}
+              >
+                {x.numero}
+              </button>
+            ))}
+            <span className="tot">
+              {hechos} de {m.hitos.length} hechos
+            </span>
+          </fieldset>
         )}
-        {!f && h && (
+        {verHito && h && (
           <TarjetaHito
             ruta={ruta}
             m={m}
             h={h}
-            volver={h.numero !== m.actual && m.actual !== null ? () => setMirado(null) : null}
+            volver={mirado !== null && (activo || mirado !== m.actual) ? () => setMirado(null) : null}
           />
         )}
+        {mirado === null && m.frentes.length > 0 && <BloqueFrentes ruta={ruta} m={m} activo={activo} />}
+        <LoUltimo ruta={ruta} />
       </div>
     </div>
   )

@@ -116,7 +116,7 @@ test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y d
 
   const mapa = win.locator('[data-seccion="mapa"]')
   await expect(mapa.locator('.h')).toHaveText(['0', '4', '7', '8'])
-  await expect(mapa.locator('.cuenta')).toHaveText('2 de 4 completos')
+  await expect(mapa.locator('.hitos .tot')).toHaveText('2 de 4 hechos')
   const tarjeta = mapa.locator('.hito-card')
   await expect(tarjeta.locator('h3')).toHaveText('Construcción')
   await expect(tarjeta.locator('.proximo')).toContainText('Terminar I-2 según D-12')
@@ -129,7 +129,7 @@ test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y d
   await mapa.locator('.h', { hasText: '4' }).click()
   await expect(tarjeta.locator('h3')).toHaveText('UX')
   await expect(tarjeta.locator('.fila')).toHaveText([/Historias\..*hecho/, /Flujos\..*pendiente/])
-  await tarjeta.getByRole('button', { name: 'Ver el hito actual' }).click()
+  await tarjeta.getByRole('button', { name: 'Volver' }).click()
 
   // Un paso abre su sección en Docs; Atrás vuelve al Mapa.
   await tarjeta.locator('.fila', { hasText: 'I-2 — Galería' }).click()

@@ -206,15 +206,26 @@ export function proximoPaso(estado: string): string {
   return seccionDeTitulo(estado, 'Próximo paso').join('\n').trim()
 }
 
+/** Una fila de la tabla «Módulos» de `estado.md` (frente Orden, A-5): un frente con su estado del vocabulario. */
+export interface FrenteLeido {
+  /** Sin la ruta ni lo que va entre paréntesis: «Orden (`modulos/orden/estado.md`)» → «Orden». */
+  nombre: string
+  /** La carpeta de su módulo si la fila la cita (`modulos/orden/estado.md` → `orden`); null si no. */
+  carpeta: string | null
+  /** El paso, sin lo que va entre paréntesis; null si la fila no lo dice. */
+  paso: string | null
+  /** Del vocabulario; con framework viejo, las palabras de antes traducidas («reabierto» → en curso). */
+  estado: Estado | null
+  estadoTexto: string
+}
+
 /**
- * El frente activo para la tarjeta (W-2): la primera fila `en curso` de la tabla «Módulos» de `estado.md` (columnas
- * Frente o Módulo, Paso y Estado), con el nombre y el paso sin lo que va entre paréntesis («Orden
- * (`modulos/orden/estado.md`)» → «Orden»; «7. Construcción (OR-I2 en curso)» → «7. Construcción»). Lee también las
- * palabras de antes («reabierto»), para los proyectos con framework viejo. null si ningún frente está en curso.
+ * Los frentes de la tabla «Módulos» de `estado.md` (columnas Frente o Módulo, Paso y Estado), en su orden. Con
+ * `framework`, solo el vocabulario; sin él, también las palabras de antes. Sin la tabla, ninguno.
  */
-export function frenteActivo(estado: string): { nombre: string; paso: string | null } | null {
+export function leerFrentes(estado: string, framework = false): FrenteLeido[] {
   const tabla = tablas(seccionDeTitulo(estado, 'Módulos')).find((t) => t.columnas.includes('estado'))
-  if (!tabla) return null
+  if (!tabla) return []
   const iNombre = Math.max(
     0,
     tabla.columnas.findIndex((c) => c === 'frente' || c === 'modulo' || c === 'seccion'),
@@ -225,14 +236,31 @@ export function frenteActivo(estado: string): { nombre: string; paso: string | n
     textoPlano(t ?? '')
       .replace(/\s*\([^)]*\)/g, '')
       .trim()
+  const r: FrenteLeido[] = []
   for (const f of tabla.filas) {
-    if (leerEstadoViejo(textoPlano(f[iEstado] ?? '')) !== 'en curso') continue
     const nombre = corto(f[iNombre])
     if (!nombre) continue
+    const estadoTexto = textoPlano(f[iEstado] ?? '')
     const paso = iPaso >= 0 ? corto(f[iPaso]) : ''
-    return { nombre, paso: paso || null }
+    r.push({
+      nombre,
+      carpeta: /modulos\/([^/`\s)]+)\//.exec(f[iNombre] ?? '')?.[1] ?? null,
+      paso: paso && paso !== '—' && paso !== '-' ? paso : null,
+      estado: vocabulario(estadoTexto, framework),
+      estadoTexto,
+    })
   }
-  return null
+  return r
+}
+
+/**
+ * El frente activo para la tarjeta (W-2): la primera fila `en curso` de la tabla «Módulos» de `estado.md`, con el
+ * nombre y el paso sin lo que va entre paréntesis. Lee también las palabras de antes («reabierto»), para los
+ * proyectos con framework viejo. null si ningún frente está en curso.
+ */
+export function frenteActivo(estado: string): { nombre: string; paso: string | null } | null {
+  const f = leerFrentes(estado).find((x) => x.estado === 'en curso')
+  return f ? { nombre: f.nombre, paso: f.paso } : null
 }
 
 /** El frente de un `estado.md` (D-063): la carpeta del módulo, o null si es el del núcleo (`docs/estado.md`). */

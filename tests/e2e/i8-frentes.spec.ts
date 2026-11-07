@@ -98,7 +98,7 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
 })
 
-test('el Mapa muestra cada frente: el núcleo con sus preguntas y el módulo con sus pasos (C-63)', async () => {
+test('el Mapa: manda el frente activo con su paso, su Próximo paso y sus preguntas; un hito muestra su detalle (W-7)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
@@ -106,30 +106,30 @@ test('el Mapa muestra cada frente: el núcleo con sus preguntas y el módulo con
     .getByRole('button', { name: 'Mapa' })
     .click()
   const mapa = win.locator('[data-seccion="mapa"]')
-  const frentes = mapa.getByRole('navigation', { name: 'Frentes' })
-  await expect(frentes.locator('.frente')).toHaveText([
-    /Núcleo.*Hito 7 · Construcción.*1/,
-    /Skills.*2\. Definición.*1/,
-  ])
-  await expect(frentes.locator('.frente').first()).toHaveAttribute('aria-pressed', 'true')
-  // El núcleo: solo su pregunta.
-  const tarjeta = mapa.locator('.hito-card')
-  await expect(tarjeta.locator('.espera-fila')).toHaveText([/Q-3/])
-
-  // El módulo: sus pasos, en qué está, su próximo paso y su pregunta.
-  await frentes.locator('.frente', { hasText: 'Skills' }).click()
-  await expect(mapa.locator('.linea')).toHaveCount(0)
-  await expect(tarjeta.locator('h3')).toHaveText('Skills')
-  await expect(tarjeta.locator('.detalle')).toContainText('Definiendo qué se ve de cada skill.')
-  await expect(tarjeta.locator('.proximo')).toContainText('Cerrar la definición con Q-4.')
-  await expect(tarjeta.locator('.fila', { hasText: '1. Propuesta' })).toContainText('hecho')
-  await expect(tarjeta.locator('.fila', { hasText: '2. Definición' })).toContainText('en curso')
-  await expect(tarjeta.locator('.espera-fila')).toHaveText([/Q-4.*frena/])
+  // Skills no está en ninguna tabla, pero tiene un paso en curso: es el frente activo.
+  const bloque = mapa.getByRole('region', { name: 'Frentes' })
+  await expect(bloque.locator('.fr-cab h3')).toHaveText('Skills')
+  await expect(bloque.locator('.fr-paso')).toHaveText('2. Definición · en curso')
+  await expect(bloque.locator('.fr-texto')).toContainText('Cerrar la definición con Q-4.')
+  await expect(bloque.locator('.espera-fila')).toHaveText([/Q-4.*!/])
+  // La pregunta del núcleo no se pierde: «Sin frente».
+  await expect(bloque.locator('.fr-otros')).toContainText('Sin frenteQ-3 en tu bandeja')
+  await expect(mapa.locator('.hito-card')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/i8-mapa-frente.png' })
 
-  // Un paso con documento lo abre en Docs.
-  await tarjeta.locator('.fila', { hasText: '1. Propuesta' }).click()
-  await expect(win.locator('.lector, [data-seccion="docs"]').first()).toContainText('Ver las skills.')
+  // Un hito muestra su detalle en lugar del bloque; Volver lo saca.
+  await mapa.locator('.h', { hasText: '7' }).click()
+  const tarjeta = mapa.locator('.hito-card')
+  await expect(tarjeta.locator('h3')).toHaveText('Construcción')
+  await expect(tarjeta.locator('.espera-fila')).toHaveText([/Q-3/])
+  await expect(bloque).toHaveCount(0)
+  await tarjeta.getByRole('button', { name: 'Volver' }).click()
+  await expect(bloque).toBeVisible()
+
+  // Abrir estado.md lleva a su estado en Docs.
+  await bloque.getByRole('button', { name: 'Abrir estado.md' }).click()
+  await expect(win.locator('[data-seccion="docs"] .barra-doc .nom')).toHaveText('modulos/skills/estado.md')
+  await expect(win.locator('[data-seccion="docs"]')).toContainText('Definiendo qué se ve de cada skill.')
   await app.close()
 })
 
