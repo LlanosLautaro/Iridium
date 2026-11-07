@@ -466,23 +466,15 @@
   font-size: var(--tam-chico);
 }
 
-/* Nuevo proyecto (R-7, C-10) */
+/* Nuevo proyecto (R-7, C-10, R-14) */
 .nuevo-proyecto {
-  width: min(500px, calc(100vw - 40px));
+  width: min(460px, calc(100vw - 40px));
 }
 .campo-nuevo {
   display: grid;
   gap: 5px;
   color: var(--texto-2);
   font-size: var(--tam-chico);
-}
-.campo-nuevo small {
-  color: var(--texto-3);
-}
-.campo-nuevo textarea.campo {
-  padding: 8px 10px;
-  resize: vertical;
-  line-height: 1.5;
 }
 .error-nuevo {
   color: var(--error);

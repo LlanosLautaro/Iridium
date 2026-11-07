@@ -21,6 +21,8 @@
 | 2026-11-05 | R-10 | Eliminar desde el menú de la tarjeta, con confirmación: hecho (D-090); falta probarlo con la papelera de verdad (Q-130) |
 | 2026-11-06 | Q-130 | Eliminar desde el clic derecho, con la papelera de verdad: todo bien |
 | 2026-11-06 | R-11 | «Otro» escrito sin nota volvía a aparecer como sin responder (el archivo se guardaba bien, pero Iridium no lo contaba como respuesta): arreglado, con su prueba |
+| 2026-11-07 | Q-118 | Inicializar repositorio y Publicar en GitHub con tu cuenta de verdad: todo bien (D-081 probado) |
+| 2026-11-07 | R-14 | Nuevo proyecto ya no pone a la IA a trabajar sin datos: arma solo la plantilla básica y la idea va en la conversación (D-101), hecho y probado |
 | 2026-11-06 | R-12 | Un solo botón «Actualizar» que arma y reinicia: anotado en el frente Orden (`modulos/orden/ux.md` › PO-1), se construye con sus iteraciones (D-091) |
 | 2026-11-05 | Pedido del usuario | Una crítica de la gestión de ideas: `10-operacion.md` › Crítica de la gestión de ideas; qué hacer, en Q-131 |
 | 2026-11-05 | Pedido del usuario (y Q-131) | La UX se degradó y la forma de trabajo tiene huecos: frente Orden con prioridad máxima (D-091); la guía de hitos y la skill de Iridium, un solo marco (D-092); las funciones nuevas esperan |
@@ -54,6 +56,6 @@ Las ideas y los pendientes están en `trabajo.md`. La prioridad (Must, Should, C
 - **Ajuste mediano (D-085, Q-123):** versiones para compartir, con el aviso para iniciar sesión en GitHub; construido y probado con GitHub (7 → 8). Publicadas `aca3668` y `c012989` (2026-11-04).
 - **Ajustes medianos (D-086, D-087):** la skill de Iridium y la guía como complementos de las conversaciones; Ideas y Skills en `.iridium`. Construidos y probados (7 → 8); falta tu prueba (Q-127).
 - **Ajuste mediano (D-083):** la carpeta Iridium con Ideas y Skills y Mover; desde D-087, en `.iridium` (Q-127).
-- **Ajuste chico (D-081):** Inicializar repositorio y Publicar en GitHub en la sección Git, construido (7 → 8); falta tu prueba con GitHub de verdad (Q-118).
+- **Ajuste chico (D-081):** Inicializar repositorio y Publicar en GitHub en la sección Git, construido y probado con GitHub de verdad (Q-118, todo bien).
 - **Ajuste mediano (D-089, R-7 y R-8):** el menú de la tarjeta, Nuevo proyecto, Ideas y Skills del proyecto; construido y probado (7 → 8); falta tu prueba (Q-129).
 - **Propuestas:** módulo Inicio completo (Q-115, 2026-11-04).

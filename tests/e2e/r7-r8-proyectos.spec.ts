@@ -185,26 +185,27 @@ test('Eliminar pide confirmación, borra lo regenerable y manda el resto a la pa
   await app.close()
 })
 
-test('Nuevo proyecto crea la carpeta, la abre y la IA arranca con la idea (R-7, C-10)', async () => {
+test('Nuevo proyecto crea la carpeta con la plantilla básica y la abre, sin la IA (R-7, C-10, R-14)', async () => {
   const { app, win } = await abrir()
   await win.getByRole('button', { name: 'Nuevo proyecto' }).click()
   const cuadro = win.getByRole('dialog', { name: 'Nuevo proyecto' })
   await expect(cuadro.getByRole('textbox', { name: 'Nombre' })).toBeFocused()
+  await expect(cuadro.getByRole('textbox')).toHaveCount(1)
   await cuadro.getByRole('textbox', { name: 'Nombre' }).fill('alfa')
   await cuadro.getByRole('button', { name: 'Crear' }).click()
   await expect(cuadro.getByRole('alert')).toHaveText('Ya hay una carpeta con ese nombre.')
 
   await cuadro.getByRole('textbox', { name: 'Nombre' }).fill('Delta')
-  await cuadro.getByRole('textbox', { name: /La idea/ }).fill('Una app para anotar recetas.')
   await win.screenshot({ path: join(SALIDA, 'r7-nuevo.png') })
   await cuadro.getByRole('button', { name: 'Crear' }).click()
   await expect(cuadro).toHaveCount(0)
   await expect(win.locator('.principal > .cabecera h1')).toHaveText('Delta')
-  expect((await stat(join(raiz, 'Delta'))).isDirectory()).toBe(true)
-  await expect(win.locator('.turno').first()).toContainText('Es un proyecto nuevo, «Delta»')
-  await expect(win.locator('.turno').first()).toContainText('Una app para anotar recetas.')
-  // Que termine el turno: cerrar con la IA trabajando pregunta antes (F-6).
-  await expect(win.locator('.ses', { hasText: 'Delta' })).not.toContainText('Trabajando', { timeout: 30_000 })
+  expect(await readFile(join(raiz, 'Delta', 'docs', 'estado.md'), 'utf8')).toContain('0 — Idea cruda — en curso')
+  expect((await stat(join(raiz, 'Delta', 'CLAUDE.md'))).isFile()).toBe(true)
+  // La IA no arranca: la conversación queda vacía, esperando lo que le cuente el usuario.
+  await expect(win.locator('.turno')).toHaveCount(0)
+  await expect(win.locator('.ses', { hasText: 'Delta' })).not.toContainText('Trabajando')
+  await win.screenshot({ path: join(SALIDA, 'r7-nuevo-abierto.png') })
   await app.close()
 })
 

@@ -26,25 +26,86 @@ export function problemaNombreProyecto(nombre: string, existentes: readonly stri
   return null
 }
 
-/** Lo que se escribe sobre el proyecto nuevo (C-10): una idea suelta, sin límite práctico. */
-export const LIMITE_IDEA_PROYECTO = 20_000
+/** Las plantillas del framework (`plantillas/` de la skill `iridium`) que usa un proyecto nuevo. */
+export const PLANTILLAS_PROYECTO_NUEVO = [
+  'instrucciones-ia.md',
+  'README-docs.md',
+  'estado.md',
+  'trabajo.md',
+  'decisiones.md',
+  'perfil-proyecto.md',
+  'scripts.md',
+] as const
+
+export type PlantillasProyectoNuevo = Record<(typeof PLANTILLAS_PROYECTO_NUEVO)[number], string>
+
+/** Un archivo del proyecto nuevo: la ruta relativa a su carpeta (con `/`) y el texto. */
+export interface ArchivoNuevo {
+  ruta: string
+  texto: string
+}
+
+/** La fecha local como AAAA-MM-DD. */
+export function fechaDelDia(d: Date): string {
+  const dos = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${dos(d.getMonth() + 1)}-${dos(d.getDate())}`
+}
+
+/** Corta el texto en la primera línea que empieza con `inicio` (sin ella); si no está, lo deja entero. */
+function hasta(texto: string, inicio: string): string {
+  const lineas = texto.split('\n')
+  const i = lineas.findIndex((l) => l.startsWith(inicio))
+  return i < 0 ? texto : `${lineas.slice(0, i).join('\n').trimEnd()}\n`
+}
 
 /**
- * El primer mensaje a la IA de un proyecto recién creado desde Iridium (R-7, D-089): que arranque con el framework (la
- * skill `iridium`) y deje la ficha y el ícono.
+ * La plantilla básica de un proyecto nuevo (R-14, D-101): lo que Iridium escribe al crearlo, sin la IA. Las plantillas
+ * del framework con el nombre, la fecha y el hito 0 en curso, y la ficha en `idea`. La idea, la descripción y el ícono
+ * se hacen después, conversando.
  */
-export function mensajeProyectoNuevo(nombre: string, idea: string): string {
-  const texto = idea.trim()
-  const conIdea = texto
-    ? `La idea, como la escribió el usuario:\n\n${texto
-        .split(/\r?\n/)
-        .map((l) => `> ${l}`)
-        .join('\n')}`
-    : 'El usuario todavía no escribió la idea: anotá en una Q-n de qué se trata y para quién es.'
-  return (
-    `Es un proyecto nuevo, «${nombre}», recién creado desde Iridium: la carpeta está vacía. Arrancalo con el ` +
-    'framework de Iridium (la skill `iridium`, «Cómo empezar»): `docs/` con sus plantillas, el `CLAUDE.md` de la raíz ' +
-    'y el hito 0, la idea cruda. Creá también su ficha `.proyecto.json` (estado `idea`, una descripción de una línea) ' +
-    `y un ícono \`.proyecto-icono.svg\`.\n\n${conIdea}`
-  )
+export function plantillaProyectoNuevo(
+  nombre: string,
+  fecha: string,
+  p: PlantillasProyectoNuevo,
+): ArchivoNuevo[] {
+  const de = (archivo: keyof PlantillasProyectoNuevo) => p[archivo].replace(/\r\n/g, '\n')
+  const claude = de('instrucciones-ia.md')
+    .replace(/^> Guardar en la raíz.*\n\n/m, '')
+    .replace('[una frase de `00-idea.md`]', '(todavía sin escribir: sale de `docs/00-idea.md`)')
+  const estado = de('estado.md')
+    .replace('[nombre]', nombre)
+    .replaceAll('AAAA-MM-DD', fecha)
+    .replace('[N] — [Nombre] — en curso', '0 — Idea cruda — en curso')
+    .replace('| 0 | Idea cruda | pendiente |', '| 0 | Idea cruda | en curso |')
+    .replace(
+      /^\[Hasta cinco líneas.*$/m,
+      'Proyecto recién creado con la plantilla básica: todavía no tiene la idea escrita.',
+    )
+    .replace(
+      /^\[Una acción concreta.*$/m,
+      'Hito 0: escribir la idea cruda con lo que cuente el usuario.',
+    )
+    .replace(/^\*\*Leer antes:\*\* \[.*$/m, '**Leer antes:** nada todavía.')
+  const ficha = {
+    version: 1,
+    descripcion: '',
+    estado: 'idea',
+    etiquetas: [],
+    icono: null,
+    archivado: false,
+    reemplazadoPor: null,
+  }
+  return [
+    { ruta: 'CLAUDE.md', texto: claude },
+    { ruta: 'docs/README.md', texto: de('README-docs.md').replaceAll('AAAA-MM-DD', fecha) },
+    { ruta: 'docs/estado.md', texto: estado },
+    { ruta: 'docs/trabajo.md', texto: `${hasta(de('trabajo.md'), '## T-1')}\n(nada todavía)\n` },
+    { ruta: 'docs/decisiones.md', texto: hasta(de('decisiones.md'), '| D-001') },
+    { ruta: 'docs/perfil-proyecto.md', texto: de('perfil-proyecto.md').replaceAll('AAAA-MM-DD', fecha) },
+    {
+      ruta: 'docs/scripts.md',
+      texto: `${hasta(de('scripts.md'), '## ')}\n(Todavía no hay scripts: el proyecto no tiene código.)\n`,
+    },
+    { ruta: '.proyecto.json', texto: `${JSON.stringify(ficha, null, 2)}\n` },
+  ]
 }

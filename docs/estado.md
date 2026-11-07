@@ -3,7 +3,7 @@
 > Este archivo es lo primero que lee la IA en cada sesión. Cabe en una pantalla: el historial va al documento del hito.
 
 **Proyecto:** Iridium (carpeta «Centro de Desarrollo», D-033)
-**Última actualización:** 2026-11-06
+**Última actualización:** 2026-11-07
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
@@ -37,7 +37,7 @@
 En espera, detrás de Orden (D-091): Diseño (T-5) y Capacidades (T-28).
 
 ## En qué estamos ahora
-Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 va más allá de la mitad: la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha y **Actualizar** (T-46: un solo botón que arma y reinicia; su prueba real en Q-142). Faltan el esqueleto, la cabecera común, el frente activo en la tarjeta y la conversación de 360 px. Compartir está publicado; falta la invitación (Q-126).
+Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 va más allá de la mitad: la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha y **Actualizar** (T-46: un solo botón que arma y reinicia; su prueba real en Q-142). Faltan el esqueleto, la cabecera común, el frente activo en la tarjeta y la conversación de 360 px. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
 - **Q-142 — Probá Actualizar con tu Iridium**
@@ -53,18 +53,12 @@ Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no
   - [ ] Le pasé la carpeta `Iridium para compartir` del escritorio (o el `.zip` de la última versión en GitHub)
   - [ ] En `github.com/LlanosLautaro/Iridium` › Settings › Collaborators › Add people, la invité con su usuario
   - [ ] Aceptó la invitación y en su Iridium tocó **Iniciar sesión** abajo; el aviso desapareció
-- **Q-118 — Probá crear y publicar un repositorio con tu GitHub**
-  Tipo: prueba
-  Contexto: D-081 (Q-117). Armá la última versión (**Armar** abajo en Iridium) y abrila. Usá una carpeta de prueba (con **Abrir como proyecto**) o un proyecto que quieras subir. Fijate:
-  - [ ] Sin git, **Inicializar repositorio** hace el primer commit sin `node_modules` ni `.env`
-  - [ ] **Publicar en GitHub** muestra tu cuenta (o abre la ventana de git para iniciar sesión)
-  - [ ] Privado y Publicar: aparece «En GitHub · tu-usuario/nombre», y el repositorio está en GitHub como privado
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
 Orden, OR-I2: el esqueleto (la barra del proyecto en dos grupos, y entrar a la Bandeja o al Mapa desde el proyecto).
-**Leer antes:** `modulos/orden/estado.md` › OR-I2 y Próximo paso, `modulos/orden/diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-1, W-3 y W-5, `06-ui.md` › Frente Orden (y Q-142, Q-126, Q-118 si llegaron).
+**Leer antes:** `modulos/orden/estado.md` › OR-I2 y Próximo paso, `modulos/orden/diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-1, W-3 y W-5, `06-ui.md` › Frente Orden (y Q-142, Q-126 si llegaron).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

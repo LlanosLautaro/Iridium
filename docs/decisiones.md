@@ -95,7 +95,7 @@
 | D-087 | 2026-11-04 | general | 10 (Q-125) | Ideas y Skills viven en `.iridium`, dentro de la carpeta de proyectos, como un vault | vigente |
 | D-086 | 2026-11-04 | general | 10 (Q-124) | Una skill «iridium» viaja con Iridium y se carga solo en sus conversaciones, con la guía de hitos si falta | vigente |
 | D-088 | 2026-11-05 | Revisión | 10 (R-9) | Un comentario de la Revisión se cierra solo cuando está hecho; lo que queda para después es «anotado» | vigente |
-| D-089 | 2026-11-05 | general | 10 (R-7, R-8), a pedido del usuario | El menú del clic derecho en la tarjeta, Nuevo proyecto, y las ideas y las skills de cada proyecto | vigente |
+| D-089 | 2026-11-05 | general | 10 (R-7, R-8), a pedido del usuario | El menú del clic derecho en la tarjeta, Nuevo proyecto, y las ideas y las skills de cada proyecto | vigente (el punto 3, reemplazado por D-101) |
 | D-090 | 2026-11-05 | general | 10 (R-10) | Eliminar un proyecto desde el menú de la tarjeta, con confirmación y a la papelera | vigente |
 | D-091 | 2026-11-05 | general | 10, a pedido del usuario (y Q-131) | Un frente «Orden» con prioridad máxima: auditoría, un solo modelo y la UX rehecha; las funciones nuevas esperan | vigente |
 | D-092 | 2026-11-05 | general | 10, a pedido del usuario | La guía de hitos y la skill de Iridium se funden en un solo marco, el de Iridium, con un control de formato | vigente |
@@ -106,6 +106,8 @@
 | D-097 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-137) | Lo que espera del usuario se llama «Bandeja de entrada» | vigente |
 | D-098 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-136) | La conversación queda siempre a la vista, más angosta | vigente |
 | D-099 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-139) | El marco se llama «framework» | vigente |
+| D-100 | 2026-11-06 | general | 10, frente Orden, paso 6 (Q-140) | El ámbar es solo para lo que frena y el botón principal es claro | vigente |
+| D-101 | 2026-11-07 | general | 10 (R-14) | Nuevo proyecto arma la plantilla básica, sin la IA | vigente |
 
 ---
 
@@ -2099,7 +2101,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-05
 - **Ámbito:** general (Proyectos y la vista del proyecto; C-9, C-10, C-12)
 - **Hito o paso:** 10 (R-7 y R-8, anotados en D-088; el usuario pidió hacerlos)
-- **Estado:** vigente
+- **Estado:** vigente; el punto 3 (Nuevo proyecto), reemplazado por D-101
 
 **Contexto:** R-7 pedía el clic derecho de la tarjeta con las opciones que tenía el Gestor y un botón para crear proyectos; R-8, un ícono con las ideas del proyecto y otro con sus skills, este solo si existen. Hasta ahora Iridium solo leía las fichas (`05-arquitectura.md` › Modelo de datos: «el Centro solo lee en el MVP»).
 
@@ -2310,3 +2312,20 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - `DESIGN.md` (y `.impeccable/design.json`): The Ámbar Llama Rule pasa a The Ámbar Frena Rule y The Botón Claro Rule; el botón primario, los contadores, el chip de la cabecera y la tarjeta del pedido, al día.
 - El código cambia con las iteraciones del frente: el botón primario y las cuentas en OR-I2 (el esqueleto y la Bandeja). Hasta entonces la app sigue con el ámbar de antes.
 - El ⚠ ámbar de Skills (lo que está dos veces o con el enlace roto) no frena: pasa a gris con OR-I4 (Skills › Framework).
+
+## D-101 — Nuevo proyecto arma la plantilla básica, sin la IA
+- **Fecha:** 2026-11-07
+- **Ámbito:** general (Proyectos, C-10, y el framework)
+- **Hito o paso:** 10 (R-14)
+- **Estado:** vigente
+
+**Contexto:** con D-089, **Nuevo proyecto** pedía el nombre y, opcional, la idea, y le mandaba a la IA un primer mensaje para que arrancara el proyecto. R-14: crear un proyecto en blanco no debería ponerla a trabajar sobre datos que todavía no tiene; tiene que armar solo una plantilla básica, y lo demás se avanza en la conversación.
+
+**Decisión:** el cuadro pide solo el nombre. Iridium crea la carpeta con la plantilla básica del framework, sacada de sus `plantillas/`: `CLAUDE.md`, `docs/` (`README.md` con la fecha del framework, `estado.md` en el hito 0 con su próximo paso, `trabajo.md`, `decisiones.md`, `perfil-proyecto.md`, `scripts.md`) y la ficha en `idea`, sin descripción ni ícono. Lo abre, y la IA no arranca: el usuario le cuenta la idea cuando quiere, y la IA completa ahí el hito 0, el `CLAUDE.md`, la descripción y el ícono.
+
+**Motivo:** no gasta uso ni inventa nada sin datos; el proyecto queda con el framework desde el principio (la tarjeta muestra el hito 0 y el control no marca nada), y la conversación sigue siendo donde se decide todo.
+
+**Consecuencias:**
+- La skill `iridium` › Cómo empezar dice qué deja Iridium y qué completa la IA; la de Ideas, que el proyecto nuevo se crea con el botón y la idea se cuenta después.
+- Si las plantillas no están (una app mal armada), no se crea nada y se avisa.
+- Pruebas: `tests/r7-r8-proyectos.test.ts` (la plantilla, el control en cero y la tarjeta) y `tests/e2e/r7-r8-proyectos.spec.ts` (capturas `tools/salida/r7-nuevo*.png`).

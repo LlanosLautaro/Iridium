@@ -9,7 +9,7 @@ import {
   TEMAS,
 } from '../../compartido/puente'
 import { ESTADOS } from '../../compartido/tipos'
-import { LIMITE_IDEA_PROYECTO, LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
+import { LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
 import { AjusteIa } from '../infra/config'
 
 export const CambioPreferencias = z
@@ -105,5 +105,3 @@ export const EstadoFicha = z.enum(ESTADOS)
 
 /** El nombre de un proyecto nuevo; que sirva para una carpeta lo dice `problemaNombreProyecto`. */
 export const NombreProyecto = z.string().max(LIMITE_NOMBRE_PROYECTO * 2)
-
-export const IdeaProyecto = z.string().max(LIMITE_IDEA_PROYECTO)

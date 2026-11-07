@@ -1,16 +1,9 @@
-// Nuevo proyecto (R-7, C-10, D-089): el nombre de la carpeta y, si se quiere, la idea. Iridium crea la carpeta, la
-// abre y le pide a la IA que la arranque con la guía de hitos y que haga la ficha y el ícono.
+// Nuevo proyecto (R-7, C-10, D-089, R-14): solo el nombre. Iridium crea la carpeta con la plantilla básica del framework
+// y la abre; la idea, la ficha y el ícono se hacen después, conversando con la IA (D-101).
 import { useEffect, useRef, useState } from 'react'
 
-export function NuevoProyecto({
-  cerrar,
-  listo,
-}: {
-  cerrar: () => void
-  listo: (ruta: string, aviso: string | null) => void
-}) {
+export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (ruta: string) => void }) {
   const [nombre, setNombre] = useState('')
-  const [idea, setIdea] = useState('')
   const [creando, setCreando] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const campo = useRef<HTMLInputElement>(null)
@@ -31,13 +24,13 @@ export function NuevoProyecto({
     setCreando(true)
     setError(null)
     try {
-      const r = await window.iridium.nuevoProyecto(nombre, idea)
+      const r = await window.iridium.nuevoProyecto(nombre)
       if (r.tipo === 'error') {
         setError(r.mensaje)
         campo.current?.focus()
         return
       }
-      listo(r.ruta, r.aviso)
+      listo(r.ruta)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
     } finally {
@@ -60,8 +53,8 @@ export function NuevoProyecto({
       >
         <h2 id="nuevo-t">Nuevo proyecto</h2>
         <p id="nuevo-d">
-          Se crea la carpeta en tu carpeta de proyectos y la IA lo arranca con la guía: la idea, la ficha y el
-          ícono.
+          Se crea la carpeta en tu carpeta de proyectos con la plantilla básica. Después le contás a la IA de
+          qué se trata, en la conversación.
         </p>
         <label className="campo-nuevo">
           <span>Nombre</span>
@@ -77,18 +70,6 @@ export function NuevoProyecto({
               setNombre(e.target.value)
               setError(null)
             }}
-          />
-        </label>
-        <label className="campo-nuevo">
-          <span>
-            La idea <small>(opcional; si no, la IA te la pregunta en la Bandeja de entrada)</small>
-          </span>
-          <textarea
-            className="campo"
-            rows={5}
-            value={idea}
-            placeholder="Qué querés hacer, para quién, qué te gustaría que tenga…"
-            onChange={(e) => setIdea(e.target.value)}
           />
         </label>
         {error && (

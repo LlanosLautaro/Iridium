@@ -149,6 +149,11 @@ async function ponerAlDiaFalso(carpeta: string, texto: string): Promise<void> {
   await writeFile(ruta, antes.replace(/(\*\*Formato de la gu[ií]a:\*\*).*/, `$1 ${hoy}`))
 }
 
+/** Donde están armados los complementos (`pnpm build` › `out/plugins`; en la app, en sus recursos). */
+function carpetaPlugins(): string {
+  return app.isPackaged ? join(process.resourcesPath, 'plugins') : join(app.getAppPath(), 'out', 'plugins')
+}
+
 function crearMotor(): Motor {
   if (process.env.IRIDIUM_MOTOR === 'falso') {
     const pasoMs = Number(process.env.IRIDIUM_FALSO_PASO_MS) || 400
@@ -167,10 +172,7 @@ function crearMotor(): Motor {
   }
   try {
     const rutaClaude = rutaClaudeInstalado()
-    const plugins = elegirComplementos(
-      app.isPackaged ? join(process.resourcesPath, 'plugins') : join(app.getAppPath(), 'out', 'plugins'),
-      existsSync,
-    )
+    const plugins = elegirComplementos(carpetaPlugins(), existsSync)
     return crearMotorSdk({ ...(rutaClaude ? { rutaClaude } : {}), plugins })
   } catch (e) {
     return crearMotorQueFalla(
@@ -387,6 +389,7 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       registro,
       // Las skills de la PC; las pruebas usan una carpeta de muestra (IRIDIUM_CLAUDE).
       carpetaClaude: process.env.IRIDIUM_CLAUDE ?? join(homedir(), '.claude'),
+      plantillas: join(carpetaPlugins(), 'iridium', 'skills', 'iridium', 'plantillas'),
       cerrarVentana: () => {
         cerrarSinPreguntar = true
         ventana?.close()

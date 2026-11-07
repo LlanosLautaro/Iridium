@@ -37,7 +37,7 @@ Esta carpeta no es una app: es el lugar para hablar de los proyectos en general 
 Proponé dónde integrarla y decidilo con el usuario:
 - **Es parte de un proyecto con framework:** va a su \`docs/trabajo.md\` como un \`T-n\` \`nueva\` con \`Origen: Ideas\`.
 - **Es parte de un proyecto con framework viejo o de una carpeta simple:** se anota en su \`README.md\` y se propone pasarlo al framework.
-- **Es un proyecto nuevo:** se crea con **Nuevo proyecto** de Iridium, con lo que ya está anotado como idea.
+- **Es un proyecto nuevo:** el usuario lo crea con **Nuevo proyecto** de Iridium (la carpeta con la plantilla básica) y le cuenta la idea a su IA en la primera conversación; podés darle el texto para pegar.
 - Después, la idea pasa a la sección "Integradas" de \`ideas.md\` con una línea \`→ AAAA-MM-DD: <carpeta>, T-n\` de a dónde fue. No se borra.
 `,
     'ideas.md': `# Ideas

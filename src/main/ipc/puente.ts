@@ -37,7 +37,6 @@ import { leerSeccionSkills, proyectosAtrasados, skillsDelProyecto } from '../app
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
-import { mensajeProyectoNuevo } from '../core/creacion'
 import {
   INSTRUCCION_CENTRO,
   INSTRUCCION_SKILLS,
@@ -74,7 +73,6 @@ import {
   EstadoFicha,
   HashCommit,
   IdConversacion,
-  IdeaProyecto,
   IdScript,
   NombreProyecto,
   NotaReabrir,
@@ -104,6 +102,8 @@ export interface Servicios {
   cerrarVentana: () => void
   /** La carpeta de Claude, donde están las skills (`%USERPROFILE%\.claude`; en las pruebas, `IRIDIUM_CLAUDE`). */
   carpetaClaude: string
+  /** Las plantillas del framework (`plantillas/` de la skill `iridium`), para Nuevo proyecto (R-14). */
+  plantillas: string
   /** La versión nueva lista (CO-I2); null en desarrollo, donde no hay app de uso diario. */
   versionNueva: {
     ultima(): VersionNueva | null
@@ -657,23 +657,12 @@ export function registrarPuente(s: Servicios): Puente {
     s.registro.escribir(`Eliminar: ${basename(r)}`)
     return ficha(await ejecutarEliminacion(await raiz(), r, plan, undefined, papelera))
   })
-  ipcMain.handle(
-    CANALES.nuevoProyecto,
-    async (_, nombre: unknown, idea: unknown): Promise<ResultadoNuevo> => {
-      const texto = IdeaProyecto.parse(idea)
-      const creado = await crearProyecto(await raiz(), NombreProyecto.parse(nombre))
-      if (!creado.ok) return { tipo: 'error', mensaje: creado.mensaje }
-      s.registro.escribir(`Proyecto nuevo: ${creado.nombre}`)
-      const lista = await listar()
-      let aviso: string | null = null
-      try {
-        await conversaciones.seguir(creado.ruta, { texto: mensajeProyectoNuevo(creado.nombre, texto) })
-      } catch (e) {
-        aviso = `La carpeta está creada, pero la IA no pudo arrancar: ${e instanceof Error ? e.message : String(e)}`
-      }
-      return { tipo: 'ok', ruta: creado.ruta, lista, aviso }
-    },
-  )
+  ipcMain.handle(CANALES.nuevoProyecto, async (_, nombre: unknown): Promise<ResultadoNuevo> => {
+    const creado = await crearProyecto(await raiz(), NombreProyecto.parse(nombre), s.plantillas)
+    if (!creado.ok) return { tipo: 'error', mensaje: creado.mensaje }
+    s.registro.escribir(`Proyecto nuevo: ${creado.nombre}`)
+    return { tipo: 'ok', ruta: creado.ruta, lista: await listar() }
+  })
 
   // La carpeta Iridium (D-083): mudar las de antes y cambiarla de lugar. Lo que depende de la ruta se muda con ellas.
   const mudarCarpetas = async (

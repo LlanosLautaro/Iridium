@@ -1,13 +1,14 @@
 // R-7 y R-8 (D-089): las ideas y las skills de un proyecto, Nuevo proyecto y VS Code. Con carpetas temporales.
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { controlarProyecto } from '../src/main/app/control'
+import { crearProyecto } from '../src/main/app/creacion'
 import { Documentos } from '../src/main/app/documentos'
 import { ideasDelProyecto } from '../src/main/app/ideas'
 import { listarProyectos } from '../src/main/app/proyectos'
 import { skillsDelProyecto } from '../src/main/app/skills'
-import { mensajeProyectoNuevo } from '../src/main/core/creacion'
 import { seccionDeIdeas } from '../src/main/core/ideas-proyecto'
 import { proyectoAfectado } from '../src/main/core/vigilancia'
 import { candidatosVsCode } from '../src/main/infra/vscode'
@@ -125,18 +126,61 @@ describe('skills del proyecto (R-8)', () => {
   })
 })
 
-describe('Nuevo proyecto (R-7, C-10)', () => {
-  it('el primer mensaje pide el framework, la ficha y el ícono, con la idea citada', () => {
-    const m = mensajeProyectoNuevo('Gamma', 'Una app de notas.\nPara mí.')
-    expect(m).toContain('«Gamma»')
-    expect(m).toContain('la skill `iridium`')
-    expect(m).toContain('`.proyecto.json`')
-    expect(m).toContain('.proyecto-icono.svg')
-    expect(m).toContain('> Una app de notas.\n> Para mí.')
+describe('Nuevo proyecto (R-7, C-10, R-14)', () => {
+  const plantillas = join(
+    import.meta.dirname,
+    '..',
+    'recursos',
+    'plugins',
+    'iridium',
+    'skills',
+    'iridium',
+    'plantillas',
+  )
+
+  it('arma la plantilla básica del framework, sin corchetes en lo que lee Iridium', async () => {
+    const r = await crearProyecto(raiz, 'Gamma', plantillas, new Date(2026, 10, 7))
+    if (!r.ok) throw new Error(r.mensaje)
+    expect((await readdir(r.ruta)).sort()).toEqual(['.proyecto.json', 'CLAUDE.md', 'docs'])
+    expect((await readdir(join(r.ruta, 'docs'))).sort()).toEqual([
+      'README.md',
+      'decisiones.md',
+      'estado.md',
+      'perfil-proyecto.md',
+      'scripts.md',
+      'trabajo.md',
+    ])
+    const estado = await readFile(join(r.ruta, 'docs', 'estado.md'), 'utf8')
+    expect(estado).toContain('**Proyecto:** Gamma')
+    expect(estado).toContain('**Última actualización:** 2026-11-07')
+    expect(estado).toContain('## Hito actual\n0 — Idea cruda — en curso')
+    expect(estado).toContain('| 0 | Idea cruda | en curso |')
+    expect(estado).toContain('## Próximo paso\nHito 0: escribir la idea cruda con lo que cuente el usuario')
+    expect(estado).not.toMatch(/\[(Hasta|Una acción|N\]|nombre\])/)
+    expect(await readFile(join(r.ruta, 'docs', 'README.md'), 'utf8')).toContain('**Framework:** 2026-11-07')
+    const claude = await readFile(join(r.ruta, 'CLAUDE.md'), 'utf8')
+    expect(claude).toContain('la skill `iridium`')
+    expect(claude).not.toContain('Guardar en la raíz')
+    expect(await readFile(join(r.ruta, 'docs', 'trabajo.md'), 'utf8')).not.toContain('T-1')
+    expect(await readFile(join(r.ruta, 'docs', 'decisiones.md'), 'utf8')).not.toContain('D-001')
+    expect(JSON.parse(await readFile(join(r.ruta, '.proyecto.json'), 'utf8'))).toMatchObject({
+      estado: 'idea',
+    })
   })
 
-  it('sin idea, la pide como Q-n', () => {
-    expect(mensajeProyectoNuevo('Gamma', '  ')).toContain('Q-n')
+  it('el control no marca nada y la tarjeta muestra el hito 0 y el próximo paso', async () => {
+    const r = await crearProyecto(raiz, 'Gamma', plantillas)
+    if (!r.ok) throw new Error(r.mensaje)
+    expect(await controlarProyecto(r.ruta)).toEqual([])
+    const lista = await listarProyectos(raiz)
+    const gamma = lista.tipo === 'lista' ? lista.proyectos.find((p) => p.nombre === 'Gamma') : undefined
+    expect(gamma?.estado).toBe('idea')
+    expect(JSON.stringify(gamma)).toContain('Hito 0: escribir la idea cruda con lo que cuente el usuario')
+  })
+
+  it('sin las plantillas no crea nada', async () => {
+    expect(await crearProyecto(raiz, 'Gamma', join(raiz, 'no-existe'))).toMatchObject({ ok: false })
+    expect(await readdir(raiz)).toEqual([])
   })
 })
 

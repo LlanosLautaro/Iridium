@@ -787,9 +787,9 @@ export type ResultadoFicha =
 /** Abrir el proyecto en VS Code o en el explorador (C-12). */
 export type ResultadoAbrir = { tipo: 'ok' } | { tipo: 'error'; mensaje: string }
 
-/** Crear un proyecto (C-10): su ruta, con la lista ya releída; `aviso` si la IA no pudo arrancar. */
+/** Crear un proyecto (C-10, R-14): su ruta, con la lista ya releída. */
 export type ResultadoNuevo =
-  | { tipo: 'ok'; ruta: string; lista: ListaProyectos; aviso: string | null }
+  | { tipo: 'ok'; ruta: string; lista: ListaProyectos }
   | { tipo: 'error'; mensaje: string }
 
 /** Lo que muestra la confirmación de Eliminar (R-10, D-090): qué se borra y qué va a la papelera, ya medido. */
@@ -928,8 +928,8 @@ export interface ApiIridium {
   iconoProyecto(ruta: string): Promise<ResultadoFicha>
   abrirEnVsCode(ruta: string): Promise<ResultadoAbrir>
   abrirCarpetaProyecto(ruta: string): Promise<ResultadoAbrir>
-  /** Crea la carpeta y le pide a la IA que lo arranque con la guía, con la idea escrita (C-10). */
-  nuevoProyecto(nombre: string, idea: string): Promise<ResultadoNuevo>
+  /** Crea la carpeta con la plantilla básica del framework (C-10, R-14); la IA no interviene. */
+  nuevoProyecto(nombre: string): Promise<ResultadoNuevo>
   /** Mira la carpeta antes de eliminarla (R-10): qué se borra definitivamente y qué va a la papelera. No toca nada. */
   planEliminarProyecto(ruta: string): Promise<ResultadoPlanEliminar>
   /**

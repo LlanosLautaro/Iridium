@@ -103,9 +103,9 @@ export function Proyectos() {
   const cerrarEliminar = useCallback(() => setEliminando(null), [])
   const cerrarMenu = useCallback(() => setMenu(null), [])
   const cerrarNuevo = useCallback(() => setNuevo(false), [])
-  const creado = async (ruta: string, avisoIa: string | null) => {
+  const creado = async (ruta: string) => {
     setNuevo(false)
-    setAviso(avisoIa ? { texto: avisoIa, error: true } : null)
+    setAviso(null)
     ponerLista(await window.iridium.listarProyectos())
     abrirProyecto(ruta)
   }
@@ -281,7 +281,7 @@ export function Proyectos() {
             }}
           />
         )}
-        {nuevo && <NuevoProyecto cerrar={cerrarNuevo} listo={(r, a) => void creado(r, a)} />}
+        {nuevo && <NuevoProyecto cerrar={cerrarNuevo} listo={(r) => void creado(r)} />}
       </section>
       <Divisor ancho={ancho} cambiar={cambiarAncho} />
       <aside className="chat" aria-label="Chat general">
