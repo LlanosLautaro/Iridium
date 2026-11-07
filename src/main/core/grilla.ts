@@ -43,7 +43,14 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
     reemplazadoPor: null,
     icono: d.icono,
     problema: null,
-    hito: d.guia ? { numero: d.guia.hito, nombre: d.guia.nombreHito, proximoPaso: d.guia.proximoPaso } : null,
+    hito: d.guia
+      ? {
+          numero: d.guia.hito,
+          nombre: d.guia.nombreHito,
+          proximoPaso: d.guia.proximoPaso,
+          ...(d.guia.frente ? { frente: d.guia.frente } : {}),
+        }
+      : null,
     preguntas: d.preguntas,
     revision: d.revision ?? 0,
     skills: d.skills ?? 0,

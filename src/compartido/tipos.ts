@@ -47,6 +47,8 @@ export interface Guia {
   /** "en curso", "en revisión"… */
   estadoHito: string | null
   proximoPaso: string | null
+  /** El frente en curso de la tabla «Módulos» y su paso (W-2); null si no hay. */
+  frente?: { nombre: string; paso: string | null } | null
   /** AAAA-MM-DD */
   actualizado: string | null
 }

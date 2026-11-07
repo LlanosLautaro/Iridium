@@ -3,6 +3,7 @@
 // clic derecho (o la tecla de menú), sus acciones (R-7).
 import type { MouseEvent } from 'react'
 import { textoDeCuenta } from '../../../compartido/cuentas'
+import { textoFrente } from '../../../compartido/en-que'
 import type { FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
 import type { Estado } from '../../../compartido/tipos'
 import { ChipSesion } from '../../marco/Marco'
@@ -87,12 +88,14 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
   const est = p.estado ? ESTADOS[p.estado] : SIN_FICHA
   const preguntas = textoPreguntas(p.preguntas)
   const avisos = textoAvisos(p.framework)
+  const enQue = textoFrente(p.hito)
   const etiqueta = [
     p.nombre,
     est.nombre,
     p.reemplazadoPor && `pasa a ${p.reemplazadoPor}`,
     p.hito ? textoHito(p.hito) : 'sin estado',
     p.framework === 'viejo' && 'framework viejo',
+    enQue,
     preguntas,
     avisos,
     ficha && PALABRA_SESION[ficha.estado],
@@ -154,6 +157,18 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
           </span>
         )}
       </div>
+      {enQue && (
+        <p className={p.hito?.frente ? 'en-que' : 'en-que sin-frente'} title={enQue}>
+          {p.hito?.frente ? (
+            <>
+              <span className="fr">{p.hito.frente.nombre}</span>
+              {p.hito.frente.paso && ` · ${p.hito.frente.paso}`}
+            </>
+          ) : (
+            enQue
+          )}
+        </p>
+      )}
       {avisos && p.framework !== null && p.framework !== 'viejo' && (
         <div className="aviso-fw" title={p.framework.avisos.join('\n')}>
           <span className="signo" aria-hidden="true">

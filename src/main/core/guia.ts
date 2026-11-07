@@ -2,6 +2,7 @@
 // Lectura tolerante de `docs/estado.md` de la guía de hitos (research/formato-estado-md.md).
 // El archivo lo escribe la IA y puede variar: se buscan los encabezados por texto y nunca se falla.
 import type { Guia } from '../../compartido/tipos'
+import { frenteActivo } from './mapa'
 
 const GUIONES = /\s+[—–-]\s+/
 
@@ -67,5 +68,13 @@ export function leerGuia(texto: string): Guia | null {
   const actualizado = campo(lineas, 'Última actualización')?.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? null
 
   if (hito === null && nombreHito === null && proximoPaso === null && actualizado === null) return null
-  return { hito, nombreHito, estadoHito, proximoPaso: proximoPaso || null, actualizado }
+  const frente = frenteActivo(texto)
+  return {
+    hito,
+    nombreHito,
+    estadoHito,
+    proximoPaso: proximoPaso || null,
+    actualizado,
+    ...(frente ? { frente } : {}),
+  }
 }

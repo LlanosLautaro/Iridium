@@ -24,7 +24,13 @@ export interface TarjetaProyecto {
   /** Si el `.proyecto.json` existe pero no se puede usar: por qué. */
   problema: string | null
   /** null = el proyecto no tiene `docs/estado.md` (o no se reconoce nada). */
-  hito: { numero: number | null; nombre: string | null; proximoPaso: string | null } | null
+  hito: {
+    numero: number | null
+    nombre: string | null
+    proximoPaso: string | null
+    /** El frente en curso y su paso (W-2: «Orden · 4. UX»); sin él, la tarjeta muestra el Próximo paso. */
+    frente?: { nombre: string; paso: string | null }
+  } | null
   /** Las `Q-n` sin responder del proyecto, cuántas de ellas frenan (D-010, D-019) y las respondidas sin procesar. */
   preguntas: { sinResponder: number; frenan: number; respondidas: number }
   /** Los comentarios de la Revisión abiertos (`docs/revision/`): esperan a la IA, no al usuario. */

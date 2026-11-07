@@ -206,6 +206,35 @@ export function proximoPaso(estado: string): string {
   return seccionDeTitulo(estado, 'Próximo paso').join('\n').trim()
 }
 
+/**
+ * El frente activo para la tarjeta (W-2): la primera fila `en curso` de la tabla «Módulos» de `estado.md` (columnas
+ * Frente o Módulo, Paso y Estado), con el nombre y el paso sin lo que va entre paréntesis («Orden
+ * (`modulos/orden/estado.md`)» → «Orden»; «7. Construcción (OR-I2 en curso)» → «7. Construcción»). Lee también las
+ * palabras de antes («reabierto»), para los proyectos con framework viejo. null si ningún frente está en curso.
+ */
+export function frenteActivo(estado: string): { nombre: string; paso: string | null } | null {
+  const tabla = tablas(seccionDeTitulo(estado, 'Módulos')).find((t) => t.columnas.includes('estado'))
+  if (!tabla) return null
+  const iNombre = Math.max(
+    0,
+    tabla.columnas.findIndex((c) => c === 'frente' || c === 'modulo' || c === 'seccion'),
+  )
+  const iPaso = tabla.columnas.findIndex((c) => c.startsWith('paso'))
+  const iEstado = tabla.columnas.indexOf('estado')
+  const corto = (t: string | undefined) =>
+    textoPlano(t ?? '')
+      .replace(/\s*\([^)]*\)/g, '')
+      .trim()
+  for (const f of tabla.filas) {
+    if (leerEstadoViejo(textoPlano(f[iEstado] ?? '')) !== 'en curso') continue
+    const nombre = corto(f[iNombre])
+    if (!nombre) continue
+    const paso = iPaso >= 0 ? corto(f[iPaso]) : ''
+    return { nombre, paso: paso || null }
+  }
+  return null
+}
+
 /** El frente de un `estado.md` (D-063): la carpeta del módulo, o null si es el del núcleo (`docs/estado.md`). */
 export function frenteDeEstado(ruta: string): string | null {
   return /^docs\/modulos\/([^/]+)\/estado\.md$/.exec(ruta)?.[1] ?? null

@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta, la Bandeja, Actualizar, el esqueleto y la cabecera común hechos) | este archivo |
+| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta, la Bandeja, Actualizar, el esqueleto, la cabecera común y el frente en la tarjeta hechos) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -85,8 +85,12 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Pruebas de la cabecera:** Playwright, `tests/e2e/or2-cabecera.spec.ts` (2: las siete secciones del proyecto con su título en el mismo lugar y 40 px de alto, como la de la conversación, 78 con filtros; la Bandeja con la cuenta y los filtros por frente en la segunda fila; Scripts con su cuenta; Ideas vacía con su línea; en el inicio, Proyectos y la Bandeja con la misma cabecera y la columna a la misma altura). `i3-pendientes`, `or2-bandeja`, `in1-ideas` y `r2-revision` al día con la pieza nueva. Vitest 642 de 642; typecheck limpio; el lint sin errores nuevos. Playwright, la corrida completa 92 de 100: las cinco de `r2-revision` fallaron por un espacio entre el nombre del filtro y su cuenta (corregido: 10 de 10 solas, con `or2-bandeja` y `or2-cabecera`) y las tres de `r3-electron` por la carga, como antes (solas, 3 de 3). El recorrido con los proyectos reales (`tools/auditoria-ux.ts`) pasa entero y las capturas se ven parejas.
 
-**Falta:** la línea del frente activo en la tarjeta (W-2) y la conversación de 360 px por vista (D-098).
+- **El frente activo en la tarjeta** (W-2, 2026-11-07): una línea debajo del hito con el frente en curso y su paso («Orden · 7. Construcción», el nombre en 600) o, sin frentes en curso, el Próximo paso en gris («Próximo: …»); una sola línea, con «…» si no entra y el texto entero al pasar el mouse, y en el nombre accesible de la tarjeta. Sale de la primera fila `en curso` de la tabla «Módulos» de `estado.md` (`frenteActivo` en `core/mapa.ts`, que lee también «Módulo», «Paso actual» y «reabierto» de los proyectos con framework viejo), sin la ruta ni lo que va entre paréntesis. La tarjeta conserva la descripción de la ficha, que el boceto de W-2 no dibuja pero tampoco saca.
+
+**Pruebas del frente:** `tests/or2-frente.test.ts` (7: la fila en curso sin paréntesis, sin ninguno en curso, el framework viejo, sin columna Paso, y la línea de la tarjeta con frente, con el Próximo paso y sin `estado.md`); Playwright, `tests/e2e/or2-frente.spec.ts` (1: Alfa con «Orden · 4. UX», Beta con su Próximo paso, en una línea). Vitest 649 de 649; typecheck limpio; las 27 de Playwright que tocan la grilla, 86 de 89 (las tres de `r3-electron` por la carga; solas, 3 de 3). Con los proyectos reales (`tools/auditoria-ux.ts`), el recorrido pasa entero y la tarjeta de Iridium dice «Orden · 7. Construcción».
+
+**Falta:** la conversación de 360 px por vista (D-098).
 
 ## Próximo paso
-OR-I2, lo que falta: la línea del frente activo en la tarjeta (W-2); después, la conversación de 360 px por vista (D-098), y con eso la iteración se cierra con su prueba.
-**Leer antes:** `04-ux.md` › W-2 y W-12, `06-ui.md` › Frente Orden (la tarjeta), `diseno-tecnico.md` › Iteraciones.
+OR-I2, lo que falta: la conversación de 360 px por vista (D-098); con eso la iteración se cierra con su prueba.
+**Leer antes:** `decisiones.md` › D-098, `04-ux.md` › La conversación, `diseno-tecnico.md` › La conversación de 360 px.
