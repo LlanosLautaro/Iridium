@@ -7,26 +7,20 @@
 ## Progreso
 | Paso | Estado | Documento |
 |---|---|---|
-| 1. Propuesta | completo (Q-90: A, D-069) | `propuesta.md` |
-| 2. Definición | completo | `definicion.md` |
-| 3. Investigación | completo (Q-91: A, D-070) | `investigacion.md` |
-| 4. UX | completo (CO-1, CO-2 y CO-4) | `ux.md` |
-| 5. Diseño técnico | completo (CO-I1, CO-I2, CO-I4, CO-I5 y CO-I6) | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | saltado (CO-I1, CO-I2, CO-I4, CO-I5 y CO-I6 usan el chip, el aviso, la fila de Ajustes y los botones que ya existen) | — |
-| 7. Construcción | completo (CO-I1, CO-I2, CO-I4, CO-I5 y CO-I6 aprobadas; CO-I3 hecha) | este archivo |
-| 8. Calidad | completo (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
-| 9. Lanzamiento | completo (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
+| 1. Propuesta | hecho (Q-90: A, D-069) | `propuesta.md` |
+| 2. Definición | hecho | `definicion.md` |
+| 3. Investigación | hecho (Q-91: A, D-070) | `investigacion.md` |
+| 4. UX | hecho (CO-1, CO-2 y CO-4) | `ux.md` |
+| 5. Diseño técnico | hecho (CO-I1, CO-I2, CO-I4, CO-I5 y CO-I6) | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | descartado (CO-I1, CO-I2, CO-I4, CO-I5 y CO-I6 usan el chip, el aviso, la fila de Ajustes y los botones que ya existen) | — |
+| 7. Construcción | hecho (CO-I1, CO-I2, CO-I4, CO-I5 y CO-I6 aprobadas; CO-I3 hecha) | este archivo |
+| 8. Calidad | hecho (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
+| 9. Lanzamiento | hecho (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
 
 ## En qué estamos ahora
 La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). Con Q-103, la versión de Iridium pasó a su propia sección, Ajustes › Acerca de, al final.
 
 2026-11-04, a pedido del usuario: las copias compartidas se actualizan solas desde GitHub (D-085, CO-I7). Publicada la primera versión (`aca3668`) y probada de punta a punta con `tools/probar-compartida.ts`. Con Q-123 (A): repo privado y la otra persona como colaboradora; la copia avisa si falta iniciar sesión en GitHub. Publicada `c012989` y probada de nuevo.
-
-## Pendientes
-- [x] Hito 8: si el ayudante no pudo poner la versión nueva, que Iridium lo diga al abrir (tanda 6, Defecto 3: «La versión nueva no entró · se reintenta al cerrar»; con el Defecto 21, el ayudante ya no deja la app partida si un archivo está trabado).
-
-## Preguntas abiertas
-(ninguna)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -35,13 +29,13 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| CO-I1 | Iniciar sesión en Claude desde Iridium (el aviso de la conversación, el del marco y Ajustes › IA) | aprobada (Q-94, 2026-10-31) |
-| CO-I2 | Versión nueva lista: se arma con Iridium abierto y entra al cerrar o con Reiniciar ahora; mueve `main` | aprobada (Q-97, 2026-11-01) |
-| CO-I3 | GitHub privado con `dev` y `main` | hecha (2026-10-31, D-070) |
-| CO-I4 | Elegir la carpeta de proyectos en Ajustes | aprobada (Q-98, 2026-11-01) |
-| CO-I5 | La versión de Iridium y cuándo se armó, en Ajustes › Acerca de (Q-103) | aprobada (Q-102, 2026-11-01) |
-| CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085); con el repo privado, el aviso para iniciar sesión en GitHub (Q-123) | hecha y probada con GitHub (2026-11-04); falta invitar a la otra persona (Q-126) |
-| CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | aprobada (Q-102, 2026-11-01) |
+| CO-I1 | Iniciar sesión en Claude desde Iridium (el aviso de la conversación, el del marco y Ajustes › IA) | hecho, aprobada (Q-94, 2026-10-31) |
+| CO-I2 | Versión nueva lista: se arma con Iridium abierto y entra al cerrar o con Reiniciar ahora; mueve `main` | hecho, aprobada (Q-97, 2026-11-01) |
+| CO-I3 | GitHub privado con `dev` y `main` | hecho (2026-10-31, D-070) |
+| CO-I4 | Elegir la carpeta de proyectos en Ajustes | hecho, aprobada (Q-98, 2026-11-01) |
+| CO-I5 | La versión de Iridium y cuándo se armó, en Ajustes › Acerca de (Q-103) | hecho, aprobada (Q-102, 2026-11-01) |
+| CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085); con el repo privado, el aviso para iniciar sesión en GitHub (Q-123) | hecho, probada con GitHub (2026-11-04); falta invitar a la otra persona (Q-126) |
+| CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | hecho, aprobada (Q-102, 2026-11-01) |
 
 ## Log de iteraciones
 ### CO-I1 — Iniciar sesión desde Iridium (2026-10-31)
@@ -94,5 +88,5 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - `master` pasó a `dev` y `main` nació en el mismo commit; las dos están en `LlanosLautaro/Iridium`, que sigue privado (desde afuera da 404). Git ya tenía guardada la cuenta: no hizo falta el paso a mano.
 
 ## Próximo paso
-Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `10-operacion.md` › Backlog. Lo que D-069 dejó para después (instalador, actualizaciones desde GitHub) sigue fuera.
+Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `trabajo.md`. Lo que D-069 dejó para después (instalador, actualizaciones desde GitHub) sigue fuera.
 **Leer antes:** nada.

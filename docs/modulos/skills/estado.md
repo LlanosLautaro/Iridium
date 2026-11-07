@@ -7,24 +7,18 @@
 ## Progreso
 | Paso | Estado | Documento |
 |---|---|---|
-| 1. Propuesta | completo (Q-83) | `propuesta.md` |
-| 2. Definición | completo (D-064) | `definicion.md` |
-| 3. Investigación | completo | `investigacion.md` |
-| 4. UX | completo (Q-89, con el chat a la derecha; D-068) | `ux.md` |
-| 5. Diseño técnico | completo (con precisiones al construir) | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | completo: las cuatro piezas, construidas sobre la columna de Pendientes y el chat de Ideas | `06-ui.md` › Pantallas, `DESIGN.md` › Skills |
-| 7. Construcción | completo (SK-I1 aprobada, Q-95; los archivos de cada skill, Q-96; la lista cambia de ancho, R-6) | este archivo |
-| 8. Calidad | completo (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
-| 9. Lanzamiento | completo (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
+| 1. Propuesta | hecho (Q-83) | `propuesta.md` |
+| 2. Definición | hecho (D-064) | `definicion.md` |
+| 3. Investigación | hecho | `investigacion.md` |
+| 4. UX | hecho (Q-89, con el chat a la derecha; D-068) | `ux.md` |
+| 5. Diseño técnico | hecho (con precisiones al construir) | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | hecho: las cuatro piezas, construidas sobre la columna de Pendientes y el chat de Ideas | `06-ui.md` › Pantallas, `DESIGN.md` › Skills |
+| 7. Construcción | hecho (SK-I1 aprobada, Q-95; los archivos de cada skill, Q-96; la lista cambia de ancho, R-6) | este archivo |
+| 8. Calidad | hecho (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
+| 9. Lanzamiento | hecho (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
 
 ## En qué estamos ahora
 La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivos de cada skill probados (Q-96, sin cambios). Con tu comentario R-6, la lista de skills cambia de ancho arrastrando su borde derecho, y lo recuerda. La calidad pasó con el hito 8 (Q-108). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10).
-
-## Pendientes
-(ninguno hasta la prueba)
-
-## Preguntas abiertas
-(ninguna)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -36,7 +30,7 @@ La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivo
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| SK-I1 | La sección completa: ícono y `Ctrl+3`, lista por origen con las dobles, detalle, chat de `Skills` y Poner al día (SK-1 a SK-4) | aprobada (Q-95); con los archivos de cada skill (Q-96) y la lista que cambia de ancho (R-6) |
+| SK-I1 | La sección completa: ícono y `Ctrl+3`, lista por origen con las dobles, detalle, chat de `Skills` y Poner al día (SK-1 a SK-4) | hecho, aprobada (Q-95); con los archivos de cada skill (Q-96) y la lista que cambia de ancho (R-6) |
 
 ## Log de iteraciones
 ### SK-I1 — La sección Skills (2026-10-31)
@@ -53,5 +47,5 @@ La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivo
 - **R-6 (2026-11-01), la lista de skills cambia de ancho:** su borde derecho se arrastra o se mueve con las flechas (Shift, de a más; doble clic, el de entrada), entre 200 y 640 px y sin dejar el detalle por debajo de 360 px; el ancho se guarda en `config.json` (`anchoListaSkills`). El borde de la conversación y este comparten el mismo componente. Prueba nueva en `sk1-skills.spec.ts` (arrastrar, flechas, el mínimo y que se recuerde al volver a abrir; captura `test-results/sk1-lista-ancha.png`). Pruebas: 448 de Vitest y 55 de Playwright, todas pasan.
 
 ## Próximo paso
-Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `10-operacion.md` › Backlog.
+Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `trabajo.md`.
 **Leer antes:** nada.

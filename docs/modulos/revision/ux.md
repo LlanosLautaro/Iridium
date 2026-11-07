@@ -176,18 +176,18 @@ Abierto ──(la IA lo resuelve y lo cierra, con una línea de lo que hizo)─�
 
 ```
 ┌──┬─[● otra app ×]──────────────────────────────────────────────────[─ □ ×]┐
-│⌂ │ otra app · Hito 7 · I-3                    │ Conversación              │
+│◆ │ otra app · Hito 7 · I-3                    │ Conversación              │
 ├──┤────────────────────────────────────────┼───────────────────────────│
-│▤ │ Revisión     [Abiertos 3] [Cerrados 12]│ …                         │
-│🗺│ ┌────┐ el botón queda muy pegado al    │                           │
-│📄│ │cap.│ título; separalo                │                           │
-│📁│ └────┘ Tarjeta.jsx:6 · hoy 14:32       │                           │
-│💬│ ┌────┐ el menú no se cierra al tocar   │                           │
+│■ │ Revisión     [Abiertos 3] [Cerrados 12]│ …                         │
+│◈ │ ┌────┐ el botón queda muy pegado al    │                           │
+│□ │ │cap.│ título; separalo                │                           │
+│▪ │ └────┘ Tarjeta.jsx:6 · hoy 14:32       │                           │
+│● │ ┌────┐ el menú no se cierra al tocar   │                           │
 │3 │ │cap.│ afuera                          │                           │
-│⑂ │ └────┘ Menu.tsx:41 · ayer              │                           │
+│◇ │ └────┘ Menu.tsx:41 · ayer              │                           │
 │▶ │                                        │ [ escribir…             ] │
 └──┴──────────────────── barra de estado ─────────────────────────────────┘
- 💬 Revisión (3 abiertos; el número no va en ámbar: esperan a la IA, no al usuario)
+ ●  Revisión (3 abiertos; el número no va en ámbar: esperan a la IA, no al usuario)
 ```
 - Comentario elegido (reemplaza la lista; **Atrás** vuelve):
 

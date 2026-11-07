@@ -6,13 +6,13 @@ Por el plan propio (`plan-desarrollo.md` › Qué cambia en cada hito), la explo
 
 | Área | Estado |
 |---|---|
-| Puente PC–celular | cerrada: LocalSend + envío automático (D-005) |
-| Motor y marco | cerrada: app propia (D-006) con el Agent SDK aislado en un solo lugar (D-007) |
-| Proyectos y plan | cerrada: gráfico de fases y pasos leído de `docs/`, sin kanban ni canvas (D-008) |
-| Pendientes del usuario | cerrada: bandeja propia, `Q-n` con tipo y si frena, cinco tipos (D-010) |
-| Diseño | cerrada: lienzo y biblioteca propios sobre `DESIGN.md`, armados con lo que ya existe (D-011) |
-| Revisión de la app | cerrada: extensión del navegador para apps web, comentarios en archivos planos (D-012) |
-| Repaso de lo propio | cerrado: guía de hitos (D-009), Gestor solo con mantenimiento (D-013), skills locales donde la licencia lo permite (D-014) |
+| Puente PC–celular | hecho, cerrada: LocalSend + envío automático (D-005) |
+| Motor y marco | hecho, cerrada: app propia (D-006) con el Agent SDK aislado en un solo lugar (D-007) |
+| Proyectos y plan | hecho, cerrada: gráfico de fases y pasos leído de `docs/`, sin kanban ni canvas (D-008) |
+| Pendientes del usuario | hecho, cerrada: bandeja propia, `Q-n` con tipo y si frena, cinco tipos (D-010) |
+| Diseño | hecho, cerrada: lienzo y biblioteca propios sobre `DESIGN.md`, armados con lo que ya existe (D-011) |
+| Revisión de la app | hecho, cerrada: extensión del navegador para apps web, comentarios en archivos planos (D-012) |
+| Repaso de lo propio | hecho, cerrado: guía de hitos (D-009), Gestor solo con mantenimiento (D-013), skills locales donde la licencia lo permite (D-014) |
 
 ## Área: Puente PC–celular
 
@@ -225,7 +225,7 @@ Se repasaron las ~90 `Q-n` respondidas de otras apps, el gestor anterior y este 
 Cada pendiente dice además si **frena** el próximo paso. Una prueba de un solo punto ("¿ya no se traba?") es una prueba con un punto, no un tipo aparte.
 
 ### Formulario de arranque (Q-17)
-El usuario lo ve como una guía general para la IA: si es un juego o una app, y para qué plataformas (escritorio, Android, Windows, Linux, web, servidor…). **Vale la pena si no es un trámite aparte:** esos datos ya son los que pide el hito 0 y `perfil-proyecto.md` (plataformas, quién la usa, datos). El formulario es esa misma información para completar antes del chat, **opcional y por partes**: lo que se sabe se contesta, y cada campo admite "no sé todavía". Lo que quedó en "no sé" lo afina la IA con el usuario en los hitos 0 a 2. Si es un juego, el mismo formulario abre la rama de la guía por género (`00-idea.md` › Ideas para después).
+El usuario lo ve como una guía general para la IA: si es un juego o una app, y para qué plataformas (escritorio, Android, Windows, Linux, web, servidor…). **Vale la pena si no es un trámite aparte:** esos datos ya son los que pide el hito 0 y `perfil-proyecto.md` (plataformas, quién la usa, datos). El formulario es esa misma información para completar antes del chat, **opcional y por partes**: lo que se sabe se contesta, y cada campo admite "no sé todavía". Lo que quedó en "no sé" lo afina la IA con el usuario en los hitos 0 a 2. Si es un juego, el mismo formulario abre la rama de la guía por género (`trabajo.md` › T-1).
 
 ### Conclusión
 **Construir la bandeja; las `Q-n` suman tipo y si frenan; pruebas y tareas como listas** (D-010). La bandeja muestra primero lo que frena a un proyecto y después el resto (Q-16). Los formularios se usan para arrancar un proyecto, opcionales y con "no sé todavía" (Q-17). Los cambios de formato se hacen en la guía, en `Skills`.
@@ -418,20 +418,7 @@ La diferencia de fondo: la guía confía en que la IA y el usuario noten los hue
 Es el único lugar que conoce el **ciclo completo** de cada proyecto (la guía de hitos: plan, decisiones, lo que espera del usuario) y lo muestra para **dirigir**, no para programar. Trabaja sobre los archivos de cada proyecto, todo en la PC, con Claude Code como motor, y **junta lo que ya existe** (LocalSend, `impeccable`, el código del Gestor, Open Design) en vez de rehacerlo.
 
 ## Ideas del brainstorming
-- Marco: tareas como tarjetas que un agente toma (idea de Vibe Kanban), conectadas a las iteraciones de la guía.
-- Marco: un mod de Claude Code con el estado del proyecto al lado del chat, aunque la app principal sea propia.
-- Marco: usar Dispatch (mandar tareas desde el celular) en vez de construir algo propio para eso.
-- Puente: avisar con ntfy cuando termina un APK, con el enlace para bajarlo.
-- Puente: publicar los APK en un lugar fijo y que Obtainium los actualice solo en el celular.
-- Puente: "Recibir por enlace" de LocalSend para mandar algo desde un celular ajeno sin instalar nada.
-- Plan: comentar un documento del plan párrafo por párrafo y devolvérselo a la IA (idea de Plannotator).
-- Plan: tareas de cada iteración como archivos con un tablero encima (idea de Backlog.md), para el hito 7.
-- Canvas: la IA dibuja en vivo en el canvas mientras se conversa (kit de agentes de tldraw, MCP de Excalidraw).
-- Diseño: perillas en vivo dentro de los prototipos, como las del acento de otra app.
-- Diseño: la biblioteca arranca con los design systems de los proyectos propios (otras apps propias, el Gestor).
-- Revisión: comentarios sobre capturas para las apps Android, más adelante.
-- Skills: el gestor de skills avisa cuando hay dos copias de la misma skill.
-- Gestor: una vez que el Centro lo cubra, dejarlo como acceso rápido dentro de VS Code que abre el Centro.
+Las ideas y los pendientes están en `trabajo.md`.
 
 ## Riesgos iniciales
 | Riesgo | Impacto | Cómo mitigarlo |
@@ -521,3 +508,9 @@ Es el único lugar que conoce el **ciclo completo** de cada proyecto (la guía d
 | Repaso de lo propio | La guía suma mejoras (D-009); el Gestor, solo mantenimiento hasta que el Centro lo cubra (D-013); skills locales donde la licencia lo permite (D-014) |
 
 Motivo: ninguna herramienta junta el ciclo completo de los proyectos, y cada área tiene algo que se puede usar o adaptar, así que construir es sobre todo unir.
+
+## Portón
+- [x] Hay al menos 3 alternativas analizadas (o una explicación de por qué no existen): una tabla por área.
+- [x] El diferencial está escrito en una o dos frases.
+- [x] Los riesgos principales están listados.
+- [x] Hay una decisión explícita de seguir, con el enfoque elegido.

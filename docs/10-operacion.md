@@ -3,10 +3,10 @@
 > Iridium está en uso diario desde I-6 y lanzado desde el hito 9 (Q-111, 2026-11-02). Este hito no termina: junta lo que se ve en el uso, lo que hay que mantener y lo que podría venir, y de ahí sale cada versión nueva, que vuelve a pasar por los hitos que correspondan (tabla de rutas de la guía; los cambios grandes, como módulo o propuesta).
 
 ## Cómo se trabaja en operación
-- **Errores y ajustes que reportás:** la IA los clasifica sola. Si rompen el uso o son de lo que está en curso, se arreglan en el momento (qué pasa, qué tendría que pasar, causa, arreglo y una prueba) y se arma; si no, van al Backlog. Se reportan en el chat del proyecto, en una `Q-n` o con la Revisión (F8) sobre la misma Iridium.
+- **Errores y ajustes que reportás:** la IA los clasifica sola. Si rompen el uso o son de lo que está en curso, se arreglan en el momento (qué pasa, qué tendría que pasar, causa, arreglo y una prueba) y se arma; si no, van a `trabajo.md` como `T-n` `pendiente`. Se reportan en el chat del proyecto, en una `Q-n` o con la Revisión (F8) sobre la misma Iridium.
 - **Qué se mira en el uso diario:** las preguntas periódicas de la guía (qué usás más y qué casi nunca, qué molesta, qué errores aparecieron, qué cambió del ecosistema, si siguen valiendo los objetivos) y las señales de que algo no funciona de `02-definicion.md` › Criterios de éxito: volver a VS Code para conversar con la IA, Pendientes con preguntas de más o de menos, un proyecto frenado sin que se note.
 - **Cada versión:** se arma con **Armar** o `pnpm actualizar` y entra al cerrar Iridium; si sale mal, `pnpm volver` (`09-lanzamiento.md` › Vuelta atrás). Las que marcan algo van a `09-lanzamiento.md` › Historial de lanzamientos.
-- **Mantenimiento:** en cada sesión de operación, `pnpm audit` y `pnpm outdated`. Los parches de la misma versión se suben con las pruebas completas; las versiones mayores (Electron, Vite) van como tarea propia del Backlog. Si cambia algo de Claude Code o del SDK que rompe el motor, se vuelve al hito 3 para esa área.
+- **Mantenimiento:** en cada sesión de operación, `pnpm audit` y `pnpm outdated`. Los parches de la misma versión se suben con las pruebas completas; las versiones mayores (Electron, Vite) van como un `T-n` propio. Si cambia algo de Claude Code o del SDK que rompe el motor, se vuelve al hito 3 para esa área.
 - **Revisión de la documentación:** con cada módulo nuevo o cambio grande, que `docs/` diga lo que hace la app (y `DESIGN.md`, con `impeccable` › document).
 
 ## Señales recogidas
@@ -44,36 +44,8 @@ Problemas, de más a menos grave:
 
 Qué haría falta (Q-131; desde D-091, dentro del frente Orden): un solo formato (el de `ideas.md`: título con fecha, `Toca a`, `→`, y un estado: nueva · aceptada · hecha · descartada), un solo lugar por proyecto que no cambie con el hito, anotar sin la IA y ver las de todos juntas.
 
-## Backlog
-Una sola lista; se prioriza con el criterio del hito 2. Las funcionalidades que faltan del alcance están en `02-definicion.md` › Funcionalidades (Should y Could) y se agrupan en los frentes en espera de D-063.
-
-### Must
-- (nada: no hay defectos bloqueantes ni graves abiertos)
-
-### Should
-- **Frentes (D-091):** Orden, activo y primero (`modulos/orden/`); después Diseño y Capacidades (`02-definicion.md` › Módulos previstos). Mientras dure Orden, los `R-n` y los ajustes nuevos se anotan acá y se resuelven por tandas en su ronda de UX.
-- **Mantenimiento:** subir los parches (React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316) con las pruebas completas y armar.
-- **Lo del Gestor que falta en Iridium:** búsqueda entre proyectos, grupos y filtros (C-8, C-9). El menú del clic derecho y Nuevo proyecto ya están (D-089).
-- **Respaldo de `.iridium` en GitHub (D-087):** un botón en Ajustes › Proyectos que publique Ideas y Skills como repos privados y los suba solo; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub.
-- **Revisión:** la línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto (D-082).
-- **Seguir a la IA y el cierre de sesión con comprobación** (C-4, C-6); avisos de Windows (C-51).
-- **Plan completo:** decisiones, módulos como caja, todos los planes en una vista, diagramas (C-15, C-16, C-18, C-19).
-- **Pendientes completos:** adjuntos, formulario de arranque, respuestas que la IA toma sola, preguntas del chat que pasan a `Q-n` (C-24 a C-26, C-28).
-- **Puente:** del celular a la PC y la misma pieza para otro proyecto y otra app (C-41, C-42).
-
-### Could
-- Las Could de `02-definicion.md` (C-17, C-20, C-27, C-34, C-43, C-46 a C-48).
-- Las ideas de `07-construccion.md` › Ideas nuevas que no tienen frente: la sección de aprobados provisionales.
-- El `.zip` de `pnpm publicar` pesa unos 280 MB: probar a comprimirlo más (D-085).
-- Número de versión y `CHANGELOG.md` (D-077: la opción A de Q-109, cuando quieras).
-
-### Defectos y deuda abiertos
-- **Defecto 1** (`08-calidad.md` › Defectos): una prueba que falló una vez en la tanda completa. En observación: si vuelve, se guarda su `error-context` y se investiga. 2026-11-04: las tres de `r3-electron` fallaron juntas en una tanda completa; pasaron solas y en la tanda siguiente (81 de 81). 2026-11-04 (otra vez, en la tanda de D-087): las mismas tres; la tarjeta mostraba «Guardado en … R-1» cuando esperaba R-2, como si el número de comentario viniera de una prueba anterior. Pasaron solas. Pista para investigar: algo de la Revisión que queda entre una prueba y otra en la tanda completa.
-- **Defecto 4:** `minimatch` vulnerable dentro de `electron-builder`; no viaja en la app. Se cierra cuando `electron-builder` lo actualice (se mira en cada mantenimiento).
-- **Deuda** (`07-construccion.md` › Deuda técnica): lo copiado del Gestor sin usar (se usa con C-9 y C-10, o se borra) y la ventana sin minificar (si el arranque pasa de 2 s).
-
-### Fuera de este proyecto
-- Lo de poner al día `gestor-proyectos` y la guía `hitos-desarrollo-app` (D-062, D-063, D-068, Defectos 13 y 14) pasa al marco único (D-092), y las dos se eliminan cuando funcione. Traer a `Skills` las skills que la licencia permite (D-014): van en sesiones de `Skills`.
+## Trabajo
+Las ideas y los pendientes están en `trabajo.md`. La prioridad (Must, Should, Could) va en el texto de cada `T-n`; los frentes en espera, Diseño y Capacidades, son T-5 y T-28.
 
 ## Próxima versión
 - **Objetivo:** compartir Iridium (D-084 a D-087): hecho; falta invitar a la otra persona (Q-126). Después, Diseño y Capacidades (D-079).

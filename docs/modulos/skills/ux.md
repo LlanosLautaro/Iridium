@@ -46,7 +46,7 @@ Como usuario quiero ver qué proyectos quedaron con un formato viejo de la guía
 Ícono Skills o Ctrl+3  →  lista (última skill elegida; la primera vez, Proyectos atrasados) + chat de Skills
    ├─ elegir una skill           → detalle; el chat dice «Sobre la skill …»
    │     ├─ escribir en el chat  → la IA de Skills responde ahí
-   │     ├─ con ⚠ doble          → Pedir que la saquen → el pedido queda escrito en el chat
+   │     ├─ con ! doble          → Pedir que la saquen → el pedido queda escrito en el chat
    │     └─ Abrir carpeta        → el explorador de Windows
    └─ Proyectos atrasados        → lista de proyectos
          └─ Poner al día         → el pedido sale en la conversación de ese proyecto (● trabajando)
@@ -71,24 +71,24 @@ Volver: ícono Skills (sigue donde estaba)
 
 ```
 ┌───┬──────────────────────────────────────────────────────────────────────────────────┐
-│ ◆ │ Skills · 34 · ⚠ 1 doble                                 Uso 34 % · 61 %  [● otra app]│
+│ ◆ │ Skills · 34 · ! 1 doble                                 Uso 34 % · 61 %  [● otra app]│
 │───│────────────────────┬───────────────────────────┬─────────────────────────────────│
-│ ▦ │ ⟳ Proyectos atrasa-│ hitos-desarrollo-app      │ Skills          18 %   │
-│ ✉3│   dos · 3          │ Propia · enlace a Skills  │                                 │
-│ ✦ │────────────────────│ y Claude  [Abrir carpeta] │        ┌──────────────────────┐ │
+│ ■ │ ○ Proyectos atrasa-│ hitos-desarrollo-app      │ Skills          18 %   │
+│ □3│   dos · 3          │ Propia · enlace a Skills  │                                 │
+│ ✶ │────────────────────│ y Claude  [Abrir carpeta] │        ┌──────────────────────┐ │
 │   │ PROPIAS · 2        │                           │        │ ¿Se puede hacer que  │ │
 │   │▌hitos-desarrollo-… │ Guía de hitos para llevar │        │ la guía pida…?       │ │
 │   │   Guía de hitos p… │ una app desde la idea     │        └──────────────────────┘ │
 │   │ gestor-proyectos   │ vaga hasta el lanzamiento │ Sí: en «Formato de la documen-  │
 │   │   Reglas para ma…  │ y la operación… (entera)  │ tación» se puede sumar…         │
 │   │ COPIAS DE TERC.· 1 │                           │                                 │
-│   │ ⚠ impeccable       │ ⟳ 3 proyectos con un      │ ┌─────────────────────────────┐ │
+│   │ ! impeccable       │ ○ 3 proyectos con un      │ ┌─────────────────────────────┐ │
 │   │ DE COMPLEMENTOS·21 │   formato viejo → Ver     │ │ Sobre la skill hitos-desa… ✕│ │
 │   │ ▸ (plegado)        │                           │ │ Escribile a la IA…          │ │
 │   │ DESDE LA CUENTA·10 │                           │ └─────────────────────────────┘ │
-│ ⚙ │ ▸ (plegado)        │                           │                     [Enviar]    │
+│ ◇ │ ▸ (plegado)        │                           │                     [Enviar]    │
 └───┴────────────────────┴───────────────────────────┴─────────────────────────────────┘
- ✦ Skills (ícono nuevo) · ⟳ proyectos atrasados · ⚠ está dos veces
+ ✶ Skills (ícono nuevo) · ○ proyectos atrasados · ! está dos veces
 ```
 
   El detalle de una copia doble y la lista de atrasados, en la columna del medio:
@@ -97,7 +97,7 @@ Volver: ícono Skills (sigue donde estaba)
  impeccable                                Proyectos atrasados · 3
  Copia de un tercero · carpeta suelta      La guía va por el formato del 29 de octubre
  [Abrir carpeta]                           ┌──────────────────────────────────────┐
- ┌ ⚠ Está dos veces ──────────────────┐    │ [ícono] otra app               │
+ ┌ ! Está dos veces ──────────────────┐    │ [ícono] otra app               │
  │ También llega del complemento      │    │  formato del 16 de octubre           │
  │ impeccable (impeccable:impeccable).│    │                      [Poner al día]  │
  │ Sobra esta carpeta: la del         │    │ [ícono] otro proyecto  marcado a mano       │

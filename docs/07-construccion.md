@@ -10,15 +10,15 @@ Las historias *Must* de `04-ux.md` en seis iteraciones (eran cinco; D-041 sumó 
 
 | ID | Objetivo | Historias | Estado |
 |---|---|---|---|
-| I-1 | Esqueleto: la app abre, muestra los proyectos y entra a uno, con el instalador probado | H-1, H-3 | aprobada por el usuario (Q-57) |
-| I-2 | Conversar con la IA: Seguí, Detener y varias sesiones a la vez | H-4, H-5, H-14, H-2, H-6 | aprobada por el usuario (Q-58) |
-| I-3 | Pendientes: ver y responder las `Q-n` de todos los proyectos | H-9, H-10, H-11 | aprobada por el usuario (Q-60) |
-| I-4 | Marco de tres paneles (D-041), Mapa, Docs, Archivos y conversaciones anteriores; pendientes y scripts como entrada (D-043) | H-7, H-8, H-15, H-17, C-11 | aprobada por el usuario (Q-64), con los ajustes de Q-62 y Q-63 (D-044) |
-| Revisión | Módulo Revisión de la app: la extensión del navegador para comentar la app en desarrollo (D-046); su plan, en `modulos/revision/estado.md` | C-36 a C-39 | completo (R-I1 y R-I3 aprobadas; R-I2 validada en Q-108) |
-| I-5 | Git del proyecto, solo para mirar (D-041) | H-16 | aprobada por el usuario (Q-75), con el ajuste de D-058 (Q-76) |
-| I-6 | Uso, contexto, modelo y esfuerzo (D-045), avisos y errores del motor; cerrar con sesiones trabajando | H-12, H-13, F-5, F-6, C-58 | aprobada por el usuario (Q-77: los avisos, cerrar y los colores del uso el 2026-10-30; un día completo de uso el 2026-10-31) |
+| I-1 | Esqueleto: la app abre, muestra los proyectos y entra a uno, con el instalador probado | H-1, H-3 | hecho, aprobada por el usuario (Q-57) |
+| I-2 | Conversar con la IA: Seguí, Detener y varias sesiones a la vez | H-4, H-5, H-14, H-2, H-6 | hecho, aprobada por el usuario (Q-58) |
+| I-3 | Pendientes: ver y responder las `Q-n` de todos los proyectos | H-9, H-10, H-11 | hecho, aprobada por el usuario (Q-60) |
+| I-4 | Marco de tres paneles (D-041), Mapa, Docs, Archivos y conversaciones anteriores; pendientes y scripts como entrada (D-043) | H-7, H-8, H-15, H-17, C-11 | hecho, aprobada por el usuario (Q-64), con los ajustes de Q-62 y Q-63 (D-044) |
+| Revisión | Módulo Revisión de la app: la extensión del navegador para comentar la app en desarrollo (D-046); su plan, en `modulos/revision/estado.md` | C-36 a C-39 | hecho (R-I1 y R-I3 aprobadas; R-I2 validada en Q-108) |
+| I-5 | Git del proyecto, solo para mirar (D-041) | H-16 | hecho, aprobada por el usuario (Q-75), con el ajuste de D-058 (Q-76) |
+| I-6 | Uso, contexto, modelo y esfuerzo (D-045), avisos y errores del motor; cerrar con sesiones trabajando | H-12, H-13, F-5, F-6, C-58 | hecho, aprobada por el usuario (Q-77: los avisos, cerrar y los colores del uso el 2026-10-30; un día completo de uso el 2026-10-31) |
 | I-7 | Compartir: por ahora solo para el usuario (D-069): iniciar sesión desde Iridium, actualización al cerrar, GitHub privado con `dev` y `main`, elegir la carpeta de proyectos | C-59 | en curso: es el frente Compartir (`modulos/compartir/`; CO-I1 a CO-I4 hechas: falta probar CO-I2 y CO-I4) |
-| I-8 | Frentes y Postergar: el Mapa y Pendientes muestran cada frente; el botón Postergar en las pruebas (D-063) | C-62, C-63 | aprobada por el usuario (Q-82) |
+| I-8 | Frentes y Postergar: el Mapa y Pendientes muestran cada frente; el botón Postergar en las pruebas (D-063) | C-62, C-63 | hecho, aprobada por el usuario (Q-82) |
 
 El módulo Revisión se construye antes de I-5 (D-046). Al terminar I-6 el MVP está completo. Desde D-063 el trabajo sigue por **frentes** (el núcleo o un módulo): I-8 prepara el Mapa y Pendientes para verlos, y después avanzan hasta dos a la vez, primero Skills y Apariencia y ajustes (abiertos el 2026-10-30: `modulos/skills/` y `modulos/apariencia/`). Apariencia terminó su construcción el 2026-10-31 (AP-I1) y entró Compartir (I-7). Las dos semanas de uso real de `02-definicion.md` › Criterios de éxito (hito 8) corren mientras tanto.
 
@@ -70,7 +70,7 @@ Cada iteración termina con capturas de la app abierta (Playwright, con el motor
 - **Prueba del usuario:** usar el MVP un día completo con dos o tres proyectos.
 
 ### I-7 — Compartir (beta)
-> **Desde D-069 (Q-90) se hace en el módulo Compartir y solo para el usuario; lo de abajo que es para repartir queda en suspenso.** D-054 (Q-72). El detalle de lo que falta está en Ideas nuevas › Compartir Iridium con conocidos.
+> **Desde D-069 (Q-90) se hace en el módulo Compartir y solo para el usuario; lo de abajo que es para repartir queda en suspenso.** D-054 (Q-72). El detalle de lo que faltaba está en `trabajo.md` › T-23.
 - **GitHub:** el repo con las ramas `dev` (trabajo) y `main` (lo que se reparte), con doble factor; **público** (Q-73, D-057).
 - **Limpiar `docs/` antes de publicar (D-057):** que solo hable de Iridium. Lo que trata de otros proyectos (otras apps, otra app, otro proyecto, el Gestor, `Skills`) se generaliza («una app Electron del usuario») o sale del repo; las rutas de la PC del usuario y su carpeta de proyectos, también. Se revisa también el historial de git, que es público con el repo.
 - **Instalador con actualización:** publicado en GitHub Releases, versiones beta; Iridium avisa y se actualiza al cerrar (resuelve armar Iridium con la app abierta).
@@ -393,38 +393,17 @@ Pedidos del usuario al usar Iridium todos los días.
 - `IRIDIUM_OCULTA=1` (en lugar de `IRIDIUM_SIN_FOCO`): la ventana se abre a 20.000 píxeles fuera de la pantalla, sin botón en la barra de tareas y sin foco, y Chromium la sigue dibujando; las consolas de Scripts corren escondidas. La ponen Playwright y las herramientas que abren la app.
 - Verificado: la ventana queda en (−20000, −20000), visible para Electron y sin foco; las capturas salen completas (`co6-armando.png`). Pasan 462 de Vitest y 63 de Playwright. **Prueba:** Q-104.
 
-## Pruebas manuales pendientes (aprobadas provisionales)
+## Pruebas a mano de lo aprobado provisional (historial)
 Lo que se aprobó provisionalmente (D-056) o se postergó con el botón de Pendientes (D-063): se sigue como si funcionara y la prueba a mano queda acá, con dónde mirar si falla. El hito 8 (Pruebas y calidad) las recorre todas; antes, si el usuario quiere.
 
 | Qué | Por qué quedó para después | Pruebas | Dónde mirar si falla | Origen |
 |---|---|---|---|---|
 | R-I2 — Revisión en Iridium | El usuario no usa Edge ni apps en el navegador; las automáticas pasan (R-I2 en el log) | 1. En una app (Electron o en Edge) cuyo proyecto está como pestaña: `F8`, clic, escribir y `Ctrl+Enter`: la tarjeta dice «Enviado a la sesión de…» y el comentario aparece como tarjeta en la conversación. 2. La IA lo cierra: baja el número del ícono Revisión y pasa a Cerrados con lo que hizo. 3. El archivo y la línea de un comentario abren Archivos con la línea marcada; Atrás vuelve. 4. Reabrir un cerrado con una nota: vuelve a Abiertos. 5. En un proyecto sin pestaña, Enviar ahora lo guarda y avisa que no hay sesión | El receptor y el envío a la sesión: `src/main/infra/revision/receptor.ts` y `src/main/app/revision/`; D-048 y D-049; lo cubre `tests/e2e/r2-revision.spec.ts` | Q-74; **validada** en Q-108 (2026-11-02): el punto 1 con el archivo y la línea, a mano en una app Electron; lo demás, `r2-revision` en la tanda completa del hito 8 |
 
-## Ideas nuevas (pendientes de evaluar en la definición)
-- **Una sección de aprobados provisionales (2026-10-29, Q-74).** Ver en Iridium, de todos los proyectos, lo que quedó aprobado provisional con sus pruebas a mano pendientes, y poder marcarlas cuando se hacen. Hoy viven en la tabla «Pruebas manuales pendientes» de cada `07-construccion.md`.
-- **Un atajo a las ideas en la barra de la izquierda (2026-10-29, Q-74; hecho en D-089, «Ideas del proyecto»).** Un ícono que abre las ideas del proyecto (`07-construccion.md` › Ideas nuevas; antes del hito 2, `00-idea.md` › Ideas para después) sin buscarlas en Docs.
-- **Compartir Iridium con conocidos, con actualizaciones (2026-10-29, Q-72 → I-7, D-054).** Subir el repo a GitHub con dos ramas (`dev` para trabajar, `main` para lo que se reparte), versiones marcadas como beta (hoy 0.1.0), un instalador publicado en GitHub Releases y que Iridium se actualice solo o avise («hay una versión nueva, ¿instalar al cerrar?»). Lo que hoy no está y haría falta:
-  - **GitHub:** el repo es solo local (no tiene remoto). Si el código es privado, los conocidos no pueden bajar las actualizaciones sin una clave; la salida habitual es un repo público solo con los instaladores, o hacer público el código (incluye `docs/`, con tus notas y decisiones).
-  - **Carpeta de proyectos:** está fija en la tuya (`RAIZ_DEL_GESTOR`); hay que dejar elegirla al primer arranque.
-  - **La forma de trabajar:** Iridium lee `docs/estado.md`, las `Q-n` y `scripts.md` con el formato de la guía `hitos-desarrollo-app`. Sin la guía instalada, los proyectos de otros se ven casi vacíos: habría que repartirla con Iridium (es tuya, de `Skills`) o que Iridium la instale.
-  - **Claude Code:** la app trae el suyo y usa la sesión iniciada de cada uno, con su propia suscripción; no necesitan nada extra. Falta confirmar que las condiciones de uso lo permitan en una app repartida (`01-exploracion.md` › Usar la suscripción y no la API).
-  - **Perfil y protección:** deja de ser «solo el usuario». La actualización automática es un canal para meter código en PCs ajenas, con una IA que ejecuta comandos sin pedir permiso (D-021): la cuenta de GitHub necesita doble factor, y el instalador sin firma muestra el aviso de Windows SmartScreen.
-  - **De paso**, el instalador con actualización al cerrar resuelve el pendiente de I-6 «Armar Iridium no puede reemplazar la app abierta».
+## Ideas y pendientes
+Las ideas y los pendientes están en `trabajo.md`.
 
-- **Postergar una prueba sin perderla (2026-10-30).** Decidido en Q-81: el botón **Postergar**, en I-8 (D-063).
-- **Ideas y Skills como paneles del inicio (2026-10-30; Skills hecho en D-068, Ideas es el módulo Inicio, D-079).** Que `Ideas` y `Skills` dejen de verse como proyectos y sean íconos de la barra de la izquierda en el inicio, junto a Proyectos y Pendientes. Toca D-060 (el chat de la vista de Proyectos trabaja en la carpeta `Ideas`) y el módulo Skills (`02-definicion.md` › Módulos previstos), que ya absorbe el trabajo de `Skills` (D-018).
-- **Temas (2026-10-30).** Poder cambiar la apariencia: probar uno mucho más sobrio, como macOS, Claude Code Desktop u Obsidian. D-029 dejó un solo tema oscuro; un tema más sería un juego de tokens (`06-ui.md`).
-- **Ajustes y perfil (2026-10-30).** Una pantalla de configuración y opciones de perfil (hoy no hay ninguna).
-- **Skills: verlas, elegirlas y gestionarlas (2026-10-30).** Ver las skills instaladas en la PC, elegir cuáles usa cada proyecto y gestionarlas. Es el módulo Skills (C-44 a C-48, C-52, C-53).
-- **Más capacidades de Claude (2026-10-30).** Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium.
-
-- **Frentes en paralelo y la guía según el tipo de proyecto (2026-10-30, Q-80).** Los frentes se decidieron en Q-80 (D-063: I-8 y después Skills y Apariencia y ajustes); la guía según el tipo de proyecto sigue como idea. El usuario propone que el núcleo (el MVP) sea un frente más y que los módulos compatibles avancen al mismo tiempo, cada uno con sus pendientes y su mapa; que la guía cambie según lo que se hace (herramienta personal sin lanzamiento real, producto, juego: `00-idea.md` › Ideas para después y Q-13) y que venga con Iridium. Lo pesado, en la conversación del 2026-10-30:
-  - **Ya existe en parte:** la guía tiene módulos con su ciclo y su `estado.md`, y uno de sus motivos es «avanza en paralelo»; Revisión se construyó en medio del MVP. Lo que falta está en Iridium: el Mapa y Pendientes no distinguen módulos (todo se ve como un solo plan).
-  - **Límites reales:** el cuello de botella son las pruebas y decisiones del usuario y su cuota de uso, no la IA; una sesión por proyecto (D-015) hace que dos frentes del mismo repo se turnen en vez de correr a la vez (correr a la vez pediría copias de trabajo aparte de git); y un módulo sobre un núcleo que todavía cambia se rompe con él.
-  - **Propuesta:** el núcleo tiene un portón «estable» (arquitectura y design system cerrados, en uso diario); pasado ese portón, hasta dos frentes activos a la vez, cada uno con su estado y sus `Q-n`, y los demás en espera. Iridium muestra el Mapa y Pendientes por frente. Compartir (I-7) deja de ser parte del núcleo: es un frente.
-  - **La guía:** una herramienta personal no tiene lanzamiento real; el hito 9 se vuelve «ponerla en uso» (instalar, actualizar, copias de seguridad) y el 10 casi no aplica. Un juego cambia desde la raíz (documento de diseño, prueba de una porción jugable, motor y contenido como frentes paralelos sobre un motor estable); conviene escribir esa variante cuando haya un juego de verdad para probarla. Los cambios de la guía se hacen en `Skills`; que venga con Iridium ya está en I-7.
-
-## Pendientes reportados (errores y ajustes que no se resolvieron en el momento)
+## Errores y ajustes reportados (historial: todos resueltos; los nuevos van a `trabajo.md`)
 | Fecha | Qué | Tipo (defecto / ajuste) | Iteración o hito donde se resuelve |
 |---|---|---|---|
 | 2026-10-28 | Las citas a `scripts.md` (p. ej. «`scripts.md` › Abrir Iridium») son solo texto: la sección de scripts debería mostrar botones que los ejecuten, solo con los que usa el usuario (modo desarrollo, armar el instalador, armar e instalar o actualizar) (Q-59) | ajuste | Resuelto en I-4: las citas son enlaces y los scripts, botones (D-043) |

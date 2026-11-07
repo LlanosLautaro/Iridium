@@ -2,7 +2,7 @@
 
 Esta carpeta documenta el desarrollo de la app hito por hito. Es documentación viva: se actualiza cuando cambia algo.
 
-**Formato de la guía:** 2026-10-29
+**Framework:** 2026-11-06
 
 ## Por dónde empezar
 1. `estado.md` — en qué hito está el proyecto y qué sigue.
@@ -13,11 +13,12 @@ Esta carpeta documenta el desarrollo de la app hito por hito. Es documentación 
 ## Índice
 | Documento | Contenido |
 |---|---|
-| `estado.md` | Hito actual, pendientes, preguntas abiertas, próximo paso |
+| `estado.md` | Hito actual, frentes, preguntas abiertas, próximo paso |
+| `trabajo.md` | Las ideas y los pendientes de la IA (`T-n`) |
 | `scripts.md` | Lo que el usuario ejecuta a mano: instalar, modo desarrollo, instaladores |
 | `perfil-proyecto.md` | Alcance, plataforma, datos, nivel de protección |
 | `decisiones.md` | Registro de decisiones con su porqué |
-| `plan-desarrollo.md` | Adaptación de la guía para este proyecto: exploración y definición a fondo (D-004) |
+| `plan-desarrollo.md` | Adaptación del método de hitos para este proyecto: exploración y definición a fondo (D-004) |
 | `00-idea.md` | La idea original |
 | `01-exploracion.md` | Alternativas existentes y diferencial |
 | `02-definicion.md` | Objetivo, funcionalidades, MVP, fuera de alcance, glosario |
@@ -28,14 +29,21 @@ Esta carpeta documenta el desarrollo de la app hito por hito. Es documentación 
 | `07-construccion.md` | Iteraciones, deuda técnica |
 | `08-calidad.md` | Verificación y defectos |
 | `09-lanzamiento.md` | Build, distribución, versiones |
-| `10-operacion.md` | Mantenimiento, backlog, próxima versión |
+| `10-operacion.md` | Señales, mantenimiento, próxima versión |
 | `respuestas/` | Respuestas del usuario a las preguntas `Q-n`, con sus adjuntos |
-| `modulos/` | Secciones, plugins y productos hermanos con desarrollo propio (índice en `modulos/README.md`) |
+| `revision/` | Comentarios del usuario sobre la interfaz (`R-n`) |
+| `modulos/` | Frentes: secciones, plugins y productos hermanos con desarrollo propio (índice en `modulos/README.md`) |
 
 ## Códigos
-Los códigos estándar (`D` decisión, `Q` pregunta, `H` historia, `F` flujo, `W` pantalla, `S` spike, `I` iteración; `P1`–`P5` es el nivel de protección) están en la skill. Los propios de este proyecto se declaran acá antes de usarlos.
+Los estándar (`D`, `Q`, `T`, `R`, `H`, `F`, `W`, `S`, `I`; `P1`–`P5` es el nivel de protección) están en el framework. Los propios de este proyecto se declaran acá antes de usarlos.
 
 | Prefijo | Qué es | Dónde se define |
 |---|---|---|
 | `C-n` | caso de uso del catálogo | `02-definicion.md` › Catálogo de casos de uso |
 | `B-n` | capacidad que la base tiene que dar | `02-definicion.md` › Lo que la base tiene que dar |
+| `A-n` | hallazgo de la auditoría del frente Orden | `modulos/orden/auditoria.md` |
+| `OR-n` | pieza de la definición del frente Orden | `modulos/orden/definicion.md` |
+| `PO-n` | pantalla del frente Orden antes de pasar a `W-n` (historia) | `modulos/orden/ux.md` |
+| `CO-n`, `AJ-n`, `IN-n`, `FR-n` | historia o flujo de un frente: Compartir, Apariencia y ajustes, Inicio, Revisión de la app | el `ux.md` de su frente |
+| `OR-In`, `CO-In`, `SK-In`, `AP-In`, `IN-In`, `R-In` | iteración de un frente: Orden, Compartir, Skills, Apariencia y ajustes, Inicio, Revisión de la app | el `estado.md` de su frente |
+| `Defecto n` | defecto encontrado en el hito 8 | `08-calidad.md` › Defectos |

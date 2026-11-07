@@ -57,10 +57,10 @@ Volver: ícono Ideas (sigue donde estaba)
 ┌───┬──────────────────────────────────────────────────────────────────────────────────┐
 │ ◆ │ Ideas · 7 sin integrar                 [Abrir como proyecto]  Uso 34 % · [● otra app] │
 │───│────────────────────┬───────────────────────────┬─────────────────────────────────│
-│ ▦ │ SUELTAS · 3        │ App de arquitectura       │ Chat general             18 %   │
-│ ✉3│▌App de arquitect…  │ guiada por IA             │                                 │
-│ ✦ │   30 oct.          │ Suelta · 30 de octubre    │        ┌──────────────────────┐ │
-│ 💡│ Gestor de audio …  │                           │        │ ¿Esto podría ser un  │ │
+│ ■ │ SUELTAS · 3        │ App de arquitectura       │ Chat general             18 %   │
+│ □3│▌App de arquitect…  │ guiada por IA             │                                 │
+│ ✶ │   30 oct.          │ Suelta · 30 de octubre    │        ┌──────────────────────┐ │
+│ ○ │ Gestor de audio …  │                           │        │ ¿Esto podría ser un  │ │
 │   │   16 oct.          │ Para más adelante. Una    │        │ módulo de Iridium?   │ │
 │   │ Lanzador de juegos │ persona sin conocimientos │        └──────────────────────┘ │
 │   │   16 oct.          │ habla con una IA que hace │ Podría, pero el dominio es…     │
@@ -69,9 +69,9 @@ Volver: ícono Ideas (sigue donde estaba)
 │   │   otra app · otro proyecto   │ Toca a: Centro de Desarr. │ │ Sobre la idea «App de ar… ✕ │ │
 │   │ …                  │                           │ │ Escribile a la IA…          │ │
 │   │ INTEGRADAS · 5     │      [Pedir que la integren]│ └─────────────────────────────┘ │
-│ ⚙ │ ▸ (plegado)        │                           │                     [Enviar]    │
+│ ◇ │ ▸ (plegado)        │                           │                     [Enviar]    │
 └───┴────────────────────┴───────────────────────────┴─────────────────────────────────┘
- 💡 Ideas (ícono nuevo, el cuarto)
+ ○  Ideas (ícono nuevo, el cuarto)
 ```
 - Estados:
   - **Con datos:** lo de arriba. El orden es el del archivo (la IA pone la más nueva arriba).

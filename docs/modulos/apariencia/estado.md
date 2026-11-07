@@ -7,24 +7,18 @@
 ## Progreso
 | Paso | Estado | Documento |
 |---|---|---|
-| 1. Propuesta | completo (Q-84) | `propuesta.md` |
-| 2. Definición | completo (D-065) | `definicion.md` |
-| 3. Investigación | saltado (alcanza con mirar las apps de referencia en la UX) | — |
-| 4. UX | completo (maqueta `docs/ui/vista-ajustes.html`) | `ux.md` |
-| 5. Diseño técnico | completo | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | completo: tema Carbón (D-066) y la ventana flotante | `06-ui.md`, `DESIGN.md`, `docs/ui/tokens.css` |
-| 7. Construcción | completo (AP-I1 aprobada, Q-88) | `07-construccion.md` › AP-I1 |
-| 8. Calidad | completo (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
-| 9. Lanzamiento | completo (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
+| 1. Propuesta | hecho (Q-84) | `propuesta.md` |
+| 2. Definición | hecho (D-065) | `definicion.md` |
+| 3. Investigación | descartado (alcanza con mirar las apps de referencia en la UX) | — |
+| 4. UX | hecho (maqueta `docs/ui/vista-ajustes.html`) | `ux.md` |
+| 5. Diseño técnico | hecho | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | hecho: tema Carbón (D-066) y la ventana flotante | `06-ui.md`, `DESIGN.md`, `docs/ui/tokens.css` |
+| 7. Construcción | hecho (AP-I1 aprobada, Q-88) | `07-construccion.md` › AP-I1 |
+| 8. Calidad | hecho (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
+| 9. Lanzamiento | hecho (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
 
 ## En qué estamos ahora
 AP-I1 está aprobada (Q-88): la ventana de Ajustes, los dos temas, los nombres y el tono funcionan, y las descripciones de Conciso y Proactivo quedaron bien. La construcción terminó y la calidad pasó con el hito 8 (los dos temas revisados, Q-108). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10).
-
-## Pendientes
-(ninguno hasta el hito 8)
-
-## Preguntas abiertas
-(ninguna)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -35,8 +29,8 @@ AP-I1 está aprobada (Q-88): la ventana de Ajustes, los dos temas, los nombres y
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| AP-I1 | La ventana de Ajustes (⚙ y `Ctrl+,`) con Perfil, IA (nombre y tono) y Apariencia (Iridium o Carbón), guardada en `config.json`, el tema sin parpadeo al abrir y el tono en las sesiones (AJ-1 a AJ-3) | aprobada por el usuario (Q-88) |
+| AP-I1 | La ventana de Ajustes (⚙ y `Ctrl+,`) con Perfil, IA (nombre y tono) y Apariencia (Iridium o Carbón), guardada en `config.json`, el tema sin parpadeo al abrir y el tono en las sesiones (AJ-1 a AJ-3) | hecho, aprobada por el usuario (Q-88) |
 
 ## Próximo paso
-Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `10-operacion.md` › Backlog. Una idea nueva de apariencia (un tema claro, la foto del perfil) va al Backlog.
+Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `trabajo.md`. Una idea nueva de apariencia (un tema claro, la foto del perfil) va a `trabajo.md`.
 **Leer antes:** nada.

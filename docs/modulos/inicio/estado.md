@@ -7,26 +7,20 @@
 ## Progreso
 | Paso | Estado | Documento |
 |---|---|---|
-| 1. Propuesta | completo (Q-113: B, el chat queda también al lado de la grilla) | `propuesta.md` |
-| 2. Definición | completo (Q-114: A) | `definicion.md` |
-| 3. Investigación | saltado (`ideas.md` ya tiene formato fijo, el de `Ideas/CLAUDE.md`) | — |
-| 4. UX | completo (Q-114: A) | `ux.md` |
-| 5. Diseño técnico | completo (Q-114: A) | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | saltado: se arma con las piezas de Skills; el ícono nuevo va con la construcción | — |
-| 7. Construcción | completo (IN-I1) | este archivo |
-| 8. Calidad | completo (Q-115: bien, salvo Pedir que la integren, que se sacó) | este archivo |
-| 9. Lanzamiento | completo (entra con Armar, como cada versión) | este archivo |
+| 1. Propuesta | hecho (Q-113: B, el chat queda también al lado de la grilla) | `propuesta.md` |
+| 2. Definición | hecho (Q-114: A) | `definicion.md` |
+| 3. Investigación | descartado (`ideas.md` ya tiene formato fijo, el de `Ideas/CLAUDE.md`) | — |
+| 4. UX | hecho (Q-114: A) | `ux.md` |
+| 5. Diseño técnico | hecho (Q-114: A) | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | descartado: se arma con las piezas de Skills; el ícono nuevo va con la construcción | — |
+| 7. Construcción | hecho (IN-I1) | este archivo |
+| 8. Calidad | hecho (Q-115: bien, salvo Pedir que la integren, que se sacó) | este archivo |
+| 9. Lanzamiento | hecho (entra con Armar, como cada versión) | este archivo |
 
 ## En qué estamos ahora
 Módulo completo (2026-11-04). Con Q-115 probaste IN-I1: todo bien menos **Pedir que la integren**, que no querías (para eso está el chat): se sacó. **Abrir como proyecto** te llevó a pensar la carpeta de Iridium como un «vault» (`.iridium` con Ideas, Skills y los datos internos, y respaldo opcional en GitHub): eso es Q-125, en `docs/estado.md`. Las ideas y las skills de cada proyecto (R-8) se hicieron después, en D-089.
 
 Verificado: `pnpm test` (564), `pnpm e2e` (81), typecheck y lint.
-
-## Pendientes
-(ninguno)
-
-## Preguntas abiertas
-(ninguna)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -40,7 +34,7 @@ Verificado: `pnpm test` (564), `pnpm e2e` (81), typecheck y lint.
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| IN-I1 | La sección Ideas (`Ctrl+4`), la grilla solo con proyectos y Abrir como proyecto (IN-1 a IN-3) | aprobada (Q-115), sin Pedir que la integren |
+| IN-I1 | La sección Ideas (`Ctrl+4`), la grilla solo con proyectos y Abrir como proyecto (IN-1 a IN-3) | hecho, aprobada (Q-115), sin Pedir que la integren |
 
 ## Próximo paso
 Ninguno: el módulo está completo. Lo que sigue del frente está en `docs/estado.md` (Q-125) y en el Backlog de `10-operacion.md`.

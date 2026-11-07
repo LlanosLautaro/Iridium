@@ -7,24 +7,18 @@
 ## Progreso
 | Paso | Estado | Documento |
 |---|---|---|
-| 1. Propuesta | completo (D-012, D-046) | `propuesta.md` |
-| 2. Definición | completo (D-047; aprobada en Q-68) | `definicion.md` |
-| 3. Investigación | completo (S-3) | `investigacion.md` |
-| 4. UX | completo (Q-69, D-049) | `ux.md` |
-| 5. Diseño técnico | completo (D-048) | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | completo (Q-69, D-049) | `ui/vista-revision.html` + `DESIGN.md` › Revisión de la app |
-| 7. Construcción | completo (R-I1 y R-I3 aprobadas en Q-70; R-I2 validada en Q-108) | este archivo; log en `07-construccion.md` › R-I1, R-I2 y R-I3 |
-| 8. Calidad | completo (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
-| 9. Lanzamiento | completo (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
+| 1. Propuesta | hecho (D-012, D-046) | `propuesta.md` |
+| 2. Definición | hecho (D-047; aprobada en Q-68) | `definicion.md` |
+| 3. Investigación | hecho (S-3) | `investigacion.md` |
+| 4. UX | hecho (Q-69, D-049) | `ux.md` |
+| 5. Diseño técnico | hecho (D-048) | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | hecho (Q-69, D-049) | `ui/vista-revision.html` + `DESIGN.md` › Revisión de la app |
+| 7. Construcción | hecho (R-I1 y R-I3 aprobadas en Q-70; R-I2 validada en Q-108) | este archivo; log en `07-construccion.md` › R-I1, R-I2 y R-I3 |
+| 8. Calidad | hecho (con el hito 8, `08-calidad.md`; portón aprobado en Q-108) | este archivo |
+| 9. Lanzamiento | hecho (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
 
 ## En qué estamos ahora
 Construcción y calidad completas: R-I2 quedó validada con tu recorrido (Q-108) y la prueba intermitente de Electron era un caso real, arreglado (Defecto 7: con la PC ocupada un comentario podía salir sin archivo ni línea). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). 2026-11-05: tercer estado «anotado» para lo que queda en un plan sin hacer (R-9, D-088).
-
-## Pendientes
-(ninguno: lo que sigue es la calidad, con el hito 8)
-
-## Preguntas abiertas
-(ninguna)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -48,10 +42,10 @@ Construcción y calidad completas: R-I2 quedó validada con tu recorrido (Q-108)
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| R-I1 | Comentar en el navegador: extensión, receptor, `R-n` con archivo, línea y captura, proyecto, cola | aprobada (2026-10-29, Q-70) |
-| R-I2 | Revisión en Iridium (con la detección y Pedírselo a la IA de R-I3), Enviar ahora, mensaje en la conversación, instrucción a la IA | validada (2026-11-02, Q-108) |
-| R-I3 | Electron: ayudante, captura, proyecto y la línea en las apps (adelantada, D-051) | aprobada (2026-10-29, Q-70) |
+| R-I1 | Comentar en el navegador: extensión, receptor, `R-n` con archivo, línea y captura, proyecto, cola | hecho, aprobada (2026-10-29, Q-70) |
+| R-I2 | Revisión en Iridium (con la detección y Pedírselo a la IA de R-I3), Enviar ahora, mensaje en la conversación, instrucción a la IA | hecho, validada (2026-11-02, Q-108) |
+| R-I3 | Electron: ayudante, captura, proyecto y la línea en las apps (adelantada, D-051) | hecho, aprobada (2026-10-29, Q-70) |
 
 ## Próximo paso
-Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `10-operacion.md` › Backlog.
+Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `trabajo.md`.
 **Leer antes:** nada.

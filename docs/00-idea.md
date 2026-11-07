@@ -45,19 +45,10 @@ Para confirmar o corregir (son la reformulación de la IA):
 - otro proyecto: también prevé hablar con el celular (la PC como servidor, VPN tipo Tailscale) y conectores por dispositivo. El puente PC–celular se superpone con eso (Q-3).
 - otra app: "Compartir con otra app" desde el celular y otra app como servidor usarían el mismo puente.
 
-## Ideas para después (sin compromiso)
-Funcionalidades:
-- Guía de hitos por género: para juegos (historia, arte, música, mundo, motor propio) el flujo cambia desde la raíz; la guía preguntaría al empezar si es una app o un juego. Con formularios prearmados para contestar antes de hablar con la IA (Q-13; se hace en `Skills`, y los formularios se ven en el área Pendientes del usuario).
-- Canvas para pensar una idea con la IA (postergado por D-008; candidato: Excalidraw dentro de la app, con los dibujos como archivos del proyecto).
-- Vista del plan de cada proyecto: hitos, iteraciones, decisiones, módulos.
-- Bandeja única de pendientes del usuario (las `Q-n` de todos los proyectos; forma en D-010).
-- Biblioteca de diseño local: design systems, patrones y capturas de páginas de referencia; prototipos con comentarios.
-- Inspector con comentarios para apps web y Electron en desarrollo (forma en D-012 y D-047; entró al MVP por D-046); para Android, más adelante.
-- Gestor de skills: las skills locales compartidas, verlas y administrarlas desde el Centro; adaptar skills públicas.
-- Puente PC–celular: APKs, archivos, textos, notificaciones; quizás instalar desde la PC.
-- Versión del Centro para Linux o para el celular (Q-30). Linux sale casi gratis si la tecnología del hito 5 es multiplataforma; el celular es otra app: pantalla chica y Claude Code no corre ahí, así que hablaría con la PC.
+## Ideas y pendientes
+Las ideas y los pendientes están en `trabajo.md`.
 
-Ideas técnicas ya conversadas (para los hitos 3 y 5, sin decidir):
-- Usar la suscripción y no la API: para uso personal Anthropic lo permite (Agent SDK o `claude -p` con el plan, según su ayuda del 2026-10-07); la API hace falta solo si la app se distribuye a otros. Confirmar al empezar: la política cambió varias veces en 2026.
-- Claude Code por debajo como motor; la app es la capa de gestión y de interfaz.
-- Para el puente, mirar primero lo que existe (hito 1): LocalSend, KDE Connect, Syncthing, Taildrop de Tailscale, ADB por Wi-Fi.
+## Portón
+- [x] Hay una frase que resume la idea y el usuario la reconoce como suya (Q-1).
+- [x] Está claro el problema que resuelve y para quién.
+- [x] Las ideas sueltas quedaron registradas sin compromiso (hoy en `trabajo.md`).

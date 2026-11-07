@@ -10,9 +10,9 @@ Un caso por fila, en una o dos líneas, agrupados por área. Sirven para probar 
 
 | Tanda | Áreas | Estado |
 |---|---|---|
-| 1 | Marco y motor; Proyectos y plan | aprobada (Q-25) |
-| 2 | Pendientes del usuario; Diseño | aprobada (Q-26) |
-| 3 | Revisión de la app; Puente PC–celular; Skills | aprobada (Q-27) |
+| 1 | Marco y motor; Proyectos y plan | hecho, aprobada (Q-25) |
+| 2 | Pendientes del usuario; Diseño | hecho, aprobada (Q-26) |
+| 3 | Revisión de la app; Puente PC–celular; Skills | hecho, aprobada (Q-27) |
 
 ### Marco y motor
 | Caso | Qué hace el usuario | Base | Prioridad |
@@ -176,7 +176,7 @@ Salen del catálogo (las prioridades de cada caso están ahí).
 
 ### Won't (por ahora)
 - Kanban de tareas — la IA ubica las tareas; al usuario no le sirve moverlas (D-008).
-- Canvas para pensar ideas — el usuario todavía no sabe cómo lo usaría (D-008; queda en `00-idea.md` › Ideas para después).
+- Canvas para pensar ideas — el usuario todavía no sabe cómo lo usaría (D-008; queda en `trabajo.md` › T-2).
 - Varias sesiones dentro de un mismo proyecto — para eso está Claude Code Desktop o la CLI (D-015).
 - Sesiones en la nube y mandar tareas desde el celular (Dispatch) — no hacen falta para dirigir (D-006).
 - Revisión de apps Electron y Android — después de las web (D-012).
@@ -296,3 +296,13 @@ El núcleo es lo del MVP: marco, plan y pendientes. Las demás áreas se constru
 Desde D-063 cada módulo es un **frente**: avanzan hasta dos a la vez. Skills, Compartir y Apariencia y ajustes están terminados y en uso (hito 9). Inicio, terminado (2026-11-04). Activo y primero: Orden (desde el 2026-11-05, D-091). En espera, en este orden: Diseño, Capacidades.
 
 El puente no es módulo: es LocalSend más un envío automático (D-005). No hay plugins de terceros previstos.
+
+## Portón
+- [x] `perfil-proyecto.md` completo, con nivel de protección asignado y justificado (P2).
+- [x] Objetivo y criterios de éxito comprobables.
+- [x] Funcionalidades clasificadas en MoSCoW.
+- [x] MVP descrito en un párrafo.
+- [x] Lista de «fuera de alcance».
+- [x] Glosario inicial.
+- [x] Preguntas abiertas para el hito 3.
+- [x] Módulos previstos identificados.

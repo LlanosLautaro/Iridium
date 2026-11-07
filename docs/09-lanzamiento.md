@@ -43,7 +43,7 @@ La versión anterior se borra apenas entra la nueva (`tools/cambiar-version.ps1`
 | c012989 | 2026-11-04 | La segunda para compartir: avisa si falta iniciar sesión en GitHub (Q-123), trae la skill de Iridium y la guía (D-086) y guarda Ideas y Skills en `.iridium` (D-087). Probada de punta a punta con GitHub. Es la de `Iridium para compartir`. |
 | aca3668 | 2026-11-04 | La primera publicada para compartir (D-085), en el repo nuevo: `iridium-2026-11-04-1759-aca3668` en GitHub. La copia de `Iridium para compartir` es esta. |
 
-## Pendientes del hito
+## Tareas del hito (hechas)
 - [x] Q-109: sin número por ahora (D-077).
 - [x] Q-110: la vuelta atrás, `pnpm volver` (D-078).
 - [x] `README.md` del repo al día: qué es, cómo se arma y se usa, cómo está hecho y dónde está la documentación (2026-11-02).

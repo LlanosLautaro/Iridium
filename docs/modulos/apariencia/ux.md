@@ -29,7 +29,7 @@ Como usuario quiero elegir cómo me responde la IA en Iridium.
 
 ## Flujos
 ```
-⚙ o Ctrl+,  →  ventana de Ajustes (última sección)
+◇ o Ctrl+,  →  ventana de Ajustes (última sección)
                  ├─ Perfil      → escribir nombre → se ve en la conversación
                  ├─ IA          → nombre (opcional) · tono → mensajes siguientes
                  └─ Apariencia  → tocar un tema → toda la app cambia
@@ -47,8 +47,8 @@ Esc · ✕ · clic afuera  →  vuelve a donde estaba
 ```
 ┌───┬────────────────────────────────────────────────────────────────┐
 │   │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│
-│ ▦ │░░░┌──────────────────┬────────────────────────────────────┐░░░░│
-│ ✉ │░░░│ Ajustes          │ Apariencia                      ✕  │░░░░│
+│ ■ │░░░┌──────────────────┬────────────────────────────────────┐░░░░│
+│ □ │░░░│ Ajustes          │ Apariencia                      ✕  │░░░░│
 │   │░░░│                  │                                    │░░░░│
 │   │░░░│  Perfil          │ Tema                               │░░░░│
 │   │░░░│  IA              │ ┌────────┐ ┌────────┐ ┌────────┐   │░░░░│
@@ -58,7 +58,7 @@ Esc · ✕ · clic afuera  →  vuelve a donde estaba
 │   │░░░│                  │  Iridium    ✓ Grafito  …           │░░░░│
 │   │░░░│                  │                                    │░░░░│
 │   │░░░│                  │                                    │░░░░│
-│ ⚙ │░░░└──────────────────┴────────────────────────────────────┘░░░░│
+│ ◇ │░░░└──────────────────┴────────────────────────────────────┘░░░░│
 └───┴────────────────────────────────────────────────────────────────┘
 ```
 

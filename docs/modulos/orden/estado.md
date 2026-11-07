@@ -7,40 +7,18 @@
 ## Progreso
 | Paso | Estado | Documento |
 |---|---|---|
-| 1. Propuesta | completo (el usuario abrió la operación en el chat, 2026-11-05) | `propuesta.md` |
-| 2. Definición | completo (2026-11-06; Q-133 a Q-135 → D-094 a D-096) | `definicion.md` |
-| 3. Investigación | completo (2026-11-05): la UX y la forma de trabajo, A-1 a A-23 | `auditoria.md` |
-| 4. UX | completo (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
-| 5. Diseño técnico | completo (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
-| 6. UI | completo (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 | este archivo |
+| 1. Propuesta | hecho (el usuario abrió la operación en el chat, 2026-11-05) | `propuesta.md` |
+| 2. Definición | hecho (2026-11-06; Q-133 a Q-135 → D-094 a D-096) | `definicion.md` |
+| 3. Investigación | hecho (2026-11-05): la UX y la forma de trabajo, A-1 a A-23 | `auditoria.md` |
+| 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
+| 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
+| 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
+| 7. Construcción | en curso (2026-11-06): OR-I1 espera la prueba (Q-141); sigue OR-I2 | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 va por el final: las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan; falta pasar este proyecto al framework.
-
-## Pendientes
-- [x] Auditoría de UX (`auditoria.md` › Parte 1; capturas con `tools/auditoria-ux.ts`).
-- [x] El chip del frente en el Mapa muestra el primer paso sin completar en vez del que está en curso (A-5): con la primera iteración.
-- [x] Auditoría de la forma de trabajo (`auditoria.md` › Parte 2).
-- [x] `definicion.md`: el modelo único y el framework único (OR-1 a OR-12), con Q-133 a Q-135.
-- [x] Con Q-133 a Q-135: `definicion.md` ajustada, D-094 a D-096 y el glosario de `02-definicion.md`.
-- [x] `ux.md` › Parte 1, la arquitectura de información.
-- [x] Con Q-136 a Q-138: `ux.md` › Parte 1 ajustada (D-097, D-098) y la Parte 2, las pantallas PO-1 a PO-10.
-- [x] Con Q-139: `04-ux.md` reescrito sin capas (las PO-n pasaron a W-n) y D-099.
-- [x] Paso 5, diseño técnico (`diseno-tecnico.md`).
-- [x] Paso 6, UI: las piezas nuevas en `06-ui.md` y la hoja `ui/vista-orden.html` con capturas en los dos temas.
-- [x] Con Q-140: las reglas de color de `DESIGN.md` y `.impeccable/design.json` (D-100); el paso 6, cerrado.
-- [ ] R-12 (un solo botón Actualizar, W-1): en OR-I2.
-- [ ] D-100 en el código: el botón primario claro y las cuentas en gris (OR-2), y el ⚠ de Skills en gris (OR-I4).
-- [ ] Tocar «! N avisos del framework» abre la lista en Docs (W-2): hoy la tarjeta abre el proyecto y la lista se ve al pasar el mouse; la lista va con Skills › Framework, en OR-I4.
-- [x] OR-I1: el framework reordenado (`recursos/plugins/iridium`: `SKILL.md`, `referencias/`, `plantillas/`; sin la guía).
-- [ ] OR-I1, lo que falta: pasar Iridium al framework con `referencias/pasar-al-framework.md` (`docs/trabajo.md` con los pendientes e ideas, los estados al vocabulario, la tabla de frentes, `**Framework:**`) hasta que el control dé cero; una `Q-n` de prueba para el usuario.
-- [ ] Pasar al framework (OR-I4): el pedido de Skills cita `referencias/pasar-al-framework.md` en vez de `actualizar-formato.md` de la guía, y el motor falso lo reconoce.
-
-## Preguntas abiertas
-(ninguna)
+Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y espera tu prueba (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). Lo que queda del frente está en `trabajo.md` (T-46 a T-49).
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -55,7 +33,7 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| OR-I1 | El modelo y el control | en curso |
+| OR-I1 | El modelo y el control | en curso (hecha; espera Q-141) |
 | OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | pendiente |
 | OR-I3 | Trabajo e Ideas, anotar sin la IA | pendiente |
 | OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | pendiente |
@@ -77,8 +55,14 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Pruebas:** `tests/or1-control.test.ts` (17: el vocabulario, las preguntas, `trabajo.md` y cada regla con los casos de la auditoría), `tests/or1-devolucion.test.ts` (3: corrige en el mismo turno, la terca deja el aviso sin un segundo envío, sin framework no corre) y `tests/or1-tarjeta-mapa.test.ts` (6: el framework de cada tarjeta, el vocabulario en el Mapa con y sin framework, A-5 y el `Frente:`). Playwright, `tests/e2e/or1-control.spec.ts` (2: la IA corrige y la tarjeta queda sin avisos, con Beta en «framework viejo»; la terca deja «! 1 aviso del framework» con la lista). `tests/d086-complementos.test.ts` (9: carga solo el framework; cada referencia y plantilla citada existe, una por hito; ningún archivo nombra proyectos; las plantillas sin estados ni listas de antes; un proyecto armado con las plantillas y el ejemplo de preguntas del `SKILL.md` pasan el control sin avisos). Todas las de Vitest pasan (617). Playwright: 92 de 92 (en la corrida completa fallaron tres de la Revisión y una de teclado por la carga; solas, pasan); con el framework, `or1-control`, `r7-r8-proyectos` y `d083-carpeta-iridium`, 8 de 8.
 
-**Falta:** ver Pendientes.
+- **Iridium pasado al framework** (`referencias/pasar-al-framework.md`): `docs/trabajo.md` con T-1 a T-50 (las ideas de `00-idea.md`, `01-exploracion.md` y `07-construccion.md`, el Backlog de `10-operacion.md` y los pendientes de `estado.md` y de los frentes); los estados de las tablas, con el vocabulario; `estado.md` con la tabla de frentes y sin Pendientes; los `estado.md` de los frentes sin Pendientes ni preguntas; 34 respuestas viejas con su «Procesada»; los dibujos de cuatro `ux.md` sin caracteres de otra letra; el portón de los hitos 0 a 2; `**Framework:** 2026-11-06` y los códigos propios en `docs/README.md`; el `CLAUDE.md` de la raíz cita el framework. Las tablas de `07-construccion.md` con los errores reportados y las pruebas aprobadas provisionales quedaron como historial (todo resuelto). R-12 apunta a T-46.
+- `tools/control.ts`: el control sobre una carpeta desde la terminal, aunque no haya pasado al framework. Sobre Iridium, de 119 avisos a 0.
+- En el framework, `pasar-al-framework.md`: `10-operacion.md` tampoco lleva portón (su plantilla no lo tiene).
+
+**Criterios verificados** (con la app armada, los proyectos reales y el motor falso, `tools/auditoria-ux.ts`): la tarjeta de Iridium sin «framework viejo» ni avisos; las de los otros proyectos con `docs/`, con «framework viejo»; el Mapa de Iridium con los hitos 0 a 9 hechos, el 10 en curso, los frentes hechos y Orden en «7. Construcción» con Q-141. Vitest 617 de 617 y typecheck limpio.
+
+**Falta:** la prueba del usuario (Q-141).
 
 ## Próximo paso
-OR-I1: pasar Iridium al framework con `referencias/pasar-al-framework.md` hasta que el control dé cero.
-**Leer antes:** `recursos/plugins/iridium/skills/iridium/referencias/pasar-al-framework.md` y `SKILL.md` › Los formatos.
+OR-I2: el esqueleto y la Bandeja de entrada, con Actualizar (T-46) y D-100 en el código (T-47).
+**Leer antes:** `diseno-tecnico.md` › Iteraciones y › Actualizar, `04-ux.md` › W-1, W-5 y W-9, `06-ui.md` › Frente Orden.

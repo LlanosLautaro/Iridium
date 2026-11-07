@@ -47,7 +47,7 @@ Un hito o paso que espera la prueba del usuario sigue `en curso` con su `Q-n`.
 
 **Los documentos de hito**
 - [ ] Las tablas de iteraciones y de propuestas, con el vocabulario.
-- [ ] Cada documento de un hito `hecho` o `en curso` termina con `## Portón` (salvo `07-construccion.md`); si no se puede saber si algo se cumplió, queda `- [ ]` y se dice en el resumen.
+- [ ] Cada documento de un hito `hecho` o `en curso` termina con `## Portón` (salvo `07-construccion.md` y `10-operacion.md`, que no lo llevan); si no se puede saber si algo se cumplió, queda `- [ ]` y se dice en el resumen.
 - [ ] Los dibujos en texto, sin caracteres que la letra no tiene (`SKILL.md` › Los dibujos en texto).
 
 **`docs/respuestas/`**
