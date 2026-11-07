@@ -46,7 +46,8 @@ export function instruccionRevision(abiertos: number): string | null {
     `${cuantos} de la Revisión ${abiertos === 1 ? 'abierto' : 'abiertos'} en docs/revision/ (R-n.md, con su captura): ` +
     'son comentarios del usuario sobre la app. Leelos, resolvelos y cerralos: Estado `cerrado` y una línea en ' +
     'Historia («- AAAA-MM-DD HH:MM — cerrado por la IA: qué hiciste»). Cerrado es solo lo que quedó hecho de ' +
-    'verdad: si lo dejás para después, Estado `anotado` y «- AAAA-MM-DD HH:MM — anotado por la IA: dónde y por qué».'
+    'verdad: si lo dejás para después, creá su T-n, Estado `anotado` y «- AAAA-MM-DD HH:MM — anotado por la IA: T-n (por qué ' +
+    'después)»; cuando ese T-n quede hecho, cerralo.'
   )
 }
 

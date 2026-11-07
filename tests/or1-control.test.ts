@@ -230,6 +230,52 @@ describe('el control (OR-2)', () => {
     expect(r[0]?.texto).toContain('⚙')
   })
 
+  it('un comentario anotado: apunta a su T-n y se cierra cuando está hecho (R-12)', () => {
+    const r = (n: number, historia: string) => ({
+      ruta: `docs/revision/R-${n}.md`,
+      texto: `# R-${n} — Un comentario
+
+**Estado:** anotado
+
+## Comentario
+Algo
+
+## Historia
+- 2026-11-06 08:48 — dejado
+${historia}
+`,
+    })
+    const trabajo = `${TRABAJO_BIEN}
+## T-3 — Ya hecho
+Estado: hecho · Fecha: 2026-11-06 · Origen: R-12
+
+## T-4 — Hecho, citado en el comentario
+Estado: hecho · Fecha: 2026-11-06
+`
+    const documentos = [
+      r(10, '- 2026-11-06 09:00 — anotado por la IA: T-1 (en la próxima iteración)'),
+      r(11, '- 2026-11-06 09:00 — anotado por la IA: en el Backlog'),
+      r(12, '- 2026-11-06 09:00 — anotado por la IA: en el plan'),
+      r(
+        13,
+        '- 2026-11-06 09:00 — anotado por la IA: T-2\n- 2026-11-06 10:00 — anotado por la IA: T-4 (se hace en OR-I2)',
+      ),
+      {
+        ...r(14, '- 2026-11-06 09:00 — cerrado por la IA: hecho'),
+        texto: r(14, '').texto.replace('anotado', 'cerrado'),
+      },
+    ]
+    const avisos = correrControl(archivos({ trabajo, documentos })).filter((a) => a.regla === 'revision')
+    expect(avisos.map((a) => [a.archivo, a.texto.split(':')[0]])).toEqual([
+      ['docs/revision/R-11.md', 'R-11'],
+      ['docs/revision/R-12.md', 'R-12'],
+      ['docs/revision/R-13.md', 'R-13'],
+    ])
+    expect(avisos[0]?.texto).toContain('sin su `T-n`')
+    expect(avisos[1]?.texto).toContain('T-3 ya está hecho: cerralo')
+    expect(avisos[2]?.texto).toContain('T-4 ya está hecho')
+  })
+
   it('el mensaje para la IA y cuándo corre', () => {
     const m = mensajeDelControl([
       { regla: 'preguntas', archivo: 'docs/estado.md', linea: 4, texto: 'Q-1: falta «Tipo:»' },

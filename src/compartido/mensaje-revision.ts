@@ -29,7 +29,7 @@ export function armarMensaje(c: {
     c.texto.trim(),
     ...(pistas.length ? [pistas.join(' · ')] : []),
     'Al resolverlo, cerralo en su archivo: Estado `cerrado` y una línea en Historia con lo que hiciste ' +
-      '(si no lo hacés ahora, Estado `anotado` y dónde quedó).',
+      '(si no lo hacés ahora, Estado `anotado` con su T-n, y se cierra cuando ese T-n quede hecho).',
   ].join('\n')
 }
 

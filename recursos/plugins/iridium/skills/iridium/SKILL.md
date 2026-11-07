@@ -170,7 +170,7 @@ Con filtros arriba, no una pestaña por frente.
 ```
 
 - Un ítem por `## T-n — título`. La primera línea, sus datos separados por ` · `: `Estado:` del vocabulario (obligatorio), `Frente:` (si no es del núcleo), `Fecha:` (cuando nació) y `Origen:` (la `D-n`, `Q-n`, `R-n` o la idea de donde salió). Debajo, su texto, corto.
-- `nueva` es una idea sin evaluar (las anota también el usuario desde Iridium); `pendiente`, lo que se va a hacer; `en curso`, lo que se está haciendo. Lo terminado queda `hecho` (no se borra) y lo que no va, `descartado` con el motivo.
+- `nueva` es una idea sin evaluar (las anota también el usuario desde Iridium); `pendiente`, lo que se va a hacer; `en curso`, lo que se está haciendo. Lo terminado queda `hecho` (no se borra) y lo que no va, `descartado` con el motivo. Si su `Origen:` es un `R-n`, al pasarlo a `hecho` cerrá ese comentario.
 - El orden del archivo no importa; agregá al final. Iridium puede estar agregando una idea mientras trabajás: si la herramienta te dice que el archivo cambió, volvé a leerlo. Un `T-n` repetido se renumera (el más nuevo).
 - Los errores y ajustes del usuario que no se resuelven en el momento son un `T-n` `pendiente` con la iteración o el hito en el `Origen:` o el texto.
 
@@ -224,7 +224,7 @@ El usuario comenta la interfaz de una app con F8 y llega `R-n.md` (con su captur
 - AAAA-MM-DD HH:MM — cerrado por la IA: qué hiciste
 ```
 
-**Cerrado es solo lo hecho de verdad.** Si no lo resolvés ahora, creá su `T-n` y poné `**Estado:** anotado` con la línea `- AAAA-MM-DD HH:MM — anotado por la IA: T-n (por qué después)`. Iridium no te lo vuelve a pedir; cuando hagas el `T-n`, cerralo. Los anotados para la ronda de UX la disparan al juntarse cinco (`referencias/ronda-ux.md`).
+**Cerrado es solo lo hecho de verdad.** Si no lo resolvés ahora, creá su `T-n` y poné `**Estado:** anotado` con la línea `- AAAA-MM-DD HH:MM — anotado por la IA: T-n (por qué después)`. Iridium no te lo vuelve a pedir: **cuando pases el `T-n` a `hecho`, cerrá en el mismo cambio los `R-n` que lo citan** (los de su `Origen:` y los anotados con ese `T-n`). Los anotados para la ronda de UX la disparan al juntarse cinco (`referencias/ronda-ux.md`).
 
 ### La ficha: `.proyecto.json` y su ícono
 La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, dice «sin clasificar».
@@ -249,7 +249,7 @@ La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, d
 
 ## El control
 
-Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos), las tablas de estados y los campos de `estado.md`, y los dibujos en texto. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
+Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos), las tablas de estados y los campos de `estado.md`, los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho) y los dibujos en texto. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
 
 ## Reglas para la IA
 
@@ -268,7 +268,7 @@ Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa l
 2. Lo que necesitás del usuario, como `Q-n`; las respuestas leídas, procesadas.
 3. Las decisiones tomadas, en `decisiones.md`; las ideas y pendientes nuevos, en `trabajo.md`.
 4. `scripts.md` al día si cambió algo que el usuario ejecuta.
-5. Los comentarios de la Revisión, cerrados o anotados.
+5. Los comentarios de la Revisión, cerrados o anotados con su `T-n`; los anotados cuyo `T-n` quedó `hecho`, cerrados.
 6. La ficha, cierta.
 7. El código commiteado (o por qué no).
 

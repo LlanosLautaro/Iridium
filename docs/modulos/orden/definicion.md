@@ -63,6 +63,7 @@ Desaparecen `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada provision
   - ninguna prueba o pedido al usuario fuera de Preguntas abiertas (secciones como «Verificación manual…» o «Pruebas manuales pendientes», A-14);
   - cada respuesta de una pregunta que ya salió tiene su línea «Procesada» (A-17);
   - `trabajo.md`: cada ítem con código, `Estado:` del vocabulario y `Frente:` válido; ningún código repetido;
+  - cada comentario de la Revisión `anotado` cita su `T-n`, y no sigue anotado cuando ese `T-n` está `hecho`;
   - las tablas de estados usan solo el vocabulario;
   - `estado.md` tiene sus campos (fecha, hito actual, Próximo paso de una línea);
   - los dibujos en texto (bloques de código con líneas de cuadro) usan solo caracteres que tiene la letra de ancho fijo de Iridium; uno de afuera desarma el cuadro (R-13).

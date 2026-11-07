@@ -4,6 +4,7 @@ import { reglaDibujos } from './dibujos'
 import { reglaEstados } from './estado'
 import { reglaPreguntas } from './preguntas'
 import { reglaRespuestas } from './respuestas'
+import { reglaRevision } from './revision'
 import type { ArchivosControl, Aviso, Regla } from './tipos'
 import { reglaTrabajo } from './trabajo'
 
@@ -13,6 +14,7 @@ export const REGLAS: readonly Regla[] = [
   reglaPreguntas,
   reglaRespuestas,
   reglaTrabajo,
+  reglaRevision,
   reglaEstados,
   reglaDibujos,
 ]

@@ -78,6 +78,8 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Pruebas del esqueleto:** `tests/or2-esqueleto.test.ts` (5: cada caso de la entrada); Playwright, `tests/e2e/or2-esqueleto.spec.ts` (2: la barra en orden con la línea, Alfa a la Bandeja, Beta al Mapa y de vuelta en Docs como se la dejó; la carpeta sin documentos a Archivos). `i6-uso.spec.ts` al día con la cuenta en la pestaña (quedó vieja en el paso anterior). Vitest 641 de 641; Playwright, la corrida completa 92 de 96 y las cuatro que fallaron, solas, pasan (tres de la Revisión por la carga, como antes, y la de i6, ya corregida).
 
+- **Los comentarios anotados que ya están hechos** (2026-11-07): R-12 seguía en Anotados con T-46 hecho, porque el framework pedía cerrarlo solo en la sección de la Revisión y el control no lo miraba. El control suma la regla `revision` (`core/control/revision.ts`): un `R-n` `anotado` tiene que citar su `T-n` (en su línea «anotado por la IA» o en el `Origen:` del `T-n`) y, si ese `T-n` está `hecho`, se le devuelve a la IA para que lo cierre. El framework lo dice al pasar un `T-n` a `hecho` y en el cierre de sesión; las instrucciones de las sesiones y de Enviar ahora piden el `T-n` al anotar. R-12, cerrado. Pruebas: `tests/or1-control.test.ts` (sin `T-n`, con el `T-n` hecho por `Origen:` y por la cita, el pendiente y el cerrado que no avisan); Vitest 642 de 642; el control sobre Iridium, cero.
+
 **Falta:** la cabecera común (W-9) en las demás secciones, la línea del frente activo en la tarjeta y la conversación de 360 px por vista (D-098).
 
 ## Próximo paso
