@@ -6,7 +6,7 @@ import { type CSSProperties, type ReactNode, useCallback, useState } from 'react
 import type { ListaProyectos, TarjetaProyecto } from '../../../compartido/puente'
 import { fichaDe, usarEstado } from '../../estado'
 import { Cabecera } from '../../ui/Cabecera'
-import { cambiarAncho, Divisor } from '../../ui/Divisor'
+import { Divisor, useAnchoConversacion } from '../../ui/Divisor'
 import { Icono } from '../../ui/Icono'
 import { type Punto, puntoDelMenu } from '../../ui/MenuContextual'
 import { ChatGeneral } from '../inicio/ChatGeneral'
@@ -189,7 +189,7 @@ export function Proyectos() {
     )
   }
 
-  const ancho = usarEstado((s) => s.preferencias.anchoConversacion)
+  const ancho = useAnchoConversacion('general')
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
       <section className="principal grilla-proyectos" aria-label="Proyectos">
@@ -285,7 +285,7 @@ export function Proyectos() {
         )}
         {nuevo && <NuevoProyecto cerrar={cerrarNuevo} listo={(r) => void creado(r)} />}
       </section>
-      <Divisor ancho={ancho} cambiar={cambiarAncho} />
+      <Divisor vista="general" ancho={ancho} />
       <aside className="chat" aria-label="Chat general">
         <ChatGeneral />
       </aside>

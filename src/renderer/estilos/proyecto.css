@@ -3,7 +3,8 @@
    y docs/ui/vista-mapa-docs.html. */
 .trabajo.proyecto {
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) 5px min(var(--ancho-chat, 440px), calc(100% - 365px));
+  /* La conversación, hasta la mitad (D-098): si la ventana se achica, se achica con ella sin bajar de 300 px. */
+  grid-template-columns: minmax(0, 1fr) 5px min(var(--ancho-chat, 360px), max(300px, 50%));
   grid-template-rows: minmax(0, 1fr);
 }
 .principal {
@@ -84,7 +85,7 @@
   top: 82px;
   left: auto;
   right: 10px;
-  width: min(420px, calc(var(--ancho-chat, 440px) - 20px));
+  width: min(420px, calc(var(--ancho-chat, 360px) - 20px));
   max-width: none;
   padding: 6px;
 }

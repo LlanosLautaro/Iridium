@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta, la Bandeja, Actualizar, el esqueleto, la cabecera común y el frente en la tarjeta hechos) | este archivo |
+| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 construida, espera la prueba (Q-144) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -34,7 +34,7 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 | ID | Objetivo | Estado |
 |---|---|---|
 | OR-I1 | El modelo y el control | hecho (Q-141, 2026-11-06) |
-| OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | en curso |
+| OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | en curso (construida; espera Q-144) |
 | OR-I3 | Trabajo e Ideas, anotar sin la IA | pendiente |
 | OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | pendiente |
 
@@ -89,8 +89,12 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Pruebas del frente:** `tests/or2-frente.test.ts` (7: la fila en curso sin paréntesis, sin ninguno en curso, el framework viejo, sin columna Paso, y la línea de la tarjeta con frente, con el Próximo paso y sin `estado.md`); Playwright, `tests/e2e/or2-frente.spec.ts` (1: Alfa con «Orden · 4. UX», Beta con su Próximo paso, en una línea). Vitest 649 de 649; typecheck limpio; las 27 de Playwright que tocan la grilla, 86 de 89 (las tres de `r3-electron` por la carga; solas, 3 de 3). Con los proyectos reales (`tools/auditoria-ux.ts`), el recorrido pasa entero y la tarjeta de Iridium dice «Orden · 7. Construcción».
 
-**Falta:** la conversación de 360 px por vista (D-098).
+- **La conversación de 360 px** (D-098, W-12, 2026-11-07): arranca en 360 px (300 en una ventana de menos de 1100), su borde se arrastra entre 300 px y la mitad de la zona de trabajo y cada vista recuerda el suyo: la general (Proyectos e Ideas, que comparten el chat general), Skills y cada proyecto (los últimos 200 que se cambiaron). Doble clic en el borde vuelve al de entrada solo en esa vista. La regla está en `compartido/ancho-conversacion.ts`; `config.json` guarda `anchoConversacion` como `{ general, skills, proyectos, otras }`. El ancho único de antes pasa a `otras` y vale para las vistas que todavía no tienen el suyo, salvo que fuera el de entrada de antes (440): el tuyo era 433, así que vas a verlo igual hasta que lo arrastres o le hagas doble clic. Si la ventana se achica, la conversación no pasa de la mitad. Los avisos de las sesiones se corren con el ancho del proyecto abierto.
+
+**Pruebas de la conversación de 360 px:** `tests/or2-ancho.test.ts` (6: 360 y 300 según la ventana, cada vista con el suyo, los últimos 200 proyectos, el ancho de antes en todas salvo el 440, los rotos que se descartan y lo que llega de la ventana validado) y `app-proyectos.test.ts` al día. Playwright, `tests/e2e/or2-ancho.spec.ts` (2: 360 en la general, Alfa más ancha y Beta en 360, Beta hasta la mitad y no más, Skills con el suyo, Ideas con el de la general, todo igual al volver a abrir y el doble clic solo en Alfa; una ventana de 1050 px arranca en 300 y un `config.json` de antes con 500 los pone en todas) e `i4-tres-paneles` al día (360 en vez de 440). Vitest 655 de 655; typecheck limpio; Playwright, la corrida completa 103 de 103.
+
+**Prueba del usuario:** Q-144 (abierta).
 
 ## Próximo paso
-OR-I2, lo que falta: la conversación de 360 px por vista (D-098); con eso la iteración se cierra con su prueba.
-**Leer antes:** `decisiones.md` › D-098, `04-ux.md` › La conversación, `diseno-tecnico.md` › La conversación de 360 px.
+OR-I2 está construida; espera tu prueba (Q-144). Con la respuesta: arreglar lo que falle o cerrar OR-I2 y empezar OR-I3 (Trabajo e Ideas, anotar sin la IA).
+**Leer antes:** `respuestas/Q-144.md`; para OR-I3, `diseno-tecnico.md` › Iteraciones y `04-ux.md` › W-10 y W-11.

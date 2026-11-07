@@ -1,6 +1,7 @@
 // Los avisos de H-13 (abajo a la derecha, W-4) y la confirmación de cerrar con sesiones trabajando (F-6).
 import { useEffect, useRef, useState } from 'react'
 import { type AvisoSesion, tarjetaDe, usarEstado } from '../estado'
+import { useAnchoConversacion } from '../ui/Divisor'
 import { Icono } from '../ui/Icono'
 
 /** Cuánto queda un aviso a la vista (no mientras el mouse está encima). */
@@ -85,7 +86,8 @@ export function Avisos() {
   const avisos = usarEstado((s) => s.avisos)
   const quitar = usarEstado((s) => s.quitarAviso)
   // Dentro de un proyecto, a la izquierda de la conversación: no tapa el cuadro para escribir (D-032).
-  const ancho = usarEstado((s) => (s.seccion === 'proyecto' ? s.preferencias.anchoConversacion : 0))
+  const ruta = usarEstado((s) => (s.seccion === 'proyecto' ? s.proyectoAbierto : null))
+  const ancho = useAnchoConversacion(ruta ? { proyecto: ruta } : null)
   useEffect(() => {
     const ultimo = avisos.at(-1)
     if (!ultimo) return

@@ -6,7 +6,7 @@ import type { ListaIdeas } from '../../../compartido/ideas'
 import { CARPETA_GENERAL } from '../../../compartido/puente'
 import { tamanoLegible } from '../../../compartido/tamanos'
 import { rutaGeneral, usarEstado } from '../../estado'
-import { cambiarAncho, Divisor, DivisorListaIdeas } from '../../ui/Divisor'
+import { Divisor, DivisorListaIdeas, useAnchoConversacion } from '../../ui/Divisor'
 import { ChatGeneral } from '../inicio/ChatGeneral'
 import { tocarEnlace } from '../proyecto/enlaces'
 import { DetalleIdea, MensajeIdeas } from './DetalleIdea'
@@ -17,7 +17,7 @@ export function Ideas() {
   const vista = usarEstado((s) => s.ideas)
   const cambiarIdeas = usarEstado((s) => s.cambiarIdeas)
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
-  const ancho = usarEstado((s) => s.preferencias.anchoConversacion)
+  const ancho = useAnchoConversacion('general')
   const anchoLista = usarEstado((s) => s.preferencias.anchoListaIdeas)
   const [ideas, setIdeas] = useState<ListaIdeas | null>(null)
   const rutaIdeas = rutaGeneral(lista)
@@ -138,7 +138,7 @@ export function Ideas() {
         <DivisorListaIdeas ancho={anchoLista} />
         {detalle}
       </div>
-      <Divisor ancho={ancho} cambiar={cambiarAncho} />
+      <Divisor vista="general" ancho={ancho} />
       <aside className="chat" aria-label="Chat general">
         <ChatGeneral sobre={sobre} />
       </aside>

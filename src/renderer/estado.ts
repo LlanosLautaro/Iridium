@@ -1,9 +1,9 @@
 // Estado de la ventana (Zustand). Cada proyecto abierto guarda su vista en memoria: cambiar de sección o de
 // proyecto no recarga nada (D-020, H-6).
 import { create } from 'zustand'
+import { SIN_ANCHOS } from '../compartido/ancho-conversacion'
 import {
   type AccesoVersiones,
-  ANCHO_CONVERSACION,
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
   type CambioConversacion,
@@ -265,7 +265,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   lista: null,
   preferencias: {
     verArchivados: false,
-    anchoConversacion: ANCHO_CONVERSACION.inicial,
+    anchoConversacion: SIN_ANCHOS,
     anchoListaSkills: ANCHO_LISTA_SKILLS.inicial,
     anchoListaIdeas: ANCHO_LISTA_IDEAS.inicial,
     anchoHoja: 'normal',

@@ -289,7 +289,7 @@ test('el ancho de la conversación se arrastra y se recuerda; las conversaciones
   let { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const chat = win.locator('aside.chat')
-  await expect(chat).toHaveJSProperty('offsetWidth', 440)
+  await expect(chat).toHaveJSProperty('offsetWidth', 360)
   const divisor = win.getByRole('separator', { name: /Ancho de la conversación/ })
   const caja = await divisor.boundingBox()
   if (!caja) throw new Error('sin divisor')
@@ -298,8 +298,8 @@ test('el ancho de la conversación se arrastra y se recuerda; las conversaciones
   await win.mouse.move(caja.x - 200, caja.y + 200, { steps: 5 })
   await win.mouse.up()
   const ancho = await chat.evaluate((el) => (el as HTMLElement).offsetWidth)
-  expect(ancho).toBeGreaterThan(620)
-  expect(ancho).toBeLessThan(660)
+  expect(ancho).toBeGreaterThan(540)
+  expect(ancho).toBeLessThan(580)
 
   // Dos conversaciones: la primera y una Nueva.
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
@@ -333,6 +333,6 @@ test('el ancho de la conversación se arrastra y se recuerda; las conversaciones
   await expect(win.locator('.principal .cabecera h1')).toHaveText('Alfa')
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', ancho)
   await win.getByRole('separator', { name: /Ancho de la conversación/ }).dblclick()
-  await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', 440)
+  await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', 360)
   await app.close()
 })

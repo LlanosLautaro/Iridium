@@ -83,7 +83,7 @@ describe('ArchivoConfig', () => {
     const c = new ArchivoConfig(archivo)
     expect(await c.leer()).toMatchObject({
       verArchivados: false,
-      anchoConversacion: 440,
+      anchoConversacion: { proyectos: {} },
       anchoListaSkills: 264,
       anchoListaIdeas: 264,
       anchoHoja: 'normal',
@@ -97,7 +97,7 @@ describe('ArchivoConfig', () => {
   it('un config.json roto o con valores raros no frena la app', async () => {
     const archivo = join(raiz, 'config.json')
     await writeFile(archivo, '{ roto')
-    expect((await new ArchivoConfig(archivo).leer()).anchoConversacion).toBe(440)
+    expect((await new ArchivoConfig(archivo).leer()).anchoConversacion).toEqual({ proyectos: {} })
     await writeFile(
       archivo,
       JSON.stringify({
@@ -110,7 +110,7 @@ describe('ArchivoConfig', () => {
     )
     expect(await new ArchivoConfig(archivo).leer()).toMatchObject({
       verArchivados: false,
-      anchoConversacion: 440,
+      anchoConversacion: { proyectos: {} },
       anchoListaSkills: 264,
       anchoListaIdeas: 264,
       anchoHoja: 'normal',
@@ -124,7 +124,7 @@ describe('ArchivoConfig', () => {
       JSON.stringify({ verArchivados: true, conversacionALaDerecha: true, anchoPanel: 500 }),
     )
     const c = await new ArchivoConfig(archivo).leer()
-    expect(c).toMatchObject({ verArchivados: true, anchoConversacion: 440 })
+    expect(c).toMatchObject({ verArchivados: true, anchoConversacion: { proyectos: {} } })
     expect(c).not.toHaveProperty('anchoPanel')
     expect(c).not.toHaveProperty('conversacionALaDerecha')
   })

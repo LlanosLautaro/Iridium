@@ -1,9 +1,9 @@
 // Vista de un proyecto (H-3, 04-ux.md › W-3, D-041): la sección elegida en la barra de íconos en el área grande y la
-// conversación siempre a la derecha. Su borde se arrastra (o se mueve con las flechas) y la app recuerda el ancho;
+// conversación siempre a la derecha. Su borde se arrastra (o se mueve con las flechas) y el proyecto recuerda su ancho;
 // doble clic vuelve al de entrada. Todo lo que se ve es del proyecto abierto. Cambiar de sección no recarga nada.
 import { type CSSProperties, useEffect } from 'react'
 import { type SeccionProyecto, tarjetaDe, usarEstado, vistaDe } from '../../estado'
-import { cambiarAncho, Divisor } from '../../ui/Divisor'
+import { Divisor, useAnchoConversacion } from '../../ui/Divisor'
 import { SECCIONES_PROYECTO } from '..'
 import { textoHito } from '../proyectos/Tarjeta'
 import { Archivos } from './Archivos'
@@ -47,7 +47,7 @@ export function VistaProyecto() {
   const ruta = usarEstado((s) => s.proyectoAbierto)
   const lista = usarEstado((s) => s.lista)
   const seccion = usarEstado((s) => (ruta ? vistaDe(s.vistas, ruta).seccion : 'pendientes'))
-  const ancho = usarEstado((s) => s.preferencias.anchoConversacion)
+  const ancho = useAnchoConversacion(ruta ? { proyecto: ruta } : null)
   const irA = usarEstado((s) => s.irA)
   const volver = usarEstado((s) => s.volver)
   const p = tarjetaDe(lista, ruta)
@@ -123,7 +123,7 @@ export function VistaProyecto() {
           ))}
         </div>
       </section>
-      <Divisor ancho={ancho} cambiar={cambiarAncho} />
+      <Divisor vista={{ proyecto: ruta }} ancho={ancho} />
       <aside className="chat" aria-label="Conversación">
         <Conversacion key={p.ruta} p={p} />
       </aside>

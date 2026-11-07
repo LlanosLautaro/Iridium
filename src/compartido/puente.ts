@@ -1,6 +1,7 @@
 // El puente entre la ventana y el proceso principal (05-arquitectura.md › Componentes): una lista cerrada de
 // pedidos y eventos. Los tipos los ven los dos lados; lo que llega desde la ventana se valida en `main/ipc/`.
 
+import type { AnchosConversacion } from './ancho-conversacion'
 import type { IdeasProyecto, ListaIdeas } from './ideas'
 import type { Borrador } from './respuestas'
 import type { Atrasados, ListaSkills, SkillProyecto } from './skills'
@@ -77,8 +78,8 @@ export type ResultadoMudanza =
 /** Lo que la app recuerda entre una vez y otra (05-arquitectura.md › Modelo de datos, `config.json`). */
 export interface Preferencias {
   verArchivados: boolean
-  /** Ancho de la conversación, a la derecha de la vista del proyecto (D-041), en píxeles. */
-  anchoConversacion: number
+  /** Ancho de la conversación de cada vista (D-098), en píxeles. */
+  anchoConversacion: AnchosConversacion
   /** Ancho de la lista de la sección Skills (R-6), en píxeles. */
   anchoListaSkills: number
   /** Ancho de la lista de la sección Ideas (modulos/inicio/), aparte del de Skills. */
@@ -128,8 +129,6 @@ export const CARPETA_GENERAL = 'Ideas'
 export const CARPETA_SKILLS = 'Skills'
 
 export type AnchoHoja = 'angosto' | 'normal' | 'ancho'
-
-export const ANCHO_CONVERSACION = { minimo: 320, inicial: 440, maximo: 1400 } as const
 
 /** La lista de Skills se arrastra de su borde derecho (R-6). */
 export const ANCHO_LISTA_SKILLS = { minimo: 200, inicial: 264, maximo: 640 } as const

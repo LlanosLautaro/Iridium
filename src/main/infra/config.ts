@@ -3,8 +3,8 @@
 import { mkdir } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import { z } from 'zod'
+import { ANCHO_CONVERSACION, migrarAnchos, PROYECTOS_CON_ANCHO } from '../../compartido/ancho-conversacion'
 import {
-  ANCHO_CONVERSACION,
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
   ESFUERZOS,
@@ -20,6 +20,18 @@ export const AjusteIa = z.object({
   esfuerzo: z.enum(ESFUERZOS).nullable(),
 })
 
+const Ancho = z.number().int().min(ANCHO_CONVERSACION.minimo).max(ANCHO_CONVERSACION.maximo)
+
+/** El ancho de la conversación de cada vista (D-098); uno roto se descarta solo. */
+export const AnchosConversacion = z.object({
+  general: Ancho.optional(),
+  skills: Ancho.optional(),
+  proyectos: z
+    .record(z.string().min(1).max(1024), Ancho)
+    .refine((p) => Object.keys(p).length <= PROYECTOS_CON_ANCHO),
+  otras: Ancho.optional(),
+})
+
 const Config = z.object({
   version: z.literal(1).catch(1),
   /** Carpeta de proyectos; si falta, `Documentos\Proyectos` (D-083). */
@@ -30,12 +42,27 @@ const Config = z.object({
    */
   carpetaIridium: z.string().min(1).optional().catch(undefined),
   verArchivados: z.boolean().catch(false),
-  anchoConversacion: z
-    .number()
-    .int()
-    .min(ANCHO_CONVERSACION.minimo)
-    .max(ANCHO_CONVERSACION.maximo)
-    .catch(ANCHO_CONVERSACION.inicial),
+  /** Hasta OR-I2 era un número, el mismo en todas las vistas. */
+  anchoConversacion: z.preprocess(
+    migrarAnchos,
+    z
+      .object({
+        general: Ancho.optional().catch(undefined),
+        skills: Ancho.optional().catch(undefined),
+        proyectos: z
+          .record(z.string(), Ancho.optional().catch(undefined))
+          .catch({})
+          .transform((p) =>
+            Object.fromEntries(
+              Object.entries(p)
+                .filter((e): e is [string, number] => e[1] !== undefined)
+                .slice(-PROYECTOS_CON_ANCHO),
+            ),
+          ),
+        otras: Ancho.optional().catch(undefined),
+      })
+      .catch({ proyectos: {} }),
+  ),
   anchoListaSkills: z
     .number()
     .int()
@@ -67,7 +94,7 @@ export type Config = z.infer<typeof Config>
 const PREDETERMINADA: Config = {
   version: 1,
   verArchivados: false,
-  anchoConversacion: ANCHO_CONVERSACION.inicial,
+  anchoConversacion: { proyectos: {} },
   anchoListaSkills: ANCHO_LISTA_SKILLS.inicial,
   anchoListaIdeas: ANCHO_LISTA_IDEAS.inicial,
   anchoHoja: 'normal',

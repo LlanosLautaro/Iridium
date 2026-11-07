@@ -4,7 +4,7 @@ import { type CSSProperties, useCallback, useEffect, useState } from 'react'
 import { CARPETA_SKILLS } from '../../../compartido/puente'
 import type { Atrasados as DatosAtrasados, ListaSkills, OrigenSkill } from '../../../compartido/skills'
 import { rutaSkills, tarjetaDe, usarEstado } from '../../estado'
-import { cambiarAncho, Divisor, DivisorListaSkills } from '../../ui/Divisor'
+import { Divisor, DivisorListaSkills, useAnchoConversacion } from '../../ui/Divisor'
 import { AbrirComoProyecto } from '../inicio/AbrirComoProyecto'
 import { Conversacion } from '../proyecto/Conversacion'
 import { Atrasados } from './Atrasados'
@@ -34,7 +34,7 @@ export function Skills() {
   const cambiarSkills = usarEstado((s) => s.cambiarSkills)
   const escribirEnCampo = usarEstado((s) => s.escribirEnCampo)
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
-  const ancho = usarEstado((s) => s.preferencias.anchoConversacion)
+  const ancho = useAnchoConversacion('skills')
   const anchoLista = usarEstado((s) => s.preferencias.anchoListaSkills)
   const [skills, setSkills] = useState<ListaSkills | null>(null)
   const [atrasados, setAtrasados] = useState<DatosAtrasados | null>(null)
@@ -124,7 +124,7 @@ export function Skills() {
             <Atrasados datos={atrasados} />
           ))}
       </div>
-      <Divisor ancho={ancho} cambiar={cambiarAncho} />
+      <Divisor vista="skills" ancho={ancho} />
       <aside className="chat" aria-label="Chat de Skills">
         <ChatSkills sobre={sobre} />
       </aside>

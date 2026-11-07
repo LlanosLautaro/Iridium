@@ -243,7 +243,7 @@
   top: auto;
   bottom: 30px;
   width: 300px;
-  max-width: calc(var(--ancho-chat, 440px) - 40px);
+  max-width: calc(var(--ancho-chat, 360px) - 40px);
 }
 .menu-lista > button.opcion-ia {
   height: auto;

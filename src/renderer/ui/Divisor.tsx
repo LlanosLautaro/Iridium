@@ -1,8 +1,15 @@
-// El borde entre el área grande y la conversación (D-041), en un proyecto y en Proyectos (D-060): se arrastra o se
-// mueve con las flechas, y el ancho es el mismo en todas las vistas. El mismo borde, del lado izquierdo, cambia el
-// ancho de la lista de Skills (R-6) y el de la de Ideas.
-import { type KeyboardEvent, type PointerEvent, useRef } from 'react'
-import { ANCHO_CONVERSACION, ANCHO_LISTA_IDEAS, ANCHO_LISTA_SKILLS } from '../../compartido/puente'
+// El borde entre el área grande y la conversación (D-041), en un proyecto, en Proyectos e Ideas (D-060) y en Skills:
+// se arrastra o se mueve con las flechas, hasta la mitad de la ventana, y cada vista recuerda su ancho (D-098). El
+// mismo borde, del lado izquierdo, cambia el ancho de la lista de Skills (R-6) y el de la de Ideas.
+import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react'
+import {
+  ANCHO_CONVERSACION,
+  anchoDe,
+  anchoInicial,
+  conAncho,
+  type VistaConversacion,
+} from '../../compartido/ancho-conversacion'
+import { ANCHO_LISTA_IDEAS, ANCHO_LISTA_SKILLS } from '../../compartido/puente'
 import { usarEstado } from '../estado'
 
 /** La vista principal necesita al menos esto (D-041): la conversación no la aplasta. */
@@ -16,7 +23,8 @@ interface Limites {
 
 /**
  * Un borde que se arrastra o se mueve con las flechas (Shift, de a más); doble clic, el ancho de entrada. `lado` dice
- * dónde está lo que cambia de ancho: la conversación, a la derecha; una columna, a la izquierda.
+ * dónde está lo que cambia de ancho: la conversación, a la derecha; una columna, a la izquierda. `mitad`: no pasa de
+ * la mitad de la zona (la conversación, D-098).
  */
 function Borde({
   ancho,
@@ -25,6 +33,7 @@ function Borde({
   limites,
   clase,
   nombre,
+  mitad = false,
 }: {
   ancho: number
   cambiar: (px: number, guardar: boolean) => void
@@ -32,11 +41,13 @@ function Borde({
   limites: Limites
   clase: string
   nombre: string
+  mitad?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const maximo = () => {
     const zona = ref.current?.parentElement?.getBoundingClientRect().width ?? window.innerWidth
-    return Math.min(limites.maximo, Math.max(limites.minimo, zona - MINIMO_VISTA - 5))
+    const tope = mitad ? Math.floor(zona / 2) : zona - MINIMO_VISTA - 5
+    return Math.min(limites.maximo, Math.max(limites.minimo, tope))
   }
   const limitar = (px: number) => Math.round(Math.min(maximo(), Math.max(limites.minimo, px)))
   const crece = lado === 'derecha' ? 'ArrowLeft' : 'ArrowRight'
@@ -88,22 +99,35 @@ function Borde({
   )
 }
 
-/** El borde de la conversación. */
-export function Divisor({
-  ancho,
-  cambiar,
-}: {
-  ancho: number
-  cambiar: (px: number, guardar: boolean) => void
-}) {
+/** El ancho de la ventana, al día cuando cambia. */
+function useVentana(): number {
+  const [ventana, setVentana] = useState(window.innerWidth)
+  useEffect(() => {
+    const cambio = () => setVentana(window.innerWidth)
+    window.addEventListener('resize', cambio)
+    return () => window.removeEventListener('resize', cambio)
+  }, [])
+  return ventana
+}
+
+/** El ancho de la conversación de una vista (D-098); null = no hay conversación a la vista. */
+export function useAnchoConversacion(vista: VistaConversacion | null): number {
+  const ventana = useVentana()
+  return usarEstado((s) => (vista ? anchoDe(s.preferencias.anchoConversacion, vista, ventana) : 0))
+}
+
+/** El borde de la conversación de una vista: lo que se arrastra queda para esa vista. */
+export function Divisor({ vista, ancho }: { vista: VistaConversacion; ancho: number }) {
+  const ventana = useVentana()
   return (
     <Borde
       ancho={ancho}
-      cambiar={cambiar}
+      cambiar={(px, guardar) => cambiarAncho(vista, px, guardar)}
       lado="derecha"
-      limites={ANCHO_CONVERSACION}
+      limites={{ ...ANCHO_CONVERSACION, inicial: anchoInicial(ventana) }}
       clase="divisor"
       nombre="la conversación"
+      mitad
     />
   )
 }
@@ -136,11 +160,12 @@ export function DivisorListaIdeas({ ancho }: { ancho: number }) {
   )
 }
 
-/** El ancho de la conversación: mientras se arrastra solo se ve; al soltar, se guarda (es el mismo en todas). */
-export function cambiarAncho(px: number, guardar: boolean): void {
+/** El ancho de la conversación de una vista: mientras se arrastra solo se ve; al soltar, se guarda. */
+function cambiarAncho(vista: VistaConversacion, px: number, guardar: boolean): void {
   const s = usarEstado.getState()
-  if (guardar) s.guardarPreferencias({ anchoConversacion: px })
-  else s.ponerPreferencias({ ...s.preferencias, anchoConversacion: px })
+  const anchoConversacion = conAncho(s.preferencias.anchoConversacion, vista, px)
+  if (guardar) s.guardarPreferencias({ anchoConversacion })
+  else s.ponerPreferencias({ ...s.preferencias, anchoConversacion })
 }
 
 function cambiarAnchoListaSkills(px: number, guardar: boolean): void {
