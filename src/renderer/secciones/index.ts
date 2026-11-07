@@ -56,22 +56,24 @@ export interface SeccionDeProyecto {
   id: SeccionProyecto
   nombre: string
   icono: NombreIcono
+  /** W-3: arriba, lo que se sigue; abajo, separado por una línea, el proyecto por dentro. */
+  grupo: 'sigue' | 'dentro'
   /** Si está solo en algunos proyectos: cuándo sale en la barra. */
   soloSi?: (p: TarjetaProyecto) => boolean
 }
 
 /**
- * Dentro de un proyecto (D-041, D-043, Q-62; Revisión, D-046; Ideas y Skills, R-8); después se suman Diseño y Assets.
- * Skills, solo si el proyecto tiene alguna propia.
+ * Dentro de un proyecto (W-3, D-041; Revisión, D-046; Ideas y Skills, R-8), en dos grupos. Las ideas del proyecto
+ * ocupan el lugar de Trabajo hasta OR-I3. Skills, solo si el proyecto tiene alguna propia.
  */
 export const SECCIONES_PROYECTO: readonly SeccionDeProyecto[] = [
-  { id: 'pendientes', nombre: 'Bandeja de entrada', icono: 'pendientes' },
-  { id: 'mapa', nombre: 'Mapa', icono: 'mapa' },
-  { id: 'docs', nombre: 'Docs', icono: 'docs' },
-  { id: 'ideas', nombre: 'Ideas del proyecto', icono: 'ideas' },
-  { id: 'archivos', nombre: 'Archivos', icono: 'archivos' },
-  { id: 'revision', nombre: 'Revisión', icono: 'revision' },
-  { id: 'git', nombre: 'Git', icono: 'git' },
-  { id: 'scripts', nombre: 'Scripts', icono: 'scripts' },
-  { id: 'skills', nombre: 'Skills del proyecto', icono: 'skills', soloSi: (p) => p.skills > 0 },
+  { id: 'pendientes', nombre: 'Bandeja de entrada', icono: 'pendientes', grupo: 'sigue' },
+  { id: 'mapa', nombre: 'Mapa', icono: 'mapa', grupo: 'sigue' },
+  { id: 'ideas', nombre: 'Ideas del proyecto', icono: 'ideas', grupo: 'sigue' },
+  { id: 'revision', nombre: 'Revisión', icono: 'revision', grupo: 'sigue' },
+  { id: 'docs', nombre: 'Docs', icono: 'docs', grupo: 'dentro' },
+  { id: 'archivos', nombre: 'Archivos', icono: 'archivos', grupo: 'dentro' },
+  { id: 'git', nombre: 'Git', icono: 'git', grupo: 'dentro' },
+  { id: 'scripts', nombre: 'Scripts', icono: 'scripts', grupo: 'dentro' },
+  { id: 'skills', nombre: 'Skills del proyecto', icono: 'skills', grupo: 'dentro', soloSi: (p) => p.skills > 0 },
 ]

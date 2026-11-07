@@ -299,7 +299,11 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
 
   // En el proyecto a la vista no hay aviso: se ve en la conversación.
   await win.locator('.ses', { hasText: 'Beta' }).locator('.pestana').click()
-  await mandar(win, 'Hacé algo en Beta', '1 pregunta')
+  const campo2 = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo2.fill('Hacé algo en Beta')
+  await campo2.press('Enter')
+  // Al terminar, la pestaña lleva su cuenta de la bandeja (04-ux.md › Un número que manda).
+  await expect(win.locator('.ses.activa .cuenta-bandeja')).toHaveText('1')
   await expect(win.locator('.pedido')).toContainText('Dejó 1 pregunta')
   await expect(win.locator('.aviso')).toHaveCount(0)
   await app.close()

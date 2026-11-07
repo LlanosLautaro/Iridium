@@ -23,6 +23,7 @@ import {
   type VersionNueva,
 } from '../compartido/puente'
 import type { Borrador } from '../compartido/respuestas'
+import { seccionDeEntrada } from './secciones/proyecto/entrada'
 import { guardarLuego } from './ui/guardarLuego'
 
 export type Seccion = 'proyectos' | 'pendientes' | 'skills' | 'ideas' | 'proyecto'
@@ -225,7 +226,8 @@ interface EstadoApp {
   ponerPendiente(ruta: string, p: PendienteVista): void
   escribirBorrador(ruta: string, codigo: string, b: Borrador): void
   soltarBorrador(ruta: string, codigo: string): void
-  abrirProyecto(ruta: string): void
+  /** `entrada`: la sección por la que se entra si es la primera vez (si no, la de W-3). */
+  abrirProyecto(ruta: string, entrada?: SeccionProyecto): void
   /** El botón de arriba a la izquierda: vuelve a la última sección del inicio. */
   irAlInicio(): void
   /** × en una pestaña (D-043): deja de estar en la barra; si era el abierto, se vuelve al inicio. */
@@ -368,7 +370,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     noAbierto(get())
   },
   responderEn: (ruta) => {
-    get().abrirProyecto(ruta)
+    get().abrirProyecto(ruta, 'pendientes')
     get().abrirSeccion(ruta, 'pendientes')
   },
   irAlInicio: () => get().irA(get().inicio),
@@ -398,13 +400,22 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
       const { [claveBorrador(ruta, codigo)]: _, ...resto } = s.borradores
       return { borradores: resto }
     }),
-  abrirProyecto: (ruta) => {
+  abrirProyecto: (ruta, entrada) => {
     if (get().seccion !== 'proyecto' || get().proyectoAbierto !== ruta) soltarVista(get())
-    // Lo que avisaba de este proyecto ya se ve en su conversación.
+    // Lo que avisaba de este proyecto ya se ve en su conversación. La primera vez se entra por donde dice W-3; después,
+    // como se lo dejó.
     set((s) => ({
       seccion: 'proyecto',
       proyectoAbierto: ruta,
       avisos: s.avisos.filter((a) => a.ruta !== ruta),
+      ...(s.vistas[ruta]
+        ? {}
+        : {
+            vistas: {
+              ...s.vistas,
+              [ruta]: { ...VISTA_INICIAL, seccion: entrada ?? seccionDeEntrada(tarjetaDe(s.lista, ruta)) },
+            },
+          }),
     }))
     // Queda como pestaña aunque no trabaje (D-043), y es al que se vuelve al abrir Iridium (D-060).
     const { pestanas, abierto } = get().preferencias

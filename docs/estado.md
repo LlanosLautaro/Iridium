@@ -37,7 +37,7 @@
 En espera, detrás de Orden (D-091): Diseño (T-5) y Capacidades (T-28).
 
 ## En qué estamos ahora
-Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 va más allá de la mitad: la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha y **Actualizar** (T-46: un solo botón que arma y reinicia; su prueba real en Q-142). Faltan el esqueleto, la cabecera común, el frente activo en la tarjeta y la conversación de 360 px. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
+Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 va más allá de la mitad: la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha, **Actualizar** (T-46: un solo botón que arma y reinicia; su prueba real en Q-142) y el esqueleto (la barra del proyecto en dos grupos; se entra a la Bandeja si hay algo, si no al Mapa). Faltan la cabecera común, el frente activo en la tarjeta y la conversación de 360 px. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
 - **Q-142 — Probá Actualizar con tu Iridium**
@@ -57,8 +57,8 @@ Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, OR-I2: el esqueleto (la barra del proyecto en dos grupos, y entrar a la Bandeja o al Mapa desde el proyecto).
-**Leer antes:** `modulos/orden/estado.md` › OR-I2 y Próximo paso, `modulos/orden/diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-1, W-3 y W-5, `06-ui.md` › Frente Orden (y Q-142, Q-126 si llegaron).
+Orden, OR-I2: la cabecera común de las secciones (W-9: título y cuenta, acciones a la derecha, filtros abajo, la misma altura).
+**Leer antes:** `modulos/orden/estado.md` › OR-I2 y Próximo paso, `modulos/orden/diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-9, `06-ui.md` › Frente Orden (y Q-142, Q-126 si llegaron).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

@@ -1,7 +1,7 @@
 # Estado del módulo: Orden
 
 **Tipo:** sección (atraviesa la app y la forma de trabajar; D-091)
-**Última actualización:** 2026-11-06
+**Última actualización:** 2026-11-07
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta, la Bandeja y Actualizar hechas) | este archivo |
+| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta, la Bandeja, Actualizar y el esqueleto hechos) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -74,8 +74,12 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Pruebas:** `tests/or2-bandeja.test.ts` (8: la regla de la cuenta, el orden con la en pausa al final, los filtros por frente, la respondida que no suma y el nombre de la ficha). Playwright, `tests/e2e/or2-bandeja.spec.ts` (2: el total, las tarjetas y la pestaña con su color; los filtros, el ámbar solo en la que frena y la en pausa plegada) y las de I-1 a I-8, D-060, H-8, R-2 y OR-1 al día con los nombres nuevos (33 de 33). Actualizar: `tests/or2-actualizar.test.ts` (10: cada estado del botón, el detalle, desde cuándo arma, el armado cortado, el motivo del script y Cancelar que corta el proceso); Playwright, `co6-sin-armar.spec.ts` (3: disponible → armando → Cancelar → armando → versión lista → se reinicia solo y la pone; falló con Reintentar y Ver la consola; deshabilitado mientras la IA de Iridium trabaja), `co2-version-nueva.spec.ts` (5, con Esperar) y `d085-copia-compartida.spec.ts` (3), 11 de 11. Vitest 635 de 635.
 
-**Falta:** el esqueleto (la barra del proyecto en dos grupos y entrar a la Bandeja o al Mapa), la cabecera común (W-9) en las demás secciones, la línea del frente activo en la tarjeta y la conversación de 360 px por vista (D-098).
+- **El esqueleto** (W-3, 2026-11-07): la barra del proyecto en dos grupos separados por una línea, arriba lo que se sigue (Bandeja de entrada, Mapa, Ideas del proyecto, Revisión) y abajo el proyecto por dentro (Docs, Archivos, Git, Scripts y, si tiene, Skills del proyecto). Ideas del proyecto ocupa el lugar de Trabajo hasta OR-I3. La primera vez que se abre un proyecto se entra a la Bandeja de entrada si hay algo (sin responder o respondido sin procesar), si no al Mapa, y una carpeta sin `docs/estado.md`, a Archivos (`secciones/proyecto/entrada.ts`); después, como se lo dejó. **Responder** de un aviso entra siempre a la Bandeja.
+
+**Pruebas del esqueleto:** `tests/or2-esqueleto.test.ts` (5: cada caso de la entrada); Playwright, `tests/e2e/or2-esqueleto.spec.ts` (2: la barra en orden con la línea, Alfa a la Bandeja, Beta al Mapa y de vuelta en Docs como se la dejó; la carpeta sin documentos a Archivos). `i6-uso.spec.ts` al día con la cuenta en la pestaña (quedó vieja en el paso anterior). Vitest 641 de 641; Playwright, la corrida completa 92 de 96 y las cuatro que fallaron, solas, pasan (tres de la Revisión por la carga, como antes, y la de i6, ya corregida).
+
+**Falta:** la cabecera común (W-9) en las demás secciones, la línea del frente activo en la tarjeta y la conversación de 360 px por vista (D-098).
 
 ## Próximo paso
-OR-I2, lo que falta: el esqueleto (la barra del proyecto en dos grupos y entrar a la Bandeja o al Mapa), después la cabecera común (W-9), el frente activo en la tarjeta y la conversación de 360 px por vista.
-**Leer antes:** `diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-1, W-3, W-5 y W-9, `06-ui.md` › Frente Orden.
+OR-I2, lo que falta: la cabecera común (W-9) en las secciones del proyecto y del inicio; después, el frente activo en la tarjeta y la conversación de 360 px por vista.
+**Leer antes:** `diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-9 y W-2, `06-ui.md` › Frente Orden.

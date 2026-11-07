@@ -5,7 +5,7 @@ import { estadoActualizar, tiempoArmando } from '../../compartido/actualizar'
 import { textoDeCuenta } from '../../compartido/cuentas'
 import type { EstadoMotor, FichaSesion } from '../../compartido/puente'
 import { tarjetaDe, totalBandeja, usarEstado, vistaDe } from '../estado'
-import { SECCIONES, SECCIONES_PROYECTO } from '../secciones'
+import { SECCIONES, SECCIONES_PROYECTO, type SeccionDeProyecto } from '../secciones'
 import { mismaRuta } from '../secciones/proyecto/enlaces'
 import { Cuenta } from '../ui/Cuenta'
 import { Icono, type NombreIcono } from '../ui/Icono'
@@ -78,28 +78,34 @@ function BarraActividad() {
   const irASeccion = usarEstado((s) => s.irASeccion)
   const tarjeta = tarjetaDe(lista, ruta)
   const revision = tarjeta?.revision ?? 0
-  if (seccion === 'proyecto' && ruta)
+  if (seccion === 'proyecto' && ruta) {
+    const boton = (s: SeccionDeProyecto) => (
+      <BotonActividad
+        key={s.id}
+        activa={seccionProyecto === s.id}
+        nombre={s.nombre}
+        detalle={
+          s.id === 'revision' && revision > 0
+            ? ` · ${revision} ${revision === 1 ? 'abierto, espera' : 'abiertos, esperan'} a la IA`
+            : ''
+        }
+        icono={s.icono}
+        n={s.id === 'revision' ? revision : 0}
+        queCuenta={revision === 1 ? 'abierto' : 'abiertos'}
+        alTocar={() => irASeccion(ruta, s.id)}
+      />
+    )
+    const visibles = SECCIONES_PROYECTO.filter((s) => !s.soloSi || (tarjeta && s.soloSi(tarjeta)))
+    // Dos grupos (W-3): lo que se sigue y, debajo de una línea, el proyecto por dentro.
     return (
       <nav className="actividad" aria-label="Secciones del proyecto">
-        {SECCIONES_PROYECTO.filter((s) => !s.soloSi || (tarjeta && s.soloSi(tarjeta))).map((s) => (
-          <BotonActividad
-            key={s.id}
-            activa={seccionProyecto === s.id}
-            nombre={s.nombre}
-            detalle={
-              s.id === 'revision' && revision > 0
-                ? ` · ${revision} ${revision === 1 ? 'abierto, espera' : 'abiertos, esperan'} a la IA`
-                : ''
-            }
-            icono={s.icono}
-            n={s.id === 'revision' ? revision : 0}
-            queCuenta={revision === 1 ? 'abierto' : 'abiertos'}
-            alTocar={() => irASeccion(ruta, s.id)}
-          />
-        ))}
+        {visibles.filter((s) => s.grupo === 'sigue').map(boton)}
+        <hr className="act-linea" />
+        {visibles.filter((s) => s.grupo === 'dentro').map(boton)}
         <BotonAjustes />
       </nav>
     )
+  }
   return (
     <nav className="actividad" aria-label="Secciones">
       {SECCIONES.map((s) => (

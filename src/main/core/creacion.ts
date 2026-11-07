@@ -81,10 +81,7 @@ export function plantillaProyectoNuevo(
       /^\[Hasta cinco líneas.*$/m,
       'Proyecto recién creado con la plantilla básica: todavía no tiene la idea escrita.',
     )
-    .replace(
-      /^\[Una acción concreta.*$/m,
-      'Hito 0: escribir la idea cruda con lo que cuente el usuario.',
-    )
+    .replace(/^\[Una acción concreta.*$/m, 'Hito 0: escribir la idea cruda con lo que cuente el usuario.')
     .replace(/^\*\*Leer antes:\*\* \[.*$/m, '**Leer antes:** nada todavía.')
   const ficha = {
     version: 1,

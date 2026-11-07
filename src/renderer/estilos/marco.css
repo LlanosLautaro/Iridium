@@ -192,6 +192,13 @@
   right: 7px;
   bottom: 7px;
 }
+/* La línea entre los dos grupos de la barra del proyecto (W-3). */
+.act-linea {
+  width: 24px;
+  margin: 6px 0;
+  border: 0;
+  border-top: 1px solid var(--borde);
+}
 
 .trabajo {
   min-width: 0;
