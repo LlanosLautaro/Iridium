@@ -169,7 +169,6 @@ function crearMotor(): Motor {
     const rutaClaude = rutaClaudeInstalado()
     const plugins = elegirComplementos(
       app.isPackaged ? join(process.resourcesPath, 'plugins') : join(app.getAppPath(), 'out', 'plugins'),
-      process.env.IRIDIUM_CLAUDE ?? join(homedir(), '.claude'),
       existsSync,
     )
     return crearMotorSdk({ ...(rutaClaude ? { rutaClaude } : {}), plugins })

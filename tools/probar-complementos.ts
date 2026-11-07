@@ -1,7 +1,7 @@
 // D-086 con el Claude Code real, sin mandar mensajes (no gasta uso): abre una sesión con los complementos de
 // `out/plugins` (los arma `node tools/armar-plugins.mjs`) y lista las skills que ve. Primero sin complementos, para
 // comparar: lo que aparece de más es lo que trae Iridium.
-// Uso: node --experimental-strip-types tools/probar-complementos.ts [--con-guia]
+// Uso: node --experimental-strip-types tools/probar-complementos.ts
 import { existsSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join, resolve } from 'node:path'
@@ -38,7 +38,6 @@ async function skills(plugins: string[]): Promise<string[]> {
 
 const base = resolve('out', 'plugins')
 const plugins = [join(base, 'iridium')]
-if (process.argv.includes('--con-guia')) plugins.push(join(base, 'guia'))
 for (const p of plugins) if (!existsSync(p)) throw new Error(`Falta ${p}: corré node tools/armar-plugins.mjs`)
 
 const sin = await skills([])

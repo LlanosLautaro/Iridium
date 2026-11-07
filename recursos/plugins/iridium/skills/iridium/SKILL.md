@@ -1,95 +1,180 @@
 ---
 name: iridium
-description: Cómo trabajar desde Iridium, la app de escritorio con la que el usuario dirige sus proyectos, y los formatos exactos de los archivos que Iridium lee (docs/estado.md con sus Q-n, docs/respuestas/, docs/scripts.md, los frentes de docs/modulos/, los comentarios de docs/revision/ y la ficha .proyecto.json). Usala siempre que la instrucción del sistema diga «Trabajás desde Iridium»: antes de escribir o cambiar estado.md, una pregunta, una prueba, scripts.md, un comentario de la Revisión o la ficha de un proyecto, y al cerrar cada sesión.
+description: El framework de Iridium, la app de escritorio con la que el usuario dirige sus proyectos con la IA. Es el método completo (los hitos de una app desde la idea hasta la operación, los frentes, las iteraciones) y los formatos exactos que Iridium lee y controla (docs/estado.md con sus Q-n, docs/trabajo.md con sus T-n, docs/respuestas/, docs/scripts.md, los frentes de docs/modulos/, los comentarios de docs/revision/ y la ficha .proyecto.json). Usala siempre que la instrucción del sistema diga «Trabajás desde Iridium»: al empezar cada sesión, antes de escribir cualquiera de esos archivos, al crear, planificar, definir, diseñar, construir o retomar un proyecto, y al cerrar cada sesión.
 ---
 
-# Trabajar desde Iridium
+# El framework de Iridium
 
-Iridium es la app de escritorio con la que el usuario dirige sus proyectos con vos. **No tiene base de datos:** vigila los archivos de cada proyecto y redibuja la pantalla cuando cambian. Si escribís un archivo con el formato correcto, el usuario lo ve enseguida; si no, no ve nada y nadie le avisa. Esta skill la carga Iridium solo en sus conversaciones; afuera (VS Code, la terminal) no existe.
+Iridium es la app de escritorio con la que el usuario dirige sus proyectos con vos. Este framework es todo lo que necesitás para trabajarlos: el **método** (hitos, frentes, iteraciones) y los **formatos** que Iridium lee. Iridium **no tiene base de datos**: vigila los archivos y redibuja la pantalla. Un archivo bien escrito se ve enseguida; uno mal escrito no se ve, y el **control** de Iridium te lo devuelve al terminar el turno.
 
-La guía de hitos (`hitos-desarrollo-app`) dice cómo se desarrolla cada proyecto. Esta dice cómo se ve eso en Iridium. Si las dos no coinciden en un formato, manda esta: es lo que Iridium lee de verdad.
+Este framework reemplaza a la guía `hitos-desarrollo-app` y a `gestor-proyectos`. Si alguna sigue instalada y dice otra cosa, manda esto.
 
 ## Dónde estás
 
-- Te abre **el Claude Code que trae Iridium** (el Agent SDK con su propia CLI), con la cuenta de Claude del usuario. La sesión se inicia desde Iridium (abajo a la izquierda); vos no podés hacerlo.
-- **Permisos:** sin confirmaciones (`bypassPermissions`). No toques nada fuera de la carpeta en la que trabajás sin que el usuario lo pida.
-- **Configuración:** la del usuario (`%USERPROFILE%\.claude`: su `CLAUDE.md`, sus skills, sus hooks) y la del proyecto. No hay `AskUserQuestion`.
+- Te abre **el Claude Code que trae Iridium**, con la cuenta de Claude del usuario. Sin confirmaciones (`bypassPermissions`): no toques nada fuera de la carpeta en la que trabajás sin que el usuario lo pida. No hay `AskUserQuestion`.
 - La instrucción del sistema empieza con «Trabajás desde Iridium…» y dice en qué chat estás:
 
 | Chat | Carpeta | Cómo hablás con el usuario |
 |---|---|---|
-| **De un proyecto** («Nadie mira esta sesión en vivo») | la del proyecto | **No preguntás en el chat.** Todo lo que necesitás de él va como `Q-n` en `docs/estado.md`. Cerrás con el estado al día y un Próximo paso concreto. |
-| **General** (al lado de la grilla y en Ideas) | `Ideas`, en la carpeta de Iridium | En el chat: respondés y, si necesitás algo, preguntás al final, en pocas palabras. Las reglas están en el `CLAUDE.md` de esa carpeta. |
+| **De un proyecto** («Nadie mira esta sesión en vivo») | la del proyecto | **No preguntás en el chat.** Lo que necesitás de él va como `Q-n`. Cerrás con el estado al día y un Próximo paso concreto. |
+| **General** (al lado de la grilla y en Ideas) | `Ideas`, en la carpeta de Iridium | En el chat; si necesitás algo, preguntás al final, en pocas palabras. Las reglas, en el `CLAUDE.md` de esa carpeta. |
 | **Skills** | `Skills`, en la carpeta de Iridium | En el chat, como en el general. |
 
-En el chat de un proyecto el usuario lee lo que dejaste cuando vuelve: la tarjeta, Pendientes y tu última respuesta. Una pregunta escrita en el chat se pierde.
+En el chat de un proyecto el usuario lee lo que dejaste cuando vuelve: la tarjeta, la Bandeja de entrada y tu última respuesta. Una pregunta escrita en el chat se pierde.
 
-Si algo de Iridium falla (no del proyecto), no intentes arreglar la app: anotalo en `ideas.md` de la carpeta `Ideas`, en una sección «Problemas de Iridium», con la fecha y qué pasó.
+Si algo de Iridium falla (no del proyecto), no intentes arreglar la app: anotalo en `ideas.md` de la carpeta `Ideas`, sección «Problemas de Iridium», con la fecha y qué pasó.
 
-## Qué muestra cada sección y de dónde lo saca
+## Principios
 
-| Sección | Qué muestra | De dónde |
-|---|---|---|
-| **Proyectos** (la grilla) | Una tarjeta por carpeta, agrupadas por estado | `.proyecto.json`, el ícono y `docs/estado.md` |
-| **Pendientes** | Las `Q-n` sin responder, con un formulario | «Preguntas abiertas» de cada `estado.md` y `docs/respuestas/` |
-| **Docs** y **Mapa** | Los documentos y el avance por hitos, frentes e iteraciones | `docs/*.md` y `docs/modulos/*/estado.md` |
-| **Scripts** | Un botón por script | `docs/scripts.md` |
-| **Ideas del proyecto** | Las ideas para después, a un clic | `07-construccion.md` › «Ideas nuevas…» y `00-idea.md` › «Ideas para después…» (el `## ` tiene que empezar así; cada punto de la lista, una idea) |
-| **Skills del proyecto** | Las skills propias del proyecto; el ícono sale solo si hay alguna | `.claude/skills/<skill>/SKILL.md` (`name` y `description`) |
-| **Git** | Los commits y si está en GitHub | el repo del proyecto |
-| **Revisión** | Los comentarios del usuario sobre la interfaz | `docs/revision/R-n.md` |
-| **Skills** | Las skills y si cada proyecto está al día con la guía | la carpeta de skills y `**Formato de la guía:**` de `docs/README.md` |
+1. **Un hito a la vez, con portón.** No se avanza sin cumplir el portón del hito y sin el visto bueno del usuario. El error más común es escribir código con una idea a medio definir.
+2. **Se puede volver atrás** (ver «Corregir el rumbo»): se corrige el documento de origen y se registra.
+3. **Documentación y UX siempre completas**, aunque la app sea personal. El perfil solo regula lo que protege a terceros (`referencias/perfil-proyecto.md`).
+4. **Cada decisión, con su porqué**, en `docs/decisiones.md`.
+5. **El usuario decide, la IA propone.** Ante un «no sé», 2–3 opciones con ventajas, desventajas y una recomendación; nunca decidís en silencio lo que es suyo.
+6. **La IA escribe el 100 % del código.** El usuario no programa ni revisa código. La tecnología la propone la IA y la decide el usuario; cada decisión técnica se explica por sus consecuencias; la revisión del código se reemplaza por documentación al día, pruebas automáticas y verificaciones que el usuario ve (capturas, demos, criterios de aceptación).
 
-## `docs/estado.md`
+## El modelo: cuatro cosas, cada una en un solo lugar
 
-Iridium lee estos títulos y campos exactos (plantilla `templates/estado.md` de la guía):
-- `**Última actualización:** AAAA-MM-DD`
-- `## Hito actual` y debajo una línea `N — Nombre — estado`. Va a la tarjeta.
-- `## Progreso de hitos`: una tabla con la columna Estado en palabras fijas: `pendiente`, `en curso`, `completo`, `saltado`, `reabierto`.
-- `## Preguntas abiertas`: las `Q-n` (abajo). Sin preguntas: `(ninguna)`.
-- `## Próximo paso`: la primera línea va a la tarjeta. Una acción concreta, en una línea.
+| Qué | Código | Dónde vive | Quién lo escribe |
+|---|---|---|---|
+| **Pregunta**: todo lo que espera del usuario (decisión, consulta, prueba, tarea, formulario) | `Q-n` | `estado.md` › Preguntas abiertas; la respuesta en `respuestas/Q-n.md` | la IA; el usuario responde con el formulario |
+| **Trabajo**: las ideas y los pendientes de la IA | `T-n` | `docs/trabajo.md` | la IA; el usuario anota ideas desde Iridium |
+| **Comentario** de la Revisión | `R-n` | `docs/revision/R-n.md` | el usuario (F8); la IA lo procesa |
+| **Decisión** | `D-n` | `docs/decisiones.md` | la IA, con lo que decidió el usuario |
 
-«Pendientes» de `estado.md` es solo trabajo tuyo: lo que espera del usuario no va ahí.
+- **No hay otras listas.** Nada de «Pendientes» en `estado.md`, «Ideas para después», «Ideas nuevas», «Pendientes reportados» ni un Backlog aparte: todo eso es un `T-n` con su estado. Una idea aceptada no se mueve de lugar: cambia de estado.
+- **El frente** es un dato, no un lugar: `Frente: Compartir` en la pregunta o el trabajo; sin esa línea, es del núcleo. Las `Q-n` de un módulo van igual en el `estado.md` general.
+- **Un vocabulario de estados**, el mismo para hitos, pasos de un frente, iteraciones, frentes y trabajo. Toda celda «Estado» y todo `Estado:` empieza por una de estas palabras (lo que sigue es libre: «en curso (I-3; espera Q-12)»):
 
-## Las preguntas: `Q-n` en «Preguntas abiertas»
+| Estado | Quiere decir |
+|---|---|
+| `pendiente` | no empezó (un frente pendiente está en espera) |
+| `en curso` | se está haciendo. Un hito que se reabre vuelve a `en curso`, con el motivo en su documento. Lo que espera la prueba del usuario sigue `en curso`, con su `Q-n` |
+| `en pausa` | empezado y frenado a propósito |
+| `hecho` | terminado (un frente `hecho` se ve «en operación» y sigue recibiendo trabajo) |
+| `descartado` | no se hace (un hito que se salta, una idea que no va), con el motivo |
+| `nueva` | solo en el trabajo: una idea sin evaluar |
 
-Todo lo que esperás del usuario es una `Q-n`: una decisión, una prueba, un material, una tarea a mano. Lo que no es `Q-n`, el usuario no lo ve como algo suyo.
+No se usan `completo`, `saltado`, `reabierto`, `bloqueado`, `aprobada`, `validado` ni sinónimos: el control los marca.
+
+## Los hitos
+
+| # | Hito | Pregunta central | Entregable en `docs/` | Referencia |
+|---|---|---|---|---|
+| 0 | Idea cruda | ¿Qué tengo en la cabeza? | `00-idea.md` | `referencias/00-idea.md` |
+| 1 | Exploración | ¿Ya existe? ¿Vale la pena? | `01-exploracion.md` | `referencias/01-exploracion.md` |
+| 2 | Definición y alcance | ¿Qué es y qué no es? | `02-definicion.md`, `perfil-proyecto.md` | `referencias/02-definicion.md` |
+| 3 | Investigación de dominio | ¿Cómo funciona el mundo de la app? ¿Qué reutilizo? | `03-investigacion.md`, `research/` | `referencias/03-investigacion.md` |
+| 4 | UX | ¿Cómo la usa una persona? | `04-ux.md`, `ux/` | `referencias/04-ux.md` |
+| 5 | Arquitectura técnica | ¿Cómo se construye? | `05-arquitectura.md` | `referencias/05-arquitectura.md` |
+| 6 | UI | ¿Cómo se ve? (design system → pantallas) | `06-ui.md` | `referencias/06-ui.md` |
+| 7 | Construcción | — | `07-construccion.md` + código | `referencias/07-construccion.md` |
+| 8 | Pruebas y calidad | ¿Funciona y es confiable? | `08-calidad.md` | `referencias/08-calidad.md` |
+| 9 | Lanzamiento | ¿Cómo llega a sus usuarios? | `09-lanzamiento.md` | `referencias/09-lanzamiento.md` |
+| 10 | Operación | ¿Qué aprendimos y qué sigue? | `10-operacion.md` | `referencias/10-operacion.md` |
+
+- El 3 se descarta solo si el dominio es trivial; si la app trabaja con formatos, APIs o reglas de terceros, es obligatorio.
+- El 5 y el 6 pueden ir en paralelo; el 6 empieza por el design system.
+- 7, 8 y 10 forman un ciclo: cada iteración construye, prueba y aprende.
+- **No escribas código de producto antes del hito 7.** Sí *spikes*: prototipos descartables para una duda técnica (hitos 3 y 5), fuera del código principal, con la conclusión en `research/` o `decisiones.md`.
+
+**Leé solo la referencia del hito en curso** (y la del anterior si hace falta contexto). Las demás referencias: `modulos.md` (frentes), `perfil-proyecto.md` (protección), `integraciones.md` (skills externas como `impeccable`), `ronda-ux.md` (operación) y `pasar-al-framework.md`.
+
+### Protocolo de cada hito
+1. **Contexto:** `estado.md`, `perfil-proyecto.md`, los documentos anteriores que hagan falta y la referencia del hito.
+2. **Preguntar:** de a 3–5 preguntas, las de más impacto primero, como `Q-n`. Omití las ya respondidas.
+3. **Hacer el trabajo** que pide la referencia y **redactar el entregable** con su plantilla.
+4. **Portón:** el documento termina con `## Portón`, la checklist de salida de la referencia como `- [ ]`, que se marca `- [x]` a medida que se cumple. Con todo marcado, el visto bueno del usuario es una `Q-n` de tipo decisión.
+5. Con el visto bueno: el hito pasa a `hecho`, el siguiente a `en curso`, y se registran las decisiones.
+
+### Corregir el rumbo
+Cuando algo grande cambia (una función nueva obliga a cambiar la arquitectura, el dominio resultó distinto, cambia el objetivo), no se parcha el código: se vuelve al hito donde nace el cambio (2 qué es, 3 su mundo, 4 cómo se usa, 5 cómo se construye, 6 cómo se ve). Se miden los documentos y el código afectados, se le explican las consecuencias al usuario con opciones (una `Q-n`), y el hito de origen vuelve a `en curso`; se corrigen sus documentos en orden, con el portón revisado. Si el cambio tiene vida propia, conviene abrirlo como frente. En operación, los cambios grandes van como propuesta (`referencias/10-operacion.md`).
+
+### Frentes (módulos)
+Una parte con vida propia (una sección grande, un plugin, una app hermana) es un **frente**: recorre un ciclo reducido de pasos en `docs/modulos/<nombre>/`, hereda del proyecto el perfil, el glosario, el design system, la arquitectura y las decisiones, y documenta solo lo propio. Nunca contradice los documentos generales: lo que necesite del núcleo se cambia ahí y se registra. Detalle en `referencias/modulos.md`; plantillas en `plantillas/modulo/`.
+
+## Cómo empezar
+
+- **Proyecto nuevo** (Iridium crea la carpeta vacía con **Nuevo proyecto** y te manda la idea): creá `docs/` con las plantillas (`estado.md`, `trabajo.md`, `README-docs.md` como `docs/README.md` con la fecha del framework, `decisiones.md`, `perfil-proyecto.md`, `scripts.md`), el `CLAUDE.md` de la raíz con `plantillas/instrucciones-ia.md`, la ficha y el ícono, y arrancá por el hito 0 aunque la idea esté pensada.
+- **Proyecto con `docs/estado.md`:** leelo y seguí su **Próximo paso**. Si `docs/README.md` no tiene `**Framework:**`, es de **framework viejo** (la guía de hitos): leé lo de antes con la tabla de `referencias/pasar-al-framework.md` y no lo reescribas por tu cuenta; pasarlo al framework es un pedido del usuario (Skills › Framework, o la tarjeta).
+- **Carpeta simple** (sin `docs/estado.md`): un script suelto o una carpeta personal. Se conversa y se trabaja sin documentos; no le crees `docs/` salvo que el usuario pida **Pasar al framework**.
+- **Si el usuario quiere saltar etapas**: decile qué riesgo concreto tiene, ofrecé la versión más rápida del hito y, si insiste, respetalo, registralo y anotá el hueco en «Hitos con huecos aceptados».
+
+```
+docs/
+├── README.md          # índice y **Framework:** AAAA-MM-DD
+├── estado.md          # hito actual, frentes, preguntas, próximo paso
+├── trabajo.md         # ideas y pendientes de la IA (T-n)
+├── perfil-proyecto.md
+├── decisiones.md
+├── 00-idea.md … 10-operacion.md
+├── research/  ux/
+├── scripts.md         # lo que el usuario ejecuta a mano
+├── respuestas/        # Q-n.md, con sus adjuntos en Q-n/
+├── revision/          # R-n.md y R-n.png
+└── modulos/<frente>/  # estado.md y los documentos del ciclo reducido
+```
+
+## Los formatos
+
+Cada formato está escrito acá una sola vez. Iridium los lee con estos títulos y campos exactos y el control los revisa.
+
+### `docs/estado.md` (plantilla `plantillas/estado.md`)
+- `**Última actualización:** AAAA-MM-DD`.
+- `## Hito actual` y debajo **una línea** `N — Nombre — estado` (estado del vocabulario). Va a la tarjeta.
+- `## Progreso de hitos`: tabla `| # | Hito | Estado | Documento |`.
+- `## Módulos`: tabla `| Frente | Tipo | Paso | Estado |`; el frente activo es el `en curso`. El paso y el próximo paso de cada uno salen de su propio `estado.md`.
+- `## En qué estamos ahora`: hasta cinco líneas del presente, no un diario.
+- `## Preguntas abiertas`: las `Q-n`; sin preguntas, `(ninguna)`.
+- `## Próximo paso`: la primera línea va a la tarjeta, una acción concreta; debajo, `**Leer antes:**` con las secciones necesarias (`archivo.md` › Título), no la carpeta entera.
+- **Cabe en una pantalla.** No lleva lista de pendientes: eso es `trabajo.md`. Lo hecho va al documento del hito (el log de `07-construccion.md`, `10-operacion.md` o el del frente).
+
+El `estado.md` de un frente (`plantillas/modulo/estado.md`) tiene `## Progreso` con sus pasos, `## Iteraciones` (`| ID | Objetivo | Estado |`), su log y su `## Próximo paso`; no lleva preguntas.
+
+### Las preguntas: `Q-n`
+Todo lo que esperás del usuario es una `Q-n`: una decisión, una prueba, un material, una tarea a mano. Lo que no es `Q-n`, el usuario no lo ve como algo suyo: nada de secciones «Verificación manual» ni «Pruebas pendientes».
 
 ```markdown
 ## Preguntas abiertas
 - **Q-3 — ¿La pantalla principal muestra una lista o una grilla?**
   Tipo: decisión · frena
   Contexto: `04-ux.md` › Pantalla principal. La lista entra más; la grilla se ve mejor con fotos.
-  Opciones: A) Lista (recomendada) · B) Grilla
+  Opciones: A) Lista (recomendada: entra más) · B) Grilla
 - **Q-4 — Probá la primera versión**
-  Tipo: prueba
+  Tipo: prueba · Frente: Compartir
   Contexto: abrila con `scripts.md` › Abrir en modo desarrollo. Fijate:
   - [ ] Se puede crear una nota
   - [ ] La nota sigue ahí al cerrar y abrir
 ```
 
-- El ítem empieza con `**Q-n — título**`. El código no se repite: el siguiente es el más alto del proyecto + 1.
-- `Tipo:` es `decisión`, `consulta`, `prueba`, `tarea` o `formulario`; se le suma `· frena` si sin la respuesta no podés seguir.
-- `Opciones:` va en una línea propia, `A) … · B) …`, con la recomendada marcada. Si van en la misma línea que otra cosa, el formulario queda sin opciones.
-- **Las pruebas y las tareas van solo con casillas**, un `- [ ]` corto por cosa a mirar, **sin** `Opciones: A) Todo bien · B) Algo falla`: la casilla sin marcar y su nota ya dicen qué falló. Juntar las dos cosas es contradictorio.
-- Si cambiás el título de una `Q-n` ya respondida, la respuesta vieja deja de valer. Para otra cosa, otro código.
+- Un ítem de lista que empieza con `**Q-n — título**` (negrita, raya larga), en una línea. Nunca un título `### Q-n` ni texto suelto. Lo demás, en las líneas siguientes, con sangría.
+- La primera línea es `Tipo:` con `decisión`, `consulta`, `prueba`, `tarea` o `formulario`, y después, separadas por ` · `, solo estas palabras: `frena` (si sin la respuesta no podés hacer el Próximo paso), `en pausa` (no cuenta ni avisa hasta que se reactive) y `Frente: <nombre>` (un frente que existe).
+- **Decisiones:** `Opciones: A) … · B) …` en una línea propia, con la recomendada marcada `(recomendada: por qué)`. Iridium suma siempre **Otro** con texto libre.
+- **Pruebas y tareas:** solo casillas, un `- [ ]` corto por cosa (la acción y lo que tiene que pasar), **sin** `Opciones:`: la casilla sin marcar y su nota ya dicen qué falló.
+- **Se acorta el contexto, nunca el formato:** el `Contexto:` cita el detalle (`ux/…` › Q-n) en vez de copiarlo.
+- El número es el más alto del proyecto + 1 (mirá `estado.md` y `respuestas/`); nunca se reutiliza. Si la pregunta cambia (no una errata), lleva otro número: el viejo puede tener respuesta.
 
-## Las respuestas: `docs/respuestas/Q-n.md`
+### Las respuestas: `docs/respuestas/Q-n.md`
+El formulario de Iridium escribe `# Q-n — <la pregunta tal cual>`, `**Opción:** A) …` (u `Otro: …`), el texto libre y, en pruebas y tareas, cada casilla marcada o no con su nota después de ` — `. Los adjuntos van en `respuestas/Q-n/`.
 
-El formulario de Iridium escribe:
+Al empezar con preguntas abiertas, mirá esa carpeta. Por cada respuesta: aplicala (una decisión va a `decisiones.md`; un trabajo, a `trabajo.md`), sacá la `Q-n` de «Preguntas abiertas» y agregá al final del archivo `> Procesada el AAAA-MM-DD → D-n` (o `T-n`, o el documento que cambió). Esa línea la escribís vos, nunca Iridium; sin ella, la Bandeja la muestra «respondida sin procesar» y el control la marca. Si el usuario responde en el chat una `Q-n`, guardá la respuesta con ese formato y procesala igual. Los archivos de respuesta no se borran.
+
+### El trabajo: `docs/trabajo.md` (plantilla `plantillas/trabajo.md`)
 
 ```markdown
-# Q-3 — ¿La pantalla principal muestra una lista o una grilla?
+# Trabajo
 
-**Opción:** A) Lista
-
-(texto libre, si escribió algo)
+## T-12 — Bandeja agrupada por frente
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-05 · Origen: D-091
+Con filtros arriba, no una pestaña por frente.
 ```
 
-En una prueba, las casillas marcadas o no, cada una con su nota. Al empezar una sesión con preguntas abiertas, mirá esa carpeta. Por cada respuesta: aplicala (una decisión va a `docs/decisiones.md`), sacá la `Q-n` de «Preguntas abiertas» y agregá al final del archivo `> Procesada el AAAA-MM-DD → D-n` (o adónde fue). Esa línea la escribís vos, nunca Iridium; mientras falte, Pendientes la muestra como «respondida sin procesar».
+- Un ítem por `## T-n — título`. La primera línea, sus datos separados por ` · `: `Estado:` del vocabulario (obligatorio), `Frente:` (si no es del núcleo), `Fecha:` (cuando nació) y `Origen:` (la `D-n`, `Q-n`, `R-n` o la idea de donde salió). Debajo, su texto, corto.
+- `nueva` es una idea sin evaluar (las anota también el usuario desde Iridium); `pendiente`, lo que se va a hacer; `en curso`, lo que se está haciendo. Lo terminado queda `hecho` (no se borra) y lo que no va, `descartado` con el motivo.
+- El orden del archivo no importa; agregá al final. Iridium puede estar agregando una idea mientras trabajás: si la herramienta te dice que el archivo cambió, volvé a leerlo. Un `T-n` repetido se renumera (el más nuevo).
+- Los errores y ajustes del usuario que no se resuelven en el momento son un `T-n` `pendiente` con la iteración o el hito en el `Origen:` o el texto.
 
-## Los scripts: `docs/scripts.md`
-
+### Los scripts: `docs/scripts.md` (plantilla `plantillas/scripts.md`)
 Lo que el usuario ejecuta a mano va acá, nunca en el chat. Cada script es un botón:
 
 ```markdown
@@ -108,41 +193,46 @@ Una vez, o cuando la IA lo pida.
 **Abrir:** `docs/capturas`
 ```
 
-- Un `##` por script, una línea de para qué sirve y **una** línea de acción con el valor entre comillas invertidas: `**Ejecutar:**` (un comando, que corre en la raíz o en la `**Carpeta:**` indicada; o un archivo del proyecto, `.exe`, `.msi`, `.bat`, `.lnk`…, que Windows abre) o `**Abrir:**` (una carpeta o un archivo para ver).
-- Lo más usado primero. En una `Q-n`, citá el script (`scripts.md` › Abrir en modo desarrollo) en vez de repetir el comando.
-- Sin nada que ejecutar todavía: «(Todavía no hay scripts: el proyecto no tiene código.)».
+- Un `##` por script con lo que hace en palabras del usuario, una línea de para qué sirve y **una** línea de acción: `**Ejecutar:**` (un comando, en la raíz o en la `**Carpeta:**` indicada; o un archivo del proyecto, `.exe`, `.msi`, `.bat`, `.lnk`…, que Windows abre) o `**Abrir:**` (una carpeta o un archivo para ver).
+- Lo más usado primero, no más de ocho. Las herramientas que usa solo la IA van en el `CLAUDE.md`. Se corrige en la misma sesión en que algo cambia. Sin nada que ejecutar: «(Todavía no hay scripts: el proyecto no tiene código.)».
+- En una `Q-n`, citá el script (`scripts.md` › Abrir en modo desarrollo) en vez de repetir el comando.
 
-## Docs, Mapa, códigos y frentes
+### Códigos y citas
+| Código | Qué es | Dónde nace |
+|---|---|---|
+| `D-n` | decisión | `decisiones.md` |
+| `Q-n` | pregunta al usuario | `estado.md` › Preguntas abiertas |
+| `T-n` | idea o pendiente de la IA | `trabajo.md` |
+| `R-n` | comentario de la Revisión | `revision/R-n.md` |
+| `H-n`, `F-n`, `W-n` | historia, flujo, pantalla | `04-ux.md` o `ux/` |
+| `S-n` | spike | `03-investigacion.md` o `05-arquitectura.md` |
+| `I-n` | iteración (en un frente, con su prefijo: `OR-I1`) | `07-construccion.md` o el `estado.md` del frente |
 
-- Los códigos (`D-n`, `Q-n`, `H-n`, `I-n`, `R-n`…) se vuelven enlaces si nacen en un título que empieza por ellos (`## D-4 — …`). Para citar una sección: `archivo.md` › Título.
-- Los dibujos en texto (wireframes en un bloque ```) se ven en Docs con una letra de ancho fijo que tiene las líneas de cuadro (`─│┌┐└┘├┤┬┴┼`), las figuras (`■□▪▫◆◇◈●○◉▲▼▶◀`), las flechas (`←→↑↓↔`), `✓✕✗✶…·›` y el texto latino. Cualquier otro símbolo (emojis, `⚙ ✉ ⌂ ▦ ↻ ⑂ ☰ ⚠ ▢`) sale de otra letra con otro ancho y desarma el cuadro: para un ícono, usá una figura de esa lista o una palabra entre corchetes (`[Ajustes]`).
-- El Mapa sale de la tabla de hitos de `estado.md` y, dentro de cada hito, de su `## Portón` (en el de construcción, de la tabla de iteraciones con columna ID y filas `I-n`). No cambies los títulos ni las columnas de las plantillas.
-- **Frentes:** cada módulo tiene `docs/modulos/<nombre>/estado.md`, con su tabla de pasos y sus iteraciones; el Mapa muestra una fila con el núcleo y cada módulo. En el `estado.md` general, la tabla «Módulos» dice cuál es el frente activo. Las `Q-n` de un módulo van igual en el `estado.md` general.
-- `docs/README.md` lleva `**Formato de la guía:** AAAA-MM-DD`: la sección Skills marca los proyectos atrasados.
+- Un código **nace en un título que empieza por él** (`## D-4 — …`) o en la primera columna de una tabla; las `Q-n`, en su ítem. Así Iridium lo vuelve un enlace en todos lados. Otro prefijo del proyecto se declara antes en la tabla «Códigos» de `docs/README.md`. `P1`–`P5` son los niveles de protección: la P no se usa para otra cosa.
+- En `estado.md`, cada código va con un nombre de 2 a 5 palabras la primera vez en cada sección: «D-42 (referencia del juego)». Una sección se cita `archivo.md` › Título.
 
-## Los comentarios de la Revisión: `docs/revision/R-n.md`
+### Los dibujos en texto
+Los wireframes en un bloque ``` se ven en Docs con una letra de ancho fijo que tiene las líneas de cuadro (`─│┌┐└┘├┤┬┴┼`), las figuras (`■□▪▫◆◇◈●○◉▲▼▶◀`), las flechas (`←→↑↓↔`), `✓✕✗✶…·›` y el texto latino. Cualquier otro símbolo (emojis, `⚙ ✉ ⌂ ▦ ↻ ☰ ⚠`) sale de otra letra con otro ancho y desarma el cuadro: para un ícono, una figura de esa lista o una palabra entre corchetes (`[Ajustes]`).
 
-El usuario comenta la interfaz de una app con F8 y el comentario llega como `docs/revision/R-n.md` (con su captura `R-n.png`). Leelo, resolvelo y cerralo: cambiá `**Estado:** abierto` por `**Estado:** cerrado` y agregá una línea al final de «## Historia»:
+### El Mapa
+Sale de la tabla de hitos de `estado.md`, del `## Portón` de cada documento de hito, de la tabla de iteraciones (columna ID con `I-n`) y del `estado.md` de cada frente. No cambies los títulos ni las columnas de las plantillas.
+
+### Los comentarios de la Revisión: `docs/revision/R-n.md`
+El usuario comenta la interfaz de una app con F8 y llega `R-n.md` (con su captura `R-n.png`, el archivo y la línea). Leelos al empezar, resolvelos y cerralos: `**Estado:** abierto` pasa a `**Estado:** cerrado` y se agrega al final de `## Historia`:
 
 ```markdown
 - AAAA-MM-DD HH:MM — cerrado por la IA: qué hiciste
 ```
 
-**Cerrado es solo lo que quedó hecho de verdad.** Si no lo resolvés ahora (va a un plan, al Backlog, a otra iteración), no lo cierres: poné `**Estado:** anotado` y una línea que diga dónde quedó y por qué:
+**Cerrado es solo lo hecho de verdad.** Si no lo resolvés ahora, creá su `T-n` y poné `**Estado:** anotado` con la línea `- AAAA-MM-DD HH:MM — anotado por la IA: T-n (por qué después)`. Iridium no te lo vuelve a pedir; cuando hagas el `T-n`, cerralo. Los anotados para la ronda de UX la disparan al juntarse cinco (`referencias/ronda-ux.md`).
 
-```markdown
-- AAAA-MM-DD HH:MM — anotado por la IA: `10-operacion.md` › Backlog (Should); se hace después de compartir
-```
-
-Iridium muestra los anotados aparte (ni abiertos ni cerrados) y no te los vuelve a pedir en cada sesión. Cuando hagas lo anotado, cerralo con su línea «cerrado por la IA».
-
-## La ficha del proyecto: `.proyecto.json`
-
-La tarjeta sale de `.proyecto.json` en la raíz del proyecto. Sin ficha, o con el JSON roto, la tarjeta dice «sin clasificar».
+### La ficha: `.proyecto.json` y su ícono
+La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, dice «sin clasificar».
 
 ```json
 {
   "version": 1,
+  "nombre": "Alfa",
   "descripcion": "Una línea: qué es el proyecto.",
   "estado": "en-desarrollo",
   "etiquetas": [],
@@ -152,11 +242,45 @@ La tarjeta sale de `.proyecto.json` en la raíz del proyecto. Sin ficha, o con e
 }
 ```
 
-- Obligatorios: `version` (1) y `estado`, uno de `idea`, `en-desarrollo`, `en-uso`, `pausado`, `descontinuado`, `en-rescate`, `para-eliminar`. El estado decide el grupo de la grilla.
-- `icono`: ruta relativa dentro del proyecto (svg, png, jpg, webp, gif, ico), nunca absoluta ni con `..`; `null` es el genérico. De costumbre, un `.proyecto-icono.svg` cuadrado y simple.
-- `reemplazadoPor`: el nombre de la carpeta del proyecto que lo reemplaza, o `null`. Los campos que no conozcas, dejalos como están.
-- El usuario puede cambiar `estado`, `archivado` e `icono` desde el menú de la tarjeta en Iridium, y eliminar el proyecto (va a la papelera): releé la ficha antes de tocarla. Con **Nuevo proyecto**, Iridium crea la carpeta vacía y te manda el primer mensaje: arrancá con la guía y creá la ficha y el ícono.
+- Obligatorios: `version` (1) y `estado`, uno de `idea`, `en-desarrollo`, `en-uso`, `pausado`, `descontinuado`, `en-rescate`, `para-eliminar` (decide el grupo de la grilla). `nombre` es opcional: el nombre visible si no es el de la carpeta.
+- `icono`: ruta relativa dentro del proyecto (svg, png, jpg, webp, gif, ico), nunca absoluta ni con `..`; `null` es el genérico. De costumbre, un `.proyecto-icono.svg` con el estilo de `referencias/iconos.md`.
+- `reemplazadoPor`: la carpeta del proyecto que lo reemplaza, o `null`. Los campos que no conozcas, dejalos como están.
+- El usuario cambia `estado`, `archivado` e `icono` desde el menú de la tarjeta: releé la ficha antes de tocarla. Al cerrar un hito, revisá que el estado y la descripción sigan siendo ciertos.
+
+## El control
+
+Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos), las tablas de estados y los campos de `estado.md`, y los dibujos en texto. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
+
+## Reglas para la IA
+
+- **No agregues funciones que no estén en `02-definicion.md`.** Una idea nueva es un `T-n` `nueva`.
+- **Errores y ajustes que reporta el usuario: los clasificás vos**, sin preguntarle. Se resuelven ahora si son del hito o la iteración en curso, o si rompen el uso (bloquea, pierde datos, contradice un criterio ya cumplido), con la pista corta: qué pasa y qué tendría que pasar, la causa, el arreglo más acotado y una prueba que falla sin él. Si no, un `T-n` `pendiente` donde corresponda. Avisá en una línea qué hiciste.
+- **Si una decisión contradice un documento**, no la apliques en silencio: decilo, corregí el documento y registrala.
+- **Antes de mostrar una iteración**, verificá uno por uno sus criterios de aceptación con la app abierta; mostrala funcionando (capturas, demo, pruebas explicadas), nunca el código, y su prueba va como `Q-n` de tipo prueba.
+- **No copies documentación de terceros sin mirar su licencia**: notas propias con enlaces, o copias con fecha y atribución (`referencias/03-investigacion.md`).
+- **Nunca le pidas al usuario que escriba, edite o revise código.**
+- **Un error de formato que se repite** se arregla en este framework y en el control, nunca con un parche suelto en un proyecto.
+- **Los otros proyectos del usuario no se tocan** desde un proyecto sin que lo pida.
 
 ## Al cerrar cada sesión de un proyecto
 
-`estado.md` con la fecha y un Próximo paso concreto, las decisiones registradas, lo que necesitás del usuario como `Q-n`, los comentarios de la Revisión cerrados y el código commiteado.
+1. `estado.md` con la fecha, «En qué estamos ahora» al día y un **Próximo paso** concreto con su **Leer antes** (y el `estado.md` del frente, si trabajaste en uno).
+2. Lo que necesitás del usuario, como `Q-n`; las respuestas leídas, procesadas.
+3. Las decisiones tomadas, en `decisiones.md`; las ideas y pendientes nuevos, en `trabajo.md`.
+4. `scripts.md` al día si cambió algo que el usuario ejecuta.
+5. Los comentarios de la Revisión, cerrados o anotados.
+6. La ficha, cierta.
+7. El código commiteado (o por qué no).
+
+Al pasar un portón o terminar una iteración, cerrá así y decí en una línea que conviene un chat nuevo: la sesión nueva lee `estado.md` y sigue, sin repetir contexto.
+
+## Archivos del framework
+
+- `referencias/00-idea.md` … `referencias/10-operacion.md`: un archivo por hito (objetivo, preguntas, actividades, portón, cómo escala con el perfil, errores comunes y la plantilla del entregable).
+- `referencias/modulos.md`: los frentes (sección, plugin, producto hermano), qué heredan, el ciclo reducido.
+- `referencias/perfil-proyecto.md`: el cuestionario del perfil y los niveles de protección (hito 2 y cada vez que haya que decidir cuánta protección hace falta).
+- `referencias/iconos.md`: el estilo de los íconos de proyecto.
+- `referencias/integraciones.md`: las skills externas (`impeccable`) en los hitos 4, 6, 7, 8 y 10.
+- `referencias/ronda-ux.md`: la ronda de UX de la operación.
+- `referencias/pasar-al-framework.md`: cómo pasar un proyecto de la guía de hitos (o una carpeta simple) al framework.
+- `plantillas/`: `estado.md`, `trabajo.md`, `README-docs.md`, `decisiones.md`, `perfil-proyecto.md`, `scripts.md`, `instrucciones-ia.md` y, en `plantillas/modulo/`, las de cada frente.

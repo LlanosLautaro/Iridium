@@ -20,7 +20,7 @@ export const INICIALES: Record<Cual, Record<string, string>> = {
   ideas: {
     'CLAUDE.md': `# Ideas
 
-Esta carpeta no es una app: es el lugar para hablar de los proyectos en general y para anotar ideas que todavía no tienen proyecto. No sigue la guía \`hitos-desarrollo-app\`: acá no hay nada que construir.
+Esta carpeta no es una app: es el lugar para hablar de los proyectos en general y para anotar ideas que todavía no tienen proyecto. No sigue el framework de Iridium: acá no hay nada que construir.
 
 ## Dónde están los proyectos
 - La carpeta de proyectos te la dice Iridium al empezar cada sesión. Cada carpeta hija es un proyecto; las que empiezan con \`.\` no.
@@ -35,10 +35,10 @@ Esta carpeta no es una app: es el lugar para hablar de los proyectos en general 
 
 ## Cuando una idea madura
 Proponé dónde integrarla y decidilo con el usuario:
-- **Es parte de un proyecto que sigue la guía de hitos:** va a "Ideas nuevas" de \`docs/07-construccion.md\` de ese proyecto (o a la sección que indique su \`docs/estado.md\`).
-- **Es parte de un proyecto que no sigue la guía:** se anota en su \`README.md\` y se propone ponerlo al día con la guía.
-- **Es un proyecto nuevo:** se crea la carpeta en la carpeta de proyectos y, si va a ser una app o herramienta, se sigue con \`hitos-desarrollo-app\` desde el hito 0 con lo que ya está anotado.
-- Después, la idea pasa a la sección "Integradas" de \`ideas.md\` con una línea \`→ AAAA-MM-DD: …\` de a dónde fue. No se borra.
+- **Es parte de un proyecto con framework:** va a su \`docs/trabajo.md\` como un \`T-n\` \`nueva\` con \`Origen: Ideas\`.
+- **Es parte de un proyecto con framework viejo o de una carpeta simple:** se anota en su \`README.md\` y se propone pasarlo al framework.
+- **Es un proyecto nuevo:** se crea con **Nuevo proyecto** de Iridium, con lo que ya está anotado como idea.
+- Después, la idea pasa a la sección "Integradas" de \`ideas.md\` con una línea \`→ AAAA-MM-DD: <carpeta>, T-n\` de a dónde fue. No se borra.
 `,
     'ideas.md': `# Ideas
 
@@ -57,7 +57,7 @@ Ideas que ya pasaron a un proyecto: una línea con a dónde fueron.
   skills: {
     'CLAUDE.md': `# Skills
 
-Esta carpeta guarda cómo trabaja Claude con el usuario: sus skills propias y el resto de la configuración de Claude. No es una app: no sigue la guía \`hitos-desarrollo-app\`.
+Esta carpeta guarda cómo trabaja Claude con el usuario: sus skills propias y el resto de la configuración de Claude. No es una app: no sigue el framework de Iridium.
 
 ## Estructura
 - \`skills/<nombre>/\` — una carpeta por skill (\`SKILL.md\` y lo que use).

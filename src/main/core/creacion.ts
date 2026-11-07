@@ -30,8 +30,8 @@ export function problemaNombreProyecto(nombre: string, existentes: readonly stri
 export const LIMITE_IDEA_PROYECTO = 20_000
 
 /**
- * El primer mensaje a la IA de un proyecto recién creado desde Iridium (R-7, D-089): que arranque con la guía y deje la
- * ficha y el ícono (los formatos los trae la skill `iridium`).
+ * El primer mensaje a la IA de un proyecto recién creado desde Iridium (R-7, D-089): que arranque con el framework (la
+ * skill `iridium`) y deje la ficha y el ícono.
  */
 export function mensajeProyectoNuevo(nombre: string, idea: string): string {
   const texto = idea.trim()
@@ -42,9 +42,9 @@ export function mensajeProyectoNuevo(nombre: string, idea: string): string {
         .join('\n')}`
     : 'El usuario todavía no escribió la idea: anotá en una Q-n de qué se trata y para quién es.'
   return (
-    `Es un proyecto nuevo, «${nombre}», recién creado desde Iridium: la carpeta está vacía. Arrancalo con la guía ` +
-    '`hitos-desarrollo-app` (hito 0, la idea cruda), con `docs/` y el `CLAUDE.md` de la raíz. Creá también su ficha ' +
-    '`.proyecto.json` (estado `idea`, una descripción de una línea) y un ícono `.proyecto-icono.svg`, como dice la ' +
-    `skill \`iridium\`.\n\n${conIdea}`
+    `Es un proyecto nuevo, «${nombre}», recién creado desde Iridium: la carpeta está vacía. Arrancalo con el ` +
+    'framework de Iridium (la skill `iridium`, «Cómo empezar»): `docs/` con sus plantillas, el `CLAUDE.md` de la raíz ' +
+    'y el hito 0, la idea cruda. Creá también su ficha `.proyecto.json` (estado `idea`, una descripción de una línea) ' +
+    `y un ícono \`.proyecto-icono.svg\`.\n\n${conIdea}`
   )
 }

@@ -2036,7 +2036,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-04
 - **Ámbito:** general (motor; reemplaza parte de la configuración inicial de D-080)
 - **Hito o paso:** 10 (Q-124)
-- **Estado:** vigente
+- **Estado:** vigente; la parte de la guía de hitos (cargarla si la PC no la tiene) la reemplaza D-092: desde OR-I1 (2026-11-06) Iridium carga solo el framework
 
 **Contexto:** el Claude que trabaja desde Iridium no siempre escribía los formatos que Iridium lee (Q-115: pruebas con casillas y además «A) Todo bien»), y el de la persona que recibe Iridium dependía de una configuración inicial a mano (D-080). El usuario preguntó si una skill de Iridium interferiría con el Claude de afuera, porque las skills se instalan en la carpeta de Claude.
 

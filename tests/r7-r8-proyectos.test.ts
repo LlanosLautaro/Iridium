@@ -126,10 +126,10 @@ describe('skills del proyecto (R-8)', () => {
 })
 
 describe('Nuevo proyecto (R-7, C-10)', () => {
-  it('el primer mensaje pide la guía, la ficha y el ícono, con la idea citada', () => {
+  it('el primer mensaje pide el framework, la ficha y el ícono, con la idea citada', () => {
     const m = mensajeProyectoNuevo('Gamma', 'Una app de notas.\nPara mí.')
     expect(m).toContain('«Gamma»')
-    expect(m).toContain('`hitos-desarrollo-app`')
+    expect(m).toContain('la skill `iridium`')
     expect(m).toContain('`.proyecto.json`')
     expect(m).toContain('.proyecto-icono.svg')
     expect(m).toContain('> Una app de notas.\n> Para mí.')
