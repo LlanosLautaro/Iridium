@@ -214,3 +214,6 @@ Con `referencias/pasar-al-framework.md`, hasta que el control dio cero (`modulos
 ## T-51 — «Ver en Framework» en Ideas
 Estado: pendiente · Frente: Orden · Fecha: 2026-11-07 · Origen: W-10
 La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Va con OR-I4, cuando exista esa sección; hasta entonces la línea muestra los nombres al pasar el mouse.
+
+## T-52 — Un sonido para cuando el agente termine de trabajar (cuidado de que no suene cuando el aente simplemente está esperando mientras hace pruebas)
+Estado: nueva · Fecha: 2026-11-07
