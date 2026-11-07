@@ -182,7 +182,7 @@ function crearMotor(): Motor {
 let ventana: BrowserWindow | null = null
 /** Después de «Cerrar igual» (F-6) la ventana se cierra sin volver a preguntar. */
 let cerrarSinPreguntar = false
-/** Se cerró con Reiniciar ahora (CO-I2): la versión nueva se abre sola al ponerse. */
+/** Se cerró con Actualizar y una versión lista (CO-I2, R-12): la versión nueva se abre sola al ponerse. */
 let reiniciar = false
 
 /**

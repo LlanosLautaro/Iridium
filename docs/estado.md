@@ -37,9 +37,16 @@
 En espera, detrás de Orden (D-091): Diseño (T-5) y Capacidades (T-28).
 
 ## En qué estamos ahora
-Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 va por la mitad: la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, y el nombre de la ficha. Faltan Actualizar (T-46), el esqueleto, la cabecera común y la conversación de 360 px. Compartir está publicado; falta la invitación (Q-126).
+Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 va más allá de la mitad: la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha y **Actualizar** (T-46: un solo botón que arma y reinicia; su prueba real en Q-142). Faltan el esqueleto, la cabecera común, el frente activo en la tarjeta y la conversación de 360 px. Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
+- **Q-142 — Probá Actualizar con tu Iridium**
+  Tipo: prueba · Frente: Orden
+  Contexto: T-46 (R-12). Tu Iridium todavía tiene los dos avisos viejos: tocá **Armar** abajo una última vez y, cuando aparezca «Versión nueva lista», **Reiniciar ahora**. Desde ahí, cuando haya algo nuevo, abajo va a aparecer un solo botón. Fijate:
+  - [ ] Después de un commit nuevo aparece **Actualizar** abajo, y con el mouse encima dice qué trae
+  - [ ] Al tocarlo dice «Actualizando…» con el tiempo, no se abre ninguna consola y Iridium se sigue usando
+  - [ ] Al terminar (unos minutos) Iridium se reinicia solo con la versión nueva
+  - [ ] Si tocás **Cancelar** mientras actualiza, vuelve a ofrecer Actualizar y la app sigue como estaba
 - **Q-126 — Invitá a la otra persona al repo de Iridium**
   Tipo: tarea · frena
   Contexto: D-085 y Q-123 (A). Sin la invitación, su Iridium no ve las versiones nuevas (le aparece «Sin acceso a las versiones nuevas»). Si preferís, pasame su usuario de GitHub en la respuesta y la invito yo.
@@ -56,8 +63,8 @@ Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, OR-I2: Actualizar (T-46), un solo botón que arma y reinicia.
-**Leer antes:** `modulos/orden/estado.md` › OR-I2 y Próximo paso, `modulos/orden/diseno-tecnico.md` › Actualizar, `04-ux.md` › W-1 y F-7, `06-ui.md` › Frente Orden (Actualizar), `trabajo.md` › T-46 (y Q-126, Q-118 si llegaron).
+Orden, OR-I2: el esqueleto (la barra del proyecto en dos grupos, y entrar a la Bandeja o al Mapa desde el proyecto).
+**Leer antes:** `modulos/orden/estado.md` › OR-I2 y Próximo paso, `modulos/orden/diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-1, W-3 y W-5, `06-ui.md` › Frente Orden (y Q-142, Q-126, Q-118 si llegaron).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

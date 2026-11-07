@@ -192,8 +192,8 @@ Estado: pendiente · Origen: Q-127
 En el chat de Skills, poner al día las rutas que nombran la carpeta vieja; en el chat general, la sección «Dónde están los demás proyectos» del `CLAUDE.md` de Ideas.
 
 ## T-46 — Un solo botón Actualizar
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-06 · Origen: R-12
-Arma y reinicia, con sus estados (W-1). En OR-I2.
+Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: R-12
+Arma y reinicia, con sus estados (W-1). Hecho en OR-I2 (2026-11-06); la prueba con la app de uso diario, en Q-142.
 
 ## T-47 — D-100 en el código
 Estado: en curso · Frente: Orden · Fecha: 2026-11-06 · Origen: D-100

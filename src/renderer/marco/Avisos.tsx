@@ -116,6 +116,7 @@ export function ConfirmarCierre() {
   const ponerCierre = usarEstado((s) => s.ponerCierre)
   const lista = usarEstado((s) => s.lista)
   const reiniciando = usarEstado((s) => s.reiniciando)
+  const esperar = usarEstado((s) => s.esperarParaReiniciar)
   const cancelar = useRef<HTMLButtonElement>(null)
   const [cerrando, setCerrando] = useState(false)
   useEffect(() => {
@@ -158,6 +159,17 @@ export function ConfirmarCierre() {
           >
             Cancelar
           </button>
+          {reiniciando && (
+            <button
+              type="button"
+              className="btn secundario"
+              disabled={cerrando}
+              title="La versión nueva queda lista: Iridium se reinicia solo cuando terminen"
+              onClick={esperar}
+            >
+              Esperar
+            </button>
+          )}
           <button
             type="button"
             className="btn peligro"

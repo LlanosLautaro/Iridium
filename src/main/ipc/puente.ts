@@ -114,6 +114,8 @@ export interface Servicios {
     ultimo(): SinArmar
     vigilar(alCambiar: (s: SinArmar) => void): void
     armar(): Promise<{ tipo: 'ok'; mensaje: string } | { tipo: 'error'; mensaje: string }>
+    cancelar(): Promise<void>
+    consola(): string
   } | null
   /** Las versiones de GitHub de una copia compartida (D-085, Q-123); null si no lo es. */
   versionesGithub?: {
@@ -123,7 +125,7 @@ export interface Servicios {
       entrar: () => Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>,
     ): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>
   } | null
-  /** Reiniciar ahora: cierra la ventana como siempre (F-6 pregunta si hay sesiones) y al salir abre la versión nueva. */
+  /** Actualizar con una versión lista: cierra la ventana como siempre (F-6 pregunta si hay sesiones) y al salir abre la versión nueva. */
   reiniciarAhora: () => void
   /** Se canceló la confirmación de F-6: si era para reiniciar, ya no. */
   cancelarCierre: () => void
@@ -394,7 +396,7 @@ export function registrarPuente(s: Servicios): Puente {
   })
   ipcMain.handle(CANALES.versionNueva, () => s.versionNueva?.ultima() ?? null)
   ipcMain.handle(CANALES.reiniciarAhora, () => {
-    s.registro.escribir('Versión nueva: Reiniciar ahora')
+    s.registro.escribir('Actualizar: reinicia con la versión lista')
     s.reiniciarAhora()
   })
   s.versionNueva?.vigilar((v) => {
@@ -404,8 +406,17 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.sinArmar, () => s.sinArmar?.ultimo() ?? null)
   ipcMain.handle(CANALES.armar, async () => {
     if (!s.sinArmar) return { tipo: 'error', mensaje: 'En desarrollo no hay app de uso diario para armar.' }
-    s.registro.escribir('Cambios sin armar: Armar')
+    s.registro.escribir('Actualizar: arma')
     return s.sinArmar.armar()
+  })
+  ipcMain.handle(CANALES.cancelarArmado, async () => {
+    s.registro.escribir('Actualizar: Cancelar')
+    await s.sinArmar?.cancelar()
+  })
+  ipcMain.handle(CANALES.verConsolaArmado, async () => {
+    if (!s.sinArmar) return { tipo: 'error', mensaje: 'No hay armado.' }
+    const error = await shell.openPath(s.sinArmar.consola())
+    return error ? { tipo: 'error', mensaje: `Windows no lo pudo abrir: ${error}` } : { tipo: 'ok' }
   })
   ipcMain.handle(CANALES.accesoVersiones, () => s.versionesGithub?.ultimoAcceso() ?? null)
   ipcMain.handle(CANALES.entrarGithub, async () => {
@@ -418,7 +429,10 @@ export function registrarPuente(s: Servicios): Puente {
     enviar(CANALES.accesoVersionesCambio, a)
   })
   s.sinArmar?.vigilar((a) => {
-    if (a.pendiente) s.registro.escribir(`Sin armar: ${a.pendiente.commit}${a.armando ? ' (armando)' : ''}`)
+    if (a.pendiente)
+      s.registro.escribir(
+        `Sin armar: ${a.pendiente.commit}${a.armando ? ' (armando)' : ''}${a.fallo ? ` (falló: ${a.fallo.motivo})` : ''}`,
+      )
     enviar(CANALES.sinArmarCambio, a)
   })
 

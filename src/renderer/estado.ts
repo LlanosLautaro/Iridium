@@ -189,7 +189,7 @@ interface EstadoApp {
   cambiarAjustes(cambio: Partial<Preferencias>): Promise<boolean>
   /** Se quiso cerrar con sesiones trabajando (F-6): sus rutas; null = no se está preguntando. */
   cierre: string[] | null
-  /** null cierra la confirmación: es Cancelar, y si era para Reiniciar ahora, cerrar después ya no reinicia. */
+  /** null cierra la confirmación: es Cancelar, y si era para reiniciar con Actualizar, cerrar después ya no reinicia. */
   ponerCierre(trabajando: string[] | null): void
   /** La versión nueva lista para entrar al cerrar (CO-I2). */
   versionNueva: VersionNueva | null
@@ -200,9 +200,18 @@ interface EstadoApp {
   /** Si la copia compartida ve las versiones de GitHub (Q-123); null si no es una copia compartida. */
   accesoVersiones: AccesoVersiones | null
   ponerAccesoVersiones(a: AccesoVersiones | null): void
-  /** Se tocó Reiniciar ahora: la confirmación de F-6, si aparece, habla de reiniciar. */
+  /** Se tocó Actualizar con una versión lista: la confirmación de F-6, si aparece, habla de reiniciar. */
   reiniciando: boolean
   reiniciarAhora(): void
+  /**
+   * Se tocó Actualizar sin versión lista (R-12): arma y, cuando aparece una versión lista distinta de la que había
+   * (`antes`, su fecha), reinicia sola. null = no se pidió.
+   */
+  actualizarPedido: { antes: string | null } | null
+  ponerActualizarPedido(p: { antes: string | null } | null): void
+  /** «Esperar» en la confirmación de F-6 al reiniciar: reinicia sola cuando ninguna sesión trabaja. */
+  reiniciarAlTerminar: boolean
+  esperarParaReiniciar(): void
   /** Escribe en el campo de la conversación del proyecto; no lo envía. */
   escribirEnCampo(ruta: string, texto: string): void
   soltarCampo(ruta: string): void
@@ -332,8 +341,15 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   ponerAccesoVersiones: (accesoVersiones) => set({ accesoVersiones }),
   reiniciando: false,
   reiniciarAhora: () => {
-    set({ reiniciando: true })
+    set({ reiniciando: true, reiniciarAlTerminar: false })
     void window.iridium.reiniciarAhora()
+  },
+  actualizarPedido: null,
+  ponerActualizarPedido: (actualizarPedido) => set({ actualizarPedido }),
+  reiniciarAlTerminar: false,
+  esperarParaReiniciar: () => {
+    get().ponerCierre(null)
+    set({ reiniciarAlTerminar: true })
   },
   escribirEnCampo: (ruta, texto) => set((s) => ({ paraElCampo: { ...s.paraElCampo, [ruta]: texto } })),
   soltarCampo: (ruta) =>

@@ -99,8 +99,8 @@ El hook `comprobar-preguntas.mjs` de la guía (en la configuración global de Cl
 - El paso de cada frente sale de su `docs/modulos/<nombre>/estado.md` › Progreso: el que está `en curso` (no el primero sin hacer). Su Próximo paso, de su `## Próximo paso`.
 - El bloque «En tu bandeja» del frente filtra las preguntas por `Frente:`; «En curso», los `T-n` `en curso` de ese frente.
 
-## Actualizar (R-12, `infra/actualizar.ts`)
-El `Actualizador` junta lo que hoy son dos chips y da un solo estado a la barra:
+## Actualizar (R-12, `compartido/actualizar.ts` e `infra/sin-armar.ts`)
+Una función junta lo que eran dos chips y da un solo estado a la barra (`estadoActualizar`, con lo que leen las dos vigías):
 
 | Estado | Sale de |
 |---|---|
@@ -110,9 +110,10 @@ El `Actualizador` junta lo que hoy son dos chips y da un solo estado a la barra:
 | `fallo` (con el motivo) | el armado terminó sin versión nueva: `actualizar.ps1` deja `release/armado-fallo.json` con el motivo |
 | `bloqueado` | la IA de Iridium está trabajando (como hoy, CO-I6) |
 
-- **Actualizar** con una versión lista llama al mismo camino que hoy «Reiniciar ahora» (F-6 si hay sesiones). Sin versión lista, arma con la marca `reiniciarAlTerminar`; cuando `VigiaVersionNueva` ve la versión con ese commit, sigue igual que con una lista.
+- **Actualizar** con una versión lista llama al mismo camino que «Reiniciar ahora» (F-6 si hay sesiones; F-6 suma **Esperar**). Sin versión lista, arma y la barra recuerda el pedido (con la versión que había); cuando aparece otra versión lista y el armado terminó (el script todavía sube `main` después de dejarla), sigue igual que con una lista. El pedido vive en la ventana: si Iridium se cierra mientras arma, la versión entra al cerrar, como siempre.
+- El armado corre suelto y con la consola escondida (`start /min` y PowerShell oculto): sin eso, cada programa de consola abre su ventana. `actualizar.ps1` anota todo en `release/armado.log`, escribe `desde` en `armando.json` y deja `armado-fallo.json` con el motivo si no pudo; una marca sin su proceso es un armado cortado (falló).
 - **Cancelar** corta el árbol de procesos del armado (`taskkill /T /F` con el `pid` de `armando.json`) y borra la marca; `actualizar.ps1` limpia lo que dejó a medias al arrancar la próxima vez.
-- **Ver la consola** abre `release/actualizacion.log`.
+- **Ver la consola** abre `release/armado.log` (`actualizacion.log` sigue siendo el de poner la versión).
 - Las pruebas usan `IRIDIUM_ARMAR` (un comando falso que escribe una versión de muestra) e `IRIDIUM_RELEASE`, como hoy.
 
 ## Lo demás

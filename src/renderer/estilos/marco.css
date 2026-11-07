@@ -350,3 +350,49 @@
   color: var(--texto-3);
   font-size: 12.5px;
 }
+
+/* Actualizar (W-1, R-12): un botón chico de contorno del color de lo activo; armando, el ícono que gira y el tiempo
+   en mono; falló, el chip rojo con sus enlaces. */
+.estado-barra .actualizar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: var(--radio-control);
+  border: 1px solid color-mix(in oklab, var(--primario) 50%, transparent);
+  background: none;
+  color: var(--primario-texto);
+  font: 600 12px / 1 var(--ui);
+  cursor: pointer;
+}
+.estado-barra .actualizar:hover:not(:disabled) {
+  background: var(--sel-fondo);
+}
+.estado-barra .actualizar:disabled {
+  border-color: var(--borde-fuerte);
+  color: var(--texto-3);
+  cursor: default;
+}
+.estado-barra .actualizar .ic,
+.estado-barra .armando .ic {
+  width: 12px;
+  height: 12px;
+}
+.estado-barra .armando {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-2);
+}
+.estado-barra .armando .t {
+  font-family: var(--mono);
+  color: var(--texto-3);
+}
+.estado-barra .enlace {
+  font-size: 12px;
+  cursor: pointer;
+}
+.estado-barra .motivo {
+  color: var(--texto-3);
+}

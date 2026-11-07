@@ -135,6 +135,7 @@ const TRAZOS = {
     </>
   ),
   play: <path d="M7 5v14l11-7z" />,
+  bajar: <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />,
   busca: (
     <>
       <circle cx="11" cy="11" r="7" />

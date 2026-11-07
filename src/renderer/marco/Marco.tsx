@@ -1,8 +1,8 @@
 // Lo que está siempre (04-ux.md › W-1, D-041): la barra de título con el inicio y las sesiones, la barra de íconos
 // (cambia entre el inicio y el proyecto abierto) y la de estado.
 import { type ReactNode, useEffect, useState } from 'react'
+import { estadoActualizar, tiempoArmando } from '../../compartido/actualizar'
 import { textoDeCuenta } from '../../compartido/cuentas'
-import { fechaExacta } from '../../compartido/fechas'
 import type { EstadoMotor, FichaSesion } from '../../compartido/puente'
 import { tarjetaDe, totalBandeja, usarEstado, vistaDe } from '../estado'
 import { SECCIONES, SECCIONES_PROYECTO } from '../secciones'
@@ -318,89 +318,114 @@ function ChipMotor({ motor }: { motor: EstadoMotor }) {
   }
 }
 
-/** CO-I2: hay una versión armada esperando; entra al cerrar Iridium, o ya con Reiniciar ahora. */
-function VersionNuevaLista() {
-  const v = usarEstado((s) => s.versionNueva)
+/**
+ * Actualizar (R-12, T-46, 04-ux.md › W-1 y F-7): un solo botón junta «Armar» y «Reiniciar ahora». Con una versión
+ * lista, reinicia (con F-6 si hay sesiones trabajando); sin ella, arma sin consola a la vista y reinicia sola al
+ * terminar. Mientras la IA del código de Iridium trabaja, no arma: tomaría su trabajo a mitad de camino.
+ */
+function Actualizar() {
+  const sinArmar = usarEstado((s) => s.sinArmar)
+  const version = usarEstado((s) => s.versionNueva)
+  const iaTrabajando = usarEstado((s) =>
+    s.fichas.some(
+      (f) => sinArmar !== null && f.estado === 'trabajando' && mismaRuta(f.ruta, sinArmar.carpeta),
+    ),
+  )
+  const algunaTrabajando = usarEstado((s) => s.fichas.some((f) => f.estado === 'trabajando'))
   const reiniciando = usarEstado((s) => s.reiniciando)
   const reiniciarAhora = usarEstado((s) => s.reiniciarAhora)
-  if (!v) return null
-  const armada = `Armada el ${fechaExacta(Date.parse(v.fecha))}, con «${v.mensaje}» (${v.commit})${v.sinGuardar ? ' y cambios sin commitear' : ''}.`
-  // Ya se intentó y no entró (Defecto 3): se dice, con el motivo, y se reintenta en el próximo cierre.
-  const noEntro = v.noEntro
-    ? ` El ${fechaExacta(Date.parse(v.noEntro.fecha))} no entró: ${v.noEntro.motivo}`
-    : ''
-  return (
-    <span className="it version-nueva" title={armada + noEntro}>
-      {v.noEntro ? (
-        <span className="chip espera">
-          <Icono nombre="espera" />
-          La versión nueva no entró · se reintenta al cerrar
-        </span>
-      ) : (
-        <span className="chip ok">
-          <Icono nombre="check" />
-          Versión nueva lista · entra al cerrar
-        </span>
-      )}
-      <button
-        type="button"
-        className="chip neutro"
-        disabled={reiniciando}
-        title="Cierra Iridium (pregunta si hay sesiones trabajando) y lo abre con la versión nueva"
-        onClick={reiniciarAhora}
-      >
-        <Icono nombre={reiniciando ? 'sync' : 'reintentar'} gira={reiniciando} />
-        {reiniciando ? 'Reiniciando…' : 'Reiniciar ahora'}
-      </button>
-    </span>
-  )
-}
-
-/**
- * Hay commits de Iridium que la app de uso diario no tiene (CO-I6, Q-99 B): se ofrece Armar. Mientras la IA de ese
- * proyecto trabaja no se ofrece (armaría a mitad de camino).
- */
-function CambiosSinArmar() {
-  const a = usarEstado((s) => s.sinArmar)
-  const trabajando = usarEstado((s) =>
-    s.fichas.some((f) => a !== null && f.estado === 'trabajando' && mismaRuta(f.ruta, a.carpeta)),
-  )
+  const pedido = usarEstado((s) => s.actualizarPedido)
+  const ponerPedido = usarEstado((s) => s.ponerActualizarPedido)
+  const alTerminar = usarEstado((s) => s.reiniciarAlTerminar)
   const [error, setError] = useState<string | null>(null)
-  if (!a?.pendiente || (trabajando && !a.armando)) return null
-  if (a.armando)
-    return (
-      <span
-        className="it sin-armar"
-        title="«Armar la última versión» corre en su consola; al terminar aparece «Versión nueva lista»"
-      >
-        <span className="chip trab">
-          <Icono nombre="sync" gira />
-          Armando la versión nueva…
-        </span>
-      </span>
-    )
+  const [ahora, setAhora] = useState(() => Date.now())
+  const estado = estadoActualizar({ sinArmar, version, iaTrabajando })
+
+  // Pedido con Actualizar: apareció la versión que se armó (una lista distinta de la que había) y el script terminó
+  // (después de dejar la versión lista todavía sube `main`), se reinicia.
+  useEffect(() => {
+    if (!pedido) return
+    if (version && version.fecha !== pedido.antes && estado.tipo !== 'armando') {
+      ponerPedido(null)
+      reiniciarAhora()
+    } else if (estado.tipo === 'fallo') ponerPedido(null)
+  }, [pedido, version, estado.tipo, ponerPedido, reiniciarAhora])
+  // «Esperar» en F-6: reinicia cuando ninguna sesión trabaja.
+  useEffect(() => {
+    if (alTerminar && !algunaTrabajando && version) reiniciarAhora()
+  }, [alTerminar, algunaTrabajando, version, reiniciarAhora])
+  useEffect(() => {
+    if (estado.tipo !== 'armando') return
+    const t = setInterval(() => setAhora(Date.now()), 15_000)
+    return () => clearInterval(t)
+  }, [estado.tipo])
+
   const armar = async () => {
+    setError(null)
+    ponerPedido({ antes: version?.fecha ?? null })
     const r = await window.iridium.armar()
+    if (r.tipo === 'error') {
+      setError(r.mensaje)
+      ponerPedido(null)
+    }
+  }
+  const actualizar = () => {
+    if (estado.tipo === 'disponible' && estado.lista) reiniciarAhora()
+    else void armar()
+  }
+  const cancelar = () => {
+    ponerPedido(null)
+    void window.iridium.cancelarArmado()
+  }
+  const verConsola = async () => {
+    const r = await window.iridium.verConsolaArmado()
     setError(r.tipo === 'error' ? r.mensaje : null)
   }
-  return (
-    <span
-      className="it sin-armar"
-      title={`La app que usás no tiene «${a.pendiente.mensaje}» (${a.pendiente.commit}) ni lo anterior que falte.`}
-    >
-      <span className={`chip ${error ? 'error' : 'neutro'}`} title={error ?? undefined}>
-        <Icono nombre={error ? 'error' : 'punto'} />
-        {error ? 'No se pudo armar' : 'Hay cambios sin armar'}
+
+  if (error || estado.tipo === 'fallo')
+    return (
+      <span className="it actualizar-it">
+        <span className="chip error" title={error ?? (estado.tipo === 'fallo' ? estado.motivo : undefined)}>
+          <Icono nombre="error" />
+          No se pudo actualizar
+        </span>
+        <button type="button" className="enlace" onClick={() => void armar()}>
+          Reintentar
+        </button>
+        <button type="button" className="enlace" onClick={() => void verConsola()}>
+          Ver la consola
+        </button>
       </span>
+    )
+  if (estado.tipo === 'armando')
+    return (
+      <span className="it actualizar-it" title="La app se sigue usando; al terminar, se reinicia sola">
+        <span className="armando">
+          <Icono nombre="sync" gira />
+          Actualizando…
+          {estado.desde !== null && <span className="t">{tiempoArmando(estado.desde, ahora)}</span>}
+        </span>
+        <button type="button" className="enlace" onClick={cancelar}>
+          Cancelar
+        </button>
+      </span>
+    )
+  if (estado.tipo === 'al-dia') return null
+  const bloqueado = estado.tipo === 'bloqueado'
+  return (
+    <span className="it actualizar-it">
       <button
         type="button"
-        className="chip neutro"
-        title="Arma la última versión en una consola (un minuto); Iridium sigue abierto y la versión entra al cerrar"
-        onClick={() => void armar()}
+        className="actualizar"
+        disabled={bloqueado || reiniciando}
+        title={bloqueado ? 'Espera a que la IA de Iridium termine' : estado.detalle}
+        onClick={actualizar}
       >
-        <Icono nombre="play" />
-        Armar
+        <Icono nombre={reiniciando ? 'sync' : 'bajar'} gira={reiniciando} />
+        {reiniciando ? 'Reiniciando…' : 'Actualizar'}
       </button>
+      {bloqueado && <span className="motivo">espera a que la IA de Iridium termine</span>}
+      {alTerminar && <span className="motivo">se reinicia cuando terminen las sesiones</span>}
     </span>
   )
 }
@@ -454,10 +479,9 @@ function BarraEstado({ children }: { children?: ReactNode }) {
       <span className="it" data-motor={motor.tipo}>
         <ChipMotor motor={motor} />
       </span>
-      <VersionNuevaLista />
-      <CambiosSinArmar />
-      <AccesoVersionesGithub />
       {children}
+      <Actualizar />
+      <AccesoVersionesGithub />
       <span className="der">
         <UsoEnLaBarra />
       </span>

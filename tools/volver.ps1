@@ -42,7 +42,7 @@ $fecha = "$(& git log -1 --format=%cd --date=format:%Y-%m-%d $completo)".Trim()
 
 Write-Host "Vuelve a la versión $corto del $fecha" -ForegroundColor Cyan
 Write-Host "  $mensaje"
-Write-Host 'Lo que vino después sigue en el código: Iridium lo va a ofrecer como «Hay cambios sin armar».'
+Write-Host 'Lo que vino después sigue en el código: Iridium lo va a ofrecer con «Actualizar».'
 if (-not $SinPreguntar) {
   [void](Read-Host 'Enter para seguir; para cancelar, cerrá esta ventana')
 }

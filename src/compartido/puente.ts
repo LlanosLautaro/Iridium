@@ -240,8 +240,15 @@ export interface SinArmar {
   carpeta: string
   /** El último commit (corto) y su primera línea; null si ya está armado (en `main` o en la versión lista). */
   pendiente: { commit: string; mensaje: string } | null
-  /** Se está armando, con Armar o con el script. */
+  /** Se está armando, con Actualizar o con el script. */
   armando: boolean
+  /** Desde cuándo arma (ms); null si no arma o no se sabe. */
+  desde: number | null
+  /**
+   * El último armado terminó sin versión nueva (`release/armado-fallo.json`, o la marca de `armando.json` quedó con su
+   * proceso muerto: se cerró la consola). Se borra al volver a armar.
+   */
+  fallo: { fecha: string; motivo: string } | null
 }
 
 /** Si Claude Code tiene sesión iniciada y usa la suscripción (05-arquitectura.md › La interfaz `Motor`, `verificar`). */
@@ -743,6 +750,8 @@ export const CANALES = {
   sinArmar: 'app:sin-armar',
   sinArmarCambio: 'app:sin-armar-cambio',
   armar: 'app:armar',
+  cancelarArmado: 'app:cancelar-armado',
+  verConsolaArmado: 'app:ver-consola-armado',
   accesoVersiones: 'app:acceso-versiones',
   accesoVersionesCambio: 'app:acceso-versiones-cambio',
   entrarGithub: 'app:entrar-github',
@@ -814,20 +823,24 @@ export interface ApiIridium {
   alPedirCierre(escuchar: (trabajando: string[]) => void): () => void
   /** «Cerrar igual» (F-6): frena las sesiones y cierra; las conversaciones quedan para Seguí. */
   cerrarIgual(): Promise<void>
-  /** Cancelar en la confirmación de F-6: si era para Reiniciar ahora, cerrar después ya no reinicia. */
+  /** Cancelar en la confirmación de F-6: si era para reiniciar con Actualizar, cerrar después ya no reinicia. */
   cancelarCierre(): Promise<void>
   /** La versión nueva lista para entrar al cerrar (CO-I2); null si no hay. */
   versionNueva(): Promise<VersionNueva | null>
   alCambiarVersionNueva(escuchar: (v: VersionNueva | null) => void): () => void
-  /** Reiniciar ahora (CO-I2): cierra como siempre (con F-6 si hay sesiones trabajando) y abre la versión nueva. */
+  /** Actualizar con una versión lista (CO-I2, R-12): cierra como siempre (con F-6 si hay sesiones trabajando) y abre la versión nueva. */
   reiniciarAhora(): Promise<void>
   /** Ctrl+= / Ctrl+- / Ctrl+0 (Defecto 17): agranda (1), achica (-1) o vuelve al tamaño normal (0); se recuerda. */
   zoom(paso: 1 | -1 | 0): Promise<void>
   /** Los cambios sin armar (CO-I6); null en desarrollo, donde no hay app de uso diario. */
   sinArmar(): Promise<SinArmar | null>
   alCambiarSinArmar(escuchar: (s: SinArmar) => void): () => void
-  /** Armar (CO-I6): «Armar la última versión» en una consola a la vista; Iridium sigue abierto. */
+  /** Actualizar sin versión lista (R-12): arma la última versión sin consola a la vista; Iridium sigue abierto. */
   armar(): Promise<{ tipo: 'ok'; mensaje: string } | { tipo: 'error'; mensaje: string }>
+  /** Cancelar el armado (W-1): lo corta; la app que se usa sigue igual. */
+  cancelarArmado(): Promise<void>
+  /** Ver la consola (W-1): abre lo que escribió el último armado. */
+  verConsolaArmado(): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>
   /** Si la copia compartida ve las versiones (Q-123); null si no es una copia compartida. */
   accesoVersiones(): Promise<AccesoVersiones | null>
   alCambiarAccesoVersiones(escuchar: (a: AccesoVersiones) => void): () => void

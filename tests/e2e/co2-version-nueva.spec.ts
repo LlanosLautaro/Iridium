@@ -1,5 +1,6 @@
-// CO-I2 con la app abierta y una carpeta `release` de muestra (IRIDIUM_RELEASE): el aviso «Versión nueva lista»
-// aparece solo, Reiniciar ahora cierra y la pone (y la abre), y con sesiones trabajando pregunta antes (F-6).
+// CO-I2 con la app abierta y una carpeta `release` de muestra (IRIDIUM_RELEASE): con una versión lista aparece
+// Actualizar (R-12), que cierra y la pone (y la abre); con sesiones trabajando pregunta antes (F-6), y Esperar reinicia
+// sola cuando terminan.
 import { copyFile, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -74,20 +75,20 @@ test.afterEach(async () => {
   for (const c of [raiz, datos, release]) await rm(c, { recursive: true, force: true, maxRetries: 5 })
 })
 
-test('la versión nueva aparece sola abajo y Reiniciar ahora la pone y la abre (CO-I2)', async () => {
+test('la versión nueva aparece sola abajo y Actualizar la pone y la abre (CO-I2)', async () => {
   const { app: a, win } = await abrir()
   await expect(win.locator('.estado-barra')).toContainText('Claude')
-  await expect(win.locator('.version-nueva')).toHaveCount(0)
+  await expect(win.locator('.actualizar-it')).toHaveCount(0)
 
-  // La arma `pnpm actualizar` con Iridium abierto: el aviso aparece en unos segundos, sin hacer nada.
+  // La arma `pnpm actualizar` con Iridium abierto: Actualizar aparece en unos segundos, sin hacer nada.
   await versionLista()
-  const aviso = win.locator('.version-nueva')
-  await expect(aviso).toContainText('Versión nueva lista · entra al cerrar', { timeout: 10_000 })
-  await expect(aviso).toHaveAttribute('title', /Armada el 1 nov 2026, 14:05, con «CO-I2» \(abc1234\)/)
+  const actualizar = win.locator('.actualizar-it').getByRole('button', { name: 'Actualizar' })
+  await expect(actualizar).toBeVisible({ timeout: 10_000 })
+  await expect(actualizar).toHaveAttribute('title', 'Trae «CO-I2» (abc1234), armada el 1 nov 2026, 14:05')
   await win.screenshot({ path: 'test-results/co2-lista.png' })
 
   const cerrada = a.waitForEvent('close')
-  await aviso.getByRole('button', { name: 'Reiniciar ahora' }).click()
+  await actualizar.click()
   await cerrada
   const log = await puesta()
   expect(log).toContain('Versión nueva puesta: abc1234')
@@ -95,7 +96,7 @@ test('la versión nueva aparece sola abajo y Reiniciar ahora la pone y la abre (
   expect((await readdir(release)).sort()).toEqual(['actualizacion.log', 'win-unpacked'])
 })
 
-test('con una sesión trabajando, Reiniciar ahora pregunta; Cancelar no reinicia y cerrar después la pone igual', async () => {
+test('con una sesión trabajando, Actualizar pregunta; Cancelar no reinicia y cerrar después la pone igual', async () => {
   await versionLista()
   const { app: a, win } = await abrir({ IRIDIUM_FALSO_PASO_MS: '2000' })
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
@@ -104,25 +105,50 @@ test('con una sesión trabajando, Reiniciar ahora pregunta; Cancelar no reinicia
   await campo.press('Enter')
   await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
 
-  await win.locator('.version-nueva').getByRole('button', { name: 'Reiniciar ahora' }).click()
+  await win.locator('.actualizar-it').getByRole('button', { name: 'Actualizar' }).click()
   const dialogo = win.getByRole('alertdialog')
   await expect(dialogo).toContainText('Alfa está trabajando')
   await expect(dialogo).toContainText('Reiniciar la frena')
   await expect(dialogo.getByRole('button', { name: 'Reiniciar igual' })).toBeVisible()
+  await expect(dialogo.getByRole('button', { name: 'Esperar' })).toBeVisible()
   await win.screenshot({ path: 'test-results/co2-reiniciar-pregunta.png' })
   await dialogo.getByRole('button', { name: 'Cancelar' }).click()
   await expect(dialogo).toHaveCount(0)
-  await expect(win.locator('.version-nueva').getByRole('button', { name: 'Reiniciar ahora' })).toBeEnabled()
+  await expect(win.locator('.actualizar-it').getByRole('button', { name: 'Actualizar' })).toBeEnabled()
 
   // Cerrar con la X: pregunta como siempre y, con Cerrar igual, la versión nueva entra pero no se abre.
   await a.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.close())
   await expect(dialogo.getByRole('button', { name: 'Cerrar igual' })).toBeVisible()
+  await expect(dialogo.getByRole('button', { name: 'Esperar' })).toHaveCount(0)
   const cerrada = a.waitForEvent('close')
   await dialogo.getByRole('button', { name: 'Cerrar igual' }).click()
   await cerrada
   const log = await puesta()
   expect(log).toContain('Versión nueva puesta: abc1234')
   expect(log).not.toContain('Abre Iridium.')
+})
+
+test('con Esperar, Iridium se reinicia solo cuando la sesión termina (F-6, R-12)', async () => {
+  await versionLista()
+  const { app: a, win } = await abrir({ IRIDIUM_FALSO_PASO_MS: '1500' })
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo.fill('Algo')
+  await campo.press('Enter')
+  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+
+  await win.locator('.actualizar-it').getByRole('button', { name: 'Actualizar' }).click()
+  const dialogo = win.getByRole('alertdialog')
+  const cerrada = a.waitForEvent('close')
+  await dialogo.getByRole('button', { name: 'Esperar' }).click()
+  await expect(dialogo).toHaveCount(0)
+  await expect(win.locator('.actualizar-it')).toContainText('se reinicia cuando terminen las sesiones')
+  await win.screenshot({ path: 'test-results/r12-esperar.png' })
+  // La sesión termina sola: Iridium se cierra sin volver a preguntar y abre la versión nueva.
+  await cerrada
+  const log = await puesta()
+  expect(log).toContain('Versión nueva puesta: abc1234')
+  expect(log).toContain('Abre Iridium.')
 })
 
 test('si la versión nueva no entró la vez anterior, al abrir lo dice y por qué (Defecto 3)', async () => {
@@ -135,10 +161,11 @@ test('si la versión nueva no entró la vez anterior, al abrir lo dice y por qu�
     }),
   )
   const { app: a, win } = await abrir()
-  const aviso = win.locator('.version-nueva')
-  await expect(aviso).toContainText('La versión nueva no entró · se reintenta al cerrar')
-  await expect(aviso).toHaveAttribute('title', /El 1 nov 2026, 18:30 no entró: Windows no soltó la carpeta/)
-  await expect(aviso.getByRole('button', { name: 'Reiniciar ahora' })).toBeVisible()
+  const actualizar = win.locator('.actualizar-it').getByRole('button', { name: 'Actualizar' })
+  await expect(actualizar).toHaveAttribute(
+    'title',
+    /El 1 nov 2026, 18:30 no entró: Windows no soltó la carpeta/,
+  )
   await win.screenshot({ path: 'test-results/d3-no-entro.png' })
   await a.close()
 })
