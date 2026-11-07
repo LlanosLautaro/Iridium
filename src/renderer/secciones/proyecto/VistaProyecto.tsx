@@ -10,12 +10,12 @@ import { Archivos } from './Archivos'
 import { Conversacion } from './Conversacion'
 import { Docs } from './Docs'
 import { Git } from './Git'
-import { IdeasProyecto } from './IdeasProyecto'
 import { Mapa } from './Mapa'
 import { Resumen } from './Resumen'
 import { Revision } from './Revision'
 import { Scripts } from './Scripts'
 import { SkillsProyecto } from './SkillsProyecto'
+import { Trabajo } from './Trabajo'
 
 /** Las secciones que ya se abrieron en cada proyecto: quedan montadas (ocultas) para no recargar al volver. */
 const abiertas = new Map<string, Set<SeccionProyecto>>()
@@ -36,8 +36,8 @@ function Seccion({ ruta, id }: { ruta: string; id: SeccionProyecto }) {
       return <Git ruta={ruta} />
     case 'scripts':
       return <Scripts ruta={ruta} />
-    case 'ideas':
-      return <IdeasProyecto ruta={ruta} />
+    case 'trabajo':
+      return <Trabajo ruta={ruta} />
     case 'skills':
       return <SkillsProyecto ruta={ruta} />
   }

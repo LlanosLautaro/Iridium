@@ -142,6 +142,14 @@ const TRAZOS = {
       <path d="m20 20-4-4" />
     </>
   ),
+  // Trabajo de un proyecto (W-11): una lista con sus marcas, lo que se va a hacer y lo hecho.
+  trabajo: (
+    <>
+      <path d="M10 6h11M10 12h11M10 18h11" />
+      <path d="M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11" />
+      <path d="M3.5 18h3" />
+    </>
+  ),
   mapa: (
     <>
       <path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z" />

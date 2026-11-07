@@ -200,7 +200,9 @@ test('Nuevo proyecto crea la carpeta con la plantilla básica y la abre, sin la 
   await cuadro.getByRole('button', { name: 'Crear' }).click()
   await expect(cuadro).toHaveCount(0)
   await expect(win.locator('.principal > .cabecera h1')).toHaveText('Delta')
-  expect(await readFile(join(raiz, 'Delta', 'docs', 'estado.md'), 'utf8')).toContain('0 — Idea cruda — en curso')
+  expect(await readFile(join(raiz, 'Delta', 'docs', 'estado.md'), 'utf8')).toContain(
+    '0 — Idea cruda — en curso',
+  )
   expect((await stat(join(raiz, 'Delta', 'CLAUDE.md'))).isFile()).toBe(true)
   // La IA no arranca: la conversación queda vacía, esperando lo que le cuente el usuario.
   await expect(win.locator('.turno')).toHaveCount(0)
@@ -215,10 +217,10 @@ test('el proyecto muestra sus ideas y, si tiene, sus skills (R-8)', async () => 
 
   // Beta no tiene skills: su barra no muestra el ícono.
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  await expect(barra.getByRole('button', { name: 'Ideas del proyecto' })).toBeVisible()
+  await expect(barra.getByRole('button', { name: 'Trabajo' })).toBeVisible()
   await expect(barra.getByRole('button', { name: 'Skills del proyecto' })).toHaveCount(0)
-  await barra.getByRole('button', { name: 'Ideas del proyecto' }).click()
-  await expect(win.locator('[data-seccion="ideas"]')).toContainText('todavía no tiene una sección de ideas')
+  await barra.getByRole('button', { name: 'Trabajo' }).click()
+  await expect(win.locator('[data-seccion="trabajo"]')).toContainText('no sigue el framework')
 
   // Una skill nueva en Beta hace aparecer el ícono solo.
   await escribir('Beta/.claude/skills/probar/SKILL.md', '---\nname: probar\ndescription: Prueba.\n---\n')
@@ -226,8 +228,8 @@ test('el proyecto muestra sus ideas y, si tiene, sus skills (R-8)', async () => 
 
   await win.locator('button.inicio').click()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  await barra.getByRole('button', { name: 'Ideas del proyecto' }).click()
-  const ideas = win.locator('[data-seccion="ideas"]')
+  await barra.getByRole('button', { name: 'Trabajo' }).click()
+  const ideas = win.locator('[data-seccion="trabajo"]')
   await expect(ideas.locator('.seccion-ideas h4')).toHaveText([
     'Ideas nuevas (pendientes de evaluar) 2',
     'Ideas para después (sin compromiso) 1',

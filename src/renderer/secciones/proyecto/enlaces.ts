@@ -14,7 +14,7 @@ export function mismaRuta(a: string, b: string): boolean {
 }
 
 /**
- * Un clic en un enlace: un código o una cita abren Docs en su sección; un archivo del proyecto, Archivos; uno de
+ * Un clic en un enlace: un `T-n` abre Trabajo en ese ítem; otro código o una cita abren Docs en su sección; un archivo del proyecto, Archivos; uno de
  * internet, el navegador. `arriba`: dónde estaba lo que se lee, para volver ahí con Atrás.
  */
 export function tocarEnlace(e: MouseEvent, ruta: string, arriba?: () => number): void {
@@ -23,9 +23,13 @@ export function tocarEnlace(e: MouseEvent, ruta: string, arriba?: () => number):
   e.preventDefault()
   const estado = usarEstado.getState()
   const doc = a.getAttribute('data-doc')
+  const codigo = a.getAttribute('data-codigo')
+  // Un `T-n` lleva a su ítem en Trabajo, no a `trabajo.md` en Docs (F-4).
   const archivo = a.getAttribute('data-archivo')
   const externo = a.getAttribute('data-externo') ?? a.getAttribute('href')
-  if (doc) estado.abrirDoc(ruta, { documento: doc, ancla: a.getAttribute('data-ancla') ?? '' }, arriba?.())
+  if (doc === 'docs/trabajo.md' && codigo?.startsWith('T-')) estado.abrirTrabajo(ruta, codigo)
+  else if (doc)
+    estado.abrirDoc(ruta, { documento: doc, ancla: a.getAttribute('data-ancla') ?? '' }, arriba?.())
   else if (archivo) estado.abrirArchivo(ruta, archivo)
   else if (externo && /^https?:\/\//i.test(externo)) window.open(externo)
 }

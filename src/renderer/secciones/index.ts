@@ -63,13 +63,13 @@ export interface SeccionDeProyecto {
 }
 
 /**
- * Dentro de un proyecto (W-3, D-041; Revisión, D-046; Ideas y Skills, R-8), en dos grupos. Las ideas del proyecto
- * ocupan el lugar de Trabajo hasta OR-I3. Skills, solo si el proyecto tiene alguna propia.
+ * Dentro de un proyecto (W-3, D-041; Revisión, D-046; Trabajo, W-11; Skills, R-8), en dos grupos. Skills, solo si el
+ * proyecto tiene alguna propia.
  */
 export const SECCIONES_PROYECTO: readonly SeccionDeProyecto[] = [
   { id: 'pendientes', nombre: 'Bandeja de entrada', icono: 'pendientes', grupo: 'sigue' },
   { id: 'mapa', nombre: 'Mapa', icono: 'mapa', grupo: 'sigue' },
-  { id: 'ideas', nombre: 'Ideas del proyecto', icono: 'ideas', grupo: 'sigue' },
+  { id: 'trabajo', nombre: 'Trabajo', icono: 'trabajo', grupo: 'sigue' },
   { id: 'revision', nombre: 'Revisión', icono: 'revision', grupo: 'sigue' },
   { id: 'docs', nombre: 'Docs', icono: 'docs', grupo: 'dentro' },
   { id: 'archivos', nombre: 'Archivos', icono: 'archivos', grupo: 'dentro' },

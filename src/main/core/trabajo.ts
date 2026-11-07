@@ -87,3 +87,17 @@ export function textoDeIdea(codigo: string, titulo: string, fecha: string, frent
   const datos = ['Estado: nueva', ...(frente ? [`Frente: ${frente}`] : []), `Fecha: ${fecha}`]
   return `## ${codigo} — ${titulo.trim().replace(/\s+/g, ' ')}\n${datos.join(' · ')}\n`
 }
+
+/**
+ * `trabajo.md` con una idea nueva al final (W-10, W-11): `T-n` es el más alto + 1. Sin archivo, lo crea con su título.
+ */
+export function conIdeaNueva(
+  texto: string | null,
+  titulo: string,
+  fecha: string,
+): { texto: string; codigo: string } {
+  const base = texto ?? '# Trabajo\n'
+  const codigo = siguienteCodigo(leerTrabajo(base).items)
+  const fin = base.replace(/\s*$/, '')
+  return { texto: `${fin}\n\n${textoDeIdea(codigo, titulo, fecha, null)}`, codigo }
+}

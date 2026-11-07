@@ -37,7 +37,7 @@ export type SeccionProyecto =
   | 'pendientes'
   | 'mapa'
   | 'docs'
-  | 'ideas'
+  | 'trabajo'
   | 'archivos'
   | 'revision'
   | 'git'
@@ -56,6 +56,7 @@ export interface PasoAtras {
   archivo?: string | null
   linea?: number | null
   comentario?: string | null
+  item?: string | null
 }
 
 /** Lo que cada proyecto recuerda mientras la app está abierta. */
@@ -72,6 +73,8 @@ export interface VistaProyecto {
   carpetas: string[]
   /** El comentario de la Revisión que se ve entero (`R-14`); null = la lista. */
   comentario: string | null
+  /** El `T-n` que se abrió en Trabajo desde un enlace (se despliega y se ve); null = ninguno. */
+  item: string | null
   /** Lo elegido en Git: un commit, `sin-guardar` o null (lo primero que haya). */
   commit: string | null
   /** El archivo sin guardar que se mira solo en Git; null = la lista de todos. */
@@ -90,6 +93,7 @@ const VISTA_INICIAL: VistaProyecto = {
   linea: null,
   carpetas: [],
   comentario: null,
+  item: null,
   commit: null,
   archivoGit: null,
   gitPlegadas: [],
@@ -243,6 +247,8 @@ interface EstadoApp {
   abrirArchivo(ruta: string, archivo: string, linea?: number): void
   /** Abre un comentario en Revisión (null = la lista); lo de antes queda para Atrás. */
   abrirComentario(ruta: string, codigo: string | null): void
+  /** Abre Trabajo en un `T-n` (F-4); lo de antes queda para Atrás. */
+  abrirTrabajo(ruta: string, codigo: string): void
   /** Vuelve un paso: a la sección, al documento o al archivo de antes. */
   volver(ruta: string): void
   ponerLista(lista: ListaProyectos): void
@@ -450,6 +456,11 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     if (v.seccion === 'revision' && v.comentario === codigo) return
     get().cambiarVista(ruta, { seccion: 'revision', comentario: codigo, atras: conPaso(v) })
   },
+  abrirTrabajo: (ruta, codigo) => {
+    const v = vistaDe(get().vistas, ruta)
+    if (v.seccion === 'trabajo' && v.item === codigo) return
+    get().cambiarVista(ruta, { seccion: 'trabajo', item: codigo, atras: conPaso(v) })
+  },
   volver: (ruta) => {
     const v = vistaDe(get().vistas, ruta)
     const paso = v.atras.at(-1)
@@ -460,6 +471,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
       ...(paso.doc ? { doc: { ...paso.doc } } : {}),
       ...(paso.archivo !== undefined ? { archivo: paso.archivo, linea: paso.linea ?? null } : {}),
       ...(paso.comentario !== undefined ? { comentario: paso.comentario } : {}),
+      ...(paso.item !== undefined ? { item: paso.item } : {}),
     })
   },
   ponerLista: (lista) => set({ lista }),
@@ -545,6 +557,7 @@ function conPaso(v: VistaProyecto, arriba?: number): PasoAtras[] {
     paso.linea = v.linea
   }
   if (v.seccion === 'revision') paso.comentario = v.comentario
+  if (v.seccion === 'trabajo') paso.item = v.item
   return [...v.atras, paso].slice(-PASOS_ATRAS)
 }
 

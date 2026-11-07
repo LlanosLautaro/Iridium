@@ -2,10 +2,11 @@
 // pedidos y eventos. Los tipos los ven los dos lados; lo que llega desde la ventana se valida en `main/ipc/`.
 
 import type { AnchosConversacion } from './ancho-conversacion'
-import type { IdeasProyecto, ListaIdeas } from './ideas'
+import type { ListaIdeas } from './ideas'
 import type { Borrador } from './respuestas'
 import type { Atrasados, ListaSkills, SkillProyecto } from './skills'
 import type { Estado, PlanEliminacion } from './tipos'
+import type { ResultadoAnotar, TrabajoProyecto } from './trabajo'
 import type { ContenidoDocumento, OpcionPregunta, ScriptVista } from './visor'
 
 /** Lo que la tarjeta de un proyecto necesita para dibujarse (04-ux.md › W-2). La ventana no decide nada. */
@@ -779,7 +780,9 @@ export const CANALES = {
   nuevoProyecto: 'proyectos:nuevo',
   planEliminarProyecto: 'proyectos:plan-eliminar',
   eliminarProyecto: 'proyectos:eliminar',
-  ideasProyecto: 'proyecto:ideas',
+  trabajoProyecto: 'proyecto:trabajo',
+  anotarTrabajo: 'proyecto:anotar',
+  anotarSuelta: 'ideas:anotar',
   skillsProyecto: 'proyecto:skills',
 } as const
 
@@ -942,8 +945,12 @@ export interface ApiIridium {
    * armó `planEliminarProyecto` del lado principal: la ventana no dice qué borrar.
    */
   eliminarProyecto(ruta: string): Promise<ResultadoFicha>
-  /** Las ideas sueltas del proyecto (R-8). */
-  ideasProyecto(ruta: string): Promise<IdeasProyecto>
+  /** El trabajo del proyecto (W-11): los `T-n` de `docs/trabajo.md` o, con framework viejo, sus ideas (R-8). */
+  trabajoProyecto(ruta: string): Promise<TrabajoProyecto>
+  /** Anota una idea como `T-n` `nueva` en `docs/trabajo.md`, sin la IA (H-18). */
+  anotarTrabajo(ruta: string, texto: string): Promise<ResultadoAnotar>
+  /** Anota una idea suelta en `ideas.md` de la carpeta Ideas, sin la IA (W-10). */
+  anotarSuelta(texto: string): Promise<ResultadoAnotar>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */
   skillsProyecto(ruta: string): Promise<SkillProyecto[]>
 }

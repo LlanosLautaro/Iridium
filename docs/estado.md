@@ -37,7 +37,7 @@
 En espera, detrás de Orden (D-091): Diseño (T-5) y Capacidades (T-28).
 
 ## En qué estamos ahora
-Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 está hecha y probada (Q-144): la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha, **Actualizar** (T-46; probado en Q-142), el esqueleto (la barra del proyecto en dos grupos; se entra a la Bandeja si hay algo, si no al Mapa), la cabecera común de las secciones (W-9), el frente activo en la tarjeta (W-2) y la conversación de 360 px, que recuerda el ancho de cada vista (D-098). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
+Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 está hecha y probada (Q-144): la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha, **Actualizar** (T-46; probado en Q-142), el esqueleto (la barra del proyecto en dos grupos; se entra a la Bandeja si hay algo, si no al Mapa), la cabecera común de las secciones (W-9), el frente activo en la tarjeta (W-2) y la conversación de 360 px, que recuerda el ancho de cada vista (D-098). OR-I3 en curso: la sección **Trabajo** de cada proyecto (los `T-n` con filtros, y anotar una idea sin la IA) está hecha; falta Ideas del inicio. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
 - **Q-126 — Invitá a la otra persona al repo de Iridium**
@@ -50,8 +50,8 @@ Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, OR-I3: Trabajo e Ideas, anotar sin la IA (W-10, W-11, H-18, H-19).
-**Leer antes:** `modulos/orden/estado.md` › Próximo paso, `modulos/orden/diseno-tecnico.md` › trabajo.md y `04-ux.md` › W-10 y W-11 (y Q-126 si llegó).
+Orden, OR-I3: Ideas del inicio con las nuevas de todos y el selector de proyecto (W-10). Trabajo del proyecto (W-11) y anotar sin la IA ya están.
+**Leer antes:** `modulos/orden/estado.md` › Próximo paso y `04-ux.md` › W-10 (y Q-126 si llegó).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

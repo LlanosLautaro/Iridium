@@ -89,7 +89,7 @@ test.afterEach(async () => {
 const SECCIONES: [boton: string, titulo: string][] = [
   ['Bandeja de entrada', 'Bandeja de entrada'],
   ['Mapa', 'Mapa'],
-  ['Ideas del proyecto', 'Ideas del proyecto'],
+  ['Trabajo', 'Trabajo'],
   ['Revisión', 'Revisión'],
   ['Archivos', 'Archivos'],
   ['Git', 'Git'],
@@ -132,12 +132,12 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
   await barra.getByRole('button', { name: /^Revisión/ }).click()
   await win.screenshot({ path: 'test-results/or2-cabecera-revision.png' })
 
-  // Scripts: la cuenta; Ideas del proyecto, vacía, la línea de para qué es.
+  // Scripts: la cuenta; Trabajo, de un proyecto sin framework, la línea que lo dice.
   await barra.getByRole('button', { name: 'Scripts' }).click()
   await expect(win.locator('[data-seccion="scripts"] .cab-1 > .n')).toHaveText('1')
-  await barra.getByRole('button', { name: 'Ideas del proyecto' }).click()
-  await expect(win.locator('[data-seccion="ideas"] .cab-vacia')).toContainText(
-    'Lo que la IA anota para más adelante',
+  await barra.getByRole('button', { name: 'Trabajo' }).click()
+  await expect(win.locator('[data-seccion="trabajo"] .cab-vacia')).toContainText(
+    'todavía no pasó al framework',
   )
   await win.screenshot({ path: 'test-results/or2-cabecera-ideas.png' })
   await app.close()

@@ -99,7 +99,7 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   expect(await barra(win)).toEqual([
     'Bandeja de entrada',
     'Mapa',
-    'Ideas del proyecto',
+    'Trabajo',
     'Revisión',
     '—',
     'Docs',

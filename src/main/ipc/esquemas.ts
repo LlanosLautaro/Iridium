@@ -31,6 +31,9 @@ export const Ruta = z.string().min(1).max(1024)
 /** Lo escrito en el cuadro de una conversación (como un mensaje: hasta 100 000 caracteres). */
 export const Escrito = z.string().max(100_000)
 
+/** Una idea anotada sin la IA (H-18): el título, en una línea. */
+export const TextoIdea = z.string().min(1).max(500)
+
 export const Tengo = z.number().int().min(0)
 
 export const Pedido = z

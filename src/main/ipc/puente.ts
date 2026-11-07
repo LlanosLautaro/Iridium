@@ -28,12 +28,13 @@ import { crearProyecto } from '../app/creacion'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
 import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
-import { ideasDelProyecto, leerSeccionIdeas } from '../app/ideas'
+import { leerSeccionIdeas } from '../app/ideas'
 import { mapaDe } from '../app/mapa'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
 import { leerSeccionSkills, proyectosAtrasados, skillsDelProyecto } from '../app/skills'
+import { anotarEnProyecto, anotarSuelta, trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
@@ -82,6 +83,7 @@ import {
   Ruta,
   RutaArchivo,
   Tengo,
+  TextoIdea,
 } from './esquemas'
 
 export interface Servicios {
@@ -574,10 +576,18 @@ export function registrarPuente(s: Servicios): Puente {
     })
   })
 
-  // Las ideas y las skills de un proyecto (R-8): solo leen.
-  ipcMain.handle(CANALES.ideasProyecto, async (_, ruta: unknown) =>
-    ideasDelProyecto(await docs.de(await proyecto(ruta))),
+  // El trabajo de un proyecto (W-11) y las skills (R-8): solo leen.
+  ipcMain.handle(CANALES.trabajoProyecto, async (_, ruta: unknown) =>
+    trabajoDelProyecto(await docs.de(await proyecto(ruta))),
   )
+  // Anotar una idea sin la IA (H-18, W-10): en el `trabajo.md` de un proyecto o, suelta, en `ideas.md` de Ideas.
+  ipcMain.handle(CANALES.anotarTrabajo, async (_, ruta: unknown, texto: unknown) =>
+    anotarEnProyecto(await proyecto(ruta), TextoIdea.parse(texto)),
+  )
+  ipcMain.handle(CANALES.anotarSuelta, async (_, texto: unknown) => {
+    const lista = await listar()
+    return anotarSuelta(enDisco.rutas.ideas ?? join(lista.iridium.carpeta, 'Ideas'), TextoIdea.parse(texto))
+  })
   ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
 
   // El menú de la tarjeta y Nuevo proyecto (R-7, D-089). Solo sobre carpetas de la carpeta de proyectos (no Ideas ni

@@ -120,3 +120,34 @@ function explicacionDe(lineas: string[]): string | null {
   const l = lineas.map((x) => x.trim()).find((x) => x !== '')
   return l ?? null
 }
+
+/** El `ideas.md` con que nace la carpeta Ideas, para cuando se anota la primera suelta sin él. */
+const IDEAS_VACIO = '# Ideas\n\n## Sueltas\nIdeas que todavía no tienen proyecto.\n'
+
+/**
+ * `ideas.md` con una idea suelta nueva (W-10): arriba de la sección Sueltas, debajo de la línea que la explica, como
+ * pide `Ideas/CLAUDE.md` («la más nueva arriba»). Sin esa sección, la crea debajo del título del archivo.
+ */
+export function conIdeaSuelta(texto: string | null, titulo: string, fecha: string): string {
+  const idea = `### ${titulo.trim().replace(/\s+/g, ' ')} — ${fecha}`
+  const lineas = (texto ?? IDEAS_VACIO).replace(/\r\n?/g, '\n').split('\n')
+  const i = lineas.findIndex((l) => /^##\s+sueltas\b/i.test(l))
+  if (i === -1) {
+    const h1 = lineas.findIndex((l) => /^#\s/.test(l))
+    // Después del título y de la línea que lo acompaña (la cita de cómo se usa), antes de la primera sección.
+    const primera = lineas.findIndex((l, n) => n > h1 && /^##?\s/.test(l))
+    const donde = primera === -1 ? lineas.length : primera
+    const antes = lineas.slice(0, donde)
+    while (antes.length > 0 && antes.at(-1)?.trim() === '') antes.pop()
+    const nueva = ['## Sueltas', 'Ideas que todavía no tienen proyecto.', '', idea, '']
+    return [...antes, ...(antes.length ? [''] : []), ...nueva, ...lineas.slice(donde)].join('\n')
+  }
+  // La línea que explica la sección queda arriba; la idea, después.
+  let donde = i + 1
+  while (donde < lineas.length && lineas[donde]?.trim() === '') donde++
+  const explica = lineas[donde]
+  if (explica !== undefined && explica.trim() !== '' && !/^#{1,6}\s/.test(explica)) donde++
+  const resto = lineas.slice(donde)
+  while (resto.length > 0 && resto[0]?.trim() === '') resto.shift()
+  return [...lineas.slice(0, donde), '', idea, '', ...resto].join('\n')
+}
