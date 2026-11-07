@@ -5,6 +5,7 @@
 import { type CSSProperties, type ReactNode, useCallback, useState } from 'react'
 import type { ListaProyectos, TarjetaProyecto } from '../../../compartido/puente'
 import { fichaDe, usarEstado } from '../../estado'
+import { Cabecera } from '../../ui/Cabecera'
 import { cambiarAncho, Divisor } from '../../ui/Divisor'
 import { Icono } from '../../ui/Icono'
 import { type Punto, puntoDelMenu } from '../../ui/MenuContextual'
@@ -192,40 +193,41 @@ export function Proyectos() {
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
       <section className="principal grilla-proyectos" aria-label="Proyectos">
-        <div className="cabecera">
-          <h1>Proyectos</h1>
-          {conGrilla && (
-            <span className="total" title="Proyectos sin archivar">
-              {proyectos.length - archivados}
-            </span>
-          )}
-          {lista && (
-            <span className="raiz" title={lista.raiz}>
-              {lista.raiz}
-            </span>
-          )}
-          {lista?.tipo === 'lista' && (
-            <div className="der">
-              <button type="button" className="btn secundario chico" onClick={() => setNuevo(true)}>
-                <Icono nombre="mas" />
-                Nuevo proyecto
-              </button>
-              {conGrilla && (
-                <button
-                  type="button"
-                  className="interruptor"
-                  role="switch"
-                  aria-checked={verArchivados}
-                  title="Mostrar los archivados al final, más tenues"
-                  onClick={() => guardarPreferencias({ verArchivados: !verArchivados })}
-                >
-                  <span className="pista" />
-                  Archivados <span className="n">{archivados}</span>
+        <Cabecera
+          nivel={1}
+          titulo="Proyectos"
+          cuenta={
+            conGrilla && (
+              <span className="n" title="Proyectos sin archivar">
+                {proyectos.length - archivados}
+              </span>
+            )
+          }
+          sub={lista && <span title={lista.raiz}>{lista.raiz}</span>}
+          acciones={
+            lista?.tipo === 'lista' && (
+              <>
+                <button type="button" className="btn secundario chico" onClick={() => setNuevo(true)}>
+                  <Icono nombre="mas" />
+                  Nuevo proyecto
                 </button>
-              )}
-            </div>
-          )}
-        </div>
+                {conGrilla && (
+                  <button
+                    type="button"
+                    className="interruptor"
+                    role="switch"
+                    aria-checked={verArchivados}
+                    title="Mostrar los archivados al final, más tenues"
+                    onClick={() => guardarPreferencias({ verArchivados: !verArchivados })}
+                  >
+                    <span className="pista" />
+                    Archivados <span className="n">{archivados}</span>
+                  </button>
+                )}
+              </>
+            )
+          }
+        />
         <div className="lienzo">
           {lista && <Mudanza lista={lista} />}
           {aviso && (

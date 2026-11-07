@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta, la Bandeja, Actualizar y el esqueleto hechos) | este archivo |
+| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 en curso (la cuenta, la Bandeja, Actualizar, el esqueleto y la cabecera común hechos) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -80,8 +80,13 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 - **Los comentarios anotados que ya están hechos** (2026-11-07): R-12 seguía en Anotados con T-46 hecho, porque el framework pedía cerrarlo solo en la sección de la Revisión y el control no lo miraba. El control suma la regla `revision` (`core/control/revision.ts`): un `R-n` `anotado` tiene que citar su `T-n` (en su línea «anotado por la IA» o en el `Origen:` del `T-n`) y, si ese `T-n` está `hecho`, se le devuelve a la IA para que lo cierre. El framework lo dice al pasar un `T-n` a `hecho` y en el cierre de sesión; las instrucciones de las sesiones y de Enviar ahora piden el `T-n` al anotar. R-12, cerrado. Pruebas: `tests/or1-control.test.ts` (sin `T-n`, con el `T-n` hecho por `Origen:` y por la cita, el pendiente y el cerrado que no avisan); Vitest 642 de 642; el control sobre Iridium, cero.
 
-**Falta:** la cabecera común (W-9) en las demás secciones, la línea del frente activo en la tarjeta y la conversación de 360 px por vista (D-098).
+- **La cabecera común** (W-9, 2026-11-07): la pieza `ui/Cabecera.tsx` (título, cuenta, un dato en gris, acciones a la derecha, los filtros en la segunda fila y, vacía, la línea de para qué es) con sus estilos en `base.css` (`.cab-seccion`, `.cab-1`, `.cab-2`, `.cab-vacia`) y los filtros como pieza (`Filtros`). La llevan, dentro del proyecto, la Bandeja de entrada (con la cuenta y los filtros por frente fijos arriba, ya no dentro de la lista), el Mapa, Ideas del proyecto, Revisión (Abiertos, Anotados y Cerrados pasan a ser sus filtros, y el estado de la extensión va a la derecha), Archivos (con Atrás), Git, Scripts (con su cuenta) y Skills del proyecto; en el inicio, Proyectos (con la carpeta en gris, Nuevo proyecto y Archivados) y la Bandeja de entrada (el proyecto elegido con Abrir y Seguí, y sus filtros abajo). La altura es la de la cabecera de la conversación, 40 px con su línea, y no los 46 de la hoja de piezas, para que las líneas de abajo queden parejas de punta a punta; los títulos de las columnas del inicio (Bandeja, Skills, Ideas) también pasan a 40. Docs sigue con su barra (el documento es el título, con el ancho y Atrás a la derecha), que ya tenía esa forma y esa altura. Los detalles de una skill o de una idea no son secciones y quedan igual (Ideas se rehace en OR-I3). Ideas, Scripts y Skills del proyecto dejan el párrafo de explicación solo para cuando están vacías.
+- `tools/auditoria-ux.ts` encuentra la tarjeta de Iridium por el nombre de la ficha (OR-10) y cierra el menú de Ajustes antes del paso de ancho chico: el recorrido pasa entero.
+
+**Pruebas de la cabecera:** Playwright, `tests/e2e/or2-cabecera.spec.ts` (2: las siete secciones del proyecto con su título en el mismo lugar y 40 px de alto, como la de la conversación, 78 con filtros; la Bandeja con la cuenta y los filtros por frente en la segunda fila; Scripts con su cuenta; Ideas vacía con su línea; en el inicio, Proyectos y la Bandeja con la misma cabecera y la columna a la misma altura). `i3-pendientes`, `or2-bandeja`, `in1-ideas` y `r2-revision` al día con la pieza nueva. Vitest 642 de 642; typecheck limpio; el lint sin errores nuevos. Playwright, la corrida completa 92 de 100: las cinco de `r2-revision` fallaron por un espacio entre el nombre del filtro y su cuenta (corregido: 10 de 10 solas, con `or2-bandeja` y `or2-cabecera`) y las tres de `r3-electron` por la carga, como antes (solas, 3 de 3). El recorrido con los proyectos reales (`tools/auditoria-ux.ts`) pasa entero y las capturas se ven parejas.
+
+**Falta:** la línea del frente activo en la tarjeta (W-2) y la conversación de 360 px por vista (D-098).
 
 ## Próximo paso
-OR-I2, lo que falta: la cabecera común (W-9) en las secciones del proyecto y del inicio; después, el frente activo en la tarjeta y la conversación de 360 px por vista.
-**Leer antes:** `diseno-tecnico.md` › Iteraciones, `04-ux.md` › W-9 y W-2, `06-ui.md` › Frente Orden.
+OR-I2, lo que falta: la línea del frente activo en la tarjeta (W-2); después, la conversación de 360 px por vista (D-098), y con eso la iteración se cierra con su prueba.
+**Leer antes:** `04-ux.md` › W-2 y W-12, `06-ui.md` › Frente Orden (la tarjeta), `diseno-tecnico.md` › Iteraciones.

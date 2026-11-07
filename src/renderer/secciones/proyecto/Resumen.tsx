@@ -28,7 +28,12 @@ export function Resumen({ ruta }: { ruta: string }) {
   return (
     <div className="resumen">
       <section className="principal-pend" aria-label="Pendientes">
-        <ListaPendientes p={p} abrirDoc={(d) => abrirDoc(ruta, d)} pie={<ListaScripts ruta={ruta} />} />
+        <ListaPendientes
+          p={p}
+          abrirDoc={(d) => abrirDoc(ruta, d)}
+          pie={<ListaScripts ruta={ruta} />}
+          cabecera={{ titulo: 'Bandeja de entrada' }}
+        />
       </section>
     </div>
   )

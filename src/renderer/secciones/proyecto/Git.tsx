@@ -16,6 +16,7 @@ import type {
   ResultadoGit,
 } from '../../../compartido/puente'
 import { usarEstado, vistaDe } from '../../estado'
+import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 import { useDocsCambian } from './enlaces'
 import { PublicarGithub, SinRepositorio } from './PublicarGithub'
@@ -387,6 +388,15 @@ function FilaArchivo({ a, sel, elegir }: { a: ArchivoGit; sel: boolean; elegir: 
 }
 
 export function Git({ ruta }: { ruta: string }) {
+  return (
+    <>
+      <Cabecera titulo="Git" />
+      <CuerpoGit ruta={ruta} />
+    </>
+  )
+}
+
+function CuerpoGit({ ruta }: { ruta: string }) {
   const visible = usarEstado((s) => s.proyectoAbierto === ruta && vistaDe(s.vistas, ruta).seccion === 'git')
   const elegido = usarEstado((s) => vistaDe(s.vistas, ruta).commit)
   const archivoGit = usarEstado((s) => vistaDe(s.vistas, ruta).archivoGit)

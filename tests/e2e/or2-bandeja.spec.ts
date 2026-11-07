@@ -113,7 +113,7 @@ test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar 
     .getByRole('button', { name: /^Bandeja de entrada/ })
     .click()
   await expect(win.locator('.columna h1')).toHaveText('Bandeja de entrada')
-  await expect(win.locator('.cab-proy h2')).toHaveText('Alfa')
+  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
 
   const filtros = win.getByRole('group', { name: 'Filtrar por frente' }).getByRole('button')
   await expect(filtros).toHaveText(['Todos 3', 'Núcleo 1', 'Compartir 2'])
@@ -141,7 +141,7 @@ test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar 
 
   // Beta, con un solo frente: sin filtros.
   await win.locator('.proy', { hasText: 'Beta' }).click()
-  await expect(win.locator('.cab-proy h2')).toHaveText('Beta')
+  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Beta')
   await expect(win.getByRole('group', { name: 'Filtrar por frente' })).toHaveCount(0)
   await app.close()
 })

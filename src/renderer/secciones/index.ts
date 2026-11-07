@@ -75,5 +75,11 @@ export const SECCIONES_PROYECTO: readonly SeccionDeProyecto[] = [
   { id: 'archivos', nombre: 'Archivos', icono: 'archivos', grupo: 'dentro' },
   { id: 'git', nombre: 'Git', icono: 'git', grupo: 'dentro' },
   { id: 'scripts', nombre: 'Scripts', icono: 'scripts', grupo: 'dentro' },
-  { id: 'skills', nombre: 'Skills del proyecto', icono: 'skills', grupo: 'dentro', soloSi: (p) => p.skills > 0 },
+  {
+    id: 'skills',
+    nombre: 'Skills del proyecto',
+    icono: 'skills',
+    grupo: 'dentro',
+    soloSi: (p) => p.skills > 0,
+  },
 ]

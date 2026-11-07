@@ -13,6 +13,7 @@ import type {
   PreguntaNueva,
 } from '../../../compartido/puente'
 import { fichaDe, usarEstado } from '../../estado'
+import { Cabecera } from '../../ui/Cabecera'
 import { Icono, type NombreIcono } from '../../ui/Icono'
 import { nombreDoc, tocarEnlace, useDocsCambian } from './enlaces'
 
@@ -435,6 +436,15 @@ function useMapa(ruta: string): MapaProyecto | null {
 }
 
 export function Mapa({ ruta }: { ruta: string }) {
+  return (
+    <>
+      <Cabecera titulo="Mapa" />
+      <CuerpoMapa ruta={ruta} />
+    </>
+  )
+}
+
+function CuerpoMapa({ ruta }: { ruta: string }) {
   const m = useMapa(ruta)
   const abrirDoc = usarEstado((s) => s.abrirDoc)
   const [mirado, setMirado] = useState<number | null>(null)

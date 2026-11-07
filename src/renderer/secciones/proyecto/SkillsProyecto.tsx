@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { SkillProyecto } from '../../../compartido/skills'
 import { tarjetaDe, usarEstado } from '../../estado'
+import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 
 export function SkillsProyecto({ ruta }: { ruta: string }) {
@@ -23,41 +24,45 @@ export function SkillsProyecto({ ruta }: { ruta: string }) {
   }, [ruta, tarjeta])
 
   return (
-    <div className="scripts skills-proyecto">
-      <div className="scripts-col">
-        <div className="cab-scripts">
-          <h2>Skills del proyecto</h2>
-        </div>
-        <p className="nota">
-          Las de <code>.claude/skills/</code>: Claude Code las carga solo cuando trabaja en este proyecto,
-          además de las de la PC (las ves en Skills, en el inicio).
-        </p>
-        {error && (
-          <p className="script-msg error" role="alert">
-            <Icono nombre="error" />
-            No se pudieron leer: {error}
-          </p>
-        )}
-        {!skills && !error && <p className="nota">Leyendo…</p>}
-        {skills?.length === 0 && <p className="nota">Este proyecto no tiene skills propias.</p>}
-        {skills?.map((s) => (
-          <div key={s.archivo} className="script skill-proyecto">
-            <div className="script-cab">
-              <h4>{s.nombre}</h4>
-              <button
-                type="button"
-                className="btn secundario chico"
-                title={`Ver ${s.archivo} en Archivos`}
-                onClick={() => abrirArchivo(ruta, s.archivo)}
-              >
-                <Icono nombre="archivos" />
-                Ver
-              </button>
+    <>
+      <Cabecera
+        titulo="Skills del proyecto"
+        cuenta={skills && skills.length > 0 ? skills.length : undefined}
+        sub={
+          <>
+            las de <code>.claude/skills/</code>, solo para este proyecto
+          </>
+        }
+        vacia={skills?.length === 0 && 'Este proyecto no tiene skills propias.'}
+      />
+      <div className="scripts skills-proyecto">
+        <div className="scripts-col">
+          {error && (
+            <p className="script-msg error" role="alert">
+              <Icono nombre="error" />
+              No se pudieron leer: {error}
+            </p>
+          )}
+          {!skills && !error && <p className="nota">Leyendo…</p>}
+          {skills?.map((s) => (
+            <div key={s.archivo} className="script skill-proyecto">
+              <div className="script-cab">
+                <h4>{s.nombre}</h4>
+                <button
+                  type="button"
+                  className="btn secundario chico"
+                  title={`Ver ${s.archivo} en Archivos`}
+                  onClick={() => abrirArchivo(ruta, s.archivo)}
+                >
+                  <Icono nombre="archivos" />
+                  Ver
+                </button>
+              </div>
+              <p className="script-desc">{s.descripcion ?? 'Su SKILL.md no tiene descripción.'}</p>
             </div>
-            <p className="script-desc">{s.descripcion ?? 'Su SKILL.md no tiene descripción.'}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

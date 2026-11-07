@@ -120,7 +120,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 38px;
+  height: 40px;
   padding: 0 14px 0 16px;
   flex: none;
   border-bottom: 1px solid var(--borde-suave);
@@ -236,34 +236,6 @@
   flex-direction: column;
   min-height: 0;
 }
-.cab-proy {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 38px;
-  padding: 0 12px 0 20px;
-  flex: none;
-  border-bottom: 1px solid var(--borde-suave);
-  min-width: 0;
-}
-.cab-proy h2 {
-  font: 600 14.5px / 1 var(--ui);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-}
-.cab-proy .hito {
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-  white-space: nowrap;
-}
-.cab-proy .der {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 /* «Seguí» se resalta cuando no queda nada sin responder: verde de contorno, nunca de fondo */
 .btn.secundario.resaltado {
   border-color: var(--primario);
@@ -287,9 +259,6 @@
 }
 .grupo-pend:first-child .grupo {
   margin-top: 0;
-}
-.pendientes > .filtros {
-  margin-bottom: 14px;
 }
 /* En pausa (OR-6): al final, plegadas, sin contar */
 .en-pausa > summary {

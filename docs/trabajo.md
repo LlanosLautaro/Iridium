@@ -193,7 +193,7 @@ En el chat de Skills, poner al día las rutas que nombran la carpeta vieja; en e
 
 ## T-46 — Un solo botón Actualizar
 Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: R-12
-Arma y reinicia, con sus estados (W-1). Hecho en OR-I2 (2026-11-06); la prueba con la app de uso diario, en Q-142.
+Arma y reinicia, con sus estados (W-1). Hecho en OR-I2 (2026-11-06); probado con la app de uso diario en Q-142 (2026-11-07), las cuatro casillas bien.
 
 ## T-47 — D-100 en el código
 Estado: en curso · Frente: Orden · Fecha: 2026-11-06 · Origen: D-100

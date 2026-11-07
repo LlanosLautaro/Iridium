@@ -156,7 +156,7 @@ test('Revisión en Iridium: el contador en gris, la lista con la captura y el de
   await expect(fila).toContainText('el botón queda muy pegado')
   await expect(fila).toContainText('Tarjeta.jsx:')
   await expect(fila.locator('.cap img')).toBeVisible()
-  await expect(seccion().locator('.grupos')).toContainText('Abiertos 1')
+  await expect(seccion().getByRole('group', { name: 'Grupo' })).toContainText('Abiertos 1')
   await expect(seccion().locator('.ext-est')).toContainText('conectada por última vez hoy')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-lista.png') })
 

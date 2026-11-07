@@ -92,7 +92,7 @@ test('la columna, los pendientes con lo que citan y «Ver entero» en el panel (
   await expect(columna.locator('.proy')).toHaveText([/Alfa.*2/, /Beta.*1/, /Gestor.*1/])
   await expect(columna.locator('.seccion')).toHaveText('Respondidas, sin procesar')
   await expect(columna.locator('.titulo .n')).toHaveText('3')
-  await expect(win.locator('.cab-proy h2')).toHaveText('Alfa')
+  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
 
   const q7 = win.locator('.pend[data-q="Q-7"]')
   await expect(q7.locator('.meta')).toContainText('decisión')
@@ -140,7 +140,7 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   // Baja el total del inicio y el número de la columna, que se reordena; la vista sigue en Alfa.
   await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('2')
   await expect(win.locator('.proy', { hasText: 'Alfa' })).toContainText('1')
-  await expect(win.locator('.cab-proy h2')).toHaveText('Alfa')
+  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
 
   // La prueba: lo escrito sigue al ir a otro proyecto y volver.
   const q8 = win.locator('.pend[data-q="Q-8"]')
@@ -156,7 +156,7 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   await nota.fill('')
   await q8.getByRole('textbox', { name: 'Nota de: Clasifica en Pendientes' }).fill('no aparece la tarjeta')
   await win.locator('.proy', { hasText: 'Beta' }).click()
-  await expect(win.locator('.cab-proy h2')).toHaveText('Beta')
+  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Beta')
   await win.locator('.proy', { hasText: 'Alfa' }).click()
   await expect(q8.getByRole('checkbox', { name: 'Abre la app sin errores' })).toBeChecked()
 
@@ -182,14 +182,14 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   )
 
   // Nada sin responder: Seguí resaltado; arranca la sesión sin abrir el proyecto.
-  const segui = win.locator('.cab-proy').getByRole('button', { name: 'Seguí' })
+  const segui = win.locator('.principal-pend .cab-seccion').getByRole('button', { name: 'Seguí' })
   await expect(segui).toHaveClass(/resaltado/)
-  await expect(win.locator('.cab-proy .cuenta-bandeja')).toHaveCount(0)
+  await expect(win.locator('.principal-pend .cab-seccion .cuenta-bandeja')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/i3-todo-respondido.png' })
   await segui.click()
-  await expect(win.locator('.cab-proy')).toContainText('La IA trabaja')
+  await expect(win.locator('.principal-pend .cab-seccion')).toContainText('La IA trabaja')
   await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
-  await expect(win.locator('.cab-proy h2')).toHaveText('Alfa')
+  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
 
   // Corregir una respondida.
   await q7.getByRole('button', { name: 'Corregir' }).click()

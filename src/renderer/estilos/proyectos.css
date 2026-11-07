@@ -12,18 +12,6 @@
   font: 600 16px / 1 var(--ui);
   color: var(--texto);
 }
-.cabecera .total {
-  font: 500 12px / 1 var(--mono);
-  color: var(--texto-3);
-}
-.cabecera .raiz {
-  color: var(--texto-3);
-  font: 400 12px / 1 var(--mono);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
 .cabecera .der {
   margin-left: auto;
   display: flex;

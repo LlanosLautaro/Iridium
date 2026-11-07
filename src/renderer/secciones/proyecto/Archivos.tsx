@@ -5,6 +5,7 @@
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CarpetaArchivos, ContenidoArchivo } from '../../../compartido/puente'
 import { tarjetaDe, usarEstado, vistaDe } from '../../estado'
+import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 import { useDocsCambian } from './enlaces'
 import { BotonAtras } from './Lector'
@@ -274,24 +275,24 @@ export function Archivos({ ruta }: { ruta: string }) {
     elegir: (a) => cambiarVista(ruta, { archivo: a, linea: null }),
   }
   return (
-    <div className="partida">
-      <nav className="arbol" aria-label={`Archivos de ${nombre}`}>
-        <h3>
-          {nombre}
-          {atras > 0 && <BotonAtras ruta={ruta} />}
-        </h3>
-        <ArbolArchivos fuente={fuente} eleccion={eleccion} />
-      </nav>
-      {archivo ? (
-        <VisorArchivo fuente={fuente} archivo={archivo} linea={linea} proyecto={ruta} />
-      ) : (
-        <div className="vacia">
-          <div>
-            <b>Elegí un archivo del árbol</b>
-            Se ve tal cual, sin poder editarlo: el texto con colores, las imágenes como imagen.
+    <>
+      <Cabecera titulo="Archivos" acciones={atras > 0 && <BotonAtras ruta={ruta} />} />
+      <div className="partida">
+        <nav className="arbol" aria-label={`Archivos de ${nombre}`}>
+          <h3>{nombre}</h3>
+          <ArbolArchivos fuente={fuente} eleccion={eleccion} />
+        </nav>
+        {archivo ? (
+          <VisorArchivo fuente={fuente} archivo={archivo} linea={linea} proyecto={ruta} />
+        ) : (
+          <div className="vacia">
+            <div>
+              <b>Elegí un archivo del árbol</b>
+              Se ve tal cual, sin poder editarlo: el texto con colores, las imágenes como imagen.
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   )
 }

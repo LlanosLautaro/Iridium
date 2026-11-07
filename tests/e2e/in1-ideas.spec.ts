@@ -84,7 +84,7 @@ test('la grilla solo con proyectos y el chat general al lado (IN-3)', async () =
   await expect(grilla.locator('.tarjeta', { hasText: 'Beta' })).toBeVisible()
   await expect(grilla.locator('.tarjeta', { hasText: 'Ideas' })).toHaveCount(0)
   await expect(grilla.locator('.tarjeta', { hasText: 'Skills' })).toHaveCount(0)
-  await expect(grilla.locator('.cabecera .total')).toHaveText('2')
+  await expect(grilla.locator('.cab-1 > .n')).toHaveText('2')
   await expect(win.getByRole('complementary', { name: 'Chat general' }).locator('.chat-cab')).toContainText(
     'Ideas y proyectos',
   )

@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { ListaComentarios, ResultadoEnvio, VistaComentario } from '../../../compartido/puente'
 import { usarEstado, vistaDe } from '../../estado'
+import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 import { useDocsCambian } from './enlaces'
 import { BotonAtras } from './Lector'
@@ -195,37 +196,40 @@ function AvisoElectron({ ruta }: { ruta: string }) {
 
 function Vacio({ ruta, l }: { ruta: string; l: Extract<ListaComentarios, { tipo: 'ok' }> }) {
   return (
-    <div className="rev-vacio">
-      {l.electron.esElectron && !l.electron.cargaLinea && <AvisoElectron ruta={ruta} />}
-      <h2>Todavía no hay comentarios</h2>
-      <p>
-        Abrí la app en modo desarrollo y apretá <kbd>F8</kbd>. Señalás una parte, escribís qué le pasa y llega
-        acá.
-      </p>
-      <ol className="pasos">
-        <li>
-          <span>1</span>
-          <div>
-            Instalá la extensión una vez en Chrome o Edge: en el <code>scripts.md</code> de Iridium, «Instalar
-            la extensión de Revisión».
-          </div>
-        </li>
-        <li>
-          <span>2</span>
-          <div>
-            Abrí la app en modo desarrollo (<code>localhost</code>, o la app Electron con la línea).
-          </div>
-        </li>
-        <li>
-          <span>3</span>
-          <div>Con Iridium abierto, apretá F8 o el botón de la extensión.</div>
-        </li>
-      </ol>
-      <div className="conexion">
-        <Icono nombre="enchufe" />
-        Extensión: {fechaConexion(l.extension)}
+    <>
+      <Cabecera titulo="Revisión" />
+      <div className="rev-vacio">
+        {l.electron.esElectron && !l.electron.cargaLinea && <AvisoElectron ruta={ruta} />}
+        <h2>Todavía no hay comentarios</h2>
+        <p>
+          Abrí la app en modo desarrollo y apretá <kbd>F8</kbd>. Señalás una parte, escribís qué le pasa y
+          llega acá.
+        </p>
+        <ol className="pasos">
+          <li>
+            <span>1</span>
+            <div>
+              Instalá la extensión una vez en Chrome o Edge: en el <code>scripts.md</code> de Iridium,
+              «Instalar la extensión de Revisión».
+            </div>
+          </li>
+          <li>
+            <span>2</span>
+            <div>
+              Abrí la app en modo desarrollo (<code>localhost</code>, o la app Electron con la línea).
+            </div>
+          </li>
+          <li>
+            <span>3</span>
+            <div>Con Iridium abierto, apretá F8 o el botón de la extensión.</div>
+          </li>
+        </ol>
+        <div className="conexion">
+          <Icono nombre="enchufe" />
+          Extensión: {fechaConexion(l.extension)}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -442,21 +446,21 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
 
 function Cargando() {
   return (
-    <div className="rev" aria-busy="true">
-      <div className="rev-cab">
-        <h2>Revisión</h2>
-      </div>
-      {[0, 1, 2, 3].map((i) => (
-        <div key={i} className="silueta">
-          <i />
-          <div>
-            <i style={{ width: '80%' }} />
-            <i style={{ width: '55%' }} />
-            <i style={{ width: '30%' }} />
+    <>
+      <Cabecera titulo="Revisión" />
+      <div className="rev" aria-busy="true">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="silueta">
+            <i />
+            <div>
+              <i style={{ width: '80%' }} />
+              <i style={{ width: '55%' }} />
+              <i style={{ width: '30%' }} />
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   )
 }
 
@@ -466,7 +470,7 @@ export function Revision({ ruta }: { ruta: string }) {
     s.lista?.tipo === 'lista' ? (s.lista.proyectos.find((p) => p.ruta === ruta)?.nombre ?? '') : '',
   )
   const [l, setL] = useState<ListaComentarios | null>(() => leidas.get(ruta) ?? null)
-  const [grupo, setGrupo] = useState<'abiertos' | 'anotados' | 'cerrados'>('abiertos')
+  const [grupo, setGrupo] = useState('abiertos')
   const leer = useCallback(() => {
     void window.iridium.comentarios(ruta).then((r) => {
       leidas.set(ruta, r)
@@ -480,11 +484,14 @@ export function Revision({ ruta }: { ruta: string }) {
   if (!l) return <Cargando />
   if (l.tipo === 'error')
     return (
-      <div className="rev">
-        <p className="mal" role="alert">
-          No se pudieron leer los comentarios: {l.mensaje}
-        </p>
-      </div>
+      <>
+        <Cabecera titulo="Revisión" />
+        <div className="rev">
+          <p className="mal" role="alert">
+            No se pudieron leer los comentarios: {l.mensaje}
+          </p>
+        </div>
+      </>
     )
 
   if (elegido) {
@@ -508,41 +515,47 @@ export function Revision({ ruta }: { ruta: string }) {
   const cerrados = l.comentarios.filter((c) => c.estado === 'cerrado')
   const mostrar = grupo === 'abiertos' ? abiertos : grupo === 'anotados' ? anotados : cerrados
   return (
-    <div className="rev">
-      <div className="rev-cab">
-        <h2>Revisión</h2>
-        <fieldset className="grupos" aria-label="Grupo">
-          <button type="button" aria-pressed={grupo === 'abiertos'} onClick={() => setGrupo('abiertos')}>
-            Abiertos <span>{abiertos.length}</span>
-          </button>
-          <button
-            type="button"
-            aria-pressed={grupo === 'anotados'}
-            title="Quedaron en un plan: se cierran cuando estén hechos"
-            onClick={() => setGrupo('anotados')}
-          >
-            Anotados <span>{anotados.length}</span>
-          </button>
-          <button type="button" aria-pressed={grupo === 'cerrados'} onClick={() => setGrupo('cerrados')}>
-            Cerrados <span>{cerrados.length}</span>
-          </button>
-        </fieldset>
-        <span className="ext-est">
-          <Icono nombre="enchufe" />
-          Extensión {fechaConexion(l.extension)}
-        </span>
+    <>
+      <Cabecera
+        titulo="Revisión"
+        cuenta={abiertos.length}
+        acciones={
+          <span className="ext-est">
+            <Icono nombre="enchufe" />
+            Extensión {fechaConexion(l.extension)}
+          </span>
+        }
+        filtros={
+          <Filtros
+            etiqueta="Grupo"
+            elegido={grupo}
+            elegir={setGrupo}
+            filtros={[
+              { clave: 'abiertos', nombre: 'Abiertos', n: abiertos.length },
+              {
+                clave: 'anotados',
+                nombre: 'Anotados',
+                n: anotados.length,
+                titulo: 'Quedaron en un plan: se cierran cuando estén hechos',
+              },
+              { clave: 'cerrados', nombre: 'Cerrados', n: cerrados.length },
+            ]}
+          />
+        }
+      />
+      <div className="rev">
+        {l.electron.esElectron && !l.electron.cargaLinea && <AvisoElectron ruta={ruta} />}
+        <div className="filas-com">
+          {mostrar.length ? (
+            mostrar.map((c) => <Fila key={c.codigo} ruta={ruta} c={c} />)
+          ) : (
+            <div className="ninguno">Ninguno.</div>
+          )}
+          {l.ilegibles.map((n) => (
+            <Ilegible key={n} nombre={n} />
+          ))}
+        </div>
       </div>
-      {l.electron.esElectron && !l.electron.cargaLinea && <AvisoElectron ruta={ruta} />}
-      <div className="filas-com">
-        {mostrar.length ? (
-          mostrar.map((c) => <Fila key={c.codigo} ruta={ruta} c={c} />)
-        ) : (
-          <div className="ninguno">Ninguno.</div>
-        )}
-        {l.ilegibles.map((n) => (
-          <Ilegible key={n} nombre={n} />
-        ))}
-      </div>
-    </div>
+    </>
   )
 }

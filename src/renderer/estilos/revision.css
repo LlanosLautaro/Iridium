@@ -37,55 +37,20 @@
 }
 
 .rev {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   max-width: 880px;
-  padding: 18px 24px 40px;
+  padding: 14px 24px 40px;
 }
-.rev-cab {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-.rev-cab h2 {
-  font-size: 16px;
-  font-weight: 600;
-}
-.grupos {
-  display: inline-flex;
-  margin: 0;
-  padding: 2px;
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-control);
-}
-.grupos button {
-  height: 24px;
-  padding: 0 10px;
-  border-radius: var(--radio-control);
-  color: var(--texto-3);
-  font-weight: 600;
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-}
-.grupos button span {
-  font: 600 12px / 1 var(--mono);
-}
-.grupos button:hover {
-  color: var(--texto);
-}
-.grupos button[aria-pressed="true"] {
-  background: var(--sel-fondo);
-  color: var(--texto);
-}
-.rev-cab .ext-est {
-  margin-left: auto;
+.ext-est {
   color: var(--texto-3);
   font-size: var(--tam-chico);
   display: inline-flex;
   gap: 6px;
   align-items: center;
 }
-.rev-cab .ext-est .ic {
+.cab-1 .ext-est .ic {
   width: 13px;
   height: 13px;
 }

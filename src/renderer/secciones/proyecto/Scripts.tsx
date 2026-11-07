@@ -1,10 +1,12 @@
 // Los scripts del proyecto (C-11, D-043): un botón por cada script de `docs/scripts.md`. Un comando corre en una
 // ventana de consola; un archivo o una carpeta se abre con Windows. Van en dos lugares (D-044, Q-63): en lista después
 // de los pendientes de la vista de entrada, y en su sección, cada uno con su descripción entera.
+import type { ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import type { ResultadoScript, ScriptsProyecto } from '../../../compartido/puente'
 import type { ScriptVista } from '../../../compartido/visor'
 import { usarEstado, vistaDe } from '../../estado'
+import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 import { tocarEnlace, useDocsCambian } from './enlaces'
 import { BotonAtras } from './Lector'
@@ -107,57 +109,60 @@ export function ListaScripts({ ruta }: { ruta: string }) {
 export function Scripts({ ruta }: { ruta: string }) {
   const { datos, ultima, correr } = useScripts(ruta)
   const atras = usarEstado((s) => vistaDe(s.vistas, ruta).atras.length)
+  let vacia: ReactNode = null
+  if (datos && !datos.existe)
+    vacia = (
+      <>
+        Este proyecto no tiene <code>docs/scripts.md</code>. Ahí la IA anota lo que vos ejecutás a mano (abrir
+        la app, armarla, instalarla) y acá aparece como botones.
+      </>
+    )
+  else if (datos?.scripts.length === 0)
+    vacia = (
+      <>
+        <code>docs/scripts.md</code> no tiene scripts con una línea <b>Ejecutar:</b> o <b>Abrir:</b>.
+      </>
+    )
   return (
-    <div className="scripts">
-      <div className="scripts-col">
-        <div className="cab-scripts">
-          <h2>Scripts</h2>
-          {atras > 0 && <BotonAtras ruta={ruta} />}
-        </div>
-        <p className="nota">
-          Lo que anota la IA en <code>docs/scripts.md</code>: <b>Ejecutar</b> abre una consola con el comando,
-          que queda abierta para ver qué pasó; <b>Abrir</b> lo abre con Windows.
-        </p>
-        {!datos && <p className="nota">Leyendo…</p>}
-        {datos && !datos.existe && (
-          <p className="nota">
-            Este proyecto no tiene <code>docs/scripts.md</code>. Ahí la IA anota lo que vos ejecutás a mano
-            (abrir la app, armarla, instalarla) y acá aparece como botones.
-          </p>
-        )}
-        {datos?.existe && datos.scripts.length === 0 && (
-          <p className="nota">
-            <code>docs/scripts.md</code> no tiene scripts con una línea <b>Ejecutar:</b> o <b>Abrir:</b>.
-          </p>
-        )}
-        {datos?.scripts.map((s) => {
-          const mia = ultima?.id === s.id ? ultima.estado : null
-          return (
-            <div key={s.id} className="script" data-script={s.id}>
-              <div className="script-cab">
-                <h4>{s.nombre}</h4>
-                <Boton
-                  s={s}
-                  conNombre={false}
-                  corriendo={mia === 'corriendo'}
-                  correr={() => void correr(s.id)}
-                />
+    <>
+      <Cabecera
+        titulo="Scripts"
+        cuenta={datos?.existe && datos.scripts.length > 0 ? datos.scripts.length : undefined}
+        acciones={atras > 0 && <BotonAtras ruta={ruta} />}
+        vacia={vacia}
+      />
+      <div className="scripts">
+        <div className="scripts-col">
+          {!datos && <p className="nota">Leyendo…</p>}
+          {datos?.scripts.map((s) => {
+            const mia = ultima?.id === s.id ? ultima.estado : null
+            return (
+              <div key={s.id} className="script" data-script={s.id}>
+                <div className="script-cab">
+                  <h4>{s.nombre}</h4>
+                  <Boton
+                    s={s}
+                    conNombre={false}
+                    corriendo={mia === 'corriendo'}
+                    correr={() => void correr(s.id)}
+                  />
+                </div>
+                {s.descripcionHtml && (
+                  // biome-ignore lint/a11y/useKeyWithClickEvents lint/a11y/noStaticElementInteractions: solo delega los clics de los enlaces de adentro, que ya son enfocables.
+                  <div
+                    className="doc-texto script-desc"
+                    onClick={(e) => tocarEnlace(e, ruta)}
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
+                    dangerouslySetInnerHTML={{ __html: s.descripcionHtml }}
+                  />
+                )}
+                {s.falta && <p className="script-msg error">{s.falta}</p>}
+                {mia && mia !== 'corriendo' && <Mensaje r={mia} />}
               </div>
-              {s.descripcionHtml && (
-                // biome-ignore lint/a11y/useKeyWithClickEvents lint/a11y/noStaticElementInteractions: solo delega los clics de los enlaces de adentro, que ya son enfocables.
-                <div
-                  className="doc-texto script-desc"
-                  onClick={(e) => tocarEnlace(e, ruta)}
-                  // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
-                  dangerouslySetInnerHTML={{ __html: s.descripcionHtml }}
-                />
-              )}
-              {s.falta && <p className="script-msg error">{s.falta}</p>}
-              {mia && mia !== 'corriendo' && <Mensaje r={mia} />}
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

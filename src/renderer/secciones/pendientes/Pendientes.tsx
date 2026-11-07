@@ -5,6 +5,7 @@
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import type { PendienteVista, TarjetaProyecto } from '../../../compartido/puente'
 import { columnaPendientes, fichaDe, usarEstado } from '../../estado'
+import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { Cuenta } from '../../ui/Cuenta'
 import { Icono } from '../../ui/Icono'
 import { textoHito } from '../proyectos/Tarjeta'
@@ -121,41 +122,43 @@ function Proyecto({ p, abrirDoc }: { p: TarjetaProyecto; abrirDoc: (d: Destino) 
   const ficha = usarEstado((s) => fichaDe(s.fichas, p.ruta))
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
   const n = p.preguntas.sinResponder
-  const cabecera = (
-    <div className="cab-proy">
-      <IconoProyecto p={p} />
-      <h2 title={p.nombre}>{p.nombre}</h2>
-      <Cuenta n={n} frenan={p.preguntas.frenan} />
-      {p.hito && <span className="hito">{textoHito(p.hito)}</span>}
-      <div className="der">
-        <button type="button" className="btn secundario" onClick={() => abrirProyecto(p.ruta)}>
-          <Icono nombre="abrir" />
-          Abrir
+  const acciones = (
+    <>
+      <button type="button" className="btn secundario" onClick={() => abrirProyecto(p.ruta)}>
+        <Icono nombre="abrir" />
+        Abrir
+      </button>
+      {ficha?.estado === 'trabajando' ? (
+        <span className="chip trab">
+          <Icono nombre="sync" gira />
+          La IA trabaja
+        </span>
+      ) : (
+        <button
+          type="button"
+          className={n === 0 ? 'btn secundario resaltado' : 'btn secundario'}
+          title="Arranca la sesión del proyecto sin abrirlo"
+          onClick={() => void window.iridium.seguir(p.ruta, {})}
+        >
+          <Icono nombre="play" />
+          Seguí
         </button>
-        {ficha?.estado === 'trabajando' ? (
-          <span className="chip trab">
-            <Icono nombre="sync" gira />
-            La IA trabaja
-          </span>
-        ) : (
-          <button
-            type="button"
-            className={n === 0 ? 'btn secundario resaltado' : 'btn secundario'}
-            title="Arranca la sesión del proyecto sin abrirlo"
-            onClick={() => void window.iridium.seguir(p.ruta, {})}
-          >
-            <Icono nombre="play" />
-            Seguí
-          </button>
-        )}
-      </div>
-    </div>
+      )}
+    </>
   )
 
   return (
     <section className="principal-pend">
-      {cabecera}
-      <ListaPendientes p={p} abrirDoc={abrirDoc} />
+      <ListaPendientes
+        p={p}
+        abrirDoc={abrirDoc}
+        cabecera={{
+          titulo: p.nombre,
+          icono: <IconoProyecto p={p} />,
+          sub: p.hito ? textoHito(p.hito) : undefined,
+          acciones,
+        }}
+      />
     </section>
   )
 }
@@ -165,38 +168,51 @@ export function ListaPendientes({
   p,
   abrirDoc,
   pie,
+  cabecera,
 }: {
   p: TarjetaProyecto
   abrirDoc: (d: Destino) => void
+  /** La cabecera de la sección (W-9): la cuenta y los filtros por frente los pone la lista. */
+  cabecera: { titulo: string; icono?: ReactNode; sub?: ReactNode; acciones?: ReactNode }
   /** Lo que va después de los pendientes, en el mismo desplazamiento (los scripts, en la vista de entrada). */
   pie?: ReactNode
 }) {
   const datos = usarEstado((s) => s.pendientes[p.ruta])
   const ponerPendientes = usarEstado((s) => s.ponerPendientes)
   const [filtro, setFiltro] = useState(TODOS)
-  if (!datos) return <Siluetas />
+  const cuenta = <Cuenta n={p.preguntas.sinResponder} frenan={p.preguntas.frenan} />
+  if (!datos)
+    return (
+      <>
+        <Cabecera {...cabecera} cuenta={cuenta} />
+        <Siluetas />
+      </>
+    )
   if (datos.tipo === 'error')
     return (
-      <div className="pendientes">
-        <div className="mensaje error" role="alert">
-          <span className="chip error">
-            <Icono nombre="error" />
-            No se pudo leer
-          </span>
-          <h2>No puedo ver la bandeja de {p.nombre}</h2>
-          <p>{datos.mensaje}</p>
-          <div className="acc">
-            <button
-              type="button"
-              className="btn secundario"
-              onClick={() => void window.iridium.pendientes(p.ruta).then(ponerPendientes)}
-            >
-              <Icono nombre="reintentar" />
-              Reintentar
-            </button>
+      <>
+        <Cabecera {...cabecera} cuenta={cuenta} />
+        <div className="pendientes">
+          <div className="mensaje error" role="alert">
+            <span className="chip error">
+              <Icono nombre="error" />
+              No se pudo leer
+            </span>
+            <h2>No puedo ver la bandeja de {p.nombre}</h2>
+            <p>{datos.mensaje}</p>
+            <div className="acc">
+              <button
+                type="button"
+                className="btn secundario"
+                onClick={() => void window.iridium.pendientes(p.ruta).then(ponerPendientes)}
+              >
+                <Icono nombre="reintentar" />
+                Reintentar
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     )
   const filtros = filtrosPorFrente(datos.pendientes)
   // Si el frente elegido ya no tiene preguntas, vuelve a Todos.
@@ -204,53 +220,45 @@ export function ListaPendientes({
   const delFiltro = (x: PendienteVista) => elegido === TODOS || (x.frente ?? NUCLEO) === elegido
   const activas = datos.pendientes.filter((x) => !enPausa(x) && delFiltro(x))
   const pausadas = datos.pendientes.filter(enPausa)
+  const vacia = datos.pendientes.length === pausadas.length
   return (
-    <div className="pendientes">
-      {filtros.length > 0 && (
-        <fieldset className="filtros" aria-label="Filtrar por frente">
-          {filtros.map((f) => (
-            <button
-              key={f.clave}
-              type="button"
-              className={f.clave === elegido ? 'filtro sel' : 'filtro'}
-              aria-pressed={f.clave === elegido}
-              onClick={() => setFiltro(f.clave)}
-            >
-              {f.nombre} <span className="n">{f.n}</span>
-            </button>
-          ))}
-        </fieldset>
-      )}
-      {datos.pendientes.length === pausadas.length && (
-        <div className="mensaje" role="status">
-          <h2>Nada en tu bandeja</h2>
-          <p>Cuando la IA necesite algo de vos, aparece acá.</p>
-        </div>
-      )}
-      {GRUPOS.map((g) => {
-        const ps = activas.filter(g.de)
-        if (ps.length === 0) return null
-        return (
-          <div key={g.titulo} className="grupo-pend">
-            <h3 className="grupo">{g.titulo}</h3>
-            {ps.map((x) => (
+    <>
+      <Cabecera
+        {...cabecera}
+        cuenta={cuenta}
+        filtros={
+          filtros.length > 0 && (
+            <Filtros filtros={filtros} elegido={elegido} elegir={setFiltro} etiqueta="Filtrar por frente" />
+          )
+        }
+        vacia={vacia && 'Nada en tu bandeja. Cuando la IA necesite algo de vos, aparece acá.'}
+      />
+      <div className="pendientes">
+        {GRUPOS.map((g) => {
+          const ps = activas.filter(g.de)
+          if (ps.length === 0) return null
+          return (
+            <div key={g.titulo} className="grupo-pend">
+              <h3 className="grupo">{g.titulo}</h3>
+              {ps.map((x) => (
+                <Pendiente key={x.codigo} ruta={p.ruta} p={x} abrirDoc={abrirDoc} />
+              ))}
+            </div>
+          )
+        })}
+        {pausadas.length > 0 && (
+          <details className="grupo-pend en-pausa">
+            <summary className="grupo">
+              En pausa <span className="n">{pausadas.length}</span>
+            </summary>
+            {pausadas.map((x) => (
               <Pendiente key={x.codigo} ruta={p.ruta} p={x} abrirDoc={abrirDoc} />
             ))}
-          </div>
-        )
-      })}
-      {pausadas.length > 0 && (
-        <details className="grupo-pend en-pausa">
-          <summary className="grupo">
-            En pausa <span className="n">{pausadas.length}</span>
-          </summary>
-          {pausadas.map((x) => (
-            <Pendiente key={x.codigo} ruta={p.ruta} p={x} abrirDoc={abrirDoc} />
-          ))}
-        </details>
-      )}
-      {pie}
-    </div>
+          </details>
+        )}
+        {pie}
+      </div>
+    </>
   )
 }
 
