@@ -13,12 +13,12 @@
 | 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 construida, espera la prueba (Q-144) | este archivo |
+| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 hecha (Q-144); OR-I3 en curso | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y probada (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). Lo que queda del frente está en `trabajo.md` (T-46 a T-49).
+Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y probada (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). OR-I2 también (Q-144): la Bandeja de entrada, el esqueleto, la cabecera común, la tarjeta con su frente, la conversación de 360 px y Actualizar. Lo que queda del frente está en `trabajo.md` (T-46 a T-49).
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -34,8 +34,8 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 | ID | Objetivo | Estado |
 |---|---|---|
 | OR-I1 | El modelo y el control | hecho (Q-141, 2026-11-06) |
-| OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | en curso (construida; espera Q-144) |
-| OR-I3 | Trabajo e Ideas, anotar sin la IA | pendiente |
+| OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | hecho (Q-144, 2026-11-07) |
+| OR-I3 | Trabajo e Ideas, anotar sin la IA | en curso |
 | OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | pendiente |
 
 ## Log de iteraciones
@@ -63,7 +63,7 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Prueba del usuario:** Q-141, las tres casillas bien (2026-11-06).
 
-### OR-I2 — El esqueleto y la Bandeja de entrada, con Actualizar (en curso desde 2026-11-06)
+### OR-I2 — El esqueleto y la Bandeja de entrada, con Actualizar (2026-11-06 a 2026-11-07, hecha)
 **Hecho:**
 - **Un número que manda** (04-ux.md › Un número que manda, D-100): `compartido/cuentas.ts` con `colorDeCuenta` y el texto («3 en la bandeja; una frena el proyecto») y la pieza `ui/Cuenta.tsx`. El total de la bandeja está solo en el botón de inicio; el ícono de la Bandeja ya no lleva número (ni en el inicio ni en el proyecto); la tarjeta lleva su cuenta arriba a la derecha, la pestaña la suya y la cabecera del proyecto no la repite (W-3). Gris, y amarilla con «!» solo si algo frena. El número de Revisión queda en gris.
 - **El botón principal claro** (D-100): `.btn.primario` con el fondo del texto y la tinta oscura, sin ámbar.
@@ -93,8 +93,8 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Pruebas de la conversación de 360 px:** `tests/or2-ancho.test.ts` (6: 360 y 300 según la ventana, cada vista con el suyo, los últimos 200 proyectos, el ancho de antes en todas salvo el 440, los rotos que se descartan y lo que llega de la ventana validado) y `app-proyectos.test.ts` al día. Playwright, `tests/e2e/or2-ancho.spec.ts` (2: 360 en la general, Alfa más ancha y Beta en 360, Beta hasta la mitad y no más, Skills con el suyo, Ideas con el de la general, todo igual al volver a abrir y el doble clic solo en Alfa; una ventana de 1050 px arranca en 300 y un `config.json` de antes con 500 los pone en todas) e `i4-tres-paneles` al día (360 en vez de 440). Vitest 655 de 655; typecheck limpio; Playwright, la corrida completa 103 de 103.
 
-**Prueba del usuario:** Q-144 (abierta).
+**Prueba del usuario:** Q-144, las siete casillas bien (2026-11-07).
 
 ## Próximo paso
-OR-I2 está construida; espera tu prueba (Q-144). Con la respuesta: arreglar lo que falle o cerrar OR-I2 y empezar OR-I3 (Trabajo e Ideas, anotar sin la IA).
-**Leer antes:** `respuestas/Q-144.md`; para OR-I3, `diseno-tecnico.md` › Iteraciones y `04-ux.md` › W-10 y W-11.
+OR-I3: Trabajo e Ideas, anotar sin la IA. Primero la sección Trabajo del proyecto (W-11) en lugar de Ideas del proyecto; después anotar sin pisar a la sesión (`infra/trabajo.ts`); por último Ideas del inicio con las nuevas de todos (W-10).
+**Leer antes:** `diseno-tecnico.md` › trabajo.md y `04-ux.md` › W-10 y W-11.
