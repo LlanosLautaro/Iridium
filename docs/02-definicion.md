@@ -256,6 +256,9 @@ Además de lo que está en *Won't*:
 | Base | Lo común que da la app a todas las áreas (capacidades `B-n`) |
 | Biblioteca de diseño | La carpeta local con los estilos guardados: captura y `DESIGN.md` de cada uno (D-011) |
 | Lienzo | Donde se ven los prototipos lado a lado, en rondas, con comentarios |
+| Pieza | Un componente compartido de la interfaz (botón, fila, bloque…) con sus variantes; lo que Claude Design llama componente (D-103) |
+| Dirección | Un juego de tokens que se prueba sobre todas las pantallas a la vez, por ejemplo el negro con otro acento (D-103) |
+| Pantallas | En Diseño, las capturas de todas las vistas de la app juntas, para mirar el conjunto (D-103) |
 | Comentario | Una nota pegada a un elemento de un prototipo o de la app en desarrollo, guardada como archivo en el proyecto (D-012) |
 | Extensión de revisión | La extensión de Chrome y Edge, que también cargan las apps Electron en desarrollo, con la que se comenta la app (D-047) |
 | Pistas | Lo que guarda un comentario para encontrar el elemento: selector, texto visible, componentes, archivo y línea, captura |

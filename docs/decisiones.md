@@ -2351,3 +2351,23 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - `02-definicion.md` › Módulos previstos y `10-operacion.md`: el orden nuevo (Diseño antes que Capacidades y que el paso 8 de Orden).
 - Cambia D-091 punto 3 («Diseño no se adelanta») y el orden de D-079.
 - Cuando se apruebe la dirección, `DESIGN.md`, `docs/06-ui.md` y `docs/ui/tokens.css` se reescriben (probablemente un tema nuevo que reemplaza a los dos de hoy; se decide con Q-148).
+
+## D-103 — El mínimo de Diseño empieza por las piezas compartidas, y el negro va sin acento
+- **Fecha:** 2026-11-07
+- **Ámbito:** general (design system y frente Diseño)
+- **Hito o paso:** 10; frente Diseño, paso 1 (Q-147 y Q-148)
+- **Estado:** vigente
+
+**Contexto:** D-102 activó Diseño y dejó dos cosas para decidir: qué entra en el mínimo (Q-147) y si la muestra negra, con el azul de X para lo activo, era la dirección (Q-148).
+
+**Decisión:**
+1. **Q-147, A:** primero las piezas compartidas y el negro aplicado, mirando las 30 pantallas juntas en una página (DI-I1); después la sección Diseño con Sistema y Pantallas (DI-I2) y Probar una dirección (DI-I3).
+2. **Q-148, C:** negro **sin acento** y lo más oscuro posible. Lo activo, lo elegido y el botón principal van en blanco y grises, no en un color. Con color quedan solo las dos señales que ya existían, apagadas: ámbar para lo que espera del usuario y rojo para un error. La letra es la del sistema (Segoe UI), no Chakra Petch.
+3. Los acentos se prueban después, muy sutiles, como otras direcciones sobre el mismo negro (DI-I3 es la herramienta para eso).
+
+**Motivo:** el usuario no tiene un acento definido y quiere ver primero la app callada; las piezas compartidas antes que la sección hacen visible el cambio en la primera iteración y la sección se arma sobre piezas ya ordenadas.
+
+**Consecuencias:**
+- `modulos/diseno/negro.css` pasa a la versión sin acento; sus 30 pantallas, en `tools/salida/auditoria/1440x900-negro/`.
+- `modulos/diseno/definicion.md`: el alcance, las piezas y DI-I1 a DI-I3.
+- Con DI-I1, `docs/ui/tokens.css`, `DESIGN.md` y `06-ui.md` se reescriben en negro. Qué pasa con los temas Iridium y Carbón de Ajustes › Apariencia, en Q-149.

@@ -22,6 +22,7 @@
 | 2026-11-06 | Q-130 | Eliminar desde el clic derecho, con la papelera de verdad: todo bien |
 | 2026-11-06 | R-11 | «Otro» escrito sin nota volvía a aparecer como sin responder (el archivo se guardaba bien, pero Iridium no lo contaba como respuesta): arreglado, con su prueba |
 | 2026-11-07 | Q-118 | Inicializar repositorio y Publicar en GitHub con tu cuenta de verdad: todo bien (D-081 probado) |
+| 2026-11-07 | Q-147, Q-148 | El mínimo de Diseño empieza por las piezas compartidas y el negro aplicado; el negro va sin acento, con el blanco para lo activo (D-103); qué pasa con los temas de hoy, en Q-149 |
 | 2026-11-07 | Pedido del usuario | El estilo y el orden visual siguen mal: Diseño pasa adelante como un «Claude Design» local y la dirección visual cambia a negro (D-102); qué entra en el mínimo y la muestra negra, en Q-147 y Q-148 |
 | 2026-11-07 | R-14 | Nuevo proyecto ya no pone a la IA a trabajar sin datos: arma solo la plantilla básica y la idea va en la conversación (D-101), hecho y probado |
 | 2026-11-06 | R-12 | Un solo botón «Actualizar» que arma y reinicia: anotado en el frente Orden (`modulos/orden/ux.md` › PO-1), se construye con sus iteraciones (D-091) |
