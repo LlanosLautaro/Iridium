@@ -221,3 +221,7 @@ Estado: nueva · Fecha: 2026-11-07
 ## T-53 — La captura del detalle de Ideas no sale en auditoria-ux.ts
 Estado: pendiente · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
 `11-ideas-detalle` se queda esperando un clic (30 s) y no saca la pantalla, en los dos temas. Se arregla con la página de antes y después de DI-I1, que necesita las 30.
+
+## T-54 — Cinco pruebas con la app abierta quedaron viejas
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-08 · Origen: DI-I1 (`test-results/e2e-completo.log`)
+Fallan igual en el commit anterior a DI-I1 (79d8c59), así que no son de Diseño: `in1-ideas.spec.ts` (las dos: la línea de los que no pasaron ahora suma «Ver en Framework», T-51), `or4-mapa.spec.ts` › la tabla ancha en Docs no se desplaza en su recuadro (A-10), `r2-revision.spec.ts` › un proyecto Electron sin la línea (no encuentra el botón de Revisión) y `r7-r8-proyectos.spec.ts` › sus ideas y sus skills (no hay Trabajo en la barra). Ver en cada una si cambió la app a propósito (se corrige la prueba) o si es un error (se corrige la app); la de la tabla puede ser el criterio de Q-146.
