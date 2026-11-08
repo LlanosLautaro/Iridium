@@ -229,4 +229,4 @@ flowchart TD
 - [x] Wireframes de Pantallas, la maqueta grande y Sistema; estados de cada pantalla.
 - [x] Principios de interacción y accesibilidad.
 - [x] ¿Cambia algo de los documentos generales? Sí: PZ-11 y PZ-12 en `definicion.md`; los códigos `PZ-n` y `DS-n` en `docs/README.md` (aplicado).
-- [ ] El usuario recorrió los flujos y los aprobó (Q-150 cambió el modelo, D-105; la parte 2 rehecha espera Q-151).
+- [x] El usuario recorrió los flujos y los aprobó (Q-150 cambió el modelo, D-105; la parte 2 rehecha, aprobada con Q-151, D-106).

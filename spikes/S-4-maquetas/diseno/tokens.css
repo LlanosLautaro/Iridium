@@ -1,0 +1,2 @@
+:root { --fondo: #000; --texto: #e6e6e6; }
+body { background: var(--fondo); color: var(--texto); font: 14px system-ui; }

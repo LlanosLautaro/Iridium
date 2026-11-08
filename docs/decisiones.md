@@ -2421,3 +2421,26 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - El framework suma el formato `docs/diseno/` (tokens, piezas, pantallas, versiones y direcciones) con su lector y su control (D-086); `referencias/06-ui.md` pasa a decir cómo se arman las maquetas.
 - El glosario cambia «Pantallas» y suma «Maqueta».
 
+
+## D-106 — Diseño: primero la sección, después el rediseño de Iridium en maquetas; las maquetas se muestran en un iframe aislado y la grande en un webview
+- **Fecha:** 2026-11-08
+- **Ámbito:** general (frente Diseño, la ventana de Iridium, la Revisión)
+- **Hito o paso:** 10; frente Diseño, pasos 4 y 5 (Q-151)
+- **Estado:** vigente
+
+**Contexto:** con D-105 la UX de Diseño quedó rehecha alrededor de las maquetas HTML, y faltaba elegir el orden (Q-151) y cómo mostrar dentro de Iridium un HTML que escribe la IA sin que toque la app ni salga a internet, con `F8` andando sobre él.
+
+**Opciones (Q-151):** A) Primero la sección (mirar, usar y comentar maquetas), después el rediseño de Iridium en maquetas, pasarlo al código y al final Otra versión y Probar una dirección (elegida) · B) La sección completa primero, después el rediseño · C) Primero las maquetas del rediseño en el navegador y la sección después.
+
+**Decisión:**
+1. **Q-151, A:** DI-I1 la sección Diseño (Pantallas, la grande, Sistema, `F8` y empezar el diseño), DI-I2 el rediseño de Iridium en maquetas, DI-I3 pasarlo al código, DI-I4 Otra versión y Probar una dirección. Con esto el paso 4 queda aprobado.
+2. **Cómo se muestran (S-4):** las miniaturas, en un `iframe` con `sandbox` y un protocolo propio (`maqueta:`) que solo sirve `docs/diseno/` del proyecto y no deja salir a la red; la grande, en un `webview` con `file://` donde la extensión de la Revisión entra sola, con sus opciones y su navegación fijadas por Iridium. Lo que ya se miró se guarda en `diseno.json` (datos del Centro).
+3. **`F8` sobre una maqueta:** el comentario va al proyecto de la maqueta (antes que la carpeta que dice el ayudante) y el `R-n.md` suma el campo **Maqueta**.
+4. El paso 6 (UI) no va aparte: la sección se arma con las piezas de hoy en DI-I1 y se rediseña con las demás en las maquetas de DI-I2 (D-105: las maquetas son la UI).
+
+**Motivo:** el rediseño de Iridium se revisa ya con la herramienta y llega antes a la app. S-4 mostró que la extensión solo entra en el marco principal de una página `file://` o local, así que la grande necesita su propia vista; las miniaturas, que son muchas y no se comentan, van en algo más liviano y más cerrado.
+
+**Consecuencias:**
+- `modulos/diseno/diseno-tecnico.md` escrito; `05-arquitectura.md` suma S-4 y resuelve las páginas web dentro de la app (B-5).
+- La ventana de Iridium pasa a tener `webviewTag`, con reglas que rechazan cualquier dirección que no sea una maqueta (DI-I1).
+- Variable nueva para las pruebas, `IRIDIUM_AYUDANTE=1`, con DI-I1.

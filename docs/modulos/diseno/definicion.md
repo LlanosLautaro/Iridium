@@ -39,7 +39,7 @@ El inventario exacto (qué usa cada pantalla y qué se reemplaza) está en `ux.m
 
 ## Funcionalidades
 ### Must (MVP del módulo)
-El orden de las iteraciones se decide en Q-151; este es el recomendado.
+El orden de las iteraciones es el de Q-151 (D-106).
 - **DI-I1 — La sección Diseño con las maquetas.** El formato `docs/diseno/` en el framework, con su lector y su control (D-086); la sección en cada proyecto con framework: **Pantallas** (las maquetas vivas en un lienzo; tocar una la agranda y se puede usar), **Sistema** (los tokens dibujados y la maqueta de piezas) y `F8` sobre una maqueta, con el comentario en la Revisión (C-33). Empezar el diseño con Pedírselo a la IA.
 - **DI-I2 — El rediseño de Iridium en maquetas.** Los tokens en negro sin acento, la maqueta de las 12 piezas y las pantallas de Iridium en su `docs/diseno/`, revisadas por el usuario en la sección.
 - **DI-I3 — Pasar al código.** Pasar al código en la sección y, con él, el rediseño de Iridium: las piezas en `src/renderer/ui/` con sus estilos en un solo archivo, las secciones pasadas a ellas, `tokens.css` en negro como único tema (D-104) y la app de antes y la de ahora lado a lado (las capturas reales).
