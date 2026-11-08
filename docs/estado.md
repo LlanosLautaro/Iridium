@@ -32,26 +32,26 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha, espera la prueba: Q-152) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha y DI-I2 con su primera tanda; esperan la prueba: Q-152) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro sin acento como único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 está construida y probada**: el formato `docs/diseno/` en el framework con su control y la sección Diseño (Pantallas, la grande, Sistema, `F8` sobre una maqueta y Pedírselo a la IA); espera tu prueba (Q-152).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro sin acento como único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). DI-I1 (la sección) está construida y probada. Con D-107 se prueba sobre Iridium mismo: **DI-I2 empezó** y las primeras 16 maquetas del rediseño (el sistema, las 12 piezas y las pantallas de Inicio y de un proyecto) están en `docs/diseno/`; las recorrés en Diseño y las comentás con `F8` (Q-152).
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
-- **Q-152 — Probá DI-I1: la sección Diseño con maquetas vivas**
+- **Q-152 — Recorré el rediseño de Iridium en Diseño y comentalo con F8**
   Tipo: prueba · Frente: Diseño
-  Contexto: tocá **Actualizar** abajo para tener esta versión. Ningún proyecto tuyo tiene maquetas todavía: la prueba arma uno nuevo y le pide el diseño a su IA (gasta un poco de uso). Detalle en `modulos/diseno/estado.md` › Log de iteraciones › DI-I1.
-  - [ ] Con **Nuevo proyecto** creé «Prueba de diseño», le conté a su IA en una línea qué app es (por ejemplo, una lista de compras) y en su barra aparece **Diseño**, debajo de Revisión
-  - [ ] En Diseño, el recuadro punteado dice que todavía no tiene su diseño; **Pedírselo a la IA** muestra un cuadro que avisa que gasta uso y, al aceptar, el pedido llega a la conversación
-  - [ ] Mientras la IA trabaja, las maquetas aparecen solas en **Pantallas**, agrupadas por sección y con su nombre debajo
-  - [ ] Tocar una la agranda a todo el lienzo y se puede usar (un menú, un botón, un enlace a otra pantalla cambia el nombre de arriba); las flechas de los costados pasan a la anterior y la siguiente; Esc vuelve al lienzo
-  - [ ] Con una grande, **F8** prende el modo comentar con el proyecto «Prueba de diseño» (no Iridium); el comentario aparece en su Revisión y tocar «la maqueta …» la abre grande otra vez
-  - [ ] Si le pedís a la IA que cambie una maqueta, se redibuja sola y queda con un punto hasta que la agrandás
+  Contexto: tocá **Actualizar** abajo para tener esta versión. Probás DI-I1 (la sección) con las maquetas de Iridium mismo (D-107): 16 pantallas en negro, con datos de muestra (Alfa, Beta…). Lo que no te guste, comentalo con `F8` sobre la maqueta: es parte de la prueba. Detalle en `modulos/diseno/estado.md` › Log › DI-I2.
+  - [ ] En Iridium, **Diseño** (en la barra, debajo de Revisión) muestra las maquetas vivas en **Pantallas**, en dos grupos, Inicio y Un proyecto, con su nombre debajo
+  - [ ] Tocar una la agranda y se puede usar: los íconos de la izquierda pasan a otra pantalla y cambia el nombre de arriba; las flechas de los costados van a la anterior y la siguiente; Esc vuelve
+  - [ ] En **Proyectos**, los tres puntos de la tarjeta de Iridium (o el clic derecho en cualquier tarjeta) abren el menú; en **Ajustes**, las pestañas de la izquierda cambian de página
+  - [ ] Con una grande, **F8** prende el modo comentar; el comentario aparece en la Revisión de Iridium y tocar «la maqueta …» la abre grande otra vez
+  - [ ] Pedile a la IA que cambie algo de una maqueta (por ejemplo, desde tu comentario): se redibuja sola y queda con un punto hasta que la agrandás
   - [ ] **Sistema** muestra los colores, la letra, los tamaños, los espacios y las piezas vivas
+  - [ ] La dirección en general (negro, sin cajas dentro de cajas, un solo botón blanco por pantalla) va bien para seguir con las demás pantallas
 
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
@@ -73,7 +73,7 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: procesar Q-152; si DI-I1 anda, cerrarla y empezar DI-I2 (el rediseño de Iridium en maquetas). Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
+Diseño: procesar Q-152 y los comentarios de la Revisión sobre las maquetas; corregirlas, cerrar DI-I1 si la sección anda y seguir con la tanda 2 de DI-I2. Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso (y Q-146 o Q-126 si llegaron).
 
 ## Hitos con huecos aceptados

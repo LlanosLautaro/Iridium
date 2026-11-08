@@ -110,6 +110,12 @@
         ],
         "createdAt": "2026-11-06T12:40:59.278Z",
         "reason": "Claude: chips, cuentas y filtros compactos con el relleno del design system (DESIGN.md › Chips: 7 px; contador del badge)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cascadia mono",
+        "createdAt": "2026-11-08T15:00:31.644Z",
+        "reason": "IA: la letra fija de las maquetas de DI-I2 (tokens.css); DESIGN.md se actualiza en DI-I3 (modulos/diseno/estado.md › Cambios requeridos)"
       }
     ]
   }

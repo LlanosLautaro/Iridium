@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ajustes</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .fondo-grilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--esp-3); }
+  .fondo-grilla span { height: 168px; border-radius: var(--radio-tarjeta); background: var(--tarjeta); }
+  .cuerpo-ventana h3 { margin: 0 0 var(--esp-4); font-size: var(--tam-titulo); font-weight: 600; }
+  .ajuste { display: grid; grid-template-columns: 220px 1fr; gap: var(--esp-5); padding: var(--esp-4) 0; }
+  .ajuste + .ajuste { border-top: 1px solid var(--borde-suave); }
+  .ajuste .que { display: flex; flex-direction: column; gap: 2px; }
+  .ajuste .que span { font-size: var(--tam-chico); color: var(--texto-3); }
+  .ajuste .control { display: flex; flex-direction: column; gap: var(--esp-2); align-items: flex-start; }
+  .opcion .expl { display: block; font-size: var(--tam-chico); color: var(--texto-3); }
+  .cerrar-ventana { position: absolute; top: var(--esp-3); right: var(--esp-3); }
+</style>
+</head>
+<body data-marco="inicio" data-seccion="ajustes">
+<main class="seccion">
+  <div class="contenido"><div class="fondo-grilla"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <div class="velo">
+    <div class="ventana" role="dialog" aria-label="Ajustes">
+      <nav>
+        <h2>Ajustes</h2>
+        <div class="pestanas vertical" data-vista="ajustes">
+          <a class="pestana" data-para="perfil">Perfil</a>
+          <a class="pestana elegida" data-para="ia">IA</a>
+          <a class="pestana" data-para="apariencia">Apariencia</a>
+          <a class="pestana" data-para="proyectos">Proyectos</a>
+          <a class="pestana" data-para="acerca">Acerca de</a>
+        </div>
+      </nav>
+      <div class="cuerpo-ventana">
+        <a class="boton solo-icono cerrar-ventana" href="grilla.html" aria-label="Cerrar"><i data-ic="cerrar"></i></a>
+        <section data-panel-de="ajustes" data-panel="perfil" hidden>
+          <h3>Perfil</h3>
+          <div class="ajuste"><div class="que">Tu nombre<span>Cómo te llama la IA</span></div><div class="control"><input class="campo" value="Alex" style="max-width:280px"></div></div>
+          <div class="ajuste"><div class="que">Cuenta de GitHub<span>Para publicar y para las versiones nuevas</span></div><div class="control"><span>conectada como <b>usuario</b></span><button class="boton sin-fondo chico">Cambiar de cuenta</button></div></div>
+        </section>
+        <section data-panel-de="ajustes" data-panel="ia">
+          <h3>IA</h3>
+          <div class="ajuste"><div class="que">Cuenta de Claude<span>La que usa Claude Code</span></div><div class="control"><span>Claude · max</span><button class="boton sin-fondo chico">Cambiar de cuenta</button></div></div>
+          <div class="ajuste"><div class="que">Modelo<span>Para las conversaciones nuevas</span></div><div class="control"><select class="selector" style="width:220px"><option>Opus</option><option>Sonnet</option><option>Haiku</option></select></div></div>
+          <div class="ajuste"><div class="que">Tono<span>Cómo te explica las cosas</span></div>
+            <div class="control">
+              <label class="opcion"><input type="radio" name="tono" checked><span>Directo<span class="expl">Lo justo: qué hizo y qué sigue</span></span></label>
+              <label class="opcion"><input type="radio" name="tono"><span>Explicativo<span class="expl">Las decisiones con sus consecuencias</span></span></label>
+              <label class="opcion"><input type="radio" name="tono"><span>Aprendiendo<span class="expl">Con un poco más de contexto en cada paso</span></span></label>
+            </div></div>
+          <div class="ajuste"><div class="que">Al abrir un proyecto</div><div class="control"><label class="interruptor"><input type="checkbox" checked>Seguir con la última conversación</label></div></div>
+        </section>
+        <section data-panel-de="ajustes" data-panel="apariencia" hidden>
+          <h3>Apariencia</h3>
+          <div class="ajuste"><div class="que">Ancho de lectura<span>En Docs y en la Bandeja</span></div><div class="control"><div class="filtros"><button class="filtro">Angosto</button><button class="filtro elegido">Normal</button><button class="filtro">Ancho</button></div></div></div>
+          <div class="ajuste"><div class="que">Tamaño de la letra</div><div class="control"><div class="filtros"><button class="filtro">Chica</button><button class="filtro elegido">Normal</button><button class="filtro">Grande</button></div></div></div>
+        </section>
+        <section data-panel-de="ajustes" data-panel="proyectos" hidden>
+          <h3>Proyectos</h3>
+          <div class="ajuste"><div class="que">Carpeta de proyectos</div><div class="control"><span class="fija">D:\Proyectos</span><button class="boton sin-fondo chico">Cambiar…</button></div></div>
+        </section>
+        <section data-panel-de="ajustes" data-panel="acerca" hidden>
+          <h3>Acerca de</h3>
+          <div class="ajuste"><div class="que">Versión</div><div class="control"><span class="fija">2026.11.08</span><button class="boton sin-fondo chico">Buscar versiones nuevas</button></div></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

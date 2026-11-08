@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mapa</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .hitos { display: flex; align-items: center; gap: var(--esp-3); }
+  .hitos .derecha { margin-left: auto; }
+  .activo { display: flex; flex-direction: column; gap: var(--esp-4); padding: var(--esp-5) 0 var(--esp-6); border-bottom: 1px solid var(--borde); }
+  .activo .cab-a { display: flex; align-items: baseline; gap: var(--esp-3); }
+  .activo .cab-a h2 { margin: 0; font-size: var(--tam-grande); font-weight: 600; }
+  .activo .cab-a .derecha { margin-left: auto; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-6); }
+  .dos > .bloque { margin-top: 0; }
+  .lineas { display: grid; grid-template-columns: 140px 1fr; row-gap: var(--esp-2); padding-top: var(--esp-5); }
+  .lineas dt { color: var(--texto-3); }
+  .lineas dd { margin: 0; display: flex; flex-wrap: wrap; gap: var(--esp-1) var(--esp-3); }
+  .lineas a { color: var(--texto); text-decoration: none; }
+  .lineas a:hover { text-decoration: underline; text-underline-offset: 3px; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="mapa">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Mapa</h1><span class="ruta">Hito 10 · Operación</span>
+      <span class="acciones-cab"><a class="boton sin-fondo" href="docs.html"><i data-ic="docs"></i>Abrir 10-operacion.md</a></span></div>
+  </header>
+  <div class="contenido centrado">
+    <div>
+      <div class="hitos">
+        <span class="bloque-titulo">Hitos</span>
+        <div class="pestanas numeros">
+          <span class="pestana hecho" title="0 · Idea cruda">0</span><span class="pestana hecho">1</span><span class="pestana hecho">2</span><span class="pestana hecho">3</span><span class="pestana hecho">4</span><span class="pestana hecho">5</span><span class="pestana hecho">6</span><span class="pestana hecho">7</span><span class="pestana hecho">8</span><span class="pestana hecho">9</span><span class="pestana elegida" title="10 · Operación">10</span>
+        </div>
+        <span class="cuenta derecha">10 de 11 hechos</span>
+      </div>
+
+      <section class="activo">
+        <div class="cab-a">
+          <span class="bloque-titulo">Frente activo</span>
+          <h2>Diseño</h2>
+          <span class="gris">7. Construcción · DI-I2</span>
+          <span class="derecha"><a class="boton sin-fondo" href="docs.html"><i data-ic="docs"></i>Abrir estado.md</a></span>
+        </div>
+        <div class="bloque">
+          <h3 class="bloque-titulo">Próximo paso</h3>
+          <div class="texto-doc conversacion" style="max-width:none">
+            <p>Diseño: recorrer las maquetas de Iridium en su sección y comentarlas con <code>F8</code> (Q-152). Con los comentarios, corregir las maquetas; lo aprobado pasa al código en DI-I3.</p>
+            <p><b>Leer antes:</b> <code>respuestas/Q-152.md</code> y <code>modulos/diseno/estado.md</code>.</p>
+          </div>
+        </div>
+        <div class="dos">
+          <div class="bloque">
+            <h3 class="bloque-titulo">En curso <span class="cuenta">1</span></h3>
+            <a class="fila se-abre" href="trabajo.html"><span class="codigo">T-55</span><span class="principal-fila"><span class="titulo-fila">Las maquetas de Iridium en negro</span></span></a>
+          </div>
+          <div class="bloque">
+            <h3 class="bloque-titulo">En tu bandeja <span class="cuenta frena">1</span></h3>
+            <a class="fila se-abre" href="bandeja.html"><span class="codigo">Q-152</span><span class="principal-fila"><span class="titulo-fila">Recorré las maquetas de Iridium en Diseño</span></span></a>
+          </div>
+        </div>
+      </section>
+
+      <dl class="lineas">
+        <dt>También en curso</dt><dd><a href="docs.html">Orden</a> <span class="gris-3">· OR-I4 espera la prueba</span></dd>
+        <dt>En espera</dt><dd><span>Capacidades</span></dd>
+        <dt>En operación</dt><dd><a href="docs.html">Revisión de la app</a><a href="docs.html">Skills</a><a href="docs.html">Compartir</a><a href="docs.html">Apariencia y ajustes</a><a href="docs.html">Inicio</a></dd>
+        <dt>Sin frente</dt><dd><a href="bandeja.html">Q-126 en tu bandeja</a> <span class="senal ambar">Frena</span></dd>
+      </dl>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

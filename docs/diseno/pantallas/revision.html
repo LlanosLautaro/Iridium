@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Revisión</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .com .fila { align-items: flex-start; padding-block: var(--esp-3); }
+  .com .captura { width: 120px; height: 75px; border-radius: var(--radio-fila); background: var(--elevado); flex: none; display: grid; place-items: center; color: var(--texto-3); font-size: var(--tam-chico); }
+  .com .texto-c { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .com .donde { font-size: var(--tam-chico); color: var(--texto-3); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="revision">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Revisión <span class="cuenta">3</span></h1><span class="ruta">F8 prende el modo comentar sobre cualquier pantalla</span></div>
+    <div class="filtros"><button class="filtro elegido">Nuevos <span class="cuenta">2</span></button><button class="filtro">Anotados <span class="cuenta">1</span></button><button class="filtro">Hechos <span class="cuenta">14</span></button><button class="filtro">Todos <span class="cuenta">17</span></button></div>
+  </header>
+  <div class="contenido centrado">
+    <div class="com">
+      <div class="filas con-lineas">
+        <a class="fila se-abre"><span class="captura">captura</span><span class="texto-c"><span class="cuenta">R-31 · hoy 18:20</span><span>El Próximo paso del Mapa se corta en dos líneas; prefiero que se lea entero.</span><span class="donde">la maqueta <u>Mapa</u> · el bloque «Próximo paso»</span></span><span class="acciones"><button class="boton sin-fondo chico">Mandar a la IA</button></span></a>
+        <a class="fila se-abre"><span class="captura">captura</span><span class="texto-c"><span class="cuenta">R-30 · hoy 18:12</span><span>En la Bandeja, el botón Enviar de la segunda pregunta debería verse igual que el primero.</span><span class="donde">la maqueta <u>Bandeja de entrada</u> · «Enviar»</span></span><span class="acciones"><button class="boton sin-fondo chico">Mandar a la IA</button></span></a>
+        <a class="fila se-abre"><span class="captura">captura</span><span class="texto-c"><span class="cuenta">R-29 · ayer 22:40</span><span>Los títulos de Git en mayúsculas no se parecen a los del resto.</span><span class="donde">Git · «CAMBIOS» · anotado como T-56</span></span></a>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

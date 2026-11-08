@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Bandeja de entrada</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Cada pregunta es un bloque sin borde; las casillas, filas con la nota a la derecha; una línea gris entre preguntas. */
+  .pregunta { display: flex; flex-direction: column; gap: var(--esp-3); padding: var(--esp-5) 0; }
+  .pregunta + .pregunta { border-top: 1px solid var(--borde); }
+  .pregunta .cab-q { display: flex; align-items: baseline; gap: var(--esp-3); }
+  .pregunta .cab-q .derecha { margin-left: auto; }
+  .pregunta h2 { margin: 0; font-size: var(--tam-titulo); font-weight: 600; line-height: 1.35; }
+  .pregunta .contexto { color: var(--texto-2); margin: 0; max-width: 680px; }
+  .pregunta .detalles { align-self: flex-start; margin-left: calc(-1 * var(--esp-2)); }
+  .casillas .fila { align-items: flex-start; padding-block: var(--esp-2); }
+  .casillas .fila .casilla { flex: 1; line-height: 1.5; }
+  .casillas .fila .campo { width: 260px; flex: none; }
+  .pie-q { display: flex; align-items: center; gap: var(--esp-3); }
+  .pie-q .campo { flex: 1; }
+  .pie-q .donde { font-size: var(--tam-chico); color: var(--texto-3); margin-right: auto; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="bandeja">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Bandeja de entrada <span class="cuenta frena">2</span></h1></div>
+    <div class="filtros"><button class="filtro elegido">Todos <span class="cuenta">3</span></button><button class="filtro">Diseño <span class="cuenta">1</span></button><button class="filtro">Orden <span class="cuenta">1</span></button><button class="filtro">Sin frente <span class="cuenta">1</span></button></div>
+  </header>
+  <div class="contenido centrado">
+    <div>
+      <h3 class="bloque-titulo">Frenan el proyecto <span class="cuenta frena">1</span></h3>
+      <article class="pregunta">
+        <div class="cab-q"><span class="cuenta">Q-126</span><span class="senal">tarea</span><span class="senal ambar">Frena</span></div>
+        <h2>Invitá a la otra persona al repo de Iridium</h2>
+        <button class="boton sin-fondo chico detalles" data-pliega="ctx-126" aria-expanded="false"><i data-ic="derecha"></i>Mostrar detalles · contexto y 2 citas</button>
+        <p class="contexto" id="ctx-126" hidden>D-085 y Q-123 (A). Sin la invitación, su Iridium no ve las versiones nuevas (le aparece «Sin acceso a las versiones nuevas»). Si preferís, pasame su usuario de GitHub en la respuesta y la invito yo.</p>
+        <div class="filas con-lineas casillas">
+          <div class="fila"><label class="casilla"><input type="checkbox" checked><span>Le pasé la carpeta <code>Iridium para compartir</code> del escritorio (o el <code>.zip</code> de la última versión en GitHub)</span></label><input class="campo chico" placeholder="Nota, si falló"></div>
+          <div class="fila"><label class="casilla"><input type="checkbox"><span>En <code>github.com/…/Iridium</code> › Settings › Collaborators › Add people, la invité con su usuario</span></label><input class="campo chico" placeholder="Nota, si falló"></div>
+          <div class="fila"><label class="casilla"><input type="checkbox"><span>Aceptó la invitación y en su Iridium tocó <b>Iniciar sesión</b> abajo; el aviso desapareció</span></label><input class="campo chico" placeholder="Nota, si falló"></div>
+        </div>
+        <div class="pie-q"><input class="campo" placeholder="Nota general (opcional)"></div>
+        <div class="pie-q"><span class="donde">Se guarda en respuestas/Q-126.md</span><button class="boton sin-fondo">Guardar a medias</button><button class="boton principal">Enviar</button></div>
+      </article>
+    </div>
+    <div style="margin-top: var(--esp-5)">
+      <h3 class="bloque-titulo">Sin responder <span class="cuenta">2</span></h3>
+      <article class="pregunta">
+        <div class="cab-q"><span class="cuenta">Q-152</span><span class="senal">prueba</span><span class="senal derecha">Diseño</span></div>
+        <h2>Recorré las maquetas de Iridium en Diseño</h2>
+        <button class="boton sin-fondo chico detalles" data-pliega="ctx-152" aria-expanded="false"><i data-ic="derecha"></i>Mostrar detalles · contexto y 1 cita</button>
+        <p class="contexto" id="ctx-152" hidden>Tocá Actualizar abajo para tener esta versión. Las maquetas son las de Iridium mismo: probás la sección y el rediseño a la vez.</p>
+        <div class="filas con-lineas casillas">
+          <div class="fila"><label class="casilla"><input type="checkbox"><span>En Iridium › <b>Diseño</b> las maquetas aparecen en <b>Pantallas</b>, agrupadas por sección y con su nombre debajo</span></label><input class="campo chico" placeholder="Nota, si falló"></div>
+          <div class="fila"><label class="casilla"><input type="checkbox"><span>Tocar una la agranda y se puede usar: la barra de la izquierda pasa a otra pantalla y cambia el nombre de arriba</span></label><input class="campo chico" placeholder="Nota, si falló"></div>
+          <div class="fila"><label class="casilla"><input type="checkbox"><span>Con una grande, <b>F8</b> deja un comentario que aparece en la Revisión con la maqueta</span></label><input class="campo chico" placeholder="Nota, si falló"></div>
+        </div>
+        <div class="pie-q"><span class="donde">Se guarda en respuestas/Q-152.md</span><button class="boton sin-fondo">Guardar a medias</button><button class="boton secundario">Enviar</button></div>
+      </article>
+      <article class="pregunta">
+        <div class="cab-q"><span class="cuenta">Q-146</span><span class="senal">prueba</span><span class="senal derecha">Orden</span></div>
+        <h2>Probá OR-I4: el Mapa con frentes y Skills › Framework</h2>
+        <button class="boton sin-fondo chico detalles"><i data-ic="derecha"></i>Mostrar detalles · contexto y 1 cita</button>
+        <div class="filas con-lineas casillas">
+          <div class="fila"><label class="casilla"><input type="checkbox" checked><span>El <b>Mapa</b> de Iridium muestra arriba la fila de hitos y, debajo, el frente activo con su paso y su Próximo paso</span></label><input class="campo chico" value="El Próximo paso se corta en dos líneas"></div>
+          <div class="fila"><label class="casilla"><input type="checkbox"><span>Tocar un hito muestra su detalle y <b>Volver</b> trae el bloque</span></label><input class="campo chico" placeholder="Nota, si falló"></div>
+        </div>
+        <div class="pie-q"><span class="donde">Guardada a medias · hoy 17:10</span><button class="boton sin-fondo">Guardar a medias</button><button class="boton secundario">Enviar</button></div>
+      </article>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

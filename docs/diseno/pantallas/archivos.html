@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Archivos</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .dos-col { display: grid; grid-template-columns: 280px 1fr; height: 100%; }
+  .dos-col > nav { border-right: 1px solid var(--borde-suave); padding: var(--esp-3) var(--esp-2); overflow: auto; }
+  .dos-col > nav .bloque-titulo { padding: 0 var(--esp-2) var(--esp-2); }
+  /* El visor de código es propio de Archivos y Git. */
+  .visor { overflow: auto; font: 400 var(--tam-chico)/1.7 var(--mono); padding: var(--esp-4) 0; counter-reset: l; }
+  .visor div { padding: 0 var(--esp-5) 0 0; white-space: pre; color: var(--texto-2); }
+  .visor div::before { counter-increment: l; content: counter(l); display: inline-block; width: 48px; padding-right: var(--esp-4); text-align: right; color: var(--texto-apagado); }
+  .visor .k { color: var(--cod-clave); font-weight: 600; }
+  .visor .s { color: var(--cod-cadena); }
+  .visor .c { color: var(--cod-comentario); font-style: italic; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="archivos">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Archivos</h1><span class="ruta">docs/diseno/piezas.css</span>
+      <span class="acciones-cab"><button class="boton sin-fondo"><i data-ic="editar"></i>Abrir en VS Code</button><button class="boton solo-icono" aria-label="Buscar"><i data-ic="buscar"></i></button></span></div>
+  </header>
+  <div class="contenido sin-margen">
+    <div class="dos-col">
+      <nav>
+        <h3 class="bloque-titulo">Iridium</h3>
+        <div class="arbol">
+          <div class="nodo carpeta"><i data-ic="derecha"></i>build</div>
+          <div class="nodo carpeta"><i data-ic="abajo"></i>docs</div>
+          <div class="nodo carpeta" style="--nivel:1"><i data-ic="abajo"></i>diseno</div>
+          <div class="nodo carpeta" style="--nivel:2"><i data-ic="derecha"></i>pantallas</div>
+          <div class="nodo" style="--nivel:2"><i data-ic="archivo"></i>README.md<span class="marca">A</span></div>
+          <div class="nodo elegido" style="--nivel:2"><i data-ic="archivo"></i>piezas.css<span class="marca">A</span></div>
+          <div class="nodo" style="--nivel:2"><i data-ic="archivo"></i>piezas.html<span class="marca">A</span></div>
+          <div class="nodo" style="--nivel:2"><i data-ic="archivo"></i>piezas.js<span class="marca">A</span></div>
+          <div class="nodo" style="--nivel:2"><i data-ic="archivo"></i>tokens.css<span class="marca">A</span></div>
+          <div class="nodo carpeta" style="--nivel:1"><i data-ic="derecha"></i>modulos</div>
+          <div class="nodo carpeta" style="--nivel:1"><i data-ic="derecha"></i>research</div>
+          <div class="nodo" style="--nivel:1"><i data-ic="archivo"></i>estado.md<span class="marca ambar">M</span></div>
+          <div class="nodo carpeta"><i data-ic="derecha"></i>recursos</div>
+          <div class="nodo carpeta"><i data-ic="derecha"></i>src</div>
+          <div class="nodo carpeta"><i data-ic="derecha"></i>tests</div>
+          <div class="nodo carpeta"><i data-ic="derecha"></i>tools</div>
+          <div class="nodo"><i data-ic="archivo"></i>CLAUDE.md</div>
+          <div class="nodo"><i data-ic="archivo"></i>package.json</div>
+        </div>
+      </nav>
+      <div class="visor">
+<div><span class="c">/* Las piezas de Iridium (PZ-1 a PZ-12) y el marco que comparten las pantallas. */</span></div>
+<div></div>
+<div><span class="c">/* ───────── PZ-1 · Botón ───────── */</span></div>
+<div><span class="k">.boton</span> {</div>
+<div>  display: inline-flex; align-items: center; gap: var(<span class="s">--esp-2</span>);</div>
+<div>  height: 30px; padding: 0 var(<span class="s">--esp-3</span>);</div>
+<div>  background: transparent; border: 1px solid transparent;</div>
+<div>  border-radius: var(<span class="s">--radio-control</span>);</div>
+<div>}</div>
+<div><span class="k">.boton.principal</span> { background: var(<span class="s">--principal</span>); color: var(<span class="s">--sobre-principal</span>); }</div>
+<div><span class="k">.boton.secundario</span> { border-color: var(<span class="s">--borde-control</span>); }</div>
+<div><span class="k">.boton.sin-fondo</span> { color: var(<span class="s">--texto-2</span>); padding: 0 var(<span class="s">--esp-2</span>); }</div>
+<div><span class="k">.boton.peligroso</span> { color: var(<span class="s">--error</span>); border-color: var(<span class="s">--error-borde</span>); }</div>
+<div></div>
+<div><span class="c">/* ───────── PZ-2 · Fila ───────── */</span></div>
+<div><span class="k">.fila</span> {</div>
+<div>  display: flex; align-items: center; gap: var(<span class="s">--esp-3</span>);</div>
+<div>  min-height: 34px; padding: var(<span class="s">--esp-1</span>) var(<span class="s">--esp-2</span>);</div>
+<div>  border-radius: var(<span class="s">--radio-fila</span>);</div>
+<div>}</div>
+<div><span class="k">.fila:hover</span> { background: var(<span class="s">--hover</span>); }</div>
+<div><span class="k">.fila.elegida</span> { background: var(<span class="s">--sel-fondo</span>); }</div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

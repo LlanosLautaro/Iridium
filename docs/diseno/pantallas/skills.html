@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Skills › Framework</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .dos-col { display: grid; grid-template-columns: 280px 1fr; height: 100%; }
+  .dos-col > nav { border-right: 1px solid var(--borde-suave); padding: var(--esp-4) var(--esp-2); overflow: auto; display: flex; flex-direction: column; gap: var(--esp-4); }
+  .dos-col > nav .bloque-titulo { padding: 0 var(--esp-2); }
+  .dos-col > nav .bloque + .bloque { margin-top: 0; }
+  .dos-col > section { overflow: auto; display: flex; flex-direction: column; }
+  .dos-col > section .cabecera { padding-top: var(--esp-4); }
+  .dos-col > section .lista { padding: var(--esp-4) var(--esp-6); max-width: 820px; }
+  .nota { font-size: var(--tam-chico); color: var(--texto-3); margin: var(--esp-4) 0 0; }
+</style>
+</head>
+<body data-marco="inicio" data-seccion="skills">
+<main class="seccion">
+  <div class="contenido sin-margen">
+    <div class="dos-col">
+      <nav>
+        <div class="filas"><a class="fila elegida"><span class="principal-fila"><span class="titulo-fila">Framework</span></span><span class="cuenta">3 fuera</span></a></div>
+        <div class="bloque">
+          <h3 class="bloque-titulo">Propias <span class="cuenta">2</span></h3>
+          <div class="filas">
+            <a class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">fichas-de-proyecto</span><span class="detalle">Reglas para mantener la ficha de cada proyecto</span></span></a>
+            <a class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">guia-de-hitos</span><span class="detalle">Guía de hitos para llevar una app desde la idea</span></span></a>
+          </div>
+        </div>
+        <div class="bloque">
+          <h3 class="bloque-titulo">Copias de terceros <span class="cuenta">1</span></h3>
+          <div class="filas"><a class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">diseno-de-interfaces</span><span class="detalle">Para diseñar, criticar y pulir interfaces</span></span><span class="senal ambar">doble</span></a></div>
+        </div>
+        <div class="bloque">
+          <a class="fila se-abre"><span class="principal-fila"><span class="titulo-fila gris">De complementos</span></span><span class="cuenta">18</span></a>
+          <a class="fila se-abre"><span class="principal-fila"><span class="titulo-fila gris">Desde la cuenta</span></span><span class="cuenta">13</span></a>
+        </div>
+      </nav>
+      <section>
+        <header class="cabecera">
+          <div class="fila-cab"><h1>Framework <span class="cuenta">3 fuera</span></h1></div>
+          <div class="filtros"><button class="filtro elegido">Todos <span class="cuenta">8</span></button><button class="filtro">Fuera del framework <span class="cuenta">3</span></button><button class="filtro">Carpetas <span class="cuenta">4</span></button></div>
+        </header>
+        <div class="lista">
+          <div class="filas con-lineas">
+            <div class="fila con-detalle"><span class="icono-fila">Al</span><span class="principal-fila"><span class="titulo-fila">Alfa</span><span class="detalle">framework viejo · 2026-10-16</span></span><span class="acciones siempre"><button class="boton sin-fondo chico">Pasar al framework</button></span></div>
+            <div class="fila con-detalle"><span class="icono-fila">Be</span><span class="principal-fila"><span class="titulo-fila">Beta</span><span class="detalle">framework viejo · 2026-10-16 · <span class="senal rojo">3 avisos</span></span></span><span class="acciones siempre"><button class="boton sin-fondo chico">Pasar al framework</button></span></div>
+            <div class="fila con-detalle"><span class="icono-fila">Ga</span><span class="principal-fila"><span class="titulo-fila">Gamma</span><span class="detalle">framework viejo · sin fecha</span></span><span class="acciones siempre"><button class="boton sin-fondo chico">Pasar al framework</button></span></div>
+            <div class="fila con-detalle"><span class="icono-fila">De</span><span class="principal-fila"><span class="titulo-fila">Delta</span><span class="detalle">carpeta simple</span></span><span class="acciones siempre"><button class="boton sin-fondo chico">Pasar al framework</button></span></div>
+            <div class="fila con-detalle"><span class="icono-fila">Ép</span><span class="principal-fila"><span class="titulo-fila">Épsilon</span><span class="detalle">carpeta simple</span></span><span class="acciones siempre"><button class="boton sin-fondo chico">Pasar al framework</button></span></div>
+            <div class="fila con-detalle"><span class="icono-fila">Ir</span><span class="principal-fila"><span class="titulo-fila">Iridium</span><span class="detalle">al día · 2026-11-08</span></span></div>
+          </div>
+          <p class="nota">Pasar al framework manda el pedido a la conversación de cada proyecto; seguís acá. Las carpetas simples no cuentan como fuera: se ven y se conversan igual.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<template id="conversacion" data-titulo="Skills y configuración de Claude" data-detalle="El chat de Skills: trabaja en la carpeta de skills">
+  <div class="mensaje-ia"><div class="quien">IA</div><div class="texto-doc conversacion"><p>Preguntame por una skill o pedime que la cambie: elegila a la izquierda y lo que escribas va sobre ella. Los cambios quedan con git y se pueden deshacer.</p></div></div>
+</template>
+<script src="../piezas.js"></script>
+</body>
+</html>

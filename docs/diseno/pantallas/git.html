@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Git</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .dos-col { display: grid; grid-template-columns: 360px 1fr; height: 100%; }
+  .dos-col > nav { border-right: 1px solid var(--borde-suave); padding: var(--esp-4) var(--esp-3); overflow: auto; display: flex; flex-direction: column; gap: var(--esp-5); }
+  .commit-campo { display: flex; flex-direction: column; gap: var(--esp-2); }
+  .diff { overflow: auto; font: 400 var(--tam-chico)/1.7 var(--mono); padding: var(--esp-4) 0; }
+  .diff div { white-space: pre; padding: 0 var(--esp-5); color: var(--texto-2); }
+  .diff .mas { background: var(--cod-suma); color: var(--texto); }
+  .diff .menos { background: var(--cod-resta); color: var(--texto-2); }
+  .diff .zona { color: var(--texto-3); padding-block: var(--esp-2); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="git">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Git</h1><span class="ruta">dev · 1 commit sin subir</span>
+      <span class="acciones-cab"><button class="boton sin-fondo"><i data-ic="subir"></i>Subir</button><button class="boton sin-fondo"><i data-ic="descargar"></i>Traer</button></span></div>
+  </header>
+  <div class="contenido sin-margen">
+    <div class="dos-col">
+      <nav>
+        <div class="bloque">
+          <h3 class="bloque-titulo">Cambios <span class="cuenta">3</span></h3>
+          <div class="arbol">
+            <div class="nodo elegido"><i data-ic="archivo"></i>docs/estado.md<span class="marca ambar">M</span></div>
+            <div class="nodo"><i data-ic="archivo"></i>docs/modulos/diseno/estado.md<span class="marca ambar">M</span></div>
+            <div class="nodo"><i data-ic="archivo"></i>docs/diseno/pantallas/git.html<span class="marca">A</span></div>
+          </div>
+          <div class="commit-campo">
+            <textarea class="area" placeholder="Qué cambia, en una línea"></textarea>
+            <button class="boton secundario" style="align-self:flex-end">Guardar el cambio</button>
+          </div>
+        </div>
+        <div class="bloque">
+          <h3 class="bloque-titulo">Historial</h3>
+          <div class="filas">
+            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Trabajo: T-54, cinco pruebas que ya fallaban</span><span class="detalle">a04b9a2 · hoy 16:02</span></span></div>
+            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Diseño, DI-I1: F8 sobre una maqueta</span><span class="detalle">e737856 · hoy 14:30</span></span></div>
+            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Diseño, DI-I1: la sección Diseño con las maquetas vivas</span><span class="detalle">81b7140 · hoy 12:11</span></span></div>
+            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Diseño, DI-I1: el formato docs/diseno/ en el framework</span><span class="detalle">8273157 · ayer 23:48</span></span></div>
+          </div>
+        </div>
+      </nav>
+      <div class="diff">
+<div class="zona">@@ docs/estado.md · línea 40 @@</div>
+<div>## Preguntas abiertas</div>
+<div class="menos">- **Q-152 — Probá DI-I1: la sección Diseño con maquetas vivas**</div>
+<div class="mas">+ **Q-152 — Recorré las maquetas de Iridium en Diseño**</div>
+<div>  Tipo: prueba · Frente: Diseño</div>
+<div class="menos">  Contexto: la prueba arma un proyecto nuevo y le pide el diseño a su IA.</div>
+<div class="mas">  Contexto: las maquetas son las de Iridium mismo: probás la sección y el</div>
+<div class="mas">  rediseño a la vez.</div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

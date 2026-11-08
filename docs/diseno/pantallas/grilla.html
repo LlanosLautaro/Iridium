@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Proyectos</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* La tarjeta de proyecto es propia de la grilla: sin borde, un fondo un punto más claro que el negro. */
+  .grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--esp-3); }
+  .tarjeta {
+    background: var(--tarjeta); border-radius: var(--radio-tarjeta); padding: var(--esp-4) var(--esp-4) var(--esp-3);
+    display: flex; flex-direction: column; gap: var(--esp-2); text-decoration: none; color: inherit; cursor: pointer;
+    transition: background .12s var(--sale); min-height: 168px;
+  }
+  .tarjeta:hover { background: var(--hover); }
+  .tarjeta .cab-t { display: flex; gap: var(--esp-3); align-items: flex-start; }
+  .tarjeta .logo { width: 36px; height: 36px; border-radius: var(--radio-fila); background: var(--elevado); display: grid; place-items: center; color: var(--texto-2); flex: none; font-weight: 600; }
+  .tarjeta .nombre { font-weight: 600; font-size: var(--tam-lectura); line-height: 1.3; }
+  .tarjeta .estado-t { font-size: var(--tam-chico); color: var(--texto-3); display: flex; gap: 6px; align-items: center; }
+  .tarjeta .derecha-t { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
+  .tarjeta .desc { color: var(--texto-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+  .tarjeta .pie-t { margin-top: auto; padding-top: var(--esp-2); font-size: var(--tam-chico); color: var(--texto-3); display: flex; flex-direction: column; gap: 2px; }
+  .tarjeta .pie-t b { color: var(--texto-2); font-weight: 500; }
+  .tarjeta .pie-t .linea { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body data-marco="inicio" data-seccion="grilla">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab">
+      <h1>Proyectos <span class="cuenta">10</span></h1>
+      <span class="ruta">D:\Proyectos</span>
+      <span class="acciones-cab">
+        <label class="interruptor"><input type="checkbox">Archivados <span class="cuenta">5</span></label>
+        <a class="boton principal" href="nuevo-proyecto.html"><i data-ic="mas"></i>Nuevo proyecto</a>
+      </span>
+    </div>
+  </header>
+  <div class="contenido">
+    <div class="grilla">
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ir</span><div><div class="nombre">Iridium</div><div class="estado-t"><span class="punto blanco"></span>en uso</div></div>
+          <span class="derecha-t"><span class="cuenta frena">2</span><button class="boton solo-icono chico" data-abre="menu-tarjeta" aria-label="Más"><i data-ic="puntos"></i></button></span></div>
+        <p class="desc">Plataforma de desarrollo humano + IA. Yo dirijo, la IA desarrolla y orienta. Junta proyectos, plan, diseño y preguntas en un solo lugar.</p>
+        <div class="pie-t"><span class="linea"><b>Hito 10</b> · Operación</span><span class="linea"><b>Diseño</b> · 7. Construcción · DI-I2</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Al</span><div><div class="nombre">Alfa</div><div class="estado-t"><span class="punto"></span>en desarrollo</div></div>
+          <span class="derecha-t"><span class="cuenta">1</span></span></div>
+        <p class="desc">App para explorar paquetes de texturas, compararlos lado a lado y armar uno propio con piezas de varios.</p>
+        <div class="pie-t"><span class="linea"><b>Hito 7</b> · Construcción <span class="senal">· framework viejo</span></span><span class="linea">Próximo: construir I-16, la migración de los paquetes guardados</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Be</span><div><div class="nombre">Beta</div><div class="estado-t"><span class="punto"></span>en desarrollo</div></div>
+          <span class="derecha-t"><span class="senal rojo">! 3 avisos del framework</span></span></div>
+        <p class="desc">Catálogo personal de imágenes y videos: etiquetas, pestañas guardadas del navegador y notas rápidas.</p>
+        <div class="pie-t"><span class="linea"><b>Hito 10</b> · Operación e iteración</span><span class="linea">Próximo: con la respuesta a la segunda ronda de UX, ordenar la vista de etiquetas</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ga</span><div><div class="nombre">Gamma</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Un centro personal para guardar archivos de toda una vida y verlos desde la PC o el celular.</p>
+        <div class="pie-t"><span class="linea"><b>Hito 1</b> · Exploración <span class="senal">· framework viejo</span></span><span class="linea">Próximo: empezar la exploración según el plan</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">De</span><div><div class="nombre">Delta</div><div class="estado-t"><span class="punto blanco"></span>en uso</div></div></div>
+        <p class="desc">Scripts chicos sueltos en C, JavaScript, Python y Rust: lectura de discos, avisos de carpetas, datos de la PC.</p>
+        <div class="pie-t"><span class="linea">Sin estado</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ép</span><div><div class="nombre">Épsilon, un nombre de proyecto bastante largo</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Una guía para que una persona sin conocimientos llegue con la IA a un anteproyecto de su casa.</p>
+        <div class="pie-t"><span class="linea">Sin estado</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ze</span><div><div class="nombre">Zeta</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Elegir por dónde sale el audio de cada programa y subir el micrófono más allá del máximo, con pocos clics.</p>
+        <div class="pie-t"><span class="linea">Sin estado</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Et</span><div><div class="nombre">Eta</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Un lanzador de juegos propio, liviano, que junte las bibliotecas de todas las tiendas.</p>
+        <div class="pie-t"><span class="linea">Sin estado</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Th</span><div><div class="nombre">Theta</div><div class="estado-t">en rescate → Alfa</div></div></div>
+        <p class="desc">Primer intento de componer paquetes de texturas; lo que sirve pasa a Alfa.</p>
+        <div class="pie-t"><span class="linea">Sin estado</span></div>
+      </a>
+    </div>
+    <div class="menu" id="menu-tarjeta" role="menu">
+      <a href="bandeja.html"><i data-ic="abrir"></i>Abrir</a>
+      <button><i data-ic="editar"></i>Abrir en VS Code</button>
+      <button><i data-ic="archivos"></i>Abrir la carpeta</button>
+      <hr>
+      <button>Pasar al framework</button>
+      <button>Archivar</button>
+      <button class="peligroso"><i data-ic="papelera"></i>Eliminar…</button>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

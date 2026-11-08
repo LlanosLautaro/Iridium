@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Piezas</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="piezas.css">
+<style>
+  body { overflow: auto; }
+  .hoja { max-width: 1240px; margin: 0 auto; padding: var(--esp-6) var(--esp-6) var(--esp-7); }
+  .hoja > h1 { font-size: var(--tam-grande); font-weight: 600; margin: 0 0 var(--esp-1); }
+  .hoja > p { color: var(--texto-2); margin: 0 0 var(--esp-6); max-width: 720px; }
+  .pieza { display: grid; grid-template-columns: 220px 1fr; gap: var(--esp-6); padding: var(--esp-5) 0; border-top: 1px solid var(--borde-suave); }
+  .pieza h2 { margin: 0; font-size: var(--tam-base); font-weight: 600; }
+  .pieza h2 span { display: block; font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); font-weight: 400; }
+  .pieza .nota { margin: var(--esp-2) 0 0; font-size: var(--tam-chico); color: var(--texto-3); }
+  .muestra { display: flex; flex-wrap: wrap; gap: var(--esp-3); align-items: center; }
+  .muestra.columna { flex-direction: column; align-items: stretch; }
+  .lado { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-6); }
+  .menu.fijo { position: static; display: flex; width: 240px; }
+  .cuadro.fijo { position: static; }
+</style>
+</head>
+<body data-marco="sin-marco">
+<div class="hoja">
+  <h1>Piezas de Iridium</h1>
+  <p>Las doce piezas del rediseño, con sus variantes. Se separa con espacio y con una línea gris solo donde hace falta; el borde es del recuadro, de los campos y del botón secundario; la sombra, de lo que flota.</p>
+
+  <section class="pieza">
+    <div><h2>Botón <span>PZ-1</span></h2><p class="nota">Un principal por pantalla como mucho. Las acciones de una fila son sin fondo.</p></div>
+    <div class="muestra columna">
+      <div class="muestra">
+        <button class="boton principal"><i data-ic="mas"></i>Nuevo proyecto</button>
+        <button class="boton secundario">Guardar a medias</button>
+        <button class="boton sin-fondo"><i data-ic="docs"></i>Abrir estado.md</button>
+        <button class="boton peligroso"><i data-ic="papelera"></i>Eliminar</button>
+        <button class="boton principal peligroso">Eliminar «Gamma»</button>
+      </div>
+      <div class="muestra">
+        <button class="boton principal chico"><i data-ic="seguir"></i>Seguí</button>
+        <button class="boton secundario chico">Anotar</button>
+        <button class="boton sin-fondo chico">Pasar al framework</button>
+        <button class="boton solo-icono" aria-label="Conversaciones anteriores"><i data-ic="reloj"></i></button>
+        <button class="boton solo-icono chico" aria-label="Más"><i data-ic="puntos"></i></button>
+        <button class="boton principal" disabled>Crear</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Fila <span>PZ-2</span></h2><p class="nota">Las acciones aparecen al pasar o con el foco; la que se viene a hacer, siempre.</p></div>
+    <div class="filas con-lineas" style="max-width:720px">
+      <a class="fila se-abre"><span class="codigo">T-55</span><span class="principal-fila"><span class="titulo-fila">Las maquetas de Iridium en negro</span></span><span class="meta">Diseño</span><span class="meta fija">2026-11-08</span></a>
+      <div class="fila con-detalle elegida"><span class="icono-fila"><i data-ic="scripts"></i></span><span class="principal-fila"><span class="titulo-fila">Abrir en modo desarrollo</span><span class="detalle">pnpm dev · arma y abre la app con los cambios en vivo</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="seguir"></i>Ejecutar</button></span></div>
+      <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Beta</span><span class="detalle">framework viejo · 2026-10-16</span></span><span class="acciones"><button class="boton sin-fondo chico">Abrir</button><button class="boton sin-fondo chico">Pasar al framework</button></span></div>
+      <div class="fila"><span class="principal-fila"><span class="titulo-fila">Una fila simple</span></span><span class="meta">12</span></div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Bloque <span>PZ-3</span></h2><p class="nota">Un solo estilo de título: gris, chico, con la cuenta al lado. Nada en mayúsculas, nunca un bloque dentro de otro.</p></div>
+    <div class="lado">
+      <div class="bloque"><h3 class="bloque-titulo">En curso <span class="cuenta">1</span></h3><p style="margin:0">T-55 · Las maquetas de Iridium en negro</p></div>
+      <div class="bloque"><h3 class="bloque-titulo">Frenan el proyecto <span class="cuenta frena">1</span></h3><p style="margin:0">Q-126 · Invitá a la otra persona al repo</p></div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Recuadro <span>PZ-4</span></h2><p class="nota">Avisos, errores, vacíos y lo que falta.</p></div>
+    <div class="muestra columna" style="max-width:720px">
+      <div class="recuadro aviso"><i data-ic="aviso"></i><div class="cuerpo-recuadro"><strong>Sin acceso a las versiones nuevas</strong><span>Tu cuenta de GitHub no ve el repo de Iridium. Pedile a quien te lo pasó que te invite.</span></div></div>
+      <div class="recuadro error"><i data-ic="error"></i><div class="cuerpo-recuadro"><strong>La IA no respondió</strong><span>Claude Code se cerró sin terminar el turno. Lo que llegó a escribir quedó guardado.</span><div class="acciones-recuadro"><button class="boton secundario chico">Reintentar</button><button class="boton sin-fondo chico">Ver el detalle</button></div></div></div>
+      <div class="recuadro punteado"><div class="cuerpo-recuadro"><strong>Este proyecto todavía no tiene su diseño</strong><span>La IA arma las maquetas de cada pantalla en docs/diseno/ y las ves vivas acá.</span><div class="acciones-recuadro"><button class="boton principal">Pedírselo a la IA</button></div></div></div>
+      <div class="recuadro vacio"><strong>Sin comentarios</strong><span>Con F8 prendés el modo comentar sobre cualquier pantalla.</span></div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Campo <span>PZ-5</span></h2><p class="nota">Texto, área, selector, casilla, opción e interruptor.</p></div>
+    <div class="lado">
+      <div class="muestra columna">
+        <label class="etiqueta-campo">Nombre del proyecto<input class="campo" value="Lista de compras"></label>
+        <input class="campo" placeholder="Nota, si falló">
+        <select class="selector"><option>Frente: todos</option><option>Diseño</option><option>Orden</option></select>
+        <textarea class="area" placeholder="Nota general (opcional)"></textarea>
+      </div>
+      <div class="muestra columna">
+        <label class="casilla"><input type="checkbox" checked>Le pasé la carpeta del escritorio</label>
+        <label class="casilla"><input type="checkbox">Aceptó la invitación y tocó Iniciar sesión</label>
+        <label class="opcion"><input type="radio" name="tono" checked>Directo</label>
+        <label class="opcion"><input type="radio" name="tono">Explicativo</label>
+        <label class="interruptor"><input type="checkbox">Archivados</label>
+        <label class="interruptor"><input type="checkbox" checked>Abrir con la última conversación</label>
+      </div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Filtros <span>PZ-6</span></h2><p class="nota">Pestañas de texto; el elegido en blanco con una línea debajo.</p></div>
+    <div class="muestra columna">
+      <div class="filtros"><button class="filtro elegido">Todos <span class="cuenta">34</span></button><button class="filtro">En curso <span class="cuenta">1</span></button><button class="filtro">Pendientes <span class="cuenta">19</span></button><button class="filtro">Hechos <span class="cuenta">17</span></button></div>
+      <div class="filtros"><button class="filtro">Angosto</button><button class="filtro elegido">Normal</button><button class="filtro">Ancho</button></div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Cuenta y señal <span>PZ-7</span></h2><p class="nota">Números y texto, sin píldoras. Color solo para lo que espera (ámbar) o falla (rojo).</p></div>
+    <div class="muestra">
+      <span class="cuenta">34</span>
+      <span class="cuenta frena">2 frenan</span>
+      <span class="punto ambar"></span>
+      <span class="punto rojo"></span>
+      <span class="senal">framework viejo</span>
+      <span class="senal ambar">Frena</span>
+      <span class="senal rojo">! 3 avisos del framework</span>
+      <span class="senal">5 h <span class="cuenta">34 %</span></span>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Menú y cuadro <span>PZ-8</span></h2><p class="nota">Lo único con sombra: lo que flota.</p></div>
+    <div class="muestra" style="align-items:flex-start">
+      <div class="menu fijo">
+        <button><i data-ic="abrir"></i>Abrir</button>
+        <button><i data-ic="archivos"></i>Abrir la carpeta</button>
+        <button><i data-ic="editar"></i>Abrir en VS Code</button>
+        <hr>
+        <button>Archivar</button>
+        <button class="peligroso"><i data-ic="papelera"></i>Eliminar…</button>
+      </div>
+      <div class="cuadro fijo">
+        <h2>¿Pedirle el diseño a la IA?</h2>
+        <p>La IA de este proyecto arma las maquetas de sus pantallas en docs/diseno/. Gasta uso de tu plan.</p>
+        <div class="pie"><button class="boton sin-fondo">Cancelar</button><button class="boton principal">Pedírselo</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Cabecera de sección <span>PZ-9</span></h2><p class="nota">Título con cuenta, una acción principal como mucho y los filtros debajo. Una sola línea abajo.</p></div>
+    <div class="cabecera" style="padding-inline:0">
+      <div class="fila-cab"><h1>Trabajo <span class="cuenta">52</span></h1><span class="acciones-cab"><button class="boton sin-fondo"><i data-ic="mas"></i>Anotar una idea</button></span></div>
+      <div class="filtros"><button class="filtro elegido">Todos <span class="cuenta">34</span></button><button class="filtro">En curso <span class="cuenta">1</span></button><button class="filtro">Pendientes <span class="cuenta">19</span></button><span class="derecha"><select class="selector sin-borde"><option>Frente: todos</option></select></span></div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Pestañas <span>PZ-10</span></h2><p class="nota">De una vista, de una ventana y los hitos del Mapa.</p></div>
+    <div class="muestra columna">
+      <div class="pestanas" data-vista="demo"><a class="pestana elegida" data-para="r">Resumen</a><a class="pestana" data-para="a">Archivos</a></div>
+      <div class="pestanas numeros"><span class="pestana hecho">0</span><span class="pestana hecho">1</span><span class="pestana hecho">2</span><span class="pestana hecho">3</span><span class="pestana hecho">4</span><span class="pestana hecho">5</span><span class="pestana hecho">6</span><span class="pestana hecho">7</span><span class="pestana hecho">8</span><span class="pestana hecho">9</span><span class="pestana elegida">10</span></div>
+      <div class="pestanas vertical" style="width:200px"><a class="pestana elegida">Perfil</a><a class="pestana">IA</a><a class="pestana">Apariencia</a><a class="pestana">Proyectos</a></div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Árbol <span>PZ-11</span></h2><p class="nota">Carpetas, archivos, el elegido y la marca de Git a la derecha.</p></div>
+    <div class="arbol" style="width:320px">
+      <div class="nodo carpeta" style="--nivel:0"><i data-ic="abajo"></i>docs</div>
+      <div class="nodo carpeta" style="--nivel:1"><i data-ic="derecha"></i>diseno</div>
+      <div class="nodo carpeta" style="--nivel:1"><i data-ic="abajo"></i>modulos</div>
+      <div class="nodo elegido" style="--nivel:2"><i data-ic="archivo"></i>estado.md<span class="marca ambar">M</span></div>
+      <div class="nodo" style="--nivel:2"><i data-ic="archivo"></i>decisiones.md</div>
+      <div class="nodo" style="--nivel:1"><i data-ic="archivo"></i>05-arquitectura.md<span class="marca">A</span></div>
+    </div>
+  </section>
+
+  <section class="pieza">
+    <div><h2>Texto de documento <span>PZ-12</span></h2><p class="nota">Docs, la Bandeja y la conversación. Tablas con línea solo entre filas.</p></div>
+    <div class="texto-doc">
+      <h2>Próximo paso</h2>
+      <p>Diseño: recorrer las maquetas de Iridium en su sección y comentarlas con <code>F8</code>. Lo aprobado pasa al código en <strong>DI-I3</strong>.</p>
+      <blockquote>Un principal por pantalla como mucho.</blockquote>
+      <table>
+        <thead><tr><th>Frente</th><th>Paso</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Diseño</td><td>7. Construcción</td><td>en curso</td></tr>
+          <tr><td>Orden</td><td>7. Construcción</td><td>espera la prueba</td></tr>
+          <tr><td>Capacidades</td><td>1. Propuesta</td><td>pendiente</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<script src="piezas.js"></script>
+</body>
+</html>

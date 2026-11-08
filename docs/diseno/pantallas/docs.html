@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Docs</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .dos-col { display: grid; grid-template-columns: 240px 1fr; height: 100%; }
+  .dos-col > nav { border-right: 1px solid var(--borde-suave); padding: var(--esp-4) var(--esp-2); overflow: auto; }
+  .dos-col > article { overflow: auto; padding: var(--esp-5) var(--esp-6) var(--esp-7); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="docs">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Docs</h1><span class="ruta">docs/estado.md</span>
+      <span class="acciones-cab"><div class="filtros"><button class="filtro">Angosto</button><button class="filtro elegido">Normal</button><button class="filtro">Ancho</button></div>
+      <button class="boton solo-icono" aria-label="Abrir en Archivos"><i data-ic="abrir"></i></button></span></div>
+  </header>
+  <div class="contenido sin-margen">
+    <div class="dos-col">
+      <nav class="arbol">
+        <div class="nodo elegido"><i data-ic="archivo"></i>estado.md</div>
+        <div class="nodo"><i data-ic="archivo"></i>trabajo.md</div>
+        <div class="nodo"><i data-ic="archivo"></i>decisiones.md</div>
+        <div class="nodo carpeta"><i data-ic="derecha"></i>Hitos</div>
+        <div class="nodo carpeta"><i data-ic="abajo"></i>Frentes</div>
+        <div class="nodo" style="--nivel:1"><i data-ic="archivo"></i>Diseño</div>
+        <div class="nodo" style="--nivel:1"><i data-ic="archivo"></i>Orden</div>
+        <div class="nodo" style="--nivel:1"><i data-ic="archivo"></i>Revisión de la app</div>
+        <div class="nodo" style="--nivel:1"><i data-ic="archivo"></i>Skills</div>
+        <div class="nodo carpeta"><i data-ic="derecha"></i>research</div>
+        <div class="nodo"><i data-ic="archivo"></i>scripts.md</div>
+      </nav>
+      <article class="texto-doc">
+        <h1>Estado del proyecto</h1>
+        <p class="gris">Proyecto: Iridium · Última actualización: 2026-11-08 · Nivel de protección: P2</p>
+        <h2>Hito actual</h2>
+        <p>10 — Operación — en curso</p>
+        <h2>Módulos</h2>
+        <table>
+          <thead><tr><th>Frente</th><th>Tipo</th><th>Paso</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>Revisión de la app</td><td>producto hermano</td><td>en operación</td><td>hecho</td></tr>
+            <tr><td>Skills</td><td>sección</td><td>en operación</td><td>hecho</td></tr>
+            <tr><td>Diseño</td><td>sección</td><td>7. Construcción (DI-I2)</td><td>en curso</td></tr>
+            <tr><td>Orden</td><td>sección</td><td>7. Construcción (OR-I4, espera la prueba)</td><td>en curso</td></tr>
+            <tr><td>Capacidades</td><td>sección</td><td>1. Propuesta</td><td>pendiente</td></tr>
+          </tbody>
+        </table>
+        <h2>En qué estamos ahora</h2>
+        <p><strong>El frente activo es Diseño</strong> (D-102): un «Claude Design» local dentro de Iridium, en negro sin acento como único tema. Las pantallas son maquetas HTML que escribe la IA, se miran vivas, se comentan con <code>F8</code> y lo aprobado se pasa al código.</p>
+        <blockquote>Las maquetas de Iridium son a la vez la prueba de la sección y el rediseño de verdad.</blockquote>
+        <h2>Próximo paso</h2>
+        <p>Recorrer las maquetas en Diseño y comentarlas con <code>F8</code> (Q-152). <strong>Leer antes:</strong> <a>modulos/diseno/estado.md</a>.</p>
+      </article>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

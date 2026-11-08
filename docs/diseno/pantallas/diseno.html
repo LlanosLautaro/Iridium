@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Diseño</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* El lienzo: una fila de miniaturas por sección, con el nombre debajo. */
+  .grupo + .grupo { margin-top: var(--esp-6); }
+  .miniaturas { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: var(--esp-4); margin-top: var(--esp-3); }
+  .mini { display: flex; flex-direction: column; gap: var(--esp-2); text-decoration: none; color: inherit; cursor: pointer; }
+  .mini .lamina { aspect-ratio: 16 / 10; border-radius: var(--radio-bloque); background: var(--tarjeta); box-shadow: 0 0 0 1px var(--borde); position: relative; overflow: hidden; display: grid; grid-template-columns: 8% 1fr 24%; }
+  .mini:hover .lamina { box-shadow: 0 0 0 1px var(--borde-control); }
+  .mini .lamina i { display: block; }
+  .mini .lamina .lat { border-right: 1px solid var(--borde-suave); }
+  .mini .lamina .cen { padding: 10% 8%; display: flex; flex-direction: column; gap: 6px; }
+  .mini .lamina .cen span { height: 5px; border-radius: 3px; background: var(--borde-fuerte); }
+  .mini .lamina .cen span:first-child { width: 40%; height: 7px; background: var(--texto-3); }
+  .mini .lamina .der { border-left: 1px solid var(--borde-suave); }
+  .mini .lamina .punto { position: absolute; top: 8px; right: 8px; }
+  .mini .nombre-m { display: flex; gap: var(--esp-2); align-items: baseline; }
+  .mini .nombre-m .senal { margin-left: auto; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="diseno">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Diseño</h1>
+      <div class="pestanas" style="margin-left: var(--esp-3)"><a class="pestana elegida">Pantallas</a><a class="pestana">Sistema</a></div>
+      <span class="acciones-cab"><button class="boton sin-fondo">Chicas</button><button class="boton sin-fondo"><i data-ic="docs"></i>Abrir README.md</button></span></div>
+  </header>
+  <div class="contenido">
+    <section class="grupo">
+      <h3 class="bloque-titulo">Inicio <span class="cuenta">6</span></h3>
+      <div class="miniaturas">
+        <a class="mini" href="grilla.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Proyectos</span></a>
+        <a class="mini" href="nuevo-proyecto.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Nuevo proyecto</span></a>
+        <a class="mini" href="pendientes.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Bandeja de todos</span></a>
+      </div>
+    </section>
+    <section class="grupo">
+      <h3 class="bloque-titulo">Un proyecto <span class="cuenta">10</span></h3>
+      <div class="miniaturas">
+        <a class="mini" href="bandeja.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span><span></span></i><i class="der"></i><span class="punto blanco"></span></span><span class="nombre-m">Bandeja de entrada <span class="senal">2 comentarios</span></span></a>
+        <a class="mini" href="mapa.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Mapa <span class="senal">1 comentario</span></span></a>
+        <a class="mini" href="trabajo.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Trabajo</span></a>
+        <a class="mini" href="revision.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Revisión</span></a>
+        <a class="mini" href="docs.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Docs</span></a>
+        <a class="mini" href="git.html"><span class="lamina"><i class="lat"></i><i class="cen"><span></span><span></span></i><i class="der"></i></span><span class="nombre-m">Git <span class="senal rojo">no se pudo mostrar</span></span></a>
+      </div>
+    </section>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

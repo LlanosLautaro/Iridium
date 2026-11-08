@@ -112,6 +112,8 @@
 | D-103 | 2026-11-07 | general | 10, frente Diseño, paso 1 (Q-147 y Q-148) | El mínimo de Diseño empieza por las piezas compartidas, y el negro va sin acento | vigente |
 | D-104 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-149) | Un solo tema: el negro reemplaza a Iridium y Carbón | vigente |
 | D-105 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-150) | Las pantallas de Diseño son maquetas HTML que escribe la IA, y se comentan con F8 | vigente |
+| D-106 | 2026-11-08 | general | 10, frente Diseño, pasos 4 y 5 (Q-151) | Primero la sección, después el rediseño de Iridium en maquetas; miniaturas en un iframe aislado y la grande en un webview | vigente |
+| D-107 | 2026-11-08 | Diseño | 10, frente Diseño, paso 7 | DI-I1 se prueba sobre las maquetas de Iridium (DI-I2), no en un proyecto aparte; el marco de las maquetas lo arma `piezas.js` | vigente |
 
 ---
 
@@ -2444,3 +2446,23 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - `modulos/diseno/diseno-tecnico.md` escrito; `05-arquitectura.md` suma S-4 y resuelve las páginas web dentro de la app (B-5).
 - La ventana de Iridium pasa a tener `webviewTag`, con reglas que rechazan cualquier dirección que no sea una maqueta (DI-I1).
 - Variable nueva para las pruebas, `IRIDIUM_AYUDANTE=1`, con DI-I1.
+
+## D-107 — Diseño: DI-I1 se prueba sobre las maquetas de Iridium; el marco de las maquetas lo arma `piezas.js`
+- **Fecha:** 2026-11-08
+- **Ámbito:** Diseño
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I1 y DI-I2)
+- **Estado:** vigente
+
+**Contexto:** Q-152 pedía probar DI-I1 creando un proyecto «Prueba de diseño» y pidiéndole las maquetas a su IA. Al retomar, el usuario propuso hacer el diseño de prueba sobre Iridium mismo: probar la sección a la vez que se diseña de verdad.
+
+**Decisión:**
+1. DI-I2 empieza sin esperar la prueba de DI-I1: las maquetas de Iridium se escriben en `docs/diseno/` de este repo y **Q-152 pasa a probar las dos cosas** recorriéndolas en Iridium › Diseño. Lo de DI-I1 que solo se ve mientras la IA escribe (el redibujo y el punto) se prueba pidiéndole a la IA un cambio en una maqueta de Iridium; Pedírselo a la IA queda probado por las pruebas con la app abierta.
+2. **El marco** (la barra de proyectos, la de secciones, la conversación y la de estado) no se copia en cada maqueta: lo arma `docs/diseno/piezas.js` según `data-marco` y `data-seccion` del `<body>`. Cada maqueta tiene solo lo suyo y los íconos de la izquierda pasan de una pantalla a otra.
+3. Las maquetas usan datos de muestra (Alfa, Beta, Gamma…; D-082).
+
+**Motivo:** las maquetas de Iridium son pantallas reales con su contenido y su navegación: prueban la sección mejor que un proyecto de juguete y no gastan uso en una prueba descartable. El marco en `piezas.js` evita repetir lo mismo en cada maqueta (y que se desparejen).
+
+**Consecuencias:**
+- Q-152 reescrita; DI-I1 se cierra con ella y DI-I2 sigue con lo que se comente.
+- En DI-I3 el marco pasa al código como piezas de `src/renderer/ui/`, no como `piezas.js`: las maquetas lo usan para mostrarse.
+
