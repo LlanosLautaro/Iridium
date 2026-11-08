@@ -72,7 +72,7 @@
 | D-063 | 2026-10-30 | general | 7; al procesar Q-79, Q-80 y Q-81 | Frentes en paralelo después del núcleo, y Postergar una prueba con un botón | vigente |
 | D-064 | 2026-10-30 | Skills | módulo Skills, paso 2; al procesar Q-83 | Skills: ver, editar con la IA y poner al día proyectos; elegir por proyecto, después | vigente |
 | D-065 | 2026-10-30 | Apariencia y ajustes | módulo Apariencia, paso 2; al procesar Q-84 | Ajustes como ventana flotante con nombre, IA, tono y tema | vigente |
-| D-066 | 2026-10-30 | general | módulo Apariencia, paso 6; al procesar Q-85 y Q-86 | Dos temas oscuros: Iridium (el de siempre) y Carbón | vigente |
+| D-066 | 2026-10-30 | general | módulo Apariencia, paso 6; al procesar Q-85 y Q-86 | Dos temas oscuros: Iridium (el de siempre) y Carbón | reemplazada por D-104 (con DI-I1) |
 | D-067 | 2026-10-31 | Apariencia y ajustes | módulo Apariencia, paso 7 (AP-I1) | Cómo se construyó AP-I1: los ajustes viajan con las preferencias y «Normal» es el estilo de Claude Code | vigente |
 | D-068 | 2026-10-31 | Skills | módulo Skills, pasos 4 y 5; al procesar Q-89 | Skills: el chat de `Skills` al lado, y los atrasados por la fecha de formato que ya anota cada proyecto | vigente |
 | D-069 | 2026-10-31 | general | módulo Compartir, paso 1; al procesar Q-90 | Compartir, por ahora solo para el usuario: GitHub privado, actualización al cerrar e iniciar sesión desde Iridium | vigente |
@@ -108,6 +108,9 @@
 | D-099 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-139) | El marco se llama «framework» | vigente |
 | D-100 | 2026-11-06 | general | 10, frente Orden, paso 6 (Q-140) | El ámbar es solo para lo que frena y el botón principal es claro | vigente |
 | D-101 | 2026-11-07 | general | 10 (R-14) | Nuevo proyecto arma la plantilla básica, sin la IA | vigente |
+| D-102 | 2026-11-07 | general | 10, a pedido del usuario | Diseño pasa adelante, como un «Claude Design» dentro de Iridium, y la dirección visual cambia a negro | vigente |
+| D-103 | 2026-11-07 | general | 10, frente Diseño, paso 1 (Q-147 y Q-148) | El mínimo de Diseño empieza por las piezas compartidas, y el negro va sin acento | vigente |
+| D-104 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-149) | Un solo tema: el negro reemplaza a Iridium y Carbón | vigente |
 
 ---
 
@@ -1647,7 +1650,7 @@ Y para dar lugar a la conversación: llevarla al centro como «modo foco» o ens
 - **Fecha:** 2026-10-30
 - **Ámbito:** general (`06-ui.md`, `DESIGN.md`, `docs/ui/tokens.css`); módulo Apariencia y ajustes
 - **Hito o paso:** módulo Apariencia, paso 6; al procesar Q-85 y Q-86
-- **Estado:** vigente (reemplaza «un solo tema» de D-029; sigue siendo solo oscuro)
+- **Estado:** reemplazada por D-104 desde DI-I1 (reemplazaba «un solo tema» de D-029; sigue siendo solo oscuro)
 
 **Contexto:** el usuario pidió un tema mucho más sobrio (D-065). De tres muestras (Grafito, Obsidiana, Arcilla) eligió Grafito, más oscuro (Q-85), y de tres escalones más oscuros, el del medio (Q-86).
 
@@ -2371,3 +2374,23 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - `modulos/diseno/negro.css` pasa a la versión sin acento; sus 30 pantallas, en `tools/salida/auditoria/1440x900-negro/`.
 - `modulos/diseno/definicion.md`: el alcance, las piezas y DI-I1 a DI-I3.
 - Con DI-I1, `docs/ui/tokens.css`, `DESIGN.md` y `06-ui.md` se reescriben en negro. Qué pasa con los temas Iridium y Carbón de Ajustes › Apariencia, en Q-149.
+
+## D-104 — Un solo tema: el negro reemplaza a Iridium y Carbón
+- **Fecha:** 2026-11-07
+- **Ámbito:** general (design system, `docs/ui/tokens.css`, frentes Diseño y Apariencia y ajustes)
+- **Hito o paso:** 10; frente Diseño, paso 4 (Q-149)
+- **Estado:** vigente
+
+**Contexto:** con D-103 el negro sin acento pasa a ser el tema de Iridium en DI-I1. Ajustes › Apariencia ofrece hoy dos temas, Iridium (verde) y Carbón (gris con azul) (D-066), y cada tema que se queda obliga a que cada pieza nueva se vea bien y pase el contraste en todos.
+
+**Opciones (Q-149):** A) Solo el negro; los acentos vuelven después como variantes del negro (elegida) · B) El negro por defecto y los otros dos como opción · C) El negro y Carbón.
+
+**Decisión:** con DI-I1 queda **un solo tema, el negro sin acento**. Ajustes › Apariencia deja de ofrecer Iridium y Carbón. Los acentos sutiles vuelven más adelante como **variantes del negro**, probadas con Probar una dirección (DI-I3); si alguna se queda, se ofrece entonces como opción.
+
+**Motivo:** un solo tema que mantener y probar, y es la dirección que el usuario pidió.
+
+**Consecuencias:**
+- Reemplaza a D-066 desde DI-I1: `tokens.css` pierde el bloque de Carbón; el tema verde se va con la fuente Chakra Petch (D-103).
+- Ajustes › Apariencia: sin el selector de tema (y sin sus miniaturas, `tools/miniaturas-tema.ts`); queda lo demás que ya tenga. Quien tenía guardado Iridium o Carbón abre en negro.
+- `IRIDIUM_TEMA` y la corrida de las pruebas en Carbón (D-067) dejan de tener sentido; los colores que Windows dibuja (`src/main/index.ts`) quedan los del negro.
+- `DESIGN.md` y `06-ui.md` describen un solo tema; la tabla de contraste se rehace para el negro.

@@ -217,3 +217,7 @@ La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva
 
 ## T-52 — Un sonido para cuando el agente termine de trabajar (cuidado de que no suene cuando el aente simplemente está esperando mientras hace pruebas)
 Estado: nueva · Fecha: 2026-11-07
+
+## T-53 — La captura del detalle de Ideas no sale en auditoria-ux.ts
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
+`11-ideas-detalle` se queda esperando un clic (30 s) y no saca la pantalla, en los dos temas. Se arregla con la página de antes y después de DI-I1, que necesita las 30.

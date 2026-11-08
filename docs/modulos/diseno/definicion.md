@@ -32,12 +32,14 @@ Hoy cada sección arma las suyas (unas 6.000 líneas de estilos en 13 archivos; 
 | Menú y cuadro | menú, menú contextual, cuadro de confirmación | Lo único con sombra |
 | Cabecera de sección | título, cuenta, acciones | La que ya existe (W-9), con las reglas nuevas |
 | Pestañas | de sección, de vista | Texto; la elegida en blanco, las demás en gris |
+| Árbol | carpeta, archivo, elegido, con marca | El mismo en Archivos, Skills y Git (sumada en el paso 4) |
+| Texto de documento | lectura y conversación | Un solo markdown; las tablas con línea solo entre filas (sumada en el paso 4) |
 
-El inventario exacto (qué usa cada pantalla y qué se reemplaza) se arma en el paso 4 mirando las 30 pantallas con las skills `design-critique` y `design-system`.
+El inventario exacto (qué usa cada pantalla y qué se reemplaza) está en `ux.md` › Parte 1, con cada pieza como `PZ-n`.
 
 ## Funcionalidades
 ### Must (MVP del módulo)
-- **DI-I1 — Piezas compartidas y el negro aplicado.** Las piezas de arriba en `src/renderer/ui/` con sus estilos en un solo archivo; las secciones pasadas a ellas, sacando cajas y bordes de más; `tokens.css` en negro sin acento; una página que muestra las 30 pantallas juntas (la de antes y la de ahora lado a lado) para mirar el cambio de una.
+- **DI-I1 — Piezas compartidas y el negro aplicado.** Las piezas de arriba en `src/renderer/ui/` con sus estilos en un solo archivo; las secciones pasadas a ellas, sacando cajas y bordes de más; `tokens.css` en negro sin acento, como único tema (D-104: Apariencia deja de ofrecer Iridium y Carbón); una página que muestra las 30 pantallas juntas (la de antes y la de ahora lado a lado) para mirar el cambio de una.
 - **DI-I2 — La sección Diseño, con Sistema y Pantallas.** El formato `docs/diseno/` en el framework, con su lector y su control (D-086); la sección en cada proyecto con framework: **Sistema** (los tokens dibujados y cada pieza como tarjeta con sus variantes) y **Pantallas** (todas las capturas en un lienzo; tocar una la agranda).
 - **DI-I3 — Probar una dirección.** Elegir otro juego de tokens (por ejemplo, el negro con un acento sutil) y volver a sacar todas las pantallas con él, lado a lado con las de hoy; aplicarla si convence.
 ### Should

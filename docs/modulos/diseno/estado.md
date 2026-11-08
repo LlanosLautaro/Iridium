@@ -10,7 +10,7 @@
 | 1. Propuesta | hecho (2026-11-07; Q-147 y Q-148, D-103) | `propuesta.md` |
 | 2. Definición | hecho (2026-11-07) | `definicion.md` |
 | 3. Investigación | descartado (lo de Claude Design y las skills de Anthropic ya está en la propuesta) | — |
-| 4. UX | en curso | `ux.md` |
+| 4. UX | en curso (escrito; espera el visto bueno, Q-150) | `ux.md` |
 | 5. Diseño técnico | pendiente | `diseno-tecnico.md` |
 | 6. UI | pendiente | `06-ui.md` general y `DESIGN.md` |
 | 7. Construcción | pendiente | este archivo |
@@ -18,14 +18,16 @@
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente activado el 2026-11-07 a pedido del usuario (D-102), adelante de Capacidades y del paso 8 de Orden. Con Q-147 y Q-148 (D-103): primero las piezas compartidas y el negro aplicado (DI-I1), después la sección con Sistema y Pantallas (DI-I2) y Probar una dirección (DI-I3). La dirección es **negro sin acento**: lo activo en blanco, solo el ámbar y el rojo como señales. `negro.css` ya está en esa versión; sus pantallas, en `tools/salida/auditoria/1440x900-negro/` (29 de 30: la del detalle de Ideas no salió por tiempo). La definición está escrita; sigue el paso 4: el inventario de piezas sobre las 30 pantallas.
+Frente activado el 2026-11-07 a pedido del usuario (D-102), adelante de Capacidades y del paso 8 de Orden. Con Q-147 y Q-148 (D-103): primero las piezas compartidas y el negro aplicado (DI-I1), después la sección con Sistema y Pantallas (DI-I2) y Probar una dirección (DI-I3). La dirección es **negro sin acento**, y es el único tema (D-104, Q-149). El paso 4 está escrito (`ux.md`): el inventario de las 12 piezas (`PZ-1` a `PZ-12`) con lo que reemplaza cada una y cómo queda cada pantalla, y la sección Diseño (historias, flujos y pantallas `DS-1` a `DS-11`). Espera el visto bueno (Q-150), que decide también cómo se sacan las pantallas en los proyectos.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|
 | `estado.md` › Módulos | Diseño en curso; Orden termina con Q-146 y su paso 8 espera el rediseño | D-102 | sí |
 | `02-definicion.md` › Módulos previstos | El orden nuevo de los frentes | D-102 | sí |
-| `DESIGN.md`, `06-ui.md`, `ui/tokens.css` | La dirección negra sin acento y las piezas compartidas (con DI-I1; los temas, Q-149) | D-102, D-103 | no |
+| `DESIGN.md`, `06-ui.md`, `ui/tokens.css` | La dirección negra sin acento como único tema y las piezas compartidas (con DI-I1) | D-102, D-103, D-104 | no |
+| Ajustes › Apariencia (frente Apariencia y ajustes) | Sin el selector de tema; fuera `IRIDIUM_TEMA`, las miniaturas y la corrida en Carbón (con DI-I1) | D-104 | no |
+| `docs/README.md` › Códigos | `PZ-n` (piezas) y `DS-n` (la sección Diseño) | — | sí |
 | `02-definicion.md` › Glosario | Pieza, Dirección, Pantallas | D-103 | sí |
 | El framework | El formato `docs/diseno/`, con su lector y su control | D-086, D-102 | no |
 
@@ -39,5 +41,5 @@ Frente activado el 2026-11-07 a pedido del usuario (D-102), adelante de Capacida
 ## Log de iteraciones
 
 ## Próximo paso
-Paso 4 (UX): escribir `ux.md` con el inventario de piezas mirando las 30 pantallas (`tools/salida/auditoria/1440x900/` y `-negro/`, con las skills `design-critique` y `design-system`): qué arma cada sección a mano, qué pieza la reemplaza y dónde sobran cajas y bordes; y los flujos de la sección Diseño (Sistema, Pantallas, Probar una dirección). Después, el paso 5 y DI-I1.
-**Leer antes:** `definicion.md` y Q-149 si llegó.
+Con Q-150: cerrar el paso 4 (si pide cambios, corregir `ux.md` primero) y escribir `diseno-tecnico.md` (paso 5): las piezas en `src/renderer/ui/` con su archivo de estilos, cómo se pasan las secciones sin romper las pruebas, el control de estilos por sección, la página de antes y después, y el formato `docs/diseno/` con su lector y su control. Después, DI-I1.
+**Leer antes:** `ux.md` (las dos partes) y `respuestas/Q-150.md`.

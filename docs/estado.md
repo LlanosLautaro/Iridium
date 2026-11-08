@@ -32,18 +32,20 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 4. UX (D-102, D-103) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 4. UX (escrito; espera Q-150) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium para ver todas las pantallas juntas y cambiar la UI desde un solo lugar, y la dirección visual pasa a negro, como X. Con Q-147 y Q-148 (D-103): primero las piezas compartidas y el negro aplicado (DI-I1), después la sección con Sistema y Pantallas (DI-I2) y Probar una dirección (DI-I3). El negro va **sin acento**: lo activo en blanco y solo el ámbar y el rojo como señales (`modulos/diseno/negro.css`, pantallas en `tools/salida/auditoria/1440x900-negro/`). La definición está escrita (`modulos/diseno/definicion.md`); sigue el inventario de piezas (paso 4). Antes: hito 10 con el frente **Orden** (D-091, la UX y la forma de trabajo). OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 está hecha y probada (Q-144): la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha, **Actualizar** (T-46; probado en Q-142), el esqueleto (la barra del proyecto en dos grupos; se entra a la Bandeja si hay algo, si no al Mapa), la cabecera común de las secciones (W-9), el frente activo en la tarjeta (W-2) y la conversación de 360 px, que recuerda el ancho de cada vista (D-098). OR-I3 está hecha y probada (Q-145): la sección **Trabajo** de cada proyecto, anotar una idea sin la IA e **Ideas** del inicio con las nuevas de todos. OR-I4 está construida y espera tu prueba (Q-146): el **Mapa** con el bloque de frentes (el activo grande, los que esperan y los que están en operación en una línea), **Skills › Framework** con **Pasar al framework** (también desde la tarjeta y desde una carpeta simple), los avisos de la tarjeta que llevan a su lista, la carpeta simple sin Mapa ni Trabajo, el ⚠ de Skills en gris y las tablas de Docs con el ancho de la sección. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium para ver todas las pantallas juntas y cambiar la UI desde un solo lugar, en negro sin acento como único tema (D-103, D-104). Primero las piezas compartidas y el negro aplicado (DI-I1), después la sección con Sistema y Pantallas (DI-I2) y Probar una dirección (DI-I3). La UX está escrita (`modulos/diseno/ux.md`): 12 piezas que reemplazan las cajas y los botones que hoy arma cada sección, cómo queda cada pantalla y la sección Diseño; espera tu visto bueno (Q-150).
+Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
+Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
-- **Q-149 — ¿Qué pasa con los temas Iridium y Carbón cuando llegue el negro?**
-  Tipo: decisión · Frente: Diseño
-  Contexto: D-103. Con DI-I1 el negro sin acento pasa a ser el tema de Iridium. Hoy Ajustes › Apariencia ofrece Iridium (verde) y Carbón (gris con azul). Cada tema que se queda hay que mantenerlo: cada pieza nueva tiene que verse bien y pasar el contraste en todos. Las pantallas en negro sin acento, para mirar antes de elegir: `tools/salida/auditoria/1440x900-negro/` (comparalas con `1440x900/`). No frena hasta el final de DI-I1.
-  Opciones: A) Solo el negro: Apariencia deja de ofrecer los otros dos, y los acentos sutiles vuelven más adelante como variantes del negro (recomendada: un solo tema que mantener y probar, y es lo que pediste) · B) El negro por defecto, y Iridium y Carbón se quedan como opción (más trabajo en cada pieza y en cada prueba) · C) El negro y Carbón; se va solo el verde
+- **Q-150 — ¿Va la UX de Diseño, y cómo se sacan las pantallas de cada proyecto?**
+  Tipo: decisión · frena · Frente: Diseño
+  Contexto: `modulos/diseno/ux.md`. La Parte 1 es el rediseño de Iridium: 12 piezas (botón, fila, bloque, recuadro…) y la tabla «Cómo queda cada pantalla»; la Parte 2, la sección Diseño (Sistema, Pantallas y Probar una dirección, con sus dibujos). Lo que falta elegir: en tus otros proyectos, **Sacar de nuevo** las pantallas puede correr un script que la IA deja armado una vez (no gasta uso y siempre saca las mismas) o pedírselo a la IA cada vez (no hay que armar nada, pero gasta uso y puede variar).
+  Opciones: A) Va así, con un script de capturas por proyecto que la IA arma la primera vez (recomendada: sacarlas es gratis y repetible, y Probar una dirección lo necesita para comparar igual con igual) · B) Va así, pero que las saque la IA cada vez
 
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
@@ -65,8 +67,8 @@
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño, paso 4 (UX): escribir `modulos/diseno/ux.md` con el inventario de piezas sobre las 30 pantallas (qué arma cada sección a mano, qué pieza la reemplaza, dónde sobran cajas y bordes) y los flujos de la sección Diseño; después el paso 5 y DI-I1. Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
-**Leer antes:** `modulos/diseno/estado.md` y `modulos/diseno/definicion.md` (y `respuestas/Q-149.md`, Q-146 o Q-126 si llegaron).
+Diseño, paso 5: con Q-150, cerrar el paso 4 y escribir `modulos/diseno/diseno-tecnico.md` (las piezas en `src/renderer/ui/`, cómo se pasan las secciones, la página de antes y después, el formato `docs/diseno/`); después, DI-I1. Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
+**Leer antes:** `modulos/diseno/estado.md` › Próximo paso, `modulos/diseno/ux.md` y `respuestas/Q-150.md` (y Q-146 o Q-126 si llegaron).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
