@@ -32,14 +32,24 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba) | en curso |
-| Diseño (T-5) | sección | 1. Propuesta (detrás de Orden, D-091) | pendiente |
-| Capacidades (T-28) | sección | 1. Propuesta (detrás de Orden, D-091) | pendiente |
+| Diseño (`modulos/diseno/estado.md`) | sección | 1. Propuesta (activado en D-102) | en curso |
+| Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
+| Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no se suman funciones nuevas. OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 está hecha y probada (Q-144): la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha, **Actualizar** (T-46; probado en Q-142), el esqueleto (la barra del proyecto en dos grupos; se entra a la Bandeja si hay algo, si no al Mapa), la cabecera común de las secciones (W-9), el frente activo en la tarjeta (W-2) y la conversación de 360 px, que recuerda el ancho de cada vista (D-098). OR-I3 está hecha y probada (Q-145): la sección **Trabajo** de cada proyecto, anotar una idea sin la IA e **Ideas** del inicio con las nuevas de todos. OR-I4 está construida y espera tu prueba (Q-146): el **Mapa** con el bloque de frentes (el activo grande, los que esperan y los que están en operación en una línea), **Skills › Framework** con **Pasar al framework** (también desde la tarjeta y desde una carpeta simple), los avisos de la tarjeta que llevan a su lista, la carpeta simple sin Mapa ni Trabajo, el ⚠ de Skills en gris y las tablas de Docs con el ancho de la sección. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium para ver todas las pantallas juntas y cambiar la UI desde un solo lugar, y la dirección visual pasa a negro, como X. La propuesta está escrita (`modulos/diseno/propuesta.md`) y espera Q-147 (el mínimo) y Q-148 (la muestra negra). Antes: hito 10 con el frente **Orden** (D-091, la UX y la forma de trabajo). OR-I1 (el modelo y el control) está hecha y probada (Q-141); Iridium ya sigue el framework y el control da cero. OR-I2 está hecha y probada (Q-144): la cuenta de la bandeja (un solo total, amarilla solo si algo frena), el botón principal claro, la Bandeja de entrada con filtros por frente y las en pausa, el nombre de la ficha, **Actualizar** (T-46; probado en Q-142), el esqueleto (la barra del proyecto en dos grupos; se entra a la Bandeja si hay algo, si no al Mapa), la cabecera común de las secciones (W-9), el frente activo en la tarjeta (W-2) y la conversación de 360 px, que recuerda el ancho de cada vista (D-098). OR-I3 está hecha y probada (Q-145): la sección **Trabajo** de cada proyecto, anotar una idea sin la IA e **Ideas** del inicio con las nuevas de todos. OR-I4 está construida y espera tu prueba (Q-146): el **Mapa** con el bloque de frentes (el activo grande, los que esperan y los que están en operación en una línea), **Skills › Framework** con **Pasar al framework** (también desde la tarjeta y desde una carpeta simple), los avisos de la tarjeta que llevan a su lista, la carpeta simple sin Mapa ni Trabajo, el ⚠ de Skills en gris y las tablas de Docs con el ancho de la sección. **Nuevo proyecto** arma solo la plantilla básica, sin la IA (R-14, D-101). Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
+- **Q-147 — ¿Qué entra en el mínimo de Diseño?**
+  Tipo: decisión · frena · Frente: Diseño
+  Contexto: `modulos/diseno/propuesta.md` › El mínimo. La medición del 2026-11-07: los colores ya cambian desde un solo archivo, pero cada sección arma sus propios botones, filas y recuadros (13 archivos de estilos, 9 piezas compartidas), y de ahí sale el ruido. En las tres opciones la UI de Iridium se rehace en negro; cambia qué herramienta tenés para mirarla.
+  Opciones: A) Primero las piezas compartidas y el negro aplicado, mirando las 30 capturas en una página; después la sección Diseño con Sistema, Pantallas y Probar una dirección (recomendada: ves el cambio en la primera iteración y la sección se hace sobre piezas ya ordenadas) · B) Primero la sección Diseño completa y con ella el rediseño (la herramienta antes, el cambio visible más tarde) · C) Solo el rediseño, sin sección: las capturas en una página HTML (lo más rápido, pero no sirve para tus otros proyectos ni para comentar)
+
+- **Q-148 — ¿Vamos con este negro?**
+  Tipo: decisión · Frente: Diseño
+  Contexto: las 30 pantallas de Iridium con los tokens negros (inspirados en el modo oscuro de X), sin tocar nada más, están en `tools/salida/auditoria/1440x900-negro/`; las mismas con el tema de hoy, en `tools/salida/auditoria/1440x900/`. Compará por ejemplo `20-proyecto-mapa.png` y `02-grilla.png`. Ojo: es solo la paleta; las cajas, los bordes y las píldoras se sacan después, con las piezas compartidas.
+  Opciones: A) Sí, este negro con el azul de X para lo activo y la letra del sistema (recomendada: es lo más callado y lo que pediste) · B) Negro, pero con el verde de Iridium para lo activo (conserva la identidad) · C) Negro, pero con otro acento o con Chakra Petch (contame cuál en la respuesta)
+
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.
@@ -60,8 +70,8 @@ Hito 10 con el frente **Orden** primero (D-091, la UX y la forma de trabajo): no
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Orden, OR-I4: procesar la prueba (Q-146). Si algo falla, arreglarlo; si anda, cerrar OR-I4 (la última iteración del frente) y pasar Orden al paso 8, Calidad.
-**Leer antes:** `respuestas/Q-146.md` y `modulos/orden/estado.md` › Próximo paso (y Q-126 si llegó).
+Diseño, paso 1: procesar Q-147 y Q-148 y escribir `modulos/diseno/definicion.md` (el formato `docs/diseno/`, las piezas compartidas y las iteraciones DI-I1 en adelante). Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
+**Leer antes:** `respuestas/Q-147.md`, `respuestas/Q-148.md`, `modulos/diseno/estado.md` y `modulos/diseno/propuesta.md` (y `respuestas/Q-146.md` o Q-126 si llegaron).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

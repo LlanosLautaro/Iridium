@@ -2,15 +2,18 @@
 // el motor falso y una carpeta de datos aparte. Solo mira: no manda mensajes ni toca nada de los proyectos.
 // Cada paso que falla queda anotado y el recorrido sigue. Capturas en tools/salida/auditoria/ (no van al repo, D-082).
 // Uso: pnpm build && node --experimental-strip-types tools/auditoria-ux.ts [ruta del .exe] [ancho] [alto]
+// Con AUDITORIA_TOKENS=<archivo .css>, pone esos tokens encima de los de la app (el frente Diseño prueba así una
+// dirección visual sin tocar el código) y deja las capturas en una carpeta con el nombre del archivo.
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 import { _electron as electron } from '@playwright/test'
 
 const exe = process.argv[2] && process.argv[2] !== '-' ? process.argv[2] : undefined
 const ancho = Number(process.argv[3] ?? 1440)
 const alto = Number(process.argv[4] ?? 900)
-const SALIDA = `tools/salida/auditoria/${ancho}x${alto}`
+const tokens = process.env.AUDITORIA_TOKENS
+const SALIDA = `tools/salida/auditoria/${ancho}x${alto}${tokens ? `-${basename(tokens, '.css')}` : ''}`
 await rm(SALIDA, { recursive: true, force: true })
 await mkdir(SALIDA, { recursive: true })
 
@@ -42,6 +45,11 @@ env.IRIDIUM_VSCODE = 'falso'
 const app = await electron.launch(exe ? { executablePath: exe, env } : { args: ['.'], env })
 const win = await app.firstWindow()
 await win.setViewportSize({ width: ancho, height: alto })
+if (tokens) {
+  const css = await readFile(tokens, 'utf8')
+  await win.waitForLoadState('domcontentloaded')
+  await win.addStyleTag({ content: css })
+}
 
 const fallas: string[] = []
 let n = 0
@@ -159,17 +167,18 @@ await paso('otro-proyecto', async () => {
 })
 await paso('otro-proyecto-mapa', () => delProyecto('Mapa').click())
 
-// El tema Carbón en la grilla y en un proyecto.
-await paso('carbon-grilla', async () => {
-  await win.keyboard.press('Control+,')
-  await win
-    .getByRole('navigation', { name: 'Secciones de Ajustes' })
-    .getByRole('button', { name: 'Apariencia' })
-    .click()
-  await win.getByText('Carbón', { exact: false }).first().click()
-  await win.keyboard.press('Escape')
-  await win.keyboard.press('Control+1')
-})
+// El tema Carbón en la grilla y en un proyecto (con otros tokens encima no cambiaría nada).
+if (!tokens)
+  await paso('carbon-grilla', async () => {
+    await win.keyboard.press('Control+,')
+    await win
+      .getByRole('navigation', { name: 'Secciones de Ajustes' })
+      .getByRole('button', { name: 'Apariencia' })
+      .click()
+    await win.getByText('Carbón', { exact: false }).first().click()
+    await win.keyboard.press('Escape')
+    await win.keyboard.press('Control+1')
+  })
 await app.close()
 await writeFile(`${SALIDA}/fallas.txt`, fallas.join('\n'))
 console.log(fallas.length ? `Fallaron ${fallas.length}:\n${fallas.join('\n')}` : 'Sin fallas.')

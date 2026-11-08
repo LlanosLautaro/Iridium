@@ -1,0 +1,18 @@
+/* Diseño, paso 1: la dirección «negro» (D-102), como un juego de tokens que se pone encima de los de la app.
+   Inspirada en el modo oscuro de X: fondo negro puro, un solo gris para las líneas, dos grises de texto,
+   un solo azul para lo activo y el botón principal blanco. Es una muestra: no reemplaza a docs/ui/tokens.css. */
+:root, :root[data-tema] {
+  --fondo: #000000; --lateral: #000000; --barra: #000000; --elevado: #16181c; --hover: #0b0c0e;
+  --caja: #070708; --medidor-fondo: #202327;
+  --borde: #2f3336; --borde-suave: #1d1f22; --borde-fuerte: #3e4246; --borde-control: #536471;
+  --texto: #e7e9ea; --texto-2: #a0a5aa; --texto-3: #71767b;
+  --primario: #1d9bf0; --primario-texto: #4cb0f5; --trabaja: #1d9bf0; --ok: #00ba7c;
+  --espera: #ffc542; --espera-borde: #3d3212; --espera-fondo: #0d0b05;
+  --error: #f4212e; --sobre-color: #0f1419;
+  --seleccion: #1d9bf040; --sel-fondo: #071825;
+  --cod-cadena: #c9b27f;
+  --ui: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --tam-base: 13.5px; --tam-lectura: 15px; --tam-chico: 12.5px;
+  --radio-control: 8px; --radio-fila: 8px; --radio-bloque: 12px; --radio-tarjeta: 16px; --radio-pildora: 999px;
+  --sombra-flotante: 0 0 0 1px #2f3336, 0 8px 24px #ffffff12; --sombra-menu: 0 0 0 1px #2f3336, 0 10px 28px #ffffff14;
+}

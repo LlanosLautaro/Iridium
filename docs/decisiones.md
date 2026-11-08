@@ -2144,7 +2144,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-05
 - **Ámbito:** general
 - **Hito o paso:** 10, a pedido del usuario; responde también Q-131 (en el chat)
-- **Estado:** vigente
+- **Estado:** vigente (el punto 3 lo cambia D-102: Diseño pasa adelante)
 
 **Contexto:** el usuario notó una caída de la UX a medida que avanzó la app, `Q-n` que a veces llegan mal escritas, ideas que no se pueden citar (Q-131) y frentes mal mostrados (Q-126 es de Compartir y aparece en el núcleo). La causa común: todo creció a parches, una decisión por pedido, sin que nadie mire el conjunto (`modulos/orden/propuesta.md`).
 
@@ -2329,3 +2329,25 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - La skill `iridium` › Cómo empezar dice qué deja Iridium y qué completa la IA; la de Ideas, que el proyecto nuevo se crea con el botón y la idea se cuenta después.
 - Si las plantillas no están (una app mal armada), no se crea nada y se avisa.
 - Pruebas: `tests/r7-r8-proyectos.test.ts` (la plantilla, el control en cero y la tarjeta) y `tests/e2e/r7-r8-proyectos.spec.ts` (capturas `tools/salida/r7-nuevo*.png`).
+
+## D-102 — Diseño pasa adelante, como un «Claude Design» dentro de Iridium, y la dirección visual cambia a negro
+- **Fecha:** 2026-11-07
+- **Ámbito:** general (frentes, D-079 y D-091; design system)
+- **Hito o paso:** 10, a pedido del usuario (en el chat)
+- **Estado:** vigente
+
+**Contexto:** con OR-I1 a OR-I4 hechas, el usuario sigue viendo mal el estilo y el orden visual, y no tiene una vista de conjunto para dirigirlo: cada cambio grande de la interfaz es lento porque hay que recorrer la app pantalla por pantalla. D-091 había dejado Diseño detrás de Orden porque «no arregla la UX de Iridium»; ahora la necesidad es justo esa herramienta para mirar y cambiar la UI de Iridium.
+
+**Decisión:**
+1. El frente **Diseño** (T-5) se activa ya, como un «Claude Design» local dentro de Iridium: los tokens en un lugar, las piezas (componentes) a la vista, las **pantallas** de la app en un lienzo, comentarios sobre ellas y el pase a la IA que construye. Se toma como modelo Claude Design y las skills de diseño de Anthropic que hay en la PC (`design-system`, `design-critique`, `design-handoff`, `ux-copy`, `accessibility-review`); `impeccable` queda como apoyo, no como base. Todo local (sin `/design-sync` ni proyectos en claude.ai).
+2. Primero lo mínimo para tener la vista de conjunto y que un cambio grande sea fácil; el resto (biblioteca de referencias, rondas de versiones, perillas) después. El alcance exacto se elige en Q-147.
+3. **La dirección visual cambia a negro**, como el modo oscuro de X: fondo negro puro, una sola línea gris, dos grises de texto, un solo color para lo activo, menos cajas y menos bordes. La primera muestra es `modulos/diseno/negro.css`; se aprueba en Q-148.
+4. Orden termina con la prueba de OR-I4 (Q-146). Sus pasos 8 y 9 (Calidad y lanzamiento) se hacen **después** del rediseño: medir la accesibilidad y las capturas de una interfaz que va a cambiar entera sería trabajo tirado. Lo que quede de UX del frente Orden pasa a Diseño.
+
+**Motivo:** el problema que queda es de forma y de jerarquía, no de modelo; para dirigirlo hace falta ver toda la app de un vistazo y poder cambiarla desde un solo lugar. La muestra del 2026-11-07 (las 30 pantallas con los tokens negros, `tools/salida/auditoria/1440x900-negro/`) mostró que los colores ya cambian desde un solo archivo, pero el ruido sigue: cajas dentro de cajas, muchos bordes y píldoras. Eso es estructura, y se arregla con piezas compartidas y una vista de todas las pantallas.
+
+**Consecuencias:**
+- `estado.md` › Módulos: Diseño en curso; Orden sigue en curso hasta Q-146 y después espera el rediseño para su paso 8.
+- `02-definicion.md` › Módulos previstos y `10-operacion.md`: el orden nuevo (Diseño antes que Capacidades y que el paso 8 de Orden).
+- Cambia D-091 punto 3 («Diseño no se adelanta») y el orden de D-079.
+- Cuando se apruebe la dirección, `DESIGN.md`, `docs/06-ui.md` y `docs/ui/tokens.css` se reescriben (probablemente un tema nuevo que reemplaza a los dos de hoy; se decide con Q-148).

@@ -293,7 +293,7 @@ El núcleo es lo del MVP: marco, plan y pendientes. Las demás áreas se constru
 | Inicio | sección | Ideas y Skills como paneles del inicio, junto a Proyectos y Pendientes (D-063) |
 | Orden | sección | Atraviesa la app: auditoría, un solo modelo de lo que se sigue, un solo marco de trabajo y la UX rehecha (D-091, D-092) |
 
-Desde D-063 cada módulo es un **frente**: avanzan hasta dos a la vez. Skills, Compartir y Apariencia y ajustes están terminados y en uso (hito 9). Inicio, terminado (2026-11-04). Activo y primero: Orden (desde el 2026-11-05, D-091). En espera, en este orden: Diseño, Capacidades.
+Desde D-063 cada módulo es un **frente**: avanzan hasta dos a la vez. Skills, Compartir y Apariencia y ajustes están terminados y en uso (hito 9). Inicio, terminado (2026-11-04). Orden, desde el 2026-11-05 (D-091), termina con OR-I4; desde el 2026-11-07 el activo es Diseño (D-102), y el paso 8 de Orden espera el rediseño. En espera: Capacidades.
 
 El puente no es módulo: es LocalSend más un envío automático (D-005). No hay plugins de terceros previstos.
 

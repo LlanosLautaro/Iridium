@@ -20,8 +20,8 @@ Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-010
 Las `Q-n` de todos los proyectos: es Pendientes (D-010, D-022); pasa a llamarse Bandeja de entrada con el frente Orden (D-097).
 
 ## T-5 — Biblioteca de diseño local
-Estado: pendiente · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-011
-Design systems, patrones y capturas de páginas de referencia; prototipos con comentarios. Es el frente Diseño, en espera detrás de Orden (D-079, D-091). Del brainstorming: que la biblioteca arranque con los design systems de los proyectos propios, y perillas en vivo dentro de los prototipos (C-34).
+Estado: en curso · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-011
+Design systems, patrones y capturas de páginas de referencia; prototipos con comentarios. Es el frente Diseño, activo desde el 2026-11-07 como un «Claude Design» local (D-102, `modulos/diseno/`). Del brainstorming: que la biblioteca arranque con los design systems de los proyectos propios, y perillas en vivo dentro de los prototipos (C-34).
 
 ## T-6 — Revisión con comentarios sobre apps web y Electron
 Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-012, D-046
@@ -121,7 +121,7 @@ La ventana de Ajustes (D-065).
 
 ## T-28 — Más capacidades de Claude
 Estado: pendiente · Fecha: 2026-10-30
-Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Es el frente Capacidades, en espera detrás de Orden (D-079, D-091).
+Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Es el frente Capacidades, en espera detrás de Diseño (D-102).
 
 ## T-29 — Mantenimiento: subir los parches
 Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento

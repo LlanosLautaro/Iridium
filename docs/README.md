@@ -45,5 +45,5 @@ Los estándar (`D`, `Q`, `T`, `R`, `H`, `F`, `W`, `S`, `I`; `P1`–`P5` es el ni
 | `OR-n` | pieza de la definición del frente Orden | `modulos/orden/definicion.md` |
 | `PO-n` | pantalla del frente Orden antes de pasar a `W-n` (historia) | `modulos/orden/ux.md` |
 | `CO-n`, `AJ-n`, `IN-n`, `FR-n` | historia o flujo de un frente: Compartir, Apariencia y ajustes, Inicio, Revisión de la app | el `ux.md` de su frente |
-| `OR-In`, `CO-In`, `SK-In`, `AP-In`, `IN-In`, `R-In` | iteración de un frente: Orden, Compartir, Skills, Apariencia y ajustes, Inicio, Revisión de la app | el `estado.md` de su frente |
+| `OR-In`, `DI-In`, `CO-In`, `SK-In`, `AP-In`, `IN-In`, `R-In` | iteración de un frente: Orden, Diseño, Compartir, Skills, Apariencia y ajustes, Inicio, Revisión de la app | el `estado.md` de su frente |
 | `Defecto n` | defecto encontrado en el hito 8 | `08-calidad.md` › Defectos |

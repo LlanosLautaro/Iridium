@@ -22,6 +22,7 @@
 | 2026-11-06 | Q-130 | Eliminar desde el clic derecho, con la papelera de verdad: todo bien |
 | 2026-11-06 | R-11 | «Otro» escrito sin nota volvía a aparecer como sin responder (el archivo se guardaba bien, pero Iridium no lo contaba como respuesta): arreglado, con su prueba |
 | 2026-11-07 | Q-118 | Inicializar repositorio y Publicar en GitHub con tu cuenta de verdad: todo bien (D-081 probado) |
+| 2026-11-07 | Pedido del usuario | El estilo y el orden visual siguen mal: Diseño pasa adelante como un «Claude Design» local y la dirección visual cambia a negro (D-102); qué entra en el mínimo y la muestra negra, en Q-147 y Q-148 |
 | 2026-11-07 | R-14 | Nuevo proyecto ya no pone a la IA a trabajar sin datos: arma solo la plantilla básica y la idea va en la conversación (D-101), hecho y probado |
 | 2026-11-06 | R-12 | Un solo botón «Actualizar» que arma y reinicia: anotado en el frente Orden (`modulos/orden/ux.md` › PO-1), se construye con sus iteraciones (D-091) |
 | 2026-11-05 | Pedido del usuario | Una crítica de la gestión de ideas: `10-operacion.md` › Crítica de la gestión de ideas; qué hacer, en Q-131 |
