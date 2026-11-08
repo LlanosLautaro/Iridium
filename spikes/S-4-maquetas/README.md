@@ -21,7 +21,7 @@ Correr: `node_modules/.bin/electron spikes/S-4-maquetas/main.mjs` desde la raíz
 | Los clics de la maqueta andan | Sí (`onclick` cambió el botón) |
 | `F8` abre el modo comentar | Sí: aparece el elemento `IRIDIUM-REVISION` del selector |
 | La captura del `webview` (`capturePage`, lo que usa el ayudante con el id de la pestaña) | Sí, 200×100; fuera de la pantalla hace falta apagar `CalculateNativeWinOcclusion`, como ya hacen las pruebas |
-| Pasar a otra maqueta con un enlace dentro del `webview` | No se midió: queda para el primer paso de DI-I1 |
+| Pasar a otra maqueta con un enlace dentro del `webview` (DI-I1, 2026-11-08) | Sí: `did-navigate` avisa `mapa.html`, el título cambia y la extensión vuelve a entrar en la página nueva. Con el modo comentar prendido el clic es para comentar y no navega, como en cualquier app |
 
 ## Conclusión
 Las dos formas sirven y se usan juntas: **miniaturas en `<iframe>` con `maqueta://`** (livianas, aisladas, sin red) y **la grande en un `<webview>` con `file://`** (la extensión solo entra en el marco principal de una página `file://` o local, por eso no alcanza un `iframe`). El modo comentar no necesita cambios en la extensión; lo que cambia es del lado de Iridium: reconocer que el comentario es de una maqueta y de qué proyecto (`diseno-tecnico.md` › F8 sobre una maqueta).

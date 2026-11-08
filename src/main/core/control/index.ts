@@ -1,6 +1,7 @@
 // El control (frente Orden, OR-2; `modulos/orden/diseno-tecnico.md` › El control): revisa que lo que escribió la IA
 // esté como Iridium lo lee y arma el mensaje con el que se le devuelve. Una regla por archivo, todas puras.
 import { reglaDibujos } from './dibujos'
+import { reglaDiseno } from './diseno'
 import { reglaEstados } from './estado'
 import { reglaPreguntas } from './preguntas'
 import { reglaRespuestas } from './respuestas'
@@ -17,6 +18,7 @@ export const REGLAS: readonly Regla[] = [
   reglaRevision,
   reglaEstados,
   reglaDibujos,
+  reglaDiseno,
 ]
 
 export function correrControl(archivos: ArchivosControl): Aviso[] {

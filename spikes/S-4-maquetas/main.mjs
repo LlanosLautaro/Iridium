@@ -40,8 +40,14 @@ app.whenReady().then(async () => {
       wc.sendInputEvent({ type: 'keyDown', keyCode: 'F8' }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'F8' })
       await new Promise((ok) => setTimeout(ok, 800))
       r.f8HijosNuevos = await wc.executeJavaScript(`[...document.documentElement.children].map(e=>e.tagName).join(',')`)
+      wc.sendInputEvent({ type: 'keyDown', keyCode: 'F8' }); wc.sendInputEvent({ type: 'keyUp', keyCode: 'F8' })
+      await new Promise((ok) => setTimeout(ok, 500))
+      r.f8Apagado = await wc.executeJavaScript(`[...document.documentElement.children].map(e=>e.tagName).join(',')`)
+      wc.on('did-navigate', (_e, url) => { r.didNavigate = url })
       await wc.executeJavaScript(`document.getElementById('a').click()`)
       setTimeout(async () => {
+        r.tituloDespues = await wc.executeJavaScript('document.title').catch(() => '?')
+        r.marcaExtensionDespues = await wc.executeJavaScript(`!!window[Symbol.for('iridium-revision')]`).catch(() => '?')
         const mini = w.webContents.mainFrame.frames[0]
         r.miniatura = mini ? await mini.executeJavaScript(`document.title + ' / ' + getComputedStyle(document.body).backgroundColor`).catch((e) => 'error ' + e.message) : 'sin frame'
         r.miniaturaVeAlPadre = mini ? await mini.executeJavaScript(`(()=>{try{return String(parent.document.title)}catch(e){return 'bloqueado'}})()`).catch((e)=>'error') : '-'

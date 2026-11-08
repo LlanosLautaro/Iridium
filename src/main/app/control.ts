@@ -5,6 +5,7 @@ import { join, relative } from 'node:path'
 import { type ArchivosControl, type Aviso, correrControl, tieneFramework } from '../core/control'
 import type { ArchivoLeido } from '../core/control/tipos'
 import { leerFrentes, nombreDeModulo } from '../core/mapa'
+import { leerArchivosDiseno } from '../infra/diseno/archivos'
 
 async function textoSiExiste(ruta: string): Promise<string | null> {
   try {
@@ -67,6 +68,7 @@ export async function leerArchivosControl(ruta: string): Promise<ArchivosControl
     respuestas,
     documentos: todos,
     frentes,
+    diseno: await leerArchivosDiseno(ruta),
   }
 }
 

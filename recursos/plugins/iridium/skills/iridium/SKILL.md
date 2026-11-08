@@ -197,6 +197,13 @@ Una vez, o cuando la IA lo pida.
 - Lo más usado primero, no más de ocho. Las herramientas que usa solo la IA van en el `CLAUDE.md`. Se corrige en la misma sesión en que algo cambia. Sin nada que ejecutar: «(Todavía no hay scripts: el proyecto no tiene código.)».
 - En una `Q-n`, citá el script (`scripts.md` › Abrir en modo desarrollo) en vez de repetir el comando.
 
+### Las maquetas: `docs/diseno/` (plantilla `plantillas/diseno/README.md`)
+La interfaz se diseña en maquetas HTML que Iridium muestra vivas en su sección Diseño. Cómo se arman, en `referencias/06-ui.md` › Maquetas. Lo que lee Iridium y revisa el control:
+- `docs/diseno/README.md` con `## Pantallas` y la tabla `| Pantalla | Sección | Archivo | En la app |`: **Sección** es el grupo, **Archivo** va dentro de `pantallas/` (relativo a `docs/diseno/`) y **En la app** es `—` o `AAAA-MM-DD HH:MM`, la fecha en que terminaste de pasarla al código. Cada `.html` de `pantallas/` está en la tabla.
+- `tokens.css`: los tokens como variables en `:root`. `piezas.css` y los `<style>` de las maquetas no escriben colores, usan `var(--…)`.
+- Todo local: nada de `http://`, `https://` ni `//`, nada fuera de `docs/diseno/` y nada que falte.
+- `direcciones/<nombre>.css`: las mismas variables que `tokens.css`; `versiones/<maqueta>/<letra>.html`: de una maqueta que existe.
+
 ### Códigos y citas
 | Código | Qué es | Dónde nace |
 |---|---|---|
@@ -249,7 +256,7 @@ La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, d
 
 ## El control
 
-Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos), las tablas de estados y los campos de `estado.md`, los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho) y los dibujos en texto. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
+Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos), las tablas de estados y los campos de `estado.md`, los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho), los dibujos en texto y las maquetas de `docs/diseno/`. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
 
 ## Reglas para la IA
 
@@ -283,4 +290,4 @@ Al pasar un portón o terminar una iteración, cerrá así y decí en una línea
 - `referencias/integraciones.md`: las skills externas (`impeccable`) en los hitos 4, 6, 7, 8 y 10.
 - `referencias/ronda-ux.md`: la ronda de UX de la operación.
 - `referencias/pasar-al-framework.md`: cómo pasar un proyecto de la guía de hitos (o una carpeta simple) al framework.
-- `plantillas/`: `estado.md`, `trabajo.md`, `README-docs.md`, `decisiones.md`, `perfil-proyecto.md`, `scripts.md`, `instrucciones-ia.md` y, en `plantillas/modulo/`, las de cada frente.
+- `plantillas/`: `estado.md`, `trabajo.md`, `README-docs.md`, `decisiones.md`, `perfil-proyecto.md`, `scripts.md`, `instrucciones-ia.md`; en `plantillas/modulo/`, las de cada frente, y en `plantillas/diseno/`, el índice de las maquetas.

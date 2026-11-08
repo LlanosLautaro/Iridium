@@ -17,6 +17,15 @@ export interface ArchivosControl {
   documentos: ArchivoLeido[]
   /** Los frentes que existen: la carpeta y el nombre de cada módulo, y los de la tabla «Módulos» sin carpeta todavía. */
   frentes: readonly { carpeta: string; nombre: string }[]
+  /** `docs/diseno/` (frente Diseño, D-105), o null/ausente si el proyecto no lo tiene. */
+  diseno?: ArchivosDiseno | null
+}
+
+export interface ArchivosDiseno {
+  /** Los `.html`, `.css`, `.js` y `.md` de `docs/diseno/`, con la ruta relativa a esa carpeta: `pantallas/bandeja.html`. */
+  textos: ArchivoLeido[]
+  /** Todos los archivos de `docs/diseno/` (también imágenes y letras), relativos a esa carpeta. */
+  existentes: ReadonlySet<string>
 }
 
 export interface Aviso {
