@@ -102,3 +102,12 @@ export const EstadoFicha = z.enum(ESTADOS)
 
 /** El nombre de un proyecto nuevo; que sirva para una carpeta lo dice `problemaNombreProyecto`. */
 export const NombreProyecto = z.string().max(LIMITE_NOMBRE_PROYECTO * 2)
+
+/** Una maqueta de la sección Diseño: relativa a `docs/diseno/`, sin salir de ahí (se comprueba otra vez al leer). */
+export const ArchivoMaqueta = z
+  .string()
+  .min(1)
+  .max(512)
+  .refine((r) => !r.split('/').includes('..') && !r.includes(':') && !r.includes('\\') && !r.startsWith('/'))
+
+export const PedidoDisenoEsquema = z.enum(['empezar'])

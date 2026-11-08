@@ -9,6 +9,7 @@ import { textoHito } from '../proyectos/Tarjeta'
 import { Archivos } from './Archivos'
 import { Conversacion } from './Conversacion'
 import { Docs } from './Docs'
+import { Diseno } from './diseno/Diseno'
 import { Git } from './Git'
 import { Mapa } from './Mapa'
 import { Resumen } from './Resumen'
@@ -40,6 +41,8 @@ function Seccion({ ruta, id }: { ruta: string; id: SeccionProyecto }) {
       return <Trabajo ruta={ruta} />
     case 'skills':
       return <SkillsProyecto ruta={ruta} />
+    case 'diseno':
+      return <Diseno ruta={ruta} />
   }
 }
 

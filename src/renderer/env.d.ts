@@ -7,3 +7,13 @@ declare global {
     iridium: ApiIridium
   }
 }
+
+// El `<webview>` de Electron (la maqueta grande de Diseño, S-4): la ventana tiene `webviewTag` y el proceso principal
+// rehace sus opciones al adjuntarlo. Acá solo lo que usa la sección.
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      webview: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & { src?: string }
+    }
+  }
+}

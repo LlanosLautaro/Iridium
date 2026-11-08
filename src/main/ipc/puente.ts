@@ -1,5 +1,5 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
-import { mkdir, rename } from 'node:fs/promises'
+import { mkdir, readdir, rename } from 'node:fs/promises'
 import { basename, dirname, join, normalize } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { z } from 'zod'
@@ -25,6 +25,7 @@ import type { PlanEliminacion } from '../../compartido/tipos'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
 import { crearProyecto } from '../app/creacion'
+import { marcarVista, vistaDiseno } from '../app/diseno'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
 import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
@@ -38,6 +39,7 @@ import { anotarEnProyecto, anotarSuelta, ideasDelInicio, trabajoDelProyecto } fr
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
+import { pedidoEmpezar, tieneCodigo } from '../core/diseno/pedidos'
 import {
   INSTRUCCION_CENTRO,
   INSTRUCCION_SKILLS,
@@ -53,6 +55,8 @@ import {
   reenlazarSkills,
 } from '../infra/carpeta-iridium'
 import { type ArchivoConfig, preferenciasDe } from '../infra/config'
+import { ESQUEMA_MAQUETA, type MaquetasAbiertas } from '../infra/diseno/protocolo'
+import type { ArchivoVistos } from '../infra/diseno/vistos'
 import { ejecutarPlan } from '../infra/ejecutar'
 import type { ArchivoEscritos } from '../infra/escritos'
 import { leerCommit, leerDiferencia, leerGit } from '../infra/git'
@@ -64,6 +68,7 @@ import { type Vigilancia, vigilar } from '../infra/vigilancia'
 import { abrirEnVsCode } from '../infra/vscode'
 import type { Motor } from '../motor/motor'
 import {
+  ArchivoMaqueta,
   CambioPreferencias,
   Codigo,
   CodigoComentario,
@@ -78,6 +83,7 @@ import {
   NombreProyecto,
   NotaReabrir,
   Pedido,
+  PedidoDisenoEsquema,
   PedidoPublicar,
   PedidoResponder,
   Ruta,
@@ -135,6 +141,10 @@ export interface Servicios {
   alCambiarTema?: (tema: Tema) => void
   /** Ctrl+= / Ctrl+- / Ctrl+0 (Defecto 17): la ventana agranda, achica o vuelve al tamaño normal. */
   zoom?: (paso: 1 | -1 | 0) => void
+  /** Los proyectos abiertos en Diseño, que sirve el protocolo `maqueta:` (frente Diseño). */
+  maquetas: MaquetasAbiertas
+  /** Lo que ya se miró de cada maqueta (`diseno.json`). */
+  vistos: ArchivoVistos
 }
 
 export interface Puente {
@@ -230,6 +240,10 @@ export function registrarPuente(s: Servicios): Puente {
           for (const nombre of proyectos) enviar(CANALES.docsCambiaron, join(actual, nombre))
         },
         () => enviar(CANALES.skillsCambiaron, null),
+        (cambios) => {
+          for (const [nombre, archivos] of cambios)
+            enviar(CANALES.disenoCambio, { ruta: join(actual, nombre), archivos: [...archivos] })
+        },
       )
     }
     if (iridiumVigilada !== iridium) {
@@ -598,6 +612,23 @@ export function registrarPuente(s: Servicios): Puente {
     )
   })
   ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
+
+  // Diseño (frente Diseño, DS-11 a DS-13): abrirlo da de alta el proyecto para el protocolo `maqueta:` y la grande.
+  ipcMain.handle(CANALES.abrirDiseno, async (_, ruta: unknown) => {
+    const r = await proyecto(ruta)
+    return vistaDiseno(r, `${ESQUEMA_MAQUETA}://${s.maquetas.abrir(r)}/`, s.vistos)
+  })
+  ipcMain.handle(CANALES.marcarVista, async (_, ruta: unknown, archivo: unknown) =>
+    marcarVista(await proyecto(ruta), ArchivoMaqueta.parse(archivo), s.vistos),
+  )
+  // Los pedidos a la IA (DS-1): el texto lo arma este lado y cita el framework; la ventana solo dice cuál.
+  ipcMain.handle(CANALES.pedirDiseno, async (_, ruta: unknown, pedido: unknown) => {
+    const r = await proyecto(ruta)
+    PedidoDisenoEsquema.parse(pedido)
+    if (conversaciones.enMarcha().includes(r)) throw new Error('La IA de ese proyecto está trabajando')
+    const raiz = await readdir(r).catch(() => [] as string[])
+    await conversaciones.seguir(r, { texto: pedidoEmpezar(tieneCodigo(raiz)) })
+  })
 
   // El menú de la tarjeta y Nuevo proyecto (R-7, D-089). Solo sobre carpetas de la carpeta de proyectos (no Ideas ni
   // Skills) y, en la ficha, solo estado, archivado e ícono.

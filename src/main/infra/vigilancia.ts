@@ -1,7 +1,7 @@
 // Vigila la carpeta de proyectos con `fs.watch` recursivo (D-028) y avisa qué proyectos cambiaron.
 // Los cambios llegan de a ráfagas (la IA escribe varios archivos seguidos): se juntan y se avisa una vez.
 import { type FSWatcher, watch } from 'node:fs'
-import { cambianSkills, documentoAfectado, proyectoAfectado } from '../core/vigilancia'
+import { cambianSkills, disenoAfectado, documentoAfectado, proyectoAfectado } from '../core/vigilancia'
 
 export interface Vigilancia {
   cerrar(): void
@@ -15,8 +15,11 @@ export function vigilar(
   alCambiarDocs?: (proyectos: ReadonlySet<string>) => void,
   /** Cambió una skill propia o el formato de un proyecto (la sección Skills se relee). */
   alCambiarSkills?: () => void,
+  /** Los archivos de `docs/diseno/` que cambiaron, por proyecto (la sección Diseño redibuja esas maquetas). */
+  alCambiarDiseno?: (cambios: ReadonlyMap<string, ReadonlySet<string>>) => void,
 ): Vigilancia {
   let pendientes = new Set<string>()
+  let diseno = new Map<string, Set<string>>()
   let docs = new Set<string>()
   let skills = false
   let temporizador: NodeJS.Timeout | null = null
@@ -30,9 +33,12 @@ export function vigilar(
     docs = new Set()
     const conSkills = skills
     skills = false
+    const loteDiseno = diseno
+    diseno = new Map()
     if (lote.size > 0) alCambiar(lote)
     if (loteDocs.size > 0) alCambiarDocs?.(loteDocs)
     if (conSkills) alCambiarSkills?.()
+    if (loteDiseno.size > 0) alCambiarDiseno?.(loteDiseno)
   }
 
   try {
@@ -41,7 +47,13 @@ export function vigilar(
       const proyecto = nombre === null ? '*' : proyectoAfectado(nombre.toString())
       const doc = nombre === null ? null : documentoAfectado(nombre.toString())
       const deSkills = nombre === null || cambianSkills(nombre.toString())
-      if (proyecto === null && doc === null && !deSkills) return
+      const deDiseno = nombre === null ? null : disenoAfectado(nombre.toString())
+      if (proyecto === null && doc === null && !deSkills && !deDiseno) return
+      if (deDiseno) {
+        const archivos = diseno.get(deDiseno.proyecto) ?? new Set<string>()
+        archivos.add(deDiseno.archivo)
+        diseno.set(deDiseno.proyecto, archivos)
+      }
       if (proyecto !== null) pendientes.add(proyecto)
       if (doc !== null) docs.add(doc)
       if (deSkills) skills = true

@@ -14,6 +14,7 @@ import './estilos/ajustes.css'
 import './estilos/skills.css'
 import './estilos/ideas.css'
 import './estilos/trabajo.css'
+import './estilos/diseno.css'
 import { App } from './App'
 
 const raiz = document.getElementById('raiz')

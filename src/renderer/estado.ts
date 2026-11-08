@@ -43,6 +43,7 @@ export type SeccionProyecto =
   | 'git'
   | 'scripts'
   | 'skills'
+  | 'diseno'
 
 /** Un lugar de Docs: el documento, su sección y, al volver con Atrás, la posición en la que se lo dejó. */
 export interface LugarDoc extends Destino {

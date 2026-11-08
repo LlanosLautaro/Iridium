@@ -65,3 +65,14 @@ export function cambianSkills(relativa: string): boolean {
   if (resto.length === 1) return resto[0] === 'CLAUDE.md'
   return resto.length === 2 && resto[0] === 'docs' && resto[1] === 'README.md'
 }
+
+/**
+ * Un archivo de `docs/diseno/` (frente Diseño, DS-3): el proyecto y el archivo relativo a esa carpeta, para redibujar
+ * la maqueta que cambió. Null si el cambio es de otra cosa.
+ */
+export function disenoAfectado(relativa: string): { proyecto: string; archivo: string } | null {
+  const partes = relativa.split(/[\\/]+/).filter((p) => p !== '')
+  const [proyecto, docs, diseno, ...resto] = partes
+  if (!proyecto || !esCarpetaDeProyecto(proyecto) || docs !== 'docs' || diseno !== 'diseno') return null
+  return { proyecto, archivo: resto.join('/') }
+}

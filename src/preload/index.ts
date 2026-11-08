@@ -1,6 +1,7 @@
 // El puente seguro: la única API que ve la ventana (`window.iridium`). No expone nada de Node ni de Electron.
 import { contextBridge, ipcRenderer, webFrame } from 'electron'
 import { version } from '../../package.json'
+import type { CambioDiseno } from '../compartido/diseno'
 import {
   type AccesoVersiones,
   type ApiIridium,
@@ -107,6 +108,11 @@ const api: ApiIridium = {
   anotarSuelta: (texto) => ipcRenderer.invoke(CANALES.anotarSuelta, texto),
   ideasNuevas: () => ipcRenderer.invoke(CANALES.ideasNuevas),
   skillsProyecto: (ruta) => ipcRenderer.invoke(CANALES.skillsProyecto, ruta),
+  abrirDiseno: (ruta) => ipcRenderer.invoke(CANALES.abrirDiseno, ruta),
+  marcarVista: (ruta, archivo) => ipcRenderer.invoke(CANALES.marcarVista, ruta, archivo),
+  pedirDiseno: (ruta, pedido) => ipcRenderer.invoke(CANALES.pedirDiseno, ruta, pedido),
+  alCambiarDiseno: (f) => escuchar<CambioDiseno>(CANALES.disenoCambio, f),
+  alEscapeDiseno: (f) => escuchar<null>(CANALES.disenoEscape, () => f()),
 }
 
 contextBridge.exposeInMainWorld('iridium', api)

@@ -213,6 +213,12 @@ const TRAZOS = {
       <path d="M18 1.5v1.2M18 9.3v1.2M13.5 6h1.2M21.3 6h1.2" />
     </>
   ),
+  diseno: (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 9h18M9 9v11" />
+    </>
+  ),
   enchufe: <path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0zM12 17v5" />,
   enviar: <path d="M5 12h13M13 6l6 6-6 6" />,
   reabrir: (

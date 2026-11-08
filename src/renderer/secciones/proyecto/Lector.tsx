@@ -75,6 +75,7 @@ export function BotonAtras({ ruta }: { ruta: string }) {
           scripts: 'Scripts',
           trabajo: paso.item ? paso.item : 'Trabajo',
           skills: 'las Skills',
+          diseno: 'Diseño',
         }[paso.seccion]
   return (
     <button

@@ -245,3 +245,16 @@ describe('el framework', () => {
     expect(await readFile(join(base, 'referencias/06-ui.md'), 'utf8')).toContain('## Maquetas')
   })
 })
+
+describe('la vigilancia de docs/diseno/', () => {
+  it('reconoce un archivo de docs/diseno/ con barras de Windows o de las otras', async () => {
+    const { disenoAfectado } = await import('../src/main/core/vigilancia')
+    expect(disenoAfectado('Alfa\\docs\\diseno\\pantallas\\lista.html')).toEqual({
+      proyecto: 'Alfa',
+      archivo: 'pantallas/lista.html',
+    })
+    expect(disenoAfectado('Alfa/docs/diseno/tokens.css')).toEqual({ proyecto: 'Alfa', archivo: 'tokens.css' })
+    expect(disenoAfectado('Alfa\\docs\\estado.md')).toBeNull()
+    expect(disenoAfectado('.iridium\\docs\\diseno\\x.html')).toBeNull()
+  })
+})

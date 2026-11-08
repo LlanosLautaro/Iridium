@@ -2,6 +2,7 @@
 // pedidos y eventos. Los tipos los ven los dos lados; lo que llega desde la ventana se valida en `main/ipc/`.
 
 import type { AnchosConversacion } from './ancho-conversacion'
+import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
 import type { ListaIdeas } from './ideas'
 import type { Borrador } from './respuestas'
 import type { ListaSkills, ProyectoFramework, SkillProyecto } from './skills'
@@ -797,6 +798,11 @@ export const CANALES = {
   anotarSuelta: 'ideas:anotar',
   ideasNuevas: 'ideas:nuevas',
   skillsProyecto: 'proyecto:skills',
+  abrirDiseno: 'diseno:abrir',
+  marcarVista: 'diseno:marcar-vista',
+  pedirDiseno: 'diseno:pedir',
+  disenoCambio: 'diseno:cambio',
+  disenoEscape: 'diseno:escape',
 } as const
 
 /** Lo que vuelve de una acción del menú de la tarjeta (R-7): la lista ya releída, para verla al instante. */
@@ -968,4 +974,14 @@ export interface ApiIridium {
   ideasNuevas(): Promise<IdeasDelInicio>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */
   skillsProyecto(ruta: string): Promise<SkillProyecto[]>
+  /** La sección Diseño (DS-11 a DS-13): los grupos de maquetas, el sistema y la base `maqueta://` de las miniaturas. */
+  abrirDiseno(ruta: string): Promise<VistaDiseno>
+  /** Agrandar una maqueta la marca vista (DS-3: se va el punto). */
+  marcarVista(ruta: string, archivo: string): Promise<void>
+  /** Manda a la conversación del proyecto un pedido de Diseño (gasta uso; la ventana lo dice antes). */
+  pedirDiseno(ruta: string, pedido: PedidoDiseno): Promise<void>
+  /** Avisa qué archivos de `docs/diseno/` cambiaron en un proyecto. */
+  alCambiarDiseno(escuchar: (cambio: CambioDiseno) => void): () => void
+  /** Esc dentro de la maqueta grande, fuera del modo comentar: la sección vuelve al lienzo (DS-4). */
+  alEscapeDiseno(escuchar: () => void): () => void
 }

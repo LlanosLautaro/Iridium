@@ -5,8 +5,8 @@ import { createRequire } from 'node:module'
 import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, normalize } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { app, BrowserWindow, Menu, shell } from 'electron'
-import { TEMAS, type Tema } from '../compartido/puente'
+import { app, BrowserWindow, Menu, protocol, session, shell } from 'electron'
+import { CANALES, TEMAS, type Tema } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
 import { elegirComplementos } from './core/complementos'
@@ -14,6 +14,8 @@ import { ENCABEZADO_CONTROL } from './core/control'
 import { zoomSiguiente } from './core/zoom'
 import { ArchivoBorradores } from './infra/borradores'
 import { ArchivoConfig } from './infra/config'
+import { ESQUEMA_MAQUETA, MaquetasAbiertas } from './infra/diseno/protocolo'
+import { ArchivoVistos } from './infra/diseno/vistos'
 import { ArchivoEscritos } from './infra/escritos'
 import { leerCarpetas } from './infra/raiz'
 import { Registro } from './infra/registro'
@@ -51,6 +53,12 @@ if (oculta) app.commandLine.appendSwitch('disable-features', 'CalculateNativeWin
 const carpetaDatos = process.env.IRIDIUM_DATOS ?? join(app.getPath('appData'), 'Centro de Desarrollo')
 const config = new ArchivoConfig(join(carpetaDatos, 'config.json'))
 const datosRevision = new ArchivoRevision(join(carpetaDatos, 'revision.json'))
+/** Los proyectos abiertos en Diseño: el protocolo `maqueta:` y la grande solo cargan sus `docs/diseno/` (S-4). */
+const maquetas = new MaquetasAbiertas()
+// Las miniaturas de Diseño piden `maqueta://<id>/…` (S-4): se registra antes de que la app esté lista.
+protocol.registerSchemesAsPrivileged([
+  { scheme: ESQUEMA_MAQUETA, privileges: { standard: true, supportFetchAPI: false } },
+])
 if (process.env.IRIDIUM_DATOS) app.setPath('userData', join(carpetaDatos, 'electron'))
 
 /**
@@ -88,15 +96,14 @@ const extensionCopiada: Promise<unknown> =
       ).catch((e) => console.error('Revisión: no se pudo copiar la extensión', e))
 
 // Revisión de Iridium, en modo desarrollo y en la versión armada (D-052): F8 comenta la app y el comentario llega a su
-// proyecto (docs/modulos/revision/diseno-tecnico.md › Ayudante de Electron). Las pruebas (con datos aparte) no la cargan.
-// Va después de copiar la extensión: con la carpeta a medias, F8 no andaba.
-if (!process.env.IRIDIUM_DATOS)
+// proyecto (docs/modulos/revision/diseno-tecnico.md › Ayudante de Electron). Las pruebas (con datos aparte) no la cargan,
+// salvo la de F8 sobre una maqueta (IRIDIUM_AYUDANTE=1). Va después de copiar la extensión: con la carpeta a medias, F8
+// no andaba.
+if (!process.env.IRIDIUM_DATOS || process.env.IRIDIUM_AYUDANTE === '1')
   void despuesDeCopiar(extensionCopiada, () =>
-    import(
-      pathToFileURL(
-        join(process.env.APPDATA ?? '', 'Centro de Desarrollo', 'extension', 'electron', 'ayudante.mjs'),
-      ).href
-    ).then((m) => m.revision()),
+    import(pathToFileURL(join(carpetaDatos, 'extension', 'electron', 'ayudante.mjs')).href).then((m) =>
+      m.revision(),
+    ),
   )
 
 /** En la app instalada, Claude Code está fuera del archivo comprimido: el SDK no puede ejecutarlo desde adentro. */
@@ -293,9 +300,12 @@ function crearVentana(puente: Puente, tema: Tema): void {
       sandbox: true,
       // Fuera de la pantalla, Chromium la daría por tapada y dejaría de dibujarla.
       backgroundThrottling: !oculta,
+      // La maqueta grande de Diseño (S-4): un `webview` con `file://`, donde entra la extensión de la Revisión.
+      webviewTag: true,
     },
   })
   ventana = v
+  reglasDelWebview(v)
   // El tamaño guardado (Defecto 17); Ctrl+= y los demás los atiende la ventana, con sus otros atajos.
   v.webContents.on('did-finish-load', () => ponerZoom(zoom))
   // Oculta, se «muestra» sin quitarle el foco a lo que el usuario está usando: no se ve, pero se dibuja.
@@ -334,6 +344,61 @@ function crearVentana(puente: Puente, tema: Tema): void {
   else void v.loadFile(join(import.meta.dirname, '../renderer/index.html'), { query: { tema } })
 }
 
+/**
+ * El `webview` de la maqueta grande (S-4, `modulos/diseno/diseno-tecnico.md` › La grande): sin preload, sin Node,
+ * aislado, y solo dentro de `docs/diseno/` de un proyecto abierto en Diseño. Nunca abre ventanas.
+ */
+function reglasDelWebview(v: BrowserWindow): void {
+  v.webContents.on('will-attach-webview', (e, prefs, params) => {
+    delete prefs.preload
+    prefs.nodeIntegration = false
+    prefs.nodeIntegrationInSubFrames = false
+    prefs.contextIsolation = true
+    prefs.sandbox = true
+    prefs.webSecurity = true
+    if (!maquetas.proyectoDeArchivo(params.src ?? '')) e.preventDefault()
+  })
+  v.webContents.on('did-attach-webview', (_e, wc) => {
+    const frenar = (e: { preventDefault(): void }, url: string) => {
+      if (!maquetas.proyectoDeArchivo(url)) e.preventDefault()
+    }
+    wc.on('will-navigate', frenar)
+    wc.on('will-frame-navigate', (e) => frenar(e, e.url))
+    wc.on('will-redirect', frenar)
+    wc.setWindowOpenHandler(() => ({ action: 'deny' }))
+    // Esc vuelve al lienzo (DS-4), salvo que esté comentando: F8 prende y apaga el modo comentar de la extensión,
+    // y ahí Esc es suyo (lo cancela).
+    let comentando = false
+    wc.on('before-input-event', (_e, tecla) => {
+      if (tecla.type !== 'keyDown') return
+      if (tecla.key === 'F8') comentando = !comentando
+      else if (tecla.key === 'Escape') {
+        if (comentando) comentando = false
+        else if (!wc.hostWebContents?.isDestroyed()) wc.hostWebContents?.send(CANALES.disenoEscape, null)
+      }
+    })
+    wc.on('did-navigate', () => {
+      comentando = false
+    })
+  })
+}
+
+/**
+ * Lo que pide una maqueta grande: solo `file://` de un `docs/diseno/` abierto y la extensión de la Revisión; lo demás
+ * (la red, otros archivos de la PC) se cancela. Las otras páginas de la sesión no pasan por acá.
+ */
+function filtrarPedidosDeMaquetas(): void {
+  session.defaultSession.webRequest.onBeforeRequest((d, responder) => {
+    if (d.webContents?.getType() !== 'webview') return responder({})
+    const deja =
+      d.url.startsWith('chrome-extension:') ||
+      d.url.startsWith('devtools:') ||
+      d.url.startsWith('data:') ||
+      maquetas.proyectoDeArchivo(d.url) !== null
+    responder({ cancel: !deja })
+  })
+}
+
 /** Otro tema elegido en Ajustes: Windows vuelve a dibujar sus botones y el fondo con los colores del tema. */
 function pintarVentana(tema: Tema): void {
   if (!ventana || ventana.isDestroyed()) return
@@ -366,6 +431,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
 
   app.whenReady().then(async () => {
     Menu.setApplicationMenu(null)
+    protocol.handle(ESQUEMA_MAQUETA, (pedido) => maquetas.responder(pedido.url))
+    filtrarPedidosDeMaquetas()
     // El tema se lee antes de crear la ventana (D-066): así ya abre con sus colores.
     const tema = await temaAlAbrir()
     zoom = (await config.leer()).zoom
@@ -413,6 +480,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       versionNueva: vigiaVersion,
       sinArmar: vigiaSinArmar,
       versionesGithub: vigiaGithub,
+      maquetas,
+      vistos: new ArchivoVistos(join(carpetaDatos, 'diseno.json')),
       reiniciarAhora: () => {
         reiniciar = true
         ventana?.close()

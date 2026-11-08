@@ -1,0 +1,130 @@
+// Una maqueta grande (DS-12, S-4): a todo el lienzo, viva, en un `<webview>` con `file://` donde entra la extensión de
+// la Revisión (F8). Arriba, Volver, el nombre y el número; a los costados, la anterior y la siguiente; Esc vuelve. Si
+// un enlace de la maqueta lleva a otra, la cabecera la sigue.
+import { useEffect, useRef, useState } from 'react'
+import type { MaquetaVista } from '../../../../compartido/diseno'
+import { Icono } from '../../../ui/Icono'
+
+interface Webview extends HTMLElement {
+  reload(): void
+  getURL(): string
+}
+
+/** El archivo relativo a `docs/diseno/` de una dirección `file://` de la carpeta, o null si es de afuera. */
+function archivoDe(carpeta: string, url: string): string | null {
+  const limpia = url.replace(/[?#].*$/, '')
+  if (!limpia.toLowerCase().startsWith(carpeta.toLowerCase())) return null
+  try {
+    return decodeURIComponent(limpia.slice(carpeta.length))
+  } catch {
+    return null
+  }
+}
+
+export function Grande({
+  carpeta,
+  maquetas,
+  archivo,
+  elegir,
+  volver,
+}: {
+  /** La carpeta `docs/diseno/` como `file://…/`. */
+  carpeta: string
+  /** En el orden del lienzo, para las flechas y el número. */
+  maquetas: readonly MaquetaVista[]
+  archivo: string
+  elegir: (archivo: string) => void
+  volver: () => void
+}) {
+  const vista = useRef<Webview>(null)
+  // La que se ve: cambia si un enlace de la maqueta lleva a otra (puede no estar en el índice).
+  const [actual, setActual] = useState(archivo)
+  const mostrada = useRef(archivo)
+  const [src] = useState(`${carpeta}${archivo}`)
+  const i = maquetas.findIndex((m) => m.archivo === actual)
+  const m = maquetas[i]
+  const huella = m?.huella
+  const vistaHuella = useRef(`${actual}|${huella}`)
+
+  // Elegir otra desde las flechas carga esa maqueta; si ya es la que se ve (vino de un enlace), nada.
+  useEffect(() => {
+    if (archivo === mostrada.current) return
+    mostrada.current = archivo
+    setActual(archivo)
+    vista.current?.setAttribute('src', `${carpeta}${archivo}`)
+  }, [archivo, carpeta])
+
+  // La IA cambió la que se ve: se recarga en el lugar. Pasar a otra maqueta no es un cambio.
+  useEffect(() => {
+    const antes = vistaHuella.current
+    vistaHuella.current = `${actual}|${huella}`
+    if (huella && antes.startsWith(`${actual}|`) && antes !== vistaHuella.current) vista.current?.reload()
+  }, [actual, huella])
+
+  useEffect(() => {
+    const w = vista.current
+    if (!w) return
+    const alNavegar = (e: Event) => {
+      const a = archivoDe(carpeta, (e as Event & { url: string }).url)
+      if (!a || a === mostrada.current) return
+      mostrada.current = a
+      setActual(a)
+      if (maquetas.some((x) => x.archivo === a)) elegir(a)
+    }
+    w.addEventListener('did-navigate', alNavegar)
+    return () => w.removeEventListener('did-navigate', alNavegar)
+  }, [carpeta, maquetas, elegir])
+
+  useEffect(() => {
+    const alTeclado = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') volver()
+    }
+    window.addEventListener('keydown', alTeclado)
+    const quitar = window.iridium.alEscapeDiseno(volver)
+    return () => {
+      window.removeEventListener('keydown', alTeclado)
+      quitar()
+    }
+  }, [volver])
+
+  const ir = (paso: number) => {
+    const otra = maquetas[(i + paso + maquetas.length) % maquetas.length]
+    if (otra) elegir(otra.archivo)
+  }
+  const nombre = m?.nombre ?? actual
+  const numero = i >= 0 ? `${i + 1} de ${maquetas.length}` : null
+
+  return (
+    <div className="di-grande">
+      <div className="di-grande-cab">
+        <button type="button" className="btn fantasma chico" onClick={volver} title="Volver al lienzo (Esc)">
+          <Icono nombre="atras" />
+          Volver
+        </button>
+        <span className="di-grande-t" aria-live="polite">
+          <b>{nombre}</b>
+          {numero && <span className="sub"> · {numero}</span>}
+        </span>
+        <span className="di-grande-ayuda">F8 para comentar</span>
+      </div>
+      <div className="di-grande-cuerpo">
+        {maquetas.length > 1 && (
+          <button type="button" className="di-flecha" aria-label="Anterior" onClick={() => ir(-1)}>
+            <Icono nombre="chev" style={{ transform: 'rotate(180deg)' }} />
+          </button>
+        )}
+        <webview
+          ref={vista}
+          className="di-webview"
+          src={src}
+          aria-label={`${nombre}${numero ? `, ${numero}` : ''}`}
+        />
+        {maquetas.length > 1 && (
+          <button type="button" className="di-flecha" aria-label="Siguiente" onClick={() => ir(1)}>
+            <Icono nombre="chev" />
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
