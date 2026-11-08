@@ -111,6 +111,7 @@
 | D-102 | 2026-11-07 | general | 10, a pedido del usuario | Diseño pasa adelante, como un «Claude Design» dentro de Iridium, y la dirección visual cambia a negro | vigente |
 | D-103 | 2026-11-07 | general | 10, frente Diseño, paso 1 (Q-147 y Q-148) | El mínimo de Diseño empieza por las piezas compartidas, y el negro va sin acento | vigente |
 | D-104 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-149) | Un solo tema: el negro reemplaza a Iridium y Carbón | vigente |
+| D-105 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-150) | Las pantallas de Diseño son maquetas HTML que escribe la IA, y se comentan con F8 | vigente |
 
 ---
 
@@ -2394,3 +2395,29 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - Ajustes › Apariencia: sin el selector de tema (y sin sus miniaturas, `tools/miniaturas-tema.ts`); queda lo demás que ya tenga. Quien tenía guardado Iridium o Carbón abre en negro.
 - `IRIDIUM_TEMA` y la corrida de las pruebas en Carbón (D-067) dejan de tener sentido; los colores que Windows dibuja (`src/main/index.ts`) quedan los del negro.
 - `DESIGN.md` y `06-ui.md` describen un solo tema; la tabla de contraste se rehace para el negro.
+
+## D-105 — Las pantallas de Diseño son maquetas HTML que escribe la IA, y se comentan con F8
+- **Fecha:** 2026-11-07
+- **Ámbito:** general (frente Diseño, el framework, la Revisión)
+- **Hito o paso:** 10; frente Diseño, paso 4 (Q-150)
+- **Estado:** vigente
+
+**Contexto:** la UX escrita en el paso 4 armaba **Pantallas** con capturas de la app real y preguntaba cómo sacarlas en cada proyecto (un script o la IA cada vez). El usuario respondió con otro modelo, el de Claude Design: la interfaz se arma **aparte, en HTML**, se mira ahí y se comenta con la herramienta de la Revisión (`F8`). Así se prueban otras UX y UI con poco esfuerzo, sirve tanto para un cambio grande en una app ya armada (Iridium) como para las primeras pantallas de una app nueva, y ya le dio buen resultado en otro proyecto suyo diseñado solo con Claude Design.
+
+**Opciones (Q-150):** A) Capturas con un script de capturas por proyecto · B) Capturas que saca la IA cada vez · Otro: maquetas HTML, como Claude Design (elegida).
+
+**Decisión:**
+1. Las pantallas de Diseño son **maquetas HTML** que escribe la IA en `docs/diseno/` del proyecto, sobre los tokens y las piezas del proyecto (también en HTML). No son capturas de la app.
+2. Iridium las muestra **vivas** en un lienzo; una agrandada se puede tocar (los clics que la maqueta tenga) y se comenta con **`F8`**: el comentario llega a la Revisión del proyecto como `R-n`, con la maqueta y el lugar, y la IA corrige la maqueta.
+3. **Probar otra cosa es pedir otra versión**: de una pantalla (versiones lado a lado) o de todas a la vez (otra dirección: otro juego de tokens sobre las mismas maquetas). Se elige una y la otra se borra o se guarda.
+4. Lo aprobado **se pasa al código** después, como el pase de Claude Design a Claude Code. En una app nueva, las maquetas son la UI del hito 6.
+5. Las capturas de la app real quedan solo como referencia para comparar, donde ya existan (en Iridium, `tools/auditoria-ux.ts`); no hace falta un script de capturas por proyecto.
+
+**Motivo:** es el modelo que ya le funcionó al usuario y separa decidir la interfaz de construirla: probar una dirección o una versión cuesta escribir HTML, no tocar la app. Iridium ya lo hacía a mano con las maquetas de `docs/ui/vista-*.html`.
+
+**Consecuencias:**
+- Cambia la parte 2 de `modulos/diseno/ux.md` y el Won't de `definicion.md` («prototipos con clics» entra en lo que la maqueta tenga). El orden de las iteraciones de Diseño se decide en Q-151.
+- El ayudante de la Revisión tiene que andar dentro de una maqueta abierta en Iridium (paso 5 de Diseño).
+- El framework suma el formato `docs/diseno/` (tokens, piezas, pantallas, versiones y direcciones) con su lector y su control (D-086); `referencias/06-ui.md` pasa a decir cómo se arman las maquetas.
+- El glosario cambia «Pantallas» y suma «Maqueta».
+

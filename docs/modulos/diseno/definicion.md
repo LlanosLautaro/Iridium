@@ -1,10 +1,10 @@
 # Definición del módulo: Diseño
 
 **Fecha:** 2026-11-07
-**Base:** `propuesta.md`, D-102 y D-103 (Q-147: A; Q-148: C, negro sin acento).
+**Base:** `propuesta.md`, D-102 y D-103 (Q-147: A; Q-148: C, negro sin acento). Con D-105 (Q-150) las pantallas pasan a ser maquetas HTML: cambian el objetivo, el mínimo y el Won't.
 
 ## Objetivo del módulo
-Que el usuario pueda **ver toda la interfaz de un proyecto junta y cambiarla desde un solo lugar**. Para Iridium, eso empieza por rehacer su UI en negro, callada y sin ruido, sobre piezas compartidas; después, una sección **Diseño** en cada proyecto con framework que muestra el sistema (tokens y piezas) y las pantallas, y deja probar otra dirección sobre todas a la vez.
+Que el usuario pueda **ver toda la interfaz de un proyecto junta y cambiarla desde un solo lugar**, como en Claude Design: una sección **Diseño** en cada proyecto con framework donde la IA dibuja la interfaz como **maquetas HTML** (tokens, piezas y pantallas), que se miran vivas, se comentan con `F8` y se prueban en otras versiones antes de tocar la app (D-105). Para Iridium, la primera tarea es su rediseño en negro, callado y sin ruido, sobre piezas compartidas: primero en maquetas y después en el código.
 
 ## La dirección: negro sin acento (D-103)
 - **Fondo negro puro** en todas las superficies grandes (fondo, lateral, barra). Lo que flota (menús, cuadros) apenas se despega: un casi negro con una línea fina.
@@ -15,10 +15,10 @@ Que el usuario pueda **ver toda la interfaz de un proyecto junta y cambiarla des
 - **Letra del sistema** (Segoe UI Variable), un tamaño de lectura y uno chico; la de ancho fijo solo para códigos y números.
 - Los acentos se prueban después, muy sutiles, con Probar una dirección (DI-I3).
 
-La muestra es `negro.css`; con DI-I1 pasa a ser `docs/ui/tokens.css`.
+La muestra es `negro.css`; pasa a ser los tokens de las maquetas de Iridium y, con el pase al código, `docs/ui/tokens.css`.
 
 ## Las piezas compartidas
-Hoy cada sección arma las suyas (unas 6.000 líneas de estilos en 13 archivos; solo 9 piezas compartidas en `src/renderer/ui/`). De ahí salen las cajas dentro de cajas, los bordes en todo y los botones distintos. DI-I1 deja un solo juego, con sus variantes, y las secciones las usan en vez de las propias:
+Hoy cada sección arma las suyas (unas 6.000 líneas de estilos en 13 archivos; solo 9 piezas compartidas en `src/renderer/ui/`). De ahí salen las cajas dentro de cajas, los bordes en todo y los botones distintos. El rediseño deja un solo juego, con sus variantes (primero en la maqueta de piezas, después en el código), y las secciones las usan en vez de las propias:
 
 | Pieza | Variantes | Regla |
 |---|---|---|
@@ -39,21 +39,23 @@ El inventario exacto (qué usa cada pantalla y qué se reemplaza) está en `ux.m
 
 ## Funcionalidades
 ### Must (MVP del módulo)
-- **DI-I1 — Piezas compartidas y el negro aplicado.** Las piezas de arriba en `src/renderer/ui/` con sus estilos en un solo archivo; las secciones pasadas a ellas, sacando cajas y bordes de más; `tokens.css` en negro sin acento, como único tema (D-104: Apariencia deja de ofrecer Iridium y Carbón); una página que muestra las 30 pantallas juntas (la de antes y la de ahora lado a lado) para mirar el cambio de una.
-- **DI-I2 — La sección Diseño, con Sistema y Pantallas.** El formato `docs/diseno/` en el framework, con su lector y su control (D-086); la sección en cada proyecto con framework: **Sistema** (los tokens dibujados y cada pieza como tarjeta con sus variantes) y **Pantallas** (todas las capturas en un lienzo; tocar una la agranda).
-- **DI-I3 — Probar una dirección.** Elegir otro juego de tokens (por ejemplo, el negro con un acento sutil) y volver a sacar todas las pantallas con él, lado a lado con las de hoy; aplicarla si convence.
+El orden de las iteraciones se decide en Q-151; este es el recomendado.
+- **DI-I1 — La sección Diseño con las maquetas.** El formato `docs/diseno/` en el framework, con su lector y su control (D-086); la sección en cada proyecto con framework: **Pantallas** (las maquetas vivas en un lienzo; tocar una la agranda y se puede usar), **Sistema** (los tokens dibujados y la maqueta de piezas) y `F8` sobre una maqueta, con el comentario en la Revisión (C-33). Empezar el diseño con Pedírselo a la IA.
+- **DI-I2 — El rediseño de Iridium en maquetas.** Los tokens en negro sin acento, la maqueta de las 12 piezas y las pantallas de Iridium en su `docs/diseno/`, revisadas por el usuario en la sección.
+- **DI-I3 — Pasar al código.** Pasar al código en la sección y, con él, el rediseño de Iridium: las piezas en `src/renderer/ui/` con sus estilos en un solo archivo, las secciones pasadas a ellas, `tokens.css` en negro como único tema (D-104) y la app de antes y la de ahora lado a lado (las capturas reales).
+- **DI-I4 — Otra versión y Probar una dirección.** Versiones de una pantalla lado a lado (C-32) y quedarse con una (C-35); otro juego de tokens sobre todas las maquetas a la vez, y elegirlo.
 ### Should
-- Comentar una pantalla o una pieza en el lienzo; el comentario llega a la IA como `T-n` (C-33).
-- Rondas de versiones de una pantalla, en filas (C-32), y aprobar una (C-35).
+- La app de hoy al lado de una maqueta, donde haya capturas (DS-7).
 ### Could
 - Perillas en vivo sobre un token (C-34).
 - La biblioteca de estilos guardados y los design systems de los otros proyectos (C-29, C-30).
 ### Won't (por ahora)
-- Prototipos con clics: Iridium se mira con sus pantallas reales.
+- Prototipos que guarden datos o hablen con la app: una maqueta tiene los clics que la IA le ponga, nada más.
 - Subir nada a Claude Design ni a claude.ai (todo local, D-102).
 
 ## Criterios de éxito
-- Cambiar un token o una pieza cambia todas las pantallas que la usan, y se ve en una sola página.
+- Cambiar un token o una pieza cambia todas las maquetas que la usan, y se ve en un solo lienzo.
+- Probar otra versión o dirección cuesta un pedido a la IA y se mira sin tocar la app.
 - Ninguna sección arma su propio botón, fila o recuadro: los estilos por sección quedan para lo que es solo de ella.
 - En las 30 pantallas en negro no hay cajas dentro de cajas, y el único color es una señal (ámbar o rojo).
 - Las pruebas de siempre (`pnpm test`, `pnpm e2e`) pasan y el contraste de la tanda 5 se mantiene en AA.
@@ -63,14 +65,15 @@ El inventario exacto (qué usa cada pantalla y qué se reemplaza) está en `ux.m
 - Los otros proyectos del usuario: la sección los muestra, pero no se rediseñan desde acá.
 
 ## Impacto en el perfil
-Ninguno: lee carpetas del propio proyecto y saca capturas en la PC; no sube nada. Las capturas con proyectos reales quedan en `tools/salida/` (D-082).
+Ninguno: lee carpetas del propio proyecto y muestra sus maquetas en la PC; no sube nada. Las capturas con proyectos reales quedan en `tools/salida/` (D-082).
 
 ## Términos nuevos (se agregan al glosario general)
 | Término | Significado |
 |---|---|
 | Pieza | Un componente compartido de la interfaz (botón, fila, bloque…) con sus variantes; lo que Claude Design llama componente |
 | Dirección | Un juego de tokens que se prueba sobre todas las pantallas a la vez (por ejemplo, el negro con otro acento) |
-| Pantallas | Las capturas de todas las vistas de la app, juntas, para mirar el conjunto |
+| Pantallas | Las maquetas de todas las vistas de la app, juntas en un lienzo, para mirar el conjunto (D-105) |
+| Maqueta | Una pantalla de la app dibujada en HTML por la IA, en `docs/diseno/`, que se mira viva y se comenta con `F8` antes de pasarla al código (D-105) |
 
 ## Preguntas abiertas para investigar
 - Ninguna de dominio: lo de Claude Design y las skills de Anthropic está en `propuesta.md`. El paso 3 se salta.

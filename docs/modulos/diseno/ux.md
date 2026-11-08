@@ -1,9 +1,9 @@
 # UX del módulo: Diseño
 
 **Fecha:** 2026-11-07
-**Base:** `definicion.md`, D-102, D-103 y D-104 (un solo tema, el negro). Mirado sobre las 30 pantallas de `tools/salida/auditoria/1440x900/` y `1440x900-negro/` (la 11, el detalle de Ideas, no salió: T-53) y sobre los 13 archivos de estilos de `src/renderer/estilos/`, con los criterios de las skills `design-critique` y `design-system`.
+**Base:** `definicion.md`, D-102, D-103, D-104 (un solo tema, el negro) y D-105 (las pantallas son maquetas HTML; Q-150). Mirado sobre las 30 pantallas de `tools/salida/auditoria/1440x900/` y `1440x900-negro/` (la 11, el detalle de Ideas, no salió: T-53) y sobre los 13 archivos de estilos de `src/renderer/estilos/`, con los criterios de las skills `design-critique` y `design-system`.
 
-Este paso tiene dos partes: el **inventario** (qué arma cada sección a mano, qué pieza lo reemplaza y qué cajas y bordes sobran), que es lo que construye DI-I1, y la **sección Diseño** (historias, flujos y pantallas), que construyen DI-I2 y DI-I3.
+Este paso tiene dos partes: el **inventario** (qué arma cada sección a mano, qué pieza lo reemplaza y qué cajas y bordes sobran), que es el encargo del rediseño de Iridium (primero en maquetas, después en el código), y la **sección Diseño** (historias, flujos y pantallas), que muestra esas maquetas y las de cualquier proyecto (D-105).
 
 ## Parte 1 — Inventario
 
@@ -20,7 +20,7 @@ Con el negro los colores ya cambian desde un solo archivo, pero el ruido sigue, 
 8. **El foco se ve con el ratón.** El título de la sección («Bandeja de entrada», «Skills») queda con un recuadro blanco al entrar con un clic: el foco tiene que verse solo con el teclado.
 
 ### Las piezas (PZ-n)
-El juego que deja DI-I1, con lo que reemplaza de hoy. La regla general: **se separa con espacio y con una línea gris solo donde hace falta; el borde es del Recuadro, de los Campos y del botón secundario; la sombra, de lo que flota.**
+El juego del rediseño, con lo que reemplaza de hoy. La regla general: **se separa con espacio y con una línea gris solo donde hace falta; el borde es del Recuadro, de los Campos y del botón secundario; la sombra, de lo que flota.**
 
 | Pieza | Variantes | Reemplaza (clases de hoy) | Dónde se usa |
 |---|---|---|---|
@@ -51,7 +51,7 @@ PZ-11 y PZ-12 no estaban en la tabla de `definicion.md`: aparecieron al mirar la
 | 08 | Skills › Framework | la lista en una caja con borde; «Pasar al framework» con recuadro en cada fila | filas sobre el fondo (PZ-2) con «Pasar al framework» como botón sin fondo, a la vista |
 | 09 | Ideas | la caja de Anotar con su selector y su botón adentro | campo de una línea (PZ-5) con el destino y «Anotar» como botón chico; filas (PZ-2) |
 | 10 | Detalle de una skill | dos cabeceras propias; «ARCHIVOS» en mayúsculas; «Abrir carpeta» con recuadro | cabecera de sección (PZ-9); pestañas Resumen · Archivos (PZ-10); árbol (PZ-11) |
-| 11 | Detalle de una idea | (no salió la captura, T-53) | se revisa con la página de DI-I1 |
+| 11 | Detalle de una idea | (no salió la captura, T-53) | se revisa en su maqueta |
 | 12–17, 27 | Ajustes | la ventana con su barra con borde; cada opción de Tono en una caja; «Cambiar de cuenta» con recuadro; el foco visible al abrir | ventana (PZ-8) con pestañas (PZ-10); opciones (PZ-5) como filas con su punto; Apariencia sin el selector de tema (D-104) |
 | 18, 20, 30 | Mapa | el bloque de frentes con borde; cada hito en un cuadrado con borde; «Abrir 10-operacion.md» y «Abrir estado.md» con recuadro | hitos como pestañas de números (PZ-10); el frente activo como bloque (PZ-3) sin borde; las líneas de abajo como filas; «Abrir» como botones sin fondo |
 | 21 | Trabajo | «Anotar una idea» y el selector de frente con recuadro; filtros en píldora | filtros (PZ-6); el frente como selector sin borde dentro de los filtros; filas (PZ-2) como hoy |
@@ -64,132 +64,123 @@ PZ-11 y PZ-12 no estaban en la tabla de `definicion.md`: aparecieron al mirar la
 | 29 | Otro proyecto | — | igual que su sección |
 | todas | El marco | la barra del proyecto y la cabecera de la sección con una línea cada una; «Nueva» y «Seguí» con recuadro; «Claude · max» con recuadro; medidores de uso | una sola línea, debajo de la cabecera de la sección; «Seguí» principal (es la acción de la conversación), «Nueva» sin fondo; el uso como números (PZ-7) |
 
-### Reglas que quedan escritas para DI-I1
+### Reglas que quedan escritas para el rediseño
 - **Un principal por pantalla como mucho.** En un proyecto es «Seguí»; en la grilla, «Nuevo proyecto»; en un cuadro, el que confirma.
 - **Nunca un bloque dentro de otro, ni una caja dentro de un recuadro.** Lo que hoy es una caja dentro de otra pasa a ser filas.
 - **Las acciones de una fila** son botones sin fondo. Si la fila tiene una sola acción que es lo que se viene a hacer (Ejecutar, Pasar al framework), está siempre a la vista; si son varias, aparecen al pasar el ratón o con el foco.
 - **Un solo estilo de título de bloque**: gris, tamaño chico, con la cuenta al lado. Nada en mayúsculas.
 - **El foco se dibuja solo con el teclado** (`:focus-visible`); con el ratón, nada.
-- **Los estilos por sección** quedan para lo que es solo de ella (la tarjeta, el compositor, el visor de código, las capturas). Un botón, una fila o un recuadro escritos en un archivo de sección es un error que el control de estilos de DI-I1 marca.
+- **Los estilos por sección** quedan para lo que es solo de ella (la tarjeta, el compositor, el visor de código, las capturas). Un botón, una fila o un recuadro escritos en un archivo de sección es un error que el control de estilos del pase al código marca.
 
 ## Parte 2 — La sección Diseño
 
+Con D-105 la sección es un «Claude Design» local: **las pantallas son maquetas HTML** que escribe la IA en `docs/diseno/` del proyecto, sobre sus tokens y sus piezas, y no capturas de la app. Iridium las muestra vivas, se comentan con `F8` como cualquier app en la Revisión, y probar otra cosa es pedir otra versión. Lo aprobado se pasa al código después.
+
 ### Historias (DS-n)
-#### DS-1 — Ver el sistema de un proyecto
-- Como usuario quiero ver los tokens y las piezas de un proyecto en un solo lugar para saber de qué está hecha su interfaz sin abrir el código.
+#### DS-1 — Empezar el diseño de un proyecto
+- Como usuario quiero pedirle a la IA el diseño de un proyecto que todavía no lo tiene para tener sus pantallas a la vista sin armar nada.
+  - Criterios de aceptación:
+    - [ ] Sin `docs/diseno/`, la sección lo dice con un recuadro punteado y ofrece **Pedírselo a la IA** (gasta uso, lo dice).
+    - [ ] En una app ya armada, la IA dibuja las pantallas como están hoy (sale de su código y de su `06-ui.md`); en una app nueva, sale de su `04-ux.md`. El pedido lo dice.
+    - [ ] Mientras la IA escribe, cada maqueta aparece en el lienzo al quedar guardada.
+
+#### DS-2 — Ver el sistema
+- Como usuario quiero ver los tokens y las piezas del proyecto en un solo lugar para saber de qué está hecha su interfaz sin abrir el código.
   - Criterios de aceptación:
     - [ ] **Sistema** muestra los colores como muestras con su nombre, las letras con un ejemplo de cada tamaño, los espacios y las esquinas dibujados.
-    - [ ] Cada pieza es una tarjeta con su nombre y sus variantes, una al lado de la otra.
-    - [ ] Sin `docs/diseno/`, la sección dice qué falta y ofrece pedírselo a la IA.
+    - [ ] Cada pieza se ve viva con sus variantes (la maqueta de piezas del proyecto) y se comenta con `F8` como una pantalla.
 
-#### DS-2 — Ver todas las pantallas juntas
-- Como usuario quiero ver todas las pantallas de la app en un lienzo para juzgar el conjunto de un vistazo.
+#### DS-3 — Ver todas las pantallas juntas
+- Como usuario quiero ver todas las maquetas en un lienzo para juzgar el conjunto de un vistazo.
   - Criterios de aceptación:
-    - [ ] **Pantallas** muestra todas las capturas en una grilla, con su nombre debajo, agrupadas por sección.
-    - [ ] Tocar una la agranda a todo el lienzo; las flechas pasan a la anterior y la siguiente; Esc vuelve.
-    - [ ] Dice cuándo se sacaron y, si el código cambió después, que están viejas, con **Sacar de nuevo**.
+    - [ ] **Pantallas** muestra todas las maquetas vivas y achicadas, agrupadas por sección, con su nombre debajo.
+    - [ ] Cuando la IA cambia una maqueta, se redibuja sola y queda marcada con un punto hasta que la mirás.
+    - [ ] Una maqueta rota (no carga o le falta un archivo) muestra su lugar con el motivo; las demás se ven igual.
 
-#### DS-3 — Sacar las pantallas de nuevo
-- Como usuario quiero volver a sacar las pantallas con un botón para ver el estado de hoy sin pedírselo a nadie.
+#### DS-4 — Usar y comentar una pantalla
+- Como usuario quiero agrandar una maqueta, tocarla y comentar sobre ella para que la IA la corrija donde señalo.
   - Criterios de aceptación:
-    - [ ] **Sacar de nuevo** corre el script de capturas del proyecto y muestra el avance; al terminar, el lienzo se redibuja.
-    - [ ] Si una pantalla falla, se ve su lugar vacío con el motivo, y las demás se ven igual.
-    - [ ] Si el proyecto no tiene script de capturas, el botón ofrece pedírselo a la IA (gasta uso, lo dice).
+    - [ ] Tocar una maqueta la agranda a todo el lienzo y anda: los clics que tenga (abrir un menú, pasar a otra pantalla) funcionan. Las flechas del costado pasan a la anterior y la siguiente; Esc vuelve.
+    - [ ] `F8` prende el modo comentar sobre la maqueta, igual que en una app: el comentario llega a la Revisión del proyecto como `R-n` con el nombre de la maqueta, el lugar y la captura.
+    - [ ] **Enviar a la IA** (el de la Revisión) le pasa los comentarios; las maquetas corregidas se redibujan solas.
 
-#### DS-4 — Probar una dirección
-- Como usuario quiero probar otro juego de tokens sobre todas las pantallas a la vez para decidir un cambio grande mirando el resultado.
+#### DS-5 — Pedir otra versión o probar una dirección
+- Como usuario quiero pedir otra versión de una pantalla, o cambiar el aspecto de todas a la vez, para comparar dos ideas mirándolas.
   - Criterios de aceptación:
-    - [ ] **Probar una dirección** deja elegir una dirección guardada en `docs/diseno/direcciones/` o pedirle una nueva a la IA con una frase («el negro con un azul muy apagado»).
-    - [ ] Las pantallas con la dirección salen lado a lado con las de hoy, una fila por pantalla.
-    - [ ] **Aplicar** la vuelve los tokens del proyecto (con un commit que se puede deshacer); **Descartar** la borra.
+    - [ ] En una maqueta agrandada, **Otra versión** pide a la IA una alternativa con una frase («la bandeja como una sola lista»); gasta uso y lo dice.
+    - [ ] Las versiones de una pantalla se ven lado a lado; **Quedarme con esta** deja esa y borra las otras, o **Guardar para después** las deja guardadas.
+    - [ ] **Probar una dirección** cambia los tokens de todas las maquetas a la vez: una guardada en `docs/diseno/direcciones/` o una nueva pedida con una frase («el negro con un azul muy apagado»). Se ve todo el lienzo con la dirección, y **Hoy · Dirección** alterna o pone las dos lado a lado.
+    - [ ] **Elegir** una dirección la vuelve los tokens de las maquetas, con un cuadro que dice qué cambia.
 
-#### DS-5 — Ver el antes y el después de un cambio (DI-I1)
-- Como usuario quiero ver las 30 pantallas de antes y de ahora lado a lado para aprobar el rediseño de una vez.
+#### DS-6 — Pasar al código
+- Como usuario quiero pasar a la app lo que aprobé en las maquetas para que la interfaz real quede igual.
   - Criterios de aceptación:
-    - [ ] Una página (en DI-I1, un archivo que abre `scripts.md`; desde DI-I2, la vista **Pantallas**) muestra cada pantalla de antes a la izquierda y la de ahora a la derecha.
+    - [ ] **Pasar al código** (en la cabecera de Pantallas) manda a la IA del proyecto el pedido con las maquetas cambiadas desde el último pase; gasta uso y lo dice.
+    - [ ] Cada maqueta pasada queda marcada como «en la app» con la fecha; una que cambió después vuelve a contarse como pendiente.
+
+#### DS-7 — Comparar con la app de hoy (donde haya capturas)
+- Como usuario quiero ver una maqueta al lado de cómo se ve hoy la app para medir el cambio.
+  - Criterios de aceptación:
+    - [ ] Si el proyecto tiene capturas de la app real (en Iridium, las de `tools/auditoria-ux.ts`), una maqueta agrandada ofrece **La app hoy** y las pone lado a lado. Sin capturas, la opción no aparece: no hace falta un script de capturas por proyecto (D-105).
 
 ### Flujos
-#### DS-6 — Entrar a Diseño y mirar
+#### DS-8 — Entrar a Diseño, mirar y comentar
 ```mermaid
 flowchart TD
   A[Barra del proyecto: Diseño] --> B{¿Hay docs/diseno/?}
-  B -- No --> C[Recuadro punteado: «Este proyecto todavía no tiene su diseño armado» + Pedírselo a la IA]
-  C --> D[Manda el pedido a la conversación del proyecto] --> E[La IA arma docs/diseno/ y su script de capturas]
+  B -- No --> C[Recuadro punteado: «Este proyecto todavía no tiene su diseño» + Pedírselo a la IA]
+  C --> D[Manda el pedido a la conversación del proyecto] --> E[La IA escribe tokens, piezas y maquetas; aparecen de a una]
   E --> F
-  B -- Sí --> F[Sistema: tokens y piezas]
-  F -- pestaña --> G[Pantallas: el lienzo]
-  G -- tocar una --> H[La pantalla grande, con flechas] -- Esc --> G
-  G -- viejas --> I[Sacar de nuevo]
+  B -- Sí --> F[Pantallas: el lienzo con las maquetas vivas]
+  F -- pestaña --> S[Sistema: tokens y piezas]
+  F -- tocar una --> G[La maqueta grande, se puede usar] -- Esc --> F
+  G -- F8 --> H[Modo comentar: el comentario va a la Revisión como R-n]
+  H --> I[Enviar a la IA] --> J[La IA corrige la maqueta; se redibuja sola]
 ```
 
-#### DS-7 — Sacar las pantallas de nuevo
+#### DS-9 — Otra versión y otra dirección
 ```mermaid
 flowchart TD
-  A[Sacar de nuevo] --> B{¿Hay script de capturas?}
-  B -- No --> C[Ofrece pedírselo a la IA, avisa que gasta uso]
-  B -- Sí --> D[Corre el script: «Sacando 12 de 30…», con Cancelar]
-  D --> E{¿Terminó bien?}
-  E -- Sí --> F[El lienzo se redibuja con la fecha nueva]
-  E -- Algunas fallaron --> G[Las que fallaron quedan con su motivo; las demás, nuevas]
-  E -- El script falló --> H[Recuadro de error con Ver la consola; quedan las de antes]
+  A[Maqueta grande: Otra versión] --> B[Una frase a la IA; avisa que gasta uso] --> C[Las versiones lado a lado]
+  C -- Quedarme con esta --> D[Las otras se borran]
+  C -- Guardar para después --> E[Quedan guardadas]
+  F[Pantallas: Probar una dirección] --> G{¿Cuál?}
+  G -- Una guardada --> I
+  G -- Una nueva --> H[Una frase a la IA] --> H2[La IA escribe direcciones/nombre.css] --> I
+  I[El lienzo entero con la dirección; Hoy · Dirección] -- Elegir --> J[Cuadro: «Cambia los colores de todas las maquetas» Elegir / Cancelar] --> K[Los tokens de las maquetas pasan a ser esos]
+  I -- Descartar --> L[Se borra y vuelve a Pantallas]
 ```
 
-#### DS-8 — Probar una dirección
+#### DS-10 — Pasar al código
 ```mermaid
 flowchart TD
-  A[Probar una dirección] --> B{¿Cuál?}
-  B -- Una guardada --> D
-  B -- Una nueva --> C[Una frase a la IA] --> C2[La IA escribe direcciones/nombre.css] --> D
-  D[Corre el script con esos tokens] --> E[Lado a lado: hoy y la dirección]
-  E -- Aplicar --> F[Cuadro: «Cambia los colores de toda la app» Aplicar / Cancelar] --> G[Los tokens del proyecto pasan a ser esos, con un commit]
-  E -- Descartar --> H[Se borra la dirección y vuelve a Pantallas]
-  E -- Dejar para después --> I[Queda guardada en la lista]
+  A[Pantallas: Pasar al código · 6] --> B[Cuadro: qué maquetas pasan y que gasta uso] --> C[El pedido va a la conversación del proyecto]
+  C --> D[La IA construye y marca las maquetas como «en la app»]
+  D -- algo queda distinto --> E[Se comenta la app con F8, como siempre]
 ```
 
 ### Arquitectura de información
 - **Diseño** es una sección más de la barra de cada proyecto **con framework**, después de Revisión y antes de Docs: es de mirar y decidir, como el Mapa y la Revisión; Docs, Archivos, Git y Scripts son las herramientas. No aparece en una carpeta simple.
-- Adentro, dos pestañas (PZ-10): **Sistema** y **Pantallas**. Probar una dirección es una acción de la cabecera de Pantallas, no una tercera pestaña: se prueba mirando pantallas.
-- Lo que lee, en el proyecto: `docs/diseno/` (el formato lo define el paso 5 con su lector y su control, D-086): los tokens, las piezas, las capturas con su fecha y las direcciones guardadas, y el script de capturas en `scripts.md`.
-- La conversación sigue al lado, como en todas las secciones: lo que se ve se comenta ahí.
+- Adentro, dos pestañas (PZ-10): **Pantallas** (la primera: es lo que se viene a mirar) y **Sistema**. Otra versión, Probar una dirección y Pasar al código son acciones, no pestañas: se hacen mirando pantallas.
+- Lo que lee, en el proyecto: `docs/diseno/` — los tokens (CSS), las piezas (una maqueta), las maquetas de pantallas agrupadas por sección, sus versiones, las direcciones guardadas y qué se pasó al código y cuándo. El formato exacto lo define el paso 5 con su lector y su control (D-086).
+- Los comentarios con `F8` viven en la Revisión del proyecto, como los de la app: una sola bandeja de comentarios para la IA.
+- La conversación sigue al lado, como en todas las secciones: lo que se ve se comenta ahí también.
 
 ### Pantallas
-#### DS-9 — Diseño › Sistema
-- Propósito: ver de qué está hecha la interfaz.
-- Elementos: la cabecera (Diseño, las pestañas, «Abrir tokens.css» sin fondo); el bloque **Colores** (muestras en fila, nombre y valor); **Letra** (cada tamaño con un ejemplo); **Espacios y esquinas**; **Piezas** (una tarjeta por pieza con sus variantes).
-- Estados: sin `docs/diseno/` (recuadro punteado con Pedírselo a la IA); tokens sin piezas (los tokens y «Las piezas todavía no están anotadas»); un archivo dañado (recuadro de error con el archivo y la línea).
+#### DS-11 — Diseño › Pantallas
+- Propósito: ver todas las maquetas juntas.
+- Elementos: la cabecera (Diseño, las pestañas, «Probar una dirección», «Pasar al código · N» y, si hay comentarios sin enviar, «3 comentarios», que lleva a la Revisión); el lienzo, agrupado por sección, con cada maqueta viva y su nombre; arriba a la derecha, el tamaño de las miniaturas (chico · grande).
+- Estados: sin `docs/diseno/` (recuadro punteado con Pedírselo a la IA); la IA escribiendo (las maquetas aparecen de a una); una cambiada sin mirar (punto junto al nombre); una rota (su lugar con el motivo); una dirección puesta (una línea arriba: «Probando: negro con azul · Hoy · Elegir · Descartar»); muchas (el lienzo se desplaza y los grupos quedan como títulos).
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ Diseño   Sistema · Pantallas                [Abrir tokens]  │
-├─────────────────────────────────────────────────────────────┤
-│ Colores                                                     │
-│ ■ fondo  ■ elevado  ■ línea  ■ texto  ■ texto-2  ■ ámbar    │
-│                                                             │
-│ Letra                                                       │
-│ Lectura 14,5 — El usuario dirige con sus ideas              │
-│ Chica 12 — Hace 10 min · 12 archivos                        │
-│                                                             │
-│ Piezas                                                      │
-│ ┌ Botón ─────────────┐ ┌ Fila ──────────────┐ ┌ Bloque ──┐  │
-│ │ [Principal] [Sec.] │ │ T-5 Biblioteca   › │ │ Título 3 │  │
-│ └────────────────────┘ └────────────────────┘ └──────────┘  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-#### DS-10 — Diseño › Pantallas
-- Propósito: ver todas las pantallas juntas.
-- Elementos: la cabecera (Diseño, las pestañas, «Probar una dirección», «Sacar de nuevo» y la fecha de las capturas); el lienzo, agrupado por sección, con cada captura y su nombre; arriba a la derecha, el tamaño de las miniaturas (chico · grande).
-- Estados: sin capturas (recuadro punteado con Sacar las pantallas); sacando (cada miniatura se reemplaza al llegar, con «Sacando 12 de 30» y Cancelar); viejas (una línea ámbar: «El código cambió después de sacarlas»); una que falló (su lugar con el motivo); muchas (el lienzo se desplaza, los grupos quedan como títulos).
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ Diseño   Sistema · Pantallas   hoy 22:52  [Probar…] [Sacar] │
+│ Diseño  Pantallas · Sistema    [Probar…] [Pasar al código 6]│
 ├─────────────────────────────────────────────────────────────┤
 │ Proyectos                                                   │
 │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                         │
 │ │      │ │      │ │      │ │      │                         │
 │ └──────┘ └──────┘ └──────┘ └──────┘                         │
-│ Grilla   Archiv.  Menú     Nuevo                            │
+│ Grilla   Archiv.  Menú •   Nuevo                            │
 │ Un proyecto                                                 │
 │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                │
 │ │      │ │      │ │      │ │      │ │      │                │
@@ -198,27 +189,44 @@ flowchart TD
 └─────────────────────────────────────────────────────────────┘
 ```
 
-#### DS-11 — Una dirección, lado a lado
-- Propósito: decidir si una dirección se aplica.
-- Elementos: la cabecera con el nombre de la dirección, **Aplicar** (principal), **Descartar** y **Volver**; dos columnas, «Hoy» y la dirección, una fila por pantalla; tocar una fila la agranda con las dos.
-- Estados: sacando (las de la derecha llegan de a una); falló (recuadro de error, la dirección queda guardada); aplicada (vuelve a Pantallas con las nuevas y la fecha).
+#### DS-12 — Una maqueta grande
+- Propósito: usar la pantalla y comentarla.
+- Elementos: arriba, una línea con **Volver**, el nombre y el número («Bandeja · 7 de 30»), **Otra versión** y **La app hoy** (si hay capturas); la maqueta a todo el lienzo, viva; las flechas a los costados.
+- Estados: comentando (el aviso chico de la Revisión abajo a la derecha, D-049); con versiones (lado a lado, cada una con **Quedarme con esta**); pidiendo una versión (su lugar con «La IA está escribiendo la versión…»).
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ ‹ Volver  Bandeja · 7 de 30      [Otra versión] [La app hoy]│
+├─────────────────────────────────────────────────────────────┤
+│ ‹ ┌───────────────────────────────────────────────────┐ ›   │
+│   │                 la maqueta, viva                  │     │
+│   │                                                   │     │
+│   └───────────────────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### DS-13 — Diseño › Sistema
+- Propósito: ver de qué está hecha la interfaz.
+- Elementos: el bloque **Colores** (muestras en fila, nombre y valor); **Letra** (cada tamaño con un ejemplo); **Espacios y esquinas**; **Piezas** (la maqueta de piezas, viva, con cada pieza y sus variantes); «Abrir tokens» sin fondo.
+- Estados: sin piezas («Las piezas todavía no están dibujadas» con Pedírselo a la IA); un archivo dañado (recuadro de error con el archivo y la línea).
 
 ### Principios de interacción
-- **Nada se aplica sin un cuadro de confirmación** que diga qué cambia; Aplicar deja un commit, así que se puede volver atrás con Git.
-- **Lo que gasta uso lo dice antes** (pedir el diseño o una dirección a la IA). Sacar las pantallas con el script no gasta.
-- **Sacar las pantallas no toca los proyectos del usuario**: el script trabaja sobre una copia, como `auditoria-ux.ts` (D-082).
-- Teclado: en el lienzo, las flechas mueven entre pantallas, Enter agranda y Esc vuelve.
+- **Lo que gasta uso lo dice antes**: empezar el diseño, otra versión, una dirección nueva y pasar al código. Mirar, usar y comentar no gastan.
+- **Nada cambia sin un cuadro** cuando toca más de una maqueta (elegir una dirección, pasar al código). Todo queda en `docs/`, así que Git lo deshace.
+- **Las maquetas no tocan la app**: son archivos de `docs/diseno/`; la app cambia solo con Pasar al código.
+- **Comentar es igual en todos lados**: `F8` en una maqueta, en Iridium o en la app de un proyecto, y todo llega a la Revisión.
+- Teclado: en el lienzo, las flechas mueven entre maquetas, Enter agranda y Esc vuelve.
 
 ### Accesibilidad
-- El contraste del negro se mide con la tanda 5 (`tools/accesibilidad.ts`) al final de DI-I1: texto principal y secundario en AA sobre el negro y sobre el elevado.
-- Cada captura del lienzo lleva su nombre como texto alternativo; la pantalla grande se anuncia con su nombre y su número («12 de 30»).
+- El contraste del negro se mide con la tanda 5 (`tools/accesibilidad.ts`) al pasar el rediseño al código: texto principal y secundario en AA sobre el negro y sobre el elevado.
+- Cada maqueta del lienzo lleva su nombre como texto alternativo; la grande se anuncia con su nombre y su número («7 de 30»).
 
 ## Portón
 - [x] Inventario de piezas sobre las 30 pantallas, con lo que reemplaza cada una.
-- [x] Historias con criterios de aceptación para todo el mínimo (DI-I1 a DI-I3).
+- [x] Historias con criterios de aceptación para todo el mínimo (rehechas con D-105: maquetas HTML).
 - [x] Flujos principales, con los de error.
 - [x] Arquitectura de información: dónde entra la sección y qué lee.
-- [x] Wireframes de Sistema y Pantallas; estados de cada pantalla.
+- [x] Wireframes de Pantallas, la maqueta grande y Sistema; estados de cada pantalla.
 - [x] Principios de interacción y accesibilidad.
 - [x] ¿Cambia algo de los documentos generales? Sí: PZ-11 y PZ-12 en `definicion.md`; los códigos `PZ-n` y `DS-n` en `docs/README.md` (aplicado).
-- [ ] El usuario recorrió los flujos y los aprobó (Q-150).
+- [ ] El usuario recorrió los flujos y los aprobó (Q-150 cambió el modelo, D-105; la parte 2 rehecha espera Q-151).
