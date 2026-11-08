@@ -18,6 +18,8 @@ export interface DatosComentario {
   url: string
   elemento: { etiqueta: string; texto: string; selector: string }
   conCaptura: boolean
+  /** Hecho sobre una maqueta de Diseño (D-105): relativa al proyecto, `docs/diseno/pantallas/bandeja.html`. */
+  maqueta?: string | null
   /** Cuándo se dejó, en la hora local. */
   fecha: Date
 }
@@ -32,6 +34,8 @@ export interface Comentario {
   archivo: { ruta: string; linea: number } | null
   componentes: string[]
   pagina: string | null
+  /** La maqueta de Diseño sobre la que se hizo, o null (`**Maqueta:**`). */
+  maqueta: string | null
   elemento: string | null
   captura: string | null
   historia: { fecha: string; texto: string }[]
@@ -76,6 +80,7 @@ export function armarComentario(d: DatosComentario): string {
   const r = `R-${d.numero}`
   const lineas = [`# ${r} — ${tituloDe(d.texto)}`, `<!-- id: ${d.id} -->`, '', '**Estado:** abierto']
   if (d.archivo) lineas.push(`**Dónde:** \`${d.archivo.ruta}\`, línea ${d.archivo.linea}`)
+  if (d.maqueta) lineas.push(`**Maqueta:** \`${d.maqueta}\``)
   if (d.componentes.length) lineas.push(`**Componentes:** ${d.componentes.join(' › ')}`)
   lineas.push(`**Página:** ${d.url}`)
   const elemento = [codigo(d.elemento.etiqueta)]
@@ -158,6 +163,7 @@ export function leerComentario(nombreArchivo: string, texto: string): Comentario
       .map((c) => c.trim())
       .filter(Boolean),
     pagina: campo(texto, 'Página'),
+    maqueta: campo(texto, 'Maqueta')?.replace(/`/g, '').trim() || null,
     elemento: campo(texto, 'Elemento'),
     captura: captura ? (/\(([^)]+)\)/.exec(captura)?.[1] ?? null) : null,
     historia,

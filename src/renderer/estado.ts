@@ -84,6 +84,8 @@ export interface VistaProyecto {
   gitPlegadas: string[]
   /** Tocó Nueva: se ve una conversación en blanco que empieza con el primer mensaje o con Seguí. */
   enBlanco: boolean
+  /** La maqueta que Diseño abre grande al entrar (desde un comentario de la Revisión); null = el lienzo. */
+  maqueta: string | null
 }
 
 const VISTA_INICIAL: VistaProyecto = {
@@ -99,6 +101,7 @@ const VISTA_INICIAL: VistaProyecto = {
   archivoGit: null,
   gitPlegadas: [],
   enBlanco: false,
+  maqueta: null,
 }
 
 /** Hasta dónde se recuerda para volver. */
@@ -252,6 +255,8 @@ interface EstadoApp {
   abrirArchivo(ruta: string, archivo: string, linea?: number): void
   /** Abre un comentario en Revisión (null = la lista); lo de antes queda para Atrás. */
   abrirComentario(ruta: string, codigo: string | null): void
+  /** Abre Diseño con una maqueta grande (relativa a `docs/diseno/`), desde un comentario; lo de antes queda para Atrás. */
+  abrirMaqueta(ruta: string, maqueta: string): void
   /** Abre Trabajo en un `T-n` (F-4); lo de antes queda para Atrás. */
   abrirTrabajo(ruta: string, codigo: string): void
   /** Vuelve un paso: a la sección, al documento o al archivo de antes. */
@@ -464,6 +469,10 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     const v = vistaDe(get().vistas, ruta)
     if (v.seccion === 'revision' && v.comentario === codigo) return
     get().cambiarVista(ruta, { seccion: 'revision', comentario: codigo, atras: conPaso(v) })
+  },
+  abrirMaqueta: (ruta, maqueta) => {
+    const v = vistaDe(get().vistas, ruta)
+    get().cambiarVista(ruta, { seccion: 'diseno', maqueta, atras: conPaso(v) })
   },
   abrirTrabajo: (ruta, codigo) => {
     const v = vistaDe(get().vistas, ruta)

@@ -101,6 +101,7 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
     'Mapa',
     'Trabajo',
     'Revisión',
+    'Diseño',
     '—',
     'Docs',
     'Archivos',

@@ -19,9 +19,12 @@ export function armarMensaje(c: {
   archivo: { ruta: string; linea: number } | null
   pagina: string | null
   captura: string | null
+  /** Hecho sobre una maqueta de Diseño: se corrige ahí, no en el código. */
+  maqueta?: string | null
 }): string {
   const pistas: string[] = []
-  if (c.archivo) pistas.push(`Dónde: ${c.archivo.ruta}, línea ${c.archivo.linea}`)
+  if (c.maqueta) pistas.push(`Dónde: la maqueta ${c.maqueta} (corregila ahí, no en el código)`)
+  else if (c.archivo) pistas.push(`Dónde: ${c.archivo.ruta}, línea ${c.archivo.linea}`)
   else if (c.pagina) pistas.push(`Página: ${c.pagina}`)
   if (c.captura) pistas.push(`Captura: docs/revision/${c.captura}`)
   return [

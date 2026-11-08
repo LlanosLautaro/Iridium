@@ -101,7 +101,12 @@ function Fila({ ruta, c }: { ruta: string; c: VistaComentario }) {
       <div>
         <div className="txt">{c.texto}</div>
         <div className="donde">
-          {c.archivo ? (
+          {c.maqueta ? (
+            <>
+              <code>{c.maqueta.ruta.replace(/^docs\/diseno\//, '')}</code>
+              {!c.maqueta.existe && <span>· la maqueta ya no está</span>}
+            </>
+          ) : c.archivo ? (
             <>
               <code>{corto(c.archivo)}</code>
               {!c.archivo.existe && <span>· el archivo ya no está</span>}
@@ -301,6 +306,7 @@ const ICONO_HISTORIA = (t: string) =>
 
 function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre: string }) {
   const abrirArchivo = usarEstado((s) => s.abrirArchivo)
+  const abrirMaqueta = usarEstado((s) => s.abrirMaqueta)
   const [reabriendo, setReabriendo] = useState(false)
   const [envio, setEnvio] = useState<ResultadoEnvio | 'enviando' | null>(null)
   const cerrado = c.estado === 'cerrado'
@@ -384,7 +390,22 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
       <dl className="pistas">
         <dt>Dónde</dt>
         <dd>
-          {c.archivo ? (
+          {c.maqueta ? (
+            c.maqueta.existe ? (
+              <button
+                type="button"
+                className="enlace-archivo"
+                title="Abrirla grande en Diseño"
+                onClick={() => c.maqueta && abrirMaqueta(ruta, c.maqueta.ruta.replace(/^docs\/diseno\//, ''))}
+              >
+                la maqueta {c.maqueta.ruta}
+              </button>
+            ) : (
+              <>
+                <span className="ya-no">la maqueta {c.maqueta.ruta}</span> · ya no está
+              </>
+            )
+          ) : c.archivo ? (
             c.archivo.existe ? (
               <button
                 type="button"

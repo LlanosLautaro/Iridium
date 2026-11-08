@@ -689,6 +689,8 @@ export interface VistaComentario {
   archivo: { ruta: string; linea: number; existe: boolean } | null
   componentes: string[]
   pagina: string | null
+  /** Hecho sobre una maqueta de Diseño (relativa al proyecto); `existe` es false si ya no está. */
+  maqueta: { ruta: string; existe: boolean } | null
   elemento: string | null
   /** ¿Tiene captura en el disco? Se pide aparte (`capturaComentario`). */
   conCaptura: boolean

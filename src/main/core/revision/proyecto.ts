@@ -40,3 +40,30 @@ export function proyectoQueContiene(carpeta: string, proyectos: ProyectoConocido
 export function unicoCon<T>(hallados: T[]): T | null {
   return hallados.length === 1 ? (hallados[0] ?? null) : null
 }
+
+/**
+ * «Es una maqueta» (frente Diseño, D-105): una página `file://…/docs/diseno/…` dentro de un proyecto es de ese proyecto,
+ * aunque la app que la muestra (Iridium) sea otra. Devuelve el proyecto y la maqueta relativa a él, o null.
+ */
+export function proyectoDeMaqueta(
+  url: string,
+  proyectos: ProyectoConocido[],
+): { proyecto: ProyectoConocido; maqueta: string } | null {
+  let ruta: string
+  try {
+    const u = new URL(url)
+    if (u.protocol !== 'file:') return null
+    ruta = decodeURIComponent(u.pathname).replace(/^\/([a-z]:)/i, '$1')
+  } catch {
+    return null
+  }
+  const r = normal(ruta)
+  for (const p of proyectos) {
+    const base = `${normal(p.ruta)}/`
+    if (!r.startsWith(`${base}docs/diseno/`)) continue
+    const maqueta = ruta.replace(/\\/g, '/').slice(base.length)
+    if (maqueta.split('/').includes('..')) return null
+    return { proyecto: p, maqueta }
+  }
+  return null
+}

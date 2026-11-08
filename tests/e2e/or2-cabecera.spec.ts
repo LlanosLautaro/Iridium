@@ -91,6 +91,7 @@ const SECCIONES: [boton: string, titulo: string][] = [
   ['Mapa', 'Mapa'],
   ['Trabajo', 'Trabajo'],
   ['Revisión', 'Revisión'],
+  ['Diseño', 'Diseño'],
   ['Archivos', 'Archivos'],
   ['Git', 'Git'],
   ['Scripts', 'Scripts'],

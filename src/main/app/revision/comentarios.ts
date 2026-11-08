@@ -174,6 +174,12 @@ export class Comentarios {
         : null,
       componentes: c.componentes,
       pagina: c.pagina,
+      maqueta: c.maqueta
+        ? {
+            ruta: c.maqueta,
+            existe: !c.maqueta.includes('..') && (await existe(join(ruta, c.maqueta))),
+          }
+        : null,
       elemento: c.elemento,
       conCaptura: captura !== null && (await existe(join(this.carpeta(ruta), captura))),
       historia: c.historia,
@@ -216,7 +222,14 @@ export class Comentarios {
       await escribirAtomico(uno.archivo, conHistoria(uno.texto, this.ahora(), 'enviado a la sesión'))
       await this.s.enviarALaSesion(
         ruta,
-        armarMensaje({ codigo, texto: c.texto, archivo: c.archivo, pagina: c.pagina, captura: c.captura }),
+        armarMensaje({
+          codigo,
+          texto: c.texto,
+          archivo: c.archivo,
+          pagina: c.pagina,
+          captura: c.captura,
+          maqueta: c.maqueta,
+        }),
       )
       return 'enviado'
     })

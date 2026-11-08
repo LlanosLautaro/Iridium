@@ -225,7 +225,7 @@ Los wireframes en un bloque ``` se ven en Docs con una letra de ancho fijo que t
 Sale de la tabla de hitos de `estado.md`, del `## Portón` de cada documento de hito, de la tabla de iteraciones (columna ID con `I-n`) y del `estado.md` de cada frente. No cambies los títulos ni las columnas de las plantillas.
 
 ### Los comentarios de la Revisión: `docs/revision/R-n.md`
-El usuario comenta la interfaz de una app con F8 y llega `R-n.md` (con su captura `R-n.png`, el archivo y la línea). Leelos al empezar, resolvelos y cerralos: `**Estado:** abierto` pasa a `**Estado:** cerrado` y se agrega al final de `## Historia`:
+El usuario comenta la interfaz de una app con F8 y llega `R-n.md` (con su captura `R-n.png`, el archivo y la línea). Si trae `**Maqueta:**`, se hizo sobre una maqueta de `docs/diseno/`: corregí la maqueta, no el código. Leelos al empezar, resolvelos y cerralos: `**Estado:** abierto` pasa a `**Estado:** cerrado` y se agrega al final de `## Historia`:
 
 ```markdown
 - AAAA-MM-DD HH:MM — cerrado por la IA: qué hiciste

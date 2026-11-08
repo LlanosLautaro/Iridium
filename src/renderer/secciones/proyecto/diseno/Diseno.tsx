@@ -4,7 +4,7 @@
 // ofrece pedírselo a la IA (gasta uso: lo dice antes).
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { MaquetaVista, VistaDiseno } from '../../../../compartido/diseno'
-import { fichaDe, tarjetaDe, usarEstado } from '../../../estado'
+import { fichaDe, tarjetaDe, usarEstado, vistaDe } from '../../../estado'
 import { Cabecera, Filtros } from '../../../ui/Cabecera'
 import { Icono } from '../../../ui/Icono'
 import { mismaRuta } from '../enlaces'
@@ -76,6 +76,9 @@ export function Diseno({ ruta }: { ruta: string }) {
   const comentarios = usarEstado((s) => tarjetaDe(s.lista, ruta)?.revision ?? 0)
   const abrirSeccion = usarEstado((s) => s.abrirSeccion)
   const abrirArchivo = usarEstado((s) => s.abrirArchivo)
+  const pedida = usarEstado((s) => vistaDe(s.vistas, ruta).maqueta)
+  const cambiarVista = usarEstado((s) => s.cambiarVista)
+  const [noEsta, setNoEsta] = useState<string | null>(null)
   const botones = useRef(new Map<string, HTMLButtonElement>())
   const volverA = useRef<string | null>(null)
 
@@ -123,6 +126,20 @@ export function Diseno({ ruta }: { ruta: string }) {
     },
     [ruta],
   )
+  // Desde un comentario de la Revisión: esa maqueta grande o, si ya no está, el aviso.
+  useEffect(() => {
+    if (!pedida || vista?.tipo !== 'diseno') return
+    cambiarVista(ruta, { maqueta: null })
+    const existe = [
+      ...vista.grupos.flatMap((g) => g.maquetas),
+      ...(vista.sistema.piezas ? [vista.sistema.piezas] : []),
+    ].some((m) => m.archivo === pedida)
+    if (existe) {
+      setNoEsta(null)
+      agrandar(pedida)
+    } else setNoEsta(pedida)
+  }, [pedida, vista, ruta, cambiarVista, agrandar])
+
   const volver = useCallback(() => {
     setGrande((g) => {
       volverA.current = g
@@ -222,6 +239,12 @@ export function Diseno({ ruta }: { ruta: string }) {
         </p>
       )}
       {!vista && !error && <p className="nota">Leyendo…</p>}
+      {noEsta && (
+        <p className="di-aviso" role="note">
+          <Icono nombre="espera" />
+          La maqueta {noEsta} ya no está.
+        </p>
+      )}
       {pedido && (
         <p className="di-pedido" role="status">
           {pedido}

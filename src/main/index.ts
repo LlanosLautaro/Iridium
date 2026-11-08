@@ -5,7 +5,7 @@ import { createRequire } from 'node:module'
 import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, normalize } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { app, BrowserWindow, Menu, protocol, session, shell } from 'electron'
+import { app, BrowserWindow, Menu, protocol, session, shell, webContents } from 'electron'
 import { CANALES, TEMAS, type Tema } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
@@ -97,13 +97,16 @@ const extensionCopiada: Promise<unknown> =
 
 // Revisión de Iridium, en modo desarrollo y en la versión armada (D-052): F8 comenta la app y el comentario llega a su
 // proyecto (docs/modulos/revision/diseno-tecnico.md › Ayudante de Electron). Las pruebas (con datos aparte) no la cargan,
-// salvo la de F8 sobre una maqueta (IRIDIUM_AYUDANTE=1). Va después de copiar la extensión: con la carpeta a medias, F8
-// no andaba.
-if (!process.env.IRIDIUM_DATOS || process.env.IRIDIUM_AYUDANTE === '1')
+// salvo la de F8 sobre una maqueta: IRIDIUM_AYUDANTE=1 carga el de siempre y, con una ruta, ese ayudante (una copia de
+// la extensión con otro puerto). Va después de copiar la extensión: con la carpeta a medias, F8 no andaba.
+const ayudante = process.env.IRIDIUM_AYUDANTE
+if (!process.env.IRIDIUM_DATOS || ayudante)
   void despuesDeCopiar(extensionCopiada, () =>
-    import(pathToFileURL(join(carpetaDatos, 'extension', 'electron', 'ayudante.mjs')).href).then((m) =>
-      m.revision(),
-    ),
+    import(
+      pathToFileURL(
+        ayudante && ayudante !== '1' ? ayudante : join(carpetaDatos, 'extension', 'electron', 'ayudante.mjs'),
+      ).href
+    ).then((m) => m.revision()),
   )
 
 /** En la app instalada, Claude Code está fuera del archivo comprimido: el SDK no puede ejecutarlo desde adentro. */
@@ -252,6 +255,16 @@ async function arrancarRevision(puente: Puente): Promise<Receptor | null> {
     datos: datosRevision,
     lineasDelPuerto: lineasDeComandosDelPuerto,
     enviar: (ruta, codigo) => puente.comentarios.enviar(ruta, codigo),
+    // F8 sobre una maqueta grande de Diseño: la página con el foco es ese webview. Si nada tiene el foco (la ventana
+    // oculta de las pruebas), la única maqueta grande abierta: hay una sola a la vez.
+    maquetaEnFoco: () => {
+      const w = webContents.getFocusedWebContents()
+      if (w && !w.isDestroyed()) return w.getType() === 'webview' ? w.getURL() : null
+      const grandes = webContents
+        .getAllWebContents()
+        .filter((x) => !x.isDestroyed() && x.getType() === 'webview')
+      return grandes.length === 1 ? (grandes[0]?.getURL() ?? null) : null
+    },
   })
   const receptor = await arrancarReceptor(
     {

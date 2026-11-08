@@ -22,6 +22,7 @@ import {
 } from '../../core/revision/pila'
 import {
   type ProyectoConocido,
+  proyectoDeMaqueta,
   proyectoPorLineaDeComandos,
   proyectoQueContiene,
   unicoCon,
@@ -41,6 +42,11 @@ export interface ServiciosRevision {
   esperaEstadoMs?: number
   /** Enviar ahora (H-R2): manda el comentario guardado a la sesión del proyecto, si está abierto en Iridium. */
   enviar?(ruta: string, codigo: string): Promise<ResultadoEnvio>
+  /**
+   * La maqueta grande de Diseño con el foco (su dirección `file://`), o null. La extensión no manda la dirección de
+   * una página `file://` al preguntar el estado: con esto, la tarjeta dice el proyecto de la maqueta y no Iridium.
+   */
+  maquetaEnFoco?(): string | null
 }
 
 /** Carpetas que no son código del proyecto: no se buscan archivos en ellas. */
@@ -179,6 +185,15 @@ export class Revision {
     })
     const proyectos = await this.s.proyectos()
     const normal = direccionDe(`http://${direccion}`)
+    // Paso 0, es una maqueta (frente Diseño): la grande con el foco es de su proyecto, no de la app que la muestra.
+    const enFoco = !direccion && carpeta ? this.s.maquetaEnFoco?.() : null
+    const maqueta = enFoco ? proyectoDeMaqueta(enFoco, proyectos) : null
+    if (maqueta)
+      return {
+        version: VERSION_EXTENSION,
+        proyecto: maqueta.proyecto.nombre,
+        proyectos: proyectos.map((x) => x.nombre),
+      }
     // Paso 1, lo dice la app (Electron). No se recuerda la dirección: varias apps Electron usan el mismo puerto (5173)
     // en distintos momentos.
     const p = carpeta
@@ -251,6 +266,9 @@ export class Revision {
 
   async comentario(pedido: PedidoComentario): Promise<RespuestaComentario> {
     const todos = await this.s.proyectos()
+    // Es una maqueta (frente Diseño): va siempre a su proyecto, sin recordar nada de la app que la mostró.
+    const maqueta = proyectoDeMaqueta(pedido.url, todos)
+    if (maqueta) return this.guardarYEnviar(maqueta.proyecto, pedido, null, maqueta.maqueta)
     const direccion = direccionDe(pedido.url)
     let proyecto = (await this.porNombre(pedido.proyecto)) ?? null
     const deLaApp = pedido.carpeta ? await this.proyectoDeCarpeta(pedido.carpeta, todos) : null
@@ -265,9 +283,18 @@ export class Revision {
       if (direccion && !pedido.carpeta) await this.recordar(direccion, proyecto)
     }
     if (!proyecto) return { tipo: 'sin-proyecto', proyectos: todos.map((p) => p.nombre) }
-    const elegido = proyecto
+    return this.guardarYEnviar(proyecto, pedido, fuente, null)
+  }
+
+  /** Guarda el comentario en la cola de su proyecto y, si se pidió, lo manda a su sesión (H-R2). */
+  private async guardarYEnviar(
+    elegido: ProyectoConocido,
+    pedido: PedidoComentario,
+    fuente: { ruta: string; linea: number } | null,
+    maqueta: string | null,
+  ): Promise<RespuestaComentario> {
     const anterior = this.colas.get(elegido.ruta) ?? Promise.resolve()
-    const guardar = anterior.then(() => this.guardar(elegido, pedido, fuente))
+    const guardar = anterior.then(() => this.guardar(elegido, pedido, fuente, maqueta))
     this.colas.set(
       elegido.ruta,
       guardar.catch(() => {}),
@@ -285,6 +312,7 @@ export class Revision {
     proyecto: ProyectoConocido,
     pedido: PedidoComentario,
     fuente: { ruta: string; linea: number } | null,
+    maqueta: string | null,
   ): Promise<string> {
     const carpeta = join(proyecto.ruta, ...CARPETA_REVISION)
     await mkdir(carpeta, { recursive: true })
@@ -307,6 +335,7 @@ export class Revision {
         id: pedido.id,
         texto: pedido.texto,
         archivo: fuente ? { ruta: fuente.ruta, linea: fuente.linea } : null,
+        maqueta,
         componentes: pedido.componentes,
         url: pedido.url,
         elemento: pedido.elemento,
