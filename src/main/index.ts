@@ -1,6 +1,6 @@
 // Ventana, menú y ciclo de vida de la app (05-arquitectura.md › Estructura del repo).
 import { existsSync } from 'node:fs'
-import { readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, normalize } from 'node:path'
@@ -138,15 +138,26 @@ async function escribirMalFalso(carpeta: string, texto: string): Promise<void> {
 }
 
 /**
- * La IA falsa, con el pedido de Poner al día (SK-4), escribe en `docs/README.md` el formato de hoy: así las pruebas ven
- * que el proyecto sale de la lista de atrasados.
+ * La IA falsa, con el pedido de Pasar al framework (F-9, T-49), deja el proyecto con framework: `**Framework:**` con la
+ * fecha de hoy en `docs/README.md`, un `docs/trabajo.md` y, si era una carpeta simple, un `docs/estado.md` mínimo. Así las pruebas ven que
+ * sale de los de afuera. No arregla otra cosa: lo que el control marque, queda.
  */
-async function ponerAlDiaFalso(carpeta: string, texto: string): Promise<void> {
-  if (!texto.includes('actualizar-formato.md')) return
-  const ruta = join(carpeta, 'docs', 'README.md')
+async function pasarAlFrameworkFalso(carpeta: string, texto: string): Promise<void> {
+  if (!texto.includes('pasar-al-framework.md')) return
   const hoy = new Date().toISOString().slice(0, 10)
-  const antes = await readFile(ruta, 'utf8').catch(() => '# Docs\n\n**Formato de la guía:**\n')
-  await writeFile(ruta, antes.replace(/(\*\*Formato de la gu[ií]a:\*\*).*/, `$1 ${hoy}`))
+  await mkdir(join(carpeta, 'docs'), { recursive: true })
+  const estado = join(carpeta, 'docs', 'estado.md')
+  if (!existsSync(estado))
+    await writeFile(
+      estado,
+      `# Estado del proyecto\n\n**Última actualización:** ${hoy}\n\n## Hito actual\n0 — Idea cruda — en curso\n\n## Preguntas abiertas\n(ninguna)\n\n## Próximo paso\nContar la idea.\n`,
+    )
+  const trabajo = join(carpeta, 'docs', 'trabajo.md')
+  if (!existsSync(trabajo)) await writeFile(trabajo, '# Trabajo\n')
+  const ruta = join(carpeta, 'docs', 'README.md')
+  const antes = await readFile(ruta, 'utf8').catch(() => '# Docs\n')
+  const sinGuia = antes.replace(/^\*\*Formato de la gu[ií]a:\*\*.*\r?\n?/m, '')
+  await writeFile(ruta, `${sinGuia.trimEnd()}\n\n**Framework:** ${hoy}\n`)
 }
 
 /** Donde están armados los complementos (`pnpm build` › `out/plugins`; en la app, en sus recursos). */
@@ -165,7 +176,7 @@ function crearMotor(): Motor {
       alTurno: async (carpeta, texto) => {
         await dejarPreguntaFalsa(carpeta)
         await escribirMalFalso(carpeta, texto)
-        await ponerAlDiaFalso(carpeta, texto)
+        await pasarAlFrameworkFalso(carpeta, texto)
       },
       ...(estado ? { estado } : {}),
     })

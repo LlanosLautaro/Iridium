@@ -1,15 +1,21 @@
-// Skills (modulos/skills/ux.md › SK-W1): la lista por origen, el detalle de lo elegido y, a la derecha, la conversación
-// de Skills (D-068, D-083). Armada sin depender del marco, para poder ir como panel del módulo Inicio.
+// Skills (modulos/skills/ux.md › SK-W1, 04-ux.md › W-13): Framework y la lista por origen, el detalle de lo elegido y,
+// a la derecha, la conversación de Skills (D-068, D-083). Armada sin depender del marco, para poder ir como panel del
+// módulo Inicio.
 import { type CSSProperties, useCallback, useEffect, useState } from 'react'
 import { CARPETA_SKILLS } from '../../../compartido/puente'
-import type { Atrasados as DatosAtrasados, ListaSkills, OrigenSkill } from '../../../compartido/skills'
+import {
+  fueraDelFramework,
+  type ListaSkills,
+  type OrigenSkill,
+  type ProyectoFramework,
+} from '../../../compartido/skills'
 import { rutaSkills, tarjetaDe, usarEstado } from '../../estado'
 import { Divisor, DivisorListaSkills, useAnchoConversacion } from '../../ui/Divisor'
 import { AbrirComoProyecto } from '../inicio/AbrirComoProyecto'
 import { Conversacion } from '../proyecto/Conversacion'
-import { Atrasados } from './Atrasados'
 import { DetalleSkill } from './DetalleSkill'
-import { ATRASADOS, ListaDeSkills, plegadosAlEmpezar, SiluetasLista } from './ListaSkills'
+import { Framework } from './Framework'
+import { FRAMEWORK, ListaDeSkills, plegadosAlEmpezar, SiluetasLista } from './ListaSkills'
 
 /** El chat de la derecha; si falta la carpeta, lo dice, como el chat de Ideas. */
 function ChatSkills({ sobre }: { sobre: { nombre: string; quitar: () => void } | null }) {
@@ -37,44 +43,45 @@ export function Skills() {
   const ancho = useAnchoConversacion('skills')
   const anchoLista = usarEstado((s) => s.preferencias.anchoListaSkills)
   const [skills, setSkills] = useState<ListaSkills | null>(null)
-  const [atrasados, setAtrasados] = useState<DatosAtrasados | null>(null)
+  const [framework, setFramework] = useState<ProyectoFramework[] | null>(null)
 
   const leerSkills = useCallback(() => {
     void window.iridium.skills().then(setSkills)
   }, [])
-  const leerAtrasados = useCallback(() => {
-    void window.iridium.atrasados().then(setAtrasados)
+  const leerFramework = useCallback(() => {
+    void window.iridium.framework().then(setFramework)
   }, [])
 
-  // Al entrar se lee todo; con la sección abierta, la vigilancia avisa cuando cambia una skill propia o el formato de
-  // un proyecto. La carpeta de Claude no se vigila: lo de la cuenta y los complementos se ve al volver a entrar.
+  // Al entrar se lee todo; con la sección abierta, la vigilancia avisa cuando cambia una skill propia o el
+  // `docs/README.md` de un proyecto. La carpeta de Claude no se vigila: lo de la cuenta y los complementos se ve al
+  // volver a entrar.
   useEffect(() => {
     leerSkills()
     return window.iridium.alCambiarSkills(() => {
       leerSkills()
-      leerAtrasados()
+      leerFramework()
     })
-  }, [leerSkills, leerAtrasados])
-  // La lista de proyectos cambia cuando cambia un `estado.md` o una ficha (archivado, reemplazado).
+  }, [leerSkills, leerFramework])
+  // La lista de proyectos cambia cuando cambia un documento o una ficha: los avisos del control vienen con ella.
   useEffect(() => {
-    if (lista) leerAtrasados()
-  }, [lista, leerAtrasados])
+    if (lista) leerFramework()
+  }, [lista, leerFramework])
 
-  const nAtrasados = atrasados?.proyectos.length ?? 0
-  // La primera vez: Proyectos atrasados, o la primera propia si están todos al día.
+  const fuera = framework?.filter((p) => fueraDelFramework(p.estado)).length ?? 0
+  // La primera vez: Framework si hay alguno fuera; si no, la primera propia.
   const porDefecto =
-    atrasados && atrasados.vigente !== null && nAtrasados === 0
-      ? (skills?.skills.find((s) => s.origen === 'propia')?.id ?? ATRASADOS)
-      : ATRASADOS
+    framework && fuera === 0
+      ? (skills?.skills.find((s) => s.origen === 'propia')?.id ?? FRAMEWORK)
+      : FRAMEWORK
   const elegidaSkill = skills?.skills.find((s) => s.id === vista.elegida) ?? null
-  const elegida = vista.elegida === ATRASADOS ? ATRASADOS : (elegidaSkill?.id ?? porDefecto)
+  const elegida = vista.elegida === FRAMEWORK ? FRAMEWORK : (elegidaSkill?.id ?? porDefecto)
   const skill = skills?.skills.find((s) => s.id === elegida) ?? null
   const plegados = vista.plegados ?? (skills ? plegadosAlEmpezar(skills) : [])
 
   // La primera elección queda fija: si después se ponen todos al día, el detalle no salta a otra skill.
   useEffect(() => {
-    if (vista.elegida === null && skills && atrasados) cambiarSkills({ elegida: porDefecto })
-  }, [vista.elegida, skills, atrasados, porDefecto, cambiarSkills])
+    if (vista.elegida === null && skills && framework) cambiarSkills({ elegida: porDefecto })
+  }, [vista.elegida, skills, framework, porDefecto, cambiarSkills])
 
   const elegir = (id: string) => cambiarSkills({ elegida: id, sinSobre: null })
   const plegar = (o: OrigenSkill) =>
@@ -94,7 +101,7 @@ export function Skills() {
         {skills ? (
           <ListaDeSkills
             lista={skills}
-            atrasados={atrasados}
+            framework={framework}
             elegida={elegida}
             elegir={elegir}
             plegados={plegados}
@@ -112,16 +119,9 @@ export function Skills() {
         <DivisorListaSkills ancho={anchoLista} />
         {skills &&
           (skill ? (
-            <DetalleSkill
-              key={skill.id}
-              s={skill}
-              atrasados={skill.nombre === 'hitos-desarrollo-app' ? nAtrasados : null}
-              verAtrasados={() => elegir(ATRASADOS)}
-              pedir={pedir}
-              hayChat={rutaChat !== null}
-            />
+            <DetalleSkill key={skill.id} s={skill} pedir={pedir} hayChat={rutaChat !== null} />
           ) : (
-            <Atrasados datos={atrasados} />
+            <Framework proyectos={framework} />
           ))}
       </div>
       <Divisor vista="skills" ancho={ancho} />

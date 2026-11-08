@@ -626,6 +626,8 @@ export function Conversacion({
   sobre?: Sobre | null
 }) {
   const general = chat !== undefined
+  // Una carpeta simple (W-3, D-095) no tiene `estado.md`: no hay próximo paso que seguir, solo lo que se le pida.
+  const simple = !general && p.framework === null
   const ruta = p.ruta
   const c = usarEstado((s) => s.conversaciones[ruta])
   const ficha = usarEstado((s) => fichaDe(s.fichas, ruta))
@@ -733,12 +735,18 @@ export function Conversacion({
         <Quien ia />
         {enBlanco && ' · conversación nueva'}
       </div>
-      <p>
-        Con <b>Seguí</b> voy a leer <code>docs/estado.md</code> y hacer el próximo paso{paso ? ':' : '.'}
-      </p>
+      {simple ? (
+        <p>
+          Esta carpeta no sigue el framework: no hay un próximo paso. Escribime abajo lo que quieras que haga.
+        </p>
+      ) : (
+        <p>
+          Con <b>Seguí</b> voy a leer <code>docs/estado.md</code> y hacer el próximo paso{paso ? ':' : '.'}
+        </p>
+      )}
       {paso && <p className="paso">{paso}</p>}
       <div className="acc">
-        <span className="nota">O escribile abajo lo que quieras que haga.</span>
+        {!simple && <span className="nota">O escribile abajo lo que quieras que haga.</span>}
         {enBlanco && (
           <button
             type="button"
@@ -774,7 +782,9 @@ export function Conversacion({
         ? `El chat de Skills: trabaja en la carpeta ${p.nombre}`
         : general
           ? `El chat general: trabaja en la carpeta ${p.nombre}`
-          : 'Seguí lee estado.md y hace el próximo paso'
+          : simple
+            ? 'Escribile lo que quieras que haga'
+            : 'Seguí lee estado.md y hace el próximo paso'
 
   return (
     <>
@@ -798,7 +808,7 @@ export function Conversacion({
           <Icono nombre="mas" />
           Nueva
         </button>
-        {!general && (
+        {!general && !simple && (
           <button
             type="button"
             className="btn secundario chico sigue"

@@ -15,7 +15,7 @@ export interface ArchivosControl {
   respuestas: ReadonlyMap<string, string>
   /** Todos los `docs/**\/*.md` (para los dibujos en texto). */
   documentos: ArchivoLeido[]
-  /** Los frentes que existen: la carpeta y el nombre de cada módulo. */
+  /** Los frentes que existen: la carpeta y el nombre de cada módulo, y los de la tabla «Módulos» sin carpeta todavía. */
   frentes: readonly { carpeta: string; nombre: string }[]
 }
 

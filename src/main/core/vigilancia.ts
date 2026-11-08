@@ -6,7 +6,8 @@ import { esCarpetaDeProyecto } from './proyectos'
 /**
  * Dada una ruta relativa a la raíz (como la informa la vigilancia del disco), devuelve el proyecto afectado o
  * null si el cambio no cambia ninguna tarjeta. Cuentan: la carpeta del proyecto, su ficha y su ícono, su
- * `docs/estado.md`, los de sus módulos, sus respuestas, los comentarios de la Revisión (el contador de abiertos) y
+ * `docs/estado.md`, los de sus módulos, sus respuestas, `docs/README.md` (si sigue el framework), `docs/trabajo.md`
+ * (los avisos del control), los comentarios de la Revisión (el contador de abiertos) y
  * sus skills (`.claude/skills/<skill>/SKILL.md`: el ícono de Skills del proyecto, R-8).
  */
 export function proyectoAfectado(relativa: string): string | null {
@@ -23,7 +24,15 @@ export function proyectoAfectado(relativa: string): string | null {
   if (primera === '.claude' && segunda === 'skills')
     return resto.length === 3 || (resto.length === 4 && cuarta === 'SKILL.md') ? proyecto : null
   if (primera !== 'docs') return null
-  if (resto.length === 2 && (segunda === 'estado.md' || segunda === 'respuestas')) return proyecto
+  // `README.md` dice si sigue el framework y `trabajo.md` lo revisa el control: los dos cambian la tarjeta (W-2).
+  if (
+    resto.length === 2 &&
+    (segunda === 'estado.md' ||
+      segunda === 'respuestas' ||
+      segunda === 'README.md' ||
+      segunda === 'trabajo.md')
+  )
+    return proyecto
   if (segunda === 'respuestas' && resto.length >= 3) return proyecto
   if (segunda === 'revision' && resto.length === 3 && /^R-\d+\.md$/i.test(tercera ?? '')) return proyecto
   if (segunda === 'modulos' && resto.length === 4 && cuarta === 'estado.md' && tercera) return proyecto

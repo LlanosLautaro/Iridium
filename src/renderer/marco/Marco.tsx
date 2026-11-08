@@ -100,7 +100,7 @@ function BarraActividad() {
     return (
       <nav className="actividad" aria-label="Secciones del proyecto">
         {visibles.filter((s) => s.grupo === 'sigue').map(boton)}
-        <hr className="act-linea" />
+        {visibles.some((s) => s.grupo === 'sigue') && <hr className="act-linea" />}
         {visibles.filter((s) => s.grupo === 'dentro').map(boton)}
         <BotonAjustes />
       </nav>

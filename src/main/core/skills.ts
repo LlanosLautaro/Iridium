@@ -1,7 +1,8 @@
 // Reglas de la sección Skills (modulos/skills/diseno-tecnico.md): entender un SKILL.md, decidir de dónde llega cada
-// skill, encontrar las copias dobles y leer las fechas de formato de la guía (D-068). Sin disco.
-import type { CopiaDoble, FormatoProyecto, OrigenSkill, Skill } from '../../compartido/skills'
+// skill, encontrar las copias dobles y saber cómo está cada proyecto con el framework (W-13). Sin disco.
+import type { CopiaDoble, EstadoFramework, OrigenSkill, Skill } from '../../compartido/skills'
 import type { Estado } from '../../compartido/tipos'
+import { tieneFramework } from './control'
 import { campo } from './guia'
 
 /** Lo que entra entre los `---` del principio de un `SKILL.md`. */
@@ -176,54 +177,41 @@ export function ordenarSkills(skills: Skill[]): Skill[] {
   )
 }
 
-function sinAcentos(t: string): string {
-  return t.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
-}
-
-/**
- * El formato vigente de la guía, de su `SKILL.md` (D-068): primero la línea `**Formato vigente:** AAAA-MM-DD`; si no,
- * la fecha en negrita de «El formato vigente de esta guía es el del **AAAA-MM-DD**». null si no lo dice.
- */
-export function formatoVigente(texto: string): string | null {
-  const lineas = texto.replace(/^﻿/, '').split(/\r?\n/)
-  const fija = campo(lineas, 'Formato vigente')?.match(/\d{4}-\d{2}-\d{2}/)?.[0]
-  if (fija) return fija
-  return (
-    /formato vigente de esta guia es el del \*\*(\d{4}-\d{2}-\d{2})\*\*/.exec(sinAcentos(texto))?.[1] ?? null
-  )
-}
-
 /** La fecha de `**Formato de la guía:** AAAA-MM-DD` del `docs/README.md` de un proyecto; null si no la tiene. */
 export function formatoDelProyecto(readme: string): string | null {
   const lineas = readme.replace(/^﻿/, '').split(/\r?\n/)
   return campo(lineas, 'Formato de la guía')?.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? null
 }
 
-/** Lo que hace falta de un proyecto para saber si está atrasado. */
-export interface DatosFormato {
+/** Lo que hace falta de un proyecto para saber cómo está con el framework. */
+export interface DatosFramework {
   tieneEstado: boolean
   archivado: boolean
   estado: Estado | null
   reemplazadoPor: string | null
   readme: string | null
-  claudeMd: string | null
+  /** Lo que el control encuentra mal escrito (ya calculado para la tarjeta); null sin framework. */
+  avisos: readonly string[] | null
 }
 
-/** El bloque que la guía deja en el `CLAUDE.md` de un proyecto para ponerlo al día a mano. */
-const BLOQUE_PENDIENTE = /actualizacion de formato pendiente/
+/** La fecha de `**Framework:** AAAA-MM-DD` del `docs/README.md` de un proyecto; null si no la tiene. */
+export function fechaDelFramework(readme: string): string | null {
+  const lineas = readme.replace(/^\uFEFF/, '').split(/\r?\n/)
+  return campo(lineas, 'Framework')?.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? null
+}
 
 /**
- * Si el proyecto está atrasado, con qué formato (SK-4, D-068); null si está al día, no sigue la guía o no cuenta
- * (archivado, descontinuado o reemplazado por otro), o si no se sabe cuál es el vigente.
+ * Cómo está un proyecto con el framework (W-13); null si no cuenta (archivado, descontinuado o reemplazado por otro).
+ * Con `**Framework:**` está al día o con avisos; con `estado.md` y sin esa línea, de framework viejo; sin `estado.md`,
+ * es una carpeta simple.
  */
-export function formatoAtrasado(d: DatosFormato, vigente: string | null): FormatoProyecto | null {
-  if (vigente === null || !d.tieneEstado) return null
+export function estadoConFramework(d: DatosFramework): EstadoFramework | null {
   if (d.archivado || d.estado === 'descontinuado' || d.reemplazadoPor !== null) return null
-  if (d.claudeMd !== null && BLOQUE_PENDIENTE.test(sinAcentos(d.claudeMd))) return { tipo: 'marcado' }
-  const fecha = d.readme === null ? null : formatoDelProyecto(d.readme)
-  if (fecha === null) return { tipo: 'sin-formato' }
-  return fecha < vigente ? { tipo: 'fecha', fecha } : null
+  if (!d.tieneEstado) return { tipo: 'carpeta' }
+  const fecha = d.readme === null ? null : fechaDelFramework(d.readme)
+  if (d.readme !== null && tieneFramework(d.readme))
+    return d.avisos && d.avisos.length > 0
+      ? { tipo: 'avisos', fecha, avisos: [...d.avisos] }
+      : { tipo: 'al-dia', fecha }
+  return { tipo: 'viejo', fecha: d.readme === null ? null : formatoDelProyecto(d.readme) }
 }
-
-/** El nombre de la guía, que dice el formato vigente. */
-export const SKILL_GUIA = 'hitos-desarrollo-app'

@@ -20,7 +20,7 @@ import {
   type Tema,
   type VersionNueva,
 } from '../../compartido/puente'
-import { MENSAJE_PONER_AL_DIA } from '../../compartido/skills'
+import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/skills'
 import type { PlanEliminacion } from '../../compartido/tipos'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
@@ -33,7 +33,7 @@ import { mapaDe } from '../app/mapa'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
-import { leerSeccionSkills, proyectosAtrasados, skillsDelProyecto } from '../app/skills'
+import { leerSeccionSkills, proyectosConFramework, skillsDelProyecto } from '../app/skills'
 import { anotarEnProyecto, anotarSuelta, ideasDelInicio, trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
@@ -524,21 +524,21 @@ export function registrarPuente(s: Servicios): Puente {
     conversaciones.elegir(await proyecto(ruta), IdConversacion.parse(id)),
   )
 
-  // Skills (modulos/skills/): se lee todo cada vez (unas 35 carpetas). Abrir carpeta y Poner al día solo aceptan lo
-  // que salió de la última lectura (diseno-tecnico.md › Seguridad).
+  // Skills (modulos/skills/): se lee todo cada vez (unas 35 carpetas). Abrir carpeta y Pasar al framework solo aceptan
+  // lo que salió de la última lectura (diseno-tecnico.md › Seguridad).
   let carpetasSkills = new Set<string>()
   const leerSkills = async () => {
     await listar()
     const r = await leerSeccionSkills(s.carpetaClaude, enDisco.rutas.skills)
-    carpetasSkills = new Set(r.lista.skills.map((x) => x.id))
+    carpetasSkills = new Set(r.skills.map((x) => x.id))
     return r
   }
-  const atrasados = async () => {
-    const [{ vigente }, lista] = await Promise.all([leerSkills(), listar()])
-    return proyectosAtrasados(lista.tipo === 'lista' ? lista.proyectos : [], vigente)
+  const conFramework = async () => {
+    const lista = await listar()
+    return proyectosConFramework(lista.tipo === 'lista' ? lista.proyectos : [])
   }
-  ipcMain.handle(CANALES.skills, async () => (await leerSkills()).lista)
-  ipcMain.handle(CANALES.atrasados, () => atrasados())
+  ipcMain.handle(CANALES.skills, () => leerSkills())
+  ipcMain.handle(CANALES.framework, () => conFramework())
   const carpetaDeSkill = (id: unknown): string => {
     const carpeta = Ruta.parse(id)
     if (!carpetasSkills.has(carpeta)) throw new Error('Esa carpeta no es de una skill de la lista')
@@ -557,12 +557,14 @@ export function registrarPuente(s: Servicios): Puente {
     // «Ver en Docs» es de los documentos de un proyecto: acá no va.
     return r.tipo === 'texto' ? { ...r, documento: false } : r
   })
-  ipcMain.handle(CANALES.ponerAlDia, async (_, dato: unknown) => {
+  // Pasar al framework (F-9, OR-8): solo un proyecto de la lista que esté fuera o sea una carpeta simple.
+  ipcMain.handle(CANALES.pasarAlFramework, async (_, dato: unknown) => {
     const ruta = await proyecto(dato)
-    if (!(await atrasados()).proyectos.some((p) => p.ruta === ruta))
-      throw new Error('Ese proyecto no está atrasado')
+    const p = (await conFramework()).find((x) => x.ruta === ruta)
+    if (!p || !(fueraDelFramework(p.estado) || p.estado.tipo === 'carpeta'))
+      throw new Error('Ese proyecto ya sigue el framework')
     if (conversaciones.enMarcha().includes(ruta)) throw new Error('La IA de ese proyecto está trabajando')
-    await conversaciones.seguir(ruta, { texto: MENSAJE_PONER_AL_DIA })
+    await conversaciones.seguir(ruta, { texto: MENSAJE_PASAR_AL_FRAMEWORK })
   })
 
   // Ideas (modulos/inicio/): la ruta de `ideas.md` la arma este lado; la ventana no manda nada.

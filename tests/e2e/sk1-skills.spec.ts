@@ -1,5 +1,6 @@
 // SK-I1 con la app abierta y el motor falso (modulos/skills/diseno-tecnico.md › Pruebas): Ctrl+3, los grupos y la
-// doble, el chat de Skills con «Sobre la skill …», Poner al día y la falta de la carpeta Skills (D-083).
+// doble, el chat de Skills con «Sobre la skill …», Skills › Framework con Pasar al framework (W-13) y la falta de la
+// carpeta Skills (D-083).
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -29,7 +30,8 @@ const ficha = JSON.stringify({
   archivado: false,
   reemplazadoPor: null,
 })
-const estado = '# Estado\n\n## Hito actual\n7 — Construcción\n\n## Preguntas abiertas\n(ninguna)\n'
+const estado =
+  '# Estado\n\n**Última actualización:** 2026-11-06\n\n## Hito actual\n7 — Construcción — en curso\n\n## Preguntas abiertas\n(ninguna)\n\n## Próximo paso\nSeguir.\n'
 
 async function abrir(extra: Record<string, string> = {}): Promise<{ app: ElectronApplication; win: Page }> {
   const env = {
@@ -65,7 +67,8 @@ test.beforeEach(async () => {
   await proyecto('Alfa', {
     '.proyecto.json': ficha,
     'docs/estado.md': estado,
-    'docs/README.md': '# Docs\n\n**Formato de la guía:** 2026-10-29\n',
+    'docs/README.md': '# Docs\n\n**Framework:** 2026-11-06\n',
+    'docs/trabajo.md': '# Trabajo\n',
   })
   await mkdir(datos, { recursive: true })
   await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz }))
@@ -82,7 +85,7 @@ test.afterEach(async () => {
   await rm(base, { recursive: true, force: true, maxRetries: 5 })
 })
 
-test('Ctrl+3: la lista por origen, la doble, los atrasados y Poner al día (SK-1, SK-2, SK-4)', async () => {
+test('Ctrl+3: la lista por origen, la doble y Framework con Pasar al framework (SK-1, SK-2, W-13)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+3')
@@ -96,29 +99,45 @@ test('Ctrl+3: la lista por origen, la doble, los atrasados y Poner al día (SK-1
   await expect(lista.getByRole('button', { name: /Desde la cuenta\s*2/ })).toBeVisible()
   await expect(lista.getByText('borrada')).toHaveCount(0)
 
-  // La primera vez: Proyectos atrasados, con el vigente y Gamma (Alfa está al día).
-  const detalle = win.getByRole('region', { name: 'Proyectos atrasados' })
-  await expect(detalle.getByText('La guía va por el formato del 29 de octubre')).toBeVisible()
-  await expect(detalle.getByText('formato del 16 de octubre')).toBeVisible()
-  await expect(detalle.getByText('Alfa')).toHaveCount(0)
-  await win.screenshot({ path: 'test-results/sk1-atrasados.png' })
+  // La primera vez: Framework, con Gamma fuera (framework viejo) y Alfa al día, sin botón. La cuenta, en gris.
+  await expect(lista.locator('.sk-framework .n')).toHaveText('1')
+  const detalle = win.getByRole('region', { name: 'Framework' })
+  await expect(detalle.locator('.cab-seccion .sub')).toHaveText('1 fuera')
+  const gamma = detalle.locator('.sk-proy[data-proyecto="Gamma"]')
+  const alfa = detalle.locator('.sk-proy[data-proyecto="Alfa"]')
+  await expect(gamma).toContainText('framework viejo · 2026-10-16')
+  await expect(alfa).toContainText('al día · 2026-11-06')
+  await expect(alfa.getByRole('button', { name: 'Pasar al framework' })).toHaveCount(0)
+  await expect(detalle.locator('.sk-proy')).toHaveText([/Gamma/, /Alfa/])
+  await detalle.getByRole('button', { name: /Fuera del framework/ }).click()
+  await expect(detalle.locator('.sk-proy')).toHaveText([/Gamma/])
+  await win.screenshot({ path: 'test-results/sk1-framework.png' })
 
-  // Una ruta que no salió de la lista se rechaza.
-  const rechazo = await win.evaluate(() =>
-    (window as unknown as { iridium: ApiIridium }).iridium.ponerAlDia('C:\\Windows').then(
+  // Una ruta que no salió de la lista se rechaza, y una que ya sigue el framework también.
+  const rechazos = await win.evaluate(async () => {
+    const api = (window as unknown as { iridium: ApiIridium }).iridium
+    const ajena = await api.pasarAlFramework('C:\\Windows').then(
       () => 'aceptó',
       () => 'rechazó',
-    ),
-  )
-  expect(rechazo).toBe('rechazó')
+    )
+    const alDia = (await api.framework()).find((p) => p.nombre === 'Alfa')?.ruta ?? ''
+    const yaSigue = await api.pasarAlFramework(alDia).then(
+      () => 'aceptó',
+      () => 'rechazó',
+    )
+    return { ajena, yaSigue }
+  })
+  expect(rechazos).toEqual({ ajena: 'rechazó', yaSigue: 'rechazó' })
 
-  await detalle.getByRole('button', { name: 'Poner al día' }).click()
-  await expect(detalle.getByText('trabajando')).toBeVisible()
-  await expect(detalle.getByRole('button', { name: 'Ver la conversación' })).toBeVisible()
-  await win.screenshot({ path: 'test-results/sk1-trabajando.png' })
-  // La IA falsa escribe la fecha nueva: Gamma sale de la lista.
-  await expect(detalle.getByText('Ningún proyecto tiene un formato viejo de la guía.')).toBeVisible()
-  await expect(lista.getByText('Todos al día')).toBeVisible()
+  await gamma.getByRole('button', { name: 'Pasar al framework' }).click()
+  await expect(gamma.getByText('Pasando al framework…')).toBeVisible()
+  await expect(gamma.getByRole('button', { name: 'Ver la conversación' })).toBeVisible()
+  await win.screenshot({ path: 'test-results/sk1-pasando.png' })
+  // La IA falsa le pone la línea del framework: Gamma queda al día y no hay ninguno fuera.
+  await detalle.getByRole('button', { name: /^Todos/ }).click()
+  await expect(gamma).toContainText('al día')
+  await expect(detalle.getByText('Todos los proyectos siguen el framework.')).toBeVisible()
+  await expect(lista.locator('.sk-framework .n')).toHaveCount(0)
 
   // La doble: el aviso y Pedir que la saquen, que deja el pedido escrito en el chat.
   await lista.getByTitle('impeccable', { exact: true }).click()
@@ -177,10 +196,9 @@ test('el chat de Skills con «Sobre la skill …» (SK-3)', async () => {
   // Con la IA trabajando, cerrar Iridium pregunta (F-6): se espera a que termine.
   await expect(chat.getByText('Listo: dejé el estado al día.')).toHaveCount(2)
 
-  // La guía dice cuántos proyectos están atrasados y lleva a la lista.
-  await lista.getByTitle('hitos-desarrollo-app', { exact: true }).click()
-  await win.getByRole('button', { name: /1 proyecto atrasado/ }).click()
-  await expect(win.getByRole('region', { name: 'Proyectos atrasados' })).toBeVisible()
+  // Framework vuelve a estar a un clic.
+  await lista.getByRole('button', { name: /^Framework/ }).click()
+  await expect(win.getByRole('region', { name: 'Framework' })).toBeVisible()
   await app.close()
 })
 
@@ -192,9 +210,8 @@ test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', as
   await lista.getByTitle('hitos-desarrollo-app', { exact: true }).click()
   const detalle = win.getByRole('region', { name: 'La skill hitos-desarrollo-app' })
   const arbol = detalle.getByRole('navigation', { name: 'Archivos de hitos-desarrollo-app' })
-  // Empieza en el Resumen: la descripción y los atrasados.
+  // Empieza en el Resumen.
   await expect(arbol.getByRole('button', { name: 'Resumen' })).toHaveAttribute('aria-current', 'true')
-  await expect(detalle.getByRole('button', { name: /1 proyecto atrasado/ })).toBeVisible()
 
   await arbol.getByRole('button', { name: 'SKILL.md' }).click()
   await expect(detalle.locator('.visor-cab')).toContainText('SKILL.md')
@@ -241,8 +258,8 @@ test('en Carbón y sin la carpeta Skills (no se pudo crear), el aviso en lugar d
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+3')
   await expect(win.getByText('no pudo crearla')).toBeVisible()
-  // Sin la carpeta, las propias quedan con el enlace roto y no se sabe el formato vigente.
-  await expect(win.getByText('No sé qué formato pide la guía', { exact: false })).toBeVisible()
+  // Sin la carpeta, Framework se ve igual: no depende de las skills.
+  await expect(win.getByRole('region', { name: 'Framework' })).toContainText('framework viejo')
   await win.screenshot({ path: 'test-results/sk1-carbon-sin-chat.png' })
   await app.close()
 })

@@ -4,7 +4,7 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import { type ArchivosControl, type Aviso, correrControl, tieneFramework } from '../core/control'
 import type { ArchivoLeido } from '../core/control/tipos'
-import { nombreDeModulo } from '../core/mapa'
+import { leerFrentes, nombreDeModulo } from '../core/mapa'
 
 async function textoSiExiste(ruta: string): Promise<string | null> {
   try {
@@ -52,6 +52,10 @@ export async function leerArchivosControl(ruta: string): Promise<ArchivosControl
     frentes.push({ carpeta: m.name, nombre: texto ? nombreDeModulo(texto, m.name) : m.name })
     if (texto !== undefined) estados.push({ ruta: r, texto })
   }
+  // Los frentes de la tabla «Módulos» que todavía no tienen carpeta (los que esperan) también existen (A-5).
+  for (const f of leerFrentes(general ?? '', true))
+    if (!frentes.some((x) => x.carpeta === f.carpeta || x.nombre === f.nombre))
+      frentes.push({ carpeta: f.carpeta ?? f.nombre, nombre: f.nombre })
   const respuestas = new Map<string, string>()
   for (const d of todos) {
     const codigo = /^docs\/respuestas\/(Q-\d+)\.md$/i.exec(d.ruta)?.[1]

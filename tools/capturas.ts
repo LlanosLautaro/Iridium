@@ -121,13 +121,13 @@ if (await ver.count()) {
   await win.screenshot({ path: `${SALIDA}/6-pendientes-ver-entero.png` })
   await win.keyboard.press('Escape')
 }
-// Skills con las carpetas reales de Claude (SK-I1): solo se mira; Poner al día no se toca (gasta uso).
+// Skills con las carpetas reales de Claude (SK-I1): solo se mira; Pasar al framework no se toca (gasta uso).
 await win.keyboard.press('Control+3')
 await win.waitForSelector('.sk-columna .sk-fila', { timeout: 30_000 })
 await win.waitForTimeout(800)
 console.log('skills:', await win.textContent('.sk-columna .titulo'))
-console.log('atrasados:', await win.locator('.sk-proy .datos b').allTextContents())
-await win.screenshot({ path: `${SALIDA}/9-skills-atrasados.png` })
+console.log('framework:', await win.locator('.sk-proy .datos b').allTextContents())
+await win.screenshot({ path: `${SALIDA}/9-skills-framework.png` })
 for (const nombre of ['hitos-desarrollo-app', 'impeccable']) {
   await win.getByTitle(nombre, { exact: true }).click()
   await win.waitForTimeout(400)

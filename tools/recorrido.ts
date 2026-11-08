@@ -654,7 +654,7 @@ try {
     return {
       titulo: await win.locator('.sk-columna .titulo').innerText(),
       filas: await win.locator('.sk-columna .sk-fila').count(),
-      atrasados: await win.locator('.sk-proy .datos b').allTextContents(),
+      framework: await win.locator('.sk-proy .datos b').allTextContents(),
     }
   })
 

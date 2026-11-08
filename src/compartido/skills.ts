@@ -1,5 +1,5 @@
 // Lo que la sección Skills (modulos/skills/) recibe del proceso principal: las skills de la PC por origen, las copias
-// dobles y los proyectos con un formato viejo de la guía (D-068).
+// dobles y cómo está cada proyecto con el framework (Skills › Framework, frente Orden, W-13).
 
 /** De dónde llega una skill (modulos/skills/diseno-tecnico.md › Dónde se leen las skills). */
 export const ORIGENES = ['propia', 'tercero', 'complemento', 'cuenta'] as const
@@ -50,27 +50,36 @@ export interface ListaSkills {
   errores: { origenes: OrigenSkill[]; carpeta: string }[]
 }
 
-/** El formato de un proyecto atrasado (SK-4). */
-export type FormatoProyecto = { tipo: 'fecha'; fecha: string } | { tipo: 'sin-formato' } | { tipo: 'marcado' }
+/**
+ * Cómo está un proyecto con el framework (W-13, H-20): al día (con la fecha de su `**Framework:**`), con avisos del
+ * control, de framework viejo (con la fecha del formato de la guía, si la dice) o carpeta simple (sin `estado.md`).
+ */
+export type EstadoFramework =
+  | { tipo: 'al-dia'; fecha: string | null }
+  | { tipo: 'avisos'; fecha: string | null; avisos: string[] }
+  | { tipo: 'viejo'; fecha: string | null }
+  | { tipo: 'carpeta' }
 
-export interface ProyectoAtrasado {
+export interface ProyectoFramework {
   ruta: string
   nombre: string
   inicial: string
   icono: string | null
-  formato: FormatoProyecto
+  estado: EstadoFramework
 }
 
-export interface Atrasados {
-  /** La fecha del formato vigente de la guía (AAAA-MM-DD); null si la guía no lo dice. */
-  vigente: string | null
-  proyectos: ProyectoAtrasado[]
+/** Fuera del framework: de framework viejo o con avisos. Las carpetas simples no cuentan (W-13). */
+export function fueraDelFramework(e: EstadoFramework): boolean {
+  return e.tipo === 'viejo' || e.tipo === 'avisos'
 }
 
-/** El pedido de Poner al día (diseno-tecnico.md › Proyectos atrasados, 4). */
-export const MENSAJE_PONER_AL_DIA =
-  'Poné al día el formato de la documentación de este proyecto: seguí `references/actualizar-formato.md` de la ' +
-  'guía `hitos-desarrollo-app`.'
+/**
+ * El pedido de Pasar al framework (F-9, T-49): cita la referencia del framework, que lo lleva hasta que el control dé
+ * cero. El motor falso lo reconoce por `pasar-al-framework.md`.
+ */
+export const MENSAJE_PASAR_AL_FRAMEWORK =
+  'Pasá este proyecto al framework de Iridium: seguí `referencias/pasar-al-framework.md` del framework ' +
+  '(la skill `iridium`) hasta que el control dé cero.'
 
 /** Una skill del proyecto (R-8): de su `.claude/skills/`, que Claude Code carga solo en ese proyecto. */
 export interface SkillProyecto {

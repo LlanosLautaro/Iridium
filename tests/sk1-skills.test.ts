@@ -1,22 +1,22 @@
-// SK-I1 (modulos/skills/diseno-tecnico.md › Pruebas): el SKILL.md, los cuatro orígenes con enlaces reales, las copias
-// dobles, el formato vigente y los proyectos atrasados.
+// SK-I1 (modulos/skills/diseno-tecnico.md › Pruebas): el SKILL.md, los cuatro orígenes con enlaces reales y las copias
+// dobles; y Skills › Framework (frente Orden, W-13): cómo está cada proyecto con el framework.
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import type { OrigenSkill, Skill } from '../src/compartido/skills'
 import { listarProyectos } from '../src/main/app/proyectos'
-import { leerSeccionSkills, proyectosAtrasados } from '../src/main/app/skills'
+import { leerSeccionSkills, proyectosConFramework } from '../src/main/app/skills'
 import {
-  formatoAtrasado,
+  estadoConFramework,
+  fechaDelFramework,
   formatoDelProyecto,
-  formatoVigente,
   leerEncabezado,
   marcarDobles,
 } from '../src/main/core/skills'
 import { cambianSkills } from '../src/main/core/vigilancia'
 import { generacionesNuevas } from '../src/main/infra/skills'
-import { armarCarpetaClaude, GUIA, VIGENTE } from './muestras/carpeta-claude'
+import { armarCarpetaClaude, GUIA } from './muestras/carpeta-claude'
 
 describe('leerEncabezado (SKILL.md)', () => {
   it('lee name y description en una línea, con y sin comillas', () => {
@@ -46,15 +46,10 @@ describe('leerEncabezado (SKILL.md)', () => {
   })
 })
 
-describe('formato de la guía (D-068)', () => {
-  it('el vigente sale de la línea fija o, si no, de la frase de la guía', () => {
-    expect(formatoVigente('**Formato vigente:** 2026-10-29\n')).toBe('2026-10-29')
-    expect(formatoVigente('El formato vigente de esta guía es el del **2026-10-29**: la línea…')).toBe(
-      '2026-10-29',
-    )
-    expect(formatoVigente('# Una guía sin fecha')).toBeNull()
-  })
-  it('el de un proyecto, con la lectura tolerante de estado.md', () => {
+describe('cómo está un proyecto con el framework (W-13)', () => {
+  it('las fechas: la del framework y la del formato viejo de la guía', () => {
+    expect(fechaDelFramework('# Docs\n\n**Framework:** 2026-11-06\n')).toBe('2026-11-06')
+    expect(fechaDelFramework('# Docs')).toBeNull()
     expect(formatoDelProyecto('# Docs\n\n**Formato de la guía:** 2026-10-16\n')).toBe('2026-10-16')
     expect(formatoDelProyecto('**Formato de la guia**: 2026-10-16')).toBe('2026-10-16')
     expect(formatoDelProyecto('# Docs')).toBeNull()
@@ -64,23 +59,32 @@ describe('formato de la guía (D-068)', () => {
     archivado: false,
     estado: 'en-desarrollo' as const,
     reemplazadoPor: null,
-    readme: '**Formato de la guía:** 2026-10-16',
-    claudeMd: null,
+    readme: '**Framework:** 2026-11-06',
+    avisos: [] as string[],
   }
-  it('atrasado: fecha vieja, sin fecha o marcado a mano (gana el bloque)', () => {
-    expect(formatoAtrasado(base, VIGENTE)).toEqual({ tipo: 'fecha', fecha: '2026-10-16' })
-    expect(formatoAtrasado({ ...base, readme: null }, VIGENTE)).toEqual({ tipo: 'sin-formato' })
+  it('al día, con avisos, de framework viejo o carpeta simple', () => {
+    expect(estadoConFramework(base)).toEqual({ tipo: 'al-dia', fecha: '2026-11-06' })
+    expect(estadoConFramework({ ...base, avisos: ['docs/estado.md:3 — falta el tipo'] })).toEqual({
+      tipo: 'avisos',
+      fecha: '2026-11-06',
+      avisos: ['docs/estado.md:3 — falta el tipo'],
+    })
     expect(
-      formatoAtrasado({ ...base, claudeMd: '## Actualización de formato pendiente\nSeguí…' }, VIGENTE),
-    ).toEqual({ tipo: 'marcado' })
+      estadoConFramework({ ...base, readme: '**Formato de la guía:** 2026-10-16', avisos: null }),
+    ).toEqual({
+      tipo: 'viejo',
+      fecha: '2026-10-16',
+    })
+    expect(estadoConFramework({ ...base, readme: null, avisos: null })).toEqual({
+      tipo: 'viejo',
+      fecha: null,
+    })
+    expect(estadoConFramework({ ...base, tieneEstado: false, readme: null })).toEqual({ tipo: 'carpeta' })
   })
-  it('no cuentan: al día, sin estado.md, archivado, descontinuado, reemplazado o sin vigente', () => {
-    expect(formatoAtrasado({ ...base, readme: `**Formato de la guía:** ${VIGENTE}` }, VIGENTE)).toBeNull()
-    expect(formatoAtrasado({ ...base, tieneEstado: false }, VIGENTE)).toBeNull()
-    expect(formatoAtrasado({ ...base, archivado: true }, VIGENTE)).toBeNull()
-    expect(formatoAtrasado({ ...base, estado: 'descontinuado' }, VIGENTE)).toBeNull()
-    expect(formatoAtrasado({ ...base, reemplazadoPor: 'Otro' }, VIGENTE)).toBeNull()
-    expect(formatoAtrasado(base, null)).toBeNull()
+  it('no cuentan: archivado, descontinuado o reemplazado', () => {
+    expect(estadoConFramework({ ...base, archivado: true })).toBeNull()
+    expect(estadoConFramework({ ...base, estado: 'descontinuado' })).toBeNull()
+    expect(estadoConFramework({ ...base, reemplazadoPor: 'Otro' })).toBeNull()
   })
 })
 
@@ -132,7 +136,7 @@ describe('cambianSkills (vigilancia)', () => {
   })
 })
 
-describe('leerSeccionSkills y proyectosAtrasados (disco)', () => {
+describe('leerSeccionSkills y proyectosConFramework (disco)', () => {
   let base: string
   let claude: string
   let raiz: string
@@ -149,8 +153,7 @@ describe('leerSeccionSkills y proyectosAtrasados (disco)', () => {
   })
 
   it('agrupa por origen con enlaces reales y deja afuera lo que no es una skill', async () => {
-    const { lista, vigente } = await leerSeccionSkills(claude, carpetaSkills)
-    expect(vigente).toBe(VIGENTE)
+    const lista = await leerSeccionSkills(claude, carpetaSkills)
     expect(lista.errores).toEqual([])
     const por = (o: string) => lista.skills.filter((s) => s.origen === o).map((s) => s.nombre)
     expect(por('propia')).toEqual(['gestor-proyectos', 'hitos-desarrollo-app', 'vieja'])
@@ -169,13 +172,12 @@ describe('leerSeccionSkills y proyectosAtrasados (disco)', () => {
 
   it('sin la carpeta skills, ese grupo da error y los demás se ven igual', async () => {
     await rm(join(claude, 'skills'), { recursive: true })
-    const { lista, vigente } = await leerSeccionSkills(claude, carpetaSkills)
+    const lista = await leerSeccionSkills(claude, carpetaSkills)
     expect(lista.errores).toEqual([{ origenes: ['propia', 'tercero'], carpeta: join(claude, 'skills') }])
     expect(lista.skills.map((s) => s.origen)).toEqual(['complemento', 'complemento', 'complemento'])
-    expect(vigente).toBeNull()
   })
 
-  it('lista los atrasados con su formato y deja afuera los que no cuentan', async () => {
+  it('cada proyecto con cómo está: los de afuera primero, después las carpetas y los que están al día', async () => {
     const proyecto = async (nombre: string, archivos: Record<string, string>) => {
       for (const [ruta, texto] of Object.entries(archivos)) {
         await mkdir(join(raiz, nombre, ruta, '..'), { recursive: true })
@@ -193,39 +195,42 @@ describe('leerSeccionSkills y proyectosAtrasados (disco)', () => {
         reemplazadoPor: null,
         ...extra,
       })
-    const estado = '# Estado\n\n## Hito actual\n7 — Construcción\n'
-    const readme = (f: string) => `# Docs\n\n**Formato de la guía:** ${f}\n`
-    await proyecto('Viejo', {
-      '.proyecto.json': ficha(),
-      'docs/estado.md': estado,
-      'docs/README.md': readme('2026-10-16'),
-    })
-    await proyecto('SinFecha', { '.proyecto.json': ficha(), 'docs/estado.md': estado })
-    await proyecto('Marcado', {
-      '.proyecto.json': ficha(),
-      'docs/estado.md': estado,
-      'docs/README.md': readme(VIGENTE),
-      'CLAUDE.md': '# Instrucciones\n\n## Actualización de formato pendiente\n',
-    })
+    const estado =
+      '# Estado\n\n**Última actualización:** 2026-11-06\n\n## Hito actual\n7 — Construcción — en curso\n\n## Preguntas abiertas\n(ninguna)\n\n## Próximo paso\nSeguir.\n'
     await proyecto('AlDia', {
       '.proyecto.json': ficha(),
       'docs/estado.md': estado,
-      'docs/README.md': readme(VIGENTE),
+      'docs/README.md': '# Docs\n\n**Framework:** 2026-11-06\n',
+      'docs/trabajo.md': '# Trabajo\n',
+    })
+    await proyecto('ConAvisos', {
+      '.proyecto.json': ficha(),
+      'docs/estado.md': estado.replace('(ninguna)', '- **Q-1 — ¿Sin tipo?**\n  Contexto: falta el tipo.'),
+      'docs/README.md': '# Docs\n\n**Framework:** 2026-11-05\n',
+      'docs/trabajo.md': '# Trabajo\n',
+    })
+    await proyecto('Simple', { '.proyecto.json': ficha(), 'notas.txt': 'hola' })
+    await proyecto('Viejo', {
+      '.proyecto.json': ficha(),
+      'docs/estado.md': estado,
+      'docs/README.md': '# Docs\n\n**Formato de la guía:** 2026-10-16\n',
     })
     await proyecto('Archivado', { '.proyecto.json': ficha({ archivado: true }), 'docs/estado.md': estado })
     await proyecto('Reemplazado', {
       '.proyecto.json': ficha({ estado: 'en-rescate', reemplazadoPor: 'AlDia' }),
       'docs/estado.md': estado,
     })
-    await proyecto('SinEstado', { '.proyecto.json': ficha() })
     const lista = await listarProyectos(raiz)
     if (lista.tipo !== 'lista') throw new Error('debería ser una lista')
-    const r = await proyectosAtrasados(lista.proyectos, VIGENTE)
-    expect(Object.fromEntries(r.proyectos.map((p) => [p.nombre, p.formato]))).toEqual({
-      Viejo: { tipo: 'fecha', fecha: '2026-10-16' },
-      SinFecha: { tipo: 'sin-formato' },
-      Marcado: { tipo: 'marcado' },
-    })
-    expect((await proyectosAtrasados(lista.proyectos, null)).proyectos).toEqual([])
+    const r = await proyectosConFramework(lista.proyectos)
+    expect(r.map((p) => [p.nombre, p.estado.tipo])).toEqual([
+      ['Viejo', 'viejo'],
+      ['ConAvisos', 'avisos'],
+      ['Simple', 'carpeta'],
+      ['AlDia', 'al-dia'],
+    ])
+    expect(r[0]?.estado).toEqual({ tipo: 'viejo', fecha: '2026-10-16' })
+    const avisos = r[1]?.estado
+    expect(avisos?.tipo === 'avisos' && avisos.avisos.some((a) => a.includes('Q-1'))).toBe(true)
   })
 })

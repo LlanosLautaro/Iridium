@@ -1,12 +1,13 @@
-// La columna de la sección Skills (SK-W1): la entrada fija Proyectos atrasados y las skills en grupos plegables por
-// origen, con la marca de las que están dos veces.
+// La columna de la sección Skills (SK-W1, W-13): la entrada fija Framework, con los proyectos fuera del framework, y
+// las skills en grupos plegables por origen, con la marca de las que están dos veces.
 import type { ReactNode } from 'react'
 import {
-  type Atrasados,
+  fueraDelFramework,
   type ListaSkills,
   NOMBRE_ORIGEN,
   ORIGENES,
   type OrigenSkill,
+  type ProyectoFramework,
 } from '../../../compartido/skills'
 import { Icono } from '../../ui/Icono'
 import { primeraLinea } from './textos'
@@ -21,11 +22,11 @@ export function plegadosAlEmpezar(lista: ListaSkills): string[] {
   )
 }
 
-export const ATRASADOS = 'atrasados'
+export const FRAMEWORK = 'framework'
 
 export function ListaDeSkills({
   lista,
-  atrasados,
+  framework,
   elegida,
   elegir,
   plegados,
@@ -34,7 +35,8 @@ export function ListaDeSkills({
   abrir,
 }: {
   lista: ListaSkills
-  atrasados: Atrasados | null
+  /** Cómo está cada proyecto con el framework; null mientras se lee. */
+  framework: ProyectoFramework[] | null
   elegida: string
   elegir: (id: string) => void
   plegados: readonly string[]
@@ -44,8 +46,7 @@ export function ListaDeSkills({
   abrir: ReactNode
 }) {
   const dobles = new Set(lista.skills.filter((s) => s.doble).map((s) => s.nombre.split(':').pop())).size
-  const n = atrasados?.proyectos.length ?? 0
-  const alDia = atrasados !== null && atrasados.vigente !== null && n === 0
+  const fuera = framework?.filter((p) => fueraDelFramework(p.estado)).length ?? 0
   return (
     <nav className="columna sk-columna" aria-label="Skills">
       <div className="titulo">
@@ -62,15 +63,18 @@ export function ListaDeSkills({
       <div className="lista">
         <button
           type="button"
-          className="proy sk-atrasados"
-          aria-current={elegida === ATRASADOS}
-          onClick={() => elegir(ATRASADOS)}
+          className="proy sk-framework"
+          aria-current={elegida === FRAMEWORK}
+          title={
+            fuera === 0
+              ? 'Todos los proyectos siguen el framework'
+              : `${fuera === 1 ? 'Un proyecto' : `${fuera} proyectos`} fuera del framework`
+          }
+          onClick={() => elegir(FRAMEWORK)}
         >
-          <Icono nombre={alDia ? 'check' : 'sync'} />
-          <span className="nom">{alDia ? 'Todos al día' : 'Proyectos atrasados'}</span>
-          {!alDia && atrasados !== null && atrasados.vigente !== null && (
-            <span className="cuenta frena">{n}</span>
-          )}
+          <Icono nombre="marca" />
+          <span className="nom">Framework</span>
+          {fuera > 0 && <span className="n">{fuera}</span>}
         </button>
         {lista.skills.length === 0 && lista.errores.length === 0 && (
           <p className="sk-nota">

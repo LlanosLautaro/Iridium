@@ -4,7 +4,7 @@
 import type { AnchosConversacion } from './ancho-conversacion'
 import type { ListaIdeas } from './ideas'
 import type { Borrador } from './respuestas'
-import type { Atrasados, ListaSkills, SkillProyecto } from './skills'
+import type { ListaSkills, ProyectoFramework, SkillProyecto } from './skills'
 import type { Estado, PlanEliminacion } from './tipos'
 import type { IdeasDelInicio, ResultadoAnotar, TrabajoProyecto } from './trabajo'
 import type { ContenidoDocumento, OpcionPregunta, ScriptVista } from './visor'
@@ -777,8 +777,8 @@ export const CANALES = {
   guardarEscrito: 'escritos:guardar',
   estilos: 'ajustes:estilos',
   skills: 'skills:lista',
-  atrasados: 'skills:atrasados',
-  ponerAlDia: 'skills:poner-al-dia',
+  framework: 'skills:framework',
+  pasarAlFramework: 'skills:pasar-al-framework',
   abrirCarpetaSkill: 'skills:abrir-carpeta',
   carpetaSkill: 'skills:carpeta',
   archivoSkill: 'skills:archivo',
@@ -927,10 +927,10 @@ export interface ApiIridium {
   publicarGithub(ruta: string, pedido: PedidoPublicar): Promise<ResultadoGit>
   /** Las skills de la PC por origen, con las copias dobles (SK-1, SK-2). */
   skills(): Promise<ListaSkills>
-  /** El formato vigente de la guía y los proyectos con uno viejo (SK-4, D-068). */
-  atrasados(): Promise<Atrasados>
-  /** Manda a la conversación del proyecto el pedido de poner al día su formato (SK-4). */
-  ponerAlDia(ruta: string): Promise<void>
+  /** Cómo está cada proyecto con el framework (Skills › Framework, W-13): los de afuera primero. */
+  framework(): Promise<ProyectoFramework[]>
+  /** Manda a la conversación del proyecto el pedido de pasarlo al framework (F-9, OR-8). */
+  pasarAlFramework(ruta: string): Promise<void>
   /** Abre en el explorador la carpeta de una skill de la lista (su `id`). */
   abrirCarpetaSkill(id: string): Promise<void>
   /** Lo que hay en una carpeta de una skill de la lista (`''` = la de la skill), como Archivos. */

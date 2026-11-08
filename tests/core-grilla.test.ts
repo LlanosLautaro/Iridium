@@ -168,6 +168,9 @@ describe('proyectoAfectado (vigilancia)', () => {
     ['Alfa/docs/respuestas/Q-3.md', 'Alfa'],
     ['Alfa\\docs\\respuestas', 'Alfa'],
     ['Alfa\\docs\\modulos\\puente\\estado.md', 'Alfa'],
+    // Si sigue el framework y los avisos del control (W-2).
+    ['Alfa\\docs\\README.md', 'Alfa'],
+    ['Alfa/docs/trabajo.md', 'Alfa'],
   ])('%s cambia la tarjeta de %s', (ruta, proyecto) => {
     expect(proyectoAfectado(ruta)).toBe(proyecto)
   })

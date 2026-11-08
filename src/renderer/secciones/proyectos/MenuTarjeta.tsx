@@ -1,7 +1,9 @@
-// El menú del clic derecho en una tarjeta (R-7, C-9, C-12, D-089): abrir el proyecto, en VS Code o su carpeta; y de la
-// ficha, el estado, archivar y el ícono; y eliminarlo, con confirmación (R-10). En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
+// El menú del clic derecho en una tarjeta (R-7, C-9, C-12, D-089): abrir el proyecto, en VS Code o su carpeta; pasarlo
+// al framework o ver sus avisos (OR-8, T-48); y de la ficha, el estado, archivar y el ícono; y eliminarlo, con
+// confirmación (R-10). En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
 import type { ListaProyectos, ResultadoFicha, TarjetaProyecto } from '../../../compartido/puente'
 import { ESTADOS, type Estado, NOMBRE_ESTADO } from '../../../compartido/tipos'
+import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
 import { MenuContextual, type Punto } from '../../ui/MenuContextual'
 
@@ -32,7 +34,14 @@ export function MenuTarjeta({
   /** Abre la confirmación de Eliminar (R-10). */
   eliminar: () => void
 }) {
+  const verFramework = usarEstado((s) => s.verFramework)
+  const cambiarSkills = usarEstado((s) => s.cambiarSkills)
+  const enviados = usarEstado((s) => s.skills.enviados)
   const danada = p.problema !== null
+  // Pasar al framework (OR-8): de framework viejo o una carpeta simple; la ventana del proceso principal lo vuelve a
+  // comprobar (archivados y reemplazados no cuentan).
+  const pasable = !danada && !p.archivado && (p.framework === 'viejo' || p.framework === null)
+  const conAvisos = p.framework !== null && p.framework !== 'viejo' && p.framework.avisos.length > 0
   /** La ficha se toca desde acá solo si existe y está sana (el estado la crea). */
   const sinFicha = danada
     ? 'La ficha está dañada: pedile a la IA que la arregle'
@@ -87,6 +96,28 @@ export function MenuTarjeta({
         <Icono nombre="carpeta" />
         Abrir la carpeta
       </button>
+      {(pasable || conAvisos) && <hr />}
+      {pasable && (
+        <button
+          type="button"
+          role="menuitem"
+          title="Le manda el pedido a la IA de este proyecto: gasta uso"
+          onClick={hacer(async () => {
+            await window.iridium.pasarAlFramework(p.ruta)
+            cambiarSkills({ enviados: [...enviados.filter((r) => r !== p.ruta), p.ruta] })
+            avisar({ texto: `La IA de «${p.nombre}» lo está pasando al framework.`, error: false })
+          })}
+        >
+          <Icono nombre="marca" />
+          Pasar al framework
+        </button>
+      )}
+      {conAvisos && (
+        <button type="button" role="menuitem" onClick={hacer(async () => verFramework(p.ruta))}>
+          <Icono nombre="espera" />
+          Ver los avisos del framework
+        </button>
+      )}
       {!danada && (
         <>
           <hr />

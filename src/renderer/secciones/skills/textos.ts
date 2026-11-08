@@ -1,34 +1,6 @@
-// Los textos de la sección Skills que se arman con datos (modulos/skills/ux.md): el origen en palabras, el formato de
-// un proyecto y los pedidos que se escriben en el chat. Sin React.
-import type { FormatoProyecto, OrigenSkill, Skill } from '../../../compartido/skills'
-
-const MESES = [
-  'enero',
-  'febrero',
-  'marzo',
-  'abril',
-  'mayo',
-  'junio',
-  'julio',
-  'agosto',
-  'septiembre',
-  'octubre',
-  'noviembre',
-  'diciembre',
-]
-
-/** `2026-10-16` → «16 de octubre». */
-export function fechaLarga(fecha: string): string {
-  const [, mes, dia] = fecha.split('-').map(Number)
-  const nombre = MESES[(mes ?? 1) - 1]
-  return nombre && dia ? `${dia} de ${nombre}` : fecha
-}
-
-export function textoFormato(f: FormatoProyecto): string {
-  if (f.tipo === 'marcado') return 'marcado a mano'
-  if (f.tipo === 'sin-formato') return 'sin formato'
-  return `formato del ${fechaLarga(f.fecha)}`
-}
+// Los textos de la sección Skills que se arman con datos (modulos/skills/ux.md): el origen en palabras y los pedidos
+// que se escriben en el chat. Sin React.
+import type { OrigenSkill, Skill } from '../../../compartido/skills'
 
 /** De dónde llega, en palabras (SK-1). */
 export function origenEnPalabras(s: Pick<Skill, 'origen' | 'complemento' | 'problema'>): string {

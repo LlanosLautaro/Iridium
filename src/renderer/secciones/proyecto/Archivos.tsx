@@ -4,7 +4,7 @@
 // El árbol y el visor reciben de dónde leer: la sección Skills los usa con la carpeta de una skill.
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CarpetaArchivos, ContenidoArchivo } from '../../../compartido/puente'
-import { tarjetaDe, usarEstado, vistaDe } from '../../estado'
+import { fichaDe, rutaGeneral, rutaSkills, tarjetaDe, usarEstado, vistaDe } from '../../estado'
 import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 import { useDocsCambian } from './enlaces'
@@ -253,7 +253,57 @@ export function VisorArchivo({
   )
 }
 
+/**
+ * El recuadro de la carpeta simple (W-3, D-095), arriba de Archivos: no sigue el framework y se puede pasar (OR-8), con
+ * el pedido a su conversación. Mientras la IA lo pasa, lo dice.
+ */
+function CarpetaSimple({ ruta }: { ruta: string }) {
+  const trabajando = usarEstado((s) => fichaDe(s.fichas, ruta)?.estado === 'trabajando')
+  const enviados = usarEstado((s) => s.skills.enviados)
+  const cambiarSkills = usarEstado((s) => s.cambiarSkills)
+  const [error, setError] = useState<string | null>(null)
+  const pasando = trabajando && enviados.includes(ruta)
+  const pasar = () => {
+    setError(null)
+    window.iridium.pasarAlFramework(ruta).then(
+      () => cambiarSkills({ enviados: [...enviados.filter((r) => r !== ruta), ruta] }),
+      () => setError('No se pudo mandar el pedido.'),
+    )
+  }
+  return (
+    <div className="recuadro-simple" role="note">
+      <b>Esta carpeta no sigue el framework</b>
+      <p>
+        {pasando
+          ? 'La IA la está pasando al framework…'
+          : 'Se ve y se conversa, sin Mapa, Trabajo ni preguntas.'}
+      </p>
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+      <button
+        type="button"
+        className="btn secundario chico"
+        disabled={trabajando}
+        title={trabajando ? 'Su IA está trabajando' : 'Le manda el pedido a la IA de esta carpeta: gasta uso'}
+        onClick={pasar}
+      >
+        Pasar al framework
+      </button>
+    </div>
+  )
+}
+
 export function Archivos({ ruta }: { ruta: string }) {
+  // Las carpetas de Iridium (Ideas, Skills) tampoco tienen `estado.md`, pero no son proyectos para pasar.
+  const simple = usarEstado(
+    (s) =>
+      tarjetaDe(s.lista, ruta)?.framework === null &&
+      ruta !== rutaGeneral(s.lista) &&
+      ruta !== rutaSkills(s.lista),
+  )
   const archivo = usarEstado((s) => vistaDe(s.vistas, ruta).archivo)
   const linea = usarEstado((s) => vistaDe(s.vistas, ruta).linea)
   const carpetas = usarEstado((s) => vistaDe(s.vistas, ruta).carpetas)
@@ -277,6 +327,7 @@ export function Archivos({ ruta }: { ruta: string }) {
   return (
     <>
       <Cabecera titulo="Archivos" acciones={atras > 0 && <BotonAtras ruta={ruta} />} />
+      {simple && <CarpetaSimple ruta={ruta} />}
       <div className="partida">
         <nav className="arbol" aria-label={`Archivos de ${nombre}`}>
           <h3>{nombre}</h3>

@@ -54,6 +54,15 @@ const ESTADO = `# Estado del proyecto
 Seguir con Orden.
 `
 
+// Una tabla más ancha que la sección: se desplaza dentro de su recuadro (A-10).
+const columnas = Array.from({ length: 9 }, (_, i) => `Columna ${i + 1}`)
+const TABLA_ANCHA = [
+  `| ${columnas.join(' | ')} |`,
+  `|${'---|'.repeat(9)}`,
+  `| ${columnas.map(() => 'una celda con bastante texto').join(' | ')} |`,
+  '',
+].join('\n')
+
 const ORDEN = `# Estado del módulo: Orden
 
 ## Progreso
@@ -110,7 +119,7 @@ test.beforeEach(async () => {
     'docs/README.md': '# Docs\n\n**Framework:** 2026-11-06\n',
     'docs/estado.md': ESTADO,
     'docs/trabajo.md': TRABAJO,
-    'docs/10-operacion.md': '# Operación\n\nEn marcha.\n',
+    'docs/10-operacion.md': `# Operación\n\nEn marcha.\n\n${TABLA_ANCHA}`,
     'docs/modulos/orden/estado.md': ORDEN,
     'docs/modulos/revision/estado.md': REVISION,
   })
@@ -165,5 +174,35 @@ test('el Mapa en operación: el frente activo, los que esperan y los que están 
     .click()
   await bloque.locator('.espera-fila').click()
   await expect(win.locator('[data-seccion="pendientes"]')).toBeVisible()
+  await app.close()
+})
+
+test('Docs: una tabla usa el ancho de la sección y se desplaza dentro de su recuadro (A-10)', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await win
+    .getByRole('navigation', { name: 'Secciones del proyecto' })
+    .getByRole('button', { name: 'Mapa' })
+    .click()
+  await win.locator('[data-seccion="mapa"]').getByRole('button', { name: 'Abrir 10-operacion.md' }).click()
+  const docs = win.locator('[data-seccion="docs"]')
+  await expect(docs.locator('.gp-tabla-caja')).toBeVisible()
+  const medidas = await docs.evaluate((d) => {
+    const caja = d.querySelector<HTMLElement>('.gp-tabla-caja')
+    const lectura = d.querySelector<HTMLElement>('.lectura')
+    return {
+      caja: caja?.getBoundingClientRect().width ?? 0,
+      parrafo: d.querySelector('.doc-texto p')?.getBoundingClientRect().width ?? 0,
+      lectura: lectura?.clientWidth ?? 0,
+      seDesplaza: (caja?.scrollWidth ?? 0) > (caja?.clientWidth ?? 0),
+      paginaQuieta: (lectura?.scrollWidth ?? 0) <= (lectura?.clientWidth ?? 0),
+    }
+  })
+  // Más ancha que el texto y no más que la sección; se desplaza ella, no la página.
+  expect(medidas.caja).toBeGreaterThan(medidas.parrafo + 40)
+  expect(medidas.caja).toBeLessThanOrEqual(medidas.lectura)
+  expect(medidas.seDesplaza).toBe(true)
+  expect(medidas.paginaQuieta).toBe(true)
+  await win.screenshot({ path: 'test-results/or4-tabla.png' })
   await app.close()
 })

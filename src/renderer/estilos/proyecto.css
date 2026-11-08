@@ -477,19 +477,6 @@
   width: 13px;
   height: 13px;
 }
-.mini-link {
-  flex: none;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--texto-2);
-  font: inherit;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-}
-.mini-link:hover {
-  color: var(--texto);
-}
 
 .hito-card {
   display: grid;
@@ -689,6 +676,7 @@
   overflow-y: auto;
   padding: 22px 28px 72px;
   min-width: 0;
+  container-type: inline-size;
 }
 .hoja {
   margin: 0 auto;
@@ -1184,6 +1172,15 @@
 .lectura .doc-texto table {
   font-size: 13px;
 }
+/* Las tablas usan el ancho de la sección, no el de lectura (A-10): salen de la hoja, centradas con ella, nunca más
+   angostas que el texto, y si no entran se desplazan de costado dentro de su recuadro */
+.lectura .doc-texto .gp-tabla-caja {
+  width: max-content;
+  min-width: 100%;
+  max-width: 100cqi;
+  margin-left: 50%;
+  translate: -50% 0;
+}
 .lectura .doc-texto .marcada {
   animation: marca 2.4s var(--sale) forwards;
 }
@@ -1219,4 +1216,34 @@ button.nodo:hover {
 }
 .seccion-ideas .doc-texto {
   font-size: 13.5px;
+}
+
+/* La carpeta simple (W-3, D-095): el recuadro punteado arriba de Archivos, como lo que todavía no está ordenado */
+.recuadro-simple {
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 16px;
+  margin: 12px 16px 0;
+  padding: 12px 16px;
+  border: 1px dashed var(--borde-control);
+  border-radius: var(--radio-tarjeta);
+  background: var(--caja);
+}
+.recuadro-simple b {
+  grid-column: 1;
+  font: 600 14px / 1.3 var(--ui);
+}
+.recuadro-simple p {
+  grid-column: 1;
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.recuadro-simple p.error {
+  color: var(--error);
+}
+.recuadro-simple .btn {
+  grid-column: 2;
+  grid-row: 1 / span 3;
 }

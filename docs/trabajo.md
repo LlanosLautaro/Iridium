@@ -196,24 +196,24 @@ Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: R-12
 Arma y reinicia, con sus estados (W-1). Hecho en OR-I2 (2026-11-06); probado con la app de uso diario en Q-142 (2026-11-07), las cuatro casillas bien.
 
 ## T-47 — D-100 en el código
-Estado: en curso · Frente: Orden · Fecha: 2026-11-06 · Origen: D-100
-El botón primario claro y las cuentas en gris (OR-2, en OR-I2: hecho), y el ⚠ de Skills en gris (OR-I4).
+Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: D-100
+El botón primario claro y las cuentas en gris (OR-2, en OR-I2: hecho), y el ⚠ de Skills en gris (OR-I4, 2026-11-07: la cuenta de Framework, las dobles, el enlace roto y el aviso del detalle de una skill).
 
-## T-48 — Tocar «! N avisos del framework» abre la lista en Docs
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-06 · Origen: W-2
-Hoy la tarjeta abre el proyecto y la lista se ve al pasar el mouse; la lista va con Skills › Framework, en OR-I4.
+## T-48 — Tocar «! N avisos del framework» abre la lista
+Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: W-2
+Hecho en OR-I4 (2026-11-07): tocar los avisos de la tarjeta (o «Ver los avisos del framework» en su menú) abre Skills › Framework con la lista de ese proyecto desplegada.
 
 ## T-49 — Pasar al framework desde Skills cita la referencia nueva
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-06 · Origen: OR-I4
-El pedido de Skills cita `referencias/pasar-al-framework.md` en vez de `actualizar-formato.md` de la guía, y el motor falso lo reconoce.
+Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: OR-I4
+El pedido cita `referencias/pasar-al-framework.md` del framework en vez de `actualizar-formato.md` de la guía, y el motor falso lo reconoce (OR-I4, 2026-11-07).
 
 ## T-50 — Pasar Iridium al framework
 Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: OR-I1
 Con `referencias/pasar-al-framework.md`, hasta que el control dio cero (`modulos/orden/estado.md` › OR-I1).
 
 ## T-51 — «Ver en Framework» en Ideas
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-07 · Origen: W-10
-La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Va con OR-I4, cuando exista esa sección; hasta entonces la línea muestra los nombres al pasar el mouse.
+Estado: hecho · Frente: Orden · Fecha: 2026-11-07 · Origen: W-10
+La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Hecho en OR-I4 (2026-11-07).
 
 ## T-52 — Un sonido para cuando el agente termine de trabajar (cuidado de que no suene cuando el aente simplemente está esperando mientras hace pruebas)
 Estado: nueva · Fecha: 2026-11-07

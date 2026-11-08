@@ -27,23 +27,29 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--espera);
+  color: var(--texto-2);
   font-size: var(--tam-chico);
 }
 .sk-dobles .ic {
   width: 13px;
   height: 13px;
 }
-.proy.sk-atrasados {
+.proy.sk-framework {
   margin-bottom: 6px;
 }
-.sk-atrasados .ic {
+/* La cuenta de los de afuera, en gris: no espera al usuario (D-100, T-47) */
+.sk-framework .n {
+  margin-left: auto;
+  font: 500 12px / 1 var(--mono);
+  color: var(--texto-3);
+}
+.sk-framework .ic {
   width: 14px;
   height: 14px;
   flex: none;
   color: var(--texto-3);
 }
-.sk-atrasados[aria-current="true"] .ic {
+.sk-framework[aria-current="true"] .ic {
   color: var(--primario);
 }
 
@@ -126,7 +132,7 @@
 }
 .sk-marca {
   display: inline-flex;
-  color: var(--espera);
+  color: var(--texto-2);
 }
 .sk-marca .ic {
   width: 13px;
@@ -243,7 +249,7 @@
 .sk-enlace .ic {
   width: 14px;
   height: 14px;
-  color: var(--espera);
+  color: var(--texto-3);
 }
 .sk-enlace .ver {
   color: var(--primario-texto);
@@ -254,22 +260,22 @@
   text-decoration-style: solid;
 }
 
-/* Aviso dentro del detalle: ⚠ con un título, el texto y un botón; en el color de espera */
+/* Aviso dentro del detalle: ⚠ con un título, el texto y un botón; en gris, porque no frena nada (D-100, T-47) */
 .aviso-detalle {
   max-width: 68ch;
   display: grid;
   gap: 6px;
   padding: 12px 14px;
-  border: 1px solid var(--espera-borde);
+  border: 1px solid var(--borde-fuerte);
   border-radius: var(--radio-bloque);
-  background: var(--espera-fondo);
+  background: var(--caja);
 }
 .aviso-detalle .tit {
   display: flex;
   align-items: center;
   gap: 7px;
   font: 600 13px / 1.3 var(--ui);
-  color: var(--espera);
+  color: var(--texto);
 }
 .aviso-detalle .tit .ic {
   width: 14px;
@@ -289,19 +295,23 @@
   justify-content: flex-end;
 }
 
-/* Proyectos atrasados: la tarjeta chica de proyecto con su formato y su botón */
+/* Skills › Framework (W-13): cada proyecto con cómo está y su botón; los avisos se despliegan debajo */
 .sk-proyectos {
   max-width: 640px;
+  margin: 0;
+  padding: 0;
   list-style: none;
   border: 1px solid var(--borde);
   border-radius: var(--radio-tarjeta);
   background: var(--elevado);
 }
 .sk-proy {
+  padding: 10px 14px;
+}
+.sk-proy-fila {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 14px;
 }
 .sk-proy + .sk-proy {
   border-top: 1px solid var(--borde-suave);
@@ -337,6 +347,47 @@
 .sk-proy .chip .ic {
   width: 10px;
   height: 10px;
+}
+.sk-estado.al-dia {
+  color: var(--texto-2);
+}
+.sk-avisos {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--texto);
+  font: inherit;
+  font-size: 12.5px;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+/* El «!» de los avisos, como en la tarjeta: un círculo gris, no ámbar (no frena) */
+.aviso-punto {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--texto-2);
+  font: 700 10.5px / 1 var(--ui);
+  text-decoration: none;
+}
+.sk-lista-avisos {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 2px 38px;
+  padding: 8px 10px;
+  list-style: none;
+  border-radius: var(--radio-bloque);
+  background: var(--caja);
+  font: 12px / 1.45 var(--mono);
+  color: var(--texto-2);
+  overflow-wrap: anywhere;
 }
 .sk-todos {
   display: flex;

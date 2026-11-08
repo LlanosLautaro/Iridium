@@ -1,19 +1,10 @@
-// Casos de uso de la sección Skills (modulos/skills/diseno-tecnico.md): las skills por origen, los proyectos
-// atrasados y Poner al día. Solo leen; Poner al día manda un mensaje a la conversación del proyecto.
-import { access, readFile } from 'node:fs/promises'
+// Casos de uso de la sección Skills (modulos/skills/diseno-tecnico.md): las skills por origen y cómo está cada
+// proyecto con el framework (W-13). Solo leen; Pasar al framework manda un mensaje a la conversación del proyecto.
+import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { TarjetaProyecto } from '../../compartido/puente'
-import type { Atrasados, ListaSkills, ProyectoAtrasado, SkillProyecto } from '../../compartido/skills'
-import {
-  formatoAtrasado,
-  formatoVigente,
-  leerEncabezado,
-  marcarDobles,
-  nombreBase,
-  ordenarSkills,
-  SKILL_GUIA,
-  skillDe,
-} from '../core/skills'
+import type { ListaSkills, ProyectoFramework, SkillProyecto } from '../../compartido/skills'
+import { estadoConFramework, leerEncabezado, marcarDobles, ordenarSkills, skillDe } from '../core/skills'
 import { leerSkills, SKILLS_DEL_PROYECTO, skillsEnProyecto, textoSkillDelProyecto } from '../infra/skills'
 
 async function textoSiExiste(ruta: string): Promise<string | null> {
@@ -24,64 +15,46 @@ async function textoSiExiste(ruta: string): Promise<string | null> {
   }
 }
 
-/** La lista de la sección y el formato vigente de la guía, leídos juntos (una sola pasada por el disco). */
-export interface LecturaSkills {
-  lista: ListaSkills
-  vigente: string | null
-}
-
 /** Lee la carpeta de Claude; las propias son los enlaces a `skills` de la carpeta Skills (D-083). */
 export async function leerSeccionSkills(
   carpetaClaude: string,
   carpetaSkills: string | null,
-): Promise<LecturaSkills> {
+): Promise<ListaSkills> {
   const propias = carpetaSkills === null ? null : join(carpetaSkills, 'skills')
   const crudas = await leerSkills(carpetaClaude)
   const skills = crudas.carpetas.map((c) => skillDe(c, propias)).filter((s) => s !== null)
   marcarDobles(skills)
-  // La guía dice su formato vigente: la propia, si está; si no, la que haya con ese nombre.
-  const guias = crudas.carpetas.flatMap((c) => {
-    const s = skillDe(c, propias)
-    return s && c.texto !== null && nombreBase(s.nombre) === SKILL_GUIA ? [{ texto: c.texto, s }] : []
-  })
-  const guia = guias.find((g) => g.s.origen === 'propia') ?? guias[0]
-  return {
-    lista: { carpetaClaude, skills: ordenarSkills(skills), errores: crudas.errores },
-    vigente: guia ? formatoVigente(guia.texto) : null,
-  }
+  return { carpetaClaude, skills: ordenarSkills(skills), errores: crudas.errores }
 }
 
-/** Los proyectos con un formato viejo de la guía (SK-4, D-068), en el orden de la grilla. */
-export async function proyectosAtrasados(
+/** El orden de Skills › Framework (W-13): los de afuera primero, después las carpetas y al final los que están al día. */
+const ORDEN_FRAMEWORK = { viejo: 0, avisos: 1, carpeta: 2, 'al-dia': 3 } as const
+
+/**
+ * Cómo está cada proyecto con el framework (W-13), con los avisos que la tarjeta ya calculó: los que cuentan, en el
+ * orden de la grilla dentro de cada grupo.
+ */
+export async function proyectosConFramework(
   proyectos: readonly TarjetaProyecto[],
-  vigente: string | null,
-): Promise<Atrasados> {
-  if (vigente === null) return { vigente, proyectos: [] }
+): Promise<ProyectoFramework[]> {
   const filas = await Promise.all(
-    proyectos.map(async (p): Promise<ProyectoAtrasado | null> => {
-      const [tieneEstado, readme, claudeMd] = await Promise.all([
-        access(join(p.ruta, 'docs', 'estado.md')).then(
-          () => true,
-          () => false,
-        ),
-        textoSiExiste(join(p.ruta, 'docs', 'README.md')),
-        textoSiExiste(join(p.ruta, 'CLAUDE.md')),
-      ])
-      const formato = formatoAtrasado(
-        {
-          tieneEstado,
-          archivado: p.archivado,
-          estado: p.estado,
-          reemplazadoPor: p.reemplazadoPor,
-          readme,
-          claudeMd,
-        },
-        vigente,
-      )
-      return formato && { ruta: p.ruta, nombre: p.nombre, inicial: p.inicial, icono: p.icono, formato }
+    proyectos.map(async (p): Promise<ProyectoFramework | null> => {
+      const estado = estadoConFramework({
+        tieneEstado: p.framework !== null,
+        archivado: p.archivado,
+        estado: p.estado,
+        reemplazadoPor: p.reemplazadoPor,
+        readme: p.framework === null ? null : await textoSiExiste(join(p.ruta, 'docs', 'README.md')),
+        avisos: p.framework === null || p.framework === 'viejo' ? null : p.framework.avisos,
+      })
+      return estado && { ruta: p.ruta, nombre: p.nombre, inicial: p.inicial, icono: p.icono, estado }
     }),
   )
-  return { vigente, proyectos: filas.filter((f) => f !== null) }
+  return filas
+    .filter((f) => f !== null)
+    .map((f, i) => ({ f, i }))
+    .sort((a, b) => ORDEN_FRAMEWORK[a.f.estado.tipo] - ORDEN_FRAMEWORK[b.f.estado.tipo] || a.i - b.i)
+    .map((x) => x.f)
 }
 
 /** Las skills del proyecto (R-8), con el nombre y la descripción de su `SKILL.md`. Solo lee. */

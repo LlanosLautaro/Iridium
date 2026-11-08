@@ -32,15 +32,10 @@ function Aviso({
 
 export function DetalleSkill({
   s,
-  atrasados,
-  verAtrasados,
   pedir,
   hayChat,
 }: {
   s: Skill
-  /** Cuántos proyectos están atrasados: solo en la guía; null en las demás. */
-  atrasados: number | null
-  verAtrasados: () => void
   /** Escribe un pedido en el chat de la derecha, sin enviarlo. */
   pedir: (texto: string) => void
   hayChat: boolean
@@ -159,14 +154,6 @@ export function DetalleSkill({
                   <p className="sk-nota">El archivo SKILL.md no tiene descripción.</p>
                 )}
               </>
-            )}
-            {atrasados !== null && atrasados > 0 && (
-              <button type="button" className="sk-enlace" onClick={verAtrasados}>
-                <Icono nombre="sync" />
-                {atrasados === 1 ? '1 proyecto atrasado' : `${atrasados} proyectos atrasados`} con un formato
-                viejo
-                <span className="ver">Ver</span>
-              </button>
             )}
             {noSeEdita && <p className="sk-nota">{noSeEdita} Igual se puede hablar de ella en el chat.</p>}
           </div>

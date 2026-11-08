@@ -121,13 +121,15 @@ export interface AvisoSesion {
 
 /** Lo que recuerda la sección Skills mientras Iridium está abierto (H-6). */
 export interface VistaSkills {
-  /** La skill elegida (su `id`), `atrasados` o null (la primera vez: los atrasados o la primera propia). */
+  /** La skill elegida (su `id`), `framework` o null (la primera vez: Framework si hay alguno fuera, si no la primera propia). */
   elegida: string | null
+  /** En Framework, el proyecto con su lista de avisos abierta (T-48); null = ninguno. */
+  avisosDe: string | null
   /** Los grupos plegados por origen; null = como empiezan (los de afuera, plegados si pasan de 10). */
   plegados: string[] | null
   /** La skill a la que se le sacó «Sobre la skill …» con la ✕; al elegir otra, vuelve. */
   sinSobre: string | null
-  /** Los proyectos a los que se les mandó Poner al día desde acá: su ● trabajando es por eso (SK-4). */
+  /** Los proyectos a los que se les mandó Pasar al framework desde acá: su «Pasando al framework…» es por eso. */
   enviados: string[]
   /** Por skill (su `id`): el archivo que se mira (null = el Resumen) y las carpetas abiertas del árbol (Q-95). */
   archivos: Record<string, { archivo: string | null; carpetas: string[] }>
@@ -181,6 +183,8 @@ interface EstadoApp {
   quitarAviso(id: number): void
   skills: VistaSkills
   cambiarSkills(cambio: Partial<VistaSkills>): void
+  /** Lleva a Skills › Framework; con un proyecto, con su lista de avisos abierta (W-13, T-48, T-51). */
+  verFramework(ruta?: string): void
   ideas: VistaIdeas
   cambiarIdeas(cambio: Partial<VistaIdeas>): void
   /** La ventana de Ajustes (AJ-W1): si está abierta y en qué sección (la última, mientras Iridium está abierto). */
@@ -284,8 +288,12 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     nombreIa: '',
     tono: '',
   },
-  skills: { elegida: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
+  skills: { elegida: null, avisosDe: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
   cambiarSkills: (cambio) => set((s) => ({ skills: { ...s.skills, ...cambio } })),
+  verFramework: (ruta) => {
+    get().cambiarSkills({ elegida: 'framework', avisosDe: ruta ?? null })
+    get().irA('skills')
+  },
   ideas: { destino: null, abiertas: [], sobre: null },
   cambiarIdeas: (cambio) => set((s) => ({ ideas: { ...s.ideas, ...cambio } })),
   ajustes: { abierta: false, seccion: 'perfil' },

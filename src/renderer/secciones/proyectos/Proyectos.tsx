@@ -94,6 +94,7 @@ export function Proyectos() {
   const verArchivados = usarEstado((s) => s.preferencias.verArchivados)
   const guardarPreferencias = usarEstado((s) => s.guardarPreferencias)
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
+  const verFramework = usarEstado((s) => s.verFramework)
   const fichas = usarEstado((s) => s.fichas)
   const ponerLista = usarEstado((s) => s.ponerLista)
   const [eligiendo, setEligiendo] = useState(false)
@@ -179,6 +180,7 @@ export function Proyectos() {
             p={p}
             ficha={fichaDe(fichas, p.ruta)}
             abrir={() => abrirProyecto(p.ruta)}
+            verAvisos={() => verFramework(p.ruta)}
             menu={(e) => {
               e.preventDefault()
               setMenu({ p, en: puntoDelMenu(e) })

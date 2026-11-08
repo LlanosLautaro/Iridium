@@ -226,8 +226,8 @@ describe('git a medias', () => {
 describe('la carpeta de Claude', () => {
   it('que no existe: las skills dan un error que se puede mostrar, sin lanzar', async () => {
     const r = await leerSeccionSkills(join(base, 'no-hay-claude'), base)
-    expect(r.lista.skills).toEqual([])
-    expect(r.lista.errores.length).toBeGreaterThan(0)
+    expect(r.skills).toEqual([])
+    expect(r.errores.length).toBeGreaterThan(0)
   })
 
   it('una skill que es un enlace a sí misma (bucle) no cuelga', async () => {
@@ -235,7 +235,7 @@ describe('la carpeta de Claude', () => {
     await mkdir(join(claude, 'skills'), { recursive: true })
     await symlink(join(claude, 'skills'), join(claude, 'skills', 'bucle'), 'junction')
     const r = await leerSeccionSkills(claude, base)
-    expect(r.lista.skills.every((s) => s.nombre !== undefined)).toBe(true)
+    expect(r.skills.every((s) => s.nombre !== undefined)).toBe(true)
   })
 })
 

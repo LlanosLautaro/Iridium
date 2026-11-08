@@ -39,6 +39,7 @@ export function Ideas() {
   const vista = usarEstado((s) => s.ideas)
   const cambiarIdeas = usarEstado((s) => s.cambiarIdeas)
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
+  const verFramework = usarEstado((s) => s.verFramework)
   const abrirTrabajo = usarEstado((s) => s.abrirTrabajo)
   const ancho = useAnchoConversacion('general')
   const [nuevas, setNuevas] = useState<IdeasDelInicio | null>(null)
@@ -223,7 +224,10 @@ export function Ideas() {
               <p className="id-viejos" title={viejos.join(', ')}>
                 {viejos.length === 1
                   ? `Las ideas de ${viejos[0]} no aparecen: todavía no pasó al framework.`
-                  : `Las ideas de ${viejos.length} proyectos no aparecen: todavía no pasaron al framework.`}
+                  : `Las ideas de ${viejos.length} proyectos no aparecen: todavía no pasaron al framework.`}{' '}
+                <button type="button" className="mini-link" onClick={() => verFramework()}>
+                  Ver en Framework
+                </button>
               </p>
             )}
           </div>

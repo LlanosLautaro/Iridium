@@ -43,6 +43,8 @@ interface Props {
   /** La sesión del proyecto, si tiene una abierta: la tarjeta muestra el mismo estado que su ficha (H-2). */
   ficha: FichaSesion | null
   abrir: () => void
+  /** Tocar «! N avisos del framework»: la lista en Skills › Framework (T-48). */
+  verAvisos?: () => void
   /** El clic derecho: abre el menú de la tarjeta (R-7). */
   menu?: (e: MouseEvent<HTMLButtonElement>) => void
 }
@@ -53,7 +55,7 @@ const PALABRA_SESION = {
   error: 'IA con error',
 } as const
 
-export function Tarjeta({ p, ficha, abrir, menu }: Props) {
+export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
   if (p.problema !== null) {
     return (
       <button
@@ -111,7 +113,9 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
       title={etiqueta}
       aria-label={etiqueta}
       aria-haspopup="menu"
-      onClick={abrir}
+      // Los avisos del pie llevan a su lista (T-48); el resto de la tarjeta abre el proyecto. Con el teclado, la
+      // lista está en el menú de la tarjeta.
+      onClick={(e) => ((e.target as Element).closest('.aviso-fw') && verAvisos ? verAvisos() : abrir())}
       onContextMenu={menu}
     >
       <div className="cab">
@@ -170,7 +174,10 @@ export function Tarjeta({ p, ficha, abrir, menu }: Props) {
         </p>
       )}
       {avisos && p.framework !== null && p.framework !== 'viejo' && (
-        <div className="aviso-fw" title={p.framework.avisos.join('\n')}>
+        <div
+          className="aviso-fw"
+          title={`${p.framework.avisos.join('\n')}\n\nTocá para ver la lista en Skills › Framework`}
+        >
           <span className="signo" aria-hidden="true">
             !
           </span>

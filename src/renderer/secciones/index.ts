@@ -62,16 +62,19 @@ export interface SeccionDeProyecto {
   soloSi?: (p: TarjetaProyecto) => boolean
 }
 
+/** Una carpeta simple (D-095, W-3) no tiene `docs/estado.md`: no hay nada que seguir, ni Mapa, ni Trabajo, ni preguntas. */
+const sigue = (p: TarjetaProyecto) => p.framework !== null
+
 /**
- * Dentro de un proyecto (W-3, D-041; Revisión, D-046; Trabajo, W-11; Skills, R-8), en dos grupos. Skills, solo si el
- * proyecto tiene alguna propia.
+ * Dentro de un proyecto (W-3, D-041; Revisión, D-046; Trabajo, W-11; Skills, R-8), en dos grupos. Lo que se sigue y
+ * Docs, solo si no es una carpeta simple; Skills, solo si el proyecto tiene alguna propia.
  */
 export const SECCIONES_PROYECTO: readonly SeccionDeProyecto[] = [
-  { id: 'pendientes', nombre: 'Bandeja de entrada', icono: 'pendientes', grupo: 'sigue' },
-  { id: 'mapa', nombre: 'Mapa', icono: 'mapa', grupo: 'sigue' },
-  { id: 'trabajo', nombre: 'Trabajo', icono: 'trabajo', grupo: 'sigue' },
-  { id: 'revision', nombre: 'Revisión', icono: 'revision', grupo: 'sigue' },
-  { id: 'docs', nombre: 'Docs', icono: 'docs', grupo: 'dentro' },
+  { id: 'pendientes', nombre: 'Bandeja de entrada', icono: 'pendientes', grupo: 'sigue', soloSi: sigue },
+  { id: 'mapa', nombre: 'Mapa', icono: 'mapa', grupo: 'sigue', soloSi: sigue },
+  { id: 'trabajo', nombre: 'Trabajo', icono: 'trabajo', grupo: 'sigue', soloSi: sigue },
+  { id: 'revision', nombre: 'Revisión', icono: 'revision', grupo: 'sigue', soloSi: sigue },
+  { id: 'docs', nombre: 'Docs', icono: 'docs', grupo: 'dentro', soloSi: sigue },
   { id: 'archivos', nombre: 'Archivos', icono: 'archivos', grupo: 'dentro' },
   { id: 'git', nombre: 'Git', icono: 'git', grupo: 'dentro' },
   { id: 'scripts', nombre: 'Scripts', icono: 'scripts', grupo: 'dentro' },

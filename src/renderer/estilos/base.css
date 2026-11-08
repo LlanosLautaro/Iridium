@@ -334,3 +334,18 @@ code,
   font-family: var(--ui);
   font-weight: 700;
 }
+
+/* Un enlace chico dentro de una línea de texto («Ver», «Ver en Framework») */
+.mini-link {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--texto-2);
+  font: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.mini-link:hover {
+  color: var(--texto);
+}

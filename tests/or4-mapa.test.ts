@@ -4,6 +4,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { controlarProyecto } from '../src/main/app/control'
 import { Documentos } from '../src/main/app/documentos'
 import { mapaDe } from '../src/main/app/mapa'
 import { leerPreguntasAbiertas } from '../src/main/app/proyectos'
@@ -168,5 +169,29 @@ describe('Los frentes del Mapa (W-7)', () => {
       ['pagos', 'en curso', '4. UX'],
       ['skills', 'hecho', null],
     ])
+  })
+})
+
+describe('El control con los frentes de la tabla (A-5)', () => {
+  it('un frente de la tabla sin carpeta existe: su pregunta y su T-n no avisan; uno que no está, sí', async () => {
+    await escribir(
+      'docs/estado.md',
+      ESTADO(
+        TABLA,
+        `- **Q-1 — ¿Qué biblioteca?**
+  Tipo: consulta · Frente: Diseño
+- **Q-2 — ¿Y esto?**
+  Tipo: consulta · Frente: Nadie`,
+      ).replace('# Estado del proyecto\n', '# Estado del proyecto\n\n**Última actualización:** 2026-11-07\n'),
+    )
+    await escribir('docs/README.md', '# Docs\n\n**Framework:** 2026-11-06\n')
+    await escribir(
+      'docs/trabajo.md',
+      '# Trabajo\n\n## T-1 — Una biblioteca\nEstado: pendiente · Frente: Diseño · Fecha: 2026-11-07\n',
+    )
+    await escribir('docs/modulos/pagos/estado.md', PAGOS)
+    const avisos = ((await controlarProyecto(raiz)) ?? []).map((a) => a.texto)
+    expect(avisos.filter((t) => t.includes('Diseño'))).toEqual([])
+    expect(avisos).toContainEqual(expect.stringContaining('«Nadie»'))
   })
 })
