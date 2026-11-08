@@ -116,6 +116,15 @@
         "value": "cascadia mono",
         "createdAt": "2026-11-08T15:00:31.644Z",
         "reason": "IA: la letra fija de las maquetas de DI-I2 (tokens.css); DESIGN.md se actualiza en DI-I3 (modulos/diseno/estado.md › Cambios requeridos)"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "docs/diseno/piezas.css"
+        ],
+        "createdAt": "2026-11-08T15:09:43.867Z",
+        "reason": "IA: es la línea gris de las citas (blockquote) del texto de documento, PZ-12, no un acento de tarjeta"
       }
     ]
   }
