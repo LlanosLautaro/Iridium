@@ -66,7 +66,7 @@ describe('el índice', () => {
 describe('los tokens', () => {
   it('lee las variables de :root y las agrupa', () => {
     const t = leerTokens(
-      '/* x */\n:root {\n  --fondo: #000;\n  --ui: system-ui, sans-serif;\n  --tam-2: 16px;\n  --esp-4: 16px;\n  --radio-1: 6px;\n  --sombra-1: 0 4px 12px rgba(0,0,0,.5);\n  --ancho: 1440px;\n}\n',
+      '/* x */\n:root {\n  --fondo: #000;\n  --ui: system-ui, sans-serif;\n  --tam-2: 16px;\n  --esp-4: 16px;\n  --radio-1: 6px;\n  --sombra-1: 0 4px 12px rgba(0,0,0,.5);\n  --ancho: 1440px;\n  --sale: cubic-bezier(.16, 1, .3, 1);\n}\n',
     )
     expect(t.errores).toEqual([])
     expect(t.tokens.map((x) => [x.nombre, x.grupo, x.linea])).toEqual([
@@ -77,6 +77,7 @@ describe('los tokens', () => {
       ['--radio-1', 'espacios', 7],
       ['--sombra-1', 'sombras', 8],
       ['--ancho', 'otras', 9],
+      ['--sale', 'otras', 10],
     ])
   })
   it('una línea que no se entiende va a errores con su número; las demás se leen', () => {
@@ -84,12 +85,27 @@ describe('los tokens', () => {
     expect(t.tokens.map((x) => x.nombre)).toEqual(['--a', '--b'])
     expect(t.errores).toEqual([{ linea: 3, texto: 'esto no es nada' }])
   })
+  it('el uso de cada token es el comentario que lo sigue en la misma línea (D-114)', () => {
+    const t = leerTokens(
+      '/* Superficies */\n:root {\n  --fondo: #000; /* el fondo\n de la app */\n  /* Texto */\n  --texto: #fff;\n  --a: 1px; --b: 2px; /* solo la b */\n  --c: 3px;/*pegado*/\n}',
+    )
+    expect(t.tokens.map((x) => [x.nombre, x.uso])).toEqual([
+      ['--fondo', 'el fondo de la app'],
+      ['--texto', null],
+      ['--a', null],
+      ['--b', 'solo la b'],
+      ['--c', 'pegado'],
+    ])
+    expect(t.tokens.map((x) => x.linea)).toEqual([3, 6, 7, 7, 8])
+  })
   it('lee los tokens reales de Iridium y el negro', async () => {
-    for (const f of ['docs/ui/tokens.css', 'docs/modulos/diseno/negro.css']) {
+    for (const f of ['docs/ui/tokens.css', 'docs/modulos/diseno/negro.css', 'docs/diseno/tokens.css']) {
       const t = leerTokens(await readFile(join(__dirname, '..', f), 'utf8'))
       expect(t.tieneRaiz).toBe(true)
       expect(t.tokens.some((x) => x.grupo === 'colores')).toBe(true)
     }
+    const propios = leerTokens(await readFile(join(__dirname, '..', 'docs/diseno/tokens.css'), 'utf8'))
+    expect(propios.tokens.filter((x) => !x.uso).map((x) => x.nombre)).toEqual([])
   })
 })
 
@@ -149,7 +165,7 @@ const MAQUETA =
 const BIEN: Record<string, string> = {
   'README.md':
     '## Pantallas\n| Pantalla | Sección | Archivo | En la app |\n|---|---|---|---|\n| A | Uno | pantallas/a.html | — |\n',
-  'tokens.css': ':root { --fondo: #000; --texto: #fff; }',
+  'tokens.css': ':root {\n  --fondo: #000; /* el fondo */\n  --texto: #fff; /* el texto */\n}',
   'piezas.css': 'body { background: var(--fondo); }',
   'pantallas/a.html': MAQUETA,
 }
@@ -164,6 +180,12 @@ describe('el control de docs/diseno/', () => {
     expect(control(diseno({ ...resto, 'tokens.css': 'body{}' }))).toEqual([
       'docs/diseno/README.md falta el índice: `## Pantallas` con la tabla Pantalla | Sección | Archivo | En la app',
       'docs/diseno/tokens.css los tokens van como variables (`--nombre: valor;`) en un bloque `:root`',
+    ])
+  })
+  it('4: los tokens sin su uso, en un solo aviso con la línea del primero', () => {
+    const tokens = ':root {\n  --fondo: #000; /* el fondo */\n  --texto: #fff;\n  --borde: #222;\n}'
+    expect(control(diseno({ ...BIEN, 'tokens.css': tokens }))).toEqual([
+      'docs/diseno/tokens.css:3 2 tokens sin su uso (--texto, --borde): uno por línea, con `/* para qué se usa */` después del `;`',
     ])
   })
   it('2 y 3: un archivo que no está, uno fuera de pantallas/, uno sin listar y una fecha mal escrita', () => {

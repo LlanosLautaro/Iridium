@@ -54,6 +54,9 @@ Un hito o paso que espera la prueba del usuario sigue `en curso` con su `Q-n`.
 - [ ] Cada archivo empieza por `# Q-n — <la pregunta tal cual>`.
 - [ ] Cada respuesta de una pregunta que ya no está abierta termina con `> Procesada el AAAA-MM-DD → …`. Si no se sabe adónde fue, buscá su código en `decisiones.md` y en los documentos; si no aparece, `> Procesada el <hoy> → sin rastro (pasada al framework)`. Las respuestas nuevas sin procesar se procesan después, no ahora.
 
+**El design system**
+- [ ] Si los tokens o las piezas están en otro lado (un artifact, `docs/ui/tokens.json`, un `componentes.css`, `DESIGN.md`), pasan a `docs/diseno/` como pide `SKILL.md` › Las maquetas: `tokens.css` con cada token y su uso, `piezas.css` y `piezas.html`. Los valores no cambian. Si un script generaba el CSS, `tokens.css` pasa a ser la fuente y el código lo usa o lo copia; lo de antes se quita o queda dicho como copia. Sin pantallas todavía, el índice queda con la tabla vacía.
+
 **`docs/README.md`**
 - [ ] `**Formato de la guía:** …` pasa a `**Framework:** <hoy>`.
 - [ ] El índice suma `trabajo.md` (y `revision/` si existe); la tabla «Códigos» declara los prefijos propios.

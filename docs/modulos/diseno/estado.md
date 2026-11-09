@@ -13,12 +13,12 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2: tanda 1 aprobada en Q-154, tanda 2 hecha, espera Q-157; D-107 a D-112) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-115; siguen T-61 a T-63 y DI-I3) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está hecha y espera Q-157.
+Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso; faltan los estilos de texto, la ficha por pieza y las medidas fijas (T-61 a T-63), antes de DI-I3.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -40,13 +40,21 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 | ID | Objetivo | Estado |
 |---|---|---|
 | DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | hecho (Q-152, 2026-11-09) |
-| DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | en curso |
+| DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | hecho (Q-157, 2026-11-09) |
 | DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | pendiente |
 | DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | pendiente |
 
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I2 — 2026-11-09 — Q-157 a Q-159: la tanda 2 aprobada y cada token con su uso
+- **Q-157:** todo bien (archivados y Eliminar, el detalle de una skill, Diseño › grande y › Sistema, las conversaciones y los errores, el ancho chico), sin comentarios nuevos. **DI-I2 queda hecha.**
+- **Q-159 (A, D-114), la idea 1:** cada token de `tokens.css` en su línea con su uso en un comentario después del `;`. El lector lo lee, Diseño › Sistema lo muestra (debajo de la muestra o a la derecha) y el control avisa de los que no lo tienen, en un solo aviso. Los 55 tokens de Iridium tienen su uso; la muestra de pruebas también. Las ideas 2 a 4, en T-61 a T-63.
+- **Q-158 (A, D-115):** `referencias/pasar-al-framework.md` suma el design system guardado en otro lado. Ese proyecto lo pasa su IA: Q-160.
+- **De paso:** la curva de movimiento (`--sale`) caía en «Letra» por tener comas (ahora en «Otras»); la maqueta de Sistema mostraba los ámbar en «Espacios y esquinas» y se rearmó desde `tokens.css`; la conversación de las maquetas nombraba Trabajo.
+- **Verificado:** `pnpm test` (699 pasan), el control en 0 avisos; capturas de la maqueta de Sistema en el navegador, sin errores (`tools/salida/d114/`).
+- **Queda:** medir la carga de las miniaturas con las 23 maquetas (`diseno-tecnico.md` › Riesgos), con DI-I3.
+
 ### DI-I2 — 2026-11-09 — Q-156 y la tanda 2
 - **Q-156 (A, D-113):** las guías de impeccable, en nuestras palabras y con la atribución, en `referencias/06-ui.md` › Repaso antes de mostrar una maqueta; `SKILL.md` › Las maquetas apunta ahí (T-60 hecho).
 - **Las 9 maquetas de la tanda 2:** Proyectos archivados (apagados, con «archivado el…» y Desarchivar en el menú; el interruptor pasa de una a otra), Eliminar un proyecto (el cuadro dice qué va a la papelera y qué se borra para siempre; el botón rojo nombra el proyecto), el detalle de una skill (Resumen · Archivos como pestañas, el aviso «Está dos veces»), Diseño › una maqueta grande (la maqueta viva achicada sin deformarse, Volver, «9 de 23», Comentar que queda apretado) y › Sistema (sale de `tokens.css`, con las piezas vivas), el menú de las conversaciones (vivo en todas las maquetas, desde el reloj), la IA no respondió, Claude sin sesión (sin Continuar; aviso rojo abajo) y un proyecto en ancho chico (1024×720: Nueva queda solo con su ícono). El índice suma el grupo «La conversación». El detalle de una idea ya no va (D-112).
@@ -95,5 +103,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-Esperar Q-157 (la tanda 2 en Diseño) y corregir con los `R-n` que deje; con la tanda aprobada, DI-I2 queda hecha (falta medir la carga de las miniaturas con las 23) y sigue DI-I3 con T-58.
-**Leer antes:** `respuestas/Q-157.md` si llegó, los `R-n` nuevos de la Revisión, este archivo › Log › DI-I2 y `ux.md` › Parte 1 (Reglas).
+T-61: los estilos de texto con nombre (título, cuerpo, rótulo, código) en el formato `docs/diseno/`: decidir cómo se escriben, sumarlos al lector, a Diseño › Sistema, al control y al framework en el mismo cambio, y pasar los de Iridium. Después T-62, T-63 y DI-I3 (con T-58).
+**Leer antes:** `trabajo.md` › T-61 a T-63, `decisiones.md` › D-114 y `diseno-tecnico.md` › Sistema y › El control.

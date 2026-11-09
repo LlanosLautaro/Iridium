@@ -29,6 +29,8 @@ export interface TokenVista {
   nombre: string
   valor: string
   grupo: GrupoToken
+  /** Para qué se usa (el comentario del token en `tokens.css`, D-114), o null. */
+  uso: string | null
 }
 
 export interface SistemaDiseno {

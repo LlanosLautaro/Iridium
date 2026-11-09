@@ -85,7 +85,7 @@ const CONVERSACION = {
       <div class="mensaje-ia"><div class="quien">IA</div>
         <div class="paso">${icono('ok')} Leí estado.md y modulos/diseno/estado.md</div>
         <div class="paso">${icono('ok')} Escribí tokens.css, piezas.css y piezas.html</div>
-        <div class="texto-doc conversacion" style="margin-top:8px"><p>Las piezas ya están en <b>Diseño › Sistema</b>. Sigo con las pantallas de un proyecto: la Bandeja, el Mapa y Trabajo.</p></div>
+        <div class="texto-doc conversacion" style="margin-top:8px"><p>Las piezas ya están en <b>Diseño › Sistema</b>. Sigo con las pantallas de un proyecto: la Bandeja y el Mapa.</p></div>
       </div>`,
     seguir: true,
   },

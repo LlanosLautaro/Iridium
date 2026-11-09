@@ -1,5 +1,6 @@
 // Diseño › Sistema (DS-13): de qué está hecha la interfaz. Los tokens de `docs/diseno/tokens.css` dibujados por grupo
-// (colores, letra, tamaños, espacios y esquinas, sombras) y las piezas, la maqueta `piezas.html`, viva y grande.
+// (colores, letra, tamaños, espacios y esquinas, sombras), cada uno con su uso (D-114), y las piezas, la maqueta
+// `piezas.html`, viva y grande.
 import type { CSSProperties } from 'react'
 import type { GrupoToken, SistemaDiseno, TokenVista } from '../../../../compartido/diseno'
 import { Icono } from '../../../ui/Icono'
@@ -37,6 +38,7 @@ function Muestra({ t }: { t: TokenVista }) {
       )}
       <span className="di-token-n">{nombre}</span>
       <span className="di-token-v">{t.valor}</span>
+      {t.uso && <span className="di-token-uso">{t.uso}</span>}
     </li>
   )
 }

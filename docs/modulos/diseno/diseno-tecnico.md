@@ -137,25 +137,25 @@ Sin la IA, con escritura atómica; lo que se borra va a la papelera de Windows (
 - **Descartar una dirección:** su archivo va a la papelera.
 
 ## Sistema (DS-13)
-`core/diseno/tokens.ts` lee las variables del primer bloque `:root` de `tokens.css` (`--nombre: valor;`, sin comentarios) y las agrupa:
+`core/diseno/tokens.ts` lee las variables del primer bloque `:root` de `tokens.css` (`--nombre: valor;`) con su **uso**, el comentario que sigue al `;` en la misma línea (D-114), y las agrupa:
 
 | Grupo | Cómo se reconoce | Cómo se dibuja |
 |---|---|---|
 | Colores | el valor es `#…`, `rgb()`, `hsl()` o `transparent` | muestra con nombre y valor |
-| Letra | el nombre tiene `ui`, `fuente` o `letra`, o el valor es una lista entre comas | «Aa Iridium» en esa letra |
+| Letra | el nombre tiene `ui`, `fuente`, `letra` o `mono`, o el valor es una lista entre comas sin paréntesis | «Aa Iridium» en esa letra |
 | Tamaños de letra | `--tam-*` | una línea de ejemplo en cada tamaño |
 | Espacios y esquinas | `--espacio-*`, `--esp-*`, `--radio-*` | barras y cuadrados con esa medida |
 | Sombras | `--sombra-*` | un cuadrado con esa sombra |
 | Otras | el resto | nombre y valor |
 
-Una línea que no se entiende va al recuadro de error con su número; las demás se muestran. **Piezas** es `piezas.html`, como una miniatura más que se agranda y se comenta. **Abrir tokens** abre `tokens.css` en Archivos.
+Cada token muestra su uso debajo de la muestra (colores) o a la derecha (el resto). Una línea que no se entiende va al recuadro de error con su número; las demás se muestran. **Piezas** es `piezas.html`, como una miniatura más que se agranda y se comenta. **Abrir tokens** abre `tokens.css` en Archivos.
 
 ## El control (D-086, D-092)
 `core/control/diseno.ts`, solo si el proyecto tiene `docs/diseno/`:
 1. `README.md` con `## Pantallas` y las columnas Pantalla, Sección, Archivo y En la app.
 2. Cada **Archivo** existe y está en `pantallas/`; cada `.html` de `pantallas/` está en la tabla.
 3. **En la app** es `—` o `AAAA-MM-DD HH:MM`.
-4. `tokens.css` existe y tiene variables en `:root`.
+4. `tokens.css` existe y tiene variables en `:root`, cada una con su uso (D-114; los que faltan, en un solo aviso con la línea del primero).
 5. En maquetas, versiones, `piezas.*` y direcciones: nada de la red (`http://`, `https://`, `//`), nada fuera de `docs/diseno/` y nada que falte.
 6. Sin colores escritos en `piezas.css` ni en los `<style>` de las maquetas.
 7. Cada dirección tiene las mismas variables que `tokens.css`; cada carpeta de `versiones/` es de una maqueta que existe.

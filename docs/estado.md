@@ -32,34 +32,21 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha; DI-I2: tanda 2 hecha, espera Q-157) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 y DI-I2 hechas; siguen T-61 a T-63 y DI-I3) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. La tanda 2 está hecha (archivados, Eliminar, el detalle de una skill, Diseño › grande y › Sistema, el menú de las conversaciones, los errores y el ancho chico) y espera tu vistazo (Q-157); antes de mostrarte una maqueta, la IA la repasa con las guías de impeccable pasadas al framework (Q-156, D-113). Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. La tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) cada token del sistema lleva una línea de para qué se usa, que Diseño › Sistema muestra; siguen los estilos de texto, la ficha por pieza y las medidas fijas (T-61 a T-63) antes de pasar todo al código (DI-I3). Con Q-158 (D-115) el framework sabe pasar un design system guardado en otro lado (Q-160). Antes de mostrarte una maqueta, la IA la repasa con las guías de impeccable pasadas al framework (Q-156, D-113). Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
-- **Q-157 — Mirá la tanda 2 de maquetas en Diseño**
-  Tipo: prueba · Frente: Diseño
-  Contexto: en Iridium › tu proyecto › Diseño, las nueve nuevas (Inicio y el grupo nuevo «La conversación», más Diseño › Sistema y la grande). Lo que no te cierre, comentalo con **Comentar** (F8) sobre la maqueta. Detalle en `modulos/diseno/estado.md` › Log › DI-I2.
-  - [ ] **Proyectos archivados** y **Eliminar un proyecto**: las archivadas se ven apagadas, el menú ofrece Desarchivar y el cuadro de Eliminar dice qué va a la papelera y qué se borra
-  - [ ] **Detalle de una skill**: Resumen y Archivos como pestañas, con el aviso «Está dos veces»
-  - [ ] **Diseño › una maqueta grande** y **Diseño › Sistema** se entienden y se ven como el resto
-  - [ ] **Conversaciones anteriores** (el reloj, en cualquier maqueta), **La IA no respondió** y **Claude sin sesión**: el aviso dice qué pasó y qué hacer
-  - [ ] **Un proyecto en ancho chico** (1024×720): nada se corta ni se aprieta
-
-- **Q-158 — ¿Pasamos el design system del proyecto del artifact al formato del framework?**
-  Tipo: decisión · Frente: Diseño
-  Contexto: respuesta del 2026-11-09 en el chat. Ese proyecto tiene su design system en un artifact de claude.ai, con una copia en `docs/ui/tokens.json` (de la que un script genera el CSS) y `docs/ui/componentes.css`; el framework lo pide en `docs/diseno/` (`tokens.css`, `piezas.css`, `piezas.html`). Mientras no se pase, la pestaña Diseño de Iridium no lo muestra. Cambiar ese proyecto lo hace su propia IA, no esta.
-  Opciones: A) Pasarlo con «Pasar al framework» desde ese proyecto (recomendada: Diseño lo muestra y el artifact deja de ser la fuente) · B) Dejarlo como está, funciona · C) Que Iridium lea también `tokens.json`
-
-- **Q-159 — ¿Qué ideas del design system de claude.ai sumamos al framework?**
-  Tipo: decisión · Frente: Diseño
-  Contexto: respuesta del 2026-11-09 en el chat. Ideas tomadas de cómo arma claude.ai un design system: 1) cada token con una línea de para qué se usa, que Diseño › Sistema muestra debajo de la muestra; 2) estilos de texto con nombre (título, cuerpo, rótulo…) con tamaño, interlineado, peso y un ejemplo; 3) una ficha por pieza, agrupada (acciones, navegación, avisos, del dominio), con para qué sirve, sus estados y qué tokens usa; 4) las medidas fijas (barra, controles) como tokens. Cada una cambia el framework, lo que lee Iridium y el control (D-086).
-  Opciones: A) Las cuatro, empezando por la 1 (recomendada: es la que más ayuda a la IA a no usar mal un color) · B) Solo la 1 · C) Ninguna por ahora
+- **Q-160 — Pasá al framework el design system del proyecto que lo tiene en un artifact**
+  Tipo: tarea · Frente: Diseño
+  Contexto: Q-158 (A, D-115). Lo hace la IA de ese proyecto, no esta; gasta uso. Si en su menú no aparece **Pasar al framework** (solo sale en los de framework viejo), escribile en su conversación: «Pasá el design system a `docs/diseno/` como pide el framework (`pasar-al-framework.md` › El design system)».
+  - [ ] Le pedí a ese proyecto que pase su design system
+  - [ ] En Iridium › ese proyecto › **Diseño › Sistema** se ven sus colores, cada uno con su uso, y sus piezas
 
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
@@ -81,7 +68,7 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: con la respuesta a Q-157 y los `R-n` que deje, corregir las maquetas de la tanda 2; aprobada, DI-I2 queda hecha y sigue DI-I3 (T-58). Si llega Q-146, procesarla aparte.
+Diseño: T-61, los estilos de texto con nombre en el formato `docs/diseno/` (framework, lector, Sistema, control y pruebas juntos, D-114); después T-62, T-63 y DI-I3. Si llega Q-146 o Q-160, procesarlas aparte.
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

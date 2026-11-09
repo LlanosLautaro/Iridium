@@ -71,6 +71,22 @@ export const reglaDiseno: Regla = (a) => {
   if (!tokens) av('tokens.css', null, 'falta `tokens.css` con los tokens como variables en `:root`')
   else if (!tokens.tieneRaiz || tokens.tokens.length === 0)
     av('tokens.css', null, 'los tokens van como variables (`--nombre: valor;`) en un bloque `:root`')
+  else {
+    // Cada token con su uso (D-114): la IA elige el color por lo que dice, no por cómo se ve.
+    const sinUso = tokens.tokens.filter((x) => !x.uso)
+    const primero = sinUso[0]
+    if (primero)
+      av(
+        'tokens.css',
+        primero.linea,
+        `${sinUso.length === 1 ? 'un token sin' : `${sinUso.length} tokens sin`} su uso (${sinUso
+          .slice(0, 5)
+          .map((x) => x.nombre)
+          .join(
+            ', ',
+          )}${sinUso.length > 5 ? '…' : ''}): uno por línea, con \`/* para qué se usa */\` después del \`;\``,
+      )
+  }
 
   // 5–6: todo local y existente, sin colores escritos.
   for (const t of d.textos) {

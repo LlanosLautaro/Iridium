@@ -246,6 +246,18 @@ Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155
 La pestaña Trabajo es una lista larga de texto sin un uso claro. El usuario propone Ideas como un bloc de notas libre (pegar enlaces y lo que sea; después se pide en el chat) y algo gráfico para ver qué se está haciendo y qué está anotado. Q-155 (B, D-112): Trabajo sale de la vista e Ideas es un bloc de notas; maquetas hechas el 2026-11-09. En la app, con T-58.
 
+## T-61 — Estilos de texto con nombre en el sistema
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
+Título, cuerpo, rótulo, código…: cada estilo con tamaño, interlineado y peso, y un ejemplo en Diseño › Sistema. Definir cómo se escriben en `tokens.css` (o en `piezas.css`), con el lector, el control y las pruebas en el mismo cambio. Antes de DI-I3.
+
+## T-62 — Una ficha por pieza en el sistema
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
+Las piezas agrupadas (acciones, navegación, avisos, del dominio), cada una con para qué sirve, sus estados y qué tokens usa; Diseño › Sistema las muestra junto a `piezas.html`. Con el lector, el control y las pruebas. Antes de DI-I3.
+
+## T-63 — Las medidas fijas como tokens
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
+La altura de la barra, de los controles y de las filas, los anchos de los paneles: tokens con su uso en lugar de números sueltos en `piezas.css`. Sistema las muestra; el control puede avisar de una medida repetida escrita a mano. Antes de DI-I3.
+
 ## T-60 — Reciclar las guías de impeccable en el framework
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: pregunta del usuario, Q-156
 impeccable (licencia Apache 2.0) trae guías para limpiar una pantalla (quitar lo que sobra, bajar el ruido, aclarar los textos, la tipografía) y un piso de calidad con comprobaciones (contraste, espacios, letra). Se pueden pasar en nuestras palabras a `referencias/06-ui.md` del framework, con la atribución que pide la licencia. Q-156 (A, D-113): hecho el 2026-11-09 en `referencias/06-ui.md` › Repaso antes de mostrar una maqueta.

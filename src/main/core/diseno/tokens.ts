@@ -1,5 +1,6 @@
 // Los tokens de las maquetas (frente Diseño, DS-13): las variables del primer bloque `:root` de `docs/diseno/tokens.css`,
-// agrupadas para dibujarlas en Sistema (`modulos/diseno/diseno-tecnico.md` › Sistema).
+// agrupadas para dibujarlas en Sistema (`modulos/diseno/diseno-tecnico.md` › Sistema). Cada token lleva su uso: el
+// comentario que lo sigue en la misma línea (`--principal: #3ccf7f; /* el botón principal, uno por pantalla */`, D-114).
 
 export type GrupoToken = 'colores' | 'letra' | 'tamanos' | 'espacios' | 'sombras' | 'otras'
 
@@ -9,6 +10,8 @@ export interface Token {
   grupo: GrupoToken
   /** Desde 1. */
   linea: number
+  /** Para qué se usa: el comentario después del `;` en la misma línea, o null. */
+  uso: string | null
 }
 
 export interface Tokens {
@@ -31,7 +34,8 @@ export function grupoDe(nombre: string, valor: string): GrupoToken {
   if (/^(espacio|esp|radio)-/.test(n)) return 'espacios'
   if (/^sombra-/.test(n)) return 'sombras'
   if (esColor(valor)) return 'colores'
-  if (/(^|-)(ui|fuente|letra|mono)(-|$)/.test(n) || /,/.test(valor)) return 'letra'
+  if (/(^|-)(ui|fuente|letra|mono)(-|$)/.test(n) || (/,/.test(valor) && !/\(/.test(valor)))
+    return 'letra'
   return 'otras'
 }
 
@@ -40,8 +44,20 @@ function sinComentarios(css: string): string {
   return css.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, ' '))
 }
 
+/** Los usos, por la posición del `;` que los precede en la misma línea (las mismas posiciones que `sinComentarios`). */
+function usosDe(css: string): Map<number, string> {
+  const usos = new Map<number, string>()
+  for (const m of css.matchAll(/;[ \t]*\/\*([\s\S]*?)\*\//g)) {
+    const texto = m[1]?.replace(/\s+/g, ' ').trim()
+    if (texto) usos.set(m.index, texto)
+  }
+  return usos
+}
+
 export function leerTokens(css: string): Tokens {
-  const limpio = sinComentarios(css).replace(/\r\n?/g, '\n')
+  const normal = css.replace(/\r\n?/g, '\n')
+  const limpio = sinComentarios(normal)
+  const usos = usosDe(normal)
   // El primer bloque cuyo selector incluye `:root` (`:root, :root[data-tema] {` también).
   const m = /(?:^|[{}])([^{}]*:root(?![\w-])[^{}]*)\{/.exec(limpio)
   if (!m) return { tieneRaiz: false, tokens: [], errores: [] }
@@ -68,7 +84,9 @@ export function leerTokens(css: string): Tokens {
       continue
     }
     const valor = d[2].replace(/\s+/g, ' ').trim()
-    tokens.push({ nombre: d[1], valor, grupo: grupoDe(d[1], valor), linea })
+    // El `;` de esta declaración está justo antes de `offset` (relativo al cuerpo).
+    const uso = usos.get(desde + offset - 1) ?? null
+    tokens.push({ nombre: d[1], valor, grupo: grupoDe(d[1], valor), linea, uso })
   }
   return { tieneRaiz: true, tokens, errores }
 }

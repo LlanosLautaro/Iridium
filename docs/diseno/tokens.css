@@ -1,39 +1,89 @@
 /* Los tokens de Iridium: la dirección negra sin acento, único tema (D-103, D-104). Sale de modulos/diseno/negro.css.
    Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo y lo marcado van
-   en blanco. Un solo color de acción: el verde del botón principal (Enviar, Seguí; D-109). Las señales: ámbar lo que
+   en blanco. Un solo color de acción: el verde del botón principal (Enviar, Continuar; D-109). Las señales: ámbar lo que
    espera del usuario, rojo un error.
+   Cada token va en su línea con su uso después del `;` (D-114): Diseño › Sistema lo muestra y la IA elige el token
+   por lo que dice, no por cómo se ve.
    En DI-I3 este archivo pasa a ser docs/ui/tokens.css. */
 :root {
   color-scheme: dark;
+
   /* Superficies */
-  --fondo: #000000; --elevado: #0c0c0d; --tarjeta: #0a0a0b; --hover: #111113; --sel-fondo: #161618;
-  --velo: #000000b3;
+  --fondo: #000000; /* el fondo de toda la app: las secciones se apoyan directo en el negro */
+  --elevado: #0c0c0d; /* lo que flota o se separa del fondo: menús, cuadros, ventanas, el ícono de una fila */
+  --tarjeta: #0a0a0b; /* un bloque de código y el proyecto elegido en la barra */
+  --hover: #111113; /* el fondo de una fila, un botón o una pestaña al pasar el mouse */
+  --sel-fondo: #161618; /* la fila, la pestaña o la opción de menú elegida */
+  --velo: #000000b3; /* el oscurecido detrás de un cuadro abierto */
+
   /* Líneas */
-  --borde: #1c1c1e; --borde-suave: #121213; --borde-fuerte: #2a2a2d; --borde-control: #3d3d42;
+  --borde: #1c1c1e; /* la línea común: recuadros, la cabecera, las barras del marco */
+  --borde-suave: #121213; /* la línea entre filas o bloques de una misma lista */
+  --borde-fuerte: #2a2a2d; /* lo que tiene que verse sobre el negro: la barra de desplazamiento, el compositor, las citas */
+  --borde-control: #3d3d42; /* el borde de lo que se toca: campos, casillas, el botón secundario */
+
   /* Texto: grises neutros, sin tinte (R-46) */
-  --texto: #e6e6e6; --texto-2: #a3a3a3; --texto-3: #8a8a8a; --texto-apagado: #4d4d4d;
-  /* Lo principal: verde con letra negra (D-109); lo marcado (casillas, interruptores), blanco */
-  --principal: #3ccf7f; --principal-hover: #5adb93; --sobre-principal: #000000; --marcado: #f2f2f2;
-  /* Señales */
-  --espera: #d9a441; --espera-fondo: #0d0a04; --espera-borde: #3a2f15;
-  --error: #e5484d; --error-fondo: #0f0506; --error-borde: #3d1a1c;
-  --seleccion: #ffffff2e;
+  --texto: #e6e6e6; /* el texto que se lee: títulos, nombres, el cuerpo */
+  --texto-2: #a3a3a3; /* lo secundario: la descripción de una fila, los botones sin fondo, los íconos */
+  --texto-3: #8a8a8a; /* lo de apoyo: fechas, cuentas, códigos y los títulos de bloque; el más tenue que pasa AA */
+  --texto-apagado: #4d4d4d; /* lo deshabilitado y los números de línea; nunca para texto que haya que leer */
+
+  /* Lo principal y lo marcado */
+  --principal: #3ccf7f; /* el botón principal y nada más: uno por pantalla (Enviar, Continuar; D-109) */
+  --principal-hover: #5adb93; /* el botón principal al pasar el mouse */
+  --sobre-principal: #000000; /* la letra sobre el verde del botón principal */
+  --marcado: #f2f2f2; /* lo prendido: casillas, opciones e interruptores; no es un color de acción */
+
+  /* Señales: ámbar lo que espera del usuario, rojo un error */
+  --espera: #d9a441; /* lo que espera al usuario: la cuenta de preguntas, una prueba pendiente */
+  --espera-fondo: #0d0a04; /* el fondo de un aviso que espera al usuario */
+  --espera-borde: #3a2f15; /* el borde de un aviso que espera al usuario */
+  --error: #e5484d; /* un error y lo que borra: el aviso, el botón de Eliminar */
+  --error-fondo: #0f0506; /* el fondo de un aviso de error */
+  --error-borde: #3d1a1c; /* el borde de un aviso de error */
+  --seleccion: #ffffff2e; /* el texto seleccionado con el mouse */
+
   /* Código */
-  --cod-clave: #d4d4d8; --cod-cadena: #b5b5ba; --cod-comentario: #8a8a8a;
-  --cod-suma: #0b1a10; --cod-resta: #1c0a0b;
-  /* Git, con las letras de VS Code: modificado, agregado o nuevo, borrado */
-  --git-modificado: #e2c08d; --git-agregado: #73c991; --git-borrado: #e5484d;
+  --cod-clave: #d4d4d8; /* las palabras clave en un bloque de código */
+  --cod-cadena: #b5b5ba; /* los textos entre comillas en un bloque de código */
+  --cod-comentario: #8a8a8a; /* los comentarios en un bloque de código */
+  --cod-suma: #0b1a10; /* el fondo de una línea agregada en una diferencia */
+  --cod-resta: #1c0a0b; /* el fondo de una línea quitada en una diferencia */
+
+  /* Git, con las letras de VS Code */
+  --git-modificado: #e2c08d; /* la M de un archivo modificado */
+  --git-agregado: #73c991; /* la A o la U de un archivo agregado o nuevo; no es el verde del botón principal */
+  --git-borrado: #e5484d; /* la D de un archivo borrado */
+
   /* Letra: la del sistema para leer; la fija solo para códigos y números */
-  --ui: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
-  --mono: "Cascadia Mono", Consolas, monospace;
-  --tam-chico: 12.5px; --tam-base: 13.5px; --tam-lectura: 15px; --tam-titulo: 17px; --tam-grande: 22px;
+  --ui: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; /* toda la interfaz y el texto que se lee */
+  --mono: "Cascadia Mono", Consolas, monospace; /* solo códigos (D-n, Q-n), rutas, valores y números en columna */
+  --tam-chico: 12.5px; /* rótulos, títulos de bloque, metadatos y los botones chicos */
+  --tam-base: 13.5px; /* el tamaño de la interfaz: botones, filas, menús, campos */
+  --tam-lectura: 15px; /* el cuerpo de un documento para leer de corrido */
+  --tam-titulo: 17px; /* el título de una sección, un cuadro o un subtítulo de documento */
+  --tam-grande: 22px; /* el título de un documento, uno por página */
+
   /* Espacios */
-  --esp-1: 4px; --esp-2: 8px; --esp-3: 12px; --esp-4: 16px; --esp-5: 24px; --esp-6: 32px; --esp-7: 48px;
+  --esp-1: 4px; /* entre un ícono y su texto */
+  --esp-2: 8px; /* entre cosas de un mismo grupo */
+  --esp-3: 12px; /* el relleno de una fila o un control */
+  --esp-4: 16px; /* entre grupos cercanos */
+  --esp-5: 24px; /* entre bloques de una sección */
+  --esp-6: 32px; /* entre partes grandes de una pantalla */
+  --esp-7: 48px; /* el margen del contenido de una sección */
+
   /* Esquinas */
-  --radio-control: 8px; --radio-fila: 8px; --radio-bloque: 12px; --radio-tarjeta: 16px; --radio-pildora: 999px;
+  --radio-control: 8px; /* botones, campos, pestañas y opciones de menú */
+  --radio-fila: 8px; /* una fila de lista */
+  --radio-bloque: 12px; /* recuadros, menús, el compositor y los bloques de código */
+  --radio-tarjeta: 16px; /* cuadros y ventanas */
+  --radio-pildora: 999px; /* lo redondo: interruptores, la «i», la barra de desplazamiento */
+
   /* Sombras: solo lo que flota */
-  --sombra-menu: 0 0 0 1px #2a2a2d, 0 10px 28px #00000099;
-  --sombra-ventana: 0 0 0 1px #2a2a2d, 0 24px 64px #000000cc;
-  /* Movimiento: una sola curva de salida */
-  --sale: cubic-bezier(.16, 1, .3, 1);
+  --sombra-menu: 0 0 0 1px #2a2a2d, 0 10px 28px #00000099; /* menús y listas que se abren */
+  --sombra-ventana: 0 0 0 1px #2a2a2d, 0 24px 64px #000000cc; /* cuadros y ventanas sobre el velo */
+
+  /* Movimiento */
+  --sale: cubic-bezier(.16, 1, .3, 1); /* la única curva: todo lo que aparece o se mueve */
 }

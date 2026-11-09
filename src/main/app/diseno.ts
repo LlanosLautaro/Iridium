@@ -123,7 +123,7 @@ async function sistema(c: Carpeta, vistos: ReadonlyMap<string, string> | null): 
         ? [{ linea: null, texto: 'tokens.css no tiene un bloque :root con variables' }]
         : t.errores
   return {
-    tokens: (t?.tokens ?? []).map(({ nombre, valor, grupo }) => ({ nombre, valor, grupo })),
+    tokens: (t?.tokens ?? []).map(({ nombre, valor, grupo, uso }) => ({ nombre, valor, grupo, uso })),
     errores,
     piezas: c.existentes.has('piezas.html') ? await maqueta(c, 'piezas.html', 'Piezas', null, vistos) : null,
   }

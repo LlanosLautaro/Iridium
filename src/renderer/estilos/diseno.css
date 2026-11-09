@@ -197,7 +197,7 @@
   min-width: 0;
 }
 .di-tokens:not(.di-g-colores) .di-token {
-  grid-template-columns: minmax(0, 1fr) 180px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 180px minmax(0, 1fr) minmax(0, 1.2fr);
   align-items: center;
   gap: 16px;
 }
@@ -239,6 +239,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+/* Para qué se usa el token (D-114): texto común, que se lea como una indicación y no como un valor. */
+.di-token-uso {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--texto-2);
 }
 .di-error {
   display: flex;

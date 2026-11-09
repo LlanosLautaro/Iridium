@@ -2557,3 +2557,35 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** llega a todos los proyectos con el framework y no depende de otra herramienta.
 
 **Consecuencias:** `SKILL.md` › Las maquetas apunta al repaso; la salida del hito 6 pide las maquetas repasadas. El formato y el control no cambian.
+
+## D-114 — Cada token con su uso, y tres ideas más del design system de claude.ai
+- **Fecha:** 2026-11-09
+- **Ámbito:** framework
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente
+
+**Contexto:** cómo arma claude.ai un design system dejó cuatro ideas para el formato `docs/diseno/` (Q-159, opción A: las cuatro, empezando por la 1).
+
+**Decisión:**
+1. Cada token de `tokens.css` va en su línea con su uso en un comentario después del `;`. Iridium lo lee, Diseño › Sistema lo muestra y el control avisa de los que no lo tienen (hecho el 2026-11-09).
+2. Estilos de texto con nombre (título, cuerpo, rótulo…) con tamaño, interlineado y peso (T-61).
+3. Una ficha por pieza, agrupada, con para qué sirve, sus estados y qué tokens usa (T-62).
+4. Las medidas fijas (la barra, la altura de los controles) como tokens (T-63).
+
+**Motivo:** la IA elige un color por lo que dice el uso, no por cómo se ve; el sistema se explica solo en Sistema.
+
+**Consecuencias:** cada idea cambia el framework, el lector y el control en el mismo cambio (D-086). Los proyectos con `docs/diseno/` sin usos reciben un aviso del control. Van antes de DI-I3, porque DI-I3 pasa el sistema al código.
+
+## D-115 — Un design system guardado en otro lado pasa a `docs/diseno/` al pasar al framework
+- **Fecha:** 2026-11-09
+- **Ámbito:** framework
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente
+
+**Contexto:** un proyecto del usuario tiene su design system en un artifact de claude.ai, con una copia en `tokens.json`; Diseño no lo muestra (Q-158, opción A).
+
+**Decisión:** `referencias/pasar-al-framework.md` suma el design system: tokens y piezas que estén en otro lado pasan a `docs/diseno/` (`tokens.css` con su uso, `piezas.css`, `piezas.html`) sin cambiar valores, y `tokens.css` queda como la fuente. Ese proyecto lo pasa su propia IA cuando el usuario lo pide.
+
+**Motivo:** una sola fuente que Iridium muestra y controla; el arreglo va en el framework, no en un proyecto (regla de este repo).
+
+**Consecuencias:** no cambia el lector ni el control (el formato de destino ya existe).
