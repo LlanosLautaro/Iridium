@@ -56,9 +56,8 @@ function ponerIconos(raiz = document) {
 
 const SECCIONES_INICIO = [
   ['grilla', 'Proyectos', 'grilla.html', 'Ctrl+1'],
-  ['bandeja', 'Bandeja de todos', 'pendientes.html', 'Ctrl+2'],
-  ['skills', 'Skills', 'skills.html', 'Ctrl+3'],
-  ['ideas', 'Ideas', 'ideas.html', 'Ctrl+4'],
+  ['skills', 'Skills', 'skills.html', 'Ctrl+2'],
+  ['ideas', 'Ideas', 'ideas.html', 'Ctrl+3'],
 ]
 const SECCIONES_PROYECTO = [
   ['bandeja', 'Bandeja de entrada', 'bandeja.html'],
@@ -150,11 +149,11 @@ function armarMarco() {
         <div class="nombre-conv"><b>${c.titulo}</b>${c.detalle ? `<span>${c.detalle}</span>` : ''}</div>
         <button class="boton solo-icono" title="Conversaciones anteriores">${icono('reloj')}</button>
         <button class="boton sin-fondo">${icono('mas')}Nueva</button>
-        ${c.seguir ? `<button class="boton principal chico">${icono('seguir')}Seguí</button>` : ''}
+        ${c.seguir ? `<button class="boton principal chico">${icono('seguir')}Continuar</button>` : ''}
       </div>
       <div class="mensajes">${c.mensajes}</div>
       <div class="compositor">
-        <textarea placeholder="Escribile a la IA…" aria-label="Mensaje para la IA"></textarea>
+        <textarea placeholder="Escribe a la IA…" aria-label="Mensaje para la IA"></textarea>
         <div class="pie-comp">
           <button class="boton sin-fondo chico">Opus</button>
           <button class="boton sin-fondo chico">Medio</button>

@@ -125,13 +125,13 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .casilla input { border-radius: 4px; }
 .opcion input { border-radius: 50%; }
 .casilla input { position: relative; }
-.casilla input:checked { background: var(--principal); border-color: var(--principal); }
+.casilla input:checked { background: var(--marcado); border-color: var(--marcado); }
 .casilla input:checked::after { content: ""; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid var(--sobre-principal); border-width: 0 2px 2px 0; transform: rotate(45deg); }
-.opcion input:checked { border-color: var(--principal); box-shadow: inset 0 0 0 4px var(--fondo), inset 0 0 0 8px var(--principal); }
+.opcion input:checked { border-color: var(--marcado); box-shadow: inset 0 0 0 4px var(--fondo), inset 0 0 0 8px var(--marcado); }
 .interruptor { display: inline-flex; align-items: center; gap: var(--esp-2); cursor: pointer; color: var(--texto-2); }
 .interruptor input { appearance: none; margin: 0; width: 28px; height: 16px; border-radius: var(--radio-pildora); background: var(--borde-fuerte); position: relative; cursor: pointer; transition: background .15s var(--sale); }
 .interruptor input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--texto-2); transition: transform .15s var(--sale), background .15s var(--sale); }
-.interruptor input:checked { background: var(--principal); }
+.interruptor input:checked { background: var(--marcado); }
 .interruptor input:checked::after { transform: translateX(12px); background: var(--sobre-principal); }
 
 /* ───────── PZ-6 · Filtros ───────── */
@@ -253,18 +253,18 @@ a.fila, .fila.se-abre { cursor: pointer; }
   grid-template-areas: "menu proyectos proyectos" "actividad principal conversacion" "estado estado estado";
 }
 .marco.sin-conversacion { grid-template-columns: 48px 1fr; grid-template-areas: "menu proyectos" "actividad principal" "estado estado"; }
-.marco > .boton-menu { grid-area: menu; display: grid; place-items: center; color: var(--texto-2); position: relative; }
+.marco > .boton-menu { border-right: 1px solid var(--borde); border-bottom: 1px solid var(--borde); grid-area: menu; display: grid; place-items: center; color: var(--texto-2); position: relative; }
 .marco > .boton-menu .punto { position: absolute; top: 9px; right: 11px; }
-.barra-proyectos { grid-area: proyectos; display: flex; align-items: stretch; gap: 2px; }
+.barra-proyectos { border-bottom: 1px solid var(--borde); grid-area: proyectos; display: flex; align-items: stretch; gap: 2px; }
 .barra-proyectos .proy {
   display: flex; align-items: center; gap: var(--esp-2); padding: 0 var(--esp-2) 0 var(--esp-3); max-width: 220px;
   color: var(--texto-2); text-decoration: none; font-weight: 500; border-radius: var(--radio-control) var(--radio-control) 0 0;
 }
 .barra-proyectos .proy:hover { color: var(--texto); }
-.barra-proyectos .proy.elegido { color: var(--texto); background: var(--tarjeta); }
+.barra-proyectos .proy.elegido { color: var(--texto); background: var(--tarjeta); box-shadow: inset 0 0 0 1px var(--borde); clip-path: inset(0 0 -1px 0); margin-bottom: -1px; }
 .barra-proyectos .proy .cerrar { opacity: 0; color: var(--texto-3); }
 .barra-proyectos .proy:hover .cerrar, .barra-proyectos .proy.elegido .cerrar { opacity: 1; }
-.actividad { grid-area: actividad; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: var(--esp-2); }
+.actividad { border-right: 1px solid var(--borde); grid-area: actividad; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: var(--esp-2); }
 .actividad .sep { width: 18px; height: 1px; background: var(--borde); margin: var(--esp-2) 0; }
 .actividad .abajo { margin-top: auto; margin-bottom: var(--esp-2); }
 .act {
@@ -309,3 +309,9 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .estado-barra .senal { display: inline-flex; gap: 6px; align-items: center; }
 .estado-barra .senal .ic { width: 14px; height: 14px; }
 .estado-barra .senal.rojo:hover { color: var(--error); text-decoration: underline; }
+/* Información a pedido (R-41): una «i» que muestra su texto al pasar el mouse o con el foco, en vez de un renglón fijo. */
+.info { position: relative; display: inline-grid; place-items: center; width: 22px; height: 22px; color: var(--texto-3); border-radius: var(--radio-pildora); cursor: help; }
+.info:hover, .info:focus-visible { color: var(--texto); }
+.info .ic { width: 15px; height: 15px; }
+.info .globo { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 280px; padding: var(--esp-2) var(--esp-3); background: var(--elevado); box-shadow: var(--sombra-menu); border-radius: var(--radio-control); font-size: var(--tam-chico); color: var(--texto-2); line-height: 1.5; visibility: hidden; opacity: 0; transition: opacity .12s var(--sale); z-index: 20; }
+.info:hover .globo, .info:focus-visible .globo { visibility: visible; opacity: 1; }

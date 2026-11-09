@@ -5,6 +5,11 @@
 <title>Scripts</title>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Ejecutar va donde estaba el ícono, que era igual en todos (R-45). */
+  .ejecutar { flex: none; color: var(--texto-2); }
+  .ejecutar:hover { color: var(--texto); }
+</style>
 </head>
 <body data-marco="proyecto" data-seccion="scripts">
 <main class="seccion">
@@ -13,12 +18,12 @@
   </header>
   <div class="contenido centrado">
     <div class="filas con-lineas">
-      <div class="fila con-detalle"><span class="icono-fila"><i data-ic="scripts"></i></span><span class="principal-fila"><span class="titulo-fila">Abrir en modo desarrollo</span><span class="detalle">pnpm dev · arma y abre la app con los cambios en vivo</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="seguir"></i>Ejecutar</button></span></div>
-      <div class="fila con-detalle"><span class="icono-fila"><i data-ic="scripts"></i></span><span class="principal-fila"><span class="titulo-fila">Actualizar la app de uso diario</span><span class="detalle">pnpm actualizar · arma la versión nueva; se pone al cerrar Iridium</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="seguir"></i>Ejecutar</button></span></div>
-      <div class="fila con-detalle"><span class="icono-fila"><i data-ic="scripts"></i></span><span class="principal-fila"><span class="titulo-fila">Correr las pruebas</span><span class="detalle">pnpm test · reglas, casos de uso y disco; tarda un minuto</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="seguir"></i>Ejecutar</button></span></div>
-      <div class="fila con-detalle"><span class="icono-fila"><i data-ic="scripts"></i></span><span class="principal-fila"><span class="titulo-fila">Pruebas con la app abierta</span><span class="detalle">pnpm e2e · abre la app escondida con el motor falso</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="seguir"></i>Ejecutar</button></span></div>
-      <div class="fila con-detalle"><span class="icono-fila"><i data-ic="scripts"></i></span><span class="principal-fila"><span class="titulo-fila">Publicar una versión para compartir</span><span class="detalle">pnpm publicar · sube la app de uso diario a GitHub</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="seguir"></i>Ejecutar</button></span></div>
-      <div class="fila con-detalle"><span class="icono-fila"><i data-ic="scripts"></i></span><span class="principal-fila"><span class="titulo-fila">Capturas de la auditoría</span><span class="detalle">node tools/auditoria-ux.ts · una captura de cada pantalla</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="seguir"></i>Ejecutar</button></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Abrir en modo desarrollo</span><span class="detalle">pnpm dev · arma y abre la app con los cambios en vivo</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Actualizar la app de uso diario</span><span class="detalle">pnpm actualizar · arma la versión nueva; se pone al cerrar Iridium</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Correr las pruebas</span><span class="detalle">pnpm test · reglas, casos de uso y disco; tarda un minuto</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Pruebas con la app abierta</span><span class="detalle">pnpm e2e · abre la app escondida con el motor falso</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Publicar una versión para compartir</span><span class="detalle">pnpm publicar · sube la app de uso diario a GitHub</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Capturas de la auditoría</span><span class="detalle">node tools/auditoria-ux.ts · una captura de cada pantalla</span></span></div>
     </div>
   </div>
 </main>

@@ -1,6 +1,7 @@
 /* Los tokens de Iridium: la dirección negra sin acento, único tema (D-103, D-104). Sale de modulos/diseno/negro.css.
-   Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo y el botón
-   principal van en blanco, no en un color. Solo las señales llevan color: ámbar lo que espera del usuario, rojo un error.
+   Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo y lo marcado van
+   en blanco. Un solo color de acción: el verde del botón principal (Enviar, Seguí; D-109). Las señales: ámbar lo que
+   espera del usuario, rojo un error.
    En DI-I3 este archivo pasa a ser docs/ui/tokens.css. */
 :root {
   color-scheme: dark;
@@ -11,8 +12,8 @@
   --borde: #1c1c1e; --borde-suave: #121213; --borde-fuerte: #2a2a2d; --borde-control: #3d3d42;
   /* Texto */
   --texto: #e6e6e6; --texto-2: #9c9ca1; --texto-3: #7c7c82; --texto-apagado: #4a4a4f;
-  /* Lo principal: blanco con letra negra */
-  --principal: #f2f2f2; --principal-hover: #ffffff; --sobre-principal: #000000;
+  /* Lo principal: verde con letra negra (D-109); lo marcado (casillas, interruptores), blanco */
+  --principal: #3ccf7f; --principal-hover: #5adb93; --sobre-principal: #000000; --marcado: #f2f2f2;
   /* Señales */
   --espera: #d9a441; --espera-fondo: #0d0a04; --espera-borde: #3a2f15;
   --error: #e5484d; --error-fondo: #0f0506; --error-borde: #3d1a1c;
@@ -20,6 +21,8 @@
   /* Código */
   --cod-clave: #d4d4d8; --cod-cadena: #b5b5ba; --cod-comentario: #7c7c82;
   --cod-suma: #0b1a10; --cod-resta: #1c0a0b;
+  /* Git, con las letras de VS Code: modificado, agregado o nuevo, borrado */
+  --git-modificado: #e2c08d; --git-agregado: #73c991; --git-borrado: #e5484d;
   /* Letra: la del sistema para leer; la fija solo para códigos y números */
   --ui: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
   --mono: "Cascadia Mono", Consolas, monospace;

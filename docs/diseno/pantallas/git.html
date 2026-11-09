@@ -6,9 +6,49 @@
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../piezas.css">
 <style>
-  .dos-col { display: grid; grid-template-columns: 360px 1fr; height: 100%; }
-  .dos-col > nav { border-right: 1px solid var(--borde-suave); padding: var(--esp-4) var(--esp-3); overflow: auto; display: flex; flex-direction: column; gap: var(--esp-5); }
-  .commit-campo { display: flex; flex-direction: column; gap: var(--esp-2); }
+  /* El panel de Control de código fuente de VS Code (R-44): el mensaje, Confirmar, los cambios plegables con la letra
+     de cada archivo y sus acciones al pasar el mouse, y el gráfico de commits. A la derecha, el cambio del archivo. */
+  .dos-col { display: grid; grid-template-columns: 340px 1fr; height: 100%; }
+  .scm { border-right: 1px solid var(--borde); overflow: auto; display: flex; flex-direction: column; font-size: var(--tam-base); }
+  .scm-cab { display: flex; align-items: center; gap: 2px; height: 36px; padding: 0 var(--esp-2) 0 var(--esp-4); color: var(--texto-3); font-size: var(--tam-chico); }
+  .scm-cab .t { margin-right: auto; }
+  .scm-cab .boton.solo-icono { width: 26px; height: 26px; }
+  .scm-cab .boton .ic { width: 15px; height: 15px; }
+  .mensaje-commit { padding: 0 var(--esp-3) var(--esp-3); display: flex; flex-direction: column; gap: var(--esp-2); }
+  .mensaje-commit textarea { min-height: 34px; height: 34px; resize: vertical; }
+  .confirmar { display: flex; }
+  .confirmar .boton { flex: 1; justify-content: center; border-radius: var(--radio-control) 0 0 var(--radio-control); }
+  .confirmar .boton + .boton { flex: none; width: 30px; border-radius: 0 var(--radio-control) var(--radio-control) 0; border-left: 0; }
+  .grupo { display: flex; align-items: center; gap: var(--esp-1); height: 26px; padding: 0 var(--esp-2); color: var(--texto-2); font-size: var(--tam-chico); font-weight: 600; cursor: pointer; }
+  .grupo .ic { width: 15px; height: 15px; color: var(--texto-3); }
+  .grupo .acc { margin-left: auto; display: none; gap: 2px; }
+  .grupo:hover .acc { display: flex; }
+  .grupo .num { margin-left: auto; min-width: 18px; padding: 0 6px; border-radius: var(--radio-pildora); background: var(--borde-fuerte); color: var(--texto); font-weight: 500; text-align: center; }
+  .grupo:hover .num { display: none; }
+  .arch { display: flex; align-items: center; gap: var(--esp-2); height: 24px; padding: 0 var(--esp-2) 0 30px; cursor: pointer; white-space: nowrap; }
+  .arch:hover { background: var(--hover); }
+  .arch.elegido { background: var(--sel-fondo); }
+  .arch .ic { width: 15px; height: 15px; color: var(--texto-3); }
+  .arch .nombre-a { color: var(--texto); }
+  .arch .carpeta-a { color: var(--texto-3); font-size: var(--tam-chico); overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; }
+  .arch .acc { display: none; gap: 2px; }
+  .arch:hover .acc { display: flex; }
+  .arch .letra { width: 14px; text-align: center; font-size: var(--tam-chico); font-weight: 600; }
+  .letra.M { color: var(--git-modificado); }
+  .letra.A, .letra.U { color: var(--git-agregado); }
+  .letra.D { color: var(--git-borrado); }
+  .arch .acc .boton.solo-icono, .grupo .acc .boton.solo-icono { width: 22px; height: 22px; }
+  .arch .acc .ic, .grupo .acc .ic { width: 14px; height: 14px; }
+  .grafico { margin-top: var(--esp-2); }
+  .commit { display: flex; align-items: center; gap: var(--esp-2); height: 24px; padding: 0 var(--esp-2) 0 14px; white-space: nowrap; cursor: pointer; }
+  .commit:hover { background: var(--hover); }
+  .commit .via { width: 14px; height: 24px; flex: none; position: relative; }
+  .commit .via::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--borde-control); }
+  .commit:first-child .via::before { top: 50%; }
+  .commit .via::after { content: ""; position: absolute; left: 2px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--fondo); border: 2px solid var(--texto-2); box-sizing: border-box; }
+  .commit .msj { overflow: hidden; text-overflow: ellipsis; min-width: 0; color: var(--texto); }
+  .commit .rama { flex: none; font-size: 11px; padding: 0 6px; border-radius: var(--radio-pildora); border: 1px solid var(--borde-fuerte); color: var(--texto-2); }
+  .commit .quien { margin-left: auto; padding-left: var(--esp-2); color: var(--texto-3); font-size: var(--tam-chico); }
   .diff { overflow: auto; font: 400 var(--tam-chico)/1.7 var(--mono); padding: var(--esp-4) 0; }
   .diff div { white-space: pre; padding: 0 var(--esp-5); color: var(--texto-2); }
   .diff .mas { background: var(--cod-suma); color: var(--texto); }
@@ -18,33 +58,35 @@
 </head>
 <body data-marco="proyecto" data-seccion="git">
 <main class="seccion">
-  <header class="cabecera">
-    <div class="fila-cab"><h1>Git</h1><span class="ruta">dev · 1 commit sin subir</span>
-      <span class="acciones-cab"><button class="boton sin-fondo"><i data-ic="subir"></i>Subir</button><button class="boton sin-fondo"><i data-ic="descargar"></i>Traer</button></span></div>
-  </header>
   <div class="contenido sin-margen">
     <div class="dos-col">
-      <nav>
-        <div class="bloque">
-          <h3 class="bloque-titulo">Cambios <span class="cuenta">3</span></h3>
-          <div class="arbol">
-            <div class="nodo elegido"><i data-ic="archivo"></i>docs/estado.md<span class="marca ambar">M</span></div>
-            <div class="nodo"><i data-ic="archivo"></i>docs/modulos/diseno/estado.md<span class="marca ambar">M</span></div>
-            <div class="nodo"><i data-ic="archivo"></i>docs/diseno/pantallas/git.html<span class="marca">A</span></div>
-          </div>
-          <div class="commit-campo">
-            <textarea class="area" placeholder="Qué cambia, en una línea"></textarea>
-            <button class="boton secundario" style="align-self:flex-end">Guardar el cambio</button>
-          </div>
+      <nav class="scm" aria-label="Control de código fuente">
+        <div class="scm-cab"><span class="t">Control de código fuente</span>
+          <button class="boton solo-icono" aria-label="Traer" title="Traer"><i data-ic="descargar"></i></button>
+          <button class="boton solo-icono" aria-label="Subir" title="Subir"><i data-ic="subir"></i></button>
+          <button class="boton solo-icono" aria-label="Más" title="Más"><i data-ic="puntos"></i></button></div>
+        <div class="mensaje-commit">
+          <textarea class="area" placeholder="Mensaje (Ctrl+Enter para confirmar en «dev»)"></textarea>
+          <div class="confirmar"><button class="boton secundario"><i data-ic="ok"></i>Confirmar</button><button class="boton secundario" aria-label="Más formas de confirmar"><i data-ic="abajo"></i></button></div>
         </div>
-        <div class="bloque">
-          <h3 class="bloque-titulo">Historial</h3>
-          <div class="filas">
-            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Trabajo: T-54, cinco pruebas que ya fallaban</span><span class="detalle">a04b9a2 · hoy 16:02</span></span></div>
-            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Diseño, DI-I1: F8 sobre una maqueta</span><span class="detalle">e737856 · hoy 14:30</span></span></div>
-            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Diseño, DI-I1: la sección Diseño con las maquetas vivas</span><span class="detalle">81b7140 · hoy 12:11</span></span></div>
-            <div class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">Diseño, DI-I1: el formato docs/diseno/ en el framework</span><span class="detalle">8273157 · ayer 23:48</span></span></div>
-          </div>
+        <div class="grupo" data-pliega="cambios" aria-expanded="true"><i data-ic="abajo"></i>Cambios
+          <span class="acc"><button class="boton solo-icono" aria-label="Descartar todos"><i data-ic="izquierda"></i></button><button class="boton solo-icono" aria-label="Preparar todos"><i data-ic="mas"></i></button></span>
+          <span class="num">3</span></div>
+        <div id="cambios">
+          <div class="arch elegido"><i data-ic="archivo"></i><span class="nombre-a">estado.md</span><span class="carpeta-a">docs</span>
+            <span class="acc"><button class="boton solo-icono" aria-label="Abrir el archivo"><i data-ic="abrir"></i></button><button class="boton solo-icono" aria-label="Descartar"><i data-ic="izquierda"></i></button><button class="boton solo-icono" aria-label="Preparar"><i data-ic="mas"></i></button></span><span class="letra M">M</span></div>
+          <div class="arch"><i data-ic="archivo"></i><span class="nombre-a">estado.md</span><span class="carpeta-a">docs/modulos/diseno</span>
+            <span class="acc"><button class="boton solo-icono" aria-label="Abrir el archivo"><i data-ic="abrir"></i></button><button class="boton solo-icono" aria-label="Descartar"><i data-ic="izquierda"></i></button><button class="boton solo-icono" aria-label="Preparar"><i data-ic="mas"></i></button></span><span class="letra M">M</span></div>
+          <div class="arch"><i data-ic="archivo"></i><span class="nombre-a">git.html</span><span class="carpeta-a">docs/diseno/pantallas</span>
+            <span class="acc"><button class="boton solo-icono" aria-label="Abrir el archivo"><i data-ic="abrir"></i></button><button class="boton solo-icono" aria-label="Descartar"><i data-ic="izquierda"></i></button><button class="boton solo-icono" aria-label="Preparar"><i data-ic="mas"></i></button></span><span class="letra U">U</span></div>
+        </div>
+        <div class="grupo grafico" data-pliega="grafico" aria-expanded="true"><i data-ic="abajo"></i>Gráfico</div>
+        <div id="grafico">
+          <div class="commit"><span class="via"></span><span class="msj">Trabajo: T-54, cinco pruebas que ya fallaban</span><span class="rama">dev</span><span class="quien">hoy</span></div>
+          <div class="commit"><span class="via"></span><span class="msj">Diseño, DI-I1: F8 sobre una maqueta</span><span class="rama">origin/dev</span><span class="quien">hoy</span></div>
+          <div class="commit"><span class="via"></span><span class="msj">Diseño, DI-I1: la sección con las maquetas vivas</span><span class="quien">hoy</span></div>
+          <div class="commit"><span class="via"></span><span class="msj">Diseño, DI-I1: el formato docs/diseno/ en el framework</span><span class="quien">ayer</span></div>
+          <div class="commit"><span class="via"></span><span class="msj">Orden, OR-I4: el Mapa con frentes</span><span class="rama">main</span><span class="quien">hace 2 días</span></div>
         </div>
       </nav>
       <div class="diff">

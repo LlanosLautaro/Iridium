@@ -136,8 +136,7 @@
   white-space: nowrap;
   font-size: 14px;
 }
-.di-grande-t .sub,
-.di-grande-ayuda {
+.di-grande-t .sub {
   color: var(--texto-3);
   font-size: var(--tam-chico);
 }

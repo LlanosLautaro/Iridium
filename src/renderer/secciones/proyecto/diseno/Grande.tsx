@@ -135,7 +135,6 @@ export function Grande({
           <b>{nombre}</b>
           {numero && <span className="sub"> · {numero}</span>}
         </span>
-        {comentando && <span className="di-grande-ayuda">Elegí qué comentar · Esc para salir</span>}
         <button
           type="button"
           className="btn fantasma chico"

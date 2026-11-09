@@ -2485,3 +2485,45 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - Las maquetas de la tanda 1 corregidas y la regla escrita en `modulos/diseno/ux.md` › Reglas; el control de estilos de DI-I3 no la mira (es de contenido), la miran las maquetas.
 - En DI-I3 la barra de abajo de la app pierde Claude, las sesiones y la hora, y gana el aviso cuando Claude falla.
 
+## D-109 — Diseño: el botón principal es verde
+- **Fecha:** 2026-11-09
+- **Ámbito:** Diseño
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente (cambia el punto «sin acento» de D-103 y D-104)
+
+**Contexto:** con `F8` sobre las maquetas el usuario marcó que el blanco de Enviar «es molesto» y pidió verde, «típico de enviar», también para Seguí (R-35, R-36).
+
+**Decisión:** el fondo sigue negro y lo activo y lo marcado (la pestaña elegida, las casillas, los interruptores) siguen en blanco; el **botón principal** es verde (`--principal: #3ccf7f`) con letra negra. Es el único color que no es una señal.
+
+**Motivo:** el pedido del usuario; un solo color, solo en la acción, mantiene la pantalla tranquila.
+
+**Consecuencias:** `docs/diseno/tokens.css` suma `--marcado` para lo marcado; en DI-I3 pasa a `docs/ui/tokens.css`, `DESIGN.md` y `06-ui.md`.
+
+## D-110 — Los textos de la app en español neutro
+- **Fecha:** 2026-11-09
+- **Ámbito:** producto
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente
+
+**Contexto:** al usuario le pidieron que los textos de Iridium sean menos argentinos (R-29): «pide» o «pídeme» en lugar de «pedime».
+
+**Decisión:** la interfaz trata de «tú», sin voseo («Pídele», «Escribe a la IA…», «Continuar» en lugar de «Seguí»). Lo que escribe la IA de cada proyecto (sus `Q-n`, sus documentos) sigue el idioma de quien lo usa.
+
+**Motivo:** Iridium se comparte (D-085); un texto neutro sirve a cualquiera.
+
+**Consecuencias:** las maquetas ya están en neutro; los textos de la app se pasan en DI-I3 (T-58).
+
+## D-111 — Sin la Bandeja de todos
+- **Fecha:** 2026-11-09
+- **Ámbito:** producto
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente (deja sin efecto la vista general de D-010 y D-022)
+
+**Contexto:** el usuario: «en la práctica solo se usa la bandeja del proyecto, ya que cuenta con más detalle, docs y demás» (R-28).
+
+**Decisión:** Inicio queda con Proyectos, Skills e Ideas. Lo que espera de cada proyecto se ve en su Bandeja de entrada y, desde la grilla, en la cuenta ámbar de su tarjeta.
+
+**Motivo:** el uso real; una sección menos.
+
+**Consecuencias:** fuera de las maquetas ya; de la app, con DI-I3 (T-58): Skills pasa a Ctrl+2 e Ideas a Ctrl+3.
+

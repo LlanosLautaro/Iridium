@@ -237,3 +237,12 @@ Lo que la IA produce mientras trabaja (capturas, resultados de pruebas) aparece 
 ## T-57 — Dictado
 Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Orca)
 Un atajo y se habla: el texto entra al mensaje para la IA. Para dirigir con ideas sueltas.
+
+## T-58 — Lo que DI-I3 cambia en la app además de pasar las piezas
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-28, R-29, R-38, D-108 a D-111
+Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas.
+
+## T-59 — Rehacer Trabajo e Ideas
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155
+La pestaña Trabajo es una lista larga de texto sin un uso claro. El usuario propone Ideas como un bloc de notas libre (pegar enlaces y lo que sea; después se pide en el chat) y algo gráfico para ver qué se está haciendo y qué está anotado. Espera Q-155; después, sus maquetas.
+

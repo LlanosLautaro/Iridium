@@ -21,7 +21,7 @@
   <div class="velo" id="velo-nuevo">
     <form class="cuadro" onsubmit="return false">
       <h2>Nuevo proyecto</h2>
-      <p>Arma la carpeta con la plantilla del framework. Después le contás a su IA qué querés hacer.</p>
+      
       <label class="etiqueta-campo">Nombre<input class="campo" id="nombre" placeholder="Por ejemplo, Lista de compras" autofocus oninput="document.getElementById('crear').disabled = !this.value.trim(); document.getElementById('ruta').textContent = 'D:\\Proyectos\\' + this.value.trim()"></label>
       <span class="ruta-nueva" id="ruta">D:\Proyectos\</span>
       <div class="pie"><a class="boton sin-fondo" href="grilla.html">Cancelar</a><button class="boton principal" id="crear" disabled>Crear</button></div>

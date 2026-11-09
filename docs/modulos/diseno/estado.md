@@ -47,6 +47,15 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I2 — 2026-11-09 — la segunda ronda de comentarios (R-25 a R-45)
+- **Sin texto de relleno:** fuera la nota de Skills › Framework, el detalle y la bienvenida de la conversación de Skills, «Se guarda en…» y «Guardar a medias» de la Bandeja (lo escrito ya se guarda solo), la cabecera de Git y el renglón de ayuda de Revisión (ahora una «i» con el texto al pasar el mouse, pieza `.info`). En la app, el texto que había sumado junto a **Comentar** (R-25). La regla quedó en el framework (`referencias/06-ui.md`): era un error que se repetía, no algo del sistema de diseño.
+- **El marco:** líneas en la barra de proyectos y en la de secciones (R-26, R-27); Inicio sin la Bandeja de todos (D-111).
+- **Verde para lo principal (D-109):** `--principal` verde con letra negra; lo marcado pasa a `--marcado` (blanco).
+- **Español neutro (D-110):** «Pídele», «Escribe a la IA…» y «Continuar» en lugar de «Seguí».
+- **Pantallas:** Skills con los grupos que dicen «Skills…» y la conversación «Skills»; la Bandeja con preguntas plegables; Docs desplaza todo el ancho y centra el texto; Scripts con ▷ a la izquierda; Git rehecho como el panel de VS Code (con `--git-modificado`, `--git-agregado` y `--git-borrado`).
+- **Para después:** Trabajo e Ideas esperan Q-155 (T-59); lo que cambia en la app además de las piezas, en T-58 (DI-I3). Ajustes queda como pantalla de referencia (R-34).
+- **Verificado:** el control del framework, 0 avisos; capturas de las maquetas en el navegador; las pruebas de la grande con la app abierta.
+
 ### DI-I2 — 2026-11-09 — Q-152 y los comentarios de la tanda 1
 - **Q-152:** todo anda y la dirección (negro, sin cajas dentro de cajas, un solo botón blanco) va bien para seguir. DI-I1 queda hecha.
 - **Sin ruido (D-108, R-15 a R-21):** fuera la cuenta total junto al título y las rutas de carpeta (Proyectos, Nuevo proyecto, Ideas, Scripts, Trabajo, Revisión, Bandeja de todos), el detalle y la bienvenida de la conversación de Inicio, y de la barra de abajo Claude, las sesiones y la hora. Claude aparece abajo solo cuando falla (`data-claude="sin-sesion"`). Regla nueva en `ux.md` › Reglas.
@@ -74,5 +83,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-Esperar Q-154 (las correcciones de la tanda 1). Mientras, la tanda 2 de DI-I2 (`docs/diseno/README.md` › Falta, con la pantalla de Claude sin sesión) y medir la carga con todas. Si Q-154 trae más comentarios, corregirlos primero.
-**Leer antes:** `respuestas/Q-154.md` si llegó, los `R-n` nuevos de la Revisión, este archivo › Log › DI-I2 y `ux.md` › Parte 1 (Reglas, con D-108).
+Esperar Q-154 y Q-155. Mientras, la tanda 2 de DI-I2 (`docs/diseno/README.md` › Falta, con la pantalla de Claude sin sesión), mirando cada pantalla contra Ajustes (R-34) y sin texto de relleno; Trabajo e Ideas, cuando llegue Q-155. Si llegan comentarios nuevos, corregirlos primero.
+**Leer antes:** `respuestas/Q-154.md` y `Q-155.md` si llegaron, los `R-n` nuevos de la Revisión, este archivo › Log › DI-I2 y `ux.md` › Parte 1 (Reglas).
