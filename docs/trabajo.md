@@ -240,9 +240,13 @@ Un atajo y se habla: el texto entra al mensaje para la IA. Para dirigir con idea
 
 ## T-58 — Lo que DI-I3 cambia en la app además de pasar las piezas
 Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-28, R-29, R-38, D-108 a D-111
-Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas.
+Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3), la sección Trabajo de un proyecto, Ideas como bloc de notas (D-112) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas.
 
 ## T-59 — Rehacer Trabajo e Ideas
-Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155
-La pestaña Trabajo es una lista larga de texto sin un uso claro. El usuario propone Ideas como un bloc de notas libre (pegar enlaces y lo que sea; después se pide en el chat) y algo gráfico para ver qué se está haciendo y qué está anotado. Espera Q-155; después, sus maquetas.
+Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155
+La pestaña Trabajo es una lista larga de texto sin un uso claro. El usuario propone Ideas como un bloc de notas libre (pegar enlaces y lo que sea; después se pide en el chat) y algo gráfico para ver qué se está haciendo y qué está anotado. Q-155 (B, D-112): Trabajo sale de la vista e Ideas es un bloc de notas; maquetas hechas el 2026-11-09. En la app, con T-58.
+
+## T-60 — Reciclar las guías de impeccable en el framework
+Estado: nueva · Frente: Diseño · Fecha: 2026-11-09 · Origen: pregunta del usuario, Q-156
+impeccable (licencia Apache 2.0) trae guías para limpiar una pantalla (quitar lo que sobra, bajar el ruido, aclarar los textos, la tipografía) y un piso de calidad con comprobaciones (contraste, espacios, letra). Se pueden pasar en nuestras palabras a `referencias/06-ui.md` del framework, con la atribución que pide la licencia. Espera Q-156.
 

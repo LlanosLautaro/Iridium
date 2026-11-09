@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 con su tanda 1 corregida, espera Q-154; D-107, D-108) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2: tanda 1 aprobada en Q-154, sigue la tanda 2; D-107 a D-112) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -47,6 +47,12 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I2 — 2026-11-09 — Q-154 y Q-155: la tanda 1 aprobada
+- **Q-154:** todo bien (la grande, sin relleno, el marco, las tarjetas, el verde, la Bandeja, Git, Docs, Scripts y el español neutro). La tanda 1 queda aprobada.
+- **Q-155 (B, D-112):** Trabajo sale de las maquetas de un proyecto (el Mapa muestra lo que está en curso) e Ideas pasa a ser un bloc de notas libre (`pantallas/ideas.html`).
+- **R-46 a R-48:** grises del texto neutros y un poco más claros (los de antes tiraban a morado sobre negro); la letra de los botones llenos, seminegrita.
+- **Verificado:** el control, 0 avisos; capturas de Ideas y del Mapa en el navegador.
+
 ### DI-I2 — 2026-11-09 — la segunda ronda de comentarios (R-25 a R-45)
 - **Sin texto de relleno:** fuera la nota de Skills › Framework, el detalle y la bienvenida de la conversación de Skills, «Se guarda en…» y «Guardar a medias» de la Bandeja (lo escrito ya se guarda solo), la cabecera de Git y el renglón de ayuda de Revisión (ahora una «i» con el texto al pasar el mouse, pieza `.info`). En la app, el texto que había sumado junto a **Comentar** (R-25). La regla quedó en el framework (`referencias/06-ui.md`): era un error que se repetía, no algo del sistema de diseño.
 - **El marco:** líneas en la barra de proyectos y en la de secciones (R-26, R-27); Inicio sin la Bandeja de todos (D-111).
@@ -83,5 +89,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-Esperar Q-154 y Q-155. Mientras, la tanda 2 de DI-I2 (`docs/diseno/README.md` › Falta, con la pantalla de Claude sin sesión), mirando cada pantalla contra Ajustes (R-34) y sin texto de relleno; Trabajo e Ideas, cuando llegue Q-155. Si llegan comentarios nuevos, corregirlos primero.
-**Leer antes:** `respuestas/Q-154.md` y `Q-155.md` si llegaron, los `R-n` nuevos de la Revisión, este archivo › Log › DI-I2 y `ux.md` › Parte 1 (Reglas).
+La tanda 2 de DI-I2 (`docs/diseno/README.md` › Falta), mirando cada pantalla contra Ajustes (R-34) y sin texto de relleno; si llega Q-156, aplicarla antes. Después, DI-I3 con T-58.
+**Leer antes:** `respuestas/Q-156.md` si llegó, los `R-n` nuevos de la Revisión, este archivo › Log › DI-I2 y `ux.md` › Parte 1 (Reglas).

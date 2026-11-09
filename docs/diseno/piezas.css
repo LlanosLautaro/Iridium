@@ -32,7 +32,7 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
   transition: background .12s var(--sale), color .12s var(--sale), border-color .12s var(--sale);
 }
 .boton .ic { width: 15px; height: 15px; }
-.boton.principal { background: var(--principal); color: var(--sobre-principal); }
+.boton.principal { background: var(--principal); color: var(--sobre-principal); font-weight: 600; letter-spacing: .01em; }
 .boton.principal:hover { background: var(--principal-hover); }
 .boton.secundario { border-color: var(--borde-control); }
 .boton.secundario:hover { background: var(--hover); border-color: var(--texto-3); }

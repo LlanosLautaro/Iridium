@@ -2527,3 +2527,19 @@ evision-cola-electron.json` y sale cuando Iridium está.
 
 **Consecuencias:** fuera de las maquetas ya; de la app, con DI-I3 (T-58): Skills pasa a Ctrl+2 e Ideas a Ctrl+3.
 
+## D-112 — Sin la sección Trabajo; Ideas es un bloc de notas
+- **Fecha:** 2026-11-09
+- **Ámbito:** producto
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente
+
+**Contexto:** el usuario sentía que Trabajo era una lista compleja sin un propósito claro (R-40). Q-155, opción B.
+
+**Decisión:**
+1. Un proyecto ya no muestra la sección Trabajo. `docs/trabajo.md` sigue siendo la lista de la IA (se lee en Docs) y lo que está en curso se ve en el Mapa.
+2. Ideas es un bloc de notas libre: una sola hoja, se escribe y se pegan enlaces e imágenes, sin estados ni destinos. Lo que se quiera hacer se le pide a la IA en el chat.
+
+**Motivo:** menos texto y menos secciones; pensar (el bloc) queda separado de seguir el trabajo (el Mapa).
+
+**Consecuencias:** las maquetas ya están; la app cambia con DI-I3 (T-58). El formato de `trabajo.md` del framework no cambia.
+

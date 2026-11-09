@@ -62,7 +62,6 @@ const SECCIONES_INICIO = [
 const SECCIONES_PROYECTO = [
   ['bandeja', 'Bandeja de entrada', 'bandeja.html'],
   ['mapa', 'Mapa', 'mapa.html'],
-  ['trabajo', 'Trabajo', 'trabajo.html'],
   ['revision', 'Revisión', 'revision.html'],
   ['diseno', 'Diseño', 'diseno.html'],
   null,

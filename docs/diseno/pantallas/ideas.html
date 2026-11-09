@@ -6,40 +6,39 @@
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../piezas.css">
 <style>
-  .anotar { display: flex; gap: var(--esp-2); align-items: center; margin-bottom: var(--esp-5); }
-  .anotar .campo { flex: 1; }
-  .anotar .selector { width: 180px; }
+  /* Un bloc de notas (Q-155, D-112): una sola hoja libre, sin estados ni destinos; se escribe, se pegan enlaces e
+     imágenes y se guarda solo. Lo que se quiera hacer se le pide a la IA en el chat. */
+  .hoja-notas { outline: none; min-height: 100%; caret-color: var(--texto); }
+  .hoja-notas p { margin: 0 0 var(--esp-2); }
+  .hoja-notas .fecha { color: var(--texto-3); font-size: var(--tam-chico); margin: var(--esp-5) 0 var(--esp-2); }
+  .hoja-notas .fecha:first-child { margin-top: 0; }
+  .enlace { display: inline-flex; align-items: center; gap: var(--esp-2); padding: 2px var(--esp-2); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto); text-decoration: none; font-size: var(--tam-base); }
+  .hoja-notas .enlace { text-decoration: none; }
+  .enlace:hover { border-color: var(--borde-control); }
+  .enlace .ic { width: 14px; height: 14px; color: var(--texto-3); }
+  .enlace .sitio { color: var(--texto-3); }
+  .pegada { display: block; width: 280px; height: 160px; margin: var(--esp-2) 0 var(--esp-3); border-radius: var(--radio-bloque); border: 1px solid var(--borde); background: var(--elevado); position: relative; overflow: hidden; }
+  .pegada::before { content: ""; position: absolute; inset: 24px 24px auto 24px; height: 12px; border-radius: 6px; background: var(--borde-fuerte); box-shadow: 0 24px 0 var(--borde), 0 48px 0 var(--borde), 0 72px 0 var(--borde); }
 </style>
 </head>
 <body data-marco="inicio" data-seccion="ideas">
 <main class="seccion">
   <header class="cabecera">
     <div class="fila-cab"><h1>Ideas</h1></div>
-    <div class="filtros"><button class="filtro elegido">Sueltas <span class="cuenta">7</span></button><button class="filtro">Con destino <span class="cuenta">5</span></button><button class="filtro">Todas <span class="cuenta">12</span></button></div>
   </header>
   <div class="contenido centrado">
-    <div>
-      <div class="anotar">
-        <input class="campo" placeholder="Anotá una idea en una línea">
-        <select class="selector" aria-label="Destino"><option>Sin destino</option><option>Iridium</option><option>Alfa</option><option>Un proyecto nuevo</option></select>
-        <button class="boton secundario">Anotar</button>
-      </div>
-      <div class="filas con-lineas">
-        <a class="fila con-detalle se-abre" data-contextual="menu-idea"><span class="principal-fila"><span class="titulo-fila">Un modo foco que esconda todo menos la conversación</span><span class="detalle">hoy · sin destino</span></span><span class="acciones"><button class="boton solo-icono chico" data-abre="menu-idea" aria-label="Más"><i data-ic="puntos"></i></button></span></a>
-        <a class="fila con-detalle se-abre"><span class="principal-fila"><span class="titulo-fila">Que la grilla se pueda ordenar por la última vez que abrí cada proyecto</span><span class="detalle">ayer · sin destino</span></span></a>
-        <a class="fila con-detalle se-abre"><span class="principal-fila"><span class="titulo-fila">Una app chica para anotar lo que gasto en el súper y ver el mes</span><span class="detalle">2026-11-05 · un proyecto nuevo, quizás</span></span></a>
-        <a class="fila con-detalle se-abre"><span class="principal-fila"><span class="titulo-fila">Pasar las recetas del cuaderno a algo que se pueda buscar</span><span class="detalle">2026-11-01 · sin destino</span></span></a>
-        <a class="fila con-detalle se-abre"><span class="principal-fila"><span class="titulo-fila">Avisar en el celular cuando la IA termina un turno largo</span><span class="detalle">2026-10-29 · sin destino</span></span></a>
-        <a class="fila con-detalle se-abre"><span class="principal-fila"><span class="titulo-fila">Un tablero con los tiempos de arranque de cada proyecto</span><span class="detalle">2026-10-27 · sin destino</span></span></a>
-        <a class="fila con-detalle se-abre"><span class="principal-fila"><span class="titulo-fila">Comparar dos paquetes de texturas en el mismo bloque</span><span class="detalle">2026-10-20 · sin destino</span></span></a>
-      </div>
-      <div class="menu" id="menu-idea">
-        <button>Mandar a Iridium</button>
-        <button>Mandar a otro proyecto…</button>
-        <button>Crear un proyecto con esta idea</button>
-        <hr>
-        <button class="peligroso"><i data-ic="papelera"></i>Borrar</button>
-      </div>
+    <div class="hoja-notas texto-doc" contenteditable="true" spellcheck="false" aria-label="Ideas">
+      <p class="fecha">Hoy</p>
+      <p>Un modo foco que esconda todo menos la conversación.</p>
+      <p>Mirar cómo arma los diagramas este repo: <a class="enlace" href="#"><i data-ic="abrir"></i>beluga<span class="sitio">github.com</span></a></p>
+      <span class="pegada" role="img" aria-label="Captura pegada"></span>
+      <p>Que la grilla se pueda ordenar por la última vez que abrí cada proyecto.</p>
+      <p class="fecha">Ayer</p>
+      <p>Una app chica para anotar lo que gasto en el súper y ver el mes. ¿Proyecto nuevo?</p>
+      <p>Pasar las recetas del cuaderno a algo que se pueda buscar.</p>
+      <p class="fecha">2026-10-29</p>
+      <p>Avisar en el celular cuando la IA termina un turno largo.</p>
+      <p>Comparar dos paquetes de texturas en el mismo bloque (para Alfa).</p>
     </div>
   </div>
 </main>

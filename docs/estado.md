@@ -32,34 +32,20 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha; DI-I2: tanda 1 corregida, espera Q-154) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha; DI-I2: tanda 1 aprobada, sigue la tanda 2) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro sin acento como único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2 sigue**: la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Lo mirás en Q-154; lo de Trabajo e Ideas es Q-155. Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro sin acento como único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. Sigue la tanda 2. Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
-- **Q-155 — Qué hacemos con Trabajo e Ideas**
+- **Q-156 — Qué tomamos de impeccable**
   Tipo: decisión · Frente: Diseño
-  Contexto: tu comentario R-40 (T-59). Hoy Trabajo es una lista larga de texto e Ideas otra lista. Lo de reducir el texto en toda la app ya es regla (D-108).
-  Opciones: A) Ideas pasa a ser un bloc de notas libre (escribís, pegás enlaces o imágenes, sin estados; lo que quieras hacer se lo pedís a la IA en el chat) y Trabajo se reemplaza por un mapa de lo que se hace: tarjetas cortas en tres columnas (anotado, en curso, hecho) agrupadas por frente (recomendada: separa pensar de seguir el trabajo y es lo más gráfico) · B) Solo el bloc de notas: Trabajo desaparece de la vista y lo que está en curso se ve en el Mapa · C) Trabajo queda como lista pero mucho más corta (título y estado), e Ideas como hoy
-
-- **Q-154 — Mirá las correcciones de las maquetas y de la grande**
-  Tipo: prueba · Frente: Diseño
-  Contexto: tocá **Actualizar** abajo para tener esta versión. Son tus comentarios R-15 a R-45 y lo de F8 de Q-152 (D-108 a D-111). Lo que no te guste, comentalo con `F8` sobre la maqueta. Detalle en `modulos/diseno/estado.md` › Log › DI-I2.
-  - [ ] Con una maqueta grande, **Comentar** (arriba a la derecha) prende el modo comentar en la maqueta, no en Iridium; queda apretado («Comentando»), sin texto al lado, y tocarlo otra vez lo apaga
-  - [ ] **←** y **→** del teclado pasan a la anterior y la siguiente; con el modo comentar prendido también, y sigue prendido en la nueva
-  - [ ] En las maquetas no queda texto de relleno: sin cuentas al lado de los títulos, rutas, hora, «Se guarda en…», notas al pie ni bienvenidas en la conversación; en Revisión, una «i» que se lee al pasar el mouse
-  - [ ] Las barras de arriba y de la izquierda tienen su línea; arriba a la izquierda, una casa; en Inicio ya no está la Bandeja de todos
-  - [ ] Las tarjetas de Proyectos (línea fina, sin relleno) cuadran
-  - [ ] El botón principal (Enviar, Continuar, Nuevo proyecto) en verde va bien
-  - [ ] En la Bandeja, cada pregunta se pliega desde su título y no está «Guardar a medias»
-  - [ ] Git se parece lo suficiente al panel de VS Code (si no, adjuntá una captura del tuyo en `respuestas/Q-154/`)
-  - [ ] Docs centrado, con la barra de desplazamiento junto a la conversación; en Scripts, ▷ a la izquierda de cada uno
-  - [ ] Los textos de las maquetas están en español neutro («Escribe a la IA…», «Continuar»)
+  Contexto: T-60. impeccable es de licencia Apache 2.0: se puede reusar diciendo de dónde sale. Trae guías para limpiar una pantalla (quitar lo que sobra, bajar el ruido, aclarar los textos, la letra), un piso de calidad con comprobaciones y un revisor automático que ya corre cuando escribo maquetas (encontró el texto pegado al borde en Git). No usamos su forma de trabajar: lo nuestro son las maquetas y `F8`.
+  Opciones: A) Pasar sus guías, en nuestras palabras y con la atribución, a `referencias/06-ui.md` del framework, y que la IA repase cada maqueta con ellas antes de mostrártela (recomendada: llega a todos tus proyectos y no suma otra herramienta) · B) Lo mismo y además sumar su revisor automático al control del framework (más avisos sin mirar, pero depende de un programa de afuera) · C) Dejarlo como está: el revisor corre solo en esta PC y las guías no se copian
 
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
@@ -81,8 +67,8 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: con Q-154, corregir lo que comentes; mientras tanto, la tanda 2 de DI-I2 (las pantallas que faltan, con la de Claude sin sesión). Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
-**Leer antes:** `modulos/diseno/estado.md` › Próximo paso (y Q-146 o Q-126 si llegaron).
+Diseño: la tanda 2 de DI-I2 (las pantallas que faltan: detalle de una skill, archivados, el menú de las conversaciones, Eliminar, el ancho chico, Diseño › una grande y › Sistema, los errores y Claude sin sesión), mirando cada una contra Ajustes y sin texto de relleno; si llega Q-156, aplicarla antes. Si llega Q-146, procesarla aparte.
+**Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

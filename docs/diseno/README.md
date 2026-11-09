@@ -12,7 +12,6 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Ajustes | Inicio | pantallas/ajustes.html | — |
 | Bandeja de entrada | Un proyecto | pantallas/bandeja.html | — |
 | Mapa | Un proyecto | pantallas/mapa.html | — |
-| Trabajo | Un proyecto | pantallas/trabajo.html | — |
 | Revisión | Un proyecto | pantallas/revision.html | — |
 | Revisión sin comentarios | Un proyecto | pantallas/revision-vacia.html | — |
 | Diseño | Un proyecto | pantallas/diseno.html | — |
@@ -28,4 +27,4 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 - **Las reglas del rediseño** (`ux.md` › Reglas): un principal por pantalla como mucho; nunca un bloque dentro de otro; las acciones de una fila, sin fondo; un solo estilo de título de bloque; el foco, solo con el teclado; sin ruido: nada que no ayude a decidir, y un estado solo cuando falla (D-108).
 
 ## Falta (siguiente tanda de DI-I2)
-Trabajo e Ideas rehechas (esperan Q-155). Detalle de una skill, detalle de una idea, los proyectos archivados, el menú de las conversaciones, Eliminar, el ancho chico, Diseño › una maqueta grande y Diseño › Sistema, y los estados con error (la IA no respondió, sin sesión de Claude).
+Detalle de una skill, detalle de una idea, los proyectos archivados, el menú de las conversaciones, Eliminar, el ancho chico, Diseño › una maqueta grande y Diseño › Sistema, y los estados con error (la IA no respondió, sin sesión de Claude).
