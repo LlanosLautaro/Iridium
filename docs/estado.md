@@ -42,11 +42,6 @@ Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el M
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
-- **Q-156 — Qué tomamos de impeccable**
-  Tipo: decisión · Frente: Diseño
-  Contexto: T-60. impeccable es de licencia Apache 2.0: se puede reusar diciendo de dónde sale. Trae guías para limpiar una pantalla (quitar lo que sobra, bajar el ruido, aclarar los textos, la letra), un piso de calidad con comprobaciones y un revisor automático que ya corre cuando escribo maquetas (encontró el texto pegado al borde en Git). No usamos su forma de trabajar: lo nuestro son las maquetas y `F8`.
-  Opciones: A) Pasar sus guías, en nuestras palabras y con la atribución, a `referencias/06-ui.md` del framework, y que la IA repase cada maqueta con ellas antes de mostrártela (recomendada: llega a todos tus proyectos y no suma otra herramienta) · B) Lo mismo y además sumar su revisor automático al control del framework (más avisos sin mirar, pero depende de un programa de afuera) · C) Dejarlo como está: el revisor corre solo en esta PC y las guías no se copian
-
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.

@@ -10,7 +10,7 @@ Algunas skills externas hacen mejor una parte del trabajo de un hito. Esta guía
 
 ## impeccable (diseño de interfaz)
 
-Skill de oficio visual: criterio de diseño, detección de anti-patrones y 24 comandos (`/impeccable <comando>`). Solo aplica a proyectos con interfaz (web, webview, móvil, escritorio). Para CLIs o proyectos sin UI, no se usa.
+Skill de oficio visual: criterio de diseño, detección de anti-patrones y 24 comandos (`/impeccable <comando>`). Solo aplica a proyectos con interfaz (web, webview, móvil, escritorio). Para CLIs o proyectos sin UI, no se usa. Sus guías principales ya están, en nuestras palabras, en `referencias/06-ui.md` › Repaso antes de mostrar una maqueta, que se hace aunque la skill no esté instalada.
 
 **Sus archivos** (en la raíz del proyecto):
 - `PRODUCT.md` — la verdad del producto que impeccable necesita: usuarios, tareas, propósito, restricciones, plataforma, tono. **Se arma a partir de `docs/`**, no con una entrevista nueva: resume `00-idea.md`, `02-definicion.md`, `perfil-proyecto.md` y `04-ux.md`, y enlaza a ellos. Si `02-definicion.md` cambia, se actualiza `PRODUCT.md`.

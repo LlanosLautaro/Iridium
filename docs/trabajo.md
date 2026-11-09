@@ -247,6 +247,6 @@ Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155
 La pestaña Trabajo es una lista larga de texto sin un uso claro. El usuario propone Ideas como un bloc de notas libre (pegar enlaces y lo que sea; después se pide en el chat) y algo gráfico para ver qué se está haciendo y qué está anotado. Q-155 (B, D-112): Trabajo sale de la vista e Ideas es un bloc de notas; maquetas hechas el 2026-11-09. En la app, con T-58.
 
 ## T-60 — Reciclar las guías de impeccable en el framework
-Estado: nueva · Frente: Diseño · Fecha: 2026-11-09 · Origen: pregunta del usuario, Q-156
-impeccable (licencia Apache 2.0) trae guías para limpiar una pantalla (quitar lo que sobra, bajar el ruido, aclarar los textos, la tipografía) y un piso de calidad con comprobaciones (contraste, espacios, letra). Se pueden pasar en nuestras palabras a `referencias/06-ui.md` del framework, con la atribución que pide la licencia. Espera Q-156.
+Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: pregunta del usuario, Q-156
+impeccable (licencia Apache 2.0) trae guías para limpiar una pantalla (quitar lo que sobra, bajar el ruido, aclarar los textos, la tipografía) y un piso de calidad con comprobaciones (contraste, espacios, letra). Se pueden pasar en nuestras palabras a `referencias/06-ui.md` del framework, con la atribución que pide la licencia. Q-156 (A, D-113): hecho el 2026-11-09 en `referencias/06-ui.md` › Repaso antes de mostrar una maqueta.
 

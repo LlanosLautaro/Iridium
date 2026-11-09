@@ -2543,3 +2543,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 
 **Consecuencias:** las maquetas ya están; la app cambia con DI-I3 (T-58). El formato de `trabajo.md` del framework no cambia.
 
+
+## D-113 — Las guías de impeccable, en el framework
+- **Fecha:** 2026-11-09
+- **Ámbito:** framework
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente
+
+**Contexto:** impeccable (licencia Apache 2.0) trae guías para limpiar una pantalla y un piso de calidad; su revisor automático ya corría en esta PC al escribir maquetas (T-60). Q-156, opción A.
+
+**Decisión:** sus guías pasan, en nuestras palabras y con la atribución que pide la licencia, a `referencias/06-ui.md` › Repaso antes de mostrar una maqueta: lo que sobra, el ruido, los textos, la letra, los espacios, el piso (contraste, estados, largos reales) y lo que no va. La IA repasa cada maqueta con esa lista antes de mostrarla. No se suma su revisor al control ni su forma de trabajar: lo nuestro son las maquetas y `F8`.
+
+**Motivo:** llega a todos los proyectos con el framework y no depende de otra herramienta.
+
+**Consecuencias:** `SKILL.md` › Las maquetas apunta al repaso; la salida del hito 6 pide las maquetas repasadas. El formato y el control no cambian.
