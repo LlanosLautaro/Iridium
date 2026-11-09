@@ -1,7 +1,7 @@
 # Estado del módulo: Diseño
 
 **Tipo:** sección (un «Claude Design» local dentro de Iridium; D-102)
-**Última actualización:** 2026-11-08
+**Última actualización:** 2026-11-09
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,12 +13,12 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y DI-I2 con su primera tanda: las dos esperan la prueba, Q-152; D-107) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 con su tanda 1 corregida, espera Q-154; D-107, D-108) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está construida y probada** (el formato en el framework con su control, la sección con Pantallas, la grande, Sistema, `F8` y Pedírselo a la IA). Desde D-107 se prueba sobre las maquetas de Iridium: **DI-I2 empezó** y su primera tanda (el sistema, las 12 piezas y 16 pantallas en `docs/diseno/`) se recorre en la sección con Q-152.
+Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 viene después de Q-154.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -39,7 +39,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | en curso |
+| DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | hecho (Q-152, 2026-11-09) |
 | DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | en curso |
 | DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | pendiente |
 | DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | pendiente |
@@ -47,6 +47,14 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I2 — 2026-11-09 — Q-152 y los comentarios de la tanda 1
+- **Q-152:** todo anda y la dirección (negro, sin cajas dentro de cajas, un solo botón blanco) va bien para seguir. DI-I1 queda hecha.
+- **Sin ruido (D-108, R-15 a R-21):** fuera la cuenta total junto al título y las rutas de carpeta (Proyectos, Nuevo proyecto, Ideas, Scripts, Trabajo, Revisión, Bandeja de todos), el detalle y la bienvenida de la conversación de Inicio, y de la barra de abajo Claude, las sesiones y la hora. Claude aparece abajo solo cuando falla (`data-claude="sin-sesion"`). Regla nueva en `ux.md` › Reglas.
+- **Inicio con una casa (R-22)** en lugar de las tres rayas.
+- **Las tarjetas de Proyectos (R-23):** el usuario las sentía claras y que «no cuadraban». Lo que veía: un relleno gris por tarjeta (una pared de bloques), el ícono en otra caja adentro y tres señales distintas arriba a la derecha. Ahora: línea fina sin relleno que se aclara al pasar el mouse, el ícono sin caja, arriba solo la cuenta ámbar, los avisos abajo como señal, el pie sin negritas y sin «Sin estado», los tres puntos al pasar el mouse. Se confirma en Q-154.
+- **En la app (R-24 y Q-152):** en la maqueta grande ← y → pasan de maqueta con el foco en Iridium o en la maqueta, también comentando (salvo escribiendo), y el modo comentar sigue prendido en la nueva. **Comentar**, arriba a la derecha, prende `F8` en la maqueta y no en Iridium (lo que se mezclaba en Q-152), y se ve apretado mientras está prendido. Iridium mira en la página si sigue comentando: Esc con la tarjeta del comentario abierta solo la cierra.
+- **Verificado:** el control del framework, 0 avisos; `di1-diseno.spec.ts` y `di1-f8-maqueta.spec.ts` pasan con las flechas y el botón (captura `test-results/di1-f8-flechas.png`); capturas de las maquetas en el navegador.
+
 ### DI-I2 — 2026-11-08 — tanda 1: el sistema, las piezas y 16 pantallas
 - **Por qué ahora (D-107):** el usuario propuso probar DI-I1 con el diseño de Iridium en lugar de un proyecto de prueba; Q-152 prueba las dos cosas.
 - **El sistema:** `docs/diseno/tokens.css` sale de `negro.css` ordenado por roles (superficies, líneas, tres grises de texto, lo principal en blanco, ámbar y rojo para las señales, código, letra, tamaños, espacios, esquinas, sombras). El gris más tenue subió a `#7c7c82` para llegar a AA sobre negro. `piezas.css` tiene las 12 piezas con las variantes de `ux.md`; `piezas.html` las muestra.
@@ -66,5 +74,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-Procesar Q-152: corregir en las maquetas lo que comente el usuario (sus `R-n` de la Revisión dicen qué maqueta) y, si la sección anda, cerrar DI-I1. Después, la tanda 2 de DI-I2 (`docs/diseno/README.md` › Falta) y medir la carga con todas.
-**Leer antes:** `respuestas/Q-152.md`, los `R-n` nuevos de la Revisión, este archivo › Log › DI-I2 y `ux.md` › Parte 1.
+Esperar Q-154 (las correcciones de la tanda 1). Mientras, la tanda 2 de DI-I2 (`docs/diseno/README.md` › Falta, con la pantalla de Claude sin sesión) y medir la carga con todas. Si Q-154 trae más comentarios, corregirlos primero.
+**Leer antes:** `respuestas/Q-154.md` si llegó, los `R-n` nuevos de la Revisión, este archivo › Log › DI-I2 y `ux.md` › Parte 1 (Reglas, con D-108).

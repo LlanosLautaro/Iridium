@@ -173,6 +173,11 @@ test('la grande: se usa, un enlace lleva a otra maqueta, las flechas y Esc; nada
   await diseno.getByRole('button', { name: 'Siguiente' }).click()
   await expect(titulo).toHaveText('Red · 4 de 4')
   await expect.poll(() => enLaGrande<string>(app, 'document.title').catch(() => '')).toBe('Red cargada')
+  // Las flechas del teclado también, con el foco en Iridium (R-24).
+  await win.keyboard.press('ArrowLeft')
+  await expect(titulo).toHaveText('Ajustes · 3 de 4')
+  await win.keyboard.press('ArrowRight')
+  await expect(titulo).toHaveText('Red · 4 de 4')
   expect(pedidosAfuera).toEqual([])
   // Esc desde adentro de la maqueta vuelve al lienzo.
   await app.evaluate(({ webContents }) => {

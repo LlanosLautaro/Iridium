@@ -69,6 +69,7 @@ PZ-11 y PZ-12 no estaban en la tabla de `definicion.md`: aparecieron al mirar la
 - **Nunca un bloque dentro de otro, ni una caja dentro de un recuadro.** Lo que hoy es una caja dentro de otra pasa a ser filas.
 - **Las acciones de una fila** son botones sin fondo. Si la fila tiene una sola acción que es lo que se viene a hacer (Ejecutar, Pasar al framework), está siempre a la vista; si son varias, aparecen al pasar el ratón o con el foco.
 - **Un solo estilo de título de bloque**: gris, tamaño chico, con la cuenta al lado. Nada en mayúsculas.
+- **Sin ruido (D-108).** No se muestra lo que no ayuda a decidir nada: la cuenta total al lado del título de una pantalla, la ruta de una carpeta, la hora, «Sin sesiones abiertas», «Claude · max». Lo que anda bien no se anuncia; un estado aparece cuando falla (Claude sin sesión, en rojo abajo). La cuenta que queda es la de lo que espera del usuario.
 - **El foco se dibuja solo con el teclado** (`:focus-visible`); con el ratón, nada.
 - **Los estilos por sección** quedan para lo que es solo de ella (la tarjeta, el compositor, el visor de código, las capturas). Un botón, una fila o un recuadro escritos en un archivo de sección es un error que el control de estilos del pase al código marca.
 

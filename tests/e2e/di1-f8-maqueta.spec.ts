@@ -156,13 +156,51 @@ test('F8 sobre una maqueta grande: el comentario llega a su proyecto con la maqu
   expect(md).toContain('**Captura:** ![R-1](R-1.png)')
   expect((await stat(join(carpeta, 'R-1.png'))).size).toBeGreaterThan(300)
 
-  // Esc apaga el modo comentar sin salir de la grande; el segundo vuelve al lienzo.
+  // Esc no sale de la grande mientras está comentando.
   await enviar(app, [
     { type: 'keyDown', keyCode: 'Escape' },
     { type: 'keyUp', keyCode: 'Escape' },
   ])
   await win.waitForTimeout(300)
   await expect(win.locator('.di-grande')).toBeVisible()
+
+  // El primer Esc cerró la tarjeta del comentario: el botón muestra que sigue comentando. El segundo apaga el modo.
+  const comentar = win.locator('.di-grande-cab').getByRole('button', { name: /^Coment/ })
+  await expect(comentar).toHaveAttribute('aria-pressed', 'true')
+  await enviar(app, [
+    { type: 'keyDown', keyCode: 'Escape' },
+    { type: 'keyUp', keyCode: 'Escape' },
+  ])
+  await expect(comentar).toHaveAttribute('aria-pressed', 'false')
+  await expect(win.locator('.di-grande')).toBeVisible()
+
+  // El botón Comentar prende el modo comentar en la maqueta, no en Iridium (Q-152), y lo muestra apretado.
+  await comentar.click()
+  await expect(comentar).toHaveAttribute('aria-pressed', 'true')
+  await expect.poll(() => enLaGrande<boolean>(app, "!!document.querySelector('iridium-revision')")).toBe(true)
+  // Comentando, → pasa a la siguiente y sigue comentando en ella (R-24).
+  await enviar(app, [
+    { type: 'keyDown', keyCode: 'Right' },
+    { type: 'keyUp', keyCode: 'Right' },
+  ])
+  await expect(win.locator('.di-grande-t')).toHaveText('Nota abierta · 2 de 3')
+  await expect
+    .poll(() => enLaGrande<boolean>(app, "!!document.querySelector('iridium-revision')").catch(() => false), {
+      timeout: 10_000,
+    })
+    .toBe(true)
+  await expect(comentar).toHaveAttribute('aria-pressed', 'true')
+  await win.screenshot({ path: 'test-results/di1-f8-flechas.png' })
+  // ← vuelve; con el botón se apaga.
+  await enviar(app, [
+    { type: 'keyDown', keyCode: 'Left' },
+    { type: 'keyUp', keyCode: 'Left' },
+  ])
+  await expect(win.locator('.di-grande-t')).toHaveText('Lista · 1 de 3')
+  await expect(comentar).toHaveAttribute('aria-pressed', 'true')
+  await comentar.click()
+  await expect(comentar).toHaveAttribute('aria-pressed', 'false')
+  await expect.poll(() => enLaGrande<boolean>(app, "!!document.querySelector('iridium-revision')")).toBe(false)
 
   // En Revisión, el enlace del comentario abre la maqueta grande.
   await win

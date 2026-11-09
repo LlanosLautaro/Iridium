@@ -113,6 +113,8 @@ const api: ApiIridium = {
   pedirDiseno: (ruta, pedido) => ipcRenderer.invoke(CANALES.pedirDiseno, ruta, pedido),
   alCambiarDiseno: (f) => escuchar<CambioDiseno>(CANALES.disenoCambio, f),
   alEscapeDiseno: (f) => escuchar<null>(CANALES.disenoEscape, () => f()),
+  alFlechaDiseno: (f) => escuchar<1 | -1>(CANALES.disenoFlecha, f),
+  alComentarDiseno: (f) => escuchar<boolean>(CANALES.disenoComentando, f),
 }
 
 contextBridge.exposeInMainWorld('iridium', api)

@@ -2466,3 +2466,22 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - Q-152 reescrita; DI-I1 se cierra con ella y DI-I2 sigue con lo que se comente.
 - En DI-I3 el marco pasa al código como piezas de `src/renderer/ui/`, no como `piezas.js`: las maquetas lo usan para mostrarse.
 
+## D-108 — Diseño: sin ruido; lo que anda no se anuncia
+- **Fecha:** 2026-11-09
+- **Ámbito:** Diseño
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
+- **Estado:** vigente
+
+**Contexto:** con Q-152 el usuario recorrió las maquetas y marcó con `F8` como «ruido visual» la cuenta al lado de «Proyectos», la ruta de la carpeta, el detalle y la bienvenida de la conversación de Inicio, «Sin sesiones abiertas», la hora y «Claude · max» (R-15 a R-21), y pidió para Claude «un indicador en caso de fallo».
+
+**Decisión:**
+1. No se muestra lo que no ayuda a decidir nada: la cuenta total al lado del título de una pantalla, la ruta de una carpeta, la hora, las sesiones, el plan de Claude.
+2. Lo que anda bien no se anuncia: un estado aparece cuando falla (Claude sin sesión, en rojo en la barra de abajo, lleva a iniciarla).
+3. La cuenta que queda es la de lo que espera del usuario (la Bandeja, en ámbar) y la de un título de bloque.
+
+**Motivo:** son los comentarios del usuario, y van con la dirección negra: menos cosas en pantalla para que se vea lo que importa.
+
+**Consecuencias:**
+- Las maquetas de la tanda 1 corregidas y la regla escrita en `modulos/diseno/ux.md` › Reglas; el control de estilos de DI-I3 no la mira (es de contenido), la miran las maquetas.
+- En DI-I3 la barra de abajo de la app pierde Claude, las sesiones y la hora, y gana el aviso cuando Claude falla.
+

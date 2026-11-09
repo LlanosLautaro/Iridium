@@ -3,7 +3,7 @@
 > Este archivo es lo primero que lee la IA en cada sesión. Cabe en una pantalla: el historial va al documento del hito.
 
 **Proyecto:** Iridium (carpeta «Centro de Desarrollo», D-033)
-**Última actualización:** 2026-11-08
+**Última actualización:** 2026-11-09
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
@@ -32,31 +32,24 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha y DI-I2 con su primera tanda; esperan la prueba: Q-152) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha; DI-I2: tanda 1 corregida, espera Q-154) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro sin acento como único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). DI-I1 (la sección) está construida y probada. Con D-107 se prueba sobre Iridium mismo: **DI-I2 empezó** y las primeras 16 maquetas del rediseño (el sistema, las 12 piezas y las pantallas de Inicio y de un proyecto) están en `docs/diseno/`; las recorrés en Diseño y las comentás con `F8` (Q-152).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro sin acento como único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2 sigue**: la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Lo mirás en Q-154. Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
-- **Q-153 — Qué ideas de los cinco repos de referencia sumamos**
-  Tipo: decisión · Frente: Capacidades
-  Contexto: `research/referentes-agentes.md` (Beluga, Orca, Localix, Rift DS, Open WebUI Desktop). Beluga es el más parecido. Las ideas que mejor encajan con quien dirige sin leer código son los diagramas con recorrido paso a paso, la prueba visible de lo hecho y el dictado; Rift DS sirve para la sección Diseño.
-  Opciones: A) Anotar las tres primeras como T-n en Capacidades (T-28) y seguir con Diseño (recomendada: no frena el rediseño) · B) Meter los diagramas en el rediseño de DI-I2 ya · C) Solo dejarlo como referencia por ahora
-
-- **Q-152 — Recorré el rediseño de Iridium en Diseño y comentalo con F8**
+- **Q-154 — Mirá las correcciones de las maquetas y de la grande**
   Tipo: prueba · Frente: Diseño
-  Contexto: tocá **Actualizar** abajo para tener esta versión. Probás DI-I1 (la sección) con las maquetas de Iridium mismo (D-107): 16 pantallas en negro, con datos de muestra (Alfa, Beta…). Lo que no te guste, comentalo con `F8` sobre la maqueta: es parte de la prueba. Detalle en `modulos/diseno/estado.md` › Log › DI-I2.
-  - [ ] En Iridium, **Diseño** (en la barra, debajo de Revisión) muestra las maquetas vivas en **Pantallas**, en dos grupos, Inicio y Un proyecto, con su nombre debajo
-  - [ ] Tocar una la agranda y se puede usar: los íconos de la izquierda pasan a otra pantalla y cambia el nombre de arriba; las flechas de los costados van a la anterior y la siguiente; Esc vuelve
-  - [ ] En **Proyectos**, los tres puntos de la tarjeta de Iridium (o el clic derecho en cualquier tarjeta) abren el menú; en **Ajustes**, las pestañas de la izquierda cambian de página
-  - [ ] Con una grande, **F8** prende el modo comentar; el comentario aparece en la Revisión de Iridium y tocar «la maqueta …» la abre grande otra vez
-  - [ ] Pedile a la IA que cambie algo de una maqueta (por ejemplo, desde tu comentario): se redibuja sola y queda con un punto hasta que la agrandás
-  - [ ] **Sistema** muestra los colores, la letra, los tamaños, los espacios y las piezas vivas
-  - [ ] La dirección en general (negro, sin cajas dentro de cajas, un solo botón blanco por pantalla) va bien para seguir con las demás pantallas
+  Contexto: tocá **Actualizar** abajo para tener esta versión. Son tus comentarios R-15 a R-24 y lo de F8 de Q-152 (D-108). Lo que no te guste, comentalo con `F8` sobre la maqueta. Detalle en `modulos/diseno/estado.md` › Log › DI-I2.
+  - [ ] Con una maqueta grande, **Comentar** (arriba a la derecha) prende el modo comentar en la maqueta, no en Iridium; queda apretado («Comentando») y tocarlo otra vez lo apaga
+  - [ ] **←** y **→** del teclado pasan a la anterior y la siguiente; con el modo comentar prendido también, y sigue prendido en la nueva
+  - [ ] En **Proyectos**: sin el «10» ni la ruta, la conversación de la derecha vacía, abajo solo el uso (sin Claude, sesiones ni hora) y arriba a la izquierda una casa
+  - [ ] Las tarjetas de Proyectos (línea fina, sin relleno, se aclaran con el mouse) ahora cuadran
+  - [ ] En Ideas, Trabajo, Scripts y Revisión tampoco está la cuenta al lado del título
 
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
@@ -78,7 +71,7 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: procesar Q-152 y los comentarios de la Revisión sobre las maquetas; corregirlas, cerrar DI-I1 si la sección anda y seguir con la tanda 2 de DI-I2. Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
+Diseño: con Q-154, corregir lo que comentes; mientras tanto, la tanda 2 de DI-I2 (las pantallas que faltan, con la de Claude sin sesión). Si llega Q-146, procesarla aparte: si anda, cerrar OR-I4; el paso 8 de Orden queda para después del rediseño (D-102).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso (y Q-146 o Q-126 si llegaron).
 
 ## Hitos con huecos aceptados

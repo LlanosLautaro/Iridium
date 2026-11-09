@@ -254,3 +254,9 @@
   color: var(--error);
   flex: none;
 }
+
+/* Comentar la maqueta grande: prendido, se nota como un botón apretado (Q-152). */
+.di-grande-cab .btn[aria-pressed="true"] {
+  background: var(--sel-fondo);
+  color: var(--texto);
+}

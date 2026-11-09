@@ -305,3 +305,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .compositor textarea::placeholder { color: var(--texto-3); }
 .compositor .pie-comp { display: flex; align-items: center; gap: var(--esp-1); }
 .compositor .pie-comp .enviar { margin-left: auto; }
+/* Claude abajo solo cuando falla (R-21): la señal con su ícono, que lleva a Ajustes para iniciar sesión. */
+.estado-barra .senal { display: inline-flex; gap: 6px; align-items: center; }
+.estado-barra .senal .ic { width: 14px; height: 14px; }
+.estado-barra .senal.rojo:hover { color: var(--error); text-decoration: underline; }

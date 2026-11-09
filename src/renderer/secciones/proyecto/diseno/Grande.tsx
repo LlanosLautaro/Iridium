@@ -1,6 +1,6 @@
 // Una maqueta grande (DS-12, S-4): a todo el lienzo, viva, en un `<webview>` con `file://` donde entra la extensión de
-// la Revisión (F8). Arriba, Volver, el nombre y el número; a los costados, la anterior y la siguiente; Esc vuelve. Si
-// un enlace de la maqueta lleva a otra, la cabecera la sigue.
+// la Revisión (F8). Arriba, Volver, el nombre, el número y Comentar; a los costados (y con ← →, también comentando), la
+// anterior y la siguiente; Esc vuelve. Si un enlace de la maqueta lleva a otra, la cabecera la sigue.
 import { useEffect, useRef, useState } from 'react'
 import type { MaquetaVista } from '../../../../compartido/diseno'
 import { Icono } from '../../../ui/Icono'
@@ -8,6 +8,13 @@ import { Icono } from '../../../ui/Icono'
 interface Webview extends HTMLElement {
   reload(): void
   getURL(): string
+  sendInputEvent(e: { type: 'keyDown' | 'keyUp'; keyCode: string }): void
+}
+
+/** Si la tecla viene de un lugar donde se escribe (ahí las flechas mueven el cursor). */
+function escribiendo(e: KeyboardEvent): boolean {
+  const t = e.target
+  return t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
 }
 
 /** El archivo relativo a `docs/diseno/` de una dirección `file://` de la carpeta, o null si es de afuera. */
@@ -75,22 +82,45 @@ export function Grande({
     return () => w.removeEventListener('did-navigate', alNavegar)
   }, [carpeta, maquetas, elegir])
 
-  useEffect(() => {
-    const alTeclado = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') volver()
-    }
-    window.addEventListener('keydown', alTeclado)
-    const quitar = window.iridium.alEscapeDiseno(volver)
-    return () => {
-      window.removeEventListener('keydown', alTeclado)
-      quitar()
-    }
-  }, [volver])
-
   const ir = (paso: number) => {
     const otra = maquetas[(i + paso + maquetas.length) % maquetas.length]
     if (otra) elegir(otra.archivo)
   }
+  const irA = useRef(ir)
+  irA.current = ir
+
+  // Las flechas del teclado pasan de maqueta con el foco en Iridium o adentro de la maqueta (R-24).
+  useEffect(() => {
+    const alTeclado = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') volver()
+      else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !e.altKey && !e.ctrlKey && !e.shiftKey) {
+        if (escribiendo(e) || e.target === vista.current) return
+        e.preventDefault()
+        irA.current(e.key === 'ArrowRight' ? 1 : -1)
+      }
+    }
+    window.addEventListener('keydown', alTeclado)
+    const quitar = [
+      window.iridium.alEscapeDiseno(volver),
+      window.iridium.alFlechaDiseno((paso) => irA.current(paso)),
+      window.iridium.alComentarDiseno(setComentando),
+    ]
+    return () => {
+      window.removeEventListener('keydown', alTeclado)
+      for (const q of quitar) q()
+    }
+  }, [volver])
+
+  // Comentar es F8 con el foco en la maqueta: el botón lo pone ahí, para no comentar Iridium sin querer (Q-152).
+  const [comentando, setComentando] = useState(false)
+  const comentar = () => {
+    const w = vista.current
+    if (!w) return
+    w.focus()
+    w.sendInputEvent({ type: 'keyDown', keyCode: 'F8' })
+    w.sendInputEvent({ type: 'keyUp', keyCode: 'F8' })
+  }
+
   const nombre = m?.nombre ?? actual
   const numero = i >= 0 ? `${i + 1} de ${maquetas.length}` : null
 
@@ -105,7 +135,17 @@ export function Grande({
           <b>{nombre}</b>
           {numero && <span className="sub"> · {numero}</span>}
         </span>
-        <span className="di-grande-ayuda">F8 para comentar</span>
+        {comentando && <span className="di-grande-ayuda">Elegí qué comentar · Esc para salir</span>}
+        <button
+          type="button"
+          className="btn fantasma chico"
+          aria-pressed={comentando}
+          onClick={comentar}
+          title="Comentar esta maqueta (F8 con el foco en ella)"
+        >
+          <Icono nombre="revision" />
+          {comentando ? 'Comentando' : 'Comentar'}
+        </button>
       </div>
       <div className="di-grande-cuerpo">
         {maquetas.length > 1 && (

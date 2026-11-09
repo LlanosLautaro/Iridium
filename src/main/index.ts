@@ -357,6 +357,13 @@ function crearVentana(puente: Puente, tema: Tema): void {
   else void v.loadFile(join(import.meta.dirname, '../renderer/index.html'), { query: { tema } })
 }
 
+/** Si en la maqueta se está escribiendo: un campo, o la tarjeta del comentario (la capa de la extensión). */
+const ESCRIBIENDO = `(() => { const a = document.activeElement; return !!a && (a.isContentEditable || /^(INPUT|TEXTAREA|SELECT|IRIDIUM-REVISION)$/.test(a.tagName)) })()`
+/** Si el modo comentar de la extensión está prendido en la página: su capa está puesta solo mientras tanto. */
+const COMENTANDO = `!!document.querySelector('iridium-revision')`
+/** Prende el modo comentar de la extensión si ya entró en la página (su capa aparece al prenderse). */
+const PRENDER_COMENTAR = `(() => { if (document.querySelector('iridium-revision')) return true; window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F8' })); return !!document.querySelector('iridium-revision') })()`
+
 /**
  * El `webview` de la maqueta grande (S-4, `modulos/diseno/diseno-tecnico.md` › La grande): sin preload, sin Node,
  * aislado, y solo dentro de `docs/diseno/` de un proyecto abierto en Diseño. Nunca abre ventanas.
@@ -380,18 +387,68 @@ function reglasDelWebview(v: BrowserWindow): void {
     wc.on('will-redirect', frenar)
     wc.setWindowOpenHandler(() => ({ action: 'deny' }))
     // Esc vuelve al lienzo (DS-4), salvo que esté comentando: F8 prende y apaga el modo comentar de la extensión,
-    // y ahí Esc es suyo (lo cancela).
+    // y ahí Esc es suyo (lo cancela). Las flechas de los costados pasan a la anterior y la siguiente, también
+    // comentando, salvo que se esté escribiendo (R-24). La sección sabe si está comentando, para su botón (Q-152).
     let comentando = false
+    const avisar = (canal: string, dato: unknown) => {
+      if (!wc.hostWebContents?.isDestroyed()) wc.hostWebContents?.send(canal, dato)
+    }
+    const marcar = (si: boolean) => {
+      if (si === comentando) return
+      comentando = si
+      avisar(CANALES.disenoComentando, si)
+    }
+    // Lo que hizo la tecla se mira en la página: Esc con la tarjeta del comentario abierta la cierra y sigue comentando.
+    const verificar = () =>
+      setTimeout(() => {
+        if (wc.isDestroyed()) return
+        wc.executeJavaScript(COMENTANDO, true).then(marcar, () => {})
+      }, 60)
     wc.on('before-input-event', (_e, tecla) => {
       if (tecla.type !== 'keyDown') return
-      if (tecla.key === 'F8') comentando = !comentando
-      else if (tecla.key === 'Escape') {
-        if (comentando) comentando = false
-        else if (!wc.hostWebContents?.isDestroyed()) wc.hostWebContents?.send(CANALES.disenoEscape, null)
+      if (tecla.key === 'F8') {
+        marcar(!comentando)
+        verificar()
+      } else if (tecla.key === 'Escape') {
+        if (comentando) verificar()
+        else avisar(CANALES.disenoEscape, null)
+      } else if (
+        (tecla.key === 'ArrowLeft' || tecla.key === 'ArrowRight') &&
+        !tecla.alt &&
+        !tecla.control &&
+        !tecla.shift &&
+        !tecla.meta
+      ) {
+        const paso = tecla.key === 'ArrowRight' ? 1 : -1
+        wc.executeJavaScript(ESCRIBIENDO, true).then(
+          (escribiendo: boolean) => {
+            if (!escribiendo) avisar(CANALES.disenoFlecha, paso)
+          },
+          () => {},
+        )
       }
     })
+    // Pasar a otra maqueta comentando sigue comentando en la nueva, cuando la extensión entre en ella.
+    let seguir = false
     wc.on('did-navigate', () => {
-      comentando = false
+      seguir = comentando
+      marcar(false)
+    })
+    wc.on('did-finish-load', () => {
+      if (!seguir) return
+      seguir = false
+      let intentos = 0
+      const probar = () => {
+        if (wc.isDestroyed()) return
+        wc.executeJavaScript(PRENDER_COMENTAR, true).then(
+          (prendido: boolean) => {
+            if (prendido) marcar(true)
+            else if (++intentos < 20) setTimeout(probar, 150)
+          },
+          () => {},
+        )
+      }
+      probar()
     })
   })
 }

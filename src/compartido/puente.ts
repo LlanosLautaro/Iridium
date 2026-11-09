@@ -805,6 +805,8 @@ export const CANALES = {
   pedirDiseno: 'diseno:pedir',
   disenoCambio: 'diseno:cambio',
   disenoEscape: 'diseno:escape',
+  disenoFlecha: 'diseno:flecha',
+  disenoComentando: 'diseno:comentando',
 } as const
 
 /** Lo que vuelve de una acción del menú de la tarjeta (R-7): la lista ya releída, para verla al instante. */
@@ -986,4 +988,8 @@ export interface ApiIridium {
   alCambiarDiseno(escuchar: (cambio: CambioDiseno) => void): () => void
   /** Esc dentro de la maqueta grande, fuera del modo comentar: la sección vuelve al lienzo (DS-4). */
   alEscapeDiseno(escuchar: () => void): () => void
+  /** ← o → dentro de la maqueta grande, sin estar escribiendo: la anterior (-1) o la siguiente (1) (R-24). */
+  alFlechaDiseno(escuchar: (paso: 1 | -1) => void): () => void
+  /** El modo comentar de la maqueta grande se prendió o se apagó (F8, Esc o el botón Comentar). */
+  alComentarDiseno(escuchar: (comentando: boolean) => void): () => void
 }

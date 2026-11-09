@@ -1,6 +1,7 @@
 // Lo que comparten las maquetas de Iridium: los íconos, el marco (la barra de proyectos, la de secciones, la
 // conversación y la de estado) y los clics de las piezas (menús, filtros, pestañas, cuadros). No guarda nada ni habla
-// con la app. Cada pantalla dice qué marco lleva en <body>: data-marco="inicio|proyecto|sin-marco" y data-seccion.
+// con la app. Cada pantalla dice qué marco lleva en <body>: data-marco="inicio|proyecto|sin-marco" y data-seccion
+// (y data-claude="sin-sesion" para ver el aviso de Claude abajo).
 
 const ICONOS = {
   grilla: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
@@ -17,6 +18,7 @@ const ICONOS = {
   git: '<circle cx="6.5" cy="5.5" r="2"/><circle cx="6.5" cy="18.5" r="2"/><circle cx="17.5" cy="8.5" r="2"/><path d="M6.5 7.5v9M17.5 10.5c0 4-11 3-11 6"/>',
   scripts: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M7.5 10l2.5 2-2.5 2M12.5 14.5h4"/>',
   menu: '<path d="M4 7h16M4 12h10M4 17h16"/>',
+  inicio: '<path d="M4 10.5L12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15V15h-6v5.5H5.5A1.5 1.5 0 0 1 4 19z"/>',
   mas: '<path d="M12 5v14M5 12h14"/>',
   reloj: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4.5l3 2"/>',
   seguir: '<path d="M8 5.5l10 6.5-10 6.5z"/>',
@@ -74,8 +76,8 @@ const SECCIONES_PROYECTO = [
 const CONVERSACION = {
   inicio: {
     titulo: 'Ideas y proyectos',
-    detalle: 'El chat general: trabaja en la carpeta de proyectos',
-    mensajes: `<div class="mensaje-ia"><div class="quien">IA</div><div class="texto-doc conversacion"><p>Contame una idea que todavía no sabés dónde va, pedime que cree un proyecto o preguntame por varios a la vez. Las ideas quedan anotadas hasta que decidamos dónde van.</p></div></div>`,
+    detalle: '',
+    mensajes: '',
     seguir: false,
   },
   proyecto: {
@@ -116,8 +118,10 @@ function armarMarco() {
     .join('')
 
   const enProyecto = tipo === 'proyecto'
+  // Claude solo aparece abajo cuando falla (R-21): data-claude="sin-sesion" en <body> muestra el aviso.
+  const sinClaude = cuerpo.dataset.claude === 'sin-sesion'
   marco.innerHTML = `
-    <a class="boton-menu" href="grilla.html" title="Inicio" aria-label="Inicio">${icono('menu')}<span class="punto ambar"></span></a>
+    <a class="boton-menu" href="grilla.html" title="Inicio" aria-label="Inicio">${icono('inicio')}<span class="punto ambar"></span></a>
     <nav class="barra-proyectos" aria-label="Proyectos abiertos">
       <a class="proy${enProyecto ? ' elegido' : ''}" href="bandeja.html"><span class="punto blanco"></span>Iridium <span class="cuenta frena">2</span><span class="cerrar">${icono('cerrar')}</span></a>
       <a class="proy" href="bandeja.html"><span class="punto"></span>Alfa<span class="cerrar">${icono('cerrar')}</span></a>
@@ -126,13 +130,11 @@ function armarMarco() {
       <a class="act abajo${seccion === 'ajustes' ? ' elegida' : ''}" href="ajustes.html" title="Ajustes · Ctrl+," aria-label="Ajustes">${icono('ajustes')}</a>
     </nav>
     <footer class="estado-barra">
-      <a href="ajustes.html">Claude · max</a>
+      ${sinClaude ? `<a class="senal rojo" href="ajustes.html">${icono('error')}Claude sin sesión · Iniciar sesión</a>` : ''}
       ${enProyecto ? '<span>Hito 10 · Operación</span>' : ''}
       <span class="derecha">
         <span>5 h <span class="num">34 %</span></span>
         <span>Semana <span class="num">61 %</span></span>
-        <span>Sin sesiones abiertas</span>
-        <span class="num">18:42</span>
       </span>
     </footer>`
 
@@ -145,7 +147,7 @@ function armarMarco() {
     aside.setAttribute('aria-label', 'Conversación')
     aside.innerHTML = `
       <div class="cab-conv">
-        <div class="nombre-conv"><b>${c.titulo}</b><span>${c.detalle}</span></div>
+        <div class="nombre-conv"><b>${c.titulo}</b>${c.detalle ? `<span>${c.detalle}</span>` : ''}</div>
         <button class="boton solo-icono" title="Conversaciones anteriores">${icono('reloj')}</button>
         <button class="boton sin-fondo">${icono('mas')}Nueva</button>
         ${c.seguir ? `<button class="boton principal chico">${icono('seguir')}Seguí</button>` : ''}

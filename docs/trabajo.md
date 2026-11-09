@@ -225,3 +225,15 @@ Estado: pendiente · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
 ## T-54 — Cinco pruebas con la app abierta quedaron viejas
 Estado: pendiente · Frente: Orden · Fecha: 2026-11-08 · Origen: DI-I1 (`test-results/e2e-completo.log`)
 Fallan igual en el commit anterior a DI-I1 (79d8c59), así que no son de Diseño: `in1-ideas.spec.ts` (las dos: la línea de los que no pasaron ahora suma «Ver en Framework», T-51), `or4-mapa.spec.ts` › la tabla ancha en Docs no se desplaza en su recuadro (A-10), `r2-revision.spec.ts` › un proyecto Electron sin la línea (no encuentra el botón de Revisión) y `r7-r8-proyectos.spec.ts` › sus ideas y sus skills (no hay Trabajo en la barra). Ver en cada una si cambió la app a propósito (se corrige la prueba) o si es un error (se corrige la app); la de la tabla puede ser el criterio de Q-146.
+
+## T-55 — Diagramas que dibuja la IA, con recorrido paso a paso
+Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
+La IA escribe un bloque de datos (nodos, flechas, pasos) y Iridium dibuja un diagrama: pasar el mouse resalta lo conectado, un clic muestra el detalle y un recorrido explica una cosa por vez. En el chat, en los documentos y en los resúmenes de hito. Solo datos, sin código.
+
+## T-56 — La prueba visible de lo hecho
+Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
+Lo que la IA produce mientras trabaja (capturas, resultados de pruebas) aparece en vivo y lo mejor queda adjunto a la iteración o a la `Q-n` de prueba como evidencia.
+
+## T-57 — Dictado
+Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Orca)
+Un atajo y se habla: el texto entra al mensaje para la IA. Para dirigir con ideas sueltas.
