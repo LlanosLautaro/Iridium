@@ -6,8 +6,11 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Pantalla | Sección | Archivo | En la app |
 |---|---|---|---|
 | Proyectos | Inicio | pantallas/grilla.html | — |
+| Proyectos archivados | Inicio | pantallas/archivados.html | — |
 | Nuevo proyecto | Inicio | pantallas/nuevo-proyecto.html | — |
+| Eliminar un proyecto | Inicio | pantallas/eliminar.html | — |
 | Skills › Framework | Inicio | pantallas/skills.html | — |
+| Detalle de una skill | Inicio | pantallas/skill.html | — |
 | Ideas | Inicio | pantallas/ideas.html | — |
 | Ajustes | Inicio | pantallas/ajustes.html | — |
 | Bandeja de entrada | Un proyecto | pantallas/bandeja.html | — |
@@ -15,10 +18,16 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Revisión | Un proyecto | pantallas/revision.html | — |
 | Revisión sin comentarios | Un proyecto | pantallas/revision-vacia.html | — |
 | Diseño | Un proyecto | pantallas/diseno.html | — |
+| Diseño › una maqueta grande | Un proyecto | pantallas/diseno-grande.html | — |
+| Diseño › Sistema | Un proyecto | pantallas/diseno-sistema.html | — |
 | Docs | Un proyecto | pantallas/docs.html | — |
 | Archivos | Un proyecto | pantallas/archivos.html | — |
 | Git | Un proyecto | pantallas/git.html | — |
 | Scripts | Un proyecto | pantallas/scripts.html | — |
+| Conversaciones anteriores | La conversación | pantallas/conversaciones.html | — |
+| La IA no respondió | La conversación | pantallas/error-ia.html | — |
+| Claude sin sesión | La conversación | pantallas/sin-sesion.html | — |
+| Un proyecto en ancho chico | La conversación | pantallas/ancho-chico.html | — |
 
 ## Cómo están hechas
 - **El sistema:** `tokens.css` (la dirección negra, que en DI-I3 pasa a ser `docs/ui/tokens.css`), `piezas.css` con las doce piezas (PZ-1 a PZ-12, `modulos/diseno/ux.md` › Las piezas) y `piezas.html`, que las muestra con sus variantes.
@@ -26,5 +35,5 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 - **Los datos son de muestra:** los proyectos de la grilla se llaman Alfa, Beta, Gamma… (D-082).
 - **Las reglas del rediseño** (`ux.md` › Reglas): un principal por pantalla como mucho; nunca un bloque dentro de otro; las acciones de una fila, sin fondo; un solo estilo de título de bloque; el foco, solo con el teclado; sin ruido: nada que no ayude a decidir, y un estado solo cuando falla (D-108).
 
-## Falta (siguiente tanda de DI-I2)
-Detalle de una skill, detalle de una idea, los proyectos archivados, el menú de las conversaciones, Eliminar, el ancho chico, Diseño › una maqueta grande y Diseño › Sistema, y los estados con error (la IA no respondió, sin sesión de Claude).
+## Falta
+Nada de la lista de DI-I2: la tanda 2 sumó archivados, Eliminar, el detalle de una skill, Diseño › una maqueta grande y › Sistema, el menú de las conversaciones, los dos errores de la IA y el ancho chico. El detalle de una idea ya no existe: Ideas es un bloc de notas (D-112).

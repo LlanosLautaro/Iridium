@@ -81,7 +81,7 @@ const CONVERSACION = {
   proyecto: {
     titulo: 'Diseño, DI-I2',
     detalle: 'Hoy, 18:40 · 3 mensajes',
-    mensajes: `<div class="mensaje-yo">Seguí con Diseño</div>
+    mensajes: `<div class="mensaje-yo">Continúa con Diseño</div>
       <div class="mensaje-ia"><div class="quien">IA</div>
         <div class="paso">${icono('ok')} Leí estado.md y modulos/diseno/estado.md</div>
         <div class="paso">${icono('ok')} Escribí tokens.css, piezas.css y piezas.html</div>
@@ -89,6 +89,25 @@ const CONVERSACION = {
       </div>`,
     seguir: true,
   },
+}
+
+// El menú del reloj de la conversación: las conversaciones anteriores, la abierta marcada.
+const conv = (titulo, fecha, origen, abierta) =>
+  `<button role="menuitem"${abierta ? ' class="actual"' : ''}><span class="principal-fila"><span class="titulo-fila">${titulo}</span><span class="detalle">${origen}${abierta ? ' · abierta' : ''}</span></span><span class="meta">${fecha}</span></button>`
+const CONVERSACIONES = {
+  inicio:
+    '<h4 class="titulo-menu">Conversaciones</h4>' +
+    conv('Ideas y proyectos', 'hoy', 'Iridium', true) +
+    conv('Qué proyecto sigue después de Alfa', '7 nov', 'Iridium') +
+    conv('Ordenar las skills de terceros', '2 nov', 'Iridium'),
+  proyecto:
+    '<h4 class="titulo-menu">Conversaciones de Iridium</h4>' +
+    conv('Diseño, DI-I2', 'hoy', 'Iridium', true) +
+    conv('Q-155 y el bloc de notas de Ideas', 'hoy', 'Iridium') +
+    conv('La segunda ronda de comentarios con F8, de R-25 a R-45', 'ayer', 'Iridium') +
+    conv('Revisar por qué falla el armado en otra PC', '6 nov', 'VS Code') +
+    conv('Orden, OR-I4: el Mapa con frentes', '5 nov', 'Iridium') +
+    conv('Publicar la versión para compartir', '4 nov', 'Iridium'),
 }
 
 function armarMarco() {
@@ -139,14 +158,14 @@ function armarMarco() {
   marco.insertBefore(principal, marco.querySelector('.estado-barra'))
 
   if (!sinConv) {
-    const c = propio ? { ...conv, mensajes: propio.innerHTML, titulo: propio.dataset.titulo ?? conv.titulo, detalle: propio.dataset.detalle ?? conv.detalle } : conv
+    const c = propio ? { ...conv, mensajes: propio.innerHTML, titulo: propio.dataset.titulo ?? conv.titulo, detalle: propio.dataset.detalle ?? conv.detalle, seguir: propio.dataset.seguir !== 'no' && conv.seguir } : conv
     const aside = document.createElement('aside')
     aside.className = 'panel-conversacion'
     aside.setAttribute('aria-label', 'Conversación')
     aside.innerHTML = `
       <div class="cab-conv">
         <div class="nombre-conv"><b>${c.titulo}</b>${c.detalle ? `<span>${c.detalle}</span>` : ''}</div>
-        <button class="boton solo-icono" title="Conversaciones anteriores">${icono('reloj')}</button>
+        <button class="boton solo-icono" title="Conversaciones anteriores" aria-label="Conversaciones anteriores" data-abre="menu-conversaciones">${icono('reloj')}</button>
         <button class="boton sin-fondo">${icono('mas')}Nueva</button>
         ${c.seguir ? `<button class="boton principal chico">${icono('seguir')}Continuar</button>` : ''}
       </div>
@@ -158,7 +177,8 @@ function armarMarco() {
           <button class="boton sin-fondo chico">Medio</button>
           <button class="boton solo-icono chico enviar" aria-label="Enviar">${icono('enviar')}</button>
         </div>
-      </div>`
+      </div>
+      <div class="menu lista-menu" id="menu-conversaciones" role="menu">${CONVERSACIONES[tipo]}</div>`
     marco.insertBefore(aside, marco.querySelector('.estado-barra'))
   }
   propio?.remove()
@@ -233,4 +253,14 @@ function clics() {
 
 ponerIconos()
 armarMarco()
+ponerIconos() // los de la conversación propia de la pantalla (<template>)
 clics()
+// Una maqueta que muestra un menú abierto lo dice en <body data-abierto="id">.
+{
+  const id = document.body.dataset.abierto
+  const t = id && document.querySelector(`[data-abre="${id}"]`)
+  if (t) {
+    const b = t.getBoundingClientRect()
+    abrirMenu(document.getElementById(id), b.right - 320, b.bottom + 4)
+  }
+}

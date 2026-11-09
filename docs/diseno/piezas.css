@@ -17,6 +17,9 @@ body {
 :focus { outline: none; }
 :focus-visible { outline: 2px solid var(--texto); outline-offset: 2px; border-radius: var(--radio-control); }
 a { color: inherit; }
+a.senal { text-decoration: none; }
+a.senal:hover { color: var(--texto-2); }
+[hidden] { display: none !important; }
 code, .fija { font-family: var(--mono); font-size: .92em; }
 .gris { color: var(--texto-2); }
 .gris-3 { color: var(--texto-3); }
@@ -173,6 +176,14 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .menu .atajo { margin-left: auto; color: var(--texto-3); font-size: var(--tam-chico); }
 .menu .peligroso { color: var(--error); }
 .menu hr { border: 0; border-top: 1px solid var(--borde); margin: var(--esp-1) 0; }
+.menu .titulo-menu { margin: 0; padding: var(--esp-2) var(--esp-2) var(--esp-1); font-size: var(--tam-chico); font-weight: 400; color: var(--texto-3); }
+.menu.lista-menu { width: 320px; }
+.menu.lista-menu button { height: auto; padding: var(--esp-2); gap: var(--esp-3); }
+.menu.lista-menu .principal-fila { flex: 1; min-width: 0; }
+.menu.lista-menu .titulo-fila { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.4; }
+.menu.lista-menu .detalle { display: block; font-size: var(--tam-chico); color: var(--texto-3); line-height: 1.4; }
+.menu.lista-menu .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; align-self: flex-start; line-height: 1.4; }
+.menu.lista-menu .actual { background: var(--sel-fondo); }
 .velo { position: fixed; inset: 0; z-index: 30; background: var(--velo); display: grid; place-items: center; }
 .cuadro {
   width: 440px; padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Diseño › una maqueta grande</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* La maqueta grande ocupa la sección: arriba Volver, el nombre, el número y Comentar; a los costados, la anterior y la
+     siguiente (también con ← →); Esc vuelve al lienzo. */
+  .cab-grande { display: flex; align-items: center; gap: var(--esp-3); padding: var(--esp-2) var(--esp-4); border-bottom: 1px solid var(--borde); flex: none; }
+  .cab-grande .nombre-g { font-weight: 600; }
+  .cab-grande .acciones-cab { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
+  .escenario { flex: 1; min-height: 0; display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; padding: var(--esp-4) 0; }
+  .escenario .flecha { justify-self: center; }
+  .hueco { height: 100%; min-width: 0; display: grid; place-items: center; }
+  .lamina { border-radius: var(--radio-bloque); overflow: hidden; box-shadow: 0 0 0 1px var(--borde-fuerte); position: relative; }
+  .lamina iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; }
+  .boton.apretado { background: var(--sel-fondo); color: var(--texto); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="diseno">
+<main class="seccion">
+  <div class="cab-grande">
+    <a class="boton sin-fondo chico" href="diseno.html" title="Volver al lienzo (Esc)"><i data-ic="izquierda"></i>Volver</a>
+    <span class="nombre-g">Bandeja de entrada</span>
+    <span class="cuenta">9 de 23</span>
+    <span class="acciones-cab">
+      <a class="senal" href="revision.html">2 comentarios</a>
+      <button class="boton secundario chico" id="comentar" aria-pressed="false" title="Comentar esta maqueta (F8 con el foco en ella)"><i data-ic="comentar"></i>Comentar</button>
+    </span>
+  </div>
+  <div class="escenario">
+    <a class="boton solo-icono flecha" href="ajustes.html" aria-label="Anterior"><i data-ic="izquierda"></i></a>
+    <div class="hueco" id="hueco"><div class="lamina" id="lamina"><iframe src="bandeja.html" title="Bandeja de entrada" tabindex="0"></iframe></div></div>
+    <a class="boton solo-icono flecha" href="mapa.html" aria-label="Siguiente"><i data-ic="derecha"></i></a>
+  </div>
+</main>
+<template id="conversacion" data-titulo="Diseño, DI-I2" data-detalle="Hoy, 18:40"></template>
+<script src="../piezas.js"></script>
+<script>
+  // La maqueta se dibuja a 1440×900 y se achica a lo que entra, sin deformarse.
+  const hueco = document.getElementById('hueco')
+  const lamina = document.getElementById('lamina')
+  const ajustar = () => {
+    const e = Math.min(hueco.clientWidth / 1440, hueco.clientHeight / 900)
+    lamina.style.width = `${1440 * e}px`
+    lamina.style.height = `${900 * e}px`
+    lamina.firstElementChild.style.transform = `scale(${e})`
+  }
+  new ResizeObserver(ajustar).observe(hueco)
+  const b = document.getElementById('comentar')
+  b.addEventListener('click', () => {
+    const si = b.getAttribute('aria-pressed') !== 'true'
+    b.setAttribute('aria-pressed', String(si))
+    b.classList.toggle('apretado', si)
+    b.lastChild.textContent = si ? 'Comentando' : 'Comentar'
+  })
+</script>
+</body>
+</html>

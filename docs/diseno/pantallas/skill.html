@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Detalle de una skill</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .dos-col { display: grid; grid-template-columns: 280px 1fr; height: 100%; }
+  .dos-col > nav { border-right: 1px solid var(--borde-suave); padding: var(--esp-4) var(--esp-2); overflow: auto; display: flex; flex-direction: column; gap: var(--esp-4); }
+  .dos-col > nav .bloque-titulo { padding: 0 var(--esp-2); }
+  .dos-col > nav .bloque + .bloque { margin-top: 0; }
+  .dos-col > section { overflow: auto; display: flex; flex-direction: column; }
+  .dos-col > section .cabecera { padding-top: var(--esp-4); }
+  .dos-col > section .lista { padding: var(--esp-4) var(--esp-6); max-width: 820px; }
+  .dos-arbol { display: grid; grid-template-columns: 240px 1fr; flex: 1; min-height: 0; }
+  .dos-arbol > .arbol { border-right: 1px solid var(--borde-suave); padding: var(--esp-3) var(--esp-2); overflow: auto; }
+  .visor { margin: 0; padding: var(--esp-4) var(--esp-5); font: var(--tam-base)/1.6 var(--mono); color: var(--texto-2); overflow: auto; }
+  .nota { font-size: var(--tam-chico); color: var(--texto-3); margin: var(--esp-4) 0 0; }
+</style>
+</head>
+<body data-marco="inicio" data-seccion="skills">
+<main class="seccion">
+  <div class="contenido sin-margen">
+    <div class="dos-col">
+      <nav>
+        <div class="filas"><a class="fila" href="skills.html"><span class="principal-fila"><span class="titulo-fila">Framework</span></span><span class="cuenta">3 fuera</span></a></div>
+        <div class="bloque">
+          <h3 class="bloque-titulo">Skills propias <span class="cuenta">2</span></h3>
+          <div class="filas">
+            <a class="fila con-detalle" href="skill.html"><span class="principal-fila"><span class="titulo-fila">fichas-de-proyecto</span><span class="detalle">Reglas para mantener la ficha de cada proyecto</span></span></a>
+            <a class="fila con-detalle"><span class="principal-fila"><span class="titulo-fila">guia-de-hitos</span><span class="detalle">Guía de hitos para llevar una app desde la idea</span></span></a>
+          </div>
+        </div>
+        <div class="bloque">
+          <h3 class="bloque-titulo">Skills de terceros <span class="cuenta">1</span></h3>
+          <div class="filas"><a class="fila con-detalle elegida"><span class="principal-fila"><span class="titulo-fila">diseno-de-interfaces</span><span class="detalle">Para diseñar, criticar y pulir interfaces</span></span><span class="senal ambar">doble</span></a></div>
+        </div>
+        <div class="bloque">
+          <a class="fila se-abre"><span class="principal-fila"><span class="titulo-fila gris">Skills de complementos</span></span><span class="cuenta">18</span></a>
+          <a class="fila se-abre"><span class="principal-fila"><span class="titulo-fila gris">Skills de la cuenta</span></span><span class="cuenta">13</span></a>
+        </div>
+      </nav>
+      <section>
+        <header class="cabecera">
+          <div class="fila-cab"><h1>diseno-de-interfaces</h1><span class="senal">de terceros · instalada a mano</span>
+            <span class="acciones-cab"><button class="boton sin-fondo"><i data-ic="carpeta"></i>Abrir carpeta</button></span></div>
+          <div class="pestanas" style="padding-bottom: var(--esp-2)"><a class="pestana elegida" href="#" onclick="return ver('resumen', this)">Resumen</a><a class="pestana" href="#" onclick="return ver('archivos', this)">Archivos <span class="cuenta">47</span></a></div>
+        </header>
+        <div class="lista" id="resumen">
+          <div class="recuadro aviso"><i data-ic="aviso"></i><div class="cuerpo-recuadro"><strong>Está dos veces</strong><span>También llega con el complemento «diseno» (diseno:diseno-de-interfaces). Claude carga las dos y puede elegir cualquiera.</span>
+            <div class="acciones-recuadro"><button class="boton secundario chico">Pedir que la saquen</button></div></div></div>
+          <div class="texto-doc" style="margin-top: var(--esp-5)">
+            <p>Para diseñar, criticar y pulir interfaces: sitios, paneles, pantallas de una app, componentes y sistemas de diseño. Cubre la jerarquía, la letra, los espacios, el color, el movimiento, los textos y la accesibilidad.</p>
+            <h3>Cuándo se usa</h3>
+            <ul><li>Cuando pides diseñar o rediseñar una pantalla.</li><li>Cuando pides revisar una interfaz o bajarle el ruido.</li><li>No para trabajo sin interfaz.</li></ul>
+            <h3>Qué trae</h3>
+            <p>Una guía principal (<code>SKILL.md</code>), 41 guías por tema en <code>reference/</code> y un revisor automático en <code>scripts/</code>.</p>
+          </div>
+        </div>
+        <div class="dos-arbol" id="archivos" hidden>
+          <nav class="arbol">
+            <div class="nodo elegido"><i data-ic="archivo"></i>SKILL.md</div>
+            <div class="nodo carpeta"><i data-ic="abajo"></i>reference</div>
+            <div class="nodo" style="padding-left: 28px"><i data-ic="archivo"></i>clarify.md</div>
+            <div class="nodo" style="padding-left: 28px"><i data-ic="archivo"></i>distill.md</div>
+            <div class="nodo" style="padding-left: 28px"><i data-ic="archivo"></i>layout.md</div>
+            <div class="nodo" style="padding-left: 28px"><i data-ic="archivo"></i>quieter.md</div>
+            <div class="nodo" style="padding-left: 28px"><i data-ic="archivo"></i>typeset.md</div>
+            <div class="nodo carpeta"><i data-ic="derecha"></i>scripts</div>
+          </nav>
+          <pre class="visor"><code>---
+name: diseno-de-interfaces
+description: Para diseñar, criticar y pulir interfaces.
+license: Apache 2.0
+---
+
+Antes de cambiar una pantalla, mira qué decide el usuario
+en ella. Lo que no ayuda a decidir, sobra.</code></pre>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<template id="conversacion" data-titulo="Skills" data-detalle=""></template>
+<script src="../piezas.js"></script>
+<script>
+  // Resumen o Archivos: los filtros de la cabecera cambian la vista.
+  function ver(cual, a) {
+    document.getElementById('resumen').hidden = cual !== 'resumen'
+    document.getElementById('archivos').hidden = cual !== 'archivos'
+    for (const f of a.parentElement.children) f.classList.toggle('elegida', f === a)
+    return false
+  }
+</script>
+</body>
+</html>

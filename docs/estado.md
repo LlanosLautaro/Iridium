@@ -32,16 +32,25 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha; DI-I2: tanda 1 aprobada, sigue la tanda 2) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1 hecha; DI-I2: tanda 2 hecha, espera Q-157) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. Sigue la tanda 2. Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. La tanda 2 está hecha (archivados, Eliminar, el detalle de una skill, Diseño › grande y › Sistema, el menú de las conversaciones, los errores y el ancho chico) y espera tu vistazo (Q-157); antes de mostrarte una maqueta, la IA la repasa con las guías de impeccable pasadas al framework (Q-156, D-113). Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
+- **Q-157 — Mirá la tanda 2 de maquetas en Diseño**
+  Tipo: prueba · Frente: Diseño
+  Contexto: en Iridium › tu proyecto › Diseño, las nueve nuevas (Inicio y el grupo nuevo «La conversación», más Diseño › Sistema y la grande). Lo que no te cierre, comentalo con **Comentar** (F8) sobre la maqueta. Detalle en `modulos/diseno/estado.md` › Log › DI-I2.
+  - [ ] **Proyectos archivados** y **Eliminar un proyecto**: las archivadas se ven apagadas, el menú ofrece Desarchivar y el cuadro de Eliminar dice qué va a la papelera y qué se borra
+  - [ ] **Detalle de una skill**: Resumen y Archivos como pestañas, con el aviso «Está dos veces»
+  - [ ] **Diseño › una maqueta grande** y **Diseño › Sistema** se entienden y se ven como el resto
+  - [ ] **Conversaciones anteriores** (el reloj, en cualquier maqueta), **La IA no respondió** y **Claude sin sesión**: el aviso dice qué pasó y qué hacer
+  - [ ] **Un proyecto en ancho chico** (1024×720): nada se corta ni se aprieta
+
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.
@@ -62,7 +71,7 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: la tanda 2 de DI-I2 (las pantallas que faltan: detalle de una skill, archivados, el menú de las conversaciones, Eliminar, el ancho chico, Diseño › una grande y › Sistema, los errores y Claude sin sesión), mirando cada una contra Ajustes y sin texto de relleno; si llega Q-156, aplicarla antes. Si llega Q-146, procesarla aparte.
+Diseño: con la respuesta a Q-157 y los `R-n` que deje, corregir las maquetas de la tanda 2; aprobada, DI-I2 queda hecha y sigue DI-I3 (T-58). Si llega Q-146, procesarla aparte.
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

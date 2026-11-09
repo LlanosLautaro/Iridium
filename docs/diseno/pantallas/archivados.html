@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Proyectos archivados</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* La tarjeta de proyecto es propia de la grilla (R-23): sin relleno, una línea apenas visible que se aclara al pasar
+     el mouse; el ícono sin caja; arriba a la derecha solo lo que espera de vos, y los avisos abajo, como señal. */
+  .grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--esp-3); }
+  .tarjeta {
+    border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); padding: var(--esp-4) var(--esp-4) var(--esp-3);
+    display: flex; flex-direction: column; gap: var(--esp-2); text-decoration: none; color: inherit; cursor: pointer;
+    transition: border-color .12s var(--sale), background .12s var(--sale); min-height: 150px;
+  }
+  .tarjeta:hover { border-color: var(--borde-fuerte); background: var(--tarjeta); }
+  .tarjeta .cab-t { display: flex; gap: var(--esp-3); align-items: center; }
+  .tarjeta .logo { width: 32px; height: 32px; border-radius: var(--radio-pildora); border: 1px solid var(--borde-fuerte); display: grid; place-items: center; color: var(--texto-2); flex: none; font-size: var(--tam-chico); font-weight: 600; }
+  .tarjeta .nombre { font-weight: 600; font-size: var(--tam-lectura); line-height: 1.3; }
+  .tarjeta .estado-t { font-size: var(--tam-chico); color: var(--texto-3); display: flex; gap: 6px; align-items: center; }
+  .tarjeta .derecha-t { margin-left: auto; align-self: flex-start; display: flex; gap: var(--esp-2); align-items: center; }
+  .tarjeta .derecha-t .boton { opacity: 0; }
+  .tarjeta:hover .derecha-t .boton, .tarjeta .derecha-t .boton:focus-visible { opacity: 1; }
+  .tarjeta .desc { color: var(--texto-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+  .tarjeta .pie-t { margin-top: auto; padding-top: var(--esp-2); font-size: var(--tam-chico); color: var(--texto-3); display: flex; flex-direction: column; gap: 2px; }
+  /* Una archivada se ve apagada y dice que lo está; el menú ofrece Desarchivar. */
+  .tarjeta.archivada .nombre, .tarjeta.archivada .desc { color: var(--texto-3); }
+  .tarjeta.archivada .logo { color: var(--texto-3); border-color: var(--borde); }
+  .tarjeta .pie-t .linea { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body data-marco="inicio" data-seccion="grilla">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab">
+      <h1>Proyectos</h1>
+      <span class="acciones-cab">
+        <label class="interruptor"><input type="checkbox" checked onchange="location.href='grilla.html'">Archivados <span class="cuenta">5</span></label>
+        <a class="boton principal" href="nuevo-proyecto.html"><i data-ic="mas"></i>Nuevo proyecto</a>
+      </span>
+    </div>
+  </header>
+  <div class="contenido">
+    <div class="grilla">
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ir</span><div><div class="nombre">Iridium</div><div class="estado-t"><span class="punto blanco"></span>en uso</div></div>
+          <span class="derecha-t"><span class="cuenta frena">2</span><button class="boton solo-icono chico" data-abre="menu-tarjeta" aria-label="Más"><i data-ic="puntos"></i></button></span></div>
+        <p class="desc">Plataforma de desarrollo humano + IA. Yo dirijo, la IA desarrolla y orienta. Junta proyectos, plan, diseño y preguntas en un solo lugar.</p>
+        <div class="pie-t"><span class="linea">Hito 10 · Operación</span><span class="linea">Diseño · 7. Construcción · DI-I2</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Al</span><div><div class="nombre">Alfa</div><div class="estado-t"><span class="punto"></span>en desarrollo</div></div></div>
+        <p class="desc">App para explorar paquetes de texturas, compararlos lado a lado y armar uno propio con piezas de varios.</p>
+        <div class="pie-t"><span class="linea">Hito 7 · Construcción <span class="senal">· framework viejo</span></span><span class="linea">Próximo: construir I-16, la migración de los paquetes guardados</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Be</span><div><div class="nombre">Beta</div><div class="estado-t"><span class="punto"></span>en desarrollo</div></div></div>
+        <p class="desc">Catálogo personal de imágenes y videos: etiquetas, pestañas guardadas del navegador y notas rápidas.</p>
+        <div class="pie-t"><span class="linea">Hito 10 · Operación e iteración</span><span class="linea senal rojo">! 3 avisos del framework</span><span class="linea">Próximo: con la respuesta a la segunda ronda de UX, ordenar la vista de etiquetas</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ga</span><div><div class="nombre">Gamma</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Un centro personal para guardar archivos de toda una vida y verlos desde la PC o el celular.</p>
+        <div class="pie-t"><span class="linea">Hito 1 · Exploración <span class="senal">· framework viejo</span></span><span class="linea">Próximo: empezar la exploración según el plan</span></div>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">De</span><div><div class="nombre">Delta</div><div class="estado-t"><span class="punto blanco"></span>en uso</div></div></div>
+        <p class="desc">Scripts chicos sueltos en C, JavaScript, Python y Rust: lectura de discos, avisos de carpetas, datos de la PC.</p>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ép</span><div><div class="nombre">Épsilon, un nombre de proyecto bastante largo</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Una guía para que una persona sin conocimientos llegue con la IA a un anteproyecto de su casa.</p>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Ze</span><div><div class="nombre">Zeta</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Elegir por dónde sale el audio de cada programa y subir el micrófono más allá del máximo, con pocos clics.</p>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Et</span><div><div class="nombre">Eta</div><div class="estado-t"><span class="punto"></span>idea</div></div></div>
+        <p class="desc">Un lanzador de juegos propio, liviano, que junte las bibliotecas de todas las tiendas.</p>
+      </a>
+      <a class="tarjeta" href="bandeja.html" data-contextual="menu-tarjeta">
+        <div class="cab-t"><span class="logo">Th</span><div><div class="nombre">Theta</div><div class="estado-t">en rescate → Alfa</div></div></div>
+        <p class="desc">Primer intento de componer paquetes de texturas; lo que sirve pasa a Alfa.</p>
+      </a>
+      <a class="tarjeta archivada" href="bandeja.html" data-contextual="menu-archivada">
+        <div class="cab-t"><span class="logo">Io</span><div><div class="nombre">Iota</div><div class="estado-t">archivado el 12 oct</div></div></div>
+        <p class="desc">Un convertidor de recetas a la lista del súper, por semana.</p>
+      </a>
+      <a class="tarjeta archivada" href="bandeja.html" data-contextual="menu-archivada">
+        <div class="cab-t"><span class="logo">Ka</span><div><div class="nombre">Kappa</div><div class="estado-t">archivado el 30 sep</div></div></div>
+        <p class="desc">Primer intento de un lector de cómics para el celular; quedó en el hito 2.</p>
+      </a>
+      <a class="tarjeta archivada" href="bandeja.html" data-contextual="menu-archivada">
+        <div class="cab-t"><span class="logo">La</span><div><div class="nombre">Lambda</div><div class="estado-t">archivado el 2 sep</div></div></div>
+        <p class="desc">Bot para avisar cuándo baja de precio un juego de la lista de deseos.</p>
+      </a>
+      <a class="tarjeta archivada" href="bandeja.html" data-contextual="menu-archivada">
+        <div class="cab-t"><span class="logo">Mu</span><div><div class="nombre">Mu</div><div class="estado-t">archivado el 18 ago</div></div></div>
+        <p class="desc">Un organizador de fotos por cara y por lugar; lo reemplazó Beta.</p>
+      </a>
+      <a class="tarjeta archivada" href="bandeja.html" data-contextual="menu-archivada">
+        <div class="cab-t"><span class="logo">Nu</span><div><div class="nombre">Nu</div><div class="estado-t">archivado el 1 ago</div></div></div>
+        <p class="desc">Notas de estudio con repaso espaciado.</p>
+      </a>
+    </div>
+    <div class="menu" id="menu-tarjeta" role="menu">
+      <a href="bandeja.html"><i data-ic="abrir"></i>Abrir</a>
+      <button><i data-ic="editar"></i>Abrir en VS Code</button>
+      <button><i data-ic="archivos"></i>Abrir la carpeta</button>
+      <hr>
+      <button>Pasar al framework</button>
+      <button>Archivar</button>
+      <a class="peligroso" href="eliminar.html"><i data-ic="papelera"></i>Eliminar…</a>
+    </div>
+    <div class="menu" id="menu-archivada" role="menu">
+      <a href="bandeja.html"><i data-ic="abrir"></i>Abrir</a>
+      <button><i data-ic="archivos"></i>Abrir la carpeta</button>
+      <hr>
+      <button>Desarchivar</button>
+      <a class="peligroso" href="eliminar.html"><i data-ic="papelera"></i>Eliminar…</a>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>
