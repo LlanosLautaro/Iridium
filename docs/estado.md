@@ -42,6 +42,11 @@ Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el M
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
+- **Q-153 — Qué ideas de los cinco repos de referencia sumamos**
+  Tipo: decisión · Frente: Capacidades
+  Contexto: `research/referentes-agentes.md` (Beluga, Orca, Localix, Rift DS, Open WebUI Desktop). Beluga es el más parecido. Las ideas que mejor encajan con quien dirige sin leer código son los diagramas con recorrido paso a paso, la prueba visible de lo hecho y el dictado; Rift DS sirve para la sección Diseño.
+  Opciones: A) Anotar las tres primeras como T-n en Capacidades (T-28) y seguir con Diseño (recomendada: no frena el rediseño) · B) Meter los diagramas en el rediseño de DI-I2 ya · C) Solo dejarlo como referencia por ahora
+
 - **Q-152 — Recorré el rediseño de Iridium en Diseño y comentalo con F8**
   Tipo: prueba · Frente: Diseño
   Contexto: tocá **Actualizar** abajo para tener esta versión. Probás DI-I1 (la sección) con las maquetas de Iridium mismo (D-107): 16 pantallas en negro, con datos de muestra (Alfa, Beta…). Lo que no te guste, comentalo con `F8` sobre la maqueta: es parte de la prueba. Detalle en `modulos/diseno/estado.md` › Log › DI-I2.
