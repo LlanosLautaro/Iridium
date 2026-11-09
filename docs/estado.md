@@ -51,6 +51,11 @@ Compartir está publicado; falta la invitación (Q-126).
   - [ ] **Conversaciones anteriores** (el reloj, en cualquier maqueta), **La IA no respondió** y **Claude sin sesión**: el aviso dice qué pasó y qué hacer
   - [ ] **Un proyecto en ancho chico** (1024×720): nada se corta ni se aprieta
 
+- **Q-158 — ¿Pasamos el design system del proyecto del artifact al formato del framework?**
+  Tipo: decisión · Frente: Diseño
+  Contexto: respuesta del 2026-11-09 en el chat. Ese proyecto tiene su design system en un artifact de claude.ai, con una copia en `docs/ui/tokens.json` (de la que un script genera el CSS) y `docs/ui/componentes.css`; el framework lo pide en `docs/diseno/` (`tokens.css`, `piezas.css`, `piezas.html`). Mientras no se pase, la pestaña Diseño de Iridium no lo muestra. Cambiar ese proyecto lo hace su propia IA, no esta.
+  Opciones: A) Pasarlo con «Pasar al framework» desde ese proyecto (recomendada: Diseño lo muestra y el artifact deja de ser la fuente) · B) Dejarlo como está, funciona · C) Que Iridium lea también `tokens.json`
+
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.
