@@ -56,6 +56,11 @@ Compartir está publicado; falta la invitación (Q-126).
   Contexto: respuesta del 2026-11-09 en el chat. Ese proyecto tiene su design system en un artifact de claude.ai, con una copia en `docs/ui/tokens.json` (de la que un script genera el CSS) y `docs/ui/componentes.css`; el framework lo pide en `docs/diseno/` (`tokens.css`, `piezas.css`, `piezas.html`). Mientras no se pase, la pestaña Diseño de Iridium no lo muestra. Cambiar ese proyecto lo hace su propia IA, no esta.
   Opciones: A) Pasarlo con «Pasar al framework» desde ese proyecto (recomendada: Diseño lo muestra y el artifact deja de ser la fuente) · B) Dejarlo como está, funciona · C) Que Iridium lea también `tokens.json`
 
+- **Q-159 — ¿Qué ideas del design system de claude.ai sumamos al framework?**
+  Tipo: decisión · Frente: Diseño
+  Contexto: respuesta del 2026-11-09 en el chat. Ideas tomadas de cómo arma claude.ai un design system: 1) cada token con una línea de para qué se usa, que Diseño › Sistema muestra debajo de la muestra; 2) estilos de texto con nombre (título, cuerpo, rótulo…) con tamaño, interlineado, peso y un ejemplo; 3) una ficha por pieza, agrupada (acciones, navegación, avisos, del dominio), con para qué sirve, sus estados y qué tokens usa; 4) las medidas fijas (barra, controles) como tokens. Cada una cambia el framework, lo que lee Iridium y el control (D-086).
+  Opciones: A) Las cuatro, empezando por la 1 (recomendada: es la que más ayuda a la IA a no usar mal un color) · B) Solo la 1 · C) Ninguna por ahora
+
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.
