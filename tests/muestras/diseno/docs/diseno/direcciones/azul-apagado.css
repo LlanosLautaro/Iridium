@@ -13,5 +13,7 @@
   --esp-2: 8px;
   --esp-4: 16px;
   --radio-1: 6px;
+  --alto-control: 32px;
+  --ancho-panel: 320px;
   --sombra-1: 0 4px 12px rgba(0, 0, 0, 0.5);
 }

@@ -213,6 +213,22 @@
   background: var(--texto-3);
   border: 0;
 }
+/* Las medidas fijas (T-63): un alto en su tamaño real, un ancho como barra proporcional al más ancho. */
+.di-tokens.di-g-medidas .di-muestra {
+  background: var(--texto-3);
+  border: 0;
+}
+.di-tokens.di-g-medidas .di-alto {
+  width: 40px;
+}
+.di-tokens.di-g-medidas .di-alto.cortada {
+  -webkit-mask-image: linear-gradient(to bottom, var(--texto) 60%, transparent);
+  mask-image: linear-gradient(to bottom, var(--texto) 60%, transparent);
+}
+.di-tokens.di-g-medidas .di-ancho {
+  height: 8px;
+  max-width: 100%;
+}
 .di-tokens.di-g-sombras .di-muestra {
   width: 64px;
   background: var(--elevado);

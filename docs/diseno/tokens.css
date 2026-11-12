@@ -91,6 +91,30 @@
   --radio-tarjeta: 16px; /* cuadros y ventanas */
   --radio-pildora: 999px; /* lo redondo: interruptores, la «i», la barra de desplazamiento */
 
+  /* Medidas fijas: el tamaño de lo que se repite en todas las pantallas, para que no se corra de una a otra (T-63) */
+  --alto-barra: 36px; /* la barra de proyectos, arriba de todo */
+  --alto-estado: 26px; /* la barra de abajo */
+  --ancho-secciones: 48px; /* la barra de secciones a la izquierda y el botón del menú, arriba de ella */
+  --ancho-conversacion: 360px; /* el panel de la conversación, a la derecha */
+  --alto-cabecera-conversacion: 48px; /* la cabecera de la conversación, con su nombre y sus botones */
+  --alto-control: 30px; /* botones, opciones de menú y pestañas; también el ancho de un botón de solo ícono */
+  --alto-control-chico: 24px; /* el botón chico, dentro de una fila o un recuadro */
+  --alto-campo: 32px; /* campos y selectores, y la fila de la cabecera de una sección para que no salte con uno */
+  --alto-campo-chico: 26px; /* el campo chico, en un filtro o una fila */
+  --alto-fila: 34px; /* lo mínimo de una fila de lista; con detalle crece */
+  --alto-nodo: 26px; /* una carpeta o un archivo del árbol, más apretado que una fila */
+  --ancho-codigo: 44px; /* la columna del código (D-n, Q-n) en una fila, para que los títulos queden alineados */
+  --ancho-menu: 200px; /* lo mínimo de un menú */
+  --ancho-lista-menu: 320px; /* un menú en lista, con título y detalle en cada opción: las conversaciones */
+  --ancho-cuadro: 440px; /* un cuadro que confirma o pide un dato; también el texto de un recuadro punteado */
+  --ancho-ventana: 860px; /* la ventana de Ajustes */
+  --alto-ventana: 600px; /* la ventana de Ajustes */
+  --ancho-pestanas-ventana: 200px; /* las pestañas a la izquierda de la ventana de Ajustes */
+  --ancho-lectura: 760px; /* lo más ancho de un documento para leer de corrido */
+  --ancho-centrado: 820px; /* lo más ancho del contenido centrado de una sección */
+  --ancho-proyecto: 220px; /* lo más ancho de un proyecto en la barra de arriba; el nombre largo se corta */
+  --ancho-globo: 280px; /* lo más ancho del texto de la «i» */
+
   /* Sombras: solo lo que flota */
   --sombra-menu: 0 0 0 1px #2a2a2d, 0 10px 28px #00000099; /* menús y listas que se abren */
   --sombra-ventana: 0 0 0 1px #2a2a2d, 0 24px 64px #000000cc; /* cuadros y ventanas sobre el velo */

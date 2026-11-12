@@ -13,5 +13,7 @@
   --esp-2: 8px; /* entre cosas de un mismo grupo */
   --esp-4: 16px; /* entre grupos */
   --radio-1: 6px; /* las esquinas de los controles */
+  --alto-control: 32px; /* botones y campos */
+  --ancho-panel: 320px; /* el panel de la derecha */
   --sombra-1: 0 4px 12px rgba(0, 0, 0, 0.5); /* solo lo que flota */
 }

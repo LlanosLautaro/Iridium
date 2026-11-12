@@ -114,6 +114,18 @@
 | D-105 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-150) | Las pantallas de Diseño son maquetas HTML que escribe la IA, y se comentan con F8 | vigente |
 | D-106 | 2026-11-08 | general | 10, frente Diseño, pasos 4 y 5 (Q-151) | Primero la sección, después el rediseño de Iridium en maquetas; miniaturas en un iframe aislado y la grande en un webview | vigente |
 | D-107 | 2026-11-08 | Diseño | 10, frente Diseño, paso 7 | DI-I1 se prueba sobre las maquetas de Iridium (DI-I2), no en un proyecto aparte; el marco de las maquetas lo arma `piezas.js` | vigente |
+| D-108 | 2026-11-09 | Diseño | 10, frente Diseño, paso 7 (DI-I2) | Diseño: sin ruido; lo que anda no se anuncia | vigente |
+| D-109 | 2026-11-09 | Diseño | 10, frente Diseño, paso 7 (DI-I2) | Diseño: el botón principal es verde | vigente (cambia el punto «sin acento» de D-103 y D-104) |
+| D-110 | 2026-11-09 | producto | 10, frente Diseño, paso 7 (DI-I2) | Los textos de la app en español neutro | vigente |
+| D-111 | 2026-11-09 | producto | 10, frente Diseño, paso 7 (DI-I2) | Sin la Bandeja de todos | vigente (deja sin efecto la vista general de D-010 y D-022) |
+| D-112 | 2026-11-09 | producto | 10, frente Diseño, paso 7 (DI-I2) | Sin la sección Trabajo; Ideas es un bloc de notas | vigente |
+| D-113 | 2026-11-09 | framework | 10, frente Diseño, paso 7 (DI-I2) | Las guías de impeccable, en el framework | vigente |
+| D-114 | 2026-11-09 | framework | 10, frente Diseño, paso 7 (DI-I2) | Cada token con su uso, y tres ideas más del design system de claude.ai | vigente |
+| D-115 | 2026-11-09 | framework | 10, frente Diseño, paso 7 (DI-I2) | Un design system guardado en otro lado pasa a `docs/diseno/` al pasar al framework | vigente |
+| D-116 | 2026-11-12 | framework | 10, frente Diseño, paso 7 (T-61) | Los estilos de texto son tokens `--estilo-*` con el atajo `font` | vigente |
+| D-117 | 2026-11-12 | framework | 10, frente Diseño, paso 7 (T-62) | La ficha de cada pieza va en el comentario que la encabeza en `piezas.css` | vigente |
+| D-118 | 2026-11-12 | framework | 10, frente Orden (T-64) | Novedades del framework: los cambios que les piden algo a los proyectos, con fecha | vigente |
+| D-119 | 2026-11-12 | framework | 10, frente Diseño, paso 7 (T-63) | Las medidas fijas son tokens `--alto-*` y `--ancho-*`, y el control avisa de una repetida a mano | vigente |
 
 ---
 
@@ -2631,3 +2643,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** sirve para cualquier cambio futuro y no toca los proyectos sin pedirlo; descartado que Iridium escriba en el `estado.md` de cada uno (cambia proyectos sin permiso y les deja tareas que quizás no les aplican).
 
 **Consecuencias:** es trabajo del frente Orden (T-64), detrás de Diseño. Mientras tanto, los cambios así se avisan como hasta ahora; la primera novedad a anotar son las fichas de las piezas (D-117).
+
+## D-119 — Las medidas fijas son tokens `--alto-*` y `--ancho-*`, y el control avisa de una repetida a mano
+- **Fecha:** 2026-11-12
+- **Ámbito:** framework
+- **Hito o paso:** 10; frente Diseño, paso 7 (T-63)
+- **Estado:** vigente
+
+**Contexto:** D-114, idea 4: la altura de la barra, de los controles y de las filas y el ancho de los paneles estaban escritos como números sueltos en `piezas.css` (el alto de los controles, `30px`, en cinco lugares). Había que elegir cómo se reconocen, cómo se dibujan en Sistema y qué revisa el control.
+
+**Decisión:** una medida fija es un token de `tokens.css` que empieza con `--alto-` o `--ancho-`, con una sola medida (`--alto-control: 30px;`) y su uso, como todos; las piezas la usan en lugar del número. Diseño › Sistema las muestra como «Medidas fijas»: un alto en su tamaño real (hasta 48px; uno más alto, una ventana, se desvanece) y un ancho como barra proporcional al más ancho del grupo. El control avisa de una medida fija que no es una sola medida y, en `piezas.css`, de una medida de 20px o más escrita a mano en el tamaño (ancho, alto, columnas de una grilla) de tres reglas o más; si ya hay un token con ese valor, lo nombra. Lo más chico (íconos, el tilde de una casilla) y las medidas propias de una maqueta siguen escritos a mano.
+
+**Motivo:** el nombre dice qué es sin un formato nuevo y se dibuja sin adivinar. Con tres reglas el control encuentra lo que es del sistema sin avisar de casualidades (el ícono de una fila y el interruptor miden los dos 28px sin ser lo mismo); descartado avisar de todo número escrito (llenaría de avisos a cualquier proyecto) y desde dos reglas.
+
+**Consecuencias:** Iridium tiene 22 medidas fijas y `piezas.css` las usa en 24 lugares; las 24 maquetas se ven idénticas al píxel. Los proyectos con `docs/diseno/` que repiten una medida reciben el aviso; es la segunda novedad del framework para T-64, después de las fichas (D-117).

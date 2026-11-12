@@ -255,12 +255,12 @@ Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
 Las piezas agrupadas (acciones, navegación, avisos, del dominio), cada una con para qué sirve, sus estados y qué tokens usa; Diseño › Sistema las muestra junto a `piezas.html`. Con el lector, el control y las pruebas. Antes de DI-I3. Hecho el 2026-11-12 (D-117).
 
 ## T-63 — Las medidas fijas como tokens
-Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
-La altura de la barra, de los controles y de las filas, los anchos de los paneles: tokens con su uso en lugar de números sueltos en `piezas.css`. Sistema las muestra; el control puede avisar de una medida repetida escrita a mano. Antes de DI-I3.
+Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
+La altura de la barra, de los controles y de las filas, los anchos de los paneles: tokens con su uso en lugar de números sueltos en `piezas.css`. Sistema las muestra; el control puede avisar de una medida repetida escrita a mano. Antes de DI-I3. Hecho el 2026-11-12 (D-119).
 
 ## T-64 — Que un proyecto sepa cuándo el framework le pide algo
 Estado: pendiente · Frente: Orden · Fecha: 2026-11-12 · Origen: Q-160
-Con D-115 el usuario tuvo que pedirle a mano a otro proyecto que pasara su design system: «ese proyecto no sabía que debía hacer eso». Propuso que Iridium le avise al proyecto (por ejemplo, con una línea en su `estado.md`). Cada proyecto ya tiene la fecha de su framework (`**Framework:** AAAA-MM-DD` en `docs/README.md`). Q-161 (A, D-118): novedades del framework con fecha, «N novedades» en la tarjeta y en Skills › Framework, y **Ponerse al día**. Detrás de Diseño; la primera novedad, las fichas de las piezas (D-117).
+Con D-115 el usuario tuvo que pedirle a mano a otro proyecto que pasara su design system: «ese proyecto no sabía que debía hacer eso». Propuso que Iridium le avise al proyecto (por ejemplo, con una línea en su `estado.md`). Cada proyecto ya tiene la fecha de su framework (`**Framework:** AAAA-MM-DD` en `docs/README.md`). Q-161 (A, D-118): novedades del framework con fecha, «N novedades» en la tarjeta y en Skills › Framework, y **Ponerse al día**. Detrás de Diseño; las primeras novedades, las fichas de las piezas (D-117) y las medidas fijas (D-119).
 
 ## T-60 — Reciclar las guías de impeccable en el framework
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: pregunta del usuario, Q-156

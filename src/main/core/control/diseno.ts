@@ -1,17 +1,18 @@
 // Las maquetas (frente Diseño, D-105; `modulos/diseno/diseno-tecnico.md` › El control): el índice, los tokens, que
 // todo sea local y exista, sin colores escritos, que las direcciones y las versiones correspondan, y las fichas de las
-// piezas (T-62, D-117).
+// piezas (T-62, D-117) y las medidas fijas (T-63, D-119).
 import { COLUMNAS_INDICE, esSinPasar, FECHA_EN_LA_APP, leerIndice } from '../diseno/indice'
 import {
   coloresEscritos,
   esDeLaRed,
   estilosDe,
+  medidasRepetidas,
   noEsArchivo,
   referenciasDe,
   resolverReferencia,
 } from '../diseno/maquetas'
 import { leerFichas, tokensUsados, variablesPropias } from '../diseno/piezas'
-import { leerTokens } from '../diseno/tokens'
+import { esMedida, leerTokens } from '../diseno/tokens'
 import type { Aviso, Regla } from './tipos'
 
 const BASE = 'docs/diseno/'
@@ -95,6 +96,13 @@ export const reglaDiseno: Regla = (a) => {
         e.linea,
         `\`${e.nombre}\` no se entiende como estilo de texto: va como \`peso tamaño/interlineado letra\` (\`600 var(--tam-titulo)/1.3 var(--ui)\`), con tokens que existan`,
       )
+    // Las medidas fijas (T-63, D-119): una sola medida, sin cuentas.
+    for (const m of tokens.tokens.filter((x) => x.grupo === 'medidas' && !esMedida(x.valor)))
+      av(
+        'tokens.css',
+        m.linea,
+        `\`${m.nombre}\` no se entiende como medida fija: va una sola medida (\`36px\`), sin cuentas ni otros tokens`,
+      )
   }
 
   // 5–6: todo local y existente, sin colores escritos.
@@ -174,6 +182,20 @@ export const reglaDiseno: Regla = (a) => {
           `\`var(${n})\` no está en \`tokens.css\`: sumalo con su uso o usá uno que exista`,
         )
       }
+    }
+    // Una medida repetida escrita a mano (T-63, D-119): la barra, un control o un panel van como token.
+    const medidas = tokens?.tieneRaiz ? tokens.tokens.filter((x) => x.grupo === 'medidas') : []
+    for (const r of medidasRepetidas(piezasCss)) {
+      const token = medidas.find((x) => x.valor === r.valor)
+      av(
+        'piezas.css',
+        r.lineas[0] ?? null,
+        `\`${r.valor}\` escrito a mano en ${r.lineas.length} reglas (líneas ${r.lineas.join(', ')}): ${
+          token
+            ? `usá \`var(${token.nombre})\``
+            : 'hacelo una medida fija en `tokens.css` (`--alto-…` o `--ancho-…`, con su uso) y usala'
+        }`,
+      )
     }
   }
 

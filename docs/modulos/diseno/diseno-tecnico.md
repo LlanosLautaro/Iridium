@@ -146,6 +146,7 @@ Sin la IA, con escritura atómica; lo que se borra va a la papelera de Windows (
 | Estilos de texto | `--estilo-*`: el atajo `font`, `peso tamaño/interlineado letra` (D-116) | una línea de ejemplo en ese estilo, con los `var(--…)` resueltos con los tokens del proyecto; el valor, con los tokens por su nombre |
 | Tamaños de letra | `--tam-*` | una línea de ejemplo en cada tamaño |
 | Espacios y esquinas | `--espacio-*`, `--esp-*`, `--radio-*` | barras y cuadrados con esa medida |
+| Medidas fijas | `--alto-*`, `--ancho-*`: una sola medida (T-63, D-119) | un alto en su tamaño real (hasta 48px; más, se desvanece); un ancho, como barra proporcional al más ancho del grupo |
 | Sombras | `--sombra-*` | un cuadrado con esa sombra |
 | Otras | el resto | nombre y valor |
 
@@ -156,11 +157,11 @@ Cada token muestra su uso debajo de la muestra (colores) o a la derecha (el rest
 1. `README.md` con `## Pantallas` y las columnas Pantalla, Sección, Archivo y En la app.
 2. Cada **Archivo** existe y está en `pantallas/`; cada `.html` de `pantallas/` está en la tabla.
 3. **En la app** es `—` o `AAAA-MM-DD HH:MM`.
-4. `tokens.css` existe y tiene variables en `:root`, cada una con su uso (D-114; los que faltan, en un solo aviso con la línea del primero). Cada `--estilo-*` se entiende como atajo `font` y sus `var(--…)` existen (D-116; un aviso por estilo).
+4. `tokens.css` existe y tiene variables en `:root`, cada una con su uso (D-114; los que faltan, en un solo aviso con la línea del primero). Cada `--estilo-*` se entiende como atajo `font` y sus `var(--…)` existen (D-116; un aviso por estilo). Cada `--alto-*` y `--ancho-*` es una sola medida (D-119).
 5. En maquetas, versiones, `piezas.*` y direcciones: nada de la red (`http://`, `https://`, `//`), nada fuera de `docs/diseno/` y nada que falte.
 6. Sin colores escritos en `piezas.css` ni en los `<style>` de las maquetas.
 7. Cada dirección tiene las mismas variables que `tokens.css`; cada carpeta de `versiones/` es de una maqueta que existe.
-8. `piezas.css` tiene fichas (un aviso si no tiene ninguna), cada una con `Grupo:` y `Para qué:`, y cada `var(--…)` sin otro valor es un token de `tokens.css` o una variable que define la misma hoja (T-62, D-117).
+8. `piezas.css` tiene fichas (un aviso si no tiene ninguna), cada una con `Grupo:` y `Para qué:`, y cada `var(--…)` sin otro valor es un token de `tokens.css` o una variable que define la misma hoja (T-62, D-117). Una medida de 20px o más escrita a mano en el tamaño de tres reglas o más va como medida fija; si ya hay un token con ese valor, el aviso lo nombra (T-63, D-119).
 
 Se le devuelve a la IA como los demás avisos del control (una vez por turno). El framework suma, en el mismo cambio (DI-I1): `SKILL.md` › Los formatos, un apartado corto de `docs/diseno/` que remite a `referencias/06-ui.md` › Maquetas (cómo se arman: tokens, piezas, una maqueta por pantalla y por estado, 1440×900, todo local, contenido creíble en el idioma de la app); `referencias/06-ui.md` dice que en una app nueva las maquetas son la UI del hito 6 (D-105); y una plantilla `plantillas/diseno/README.md`.
 

@@ -23,7 +23,8 @@ body {
   color: var(--texto);
   border: 1px solid var(--borde);
   border-radius: var(--radio-1);
-  padding: var(--esp-2) var(--esp-4);
+  height: var(--alto-control);
+  padding: 0 var(--esp-4);
   font: inherit;
 }
 /* Tarjeta

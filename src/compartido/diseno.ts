@@ -23,7 +23,15 @@ export interface GrupoMaquetas {
   maquetas: MaquetaVista[]
 }
 
-export type GrupoToken = 'colores' | 'letra' | 'estilos' | 'tamanos' | 'espacios' | 'sombras' | 'otras'
+export type GrupoToken =
+  | 'colores'
+  | 'letra'
+  | 'estilos'
+  | 'tamanos'
+  | 'espacios'
+  | 'medidas'
+  | 'sombras'
+  | 'otras'
 
 export interface TokenVista {
   nombre: string

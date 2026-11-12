@@ -32,7 +32,7 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
    Estados: principal, secundario, sin fondo, peligroso, principal peligroso, chico, solo ícono, apagado. */
 .boton {
   display: inline-flex; align-items: center; gap: var(--esp-2);
-  height: 30px; padding: 0 var(--esp-3);
+  height: var(--alto-control); padding: 0 var(--esp-3);
   font: var(--estilo-boton); color: var(--texto);
   background: transparent; border: 1px solid transparent; border-radius: var(--radio-control);
   cursor: pointer; white-space: nowrap; text-decoration: none;
@@ -48,9 +48,9 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
 .boton.peligroso { color: var(--error); border-color: var(--error-borde); }
 .boton.peligroso:hover { background: var(--error-fondo); }
 .boton.principal.peligroso { background: var(--error); color: var(--sobre-principal); border-color: transparent; }
-.boton.chico { height: 24px; padding: 0 var(--esp-2); font-size: var(--tam-chico); }
-.boton.solo-icono { width: 30px; padding: 0; justify-content: center; color: var(--texto-2); }
-.boton.solo-icono.chico { width: 24px; }
+.boton.chico { height: var(--alto-control-chico); padding: 0 var(--esp-2); font-size: var(--tam-chico); }
+.boton.solo-icono { width: var(--alto-control); padding: 0; justify-content: center; color: var(--texto-2); }
+.boton.solo-icono.chico { width: var(--alto-control-chico); }
 .boton.solo-icono:hover { color: var(--texto); background: var(--hover); }
 .boton[disabled], .boton.apagado { opacity: .4; pointer-events: none; }
 
@@ -62,13 +62,13 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
 .filas.con-lineas > .fila + .fila { border-top: 1px solid var(--borde-suave); border-radius: 0; }
 .fila {
   display: flex; align-items: center; gap: var(--esp-3);
-  min-height: 34px; padding: var(--esp-1) var(--esp-2);
+  min-height: var(--alto-fila); padding: var(--esp-1) var(--esp-2);
   border-radius: var(--radio-fila); color: var(--texto); text-decoration: none; cursor: default;
 }
 a.fila, .fila.se-abre { cursor: pointer; }
 .fila:hover { background: var(--hover); }
 .fila.elegida { background: var(--sel-fondo); }
-.fila .codigo { font: var(--estilo-codigo); color: var(--texto-3); width: 44px; flex: none; }
+.fila .codigo { font: var(--estilo-codigo); color: var(--texto-3); width: var(--ancho-codigo); flex: none; }
 .fila .principal-fila { flex: 1; min-width: 0; }
 .fila .titulo-fila { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fila .detalle { display: block; font: var(--estilo-meta); color: var(--texto-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -114,21 +114,21 @@ a.fila, .fila.se-abre { cursor: pointer; }
   border-style: dashed; border-color: var(--borde-control); padding: var(--esp-6);
   flex-direction: column; align-items: center; text-align: center;
 }
-.recuadro.punteado .cuerpo-recuadro { align-items: center; max-width: 440px; }
+.recuadro.punteado .cuerpo-recuadro { align-items: center; max-width: var(--ancho-cuadro); }
 
 /* ───────── PZ-5 · Campo ─────────
    Grupo: Acciones
    Para qué: escribir o elegir: texto, área, selector, casilla, opción e interruptor. Lo escrito se guarda solo.
    Estados: normal, chico, sin borde (selector), al pasar, con el foco, marcado. */
 .campo, .selector, .area {
-  height: 32px; padding: 0 var(--esp-3); width: 100%;
+  height: var(--alto-campo); padding: 0 var(--esp-3); width: 100%;
   font: var(--estilo-control); color: var(--texto);
   background: transparent; border: 1px solid var(--borde-control); border-radius: var(--radio-control);
 }
 .campo::placeholder, .area::placeholder { color: var(--texto-3); }
 .campo:hover, .selector:hover, .area:hover { border-color: var(--texto-3); }
 .campo:focus, .selector:focus, .area:focus { border-color: var(--texto-2); outline: none; }
-.campo.chico { height: 26px; font-size: var(--tam-chico); }
+.campo.chico { height: var(--alto-campo-chico); font-size: var(--tam-chico); }
 .area { height: auto; min-height: 72px; padding: var(--esp-2) var(--esp-3); line-height: 1.5; resize: vertical; }
 .selector { appearance: none; padding-right: var(--esp-6); cursor: pointer;
   background-image: linear-gradient(45deg, transparent 50%, var(--texto-2) 50%), linear-gradient(-45deg, transparent 50%, var(--texto-2) 50%);
@@ -187,13 +187,13 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Para qué: lo que flota sobre la pantalla: el menú (también con clic derecho), el cuadro que confirma o pide un dato y la ventana de Ajustes. Es lo único con sombra.
    Estados: menú, menú en lista, con atajo, opción peligrosa, cuadro, ventana. */
 .menu {
-  position: absolute; z-index: 20; min-width: 200px; padding: var(--esp-1);
+  position: absolute; z-index: 20; min-width: var(--ancho-menu); padding: var(--esp-1);
   background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu);
   display: none; flex-direction: column;
 }
 .menu.abierto { display: flex; }
 .menu button, .menu a {
-  display: flex; align-items: center; gap: var(--esp-2); height: 30px; padding: 0 var(--esp-2);
+  display: flex; align-items: center; gap: var(--esp-2); height: var(--alto-control); padding: 0 var(--esp-2);
   background: none; border: 0; border-radius: var(--radio-control); text-align: left; text-decoration: none;
   font: var(--estilo-control); color: var(--texto); cursor: pointer;
 }
@@ -202,7 +202,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .menu .peligroso { color: var(--error); }
 .menu hr { border: 0; border-top: 1px solid var(--borde); margin: var(--esp-1) 0; }
 .menu .titulo-menu { margin: 0; padding: var(--esp-2) var(--esp-2) var(--esp-1); font-size: var(--tam-chico); font-weight: 400; color: var(--texto-3); }
-.menu.lista-menu { width: 320px; }
+.menu.lista-menu { width: var(--ancho-lista-menu); }
 .menu.lista-menu button { height: auto; padding: var(--esp-2); gap: var(--esp-3); }
 .menu.lista-menu .principal-fila { flex: 1; min-width: 0; }
 .menu.lista-menu .titulo-fila { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.4; }
@@ -211,14 +211,14 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .menu.lista-menu .actual { background: var(--sel-fondo); }
 .velo { position: fixed; inset: 0; z-index: 30; background: var(--velo); display: grid; place-items: center; }
 .cuadro {
-  width: 440px; padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);
+  width: var(--ancho-cuadro); padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);
   background: var(--elevado); border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-ventana);
 }
 .cuadro h2 { margin: 0; font: var(--estilo-titulo); }
 .cuadro p { margin: 0; color: var(--texto-2); }
 .cuadro .pie { display: flex; justify-content: flex-end; gap: var(--esp-2); margin-top: var(--esp-2); }
 .ventana {
-  width: 860px; height: 600px; display: grid; grid-template-columns: 200px 1fr; overflow: hidden;
+  width: var(--ancho-ventana); height: var(--alto-ventana); display: grid; grid-template-columns: var(--ancho-pestanas-ventana) 1fr; overflow: hidden;
   background: var(--elevado); border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-ventana);
 }
 .ventana > nav { padding: var(--esp-4) var(--esp-2); border-right: 1px solid var(--borde-suave); display: flex; flex-direction: column; gap: 2px; }
@@ -230,7 +230,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Para qué: el título de la sección con su cuenta, sus acciones a la derecha (una principal como mucho) y los filtros debajo.
    Estados: con ruta, con acciones, con filtros. */
 .cabecera { padding: var(--esp-4) var(--esp-6) 0; border-bottom: 1px solid var(--borde); flex: none; }
-.cabecera .fila-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: 32px; padding-bottom: var(--esp-3); }
+.cabecera .fila-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: var(--alto-campo); padding-bottom: var(--esp-3); }
 .cabecera h1 { margin: 0; font: var(--estilo-titulo); display: flex; align-items: baseline; gap: var(--esp-2); }
 .cabecera .ruta { color: var(--texto-3); font-size: var(--tam-chico); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cabecera .acciones-cab { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
@@ -242,7 +242,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Estados: normal, elegida, vertical, números (hitos), hecho. */
 .pestanas { display: flex; gap: 2px; }
 .pestana {
-  display: inline-flex; align-items: center; gap: var(--esp-2); height: 30px; padding: 0 var(--esp-3);
+  display: inline-flex; align-items: center; gap: var(--esp-2); height: var(--alto-control); padding: 0 var(--esp-3);
   background: none; border: 0; border-radius: var(--radio-control);
   font: var(--estilo-control); color: var(--texto-2); cursor: pointer; text-decoration: none;
 }
@@ -250,7 +250,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .pestana.elegida { color: var(--texto); background: var(--sel-fondo); }
 .pestanas.vertical { flex-direction: column; }
 .pestanas.vertical .pestana { width: 100%; }
-.pestanas.numeros .pestana { width: 30px; padding: 0; justify-content: center; font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); }
+.pestanas.numeros .pestana { width: var(--alto-control); padding: 0; justify-content: center; font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); }
 .pestanas.numeros .pestana.hecho { color: var(--texto-2); }
 .pestanas.numeros .pestana.elegida { color: var(--texto); background: var(--sel-fondo); }
 
@@ -260,7 +260,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Estados: carpeta, archivo, elegido, con marca, con marca ámbar. */
 .arbol { display: flex; flex-direction: column; font-size: var(--tam-base); }
 .nodo {
-  display: flex; align-items: center; gap: 6px; height: 26px; padding-right: var(--esp-2);
+  display: flex; align-items: center; gap: 6px; height: var(--alto-nodo); padding-right: var(--esp-2);
   padding-left: calc(var(--esp-2) + var(--nivel, 0) * 14px);
   border-radius: var(--radio-control); color: var(--texto-2); cursor: pointer; white-space: nowrap;
 }
@@ -275,7 +275,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Grupo: Contenido
    Para qué: leer un markdown: Docs, la Bandeja y las respuestas de la IA. Tablas con línea solo entre filas.
    Estados: lectura, conversación. */
-.texto-doc { font: var(--estilo-lectura); color: var(--texto); max-width: 760px; }
+.texto-doc { font: var(--estilo-lectura); color: var(--texto); max-width: var(--ancho-lectura); }
 .texto-doc h1 { font: var(--estilo-documento); margin: 0 0 var(--esp-4); }
 .texto-doc h2 { font: var(--estilo-titulo); margin: var(--esp-6) 0 var(--esp-3); }
 .texto-doc h3 { font-size: var(--tam-lectura); font-weight: 600; margin: var(--esp-5) 0 var(--esp-2); }
@@ -301,15 +301,15 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Estados: con conversación, sin conversación, sección elegida, con punto. */
 .marco {
   height: 100vh; display: grid;
-  grid-template-columns: 48px 1fr 360px; grid-template-rows: 36px 1fr 26px;
+  grid-template-columns: var(--ancho-secciones) 1fr var(--ancho-conversacion); grid-template-rows: var(--alto-barra) 1fr var(--alto-estado);
   grid-template-areas: "menu proyectos proyectos" "actividad principal conversacion" "estado estado estado";
 }
-.marco.sin-conversacion { grid-template-columns: 48px 1fr; grid-template-areas: "menu proyectos" "actividad principal" "estado estado"; }
+.marco.sin-conversacion { grid-template-columns: var(--ancho-secciones) 1fr; grid-template-areas: "menu proyectos" "actividad principal" "estado estado"; }
 .marco > .boton-menu { border-right: 1px solid var(--borde); border-bottom: 1px solid var(--borde); grid-area: menu; display: grid; place-items: center; color: var(--texto-2); position: relative; }
 .marco > .boton-menu .punto { position: absolute; top: 9px; right: 11px; }
 .barra-proyectos { border-bottom: 1px solid var(--borde); grid-area: proyectos; display: flex; align-items: stretch; gap: 2px; }
 .barra-proyectos .proy {
-  display: flex; align-items: center; gap: var(--esp-2); padding: 0 var(--esp-2) 0 var(--esp-3); max-width: 220px;
+  display: flex; align-items: center; gap: var(--esp-2); padding: 0 var(--esp-2) 0 var(--esp-3); max-width: var(--ancho-proyecto);
   color: var(--texto-2); text-decoration: none; font-weight: 500; border-radius: var(--radio-control) var(--radio-control) 0 0;
 }
 .barra-proyectos .proy:hover { color: var(--texto); }
@@ -330,7 +330,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .act .punto { position: absolute; top: 7px; right: 7px; width: 6px; height: 6px; }
 .seccion { grid-area: principal; display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
 .contenido { flex: 1; overflow: auto; padding: var(--esp-5) var(--esp-6) var(--esp-7); }
-.contenido.centrado > * { max-width: 820px; margin-inline: auto; }
+.contenido.centrado > * { max-width: var(--ancho-centrado); margin-inline: auto; }
 .contenido.sin-margen { padding: 0; }
 .estado-barra {
   grid-area: estado; display: flex; align-items: center; gap: var(--esp-4); padding: 0 var(--esp-3);
@@ -347,7 +347,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    con una sola línea alrededor.
    Estados: mensaje mío, mensaje de la IA, paso, compositor con el foco. */
 .panel-conversacion { grid-area: conversacion; display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--borde); }
-.panel-conversacion .cab-conv { display: flex; align-items: center; gap: var(--esp-2); padding: var(--esp-2) var(--esp-3) var(--esp-2) var(--esp-4); min-height: 48px; }
+.panel-conversacion .cab-conv { display: flex; align-items: center; gap: var(--esp-2); padding: var(--esp-2) var(--esp-3) var(--esp-2) var(--esp-4); min-height: var(--alto-cabecera-conversacion); }
 .panel-conversacion .cab-conv .nombre-conv { flex: 1; min-width: 0; }
 .panel-conversacion .cab-conv .nombre-conv b { display: block; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .panel-conversacion .cab-conv .nombre-conv span { display: block; font-size: var(--tam-chico); color: var(--texto-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -372,5 +372,5 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .info { position: relative; display: inline-grid; place-items: center; width: 22px; height: 22px; color: var(--texto-3); border-radius: var(--radio-pildora); cursor: help; }
 .info:hover, .info:focus-visible { color: var(--texto); }
 .info .ic { width: 15px; height: 15px; }
-.info .globo { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 280px; padding: var(--esp-2) var(--esp-3); background: var(--elevado); box-shadow: var(--sombra-menu); border-radius: var(--radio-control); font-size: var(--tam-chico); color: var(--texto-2); line-height: 1.5; visibility: hidden; opacity: 0; transition: opacity .12s var(--sale); z-index: 20; }
+.info .globo { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: max-content; max-width: var(--ancho-globo); padding: var(--esp-2) var(--esp-3); background: var(--elevado); box-shadow: var(--sombra-menu); border-radius: var(--radio-control); font-size: var(--tam-chico); color: var(--texto-2); line-height: 1.5; visibility: hidden; opacity: 0; transition: opacity .12s var(--sale); z-index: 20; }
 .info:hover .globo, .info:focus-visible .globo { visibility: visible; opacity: 1; }

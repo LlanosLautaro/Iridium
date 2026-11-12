@@ -10,13 +10,14 @@ import {
   coloresEscritos,
   descripcionDe,
   esDeLaRed,
+  medidasRepetidas,
   referenciasDe,
   resolverReferencia,
   tituloDe,
 } from '../src/main/core/diseno/maquetas'
 import { pedidoEmpezar, tieneCodigo } from '../src/main/core/diseno/pedidos'
 import { leerFichas } from '../src/main/core/diseno/piezas'
-import { leerEstilo, leerTokens, resolver } from '../src/main/core/diseno/tokens'
+import { esMedida, leerEstilo, leerTokens, resolver } from '../src/main/core/diseno/tokens'
 import { leerArchivosDiseno } from '../src/main/infra/diseno/archivos'
 
 const MUESTRA = join(__dirname, 'muestras', 'diseno')
@@ -136,6 +137,31 @@ describe('los tokens', () => {
       ),
     ).toBe('3px x')
   })
+  it('una medida fija es un `--alto-*` o un `--ancho-*` con una sola medida (T-63)', () => {
+    const t = leerTokens(
+      `:root {
+  --alto-barra: 36px; /* la barra */
+  --ancho-panel: 22rem; /* el panel */
+  --alto-mal: calc(10px + 2px); /* no */
+  --ancho: 1440px; /* otra */
+}`,
+    )
+    expect(t.tokens.map((x) => [x.nombre, x.grupo])).toEqual([
+      ['--alto-barra', 'medidas'],
+      ['--ancho-panel', 'medidas'],
+      ['--alto-mal', 'medidas'],
+      ['--ancho', 'otras'],
+    ])
+    expect(['36px', '22rem', '100%', '.5em', 'calc(10px + 2px)', 'var(--a)', '36'].map(esMedida)).toEqual([
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+    ])
+  })
   it('lee los tokens reales de Iridium y el negro', async () => {
     for (const f of ['docs/ui/tokens.css', 'docs/modulos/diseno/negro.css', 'docs/diseno/tokens.css']) {
       const t = leerTokens(await readFile(join(__dirname, '..', f), 'utf8'))
@@ -147,6 +173,9 @@ describe('los tokens', () => {
     const estilos = propios.tokens.filter((x) => x.grupo === 'estilos')
     expect(estilos.length).toBeGreaterThan(5)
     expect(estilos.filter((x) => !x.muestra).map((x) => x.nombre)).toEqual([])
+    const medidas = propios.tokens.filter((x) => x.grupo === 'medidas')
+    expect(medidas.length).toBeGreaterThan(10)
+    expect(medidas.filter((x) => !esMedida(x.valor)).map((x) => x.nombre)).toEqual([])
   })
 })
 
@@ -294,6 +323,40 @@ describe('el control de docs/diseno/', () => {
       'docs/diseno/piezas.css:1 la ficha de «Fondo» no tiene `Grupo:` (acciones, navegación, avisos…)',
       'docs/diseno/piezas.css:3 `var(--tinta)` no está en `tokens.css`: sumalo con su uso o usá uno que exista',
     ])
+  })
+  it('4: una medida fija que no es una sola medida (T-63)', () => {
+    const tokens = `:root {
+  --fondo: #000; /* el fondo */
+  --alto-a: calc(var(--x) + 2px); /* no */
+  --alto-b: 30px; /* bien */
+}`
+    expect(control(diseno({ ...BIEN, 'tokens.css': tokens }))).toEqual([
+      'docs/diseno/tokens.css:3 `--alto-a` no se entiende como medida fija: va una sola medida (`36px`), sin cuentas ni otros tokens',
+    ])
+  })
+  it('8: una medida escrita a mano en tres reglas o más, con el token si ya existe (T-63)', () => {
+    const tokens = `:root {
+  --fondo: #000; /* el fondo */
+  --texto: #fff; /* el texto */
+  --alto-control: 30px; /* los botones */
+}`
+    const piezas = `/* A
+   Grupo: Uno
+   Para qué: algo. */
+.a { height: 30px; width: 30px; }
+.b { min-height: 30px; }
+.c { height: 30px; }
+.d { grid-template-columns: 48px 1fr; }
+.e { width: 48px; }
+.f { width: 48px; }
+.g { width: 16px; } .h { width: 16px; } .i { width: 16px; }
+.j { width: 28px; } .k { height: 28px; }
+.l { margin: 30px; }`
+    expect(control(diseno({ ...BIEN, 'tokens.css': tokens, 'piezas.css': piezas }))).toEqual([
+      'docs/diseno/piezas.css:4 `30px` escrito a mano en 3 reglas (líneas 4, 5, 6): usá `var(--alto-control)`',
+      'docs/diseno/piezas.css:7 `48px` escrito a mano en 3 reglas (líneas 7, 8, 9): hacelo una medida fija en `tokens.css` (`--alto-…` o `--ancho-…`, con su uso) y usala',
+    ])
+    expect(medidasRepetidas('.a { width: 30px }', 1)).toEqual([])
   })
   it('2 y 3: un archivo que no está, uno fuera de pantallas/, uno sin listar y una fecha mal escrita', () => {
     const readme =

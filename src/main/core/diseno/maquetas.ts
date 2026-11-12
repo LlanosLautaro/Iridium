@@ -103,3 +103,47 @@ export function descripcionDe(html: string): string | null {
     /<meta\s+content\s*=\s*"([^"]*)"\s+name\s*=\s*["']descripcion["']/i.exec(html)
   return m?.[1]?.trim() || null
 }
+
+/** Las propiedades que fijan el tamaño de algo: donde una medida escrita a mano debería ser un token (T-63). */
+const PROPIEDAD_MEDIDA =
+  /^(min-|max-)?(width|height|inline-size|block-size)$|^flex-basis$|^grid-template-(columns|rows)$|^grid-auto-(columns|rows)$/i
+
+/** Desde cuánto una medida es del sistema; lo más chico (un ícono, el tilde de una casilla) es un detalle de la pieza. */
+const MEDIDA_MINIMA = 20
+/** En cuántas reglas se repite para ser del sistema: en dos puede ser casualidad (el ícono de una fila y el interruptor). */
+const REGLAS_MINIMAS = 3
+
+export interface MedidaRepetida {
+  /** `30px`. */
+  valor: string
+  /** Las líneas de las reglas donde aparece, una por regla. */
+  lineas: number[]
+}
+
+/**
+ * Las medidas en `px` de 20 o más escritas a mano en el tamaño de tres reglas o más (`height: 30px` en el botón, el menú
+ * y las pestañas): tendrían que ser un token `--alto-*` o `--ancho-*` (T-63, D-119). Ancho y alto iguales en una misma
+ * regla cuentan una vez.
+ */
+export function medidasRepetidas(css: string, primeraLinea = 1): MedidaRepetida[] {
+  const limpio = sinComentariosCss(css)
+  const porValor = new Map<string, Map<number, number>>()
+  for (const regla of limpio.matchAll(/\{([^{}]*)\}/g)) {
+    const desde = regla.index + 1
+    for (const d of (regla[1] ?? '').matchAll(/([\w-]+)\s*:([^;]*)/g)) {
+      if (!PROPIEDAD_MEDIDA.test(d[1] ?? '')) continue
+      for (const n of (d[2] ?? '').matchAll(/(?<![\w.-])(\d*\.?\d+)px\b/g)) {
+        if (Number(n[1]) < MEDIDA_MINIMA) continue
+        const valor = `${n[1]}px`
+        const reglas = porValor.get(valor) ?? new Map<number, number>()
+        if (!reglas.has(regla.index))
+          reglas.set(regla.index, primeraLinea - 1 + lineaDe(limpio, desde + d.index))
+        porValor.set(valor, reglas)
+      }
+    }
+  }
+  return [...porValor]
+    .filter(([, reglas]) => reglas.size >= REGLAS_MINIMAS)
+    .map(([valor, reglas]) => ({ valor, lineas: [...reglas.values()] }))
+    .sort((a, b) => (a.lineas[0] ?? 0) - (b.lineas[0] ?? 0))
+}

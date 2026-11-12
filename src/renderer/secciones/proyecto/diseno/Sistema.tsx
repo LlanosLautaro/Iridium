@@ -1,6 +1,6 @@
 // Diseño › Sistema (DS-13): de qué está hecha la interfaz. Los tokens de `docs/diseno/tokens.css` dibujados por grupo
-// (colores, letra, estilos de texto, tamaños, espacios y esquinas, sombras), cada uno con su uso (D-114), y las piezas: sus
-// fichas por grupo (T-62, D-117) y la maqueta `piezas.html`, viva y grande.
+// (colores, letra, estilos de texto, tamaños, espacios y esquinas, medidas fijas, sombras), cada uno con su uso (D-114), y
+// las piezas: sus fichas por grupo (T-62, D-117) y la maqueta `piezas.html`, viva y grande.
 import type { CSSProperties } from 'react'
 import type { FichaVista, GrupoToken, SistemaDiseno, TokenVista } from '../../../../compartido/diseno'
 import { Icono } from '../../../ui/Icono'
@@ -12,18 +12,44 @@ const GRUPOS: readonly { grupo: GrupoToken; nombre: string }[] = [
   { grupo: 'estilos', nombre: 'Estilos de texto' },
   { grupo: 'tamanos', nombre: 'Tamaños de letra' },
   { grupo: 'espacios', nombre: 'Espacios y esquinas' },
+  { grupo: 'medidas', nombre: 'Medidas fijas' },
   { grupo: 'sombras', nombre: 'Sombras' },
   { grupo: 'otras', nombre: 'Otras' },
 ]
 
+/** Lo más alto que se dibuja una medida fija en su tamaño real; una más alta (una ventana) se corta. */
+const ALTO_MAXIMO = 48
+
+/** Los píxeles de una medida fija (`36px`), o null si va en otra unidad. */
+function pixeles(valor: string): number | null {
+  const m = /^(\d*\.?\d+)px$/.exec(valor.trim())
+  return m?.[1] ? Number(m[1]) : null
+}
+
+/**
+ * Una medida fija (T-63): un alto, en su tamaño real hasta 48px (más, cortado); un ancho, como barra proporcional al más
+ * ancho del grupo, porque un panel no entra en la columna.
+ */
+function estiloMedida(nombre: string, valor: string, anchoMayor: number): CSSProperties | null {
+  const px = pixeles(valor)
+  if (px === null) return null
+  if (/^alto-/.test(nombre)) return { height: Math.min(px, ALTO_MAXIMO) }
+  return { width: `${Math.max(2, (px / anchoMayor) * 100)}%` }
+}
+
 /** El dibujo de un token: el valor es del proyecto y va como propiedad de estilo, nunca como texto de CSS. */
-function Muestra({ t }: { t: TokenVista }) {
+function Muestra({ t, anchoMayor = 0 }: { t: TokenVista; anchoMayor?: number }) {
   const nombre = t.nombre.replace(/^--/, '')
   let estilo: CSSProperties | null = null
+  let clase = 'di-muestra'
   if (t.grupo === 'colores') estilo = { background: t.valor }
   else if (t.grupo === 'espacios')
     estilo = /radio/.test(nombre) ? { borderRadius: t.valor } : { width: t.valor }
-  else if (t.grupo === 'sombras') estilo = { boxShadow: t.valor }
+  else if (t.grupo === 'medidas') {
+    estilo = estiloMedida(nombre, t.valor, anchoMayor)
+    const alto = /^alto-/.test(nombre)
+    clase = `di-muestra ${alto ? 'di-alto' : 'di-ancho'}${alto && (pixeles(t.valor) ?? 0) > ALTO_MAXIMO ? ' cortada' : ''}`
+  } else if (t.grupo === 'sombras') estilo = { boxShadow: t.valor }
   return (
     <li className={`di-token di-g-${t.grupo}`}>
       {t.grupo === 'letra' ? (
@@ -44,7 +70,7 @@ function Muestra({ t }: { t: TokenVista }) {
           Una línea de ejemplo
         </span>
       ) : (
-        estilo && <span className="di-muestra" style={estilo} />
+        estilo && <span className={clase} style={estilo} />
       )}
       <span className="di-token-n">{nombre}</span>
       <span className="di-token-v">
@@ -154,6 +180,11 @@ export function Sistema({
       {GRUPOS.map(({ grupo, nombre }) => {
         const del = sistema.tokens.filter((t) => t.grupo === grupo)
         if (del.length === 0) return null
+        // Los anchos se dibujan contra el más ancho del grupo.
+        const anchoMayor = Math.max(
+          1,
+          ...del.flatMap((t) => (/^--ancho-/.test(t.nombre) ? (pixeles(t.valor) ?? []) : [])),
+        )
         return (
           <section key={grupo} className="di-bloque" aria-label={nombre}>
             <h3 className="di-grupo-t">
@@ -161,7 +192,7 @@ export function Sistema({
             </h3>
             <ul className={`di-tokens di-g-${grupo}`}>
               {del.map((t) => (
-                <Muestra key={t.nombre} t={t} />
+                <Muestra key={t.nombre} t={t} anchoMayor={anchoMayor} />
               ))}
             </ul>
           </section>

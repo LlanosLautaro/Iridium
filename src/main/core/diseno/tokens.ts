@@ -1,9 +1,18 @@
 // Los tokens de las maquetas (frente Diseño, DS-13): las variables del primer bloque `:root` de `docs/diseno/tokens.css`,
 // agrupadas para dibujarlas en Sistema (`modulos/diseno/diseno-tecnico.md` › Sistema). Cada token lleva su uso: el
 // comentario que lo sigue en la misma línea (`--principal: #3ccf7f; /* el botón principal, uno por pantalla */`, D-114).
-// Un estilo de texto es un `--estilo-*` con el atajo `font` de CSS: `peso tamaño/interlineado letra` (T-61, D-116).
+// Un estilo de texto es un `--estilo-*` con el atajo `font` de CSS: `peso tamaño/interlineado letra` (T-61, D-116). Una
+// medida fija es un `--alto-*` o un `--ancho-*` con una sola medida: la barra, un control, una fila, un panel (T-63, D-119).
 
-export type GrupoToken = 'colores' | 'letra' | 'estilos' | 'tamanos' | 'espacios' | 'sombras' | 'otras'
+export type GrupoToken =
+  | 'colores'
+  | 'letra'
+  | 'estilos'
+  | 'tamanos'
+  | 'espacios'
+  | 'medidas'
+  | 'sombras'
+  | 'otras'
 
 export interface Token {
   nombre: string
@@ -36,6 +45,7 @@ export function grupoDe(nombre: string, valor: string): GrupoToken {
   if (/^estilo-/.test(n)) return 'estilos'
   if (/^(tam|tamano|tamaño)-/.test(n)) return 'tamanos'
   if (/^(espacio|esp|radio)-/.test(n)) return 'espacios'
+  if (/^(alto|ancho)-/.test(n)) return 'medidas'
   if (/^sombra-/.test(n)) return 'sombras'
   if (esColor(valor)) return 'colores'
   if (/(^|-)(ui|fuente|letra|mono)(-|$)/.test(n) || (/,/.test(valor) && !/\(/.test(valor))) return 'letra'
@@ -55,6 +65,13 @@ export function resolver(valor: string, valores: ReadonlyMap<string, string>): s
     if (falta) return null
   }
   return /var\(/.test(v) ? null : v.replace(/\s+/g, ' ').trim()
+}
+
+const MEDIDA = /^\d*\.?\d+(px|rem|em|vh|vw|%)$/
+
+/** Una medida fija se escribe como una sola medida (`36px`), sin cuentas ni otros tokens. */
+export function esMedida(valor: string): boolean {
+  return MEDIDA.test(valor.trim())
 }
 
 export interface EstiloTexto {
