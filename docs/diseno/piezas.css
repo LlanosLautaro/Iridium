@@ -7,7 +7,7 @@
 html, body { margin: 0; height: 100%; }
 body {
   background: var(--fondo); color: var(--texto);
-  font: 400 var(--tam-base)/1.5 var(--ui);
+  font: var(--estilo-cuerpo);
   -webkit-font-smoothing: antialiased; overflow: hidden;
 }
 ::selection { background: var(--seleccion); }
@@ -29,7 +29,7 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
 .boton {
   display: inline-flex; align-items: center; gap: var(--esp-2);
   height: 30px; padding: 0 var(--esp-3);
-  font: 500 var(--tam-base)/1 var(--ui); color: var(--texto);
+  font: var(--estilo-boton); color: var(--texto);
   background: transparent; border: 1px solid transparent; border-radius: var(--radio-control);
   cursor: pointer; white-space: nowrap; text-decoration: none;
   transition: background .12s var(--sale), color .12s var(--sale), border-color .12s var(--sale);
@@ -61,10 +61,10 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
 a.fila, .fila.se-abre { cursor: pointer; }
 .fila:hover { background: var(--hover); }
 .fila.elegida { background: var(--sel-fondo); }
-.fila .codigo { font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); width: 44px; flex: none; }
+.fila .codigo { font: var(--estilo-codigo); color: var(--texto-3); width: 44px; flex: none; }
 .fila .principal-fila { flex: 1; min-width: 0; }
 .fila .titulo-fila { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.fila .detalle { display: block; font-size: var(--tam-chico); color: var(--texto-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fila .detalle { display: block; font: var(--estilo-meta); color: var(--texto-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fila.con-detalle { padding-block: var(--esp-2); }
 .fila .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; }
 .fila .meta.fija { font-family: var(--mono); }
@@ -78,7 +78,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .bloque.con-linea + .bloque.con-linea { border-top: 1px solid var(--borde-suave); padding-top: var(--esp-5); }
 .bloque-titulo {
   display: flex; align-items: baseline; gap: var(--esp-2);
-  font-size: var(--tam-chico); font-weight: 500; color: var(--texto-3); margin: 0;
+  font: var(--estilo-rotulo); color: var(--texto-3); margin: 0;
 }
 .bloque-titulo .derecha { margin-left: auto; }
 
@@ -106,7 +106,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 /* ───────── PZ-5 · Campo ───────── */
 .campo, .selector, .area {
   height: 32px; padding: 0 var(--esp-3); width: 100%;
-  font: 400 var(--tam-base)/1 var(--ui); color: var(--texto);
+  font: var(--estilo-control); color: var(--texto);
   background: transparent; border: 1px solid var(--borde-control); border-radius: var(--radio-control);
 }
 .campo::placeholder, .area::placeholder { color: var(--texto-3); }
@@ -150,7 +150,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .filtros .derecha { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
 
 /* ───────── PZ-7 · Cuenta y señal ───────── */
-.cuenta { font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); font-weight: 400; }
+.cuenta { font: var(--estilo-codigo); color: var(--texto-3); }
 .cuenta.frena { color: var(--espera); }
 .punto { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--texto-3); flex: none; }
 .punto.ambar { background: var(--espera); }
@@ -170,7 +170,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .menu button, .menu a {
   display: flex; align-items: center; gap: var(--esp-2); height: 30px; padding: 0 var(--esp-2);
   background: none; border: 0; border-radius: var(--radio-control); text-align: left; text-decoration: none;
-  font: 400 var(--tam-base)/1 var(--ui); color: var(--texto); cursor: pointer;
+  font: var(--estilo-control); color: var(--texto); cursor: pointer;
 }
 .menu button:hover, .menu a:hover { background: var(--hover); }
 .menu .atajo { margin-left: auto; color: var(--texto-3); font-size: var(--tam-chico); }
@@ -189,7 +189,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
   width: 440px; padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);
   background: var(--elevado); border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-ventana);
 }
-.cuadro h2 { margin: 0; font-size: var(--tam-titulo); font-weight: 600; }
+.cuadro h2 { margin: 0; font: var(--estilo-titulo); }
 .cuadro p { margin: 0; color: var(--texto-2); }
 .cuadro .pie { display: flex; justify-content: flex-end; gap: var(--esp-2); margin-top: var(--esp-2); }
 .ventana {
@@ -197,13 +197,13 @@ a.fila, .fila.se-abre { cursor: pointer; }
   background: var(--elevado); border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-ventana);
 }
 .ventana > nav { padding: var(--esp-4) var(--esp-2); border-right: 1px solid var(--borde-suave); display: flex; flex-direction: column; gap: 2px; }
-.ventana > nav h2 { margin: 0 0 var(--esp-3) var(--esp-2); font-size: var(--tam-titulo); font-weight: 600; }
+.ventana > nav h2 { margin: 0 0 var(--esp-3) var(--esp-2); font: var(--estilo-titulo); }
 .ventana > .cuerpo-ventana { padding: var(--esp-5) var(--esp-6); overflow: auto; position: relative; }
 
 /* ───────── PZ-9 · Cabecera de sección ───────── */
 .cabecera { padding: var(--esp-4) var(--esp-6) 0; border-bottom: 1px solid var(--borde); flex: none; }
 .cabecera .fila-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: 32px; padding-bottom: var(--esp-3); }
-.cabecera h1 { margin: 0; font-size: var(--tam-titulo); font-weight: 600; display: flex; align-items: baseline; gap: var(--esp-2); }
+.cabecera h1 { margin: 0; font: var(--estilo-titulo); display: flex; align-items: baseline; gap: var(--esp-2); }
 .cabecera .ruta { color: var(--texto-3); font-size: var(--tam-chico); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cabecera .acciones-cab { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
 .cabecera .filtros { margin-top: calc(-1 * var(--esp-1)); }
@@ -213,7 +213,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .pestana {
   display: inline-flex; align-items: center; gap: var(--esp-2); height: 30px; padding: 0 var(--esp-3);
   background: none; border: 0; border-radius: var(--radio-control);
-  font: 400 var(--tam-base)/1 var(--ui); color: var(--texto-2); cursor: pointer; text-decoration: none;
+  font: var(--estilo-control); color: var(--texto-2); cursor: pointer; text-decoration: none;
 }
 .pestana:hover { color: var(--texto); background: var(--hover); }
 .pestana.elegida { color: var(--texto); background: var(--sel-fondo); }
@@ -238,9 +238,9 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .nodo .marca.ambar { color: var(--espera); }
 
 /* ───────── PZ-12 · Texto de documento ───────── */
-.texto-doc { font-size: var(--tam-lectura); line-height: 1.65; color: var(--texto); max-width: 760px; }
-.texto-doc h1 { font-size: var(--tam-grande); font-weight: 600; margin: 0 0 var(--esp-4); line-height: 1.25; }
-.texto-doc h2 { font-size: var(--tam-titulo); font-weight: 600; margin: var(--esp-6) 0 var(--esp-3); }
+.texto-doc { font: var(--estilo-lectura); color: var(--texto); max-width: 760px; }
+.texto-doc h1 { font: var(--estilo-documento); margin: 0 0 var(--esp-4); }
+.texto-doc h2 { font: var(--estilo-titulo); margin: var(--esp-6) 0 var(--esp-3); }
 .texto-doc h3 { font-size: var(--tam-lectura); font-weight: 600; margin: var(--esp-5) 0 var(--esp-2); }
 .texto-doc p, .texto-doc ul, .texto-doc ol { margin: 0 0 var(--esp-3); }
 .texto-doc ul, .texto-doc ol { padding-left: var(--esp-5); }
@@ -312,7 +312,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .mensaje-ia .paso { display: flex; gap: var(--esp-2); align-items: center; font-size: var(--tam-chico); color: var(--texto-3); }
 .compositor { margin: 0 var(--esp-3) var(--esp-3); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-bloque); padding: var(--esp-3); display: flex; flex-direction: column; gap: var(--esp-3); }
 .compositor:focus-within { border-color: var(--borde-control); }
-.compositor textarea { background: none; border: 0; resize: none; color: var(--texto); font: 400 var(--tam-base)/1.5 var(--ui); min-height: 44px; outline: none; }
+.compositor textarea { background: none; border: 0; resize: none; color: var(--texto); font: var(--estilo-cuerpo); min-height: 44px; outline: none; }
 .compositor textarea::placeholder { color: var(--texto-3); }
 .compositor .pie-comp { display: flex; align-items: center; gap: var(--esp-1); }
 .compositor .pie-comp .enviar { margin-left: auto; }

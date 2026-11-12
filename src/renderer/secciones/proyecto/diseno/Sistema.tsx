@@ -1,5 +1,5 @@
 // Diseño › Sistema (DS-13): de qué está hecha la interfaz. Los tokens de `docs/diseno/tokens.css` dibujados por grupo
-// (colores, letra, tamaños, espacios y esquinas, sombras), cada uno con su uso (D-114), y las piezas, la maqueta
+// (colores, letra, estilos de texto, tamaños, espacios y esquinas, sombras), cada uno con su uso (D-114), y las piezas, la maqueta
 // `piezas.html`, viva y grande.
 import type { CSSProperties } from 'react'
 import type { GrupoToken, SistemaDiseno, TokenVista } from '../../../../compartido/diseno'
@@ -9,6 +9,7 @@ import { Miniatura } from './Miniatura'
 const GRUPOS: readonly { grupo: GrupoToken; nombre: string }[] = [
   { grupo: 'colores', nombre: 'Colores' },
   { grupo: 'letra', nombre: 'Letra' },
+  { grupo: 'estilos', nombre: 'Estilos de texto' },
   { grupo: 'tamanos', nombre: 'Tamaños de letra' },
   { grupo: 'espacios', nombre: 'Espacios y esquinas' },
   { grupo: 'sombras', nombre: 'Sombras' },
@@ -29,6 +30,15 @@ function Muestra({ t }: { t: TokenVista }) {
         <span className="di-letra" style={{ fontFamily: t.valor }}>
           Aa Iridium
         </span>
+      ) : t.grupo === 'estilos' ? (
+        // El atajo `font` con los tokens del proyecto ya puestos (T-61); si no se entiende, el ejemplo queda tachado.
+        <span
+          className={t.muestra ? 'di-estilo' : 'di-estilo roto'}
+          style={t.muestra ? { font: t.muestra } : undefined}
+          title={t.muestra ? undefined : 'No se entiende: va como «peso tamaño/interlineado letra»'}
+        >
+          Una línea de ejemplo
+        </span>
       ) : t.grupo === 'tamanos' ? (
         <span className="di-tam" style={{ fontSize: t.valor }}>
           Una línea de ejemplo
@@ -37,7 +47,10 @@ function Muestra({ t }: { t: TokenVista }) {
         estilo && <span className="di-muestra" style={estilo} />
       )}
       <span className="di-token-n">{nombre}</span>
-      <span className="di-token-v">{t.valor}</span>
+      <span className="di-token-v">
+        {/* En los estilos, `600 tam-titulo/1.35 ui`: los tokens por su nombre, para que entre en la columna. */}
+        {t.grupo === 'estilos' ? t.valor.replace(/var\(--([\w-]+)\)/g, '$1') : t.valor}
+      </span>
       {t.uso && <span className="di-token-uso">{t.uso}</span>}
     </li>
   )

@@ -23,7 +23,7 @@ export interface GrupoMaquetas {
   maquetas: MaquetaVista[]
 }
 
-export type GrupoToken = 'colores' | 'letra' | 'tamanos' | 'espacios' | 'sombras' | 'otras'
+export type GrupoToken = 'colores' | 'letra' | 'estilos' | 'tamanos' | 'espacios' | 'sombras' | 'otras'
 
 export interface TokenVista {
   nombre: string
@@ -31,6 +31,8 @@ export interface TokenVista {
   grupo: GrupoToken
   /** Para qué se usa (el comentario del token en `tokens.css`, D-114), o null. */
   uso: string | null
+  /** Solo en los estilos de texto (T-61): el atajo `font` con los `var(--…)` resueltos, o null si no se entiende. */
+  muestra?: string | null
 }
 
 export interface SistemaDiseno {

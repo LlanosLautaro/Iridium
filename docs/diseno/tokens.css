@@ -64,6 +64,17 @@
   --tam-titulo: 17px; /* el título de una sección, un cuadro o un subtítulo de documento */
   --tam-grande: 22px; /* el título de un documento, uno por página */
 
+  /* Estilos de texto: peso, tamaño/interlineado y letra, para usar con `font: var(--estilo-…)` (T-61) */
+  --estilo-documento: 600 var(--tam-grande)/1.25 var(--ui); /* el título de un documento, uno por página */
+  --estilo-titulo: 600 var(--tam-titulo)/1.35 var(--ui); /* el título de una sección o un cuadro y los subtítulos de un documento */
+  --estilo-lectura: 400 var(--tam-lectura)/1.65 var(--ui); /* el cuerpo de un documento para leer de corrido */
+  --estilo-cuerpo: 400 var(--tam-base)/1.5 var(--ui); /* el texto de la interfaz: filas, mensajes, el compositor */
+  --estilo-boton: 500 var(--tam-base)/1 var(--ui); /* la letra de un botón */
+  --estilo-control: 400 var(--tam-base)/1 var(--ui); /* campos, opciones de menú y pestañas */
+  --estilo-rotulo: 500 var(--tam-chico)/1.5 var(--ui); /* los títulos de bloque, en el gris de apoyo */
+  --estilo-meta: 400 var(--tam-chico)/1.5 var(--ui); /* lo que acompaña: el detalle de una fila, fechas, la barra de abajo */
+  --estilo-codigo: 400 var(--tam-chico)/1.5 var(--mono); /* códigos (D-n, Q-n), cuentas y números en columna */
+
   /* Espacios */
   --esp-1: 4px; /* entre un ícono y su texto */
   --esp-2: 8px; /* entre cosas de un mismo grupo */

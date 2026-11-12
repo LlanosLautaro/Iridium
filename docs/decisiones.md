@@ -2589,3 +2589,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** una sola fuente que Iridium muestra y controla; el arreglo va en el framework, no en un proyecto (regla de este repo).
 
 **Consecuencias:** no cambia el lector ni el control (el formato de destino ya existe).
+
+## D-116 — Los estilos de texto son tokens `--estilo-*` con el atajo `font`
+- **Fecha:** 2026-11-12
+- **Ámbito:** framework
+- **Hito o paso:** 10; frente Diseño, paso 7 (T-61)
+- **Estado:** vigente
+
+**Contexto:** D-114, idea 2: los estilos de texto con nombre (título, cuerpo, rótulo…). Había que elegir cómo se escriben en `docs/diseno/`.
+
+**Decisión:** cada estilo es un token más de `tokens.css`, `--estilo-<nombre>`, con el valor del atajo `font` de CSS (`peso tamaño/interlineado letra`, con los tokens de tamaño y de letra: `--estilo-titulo: 600 var(--tam-titulo)/1.35 var(--ui);`) y su uso, como todos. Las piezas lo usan con `font: var(--estilo-…)`. Iridium los muestra en Diseño › Sistema como «Estilos de texto», cada uno escrito en ese estilo; el control avisa de uno que no se entiende o que nombra un token que no existe. No son obligatorios.
+
+**Motivo:** una sola línea por estilo que la maqueta y el código usan tal cual (pasar al código es copiar, D-105), sin un archivo ni un formato nuevo; descartado escribirlos como tres tokens sueltos (tamaño, interlineado y peso), que se pueden mezclar mal.
+
+**Consecuencias:** Iridium tiene nueve (documento, título, lectura, cuerpo, botón, control, rótulo, meta, código) y `piezas.css` los usa donde ya coincidían; los títulos pasan de interlineado 1.5 a 1.35. El atajo `font` no lleva el espaciado entre letras: si una pieza lo necesita, lo suma aparte.

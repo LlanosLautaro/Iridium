@@ -15,7 +15,7 @@ import {
   tituloDe,
 } from '../src/main/core/diseno/maquetas'
 import { pedidoEmpezar, tieneCodigo } from '../src/main/core/diseno/pedidos'
-import { leerTokens } from '../src/main/core/diseno/tokens'
+import { leerEstilo, leerTokens, resolver } from '../src/main/core/diseno/tokens'
 import { leerArchivosDiseno } from '../src/main/infra/diseno/archivos'
 
 const MUESTRA = join(__dirname, 'muestras', 'diseno')
@@ -98,6 +98,43 @@ describe('los tokens', () => {
     ])
     expect(t.tokens.map((x) => x.linea)).toEqual([3, 6, 7, 7, 8])
   })
+  it('un estilo de texto es un `--estilo-*` con el atajo font, resuelto con los otros tokens (T-61)', () => {
+    const t = leerTokens(
+      ':root {\n  --ui: system-ui, sans-serif; /* la letra */\n  --tam-t: 17px; /* títulos */\n  --estilo-titulo: 600 var(--tam-t)/1.3 var(--ui); /* el título */\n  --estilo-mal: grande; /* no */\n  --estilo-falta: 600 var(--tam-x)/1 var(--ui); /* no está */\n}',
+    )
+    expect(t.tokens.filter((x) => x.grupo === 'estilos').map((x) => [x.nombre, x.muestra])).toEqual([
+      ['--estilo-titulo', '600 17px/1.3 system-ui, sans-serif'],
+      ['--estilo-mal', null],
+      ['--estilo-falta', null],
+    ])
+    expect(t.tokens.find((x) => x.nombre === '--ui')?.muestra).toBeUndefined()
+  })
+  it('lee el atajo font: peso, tamaño, interlineado y letra', () => {
+    expect(leerEstilo('600 17px/1.3 system-ui, sans-serif')).toEqual({
+      peso: '600',
+      tamano: '17px',
+      interlineado: '1.3',
+      letra: 'system-ui, sans-serif',
+    })
+    expect(leerEstilo('12.5px "Cascadia Mono", monospace')).toEqual({
+      peso: '400',
+      tamano: '12.5px',
+      interlineado: null,
+      letra: '"Cascadia Mono", monospace',
+    })
+    expect(leerEstilo('italic bold 1rem / 20px serif')?.tamano).toBe('1rem')
+    expect(leerEstilo('600 grande serif')).toBeNull()
+    expect(leerEstilo('16px')).toBeNull()
+    expect(
+      resolver(
+        'var(--a, 3px) var(--b)',
+        new Map([
+          ['--b', 'var(--c)'],
+          ['--c', 'x'],
+        ]),
+      ),
+    ).toBe('3px x')
+  })
   it('lee los tokens reales de Iridium y el negro', async () => {
     for (const f of ['docs/ui/tokens.css', 'docs/modulos/diseno/negro.css', 'docs/diseno/tokens.css']) {
       const t = leerTokens(await readFile(join(__dirname, '..', f), 'utf8'))
@@ -106,6 +143,9 @@ describe('los tokens', () => {
     }
     const propios = leerTokens(await readFile(join(__dirname, '..', 'docs/diseno/tokens.css'), 'utf8'))
     expect(propios.tokens.filter((x) => !x.uso).map((x) => x.nombre)).toEqual([])
+    const estilos = propios.tokens.filter((x) => x.grupo === 'estilos')
+    expect(estilos.length).toBeGreaterThan(5)
+    expect(estilos.filter((x) => !x.muestra).map((x) => x.nombre)).toEqual([])
   })
 })
 
@@ -186,6 +226,13 @@ describe('el control de docs/diseno/', () => {
     const tokens = ':root {\n  --fondo: #000; /* el fondo */\n  --texto: #fff;\n  --borde: #222;\n}'
     expect(control(diseno({ ...BIEN, 'tokens.css': tokens }))).toEqual([
       'docs/diseno/tokens.css:3 2 tokens sin su uso (--texto, --borde): uno por línea, con `/* para qué se usa */` después del `;`',
+    ])
+  })
+  it('4: un estilo de texto que no se entiende o nombra un token que no está (T-61)', () => {
+    const tokens =
+      ':root {\n  --fondo: #000; /* el fondo */\n  --estilo-a: 600 var(--tam)/1 var(--ui); /* falta */\n  --estilo-b: 500 13px/1.4 system-ui; /* bien */\n}'
+    expect(control(diseno({ ...BIEN, 'tokens.css': tokens }))).toEqual([
+      'docs/diseno/tokens.css:3 `--estilo-a` no se entiende como estilo de texto: va como `peso tamaño/interlineado letra` (`600 var(--tam-titulo)/1.3 var(--ui)`), con tokens que existan',
     ])
   })
   it('2 y 3: un archivo que no está, uno fuera de pantallas/, uno sin listar y una fecha mal escrita', () => {

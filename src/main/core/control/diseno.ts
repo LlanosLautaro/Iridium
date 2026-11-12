@@ -86,6 +86,13 @@ export const reglaDiseno: Regla = (a) => {
             ', ',
           )}${sinUso.length > 5 ? '…' : ''}): uno por línea, con \`/* para qué se usa */\` después del \`;\``,
       )
+    // Los estilos de texto (T-61, D-116): el atajo `font`, con tokens que existen.
+    for (const e of tokens.tokens.filter((x) => x.grupo === 'estilos' && !x.muestra))
+      av(
+        'tokens.css',
+        e.linea,
+        `\`${e.nombre}\` no se entiende como estilo de texto: va como \`peso tamaño/interlineado letra\` (\`600 var(--tam-titulo)/1.3 var(--ui)\`), con tokens que existan`,
+      )
   }
 
   // 5–6: todo local y existente, sin colores escritos.

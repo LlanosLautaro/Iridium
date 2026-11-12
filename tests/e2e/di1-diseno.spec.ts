@@ -213,6 +213,15 @@ test('Sistema: los colores, la letra, los tamaños y las piezas vivas (DS-13)', 
     40,
   )
   await expect(diseno.getByRole('region', { name: 'Tamaños de letra' }).locator('.di-token')).toHaveCount(3)
+  // Un estilo de texto se dibuja con su peso y su tamaño, con los tokens del proyecto (T-61).
+  const estilo = diseno.getByRole('region', { name: 'Estilos de texto' }).locator('.di-estilo')
+  await expect(estilo).toHaveCSS('font-weight', '600')
+  await expect(estilo).toHaveCSS('font-size', '22px')
+  await diseno
+    .getByRole('region', { name: 'Estilos de texto' })
+    .screenshot({ path: 'test-results/t61-estilos.png' })
+  // Las miniaturas cargan al verse: Piezas queda abajo del todo.
+  await diseno.getByRole('region', { name: 'Piezas' }).scrollIntoViewIfNeeded()
   await expect
     .poll(() =>
       win

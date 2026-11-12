@@ -1,7 +1,7 @@
 # Estado del módulo: Diseño
 
 **Tipo:** sección (un «Claude Design» local dentro de Iridium; D-102)
-**Última actualización:** 2026-11-09
+**Última actualización:** 2026-11-12
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,12 +13,12 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-115; siguen T-61 a T-63 y DI-I3) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-116; T-61 hecha; siguen T-62, T-63 y DI-I3) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso; faltan los estilos de texto, la ficha por pieza y las medidas fijas (T-61 a T-63), antes de DI-I3.
+Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso y los estilos de texto tienen nombre (T-61, D-116); faltan la ficha por pieza y las medidas fijas (T-62, T-63), antes de DI-I3.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -47,6 +47,13 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I2 — 2026-11-12 — T-61: los estilos de texto con nombre
+- **El formato (D-116):** cada estilo es un token `--estilo-<nombre>` con el atajo `font` (`600 var(--tam-titulo)/1.35 var(--ui)`) y su uso; las piezas lo usan con `font: var(--estilo-…)`. No son obligatorios.
+- **Lector, Sistema y control juntos:** el lector los agrupa en «Estilos de texto» y resuelve sus `var(--…)` con los tokens del proyecto; Diseño › Sistema escribe una línea en cada estilo (tachada si no se entiende) y el valor abreviado (`600 tam-titulo/1.35 ui`); el control avisa de uno que no se entiende o nombra un token que no está. El framework lo dice en `SKILL.md` › Las maquetas y `referencias/06-ui.md` › Maquetas.
+- **Los de Iridium:** nueve (documento, título, lectura, cuerpo, botón, control, rótulo, meta, código) en `docs/diseno/tokens.css`; `piezas.css` los usa en 16 lugares donde ya coincidían. Los títulos pasan de interlineado 1.5 a 1.35; lo demás se ve igual. La maqueta de Sistema suma el bloque.
+- **Q-160:** ese proyecto pasó su design system y se ve en su Diseño › Sistema. Su propuesta (que Iridium le avise a un proyecto cuando el framework le pide algo) quedó en T-64 y Q-161.
+- **Verificado:** `pnpm test` (702 pasan), `di1-diseno.spec.ts` con la app abierta (4 pasan; captura `test-results/t61-estilos.png`), el control en 0 avisos y capturas de las 23 maquetas en el navegador, sin errores (`tools/salida/t61/`).
+
 ### DI-I2 — 2026-11-09 — Q-157 a Q-159: la tanda 2 aprobada y cada token con su uso
 - **Q-157:** todo bien (archivados y Eliminar, el detalle de una skill, Diseño › grande y › Sistema, las conversaciones y los errores, el ancho chico), sin comentarios nuevos. **DI-I2 queda hecha.**
 - **Q-159 (A, D-114), la idea 1:** cada token de `tokens.css` en su línea con su uso en un comentario después del `;`. El lector lo lee, Diseño › Sistema lo muestra (debajo de la muestra o a la derecha) y el control avisa de los que no lo tienen, en un solo aviso. Los 55 tokens de Iridium tienen su uso; la muestra de pruebas también. Las ideas 2 a 4, en T-61 a T-63.
@@ -103,5 +110,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-T-61: los estilos de texto con nombre (título, cuerpo, rótulo, código) en el formato `docs/diseno/`: decidir cómo se escriben, sumarlos al lector, a Diseño › Sistema, al control y al framework en el mismo cambio, y pasar los de Iridium. Después T-62, T-63 y DI-I3 (con T-58).
-**Leer antes:** `trabajo.md` › T-61 a T-63, `decisiones.md` › D-114 y `diseno-tecnico.md` › Sistema y › El control.
+T-62: una ficha por pieza en el formato `docs/diseno/` (agrupadas, con para qué sirve, sus estados y qué tokens usa): decidir cómo se escribe, sumarla al lector, a Diseño › Sistema, al control y al framework en el mismo cambio, y escribir las de las 12 piezas de Iridium. Después T-63 y DI-I3 (con T-58).
+**Leer antes:** `trabajo.md` › T-62 y T-63, `decisiones.md` › D-114 y D-116, `diseno-tecnico.md` › Sistema y › El control, y `ux.md` › Las piezas.
