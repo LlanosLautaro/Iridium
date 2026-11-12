@@ -220,8 +220,17 @@ test('Sistema: los colores, la letra, los tamaños y las piezas vivas (DS-13)', 
   await diseno
     .getByRole('region', { name: 'Estilos de texto' })
     .screenshot({ path: 'test-results/t61-estilos.png' })
+  // Las fichas de las piezas, por grupo y con los tokens que usan (T-62).
+  const piezas = diseno.getByRole('region', { name: 'Piezas' })
+  await expect(piezas.locator('.di-ficha')).toHaveCount(3)
+  const accion = piezas.getByRole('region', { name: 'Acciones' }).locator('.di-ficha')
+  await expect(accion.locator('.di-ficha-n')).toHaveText('BotónPZ-1')
+  await expect(accion.locator('.di-ficha-e')).toHaveText('Estadosnormal · al pasar')
+  await expect(accion.locator('.di-ficha-t')).toContainText('superficie')
+  await expect(piezas.locator('.di-ficha-t .roto')).toHaveCount(0)
+  await piezas.locator('.di-fichas').screenshot({ path: 'test-results/t62-fichas.png' })
   // Las miniaturas cargan al verse: Piezas queda abajo del todo.
-  await diseno.getByRole('region', { name: 'Piezas' }).scrollIntoViewIfNeeded()
+  await piezas.scrollIntoViewIfNeeded()
   await expect
     .poll(() =>
       win

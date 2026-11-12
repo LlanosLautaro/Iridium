@@ -13,12 +13,12 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-116; T-61 hecha; siguen T-62, T-63 y DI-I3) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-117; T-61 y T-62 hechas; siguen T-63 y DI-I3) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso y los estilos de texto tienen nombre (T-61, D-116); faltan la ficha por pieza y las medidas fijas (T-62, T-63), antes de DI-I3.
+Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso, los estilos de texto tienen nombre (T-61, D-116) y cada pieza tiene su ficha (T-62, D-117); faltan las medidas fijas (T-63), antes de DI-I3.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -47,6 +47,13 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I2 — 2026-11-12 — T-62: una ficha por pieza
+- **El formato (D-117):** el comentario que encabeza cada pieza en `piezas.css` suma `Grupo:`, `Para qué:` y `Estados:`; los tokens que usa los saca Iridium de sus reglas, así no se copian a mano.
+- **Lector, Sistema y control juntos:** `core/diseno/piezas.ts` lee las fichas; Diseño › Sistema las muestra por grupo arriba de `piezas.html`, con «Estados» y «Tokens» en dos renglones (el token que no existe, tachado en rojo); el control avisa de `piezas.css` sin fichas, de una ficha sin grupo y de un `var(--…)` que no está en `tokens.css`. El framework lo dice en `SKILL.md` › Las maquetas y `referencias/06-ui.md` (que ya no pide las tablas de componentes).
+- **Las de Iridium:** quince en cinco grupos: Acciones (Botón, Campo, Menú y cuadro), Contenido (Fila, Bloque, Texto de documento), Avisos (Recuadro, Cuenta y señal, la «i»), Navegación (Filtros, Cabecera, Pestañas, Árbol) y Del dominio (el marco, la conversación). La maqueta de Sistema suma el bloque.
+- **Q-161 (A, D-118):** novedades del framework con fecha y **Ponerse al día**, en T-64 (frente Orden). La primera novedad a anotar: las fichas.
+- **Verificado:** `pnpm test` (705 pasan), `di1-diseno.spec.ts` con la app abierta (4 pasan; captura `test-results/t62-fichas.png`), las fichas de Iridium en la app (`tools/salida/t62/pantalla.png`), la maqueta de Sistema en el navegador sin errores (`tools/salida/t62/maqueta-sistema.png`) y el control en 0 avisos.
+
 ### DI-I2 — 2026-11-12 — T-61: los estilos de texto con nombre
 - **El formato (D-116):** cada estilo es un token `--estilo-<nombre>` con el atajo `font` (`600 var(--tam-titulo)/1.35 var(--ui)`) y su uso; las piezas lo usan con `font: var(--estilo-…)`. No son obligatorios.
 - **Lector, Sistema y control juntos:** el lector los agrupa en «Estilos de texto» y resuelve sus `var(--…)` con los tokens del proyecto; Diseño › Sistema escribe una línea en cada estilo (tachada si no se entiende) y el valor abreviado (`600 tam-titulo/1.35 ui`); el control avisa de uno que no se entiende o nombra un token que no está. El framework lo dice en `SKILL.md` › Las maquetas y `referencias/06-ui.md` › Maquetas.
@@ -110,5 +117,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-T-62: una ficha por pieza en el formato `docs/diseno/` (agrupadas, con para qué sirve, sus estados y qué tokens usa): decidir cómo se escribe, sumarla al lector, a Diseño › Sistema, al control y al framework en el mismo cambio, y escribir las de las 12 piezas de Iridium. Después T-63 y DI-I3 (con T-58).
-**Leer antes:** `trabajo.md` › T-62 y T-63, `decisiones.md` › D-114 y D-116, `diseno-tecnico.md` › Sistema y › El control, y `ux.md` › Las piezas.
+T-63: las medidas fijas (la altura de la barra, de los controles y de las filas, los anchos de los paneles) como tokens con su uso en lugar de números sueltos en `piezas.css`: decidir cómo se reconocen y se dibujan en Sistema, sumarlo al lector, al control (una medida repetida escrita a mano) y al framework en el mismo cambio, y pasar las de Iridium. Después DI-I3 (con T-58).
+**Leer antes:** `trabajo.md` › T-63, `decisiones.md` › D-114, D-116 y D-117, `diseno-tecnico.md` › Sistema y › El control.

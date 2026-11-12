@@ -1,8 +1,8 @@
 // Diseño › Sistema (DS-13): de qué está hecha la interfaz. Los tokens de `docs/diseno/tokens.css` dibujados por grupo
-// (colores, letra, estilos de texto, tamaños, espacios y esquinas, sombras), cada uno con su uso (D-114), y las piezas, la maqueta
-// `piezas.html`, viva y grande.
+// (colores, letra, estilos de texto, tamaños, espacios y esquinas, sombras), cada uno con su uso (D-114), y las piezas: sus
+// fichas por grupo (T-62, D-117) y la maqueta `piezas.html`, viva y grande.
 import type { CSSProperties } from 'react'
-import type { GrupoToken, SistemaDiseno, TokenVista } from '../../../../compartido/diseno'
+import type { FichaVista, GrupoToken, SistemaDiseno, TokenVista } from '../../../../compartido/diseno'
 import { Icono } from '../../../ui/Icono'
 import { Miniatura } from './Miniatura'
 
@@ -53,6 +53,65 @@ function Muestra({ t }: { t: TokenVista }) {
       </span>
       {t.uso && <span className="di-token-uso">{t.uso}</span>}
     </li>
+  )
+}
+
+/** Las fichas de `piezas.css` por grupo, en el orden en que aparece cada grupo; las sin grupo, al final. */
+function Fichas({ fichas }: { fichas: FichaVista[] }) {
+  const grupos: { nombre: string; fichas: FichaVista[] }[] = []
+  for (const f of fichas) {
+    const nombre = f.grupo ?? 'Sin grupo'
+    let g = grupos.find((x) => x.nombre === nombre)
+    if (!g) {
+      g = { nombre, fichas: [] }
+      grupos.push(g)
+    }
+    g.fichas.push(f)
+  }
+  grupos.sort((a, b) => Number(a.nombre === 'Sin grupo') - Number(b.nombre === 'Sin grupo'))
+  return (
+    <div className="di-fichas">
+      {grupos.map((g) => (
+        <section key={g.nombre} aria-label={g.nombre}>
+          <h4 className="di-fichas-g">{g.nombre}</h4>
+          <ul>
+            {g.fichas.map((f) => (
+              <li key={`${f.codigo ?? ''}${f.nombre}`} className="di-ficha">
+                <span className="di-ficha-n">
+                  {f.nombre}
+                  {f.codigo && <span className="di-ficha-c">{f.codigo}</span>}
+                </span>
+                <span className="di-ficha-q">{f.paraQue.charAt(0).toUpperCase() + f.paraQue.slice(1)}</span>
+                {f.estados.length > 0 && (
+                  <span className="di-ficha-e">
+                    <span className="di-ficha-r">Estados</span>
+                    <span>{f.estados.join(' · ')}</span>
+                  </span>
+                )}
+                {f.tokens.length > 0 && (
+                  <span className="di-ficha-t">
+                    <span className="di-ficha-r">Tokens</span>
+                    <span className="di-ficha-lista">
+                      {f.tokens.map((t, i) => (
+                        <span key={t.nombre}>
+                          {i > 0 && ' '}
+                          <span
+                            className={t.existe ? undefined : 'roto'}
+                            title={t.existe ? undefined : 'No está en tokens.css'}
+                          >
+                            {t.nombre.replace(/^--/, '')}
+                          </span>
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
   )
 }
 
@@ -109,7 +168,10 @@ export function Sistema({
         )
       })}
       <section className="di-bloque" aria-label="Piezas">
-        <h3 className="di-grupo-t">Piezas</h3>
+        <h3 className="di-grupo-t">
+          Piezas {sistema.fichas.length > 0 && <span className="n">{sistema.fichas.length}</span>}
+        </h3>
+        {sistema.fichas.length > 0 && <Fichas fichas={sistema.fichas} />}
         {sistema.piezas ? (
           <Miniatura
             base={base}

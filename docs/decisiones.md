@@ -2603,3 +2603,31 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** una sola línea por estilo que la maqueta y el código usan tal cual (pasar al código es copiar, D-105), sin un archivo ni un formato nuevo; descartado escribirlos como tres tokens sueltos (tamaño, interlineado y peso), que se pueden mezclar mal.
 
 **Consecuencias:** Iridium tiene nueve (documento, título, lectura, cuerpo, botón, control, rótulo, meta, código) y `piezas.css` los usa donde ya coincidían; los títulos pasan de interlineado 1.5 a 1.35. El atajo `font` no lleva el espaciado entre letras: si una pieza lo necesita, lo suma aparte.
+
+## D-117 — La ficha de cada pieza va en el comentario que la encabeza en `piezas.css`
+- **Fecha:** 2026-11-12
+- **Ámbito:** framework
+- **Hito o paso:** 10; frente Diseño, paso 7 (T-62)
+- **Estado:** vigente
+
+**Contexto:** D-114, idea 3: una ficha por pieza, agrupada, con para qué sirve, sus estados y qué tokens usa. Había que elegir dónde se escribe.
+
+**Decisión:** el comentario que ya encabeza cada pieza en `piezas.css` suma tres líneas: `Grupo:`, `Para qué:` y `Estados:` (separados por comas). Un comentario es ficha si tiene `Para qué:`; el título puede traer el código (`PZ-1 · Botón`). Los tokens que usa no se escriben: Iridium los saca de las reglas de la pieza, hasta el próximo comentario que empiece una línea. Diseño › Sistema muestra las fichas por grupo arriba de `piezas.html`, con los tokens que no existen tachados en rojo. El control avisa si `piezas.css` no tiene ninguna ficha, si una no tiene grupo y si `piezas.css` nombra un token que no está en `tokens.css`.
+
+**Motivo:** la ficha queda pegada a las reglas que describe, en el archivo que pasa al código tal cual (D-105), y los tokens no pueden quedar viejos porque nadie los copia a mano. Descartados un `piezas.md` aparte (dos lugares que se desincronizan) y marcas en `piezas.html` (la maqueta es para mirar, no para leer).
+
+**Consecuencias:** los proyectos con `docs/diseno/` reciben un aviso del control hasta que sus piezas tengan ficha. Iridium tiene quince: las doce piezas, el marco, la conversación y la «i», en cinco grupos (Acciones, Contenido, Avisos, Navegación, Del dominio). `referencias/06-ui.md` ya no pide las tablas de componentes: remite a las fichas.
+
+## D-118 — Novedades del framework: los cambios que les piden algo a los proyectos, con fecha
+- **Fecha:** 2026-11-12
+- **Ámbito:** framework
+- **Hito o paso:** 10; frente Orden (T-64)
+- **Estado:** vigente
+
+**Contexto:** con D-115 un proyecto tuvo que enterarse por el usuario de que el framework le pedía pasar su design system (Q-160). Q-161, opción A.
+
+**Decisión:** el framework anota con fecha los cambios que les piden algo a los proyectos. Iridium compara esa lista con la fecha del framework de cada proyecto (`**Framework:**` de su `docs/README.md`) y marca «N novedades» en la tarjeta y en Skills › Framework; **Ponerse al día** se lo manda a la IA del proyecto, que lo hace y adelanta la fecha. Nada cambia en un proyecto hasta que el usuario lo toca.
+
+**Motivo:** sirve para cualquier cambio futuro y no toca los proyectos sin pedirlo; descartado que Iridium escriba en el `estado.md` de cada uno (cambia proyectos sin permiso y les deja tareas que quizás no les aplican).
+
+**Consecuencias:** es trabajo del frente Orden (T-64), detrás de Diseño. Mientras tanto, los cambios así se avisan como hasta ahora; la primera novedad a anotar son las fichas de las piezas (D-117).

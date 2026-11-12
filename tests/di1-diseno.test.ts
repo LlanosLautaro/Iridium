@@ -15,6 +15,7 @@ import {
   tituloDe,
 } from '../src/main/core/diseno/maquetas'
 import { pedidoEmpezar, tieneCodigo } from '../src/main/core/diseno/pedidos'
+import { leerFichas } from '../src/main/core/diseno/piezas'
 import { leerEstilo, leerTokens, resolver } from '../src/main/core/diseno/tokens'
 import { leerArchivosDiseno } from '../src/main/infra/diseno/archivos'
 
@@ -181,6 +182,53 @@ describe('las maquetas', () => {
   })
 })
 
+describe('las fichas de las piezas (T-62)', () => {
+  it('lee el título, el grupo, para qué, los estados y los tokens de sus reglas', () => {
+    const css = [
+      'body { color: var(--texto); }',
+      '/* ───── PZ-1 · Botón ─────',
+      '   Grupo: Acciones',
+      '   Para qué: lo que se hace;',
+      '   uno principal como mucho.',
+      '   Estados: principal, sin fondo · chico. */',
+      '.boton { color: var(--texto); background: var(--fondo); /* adentro no corta */ }',
+      '.boton:hover { color: var(--texto); padding-left: calc(var(--esp) + var(--nivel, 0) * 4px); }',
+      '/* Un comentario suelto corta las reglas */',
+      '.otra { color: var(--borde); }',
+      '/* Árbol',
+      '   Para qué: carpetas y archivos. */',
+      '.nodo { color: var(--texto-2); }',
+    ].join('\n')
+    expect(leerFichas(css)).toEqual([
+      {
+        codigo: 'PZ-1',
+        nombre: 'Botón',
+        grupo: 'Acciones',
+        paraQue: 'lo que se hace; uno principal como mucho.',
+        estados: ['principal', 'sin fondo', 'chico'],
+        tokens: ['--texto', '--fondo', '--esp'],
+        linea: 2,
+      },
+      {
+        codigo: null,
+        nombre: 'Árbol',
+        grupo: null,
+        paraQue: 'carpetas y archivos.',
+        estados: [],
+        tokens: ['--texto-2'],
+        linea: 11,
+      },
+    ])
+  })
+  it('las piezas de Iridium tienen su ficha, con grupo y para qué', async () => {
+    const f = leerFichas(await readFile(join(__dirname, '..', 'docs/diseno/piezas.css'), 'utf8'))
+    expect(f.filter((x) => x.codigo).map((x) => x.codigo)).toEqual(
+      Array.from({ length: 12 }, (_, i) => `PZ-${i + 1}`),
+    )
+    expect(f.filter((x) => !x.grupo || !x.paraQue || x.tokens.length === 0)).toEqual([])
+  })
+})
+
 const control = (diseno: ArchivosDiseno | null): string[] => {
   const a: ArchivosControl = {
     estados: [],
@@ -206,7 +254,8 @@ const BIEN: Record<string, string> = {
   'README.md':
     '## Pantallas\n| Pantalla | Sección | Archivo | En la app |\n|---|---|---|---|\n| A | Uno | pantallas/a.html | — |\n',
   'tokens.css': ':root {\n  --fondo: #000; /* el fondo */\n  --texto: #fff; /* el texto */\n}',
-  'piezas.css': 'body { background: var(--fondo); }',
+  'piezas.css':
+    '/* Fondo\n   Grupo: Contenido\n   Para qué: el fondo. */\nbody { background: var(--fondo); }',
   'pantallas/a.html': MAQUETA,
 }
 
@@ -235,6 +284,17 @@ describe('el control de docs/diseno/', () => {
       'docs/diseno/tokens.css:3 `--estilo-a` no se entiende como estilo de texto: va como `peso tamaño/interlineado letra` (`600 var(--tam-titulo)/1.3 var(--ui)`), con tokens que existan',
     ])
   })
+  it('8: piezas sin ficha, una ficha sin grupo y un token que no está (T-62)', () => {
+    expect(control(diseno({ ...BIEN, 'piezas.css': 'body { background: var(--fondo); }' }))).toEqual([
+      'docs/diseno/piezas.css las piezas no tienen su ficha: el comentario que encabeza cada una suma `Grupo:`, `Para qué:` y `Estados:` (una por línea)',
+    ])
+    const piezas =
+      '/* Fondo\n   Para qué: el fondo. */\nbody { background: var(--fondo); color: var(--tinta); --nivel: 1; padding: var(--nivel); margin: var(--otro, 0); }'
+    expect(control(diseno({ ...BIEN, 'piezas.css': piezas }))).toEqual([
+      'docs/diseno/piezas.css:1 la ficha de «Fondo» no tiene `Grupo:` (acciones, navegación, avisos…)',
+      'docs/diseno/piezas.css:3 `var(--tinta)` no está en `tokens.css`: sumalo con su uso o usá uno que exista',
+    ])
+  })
   it('2 y 3: un archivo que no está, uno fuera de pantallas/, uno sin listar y una fecha mal escrita', () => {
     const readme =
       '## Pantallas\n| Pantalla | Sección | Archivo | En la app |\n|---|---|---|---|\n| A | Uno | pantallas/a.html | ayer |\n| B | Uno | pantallas/b.html | — |\n| C | Uno | c.html | — |\n'
@@ -250,9 +310,15 @@ describe('el control de docs/diseno/', () => {
   it('5 y 6: la red, fuera de la carpeta, lo que falta y los colores escritos', () => {
     const mala = `${MAQUETA}\n<img src="https://x.invalid/a.png">\n<link href="../../estado.md">\n<img src="../logo.png">\n<style>\n.x { color: #f00; }\n</style>`
     expect(
-      control(diseno({ ...BIEN, 'pantallas/a.html': mala, 'piezas.css': '.b { color: hsl(0 0% 50%); }' })),
+      control(
+        diseno({
+          ...BIEN,
+          'pantallas/a.html': mala,
+          'piezas.css': '/* B\n   Grupo: Uno\n   Para qué: algo. */ .b { color: hsl(0 0% 50%); }',
+        }),
+      ),
     ).toEqual([
-      'docs/diseno/piezas.css:1 color escrito (hsl()): usá un token, `var(--…)`, para que cambiar `tokens.css` cambie todas',
+      'docs/diseno/piezas.css:3 color escrito (hsl()): usá un token, `var(--…)`, para que cambiar `tokens.css` cambie todas',
       'docs/diseno/pantallas/a.html:2 «https://x.invalid/a.png» es de la red: las maquetas son todo local (letras del sistema o archivos de `docs/diseno/`)',
       'docs/diseno/pantallas/a.html:3 «../../estado.md» sale de `docs/diseno/`: usá una ruta relativa dentro de la carpeta',
       'docs/diseno/pantallas/a.html:4 «../logo.png» no existe',

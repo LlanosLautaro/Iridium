@@ -4,12 +4,20 @@ body {
   color: var(--texto);
   font: var(--tam-2) var(--ui);
 }
+/* Cabecera
+   Grupo: Navegación
+   Para qué: el título de cada pantalla.
+   Estados: normal. */
 .cabecera {
   display: flex;
   gap: var(--esp-4);
   padding: var(--esp-4);
   border-bottom: 1px solid var(--borde);
 }
+/* ── PZ-1 · Botón ──
+   Grupo: Acciones
+   Para qué: lo que se hace en una pantalla.
+   Estados: normal, al pasar. */
 .boton {
   background: var(--superficie);
   color: var(--texto);
@@ -18,6 +26,9 @@ body {
   padding: var(--esp-2) var(--esp-4);
   font: inherit;
 }
+/* Tarjeta
+   Grupo: Del dominio
+   Para qué: un proyecto en la grilla, con su nombre y su estado. */
 .tarjeta {
   background: var(--superficie);
   border-radius: var(--radio-1);

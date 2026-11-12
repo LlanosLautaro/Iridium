@@ -35,8 +35,21 @@ export interface TokenVista {
   muestra?: string | null
 }
 
+/** La ficha de una pieza: el comentario que la encabeza en `piezas.css` (T-62, D-117). */
+export interface FichaVista {
+  codigo: string | null
+  nombre: string
+  grupo: string | null
+  paraQue: string
+  estados: string[]
+  /** Los tokens de sus reglas; `existe` es false si `tokens.css` no lo tiene. */
+  tokens: { nombre: string; existe: boolean }[]
+}
+
 export interface SistemaDiseno {
   tokens: TokenVista[]
+  /** Las fichas de `piezas.css`, en su orden; vacío si no tiene. */
+  fichas: FichaVista[]
   /** Las líneas de `tokens.css` que no se entienden (DS-13: el recuadro de error), o qué falta. */
   errores: { linea: number | null; texto: string }[]
   /** La maqueta de piezas (`piezas.html`), o null si todavía no está dibujada. */

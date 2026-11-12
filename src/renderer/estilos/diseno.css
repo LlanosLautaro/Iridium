@@ -246,6 +246,73 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Las fichas de las piezas (T-62): por grupo, en columnas, sin caja; una línea fina entre una y otra. */
+.di-fichas {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.di-fichas ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  column-gap: 32px;
+}
+.di-fichas-g {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--texto-3);
+}
+.di-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 0;
+  border-top: 1px solid var(--borde);
+  min-width: 0;
+}
+.di-ficha-n {
+  font-weight: 600;
+  color: var(--texto);
+}
+.di-ficha-c {
+  margin-left: 8px;
+  font: 400 11.5px / 1.3 var(--mono);
+  color: var(--texto-3);
+}
+.di-ficha-q {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--texto-2);
+}
+/* Estados y Tokens: el rótulo en una columna fija y lo suyo al lado, que se lean como dos renglones de una tabla. */
+.di-ficha-e,
+.di-ficha-t {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--texto-2);
+}
+.di-ficha-lista {
+  font: 400 11px / 1.6 var(--mono);
+  color: var(--texto-3);
+}
+/* Un token no se corta en su guion. */
+.di-ficha-lista > span > span {
+  white-space: nowrap;
+}
+.di-ficha-r {
+  color: var(--texto-3);
+}
+.di-ficha-t .roto {
+  color: var(--error);
+  text-decoration: line-through;
+}
 /* Para qué se usa el token (D-114): texto común, que se lea como una indicación y no como un valor. */
 .di-token-uso {
   font-size: 12px;

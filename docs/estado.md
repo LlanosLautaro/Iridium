@@ -32,21 +32,16 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1, DI-I2 y T-61 hechas; siguen T-62, T-63 y DI-I3) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1, DI-I2, T-61 y T-62 hechas; siguen T-63 y DI-I3) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. La tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) cada token del sistema lleva una línea de para qué se usa, que Diseño › Sistema muestra, y los estilos de texto tienen nombre (T-61, D-116); siguen la ficha por pieza y las medidas fijas (T-62, T-63) antes de pasar todo al código (DI-I3). Con Q-158 (D-115) el framework sabe pasar un design system guardado en otro lado; ese proyecto ya lo pasó (Q-160). Antes de mostrarte una maqueta, la IA la repasa con las guías de impeccable pasadas al framework (Q-156, D-113). Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. La tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) cada token del sistema lleva una línea de para qué se usa, que Diseño › Sistema muestra, los estilos de texto tienen nombre (T-61, D-116) y cada pieza tiene su ficha con para qué sirve, sus estados y los tokens que usa (T-62, D-117); siguen las medidas fijas (T-63) antes de pasar todo al código (DI-I3). Con Q-158 (D-115) el framework sabe pasar un design system guardado en otro lado; ese proyecto ya lo pasó (Q-160), y con Q-161 (D-118) los proyectos se van a enterar solos de lo que el framework les pide (T-64, frente Orden, después de Diseño). Antes de mostrarte una maqueta, la IA la repasa con las guías de impeccable pasadas al framework (Q-156, D-113). Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 
 ## Preguntas abiertas
-- **Q-161 — ¿Cómo se entera un proyecto de que el framework le pide algo?**
-  Tipo: decisión · Frente: Orden
-  Contexto: tu propuesta en Q-160 (T-64). Cada proyecto ya guarda la fecha de su framework (`**Framework:**` en su `docs/README.md`). No frena Diseño.
-  Opciones: A) Novedades del framework (recomendada: sirve para cualquier cambio futuro y no toca nada hasta que vos lo pidas): el framework anota con fecha los cambios que les piden algo a los proyectos; Iridium marca «N novedades» en la tarjeta y en Skills › Framework, y **Ponerse al día** se lo manda a su IA (gasta uso solo al tocarlo) · B) Iridium escribe solo una línea en el `estado.md` de cada proyecto: más directo, pero cambia tus proyectos sin pedírtelo y les deja tareas aunque no les apliquen · C) Como ahora: te lo digo en una Q-n y se lo pedís vos
-
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.
@@ -67,7 +62,7 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: T-62, una ficha por pieza en el formato `docs/diseno/` (framework, lector, Sistema, control y pruebas juntos, D-114); después T-63 y DI-I3. Si llega Q-146 o Q-161, procesarlas aparte.
+Diseño: T-63, las medidas fijas como tokens en el formato `docs/diseno/` (framework, lector, Sistema, control y pruebas juntos, D-114); después DI-I3. Si llega Q-146, procesarla aparte.
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

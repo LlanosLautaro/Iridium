@@ -149,7 +149,7 @@ Sin la IA, con escritura atómica; lo que se borra va a la papelera de Windows (
 | Sombras | `--sombra-*` | un cuadrado con esa sombra |
 | Otras | el resto | nombre y valor |
 
-Cada token muestra su uso debajo de la muestra (colores) o a la derecha (el resto). Una línea que no se entiende va al recuadro de error con su número; las demás se muestran. **Piezas** es `piezas.html`, como una miniatura más que se agranda y se comenta. **Abrir tokens** abre `tokens.css` en Archivos.
+Cada token muestra su uso debajo de la muestra (colores) o a la derecha (el resto). Una línea que no se entiende va al recuadro de error con su número; las demás se muestran. **Piezas** son las fichas de `piezas.css` y debajo `piezas.html`, como una miniatura más que se agranda y se comenta. `core/diseno/piezas.ts` lee las fichas (T-62, D-117): un comentario con `Para qué:` es una ficha, con su título (`PZ-1 · Botón`), `Grupo:` y `Estados:`; los tokens que usa salen de sus reglas hasta el próximo comentario que empiece una línea. Se muestran por grupo, cada una con su para qué, sus estados y sus tokens (el que no está en `tokens.css`, tachado en rojo). **Abrir tokens** abre `tokens.css` en Archivos.
 
 ## El control (D-086, D-092)
 `core/control/diseno.ts`, solo si el proyecto tiene `docs/diseno/`:
@@ -160,6 +160,7 @@ Cada token muestra su uso debajo de la muestra (colores) o a la derecha (el rest
 5. En maquetas, versiones, `piezas.*` y direcciones: nada de la red (`http://`, `https://`, `//`), nada fuera de `docs/diseno/` y nada que falte.
 6. Sin colores escritos en `piezas.css` ni en los `<style>` de las maquetas.
 7. Cada dirección tiene las mismas variables que `tokens.css`; cada carpeta de `versiones/` es de una maqueta que existe.
+8. `piezas.css` tiene fichas (un aviso si no tiene ninguna), cada una con `Grupo:` y `Para qué:`, y cada `var(--…)` sin otro valor es un token de `tokens.css` o una variable que define la misma hoja (T-62, D-117).
 
 Se le devuelve a la IA como los demás avisos del control (una vez por turno). El framework suma, en el mismo cambio (DI-I1): `SKILL.md` › Los formatos, un apartado corto de `docs/diseno/` que remite a `referencias/06-ui.md` › Maquetas (cómo se arman: tokens, piezas, una maqueta por pantalla y por estado, 1440×900, todo local, contenido creíble en el idioma de la app); `referencias/06-ui.md` dice que en una app nueva las maquetas son la UI del hito 6 (D-105); y una plantilla `plantillas/diseno/README.md`.
 

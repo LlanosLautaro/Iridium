@@ -1,4 +1,5 @@
 /* Las piezas de Iridium (PZ-1 a PZ-12, modulos/diseno/ux.md › Las piezas) y el marco que comparten las pantallas.
+   Cada pieza empieza con su ficha (T-62, D-117): Grupo, Para qué y Estados; Diseño › Sistema la muestra con los tokens que usa.
    Regla general: se separa con espacio y con una línea gris solo donde hace falta; el borde es del Recuadro, de los
    Campos y del botón secundario; la sombra, de lo que flota. Solo usa var(--…): ningún color escrito.
    En DI-I3 estas clases pasan tal cual a src/renderer/estilos/piezas.css. */
@@ -25,7 +26,10 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
 .gris-3 { color: var(--texto-3); }
 .ic { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ───────── PZ-1 · Botón ───────── */
+/* ───────── PZ-1 · Botón ─────────
+   Grupo: Acciones
+   Para qué: lo que se hace en una pantalla. Un principal (verde) como mucho por pantalla; las acciones de una fila, sin fondo; el rojo, solo para lo que no se deshace.
+   Estados: principal, secundario, sin fondo, peligroso, principal peligroso, chico, solo ícono, apagado. */
 .boton {
   display: inline-flex; align-items: center; gap: var(--esp-2);
   height: 30px; padding: 0 var(--esp-3);
@@ -50,7 +54,10 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
 .boton.solo-icono:hover { color: var(--texto); background: var(--hover); }
 .boton[disabled], .boton.apagado { opacity: .4; pointer-events: none; }
 
-/* ───────── PZ-2 · Fila ───────── */
+/* ───────── PZ-2 · Fila ─────────
+   Grupo: Contenido
+   Para qué: un elemento de una lista (una tarea, una skill, un script, un commit). Sus acciones aparecen al pasar el mouse o con el foco; la que se viene a hacer, siempre.
+   Estados: simple, con detalle, elegida, con acciones, con líneas entre filas. */
 .filas { display: flex; flex-direction: column; }
 .filas.con-lineas > .fila + .fila { border-top: 1px solid var(--borde-suave); border-radius: 0; }
 .fila {
@@ -72,7 +79,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .fila:hover .acciones, .fila:focus-within .acciones, .fila .acciones.siempre { opacity: 1; }
 .fila .icono-fila { width: 28px; height: 28px; border-radius: var(--radio-control); background: var(--elevado); display: grid; place-items: center; color: var(--texto-2); flex: none; }
 
-/* ───────── PZ-3 · Bloque ───────── */
+/* ───────── PZ-3 · Bloque ─────────
+   Grupo: Contenido
+   Para qué: agrupa lo de una pantalla bajo un título gris y chico, con la cuenta al lado. Nunca un bloque dentro de otro.
+   Estados: con título, sin título, con línea arriba. */
 .bloque { display: flex; flex-direction: column; gap: var(--esp-2); }
 .bloque + .bloque { margin-top: var(--esp-5); }
 .bloque.con-linea + .bloque.con-linea { border-top: 1px solid var(--borde-suave); padding-top: var(--esp-5); }
@@ -82,7 +92,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 }
 .bloque-titulo .derecha { margin-left: auto; }
 
-/* ───────── PZ-4 · Recuadro ───────── */
+/* ───────── PZ-4 · Recuadro ─────────
+   Grupo: Avisos
+   Para qué: lo que hay que ver aunque no se busque: un aviso, un error, un vacío o lo que todavía falta, con su acción si la tiene.
+   Estados: aviso (ámbar), error (rojo), vacío, punteado. */
 .recuadro {
   display: flex; gap: var(--esp-3); align-items: flex-start;
   padding: var(--esp-3) var(--esp-4); border: 1px solid var(--borde); border-radius: var(--radio-bloque);
@@ -103,7 +116,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 }
 .recuadro.punteado .cuerpo-recuadro { align-items: center; max-width: 440px; }
 
-/* ───────── PZ-5 · Campo ───────── */
+/* ───────── PZ-5 · Campo ─────────
+   Grupo: Acciones
+   Para qué: escribir o elegir: texto, área, selector, casilla, opción e interruptor. Lo escrito se guarda solo.
+   Estados: normal, chico, sin borde (selector), al pasar, con el foco, marcado. */
 .campo, .selector, .area {
   height: 32px; padding: 0 var(--esp-3); width: 100%;
   font: var(--estilo-control); color: var(--texto);
@@ -137,7 +153,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .interruptor input:checked { background: var(--marcado); }
 .interruptor input:checked::after { transform: translateX(12px); background: var(--sobre-principal); }
 
-/* ───────── PZ-6 · Filtros ───────── */
+/* ───────── PZ-6 · Filtros ─────────
+   Grupo: Navegación
+   Para qué: acotar una lista sin salir de la pantalla; cada filtro con su cuenta. Van debajo de la cabecera.
+   Estados: normal, elegido, con cuenta, con acciones a la derecha. */
 .filtros { display: flex; align-items: center; gap: var(--esp-4); }
 .filtro {
   display: inline-flex; align-items: baseline; gap: 6px; padding: 6px 0;
@@ -149,7 +168,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .filtro .cuenta { font-size: var(--tam-chico); }
 .filtros .derecha { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
 
-/* ───────── PZ-7 · Cuenta y señal ───────── */
+/* ───────── PZ-7 · Cuenta y señal ─────────
+   Grupo: Avisos
+   Para qué: un número o una marca chica que dice que hay algo, sin píldora. El ámbar es lo que frena y el rojo lo que falla; si nada falla, no se muestra (D-108).
+   Estados: cuenta, cuenta que frena, punto, punto ámbar, punto rojo, señal de texto. */
 .cuenta { font: var(--estilo-codigo); color: var(--texto-3); }
 .cuenta.frena { color: var(--espera); }
 .punto { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--texto-3); flex: none; }
@@ -160,7 +182,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .senal.ambar { color: var(--espera); }
 .senal.rojo { color: var(--error); }
 
-/* ───────── PZ-8 · Menú, cuadro y ventana ───────── */
+/* ───────── PZ-8 · Menú, cuadro y ventana ─────────
+   Grupo: Acciones
+   Para qué: lo que flota sobre la pantalla: el menú (también con clic derecho), el cuadro que confirma o pide un dato y la ventana de Ajustes. Es lo único con sombra.
+   Estados: menú, menú en lista, con atajo, opción peligrosa, cuadro, ventana. */
 .menu {
   position: absolute; z-index: 20; min-width: 200px; padding: var(--esp-1);
   background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu);
@@ -200,7 +225,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .ventana > nav h2 { margin: 0 0 var(--esp-3) var(--esp-2); font: var(--estilo-titulo); }
 .ventana > .cuerpo-ventana { padding: var(--esp-5) var(--esp-6); overflow: auto; position: relative; }
 
-/* ───────── PZ-9 · Cabecera de sección ───────── */
+/* ───────── PZ-9 · Cabecera de sección ─────────
+   Grupo: Navegación
+   Para qué: el título de la sección con su cuenta, sus acciones a la derecha (una principal como mucho) y los filtros debajo.
+   Estados: con ruta, con acciones, con filtros. */
 .cabecera { padding: var(--esp-4) var(--esp-6) 0; border-bottom: 1px solid var(--borde); flex: none; }
 .cabecera .fila-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: 32px; padding-bottom: var(--esp-3); }
 .cabecera h1 { margin: 0; font: var(--estilo-titulo); display: flex; align-items: baseline; gap: var(--esp-2); }
@@ -208,7 +236,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .cabecera .acciones-cab { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
 .cabecera .filtros { margin-top: calc(-1 * var(--esp-1)); }
 
-/* ───────── PZ-10 · Pestañas ───────── */
+/* ───────── PZ-10 · Pestañas ─────────
+   Grupo: Navegación
+   Para qué: pasar entre vistas de un mismo lugar: las secciones, las pestañas de Ajustes o del detalle de una skill, los hitos del Mapa.
+   Estados: normal, elegida, vertical, números (hitos), hecho. */
 .pestanas { display: flex; gap: 2px; }
 .pestana {
   display: inline-flex; align-items: center; gap: var(--esp-2); height: 30px; padding: 0 var(--esp-3);
@@ -223,7 +254,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .pestanas.numeros .pestana.hecho { color: var(--texto-2); }
 .pestanas.numeros .pestana.elegida { color: var(--texto); background: var(--sel-fondo); }
 
-/* ───────── PZ-11 · Árbol ───────── */
+/* ───────── PZ-11 · Árbol ─────────
+   Grupo: Navegación
+   Para qué: carpetas y archivos (Archivos, el detalle de una skill, los cambios de Git), con la marca de Git a la derecha.
+   Estados: carpeta, archivo, elegido, con marca, con marca ámbar. */
 .arbol { display: flex; flex-direction: column; font-size: var(--tam-base); }
 .nodo {
   display: flex; align-items: center; gap: 6px; height: 26px; padding-right: var(--esp-2);
@@ -237,7 +271,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .nodo .marca { margin-left: auto; font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); }
 .nodo .marca.ambar { color: var(--espera); }
 
-/* ───────── PZ-12 · Texto de documento ───────── */
+/* ───────── PZ-12 · Texto de documento ─────────
+   Grupo: Contenido
+   Para qué: leer un markdown: Docs, la Bandeja y las respuestas de la IA. Tablas con línea solo entre filas.
+   Estados: lectura, conversación. */
 .texto-doc { font: var(--estilo-lectura); color: var(--texto); max-width: 760px; }
 .texto-doc h1 { font: var(--estilo-documento); margin: 0 0 var(--esp-4); }
 .texto-doc h2 { font: var(--estilo-titulo); margin: var(--esp-6) 0 var(--esp-3); }
@@ -257,7 +294,11 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .texto-doc.conversacion { font-size: var(--tam-base); line-height: 1.6; }
 .texto-doc.conversacion p { margin-bottom: var(--esp-2); }
 
-/* ───────── El marco: la barra de proyectos, la de secciones, la conversación y la de estado ───────── */
+/* ───────── El marco ─────────
+   Grupo: Del dominio
+   Para qué: lo que rodea a todas las pantallas: la barra de proyectos, la de secciones, la sección elegida y la barra de
+   estado. Lo arma piezas.js según data-marco y data-seccion.
+   Estados: con conversación, sin conversación, sección elegida, con punto. */
 .marco {
   height: 100vh; display: grid;
   grid-template-columns: 48px 1fr 360px; grid-template-rows: 36px 1fr 26px;
@@ -300,7 +341,11 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .estado-barra a { text-decoration: none; }
 .estado-barra a:hover { color: var(--texto); }
 
-/* La conversación (propia del marco): cabecera, mensajes y el compositor con una sola línea alrededor */
+/* ───────── La conversación ─────────
+   Grupo: Del dominio
+   Para qué: hablar con la IA del proyecto, a la derecha de cada pantalla: la cabecera, los mensajes y el compositor
+   con una sola línea alrededor.
+   Estados: mensaje mío, mensaje de la IA, paso, compositor con el foco. */
 .panel-conversacion { grid-area: conversacion; display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--borde); }
 .panel-conversacion .cab-conv { display: flex; align-items: center; gap: var(--esp-2); padding: var(--esp-2) var(--esp-3) var(--esp-2) var(--esp-4); min-height: 48px; }
 .panel-conversacion .cab-conv .nombre-conv { flex: 1; min-width: 0; }
@@ -320,7 +365,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .estado-barra .senal { display: inline-flex; gap: 6px; align-items: center; }
 .estado-barra .senal .ic { width: 14px; height: 14px; }
 .estado-barra .senal.rojo:hover { color: var(--error); text-decoration: underline; }
-/* Información a pedido (R-41): una «i» que muestra su texto al pasar el mouse o con el foco, en vez de un renglón fijo. */
+/* ───────── Información a pedido ─────────
+   Grupo: Avisos
+   Para qué: una «i» que muestra su texto al pasar el mouse o con el foco, en vez de un renglón de ayuda fijo (R-41).
+   Estados: cerrada, abierta. */
 .info { position: relative; display: inline-grid; place-items: center; width: 22px; height: 22px; color: var(--texto-3); border-radius: var(--radio-pildora); cursor: help; }
 .info:hover, .info:focus-visible { color: var(--texto); }
 .info .ic { width: 15px; height: 15px; }

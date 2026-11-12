@@ -8,6 +8,7 @@ import type { GrupoMaquetas, MaquetaVista, SistemaDiseno, VistaDiseno } from '..
 import { leerIndice } from '../core/diseno/indice'
 import { esDeLaRed, noEsArchivo, referenciasDe, resolverReferencia, tituloDe } from '../core/diseno/maquetas'
 import { tieneCodigo } from '../core/diseno/pedidos'
+import { leerFichas, variablesPropias } from '../core/diseno/piezas'
 import { leerTokens } from '../core/diseno/tokens'
 import { carpetaDiseno, listarDiseno } from '../infra/diseno/archivos'
 import type { ArchivoVistos } from '../infra/diseno/vistos'
@@ -122,9 +123,24 @@ async function sistema(c: Carpeta, vistos: ReadonlyMap<string, string> | null): 
       : !t.tieneRaiz
         ? [{ linea: null, texto: 'tokens.css no tiene un bloque :root con variables' }]
         : t.errores
+  const piezasCss = c.existentes.has('piezas.css') ? await c.leer('piezas.css') : null
+  const conocidos = new Set([
+    ...(t?.tokens ?? []).map((x) => x.nombre),
+    ...(piezasCss ? variablesPropias(piezasCss) : []),
+  ])
   return {
     tokens: (t?.tokens ?? []).map(({ nombre, valor, grupo, uso, muestra }) =>
       muestra === undefined ? { nombre, valor, grupo, uso } : { nombre, valor, grupo, uso, muestra },
+    ),
+    fichas: (piezasCss ? leerFichas(piezasCss) : []).map(
+      ({ codigo, nombre, grupo, paraQue, estados, tokens }) => ({
+        codigo,
+        nombre,
+        grupo,
+        paraQue,
+        estados,
+        tokens: tokens.map((n) => ({ nombre: n, existe: conocidos.has(n) })),
+      }),
     ),
     errores,
     piezas: c.existentes.has('piezas.html') ? await maqueta(c, 'piezas.html', 'Piezas', null, vistos) : null,

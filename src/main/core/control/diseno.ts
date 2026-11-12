@@ -1,5 +1,6 @@
 // Las maquetas (frente Diseño, D-105; `modulos/diseno/diseno-tecnico.md` › El control): el índice, los tokens, que
-// todo sea local y exista, sin colores escritos, y que las direcciones y las versiones correspondan.
+// todo sea local y exista, sin colores escritos, que las direcciones y las versiones correspondan, y las fichas de las
+// piezas (T-62, D-117).
 import { COLUMNAS_INDICE, esSinPasar, FECHA_EN_LA_APP, leerIndice } from '../diseno/indice'
 import {
   coloresEscritos,
@@ -9,6 +10,7 @@ import {
   referenciasDe,
   resolverReferencia,
 } from '../diseno/maquetas'
+import { leerFichas, tokensUsados, variablesPropias } from '../diseno/piezas'
 import { leerTokens } from '../diseno/tokens'
 import type { Aviso, Regla } from './tipos'
 
@@ -144,6 +146,37 @@ export const reglaDiseno: Regla = (a) => {
         )
     }
   }
+  // 8: las fichas de las piezas y los tokens que nombra `piezas.css`.
+  const piezasCss = texto.get('piezas.css')
+  if (piezasCss !== undefined) {
+    const fichas = leerFichas(piezasCss)
+    if (fichas.length === 0)
+      av(
+        'piezas.css',
+        null,
+        'las piezas no tienen su ficha: el comentario que encabeza cada una suma `Grupo:`, `Para qué:` y `Estados:` (una por línea)',
+      )
+    for (const f of fichas.filter((x) => !x.grupo || !x.paraQue))
+      av(
+        'piezas.css',
+        f.linea,
+        `la ficha de «${f.nombre}» no tiene ${!f.grupo ? '`Grupo:` (acciones, navegación, avisos…)' : 'lo que dice `Para qué:`'}`,
+      )
+    if (tokens?.tieneRaiz) {
+      const conocidos = new Set([...tokens.tokens.map((x) => x.nombre), ...variablesPropias(piezasCss)])
+      const sinComentarios = piezasCss.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, ' '))
+      const faltan = tokensUsados(sinComentarios).filter((n) => !conocidos.has(n))
+      for (const n of faltan) {
+        const linea = sinComentarios.slice(0, sinComentarios.indexOf(`var(${n}`)).split('\n').length
+        av(
+          'piezas.css',
+          linea,
+          `\`var(${n})\` no está en \`tokens.css\`: sumalo con su uso o usá uno que exista`,
+        )
+      }
+    }
+  }
+
   const carpetas = new Set([...d.existentes].flatMap((f) => /^versiones\/([^/]+)\//i.exec(f)?.[1] ?? []))
   for (const c of carpetas)
     if (!d.existentes.has(`pantallas/${c}.html`))
