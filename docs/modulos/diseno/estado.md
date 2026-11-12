@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-119; T-61 a T-63 hechas; sigue DI-I3) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-120; T-61 a T-63 hechas; sigue DI-I3) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -47,6 +47,10 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I2 — 2026-11-12 — R-49: los botones principales delineados
+- **R-49 (D-120):** los botones llenos de color se leían mal. El principal (Nuevo proyecto, Continuar, Crear) va con fondo negro y letra y borde verdes; el principal peligroso (Eliminar «Gamma»), igual en rojo. Token nuevo `--principal-fondo` para el fondo al pasar el mouse; la maqueta de Sistema y la de Archivos al día.
+- **Verificado:** el control en 0 avisos; capturas de las 24 maquetas sin errores y de los botones quietos y al pasar el mouse (`tools/salida/r49/`).
+
 ### DI-I2 — 2026-11-12 — T-63: las medidas fijas como tokens
 - **El formato (D-119):** una medida fija es un `--alto-*` o un `--ancho-*` con una sola medida y su uso; las piezas la usan en lugar del número.
 - **Lector, Sistema y control juntos:** el lector las agrupa en «Medidas fijas»; Diseño › Sistema dibuja un alto en su tamaño real (hasta 48px; más alto, se desvanece) y un ancho como barra proporcional al más ancho. El control avisa de una que no es una sola medida y de una medida de 20px o más escrita a mano en el tamaño de tres reglas o más de `piezas.css` (si ya hay un token con ese valor, lo nombra). Desde tres para no avisar de casualidades: el ícono de una fila y el interruptor miden 28px sin ser lo mismo. El framework lo dice en `SKILL.md` › Las maquetas y `referencias/06-ui.md` › Maquetas.

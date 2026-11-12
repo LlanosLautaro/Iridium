@@ -1,6 +1,6 @@
 /* Los tokens de Iridium: la dirección negra sin acento, único tema (D-103, D-104). Sale de modulos/diseno/negro.css.
    Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo y lo marcado van
-   en blanco. Un solo color de acción: el verde del botón principal (Enviar, Continuar; D-109). Las señales: ámbar lo que
+   en blanco. Un solo color de acción: el verde del botón principal (Enviar, Continuar; D-109), en la letra y el borde sobre negro (R-49). Las señales: ámbar lo que
    espera del usuario, rojo un error.
    Cada token va en su línea con su uso después del `;` (D-114): Diseño › Sistema lo muestra y la IA elige el token
    por lo que dice, no por cómo se ve.
@@ -29,9 +29,10 @@
   --texto-apagado: #4d4d4d; /* lo deshabilitado y los números de línea; nunca para texto que haya que leer */
 
   /* Lo principal y lo marcado */
-  --principal: #3ccf7f; /* el botón principal y nada más: uno por pantalla (Enviar, Continuar; D-109) */
-  --principal-hover: #5adb93; /* el botón principal al pasar el mouse */
-  --sobre-principal: #000000; /* la letra sobre el verde del botón principal */
+  --principal: #3ccf7f; /* la letra y el borde del botón principal y nada más: uno por pantalla (Enviar, Continuar; D-109, R-49) */
+  --principal-hover: #5adb93; /* la letra y el borde del botón principal al pasar el mouse */
+  --principal-fondo: #06140c; /* el fondo del botón principal al pasar el mouse; quieto, va sobre el negro */
+  --sobre-principal: #000000; /* lo que va sobre lo marcado en blanco: el tilde de una casilla, la perilla de un interruptor */
   --marcado: #f2f2f2; /* lo prendido: casillas, opciones e interruptores; no es un color de acción */
 
   /* Señales: ámbar lo que espera del usuario, rojo un error */

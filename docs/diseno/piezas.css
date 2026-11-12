@@ -39,15 +39,17 @@ code, .fija { font-family: var(--mono); font-size: .92em; }
   transition: background .12s var(--sale), color .12s var(--sale), border-color .12s var(--sale);
 }
 .boton .ic { width: 15px; height: 15px; }
-.boton.principal { background: var(--principal); color: var(--sobre-principal); font-weight: 600; letter-spacing: .01em; }
-.boton.principal:hover { background: var(--principal-hover); }
+/* El principal va delineado, como Eliminar: fondo negro, letra y borde en verde (R-49); lleno se leía mal. */
+.boton.principal { color: var(--principal); border-color: var(--principal); font-weight: 600; letter-spacing: .01em; }
+.boton.principal:hover { color: var(--principal-hover); border-color: var(--principal-hover); background: var(--principal-fondo); }
 .boton.secundario { border-color: var(--borde-control); }
 .boton.secundario:hover { background: var(--hover); border-color: var(--texto-3); }
 .boton.sin-fondo { color: var(--texto-2); padding: 0 var(--esp-2); }
 .boton.sin-fondo:hover { color: var(--texto); background: var(--hover); }
 .boton.peligroso { color: var(--error); border-color: var(--error-borde); }
 .boton.peligroso:hover { background: var(--error-fondo); }
-.boton.principal.peligroso { background: var(--error); color: var(--sobre-principal); border-color: transparent; }
+.boton.principal.peligroso, .boton.principal.peligroso:hover { color: var(--error); border-color: var(--error); }
+.boton.principal.peligroso:hover { background: var(--error-fondo); }
 .boton.chico { height: var(--alto-control-chico); padding: 0 var(--esp-2); font-size: var(--tam-chico); }
 .boton.solo-icono { width: var(--alto-control); padding: 0; justify-content: center; color: var(--texto-2); }
 .boton.solo-icono.chico { width: var(--alto-control-chico); }
