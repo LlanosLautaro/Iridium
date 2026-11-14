@@ -1,7 +1,7 @@
 # Estado del módulo: Diseño
 
 **Tipo:** sección (un «Claude Design» local dentro de Iridium; D-102)
-**Última actualización:** 2026-11-13
+**Última actualización:** 2026-11-14
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso, tanda 1 hecha) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso, tanda 1 hecha y probada en Q-162) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -41,12 +41,19 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 |---|---|---|
 | DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | hecho (Q-152, 2026-11-09) |
 | DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | hecho (Q-157, 2026-11-09) |
-| DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | en curso (tanda 1 hecha) |
+| DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | en curso (tanda 1 hecha y probada) |
 | DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | pendiente |
 
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I3 — 2026-11-14 — Q-162 y los comentarios R-50 a R-52
+- **Q-162:** todo bien (la app negra con la letra del sistema, los botones de Windows sobre negro, el ancho de lectura en Apariencia, nada ilegible). La tanda 1 queda probada.
+- **R-50, la cuenta:** la «3!» amarilla en píldora pasa a la Cuenta de las maquetas (PZ-7): el número solo, en la letra fija, gris o ámbar si algo frena, en la pestaña y en la tarjeta. En el botón de Inicio y en el ícono de Revisión, un punto (ámbar o gris, como en las maquetas); el número queda al pasar el mouse. La leyenda de la columna de la Bandeja dice «en ámbar: frena el proyecto». Todavía con el nombre de clase viejo (`cuenta-bandeja`): pasa a `.cuenta` cuando entre `piezas.css`.
+- **R-51, la letra rosa al desplazar:** era el suavizado de colores de Windows (ClearType), que sobre negro deja bordes rosas y verdes y cambia al desplazar. Iridium lo apaga (`disable-lcd-text`): la letra se suaviza en gris, quieta y al desplazar, como en las maquetas. Medido en la captura de Scripts: la descripción gris pasa de 1258 píxeles con color a 0 (`tools/salida/r51/comparacion.png`).
+- **R-52:** Nueva (en la cabecera y en el aviso del contexto) deja el cursor en el campo.
+- **Verificado:** el control de estilos (bajan `cuenta-bandeja` de `pendientes.css` y un uso de `--sobre-color`), `pnpm typecheck`, `pnpm lint` sin errores, y con la app abierta las ocho pruebas de la cuenta, la conversación y la Revisión: 35 pasan; la que falla (`r2-revision` › un proyecto Electron sin la línea) ya fallaba antes de Diseño (`trabajo.md`). Capturas en `tools/salida/r50/`.
+
 ### DI-I3 — 2026-11-13 — tanda 1: la base (el negro como único tema, las piezas y su control)
 - **El antes:** `tools/auditoria-ux.ts` suma `--app-hoy`: copia las capturas que tienen maqueta a `docs/diseno/app-hoy/` con su nombre (16 de 31; fuera del repo, D-082). Las de antes de esta tanda quedaron en `tools/salida/antes-di3/` (el detalle de una idea falla como siempre, T-53: Ideas ya no tiene detalle).
 - **Un solo tema (D-104):** fuera Carbón, el selector de Ajustes › Apariencia (queda el ancho de lectura, el mismo de Docs, como en la maqueta), `tema.js`, sus miniaturas, `IRIDIUM_TEMA`, `tools/miniaturas-tema.ts`, `tools/maqueta-ajustes.ts` y las corridas en Carbón de las pruebas y de `tools/accesibilidad.ts`. Un `config.json` con tema de antes se lee igual (se ignora). La ventana abre en negro y los botones de Windows van en el gris de los íconos.
@@ -137,5 +144,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-DI-I3, tanda 2: `piezas.css` entra a la app y el Botón (PZ-1) en todas partes. Los choques de nombres de `tests/estilos.test.ts` › CHOQUES_PENDIENTES se resuelven (la clase de la sección cambia de nombre o pasa a la pieza) para poder importar `piezas.css`; `btn`, `chip` y `btn-ic` pasan a `.boton` con sus variantes (el principal verde delineado, uno por pantalla: ux.md › Reglas); las listas del control bajan. Al cerrar, una `Q-n` de prueba. Si llega Q-162 (la prueba de la tanda 1), procesarla antes. Después: el marco con lo de T-58 (la barra de abajo sin ruido, sin Bandeja de todos ni Trabajo) y sección por sección.
+DI-I3, tanda 2: `piezas.css` entra a la app y el Botón (PZ-1) en todas partes. Los choques de nombres de `tests/estilos.test.ts` › CHOQUES_PENDIENTES se resuelven (la clase de la sección cambia de nombre o pasa a la pieza) para poder importar `piezas.css`; `btn`, `chip` y `btn-ic` pasan a `.boton` con sus variantes (el principal verde delineado, uno por pantalla: ux.md › Reglas); las listas del control bajan. Al cerrar, una `Q-n` de prueba. Después: el marco con lo de T-58 (la barra de abajo sin ruido, sin Bandeja de todos ni Trabajo) y sección por sección.
 **Leer antes:** `decisiones.md` › D-121, `ux.md` › Las piezas (PZ-1) y › Reglas que quedan escritas para el rediseño, `tests/estilos.test.ts`.

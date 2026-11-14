@@ -676,12 +676,6 @@ textarea.campo.crece {
   width: 13px;
   height: 13px;
 }
-.leyenda .frena .cuenta-bandeja {
-  min-width: 13px;
-  height: 13px;
-  padding: 0 2px;
-  font-size: 10px;
-}
 .leyenda .ok .ic,
 .r-puntos .si .ic {
   color: var(--ok);

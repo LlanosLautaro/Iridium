@@ -45,6 +45,10 @@ let zoom = 1
 const oculta = process.env.IRIDIUM_OCULTA === '1'
 if (oculta) app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
 
+// La letra sin el suavizado de colores de Windows (ClearType): sobre negro deja bordes rosas y verdes que cambian al
+// desplazar (R-51). Así se suaviza en gris, igual en reposo y al desplazar, como en las maquetas.
+app.commandLine.appendSwitch('disable-lcd-text')
+
 // Datos del Centro en %APPDATA%\Centro de Desarrollo (05-arquitectura.md › Modelo de datos). Las pruebas usan
 // una carpeta aparte (IRIDIUM_DATOS) y el motor falso (IRIDIUM_MOTOR=falso), que no gasta uso.
 const carpetaDatos = process.env.IRIDIUM_DATOS ?? join(app.getPath('appData'), 'Centro de Desarrollo')

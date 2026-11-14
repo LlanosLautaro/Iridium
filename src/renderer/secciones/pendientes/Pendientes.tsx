@@ -84,8 +84,10 @@ function Columna({
       </div>
       <div className="leyenda">
         <span className="frena">
-          <span className="cuenta-bandeja frena" aria-hidden="true" />
-          <span>frena el proyecto</span>
+          <span className="cuenta-bandeja frena" aria-hidden="true">
+            2
+          </span>
+          <span>en ámbar: frena el proyecto</span>
         </span>
         <span className="ok">
           <Icono nombre="check" />

@@ -49,31 +49,31 @@
   width: 138px;
 }
 
-/* El total de la bandeja, en el botón de inicio (04-ux.md › Un número que manda) */
+/* El total de la bandeja, en el botón de inicio: un punto, como en las maquetas (PZ-7); el número, al pasar el mouse
+   (R-50) */
 .inicio .cuenta-bandeja.en-inicio {
   position: absolute;
-  right: 3px;
-  bottom: 4px;
-  min-width: 15px;
-  height: 15px;
-  padding: 0 3px;
-  font-size: 10px;
+  top: 9px;
+  right: 11px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--texto-3);
+  font-size: 0;
+}
+.inicio .cuenta-bandeja.en-inicio.frena {
+  background: var(--espera);
 }
 
-/* El número de un ícono de la barra: solo los comentarios abiertos de la Revisión, en gris */
+/* La marca de un ícono de la barra: solo los comentarios abiertos de la Revisión, un punto gris como en las maquetas
+   (PZ-7); el número, al pasar el mouse (R-50) */
 .badge {
   position: absolute;
-  right: 5px;
-  bottom: 4px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radio-control);
-  background: var(--borde-fuerte);
-  color: var(--texto);
-  font: 700 10.5px / 1 var(--mono);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--texto-3);
+  font-size: 0;
 }
 
 .sesiones {
@@ -189,8 +189,8 @@
   background: var(--primario);
 }
 .act .badge {
+  top: 7px;
   right: 7px;
-  bottom: 7px;
 }
 /* La línea entre los dos grupos de la barra del proyecto (W-3). */
 .act-linea {

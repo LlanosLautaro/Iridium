@@ -684,6 +684,11 @@ export function Conversacion({
       setEnviando(false)
     }
   }
+  // Nueva deja el cursor en el campo para escribir de una (R-52).
+  const nueva = () => {
+    cambiarVista(ruta, { enBlanco: true })
+    requestAnimationFrame(() => caja.current?.focus())
+  }
   const enviar = () => {
     if (texto.trim() === '' || enviando) return
     void seguir({ texto: sobre ? `${sobreQue(sobre)}: ${texto}` : texto })
@@ -803,7 +808,7 @@ export function Conversacion({
               ? 'Abrir una conversación en blanco: empieza con lo que le escribas'
               : 'Abrir una conversación en blanco: empieza con lo que le escribas, o con Seguí'
           }
-          onClick={() => cambiarVista(ruta, { enBlanco: true })}
+          onClick={nueva}
         >
           <Icono nombre="mas" />
           Nueva
@@ -849,11 +854,7 @@ export function Conversacion({
               y olvidar detalles. Conviene seguir en una <b>Nueva</b>; el estado del proyecto queda en sus
               documentos.
             </span>
-            <button
-              type="button"
-              className="btn secundario chico"
-              onClick={() => cambiarVista(ruta, { enBlanco: true })}
-            >
+            <button type="button" className="btn secundario chico" onClick={nueva}>
               Nueva
             </button>
           </p>

@@ -37,14 +37,14 @@ function BotonActividad({
     <button
       type="button"
       className={activa ? 'act activo' : 'act'}
-      title={`${nombre}${detalle}`}
+      title={`${nombre}${detalle}${n > 0 ? ` · ${n} ${queCuenta}` : ''}`}
       aria-label={`${nombre}${n > 0 ? `, ${n} ${queCuenta}` : ''}`}
       aria-current={activa ? 'page' : undefined}
       onClick={alTocar}
     >
       <Icono nombre={icono} />
-      {/* Solo los comentarios abiertos de la Revisión, en gris: esperan a la IA, no al usuario. La bandeja no lleva
-      número en su ícono: el total está en el botón de inicio y el de cada proyecto, en su pestaña. */}
+      {/* Solo los comentarios abiertos de la Revisión, un punto gris: esperan a la IA, no al usuario (R-50). La bandeja
+      no lleva marca en su ícono: el total está en el botón de inicio y el de cada proyecto, en su pestaña. */}
       {n > 0 && <span className="badge neutro">{n > 99 ? '99+' : n}</span>}
     </button>
   )

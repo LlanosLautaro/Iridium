@@ -152,6 +152,8 @@ test('Nueva abre una conversación en blanco que empieza con lo que se escribe, 
 
   // El primer mensaje en blanco empieza la conversación nueva con ese texto.
   await win.locator('.chat-cab').getByRole('button', { name: 'Nueva' }).click()
+  // El cursor queda en el campo para escribir de una (R-52).
+  await expect(campo).toBeFocused()
   await campo.fill('Una idea aparte')
   await campo.press('Enter')
   await expect(win.locator('.turno').first()).toContainText('Una idea aparte')

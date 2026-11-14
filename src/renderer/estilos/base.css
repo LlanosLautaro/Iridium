@@ -310,29 +310,15 @@ code,
   color: var(--texto-2);
 }
 
-/* La cuenta de la bandeja (04-ux.md › Un número que manda, D-100): gris; amarilla y con «!» solo si algo frena */
+/* La cuenta de la bandeja (04-ux.md › Un número que manda, D-100), como la Cuenta de las maquetas (PZ-7): el número
+   solo, sin píldora; gris, o ámbar si algo frena (R-50) */
 .cuenta-bandeja {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
   flex: none;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: var(--radio-control);
-  background: var(--borde-fuerte);
-  color: var(--texto);
-  font: 700 11px / 1 var(--mono);
+  font: var(--estilo-codigo);
+  color: var(--texto-3);
 }
 .cuenta-bandeja.frena {
-  background: var(--espera);
-  color: var(--sobre-color);
-}
-.cuenta-bandeja.frena::after {
-  content: "!";
-  font-family: var(--ui);
-  font-weight: 700;
+  color: var(--espera);
 }
 
 /* Un enlace chico dentro de una línea de texto («Ver», «Ver en Framework») */
