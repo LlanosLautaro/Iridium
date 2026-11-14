@@ -1,9 +1,15 @@
 // Los pendientes de un proyecto (H-9, F-3, 04-ux.md › W-5), en su Bandeja de entrada (D-043): todas sus preguntas con
 // lo que citan, filtros por frente y las en pausa al final. Sin la Bandeja de todos (D-111): lo que espera de cada
 // proyecto se ve en el suyo y, desde la grilla, en la cuenta de su tarjeta. Lo escrito vive en el estado de la ventana
-// (no se pierde al cambiar de proyecto ni de filtro) y se guarda a medias solo (R-3).
-import { type ReactNode, useState } from 'react'
-import type { Destino, PendienteVista, TarjetaProyecto } from '../../../compartido/puente'
+// (no se pierde al cambiar de proyecto ni de filtro) y se guarda a medias solo (R-3). El frente elegido se recuerda
+// por proyecto en `config.json`: queda al cambiar de proyecto y al cerrar Iridium (R-55).
+import type { ReactNode } from 'react'
+import {
+  type Destino,
+  type PendienteVista,
+  PROYECTOS_CON_FILTRO,
+  type TarjetaProyecto,
+} from '../../../compartido/puente'
 import { usarEstado } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { Cuenta } from '../../ui/Cuenta'
@@ -49,7 +55,14 @@ export function ListaPendientes({
 }) {
   const datos = usarEstado((s) => s.pendientes[p.ruta])
   const ponerPendientes = usarEstado((s) => s.ponerPendientes)
-  const [filtro, setFiltro] = useState(TODOS)
+  const filtro = usarEstado((s) => s.preferencias.filtrosBandeja[p.ruta]) ?? TODOS
+  const guardarPreferencias = usarEstado((s) => s.guardarPreferencias)
+  const setFiltro = (clave: string) => {
+    // Todos no se guarda: es lo de siempre. El último elegido va al final, y se olvidan los más viejos.
+    const { [p.ruta]: _, ...otros } = usarEstado.getState().preferencias.filtrosBandeja
+    const filas = Object.entries(clave === TODOS ? otros : { ...otros, [p.ruta]: clave })
+    guardarPreferencias({ filtrosBandeja: Object.fromEntries(filas.slice(-PROYECTOS_CON_FILTRO)) })
+  }
   const cuenta = <Cuenta n={p.preguntas.sinResponder} frenan={p.preguntas.frenan} />
   if (!datos)
     return (

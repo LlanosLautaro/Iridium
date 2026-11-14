@@ -78,6 +78,8 @@ const Config = z.object({
   pestanas: z.array(z.string()).max(50).catch([]),
   /** El modelo y el esfuerzo de cada proyecto (C-58), por ruta; uno roto se descarta solo. */
   ajustesIa: z.record(z.string(), AjusteIa.optional().catch(undefined)).catch({}),
+  /** El frente elegido en la Bandeja de cada proyecto (R-55), por ruta (`''`, el núcleo); uno roto se descarta solo. */
+  filtrosBandeja: z.record(z.string(), z.string().max(200).optional().catch(undefined)).catch({}),
   /** El proyecto abierto al cerrar (D-060): al abrir se vuelve a él. */
   abierto: z.string().min(1).max(1024).nullable().catch(null),
   // Ajustes (D-065): los nombres de la conversación y el tono de la IA. El tema ya no se guarda: hay uno solo (D-104).
@@ -98,6 +100,7 @@ const PREDETERMINADA: Config = {
   anchoHoja: 'normal',
   pestanas: [],
   ajustesIa: {},
+  filtrosBandeja: {},
   abierto: null,
   nombreUsuario: '',
   nombreIa: '',
@@ -115,6 +118,9 @@ export function preferenciasDe(c: Config): Preferencias {
     pestanas: c.pestanas,
     ajustesIa: Object.fromEntries(
       Object.entries(c.ajustesIa).filter((e): e is [string, z.infer<typeof AjusteIa>] => e[1] !== undefined),
+    ),
+    filtrosBandeja: Object.fromEntries(
+      Object.entries(c.filtrosBandeja).filter((e): e is [string, string] => e[1] !== undefined),
     ),
     abierto: c.abierto,
     nombreUsuario: c.nombreUsuario,

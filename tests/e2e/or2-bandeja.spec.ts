@@ -144,3 +144,47 @@ test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar 
   await expect(win.getByRole('group', { name: 'Filtrar por frente' })).toHaveCount(0)
   await app.close()
 })
+
+test('R-55: el frente elegido en la Bandeja queda al cambiar de proyecto y al cerrar Iridium', async () => {
+  let { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await win.getByRole('button', { name: 'Compartir 2' }).click()
+  await expect(win.locator('.grupo-pend:not(.en-pausa) .pend')).toHaveCount(2)
+
+  // A Beta y de vuelta a Alfa por su pestaña: sigue en Compartir.
+  await win.keyboard.press('Control+1')
+  await win.locator('.tarjeta', { hasText: 'Beta' }).click()
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
+  await win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
+  await expect(win.getByRole('button', { name: 'Compartir 2' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(win.locator('.grupo-pend:not(.en-pausa) .pend')).toHaveCount(2)
+  await app.close()
+
+  // Al abrir de nuevo, Alfa vuelve en Compartir.
+  ;({ app, win } = await abrir())
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
+  await expect(win.getByRole('button', { name: 'Compartir 2' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(win.locator('.pend[data-q="Q-1"]')).toHaveCount(0)
+  // Todos no se guarda: es lo de siempre.
+  await win.getByRole('button', { name: 'Todos 3' }).click()
+  await expect(win.locator('.pend[data-q="Q-1"]')).toBeVisible()
+  await app.close()
+})
+
+test('Q-165: entre varias pestañas, la elegida se distingue (su fondo y su nombre en blanco)', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await win.keyboard.press('Control+1')
+  await win.locator('.tarjeta', { hasText: 'Beta' }).click()
+  const fondo = (n: string) =>
+    win.locator('.barra-proyectos .proy', { hasText: n }).evaluate((e) => {
+      const c = getComputedStyle(e)
+      return { fondo: c.backgroundColor, letra: c.color }
+    })
+  const elegida = await fondo('Beta')
+  const otra = await fondo('Alfa')
+  expect(elegida.fondo).not.toBe(otra.fondo)
+  expect(elegida.letra).not.toBe(otra.letra)
+  await win.locator('.barra-proyectos').screenshot({ path: 'test-results/q165-pestanas.png' })
+  await app.close()
+})

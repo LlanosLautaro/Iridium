@@ -11,9 +11,9 @@
   /* Superficies */
   --fondo: #000000; /* el fondo de toda la app: las secciones se apoyan directo en el negro */
   --elevado: #0c0c0d; /* lo que flota o se separa del fondo: menús, cuadros, ventanas, el ícono de una fila */
-  --tarjeta: #0a0a0b; /* un bloque de código y el proyecto elegido en la barra */
+  --tarjeta: #0a0a0b; /* un bloque de código */
   --hover: #111113; /* el fondo de una fila, un botón o una pestaña al pasar el mouse */
-  --sel-fondo: #161618; /* la fila, la pestaña o la opción de menú elegida */
+  --sel-fondo: #161618; /* la fila, la pestaña (también el proyecto elegido en la barra) o la opción de menú elegida */
   --velo: #000000b3; /* el oscurecido detrás de un cuadro abierto */
 
   /* Líneas */

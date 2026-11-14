@@ -1,7 +1,12 @@
 // Esquemas que validan lo que llega desde la ventana (05-arquitectura.md › Seguridad: validar todo contenido externo).
 import { z } from 'zod'
 import { LARGO_NOMBRE_REPO } from '../../compartido/github'
-import { ANCHO_LISTA_IDEAS, ANCHO_LISTA_SKILLS, LARGO_AJUSTES } from '../../compartido/puente'
+import {
+  ANCHO_LISTA_IDEAS,
+  ANCHO_LISTA_SKILLS,
+  LARGO_AJUSTES,
+  PROYECTOS_CON_FILTRO,
+} from '../../compartido/puente'
 import { ESTADOS } from '../../compartido/tipos'
 import { LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
 import { AjusteIa, AnchosConversacion } from '../infra/config'
@@ -15,6 +20,9 @@ export const CambioPreferencias = z
     anchoHoja: z.enum(['angosto', 'normal', 'ancho']),
     pestanas: z.array(z.string().min(1).max(1024)).max(50),
     ajustesIa: z.record(z.string().min(1).max(1024), AjusteIa.strict()),
+    filtrosBandeja: z
+      .record(z.string().min(1).max(1024), z.string().max(200))
+      .refine((f) => Object.keys(f).length <= PROYECTOS_CON_FILTRO),
     abierto: z.string().min(1).max(1024).nullable(),
     nombreUsuario: z.string().max(LARGO_AJUSTES.nombreUsuario),
     nombreIa: z.string().max(LARGO_AJUSTES.nombreIa),

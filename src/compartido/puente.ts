@@ -92,6 +92,8 @@ export interface Preferencias {
   pestanas: string[]
   /** El modelo y el esfuerzo que eligió cada proyecto (C-58), por ruta. */
   ajustesIa: Record<string, AjusteIa>
+  /** El frente elegido en la Bandeja de entrada de cada proyecto (R-55), por ruta; sin él, Todos. */
+  filtrosBandeja: Record<string, string>
   /** El proyecto que estaba abierto al cerrar: al abrir Iridium se vuelve a él (D-060); null = el inicio. */
   abierto: string | null
   /** Los ajustes de la ventana de Ajustes (D-065, modulos/apariencia/): los nombres y el tono. */
@@ -105,6 +107,9 @@ export interface Preferencias {
 
 /** Lo más largo que puede ser cada texto de Ajustes. */
 export const LARGO_AJUSTES = { nombreUsuario: 60, nombreIa: 40, tono: 100 } as const
+
+/** Los proyectos con el filtro de la Bandeja recordado (R-55): los últimos que se cambiaron. */
+export const PROYECTOS_CON_FILTRO = 200
 
 /** Un estilo de respuesta de Claude Code (AJ-3): su nombre para Claude Code y una línea de qué cambia. */
 export interface EstiloRespuesta {

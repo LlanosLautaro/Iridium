@@ -277,6 +277,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     anchoHoja: 'normal',
     pestanas: [],
     ajustesIa: {},
+    filtrosBandeja: {},
     abierto: null,
     nombreUsuario: '',
     nombreIa: '',

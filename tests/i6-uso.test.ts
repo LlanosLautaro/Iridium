@@ -324,6 +324,29 @@ describe('el modelo y el esfuerzo de cada proyecto (C-58)', () => {
   })
 })
 
+describe('el frente elegido en la Bandeja de cada proyecto (R-55)', () => {
+  it('se guarda por proyecto (el núcleo, vacío); uno roto se descarta sin perder los demás', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'iridium-cfg-'))
+    try {
+      const archivo = join(dir, 'config.json')
+      await writeFile(
+        archivo,
+        JSON.stringify({ filtrosBandeja: { 'C:/Alfa': 'Compartir', 'C:/Beta': '', 'C:/Roto': 7 } }),
+      )
+      const p = preferenciasDe(await new ArchivoConfig(archivo).leer())
+      expect(p.filtrosBandeja).toEqual({ 'C:/Alfa': 'Compartir', 'C:/Beta': '' })
+      // Sin el campo (un config.json de antes), ninguno.
+      await writeFile(archivo, JSON.stringify({ version: 1 }))
+      expect(preferenciasDe(await new ArchivoConfig(archivo).leer()).filtrosBandeja).toEqual({})
+      expect(() => CambioPreferencias.parse({ filtrosBandeja: { x: 'a'.repeat(201) } })).toThrow()
+      const muchos = Object.fromEntries(Array.from({ length: 201 }, (_, i) => [`C:/P${i}`, 'Diseño']))
+      expect(() => CambioPreferencias.parse({ filtrosBandeja: muchos })).toThrow()
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
+  })
+})
+
 describe('el registro del día', () => {
   it('una línea por cosa, sin saltos; borra los de más de 14 días', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'iridium-reg-'))

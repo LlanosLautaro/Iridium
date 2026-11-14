@@ -313,10 +313,10 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .barra-proyectos { border-bottom: 1px solid var(--borde); grid-area: proyectos; display: flex; align-items: stretch; gap: 2px; }
 .barra-proyectos .proy {
   display: flex; align-items: center; gap: var(--esp-2); padding: 0 var(--esp-2) 0 var(--esp-3); max-width: var(--ancho-proyecto);
-  color: var(--texto-2); text-decoration: none; font-weight: 500; border-radius: var(--radio-control) var(--radio-control) 0 0;
+  color: var(--texto-3); text-decoration: none; font-weight: 500; border-radius: var(--radio-control) var(--radio-control) 0 0;
 }
 .barra-proyectos .proy:hover { color: var(--texto); }
-.barra-proyectos .proy.elegido { color: var(--texto); background: var(--tarjeta); box-shadow: inset 0 0 0 1px var(--borde); clip-path: inset(0 0 -1px 0); margin-bottom: -1px; }
+.barra-proyectos .proy.elegido { color: var(--texto); background: var(--sel-fondo); box-shadow: inset 0 0 0 1px var(--borde-fuerte); clip-path: inset(0 0 -1px 0); margin-bottom: -1px; }
 .barra-proyectos .proy .cerrar { opacity: 0; color: var(--texto-3); }
 .barra-proyectos .proy:hover .cerrar, .barra-proyectos .proy.elegido .cerrar { opacity: 1; }
 .actividad { border-right: 1px solid var(--borde); grid-area: actividad; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: var(--esp-2); }
