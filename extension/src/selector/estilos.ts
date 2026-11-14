@@ -1,5 +1,5 @@
 // Estilos de lo que dibuja la extensión sobre la app (DESIGN.md › Revisión de la app). Viven en un Shadow DOM cerrado:
-// no heredan nada de la página ni le cambian nada. Los valores son los tokens de Iridium (docs/ui/tokens.css).
+// no heredan nada de la página ni le cambian nada. Los valores son los tokens de Iridium (docs/diseno/tokens.css).
 export const FAMILIA_UI = 'Iridium Chakra Petch'
 export const FAMILIA_MONO = 'Iridium JetBrains Mono'
 

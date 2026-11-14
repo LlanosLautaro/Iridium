@@ -163,7 +163,7 @@ describe('los tokens', () => {
     ])
   })
   it('lee los tokens reales de Iridium y el negro', async () => {
-    for (const f of ['docs/ui/tokens.css', 'docs/modulos/diseno/negro.css', 'docs/diseno/tokens.css']) {
+    for (const f of ['docs/modulos/diseno/negro.css', 'docs/diseno/tokens.css']) {
       const t = leerTokens(await readFile(join(__dirname, '..', f), 'utf8'))
       expect(t.tieneRaiz).toBe(true)
       expect(t.tokens.some((x) => x.grupo === 'colores')).toBe(true)

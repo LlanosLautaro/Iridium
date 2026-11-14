@@ -127,9 +127,10 @@ test('Ctrl+4: las nuevas de cada proyecto y las sueltas, anotar con el selector 
   await expect(ideas.locator('.cab-1 > .n')).toHaveText('10')
   await expect(ideas.getByText('Respaldo en GitHub')).toHaveCount(0)
   await expect(ideas.getByText('Puente entre el celular y la PC')).toHaveCount(0)
-  await expect(ideas.locator('.id-viejos')).toHaveText(
+  await expect(ideas.locator('.id-viejos')).toContainText(
     'Las ideas de 2 proyectos no aparecen: todavía no pasaron al framework.',
   )
+  await expect(ideas.locator('.id-viejos').getByRole('button', { name: 'Ver en Framework' })).toBeVisible()
 
   // El selector: los proyectos con framework y, separada, Suelta. Empieza en el primero.
   const selector = ideas.locator('.destino .menu-boton')
@@ -211,8 +212,8 @@ test('la lista se actualiza sola: una idea que la IA pasa a pendiente sale (W-10
   await app.close()
 })
 
-test('Abrir como proyecto desde Ideas y desde Skills (IN-3), en Carbón', async () => {
-  const { app, win } = await abrir({ IRIDIUM_TEMA: 'carbon' })
+test('Abrir como proyecto desde Ideas y desde Skills (IN-3)', async () => {
+  const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+4')
   await win
@@ -232,10 +233,10 @@ test('Abrir como proyecto desde Ideas y desde Skills (IN-3), en Carbón', async 
   await expect(win.getByRole('button', { name: /^Docs/ })).toBeVisible()
   await expect(win.locator('.ses, .pestana').filter({ hasText: 'Skills' }).first()).toBeVisible()
 
-  // De vuelta en Ideas, en Carbón.
+  // De vuelta en Ideas.
   await win.keyboard.press('Control+4')
   await expect(win.getByRole('region', { name: 'Ideas' })).toBeVisible()
-  await win.screenshot({ path: 'test-results/in1-ideas-carbon.png' })
+  await win.screenshot({ path: 'test-results/in1-ideas-abrir.png' })
   await app.close()
 })
 

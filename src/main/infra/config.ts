@@ -10,7 +10,6 @@ import {
   ESFUERZOS,
   LARGO_AJUSTES,
   type Preferencias,
-  TEMAS,
 } from '../../compartido/puente'
 import { escribirAtomico, leerDatos } from './escritura'
 
@@ -81,8 +80,7 @@ const Config = z.object({
   ajustesIa: z.record(z.string(), AjusteIa.optional().catch(undefined)).catch({}),
   /** El proyecto abierto al cerrar (D-060): al abrir se vuelve a él. */
   abierto: z.string().min(1).max(1024).nullable().catch(null),
-  // Ajustes (D-065): el tema, los nombres de la conversación y el tono de la IA.
-  tema: z.enum(TEMAS).catch('iridium'),
+  // Ajustes (D-065): los nombres de la conversación y el tono de la IA. El tema ya no se guarda: hay uno solo (D-104).
   nombreUsuario: z.string().max(LARGO_AJUSTES.nombreUsuario).catch(''),
   nombreIa: z.string().max(LARGO_AJUSTES.nombreIa).catch(''),
   tono: z.string().max(LARGO_AJUSTES.tono).catch(''),
@@ -101,7 +99,6 @@ const PREDETERMINADA: Config = {
   pestanas: [],
   ajustesIa: {},
   abierto: null,
-  tema: 'iridium',
   nombreUsuario: '',
   nombreIa: '',
   tono: '',
@@ -120,7 +117,6 @@ export function preferenciasDe(c: Config): Preferencias {
       Object.entries(c.ajustesIa).filter((e): e is [string, z.infer<typeof AjusteIa>] => e[1] !== undefined),
     ),
     abierto: c.abierto,
-    tema: c.tema,
     nombreUsuario: c.nombreUsuario,
     nombreIa: c.nombreIa,
     tono: c.tono,

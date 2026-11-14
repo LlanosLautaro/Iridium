@@ -133,19 +133,9 @@ function useFocoAlCambiar(seccion: string, ruta: string | null) {
   }, [seccion, ruta])
 }
 
-/** El tema elegido (D-066) en <html>: toda la app cambia en el momento, también lo que está detrás de Ajustes. */
-function useTema() {
-  const tema = usarEstado((s) => s.preferencias.tema)
-  useEffect(() => {
-    if (tema === 'iridium') delete document.documentElement.dataset.tema
-    else document.documentElement.dataset.tema = tema
-  }, [tema])
-}
-
 export function App() {
   useConexion()
   useAtajos()
-  useTema()
   const seccion = usarEstado((s) => s.seccion)
   const lista = usarEstado((s) => s.lista)
   const ruta = usarEstado((s) => s.proyectoAbierto)

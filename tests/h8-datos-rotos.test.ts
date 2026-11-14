@@ -72,7 +72,7 @@ describe('un archivo roto se aparta antes de pisarlo', () => {
     const anterior = '{"raiz": "D:/Mis proyectos", "tema": "carbon",'
     await writeFile(archivo, anterior)
     const c = new ArchivoConfig(archivo)
-    expect((await c.leer()).tema).toBe('iridium')
+    expect((await c.leer()).raiz).toBeUndefined()
     await c.guardar({ nombreUsuario: 'Lau' })
     expect(await readFile(`${archivo}.roto`, 'utf8')).toBe(anterior)
   })

@@ -18,7 +18,6 @@ import {
   type Preferencias,
   type SinArmar,
   type TarjetaProyecto,
-  type Tema,
   type UsoSuscripcion,
   type VersionNueva,
 } from '../compartido/puente'
@@ -196,7 +195,7 @@ interface EstadoApp {
   abrirAjustes(seccion?: SeccionAjustes): void
   cerrarAjustes(): void
   /**
-   * Cambia un ajuste en el acto (el tema se ve ya) y lo guarda; si no se pudo guardar, vuelve atrás en pantalla y
+   * Cambia un ajuste en el acto (el ancho de lectura se ve ya) y lo guarda; si no se pudo guardar, vuelve atrás en pantalla y
    * devuelve false (modulos/apariencia/ux.md › Flujos).
    */
   cambiarAjustes(cambio: Partial<Preferencias>): Promise<boolean>
@@ -288,8 +287,6 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     pestanas: [],
     ajustesIa: {},
     abierto: null,
-    // El que puso `tema.js` antes de la primera pintura: así no se vuelve al de siempre hasta leer `config.json`.
-    tema: temaDeLaPagina(),
     nombreUsuario: '',
     nombreIa: '',
     tono: '',
@@ -577,13 +574,6 @@ function conPaso(v: VistaProyecto, arriba?: number): PasoAtras[] {
   if (v.seccion === 'revision') paso.comentario = v.comentario
   if (v.seccion === 'trabajo') paso.item = v.item
   return [...v.atras, paso].slice(-PASOS_ATRAS)
-}
-
-/** El tema con que abrió la página (lo pone `tema.js` en <html>). */
-function temaDeLaPagina(): Tema {
-  return typeof document !== 'undefined' && document.documentElement.dataset.tema === 'carbon'
-    ? 'carbon'
-    : 'iridium'
 }
 
 let siguienteAviso = 1

@@ -1,7 +1,7 @@
 # Estado del módulo: Diseño
 
 **Tipo:** sección (un «Claude Design» local dentro de Iridium; D-102)
-**Última actualización:** 2026-11-12
+**Última actualización:** 2026-11-13
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,20 +13,20 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-120; T-61 a T-63 hechas; sigue DI-I3) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso, tanda 1 hecha) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso, los estilos de texto tienen nombre (T-61, D-116), cada pieza tiene su ficha (T-62, D-117) y las medidas fijas son tokens (T-63, D-119). El sistema está completo: sigue **DI-I3**, pasar el rediseño al código.
+Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso, los estilos de texto tienen nombre (T-61, D-116), cada pieza tiene su ficha (T-62, D-117) y las medidas fijas son tokens (T-63, D-119). El sistema está completo y **DI-I3** (pasarlo al código) empezó: con la tanda 1 la app ya es negra, con un solo tema y un solo `tokens.css` para la app y las maquetas (D-121); las secciones pasan a las piezas en las tandas que siguen.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|
 | `estado.md` › Módulos | Diseño en curso; Orden termina con Q-146 y su paso 8 espera el rediseño | D-102 | sí |
 | `02-definicion.md` › Módulos previstos | El orden nuevo de los frentes | D-102 | sí |
-| `DESIGN.md`, `06-ui.md`, `ui/tokens.css` | La dirección negra sin acento como único tema y las piezas compartidas (con DI-I1) | D-102, D-103, D-104 | no |
-| Ajustes › Apariencia (frente Apariencia y ajustes) | Sin el selector de tema; fuera `IRIDIUM_TEMA`, las miniaturas y la corrida en Carbón (con DI-I1) | D-104 | no |
+| `DESIGN.md`, `06-ui.md`, `ui/tokens.css` | La dirección negra sin acento como único tema y las piezas compartidas (con DI-I1) | D-102, D-103, D-104, D-121 | en parte: `ui/tokens.css` enlaza al de las maquetas y los dos documentos lo avisan arriba; se reescriben desde lo construido al cerrar DI-I3 |
+| Ajustes › Apariencia (frente Apariencia y ajustes) | Sin el selector de tema; fuera `IRIDIUM_TEMA`, las miniaturas y la corrida en Carbón (con DI-I1) | D-104 | sí (DI-I3, tanda 1: Apariencia queda con el ancho de lectura) |
 | `docs/README.md` › Códigos | `PZ-n` (piezas) y `DS-n` (la sección Diseño) | — | sí |
 | `02-definicion.md` › Glosario | Pieza, Dirección, Pantallas | D-103 | sí |
 | El framework | El formato `docs/diseno/` (maquetas), con su lector y su control; `referencias/06-ui.md` dice cómo se arman las maquetas; el campo **Maqueta** del `R-n.md` (con DI-I1) | D-086, D-102, D-105 | sí |
@@ -41,12 +41,21 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 |---|---|---|
 | DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | hecho (Q-152, 2026-11-09) |
 | DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | hecho (Q-157, 2026-11-09) |
-| DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | pendiente |
+| DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | en curso (tanda 1 hecha) |
 | DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | pendiente |
 
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I3 — 2026-11-13 — tanda 1: la base (el negro como único tema, las piezas y su control)
+- **El antes:** `tools/auditoria-ux.ts` suma `--app-hoy`: copia las capturas que tienen maqueta a `docs/diseno/app-hoy/` con su nombre (16 de 31; fuera del repo, D-082). Las de antes de esta tanda quedaron en `tools/salida/antes-di3/` (el detalle de una idea falla como siempre, T-53: Ideas ya no tiene detalle).
+- **Un solo tema (D-104):** fuera Carbón, el selector de Ajustes › Apariencia (queda el ancho de lectura, el mismo de Docs, como en la maqueta), `tema.js`, sus miniaturas, `IRIDIUM_TEMA`, `tools/miniaturas-tema.ts`, `tools/maqueta-ajustes.ts` y las corridas en Carbón de las pruebas y de `tools/accesibilidad.ts`. Un `config.json` con tema de antes se lee igual (se ignora). La ventana abre en negro y los botones de Windows van en el gris de los íconos.
+- **Un solo `tokens.css` (D-121):** la app importa `docs/diseno/tokens.css`, el de las maquetas; `docs/ui/tokens.css` lo enlaza para las vistas viejas. Los nombres de antes (`--primario`, `--caja`, `--esp-md`…) van en `src/renderer/estilos/tokens-viejos.css` apuntando a los nuevos: lo verde de antes pasa a blanco y lo que «anda bien» a gris (D-108, D-109). La letra pasa a la del sistema (Segoe UI) y la fija a Cascadia Mono.
+- **Las piezas:** `src/renderer/estilos/piezas.css` con PZ-1 a PZ-12 y la «i», bloque por bloque iguales a las de las maquetas (fuera del formateador para que queden tal cual). Todavía no se importa: nueve hojas usan los mismos nombres para otra cosa (D-121).
+- **El control de estilos** (`tests/estilos.test.ts`): ninguna hoja escribe un color (se arreglaron los dos que había); las piezas de la app son las de las maquetas; cada `var(--…)` existe; y lo que falta pasar queda anotado y solo baja: 25 choques de nombres en 9 hojas, 92 clases viejas del inventario en 14 hojas y 167 usos de los tokens de antes. Probado con un color y una `.fila` puestos a propósito: marca los dos.
+- **Verificado:** `pnpm test`, `pnpm typecheck`, `pnpm lint` (de paso, un aviso viejo de `Diseno.tsx`) y `pnpm e2e`; capturas del después en `tools/salida/auditoria/1440x900/` y `docs/diseno/app-hoy/`.
+- **Prueba:** Q-162.
+
 ### DI-I2 — 2026-11-12 — R-49: los botones principales delineados
 - **R-49 (D-120):** los botones llenos de color se leían mal. El principal (Nuevo proyecto, Continuar, Crear) va con fondo negro y letra y borde verdes; el principal peligroso (Eliminar «Gamma»), igual en rojo. Token nuevo `--principal-fondo` para el fondo al pasar el mouse; la maqueta de Sistema y la de Archivos al día.
 - **Verificado:** el control en 0 avisos; capturas de las 24 maquetas sin errores y de los botones quietos y al pasar el mouse (`tools/salida/r49/`).
@@ -128,5 +137,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-DI-I3, tanda 1 (la base, sin rehacer secciones todavía): (1) las capturas de la app de hoy con `tools/auditoria-ux.ts` para tener el «antes»; (2) `docs/ui/tokens.css` pasa a ser el `tokens.css` de las maquetas como único tema (D-104): fuera Carbón, el selector de Ajustes › Apariencia, `IRIDIUM_TEMA`, `tools/miniaturas-tema.ts` y la corrida en Carbón; (3) `src/renderer/estilos/piezas.css` con las clases de `docs/diseno/piezas.css` y el control de estilos (`tests/estilos.test.ts`). Después, tanda por tanda, las secciones pasan a las piezas con lo de T-58, y se mide la carga de las miniaturas con las 23 maquetas. Al cerrar cada tanda, una `Q-n` de prueba.
-**Leer antes:** `diseno-tecnico.md` › Pasar al código en Iridium y › Iteraciones, `ux.md` › Las piezas (columna Reemplaza) y › Se quedan como propias, `trabajo.md` › T-58, `decisiones.md` › D-104 y D-108 a D-112.
+DI-I3, tanda 2: `piezas.css` entra a la app y el Botón (PZ-1) en todas partes. Los choques de nombres de `tests/estilos.test.ts` › CHOQUES_PENDIENTES se resuelven (la clase de la sección cambia de nombre o pasa a la pieza) para poder importar `piezas.css`; `btn`, `chip` y `btn-ic` pasan a `.boton` con sus variantes (el principal verde delineado, uno por pantalla: ux.md › Reglas); las listas del control bajan. Al cerrar, una `Q-n` de prueba. Si llega Q-162 (la prueba de la tanda 1), procesarla antes. Después: el marco con lo de T-58 (la barra de abajo sin ruido, sin Bandeja de todos ni Trabajo) y sección por sección.
+**Leer antes:** `decisiones.md` › D-121, `ux.md` › Las piezas (PZ-1) y › Reglas que quedan escritas para el rediseño, `tests/estilos.test.ts`.

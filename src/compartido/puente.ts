@@ -94,8 +94,7 @@ export interface Preferencias {
   ajustesIa: Record<string, AjusteIa>
   /** El proyecto que estaba abierto al cerrar: al abrir Iridium se vuelve a él (D-060); null = el inicio. */
   abierto: string | null
-  /** Los ajustes de la ventana de Ajustes (D-065, modulos/apariencia/): el tema, los nombres y el tono. */
-  tema: Tema
+  /** Los ajustes de la ventana de Ajustes (D-065, modulos/apariencia/): los nombres y el tono. */
   /** Vacío = «Vos». */
   nombreUsuario: string
   /** Vacío = «IA». */
@@ -103,10 +102,6 @@ export interface Preferencias {
   /** El estilo de respuesta de Claude Code para las sesiones de Iridium (su nombre); vacío = el de Claude Code. */
   tono: string
 }
-
-/** Los temas de Iridium (D-066): el de siempre y Carbón. */
-export const TEMAS = ['iridium', 'carbon'] as const
-export type Tema = (typeof TEMAS)[number]
 
 /** Lo más largo que puede ser cada texto de Ajustes. */
 export const LARGO_AJUSTES = { nombreUsuario: 60, nombreIa: 40, tono: 100 } as const

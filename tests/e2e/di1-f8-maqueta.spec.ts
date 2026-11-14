@@ -200,7 +200,9 @@ test('F8 sobre una maqueta grande: el comentario llega a su proyecto con la maqu
   await expect(comentar).toHaveAttribute('aria-pressed', 'true')
   await comentar.click()
   await expect(comentar).toHaveAttribute('aria-pressed', 'false')
-  await expect.poll(() => enLaGrande<boolean>(app, "!!document.querySelector('iridium-revision')")).toBe(false)
+  await expect
+    .poll(() => enLaGrande<boolean>(app, "!!document.querySelector('iridium-revision')"))
+    .toBe(false)
 
   // En Revisión, el enlace del comentario abre la maqueta grande.
   await win

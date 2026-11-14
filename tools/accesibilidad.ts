@@ -1,4 +1,4 @@
-// Hito 8, tanda 5 (08-calidad.md › Accesibilidad y UI): abre Iridium en los dos temas sobre una copia de la carpeta de proyectos,
+// Hito 8, tanda 5 (08-calidad.md › Accesibilidad y UI): abre Iridium (un solo tema, el negro) sobre una copia de la carpeta de proyectos,
 // con el motor falso y sin mandar nada, y en cada pantalla principal mide:
 // - el contraste de cada texto visible contra su fondo real (WCAG AA: 4,5:1; 3:1 el texto grande);
 // - los controles sin nombre (para lectores de pantalla y para el título al pasar el mouse);
@@ -20,7 +20,7 @@ await mkdir(SALIDA, { recursive: true })
 
 const registro: Record<string, unknown> = {}
 
-async function abrir(tema: string) {
+async function abrir() {
   const datos = await mkdtemp(join(tmpdir(), 'iridium-tanda5-'))
   await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz }))
   const env = {
@@ -29,7 +29,6 @@ async function abrir(tema: string) {
     IRIDIUM_MOTOR: 'falso',
     IRIDIUM_REVISION: 'no',
     IRIDIUM_OCULTA: '1',
-    IRIDIUM_TEMA: tema,
   } as Record<string, string>
   delete env.ELECTRON_RUN_AS_NODE
   const app = await electron.launch(exe ? { executablePath: exe, env } : { args: ['.'], env })
@@ -255,10 +254,11 @@ async function pantalla(win: Page, tema: string, id: string, conTab = true) {
   )
 }
 
-for (const tema of ['iridium', 'carbon']) {
+// Un solo tema, el negro (D-104); el nombre queda en el registro para compararlo con las corridas de antes.
+for (const tema of ['negro']) {
   let app: ElectronApplication | undefined
   try {
-    const abierta = await abrir(tema)
+    const abierta = await abrir()
     app = abierta.app
     const win = abierta.win
     await pantalla(win, tema, 'proyectos')

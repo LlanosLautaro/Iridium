@@ -127,6 +127,7 @@
 | D-118 | 2026-11-12 | framework | 10, frente Orden (T-64) | Novedades del framework: los cambios que les piden algo a los proyectos, con fecha | vigente |
 | D-119 | 2026-11-12 | framework | 10, frente Diseño, paso 7 (T-63) | Las medidas fijas son tokens `--alto-*` y `--ancho-*`, y el control avisa de una repetida a mano | vigente |
 | D-120 | 2026-11-12 | Diseño | 10, frente Diseño, paso 7 (R-49) | Los botones principales van delineados: fondo negro, letra y borde en color | vigente (ajusta D-109) |
+| D-121 | 2026-11-13 | Diseño | 10, frente Diseño, paso 7 (DI-I3) | La app y las maquetas comparten un solo `tokens.css`; las piezas entran a la app sección por sección | vigente |
 
 ---
 
@@ -2672,3 +2673,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** lo pidió el usuario después de verlo; letra clara sobre negro se lee mejor que letra negra sobre un color saturado, y el botón sigue destacando por ser el único verde.
 
 **Consecuencias:** cambia `piezas.css`, así que cambian todas las maquetas a la vez; `--sobre-principal` queda solo para lo que va sobre lo marcado en blanco (el tilde de una casilla, la perilla de un interruptor). En la app llega con DI-I3.
+
+## D-121 — La app y las maquetas comparten un solo `tokens.css`; las piezas entran a la app sección por sección
+- **Fecha:** 2026-11-13
+- **Ámbito:** Diseño (DI-I3)
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I3, tanda 1)
+- **Estado:** vigente (ajusta `modulos/diseno/diseno-tecnico.md` › Pasar al código en Iridium)
+
+**Contexto:** el diseño técnico decía que `docs/ui/tokens.css` «pasa a ser» el `tokens.css` de las maquetas, es decir, dos archivos iguales que había que mantener a la par. Y que `piezas.css` entraba a la app en la base; pero nueve hojas de sección usan hoy los mismos nombres de clase que las piezas para otra cosa (`.fila`, `.menu`, `.filtro`, `.cabecera`…), y `.menu` de las piezas, por ejemplo, está escondido hasta que se abre: sumarlo así rompía los menús de hoy.
+
+**Decisión:** la app importa `docs/diseno/tokens.css` tal cual: es el único archivo de tokens, el mismo que ven las maquetas. `docs/ui/tokens.css` queda como un enlace a él para las vistas viejas de `docs/ui/`. Los nombres de los tokens de antes van en `src/renderer/estilos/tokens-viejos.css`, apuntando a los nuevos (lo verde de antes, a blanco: el verde es solo del principal), hasta que las secciones pasen. `src/renderer/estilos/piezas.css` tiene las piezas copiadas bloque por bloque de las maquetas, y se suma a la app con la primera tanda que pasa una sección. El control de estilos (`tests/estilos.test.ts`) compara las piezas con las de las maquetas y lleva la cuenta de lo que falta pasar (choques de nombres, clases viejas, usos de los tokens de antes), que solo puede bajar.
+
+**Motivo:** un solo archivo no se desfasa: cambiar un token en Diseño cambia la app y las maquetas a la vez. Pasar las piezas por sección evita romper lo que todavía no se rehízo.
+
+**Consecuencias:** desde esta tanda la app ya es negra (fondo, letra del sistema, grises), aunque con las formas de antes; el principal se ve blanco hasta que su sección pase a la pieza Botón. Al terminar DI-I3 se borra `tokens-viejos.css` y las listas del control quedan vacías.

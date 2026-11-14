@@ -1,5 +1,5 @@
-// AP-I1 con la app abierta y el motor falso: la ventana de Ajustes (⚙ y Ctrl+,), el tema en el momento y al volver a
-// abrir, los nombres en la conversación y el tono en las sesiones (modulos/apariencia/ux.md › AJ-1 a AJ-3).
+// AP-I1 con la app abierta y el motor falso: la ventana de Ajustes (⚙ y Ctrl+,), Apariencia (un solo tema, D-104),
+// los nombres en la conversación y el tono en las sesiones (modulos/apariencia/ux.md › AJ-1 a AJ-3).
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -87,45 +87,33 @@ test('el ⚙ y Ctrl+, abren Ajustes; Esc, la ✕ y un clic afuera cierran sin pe
   await app.close()
 })
 
-test('elegir Carbón cambia toda la app en el momento y sigue al volver a abrir (AJ-1)', async () => {
+test('un solo tema, el negro; Apariencia elige el ancho de lectura y sigue al volver a abrir (AJ-1, D-104)', async () => {
   let { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  // El negro de docs/diseno/tokens.css, sin atributo de tema.
   await expect(win.locator('html')).not.toHaveAttribute('data-tema', /.+/)
-  await win.keyboard.press('Control+,')
-  await win.getByRole('dialog').getByRole('button', { name: 'Apariencia' }).click()
-  const temas = win.getByRole('radiogroup', { name: 'Tema' })
-  await expect(temas.getByRole('radio', { name: /Iridium/ })).toHaveAttribute('aria-checked', 'true')
-  await win.screenshot({ path: 'test-results/ap1-apariencia-iridium.png' })
-
-  await temas.getByRole('radio', { name: /Carbón/ }).click()
-  await expect(win.locator('html')).toHaveAttribute('data-tema', 'carbon')
-  await expect(temas.getByRole('radio', { name: /Carbón/ })).toHaveAttribute('aria-checked', 'true')
-  // Lo de atrás también: los colores de toda la app ya son los de Carbón.
   const fondo = await win.evaluate(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim(),
   )
-  expect(fondo).toBe('#111113')
-  await win.screenshot({ path: 'test-results/ap1-apariencia-carbon.png' })
-  await expect.poll(async () => (await leerConfig()).tema).toBe('carbon')
-  await app.close()
-
-  // Al volver a abrir, la primera pintura ya es Carbón: `tema.js` lo pone antes de React.
-  ;({ app, win } = await abrir())
-  await win.waitForLoadState('domcontentloaded')
-  expect(await win.evaluate(() => document.documentElement.dataset.tema)).toBe('carbon')
-  // Vuelve al proyecto que estaba abierto (D-060), ya en Carbón.
-  await expect(win.getByRole('heading', { name: 'Alfa', level: 1 })).toBeVisible()
-  await expect(win.locator('html')).toHaveAttribute('data-tema', 'carbon')
-  await win.screenshot({ path: 'test-results/ap1-proyecto-carbon.png' })
-
-  // Y se puede volver al de siempre.
+  expect(fondo).toBe('#000000')
   await win.keyboard.press('Control+,')
   await win.getByRole('dialog').getByRole('button', { name: 'Apariencia' }).click()
-  await win
-    .getByRole('radiogroup', { name: 'Tema' })
-    .getByRole('radio', { name: /Iridium/ })
-    .click()
-  await expect(win.locator('html')).not.toHaveAttribute('data-tema', /.+/)
+  await expect(win.getByRole('radiogroup', { name: 'Tema' })).toHaveCount(0)
+  const anchos = win.getByRole('group', { name: 'Ancho de lectura' })
+  await expect(anchos.getByRole('button', { name: 'Normal' })).toHaveAttribute('aria-pressed', 'true')
+  await anchos.getByRole('button', { name: 'Ancho' }).click()
+  await expect(anchos.getByRole('button', { name: 'Ancho' })).toHaveAttribute('aria-pressed', 'true')
+  await win.screenshot({ path: 'test-results/ap1-apariencia.png' })
+  await expect.poll(async () => (await leerConfig()).anchoHoja).toBe('ancho')
+  await app.close()
+
+  ;({ app, win } = await abrir())
+  await expect(win.getByRole('heading', { name: 'Alfa', level: 1 })).toBeVisible()
+  await win.keyboard.press('Control+,')
+  await win.getByRole('dialog').getByRole('button', { name: 'Apariencia' }).click()
+  await expect(
+    win.getByRole('group', { name: 'Ancho de lectura' }).getByRole('button', { name: 'Ancho' }),
+  ).toHaveAttribute('aria-pressed', 'true')
   await app.close()
 })
 

@@ -9,7 +9,7 @@ import { Icono } from '../../ui/Icono'
 import { Menu } from '../../ui/Menu'
 import { nombreDoc, tocarEnlace, useDocsCambian } from './enlaces'
 
-const ANCHOS: { id: AnchoHoja; nombre: string }[] = [
+export const ANCHOS: { id: AnchoHoja; nombre: string }[] = [
   { id: 'angosto', nombre: 'Angosto' },
   { id: 'normal', nombre: 'Normal' },
   { id: 'ancho', nombre: 'Ancho' },

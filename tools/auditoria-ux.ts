@@ -1,17 +1,21 @@
 // Frente Orden, paso 3 (modulos/orden/auditoria.md): una captura de cada pantalla de Iridium con los proyectos reales,
 // el motor falso y una carpeta de datos aparte. Solo mira: no manda mensajes ni toca nada de los proyectos.
 // Cada paso que falla queda anotado y el recorrido sigue. Capturas en tools/salida/auditoria/ (no van al repo, D-082).
-// Uso: pnpm build && node --experimental-strip-types tools/auditoria-ux.ts [ruta del .exe] [ancho] [alto]
+// Uso: pnpm build && node --experimental-strip-types tools/auditoria-ux.ts [ruta del .exe] [ancho] [alto] [--app-hoy]
+// Con --app-hoy, las que tienen maqueta se copian también a docs/diseno/app-hoy/ con su nombre (DS-7, DI-I3): la app
+// de hoy al lado de su maqueta. Esa carpeta no va al repo (son los proyectos reales, D-082).
 // Con AUDITORIA_TOKENS=<archivo .css>, pone esos tokens encima de los de la app (el frente Diseño prueba así una
 // dirección visual sin tocar el código) y deja las capturas en una carpeta con el nombre del archivo.
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, join } from 'node:path'
 import { _electron as electron } from '@playwright/test'
 
-const exe = process.argv[2] && process.argv[2] !== '-' ? process.argv[2] : undefined
-const ancho = Number(process.argv[3] ?? 1440)
-const alto = Number(process.argv[4] ?? 900)
+const appHoy = process.argv.includes('--app-hoy')
+const args = process.argv.slice(2).filter((a) => a !== '--app-hoy')
+const exe = args[0] && args[0] !== '-' ? args[0] : undefined
+const ancho = Number(args[1] ?? 1440)
+const alto = Number(args[2] ?? 900)
 const tokens = process.env.AUDITORIA_TOKENS
 const SALIDA = `tools/salida/auditoria/${ancho}x${alto}${tokens ? `-${basename(tokens, '.css')}` : ''}`
 await rm(SALIDA, { recursive: true, force: true })
@@ -52,6 +56,7 @@ if (tokens) {
 }
 
 const fallas: string[] = []
+const hechos: string[] = []
 let n = 0
 async function paso(nombre: string, hacer: () => Promise<unknown>) {
   n++
@@ -60,6 +65,7 @@ async function paso(nombre: string, hacer: () => Promise<unknown>) {
     await hacer()
     await win.waitForTimeout(450)
     await win.screenshot({ path: `${SALIDA}/${id}.png` })
+    hechos.push(id)
     console.log('ok', id)
   } catch (e) {
     fallas.push(`${id}: ${(e as Error).message.split('\n')[0]}`)
@@ -167,18 +173,41 @@ await paso('otro-proyecto', async () => {
 })
 await paso('otro-proyecto-mapa', () => delProyecto('Mapa').click())
 
-// El tema Carbón en la grilla y en un proyecto (con otros tokens encima no cambiaría nada).
-if (!tokens)
-  await paso('carbon-grilla', async () => {
-    await win.keyboard.press('Control+,')
-    await win
-      .getByRole('navigation', { name: 'Secciones de Ajustes' })
-      .getByRole('button', { name: 'Apariencia' })
-      .click()
-    await win.getByText('Carbón', { exact: false }).first().click()
-    await win.keyboard.press('Escape')
-    await win.keyboard.press('Control+1')
-  })
 await app.close()
 await writeFile(`${SALIDA}/fallas.txt`, fallas.join('\n'))
 console.log(fallas.length ? `Fallaron ${fallas.length}:\n${fallas.join('\n')}` : 'Sin fallas.')
+
+// La app de hoy con el nombre de su maqueta (DS-7). Los pasos sin maqueta (el menú de la tarjeta, Pendientes) no van.
+if (appHoy) {
+  const MAQUETA: Record<string, string> = {
+    grilla: 'grilla',
+    'grilla-archivados': 'archivados',
+    'nuevo-proyecto': 'nuevo-proyecto',
+    skills: 'skills',
+    'skills-detalle': 'skill',
+    ideas: 'ideas',
+    ajustes: 'ajustes',
+    'proyecto-entrada': 'bandeja',
+    'proyecto-bandeja-de-entrada': 'bandeja',
+    'proyecto-mapa': 'mapa',
+    'proyecto-revision': 'revision',
+    'proyecto-diseno': 'diseno',
+    'proyecto-docs': 'docs',
+    'proyecto-archivos': 'archivos',
+    'proyecto-git': 'git',
+    'proyecto-scripts': 'scripts',
+    'proyecto-ancho-chico': 'ancho-chico',
+  }
+  const destino = 'docs/diseno/app-hoy'
+  await rm(destino, { recursive: true, force: true })
+  await mkdir(destino, { recursive: true })
+  let copiadas = 0
+  for (const id of hechos) {
+    const sinAcentos = id.replace(/^\d+-/, '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    const maqueta = MAQUETA[sinAcentos]
+    if (!maqueta) continue
+    await copyFile(`${SALIDA}/${id}.png`, `${destino}/${maqueta}.png`)
+    copiadas++
+  }
+  console.log(`${copiadas} capturas en ${destino}/`)
+}

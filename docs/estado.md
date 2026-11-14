@@ -3,7 +3,7 @@
 > Este archivo es lo primero que lee la IA en cada sesión. Cabe en una pantalla: el historial va al documento del hito.
 
 **Proyecto:** Iridium (carpeta «Centro de Desarrollo», D-033)
-**Última actualización:** 2026-11-12
+**Última actualización:** 2026-11-14
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
@@ -32,12 +32,12 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I1, DI-I2 y T-61 a T-63 hechas; sigue DI-I3) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 en curso: tanda 1 hecha, espera la prueba) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. La tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) cada token del sistema lleva una línea de para qué se usa, que Diseño › Sistema muestra, los estilos de texto tienen nombre (T-61, D-116) cada pieza tiene su ficha con para qué sirve, sus estados y los tokens que usa (T-62, D-117) y las medidas fijas (la barra, los controles, las filas, los paneles) también son tokens (T-63, D-119). **El sistema está completo; sigue pasarlo al código (DI-I3).** Con Q-158 (D-115) el framework sabe pasar un design system guardado en otro lado; ese proyecto ya lo pasó (Q-160), y con Q-161 (D-118) los proyectos se van a enterar solos de lo que el framework les pide (T-64, frente Orden, después de Diseño). Antes de mostrarte una maqueta, la IA la repasa con las guías de impeccable pasadas al framework (Q-156, D-113). Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
+**Desde el 2026-11-07 el frente activo es Diseño** (D-102): un «Claude Design» local dentro de Iridium, en negro como único tema (D-103, D-104), con verde solo en el botón principal (D-109). Las pantallas son **maquetas HTML** que escribe la IA, se miran vivas, se comentan con `F8` y lo aprobado se pasa al código (D-105). Con Q-151 (D-106) va primero la sección (DI-I1), después el rediseño de Iridium en maquetas (DI-I2), su pase al código (DI-I3) y al final Otra versión y Probar una dirección (DI-I4). **DI-I1 (la sección) está hecha** (Q-152). **DI-I2: la tanda 1 está aprobada** (Q-154); antes, la dirección de las primeras 16 maquetas quedó aprobada y tus comentarios están corregidos, con la regla «sin ruido» (D-108); la maqueta grande suma **Comentar** y las flechas del teclado. Tu segunda ronda (R-25 a R-45) también está aplicada: sin texto de relleno, el botón principal verde (D-109), español neutro (D-110), sin la Bandeja de todos (D-111) y Git como en VS Code. Con Q-155 (D-112) Trabajo sale de la vista e Ideas es un bloc de notas. La tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) cada token del sistema lleva una línea de para qué se usa, que Diseño › Sistema muestra, los estilos de texto tienen nombre (T-61, D-116) cada pieza tiene su ficha con para qué sirve, sus estados y los tokens que usa (T-62, D-117) y las medidas fijas (la barra, los controles, las filas, los paneles) también son tokens (T-63, D-119). **El sistema está completo y DI-I3 (pasarlo al código) empezó:** con la tanda 1 la app ya es negra, con un solo tema y un solo `tokens.css` para la app y las maquetas (D-121); las formas pasan a las piezas en las tandas que siguen. La tanda 1 está probada (Q-162). Con Q-158 (D-115) el framework sabe pasar un design system guardado en otro lado; ese proyecto ya lo pasó (Q-160), y con Q-161 (D-118) los proyectos se van a enterar solos de lo que el framework les pide (T-64, frente Orden, después de Diseño). Antes de mostrarte una maqueta, la IA la repasa con las guías de impeccable pasadas al framework (Q-156, D-113). Las ideas de los repos de referencia quedaron como T-55 a T-57 en Capacidades (Q-153).
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 
@@ -62,7 +62,7 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: DI-I3, tanda 1 — las capturas de la app de hoy, el negro como único tema en la app (fuera Carbón y el selector, D-104) y `piezas.css` en el código con su control de estilos. Si llega Q-146, procesarla aparte.
+Diseño: DI-I3, tanda 2 — `piezas.css` entra a la app y el Botón (PZ-1) en todas partes, resolviendo los choques de nombres que lleva el control de estilos. Si llega Q-162 o Q-146, procesarlas antes.
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

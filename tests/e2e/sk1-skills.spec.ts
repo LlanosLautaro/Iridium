@@ -250,17 +250,17 @@ test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', as
   await app.close()
 })
 
-test('en Carbón y sin la carpeta Skills (no se pudo crear), el aviso en lugar del chat', async () => {
+test('sin la carpeta Skills (no se pudo crear), el aviso en lugar del chat', async () => {
   // Un archivo con su nombre: Iridium no puede crear la carpeta.
   await rm(join(iridium, 'Skills'), { recursive: true })
   await writeFile(join(iridium, 'Skills'), '')
-  const { app, win } = await abrir({ IRIDIUM_TEMA: 'carbon' })
+  const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+3')
   await expect(win.getByText('no pudo crearla')).toBeVisible()
   // Sin la carpeta, Framework se ve igual: no depende de las skills.
   await expect(win.getByRole('region', { name: 'Framework' })).toContainText('framework viejo')
-  await win.screenshot({ path: 'test-results/sk1-carbon-sin-chat.png' })
+  await win.screenshot({ path: 'test-results/sk1-sin-chat.png' })
   await app.close()
 })
 

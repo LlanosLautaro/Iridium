@@ -1,44 +1,35 @@
-// Ajustes › Apariencia (AJ-1): el tema, como tarjetas con una miniatura de la app. Cambia en el momento, también lo que
-// está detrás de la ventana.
-import type { Tema } from '../../../compartido/puente'
-import carbon from '../../assets/temas/carbon.jpg'
-import iridium from '../../assets/temas/iridium.jpg'
+// Ajustes › Apariencia (AJ-1): hay un solo tema, el negro (D-104), así que acá queda el ancho de lectura de Docs, el
+// mismo que se elige arriba del documento. Cambia en el momento.
 import { usarEstado } from '../../estado'
+import { ANCHOS } from '../../secciones/proyecto/Lector'
 import type { PropsSeccion } from '../Ajustes'
 
-const TEMAS_VISTA: { id: Tema; nombre: string; detalle: string; miniatura: string }[] = [
-  { id: 'iridium', nombre: 'Iridium', detalle: 'verde, Chakra Petch', miniatura: iridium },
-  { id: 'carbon', nombre: 'Carbón', detalle: 'gris oscuro, letra del sistema', miniatura: carbon },
-]
-
 export function Apariencia({ cambiar }: PropsSeccion) {
-  const tema = usarEstado((s) => s.preferencias.tema)
+  const ancho = usarEstado((s) => s.preferencias.anchoHoja)
   return (
-    <>
-      <div className="r" id="ajuste-tema">
-        Tema
+    <div className="campo-ajuste">
+      <div>
+        <div className="r" id="ajuste-ancho">
+          Ancho de lectura
+        </div>
+        <div className="d" id="ajuste-ancho-d">
+          Lo ancho del texto en Docs.
+        </div>
       </div>
-      <div className="temas" role="radiogroup" aria-labelledby="ajuste-tema">
-        {TEMAS_VISTA.map((t) => (
-          // biome-ignore lint/a11y/useSemanticElements: una tarjeta con imagen; un input radio no la puede contener.
+      <fieldset className="ancho-lectura" aria-labelledby="ajuste-ancho" aria-describedby="ajuste-ancho-d">
+        {ANCHOS.map((a) => (
           <button
-            key={t.id}
+            key={a.id}
             type="button"
-            role="radio"
-            aria-checked={tema === t.id}
-            className={tema === t.id ? 'tema sel' : 'tema'}
+            aria-pressed={ancho === a.id}
             onClick={() => {
-              if (tema !== t.id) void cambiar({ tema: t.id })
+              if (ancho !== a.id) void cambiar({ anchoHoja: a.id })
             }}
           >
-            <img src={t.miniatura} alt="" />
-            <span className="n">
-              {t.nombre} <span>{t.detalle}</span>
-            </span>
+            {a.nombre}
           </button>
         ))}
-      </div>
-      <p className="pie">El tema cambia en el momento, también lo que está detrás de esta ventana.</p>
-    </>
+      </fieldset>
+    </div>
   )
 }

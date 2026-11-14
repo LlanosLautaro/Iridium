@@ -6,7 +6,7 @@ import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, normalize } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { app, BrowserWindow, Menu, protocol, session, shell, webContents } from 'electron'
-import { CANALES, TEMAS, type Tema } from '../compartido/puente'
+import { CANALES } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
 import { elegirComplementos } from './core/complementos'
@@ -32,13 +32,10 @@ import { crearMotorFalso, crearMotorQueFalla, type Motor } from './motor/motor'
 import { crearMotorSdk } from './motor/sdk'
 
 /**
- * Lo que dibuja Windows, de cada tema (D-066): el fondo de la ventana antes de la primera pintura (`--fondo`) y los tres
- * botones de la barra de título, que es propia (D-041), del color de la barra (`--barra`, `--texto-2`).
+ * Lo que dibuja Windows, del único tema, el negro (D-104): el fondo de la ventana antes de la primera pintura (`--fondo`)
+ * y los tres botones de la barra de título, que es propia (D-041), sobre el fondo (`--texto-2`).
  */
-const COLORES: Record<Tema, { fondo: string; barra: string; simbolos: string }> = {
-  iridium: { fondo: '#0a0f0e', barra: '#060908', simbolos: '#a3b8b0' },
-  carbon: { fondo: '#111113', barra: '#0a0a0b', simbolos: '#a9aab1' },
-}
+const COLORES = { fondo: '#000000', barra: '#000000', simbolos: '#a3a3a3' }
 const ALTO_BARRA = 36
 /** El tamaño de la ventana (Defecto 17): la barra de Windows de arriba crece con él. */
 let zoom = 1
@@ -281,18 +278,8 @@ async function arrancarRevision(puente: Puente): Promise<Receptor | null> {
   return receptor
 }
 
-/** El tema guardado. Con IRIDIUM_TEMA las pruebas lo cambian antes de abrir (todas las pruebas en Carbón, AP-I1). */
-async function temaAlAbrir(): Promise<Tema> {
-  const pedido = TEMAS.find((t) => t === process.env.IRIDIUM_TEMA)
-  if (pedido) await config.guardar({ tema: pedido }).catch(() => {})
-  return (await config.leer()).tema
-}
-
-let temaActual: Tema = 'iridium'
-
-function crearVentana(puente: Puente, tema: Tema): void {
-  temaActual = tema
-  const colores = COLORES[tema]
+function crearVentana(puente: Puente): void {
+  const colores = COLORES
   const v = new BrowserWindow({
     width: 1440,
     height: 900,
@@ -351,10 +338,9 @@ function crearVentana(puente: Puente, tema: Tema): void {
     abrirAfuera(url)
   })
 
-  // El tema va en la dirección: `tema.js` lo pone en <html> antes de la primera pintura (sin parpadeo, AJ-1).
   const urlDesarrollo = process.env.ELECTRON_RENDERER_URL
-  if (urlDesarrollo) void v.loadURL(`${urlDesarrollo}?tema=${tema}`)
-  else void v.loadFile(join(import.meta.dirname, '../renderer/index.html'), { query: { tema } })
+  if (urlDesarrollo) void v.loadURL(urlDesarrollo)
+  else void v.loadFile(join(import.meta.dirname, '../renderer/index.html'))
 }
 
 /** Si en la maqueta se está escribiendo: un campo, o la tarjeta del comentario (la capa de la extensión). */
@@ -469,15 +455,12 @@ function filtrarPedidosDeMaquetas(): void {
   })
 }
 
-/** Otro tema elegido en Ajustes: Windows vuelve a dibujar sus botones y el fondo con los colores del tema. */
-function pintarVentana(tema: Tema): void {
+/** Los botones de Windows siguen el alto de la barra, que crece con el zoom. */
+function pintarVentana(): void {
   if (!ventana || ventana.isDestroyed()) return
-  temaActual = tema
-  const colores = COLORES[tema]
-  ventana.setBackgroundColor(colores.fondo)
   ventana.setTitleBarOverlay({
-    color: colores.barra,
-    symbolColor: colores.simbolos,
+    color: COLORES.barra,
+    symbolColor: COLORES.simbolos,
     height: Math.round(ALTO_BARRA * zoom),
   })
 }
@@ -487,7 +470,7 @@ function ponerZoom(nuevo: number): void {
   zoom = nuevo
   if (!ventana || ventana.isDestroyed()) return
   ventana.webContents.setZoomFactor(zoom)
-  pintarVentana(temaActual)
+  pintarVentana()
 }
 
 // Una sola ventana de la app instalada; en desarrollo puede convivir con ella.
@@ -503,8 +486,6 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
     Menu.setApplicationMenu(null)
     protocol.handle(ESQUEMA_MAQUETA, (pedido) => maquetas.responder(pedido.url))
     filtrarPedidosDeMaquetas()
-    // El tema se lee antes de crear la ventana (D-066): así ya abre con sus colores.
-    const tema = await temaAlAbrir()
     zoom = (await config.leer()).zoom
     const compartida = await actualizaciones
     if (release && !compartida) vigiaSinArmar = new VigiaSinArmar(dirname(release), release)
@@ -542,7 +523,6 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         cerrarSinPreguntar = true
         ventana?.close()
       },
-      alCambiarTema: pintarVentana,
       zoom: (paso) => {
         ponerZoom(zoomSiguiente(zoom, paso))
         void config.guardar({ zoom }).catch(() => {})
@@ -560,7 +540,7 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         reiniciar = false
       },
     })
-    crearVentana(puente, tema)
+    crearVentana(puente)
     const revision = arrancarRevision(puente)
     vigiaGithub?.vigilar()
     app.on('window-all-closed', () => app.quit())

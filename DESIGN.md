@@ -155,6 +155,8 @@ components:
 
 # Design System: Iridium
 
+> **Desde el 2026-11-13 (DI-I3, D-104) rige el negro, único tema.** Los tokens que usa la app son los de `docs/diseno/tokens.css` y las piezas, las de `docs/diseno/piezas.css` (frente Diseño). Lo de abajo describe el sistema de antes (Iridium verde y Carbón): se reescribe desde lo construido al cerrar DI-I3.
+
 > El nombre es Iridium (D-033). Fuente de los tokens: `docs/ui/vista-proyecto.html`, la primera superficie construida y revisada.
 
 ## Overview

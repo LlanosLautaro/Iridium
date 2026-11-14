@@ -405,7 +405,7 @@
   flex: none;
 }
 .pend .plegada.larga {
-  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, var(--fondo) 55%, transparent);
 }
 .cita .doc-texto.plegada {
   max-height: calc(1.6em * 3.5);

@@ -22,35 +22,33 @@ afterEach(async () => {
 })
 
 describe('los ajustes en config.json (D-065)', () => {
-  it('sin nada guardado: tema Iridium, «Vos», «IA» y el tono de Claude Code', async () => {
+  it('sin nada guardado: «Vos», «IA» y el tono de Claude Code; el tema ya no se guarda (D-104)', async () => {
     const p = preferenciasDe(await new ArchivoConfig(join(raiz, 'config.json')).leer())
-    expect(p).toMatchObject({ tema: 'iridium', nombreUsuario: '', nombreIa: '', tono: '' })
+    expect(p).toMatchObject({ nombreUsuario: '', nombreIa: '', tono: '' })
+    expect(p).not.toHaveProperty('tema')
   })
 
   it('se guardan y siguen al volver a abrir', async () => {
     const archivo = join(raiz, 'datos', 'config.json')
     await new ArchivoConfig(archivo).guardar({
-      tema: 'carbon',
       nombreUsuario: 'Lautaro',
       nombreIa: 'Iri',
       tono: 'Explanatory',
     })
     expect(preferenciasDe(await new ArchivoConfig(archivo).leer())).toMatchObject({
-      tema: 'carbon',
       nombreUsuario: 'Lautaro',
       nombreIa: 'Iri',
       tono: 'Explanatory',
     })
   })
 
-  it('valores rotos vuelven a los de siempre sin perder los demás', async () => {
+  it('valores rotos vuelven a los de siempre sin perder los demás; un tema de antes se ignora', async () => {
     const archivo = join(raiz, 'config.json')
     await writeFile(
       archivo,
       JSON.stringify({ tema: 'rosa', nombreUsuario: 'x'.repeat(500), nombreIa: 3, tono: 'Learning' }),
     )
     expect(await new ArchivoConfig(archivo).leer()).toMatchObject({
-      tema: 'iridium',
       nombreUsuario: '',
       nombreIa: '',
       tono: 'Learning',
@@ -61,13 +59,12 @@ describe('los ajustes en config.json (D-065)', () => {
     // La «carpeta» de datos es un archivo: no se puede crear config.json adentro.
     await writeFile(join(raiz, 'ocupado'), '')
     const c = new ArchivoConfig(join(raiz, 'ocupado', 'config.json'))
-    await expect(c.guardar({ tema: 'carbon' })).rejects.toThrow()
-    expect((await c.leer()).tema).toBe('iridium')
+    await expect(c.guardar({ nombreUsuario: 'Lau' })).rejects.toThrow()
+    expect((await c.leer()).nombreUsuario).toBe('')
   })
 
-  it('desde la ventana: solo los temas que hay y textos de largo razonable', () => {
-    expect(CambioPreferencias.safeParse({ tema: 'carbon' }).success).toBe(true)
-    expect(CambioPreferencias.safeParse({ tema: 'rosa' }).success).toBe(false)
+  it('desde la ventana: sin tema (D-104) y textos de largo razonable', () => {
+    expect(CambioPreferencias.safeParse({ tema: 'carbon' }).success).toBe(false)
     expect(CambioPreferencias.safeParse({ nombreUsuario: 'x'.repeat(61) }).success).toBe(false)
     expect(CambioPreferencias.safeParse({ nombreIa: 'x'.repeat(41) }).success).toBe(false)
     expect(CambioPreferencias.safeParse({ tono: 'x'.repeat(101) }).success).toBe(false)

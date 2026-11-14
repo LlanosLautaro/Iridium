@@ -11,3 +11,5 @@ tests/e2e/.tmp/
 release-tmp/
 # Las capturas de la Revisión muestran los proyectos de quien la usa: quedan en la PC, no en el repo (D-082).
 docs/revision/*.png
+# La app de hoy al lado de las maquetas (DS-7): son los proyectos reales (D-082).
+docs/diseno/app-hoy/

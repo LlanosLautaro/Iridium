@@ -4,7 +4,7 @@
    espera del usuario, rojo un error.
    Cada token va en su línea con su uso después del `;` (D-114): Diseño › Sistema lo muestra y la IA elige el token
    por lo que dice, no por cómo se ve.
-   En DI-I3 este archivo pasa a ser docs/ui/tokens.css. */
+   Desde DI-I3 la app lo importa tal cual: cambiar un token cambia las maquetas y la app. */
 :root {
   color-scheme: dark;
 

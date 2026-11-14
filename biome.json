@@ -14,7 +14,8 @@
       "!release",
       "!.impeccable",
       "!.proyecto-icono.svg",
-      "!.proyecto.json"
+      "!.proyecto.json",
+      "!src/renderer/estilos/piezas.css"
     ]
   },
   "formatter": {

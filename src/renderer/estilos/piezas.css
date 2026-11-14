@@ -1,0 +1,286 @@
+/* Las piezas de Iridium (PZ-1 a PZ-12, modulos/diseno/ux.md › Las piezas), pasadas al código en DI-I3: los bloques de
+   cada pieza son los de docs/diseno/piezas.css, tal cual (el control de estilos, tests/estilos.test.ts, los compara).
+   Cambiar una pieza es cambiarla en la maqueta y acá en el mismo cambio. El marco y la conversación de esa hoja no
+   están: son de la app (marco.css, conversacion.css). Solo usa var(--…): ningún color escrito.
+   Se suma a main.tsx con la primera tanda que pasa una sección a las piezas: hoy varias secciones usan los mismos
+   nombres de clase (.fila, .menu, .filtro…) para otra cosa, y el control lleva la cuenta de esos choques. */
+
+/* ───────── PZ-1 · Botón ─────────
+   Grupo: Acciones
+   Para qué: lo que se hace en una pantalla. Un principal (verde) como mucho por pantalla; las acciones de una fila, sin fondo; el rojo, solo para lo que no se deshace.
+   Estados: principal, secundario, sin fondo, peligroso, principal peligroso, chico, solo ícono, apagado. */
+.boton {
+  display: inline-flex; align-items: center; gap: var(--esp-2);
+  height: var(--alto-control); padding: 0 var(--esp-3);
+  font: var(--estilo-boton); color: var(--texto);
+  background: transparent; border: 1px solid transparent; border-radius: var(--radio-control);
+  cursor: pointer; white-space: nowrap; text-decoration: none;
+  transition: background .12s var(--sale), color .12s var(--sale), border-color .12s var(--sale);
+}
+.boton .ic { width: 15px; height: 15px; }
+/* El principal va delineado, como Eliminar: fondo negro, letra y borde en verde (R-49); lleno se leía mal. */
+.boton.principal { color: var(--principal); border-color: var(--principal); font-weight: 600; letter-spacing: .01em; }
+.boton.principal:hover { color: var(--principal-hover); border-color: var(--principal-hover); background: var(--principal-fondo); }
+.boton.secundario { border-color: var(--borde-control); }
+.boton.secundario:hover { background: var(--hover); border-color: var(--texto-3); }
+.boton.sin-fondo { color: var(--texto-2); padding: 0 var(--esp-2); }
+.boton.sin-fondo:hover { color: var(--texto); background: var(--hover); }
+.boton.peligroso { color: var(--error); border-color: var(--error-borde); }
+.boton.peligroso:hover { background: var(--error-fondo); }
+.boton.principal.peligroso, .boton.principal.peligroso:hover { color: var(--error); border-color: var(--error); }
+.boton.principal.peligroso:hover { background: var(--error-fondo); }
+.boton.chico { height: var(--alto-control-chico); padding: 0 var(--esp-2); font-size: var(--tam-chico); }
+.boton.solo-icono { width: var(--alto-control); padding: 0; justify-content: center; color: var(--texto-2); }
+.boton.solo-icono.chico { width: var(--alto-control-chico); }
+.boton.solo-icono:hover { color: var(--texto); background: var(--hover); }
+.boton[disabled], .boton.apagado { opacity: .4; pointer-events: none; }
+
+/* ───────── PZ-2 · Fila ─────────
+   Grupo: Contenido
+   Para qué: un elemento de una lista (una tarea, una skill, un script, un commit). Sus acciones aparecen al pasar el mouse o con el foco; la que se viene a hacer, siempre.
+   Estados: simple, con detalle, elegida, con acciones, con líneas entre filas. */
+.filas { display: flex; flex-direction: column; }
+.filas.con-lineas > .fila + .fila { border-top: 1px solid var(--borde-suave); border-radius: 0; }
+.fila {
+  display: flex; align-items: center; gap: var(--esp-3);
+  min-height: var(--alto-fila); padding: var(--esp-1) var(--esp-2);
+  border-radius: var(--radio-fila); color: var(--texto); text-decoration: none; cursor: default;
+}
+a.fila, .fila.se-abre { cursor: pointer; }
+.fila:hover { background: var(--hover); }
+.fila.elegida { background: var(--sel-fondo); }
+.fila .codigo { font: var(--estilo-codigo); color: var(--texto-3); width: var(--ancho-codigo); flex: none; }
+.fila .principal-fila { flex: 1; min-width: 0; }
+.fila .titulo-fila { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fila .detalle { display: block; font: var(--estilo-meta); color: var(--texto-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fila.con-detalle { padding-block: var(--esp-2); }
+.fila .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; }
+.fila .meta.fija { font-family: var(--mono); }
+.fila .acciones { display: flex; gap: var(--esp-1); opacity: 0; transition: opacity .12s var(--sale); }
+.fila:hover .acciones, .fila:focus-within .acciones, .fila .acciones.siempre { opacity: 1; }
+.fila .icono-fila { width: 28px; height: 28px; border-radius: var(--radio-control); background: var(--elevado); display: grid; place-items: center; color: var(--texto-2); flex: none; }
+
+/* ───────── PZ-3 · Bloque ─────────
+   Grupo: Contenido
+   Para qué: agrupa lo de una pantalla bajo un título gris y chico, con la cuenta al lado. Nunca un bloque dentro de otro.
+   Estados: con título, sin título, con línea arriba. */
+.bloque { display: flex; flex-direction: column; gap: var(--esp-2); }
+.bloque + .bloque { margin-top: var(--esp-5); }
+.bloque.con-linea + .bloque.con-linea { border-top: 1px solid var(--borde-suave); padding-top: var(--esp-5); }
+.bloque-titulo {
+  display: flex; align-items: baseline; gap: var(--esp-2);
+  font: var(--estilo-rotulo); color: var(--texto-3); margin: 0;
+}
+.bloque-titulo .derecha { margin-left: auto; }
+
+/* ───────── PZ-4 · Recuadro ─────────
+   Grupo: Avisos
+   Para qué: lo que hay que ver aunque no se busque: un aviso, un error, un vacío o lo que todavía falta, con su acción si la tiene.
+   Estados: aviso (ámbar), error (rojo), vacío, punteado. */
+.recuadro {
+  display: flex; gap: var(--esp-3); align-items: flex-start;
+  padding: var(--esp-3) var(--esp-4); border: 1px solid var(--borde); border-radius: var(--radio-bloque);
+  color: var(--texto-2);
+}
+.recuadro .ic { margin-top: 2px; }
+.recuadro strong { color: var(--texto); font-weight: 600; }
+.recuadro .cuerpo-recuadro { flex: 1; display: flex; flex-direction: column; gap: var(--esp-1); }
+.recuadro .acciones-recuadro { display: flex; gap: var(--esp-2); margin-top: var(--esp-2); }
+.recuadro.aviso { border-color: var(--espera-borde); background: var(--espera-fondo); }
+.recuadro.aviso > .ic { color: var(--espera); }
+.recuadro.error { border-color: var(--error-borde); background: var(--error-fondo); }
+.recuadro.error > .ic { color: var(--error); }
+.recuadro.vacio { border: 0; padding: var(--esp-6) 0; flex-direction: column; align-items: flex-start; color: var(--texto-3); }
+.recuadro.punteado {
+  border-style: dashed; border-color: var(--borde-control); padding: var(--esp-6);
+  flex-direction: column; align-items: center; text-align: center;
+}
+.recuadro.punteado .cuerpo-recuadro { align-items: center; max-width: var(--ancho-cuadro); }
+
+/* ───────── PZ-5 · Campo ─────────
+   Grupo: Acciones
+   Para qué: escribir o elegir: texto, área, selector, casilla, opción e interruptor. Lo escrito se guarda solo.
+   Estados: normal, chico, sin borde (selector), al pasar, con el foco, marcado. */
+.campo, .selector, .area {
+  height: var(--alto-campo); padding: 0 var(--esp-3); width: 100%;
+  font: var(--estilo-control); color: var(--texto);
+  background: transparent; border: 1px solid var(--borde-control); border-radius: var(--radio-control);
+}
+.campo::placeholder, .area::placeholder { color: var(--texto-3); }
+.campo:hover, .selector:hover, .area:hover { border-color: var(--texto-3); }
+.campo:focus, .selector:focus, .area:focus { border-color: var(--texto-2); outline: none; }
+.campo.chico { height: var(--alto-campo-chico); font-size: var(--tam-chico); }
+.area { height: auto; min-height: 72px; padding: var(--esp-2) var(--esp-3); line-height: 1.5; resize: vertical; }
+.selector { appearance: none; padding-right: var(--esp-6); cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--texto-2) 50%), linear-gradient(-45deg, transparent 50%, var(--texto-2) 50%);
+  background-position: calc(100% - 15px) 14px, calc(100% - 10px) 14px; background-size: 5px 5px; background-repeat: no-repeat; }
+.selector option { background: var(--elevado); }
+.selector.sin-borde { border-color: transparent; color: var(--texto-2); }
+.etiqueta-campo { display: flex; flex-direction: column; gap: var(--esp-1); font-size: var(--tam-chico); color: var(--texto-2); }
+.casilla, .opcion { display: inline-flex; align-items: flex-start; gap: var(--esp-2); cursor: pointer; }
+.casilla input, .opcion input {
+  appearance: none; margin: 2px 0 0; width: 16px; height: 16px; flex: none;
+  border: 1px solid var(--borde-control); background: transparent; cursor: pointer;
+}
+.casilla input { border-radius: 4px; }
+.opcion input { border-radius: 50%; }
+.casilla input { position: relative; }
+.casilla input:checked { background: var(--marcado); border-color: var(--marcado); }
+.casilla input:checked::after { content: ""; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid var(--sobre-principal); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.opcion input:checked { border-color: var(--marcado); box-shadow: inset 0 0 0 4px var(--fondo), inset 0 0 0 8px var(--marcado); }
+.interruptor { display: inline-flex; align-items: center; gap: var(--esp-2); cursor: pointer; color: var(--texto-2); }
+.interruptor input { appearance: none; margin: 0; width: 28px; height: 16px; border-radius: var(--radio-pildora); background: var(--borde-fuerte); position: relative; cursor: pointer; transition: background .15s var(--sale); }
+.interruptor input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--texto-2); transition: transform .15s var(--sale), background .15s var(--sale); }
+.interruptor input:checked { background: var(--marcado); }
+.interruptor input:checked::after { transform: translateX(12px); background: var(--sobre-principal); }
+
+/* ───────── PZ-6 · Filtros ─────────
+   Grupo: Navegación
+   Para qué: acotar una lista sin salir de la pantalla; cada filtro con su cuenta. Van debajo de la cabecera.
+   Estados: normal, elegido, con cuenta, con acciones a la derecha. */
+.filtros { display: flex; align-items: center; gap: var(--esp-4); }
+.filtro {
+  display: inline-flex; align-items: baseline; gap: 6px; padding: 6px 0;
+  background: none; border: 0; border-bottom: 1px solid transparent; margin-bottom: -1px;
+  font: 400 var(--tam-base)/1.2 var(--ui); color: var(--texto-3); cursor: pointer;
+}
+.filtro:hover { color: var(--texto-2); }
+.filtro.elegido { color: var(--texto); border-bottom-color: var(--texto); }
+.filtro .cuenta { font-size: var(--tam-chico); }
+.filtros .derecha { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
+
+/* ───────── PZ-7 · Cuenta y señal ─────────
+   Grupo: Avisos
+   Para qué: un número o una marca chica que dice que hay algo, sin píldora. El ámbar es lo que frena y el rojo lo que falla; si nada falla, no se muestra (D-108).
+   Estados: cuenta, cuenta que frena, punto, punto ámbar, punto rojo, señal de texto. */
+.cuenta { font: var(--estilo-codigo); color: var(--texto-3); }
+.cuenta.frena { color: var(--espera); }
+.punto { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--texto-3); flex: none; }
+.punto.ambar { background: var(--espera); }
+.punto.rojo { background: var(--error); }
+.punto.blanco { background: var(--texto); }
+.senal { font-size: var(--tam-chico); color: var(--texto-3); white-space: nowrap; }
+.senal.ambar { color: var(--espera); }
+.senal.rojo { color: var(--error); }
+
+/* ───────── PZ-8 · Menú, cuadro y ventana ─────────
+   Grupo: Acciones
+   Para qué: lo que flota sobre la pantalla: el menú (también con clic derecho), el cuadro que confirma o pide un dato y la ventana de Ajustes. Es lo único con sombra.
+   Estados: menú, menú en lista, con atajo, opción peligrosa, cuadro, ventana. */
+.menu {
+  position: absolute; z-index: 20; min-width: var(--ancho-menu); padding: var(--esp-1);
+  background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu);
+  display: none; flex-direction: column;
+}
+.menu.abierto { display: flex; }
+.menu button, .menu a {
+  display: flex; align-items: center; gap: var(--esp-2); height: var(--alto-control); padding: 0 var(--esp-2);
+  background: none; border: 0; border-radius: var(--radio-control); text-align: left; text-decoration: none;
+  font: var(--estilo-control); color: var(--texto); cursor: pointer;
+}
+.menu button:hover, .menu a:hover { background: var(--hover); }
+.menu .atajo { margin-left: auto; color: var(--texto-3); font-size: var(--tam-chico); }
+.menu .peligroso { color: var(--error); }
+.menu hr { border: 0; border-top: 1px solid var(--borde); margin: var(--esp-1) 0; }
+.menu .titulo-menu { margin: 0; padding: var(--esp-2) var(--esp-2) var(--esp-1); font-size: var(--tam-chico); font-weight: 400; color: var(--texto-3); }
+.menu.lista-menu { width: var(--ancho-lista-menu); }
+.menu.lista-menu button { height: auto; padding: var(--esp-2); gap: var(--esp-3); }
+.menu.lista-menu .principal-fila { flex: 1; min-width: 0; }
+.menu.lista-menu .titulo-fila { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.4; }
+.menu.lista-menu .detalle { display: block; font-size: var(--tam-chico); color: var(--texto-3); line-height: 1.4; }
+.menu.lista-menu .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; align-self: flex-start; line-height: 1.4; }
+.menu.lista-menu .actual { background: var(--sel-fondo); }
+.velo { position: fixed; inset: 0; z-index: 30; background: var(--velo); display: grid; place-items: center; }
+.cuadro {
+  width: var(--ancho-cuadro); padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);
+  background: var(--elevado); border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-ventana);
+}
+.cuadro h2 { margin: 0; font: var(--estilo-titulo); }
+.cuadro p { margin: 0; color: var(--texto-2); }
+.cuadro .pie { display: flex; justify-content: flex-end; gap: var(--esp-2); margin-top: var(--esp-2); }
+.ventana {
+  width: var(--ancho-ventana); height: var(--alto-ventana); display: grid; grid-template-columns: var(--ancho-pestanas-ventana) 1fr; overflow: hidden;
+  background: var(--elevado); border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-ventana);
+}
+.ventana > nav { padding: var(--esp-4) var(--esp-2); border-right: 1px solid var(--borde-suave); display: flex; flex-direction: column; gap: 2px; }
+.ventana > nav h2 { margin: 0 0 var(--esp-3) var(--esp-2); font: var(--estilo-titulo); }
+.ventana > .cuerpo-ventana { padding: var(--esp-5) var(--esp-6); overflow: auto; position: relative; }
+
+/* ───────── PZ-9 · Cabecera de sección ─────────
+   Grupo: Navegación
+   Para qué: el título de la sección con su cuenta, sus acciones a la derecha (una principal como mucho) y los filtros debajo.
+   Estados: con ruta, con acciones, con filtros. */
+.cabecera { padding: var(--esp-4) var(--esp-6) 0; border-bottom: 1px solid var(--borde); flex: none; }
+.cabecera .fila-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: var(--alto-campo); padding-bottom: var(--esp-3); }
+.cabecera h1 { margin: 0; font: var(--estilo-titulo); display: flex; align-items: baseline; gap: var(--esp-2); }
+.cabecera .ruta { color: var(--texto-3); font-size: var(--tam-chico); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cabecera .acciones-cab { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
+.cabecera .filtros { margin-top: calc(-1 * var(--esp-1)); }
+
+/* ───────── PZ-10 · Pestañas ─────────
+   Grupo: Navegación
+   Para qué: pasar entre vistas de un mismo lugar: las secciones, las pestañas de Ajustes o del detalle de una skill, los hitos del Mapa.
+   Estados: normal, elegida, vertical, números (hitos), hecho. */
+.pestanas { display: flex; gap: 2px; }
+.pestana {
+  display: inline-flex; align-items: center; gap: var(--esp-2); height: var(--alto-control); padding: 0 var(--esp-3);
+  background: none; border: 0; border-radius: var(--radio-control);
+  font: var(--estilo-control); color: var(--texto-2); cursor: pointer; text-decoration: none;
+}
+.pestana:hover { color: var(--texto); background: var(--hover); }
+.pestana.elegida { color: var(--texto); background: var(--sel-fondo); }
+.pestanas.vertical { flex-direction: column; }
+.pestanas.vertical .pestana { width: 100%; }
+.pestanas.numeros .pestana { width: var(--alto-control); padding: 0; justify-content: center; font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); }
+.pestanas.numeros .pestana.hecho { color: var(--texto-2); }
+.pestanas.numeros .pestana.elegida { color: var(--texto); background: var(--sel-fondo); }
+
+/* ───────── PZ-11 · Árbol ─────────
+   Grupo: Navegación
+   Para qué: carpetas y archivos (Archivos, el detalle de una skill, los cambios de Git), con la marca de Git a la derecha.
+   Estados: carpeta, archivo, elegido, con marca, con marca ámbar. */
+.arbol { display: flex; flex-direction: column; font-size: var(--tam-base); }
+.nodo {
+  display: flex; align-items: center; gap: 6px; height: var(--alto-nodo); padding-right: var(--esp-2);
+  padding-left: calc(var(--esp-2) + var(--nivel, 0) * 14px);
+  border-radius: var(--radio-control); color: var(--texto-2); cursor: pointer; white-space: nowrap;
+}
+.nodo:hover { background: var(--hover); color: var(--texto); }
+.nodo.elegido { background: var(--sel-fondo); color: var(--texto); }
+.nodo .ic { width: 14px; height: 14px; color: var(--texto-3); }
+.nodo.carpeta { color: var(--texto); }
+.nodo .marca { margin-left: auto; font-family: var(--mono); font-size: var(--tam-chico); color: var(--texto-3); }
+.nodo .marca.ambar { color: var(--espera); }
+
+/* ───────── PZ-12 · Texto de documento ─────────
+   Grupo: Contenido
+   Para qué: leer un markdown: Docs, la Bandeja y las respuestas de la IA. Tablas con línea solo entre filas.
+   Estados: lectura, conversación. */
+.texto-doc { font: var(--estilo-lectura); color: var(--texto); max-width: var(--ancho-lectura); }
+.texto-doc h1 { font: var(--estilo-documento); margin: 0 0 var(--esp-4); }
+.texto-doc h2 { font: var(--estilo-titulo); margin: var(--esp-6) 0 var(--esp-3); }
+.texto-doc h3 { font-size: var(--tam-lectura); font-weight: 600; margin: var(--esp-5) 0 var(--esp-2); }
+.texto-doc p, .texto-doc ul, .texto-doc ol { margin: 0 0 var(--esp-3); }
+.texto-doc ul, .texto-doc ol { padding-left: var(--esp-5); }
+.texto-doc li { margin-bottom: var(--esp-1); }
+.texto-doc a { text-decoration: underline; text-decoration-color: var(--texto-3); text-underline-offset: 3px; }
+.texto-doc code { background: var(--elevado); padding: 1px 5px; border-radius: 4px; }
+.texto-doc blockquote { margin: 0 0 var(--esp-3); padding-left: var(--esp-4); border-left: 2px solid var(--borde-fuerte); color: var(--texto-2); }
+.texto-doc pre { background: var(--tarjeta); padding: var(--esp-3) var(--esp-4); border-radius: var(--radio-bloque); overflow: auto; font-size: var(--tam-chico); }
+.texto-doc pre code { background: none; padding: 0; }
+.texto-doc table { border-collapse: collapse; width: 100%; font-size: var(--tam-base); margin: 0 0 var(--esp-4); }
+.texto-doc th { text-align: left; font-weight: 500; color: var(--texto-3); font-size: var(--tam-chico); padding: var(--esp-2) var(--esp-3) var(--esp-2) 0; border-bottom: 1px solid var(--borde); }
+.texto-doc td { padding: var(--esp-2) var(--esp-3) var(--esp-2) 0; border-bottom: 1px solid var(--borde-suave); vertical-align: top; }
+.texto-doc strong { font-weight: 600; }
+.texto-doc.conversacion { font-size: var(--tam-base); line-height: 1.6; }
+.texto-doc.conversacion p { margin-bottom: var(--esp-2); }
+
+/* ───────── Información a pedido ─────────
+   Grupo: Avisos
+   Para qué: una «i» que muestra su texto al pasar el mouse o con el foco, en vez de un renglón de ayuda fijo (R-41).
+   Estados: cerrada, abierta. */
+.info { position: relative; display: inline-grid; place-items: center; width: 22px; height: 22px; color: var(--texto-3); border-radius: var(--radio-pildora); cursor: help; }
+.info:hover, .info:focus-visible { color: var(--texto); }
+.info .ic { width: 15px; height: 15px; }
+.info .globo { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: max-content; max-width: var(--ancho-globo); padding: var(--esp-2) var(--esp-3); background: var(--elevado); box-shadow: var(--sombra-menu); border-radius: var(--radio-control); font-size: var(--tam-chico); color: var(--texto-2); line-height: 1.5; visibility: hidden; opacity: 0; transition: opacity .12s var(--sale); z-index: 20; }
+.info:hover .globo, .info:focus-visible .globo { visibility: visible; opacity: 1; }

@@ -17,7 +17,6 @@ import {
   type ResultadoNuevo,
   type ResultadoPlanEliminar,
   type SinArmar,
-  type Tema,
   type VersionNueva,
 } from '../../compartido/puente'
 import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/skills'
@@ -137,8 +136,6 @@ export interface Servicios {
   reiniciarAhora: () => void
   /** Se canceló la confirmación de F-6: si era para reiniciar, ya no. */
   cancelarCierre: () => void
-  /** Se eligió otro tema (AJ-1): la barra de título y el fondo de la ventana, que dibuja Windows, lo siguen. */
-  alCambiarTema?: (tema: Tema) => void
   /** Ctrl+= / Ctrl+- / Ctrl+0 (Defecto 17): la ventana agranda, achica o vuelve al tamaño normal. */
   zoom?: (paso: 1 | -1 | 0) => void
   /** Los proyectos abiertos en Diseño, que sirve el protocolo `maqueta:` (frente Diseño). */
@@ -375,9 +372,8 @@ export function registrarPuente(s: Servicios): Puente {
     const limpio = Object.fromEntries(Object.entries(valido).filter(([, v]) => v !== undefined))
     const previa = await s.config.leer()
     const antes = previa.ajustesIa
-    const { tema: temaAntes, tono: tonoAntes } = previa
+    const tonoAntes = previa.tono
     const despues = preferenciasDe(await s.config.guardar(limpio))
-    if (despues.tema !== temaAntes) s.alCambiarTema?.(despues.tema)
     if (despues.tono !== tonoAntes) conversaciones.ponerTono(despues.tono || null)
     // El modelo o el esfuerzo de un proyecto con la sesión abierta valen desde su próximo mensaje (C-58).
     if (valido.ajustesIa)
