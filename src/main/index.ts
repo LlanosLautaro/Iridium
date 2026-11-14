@@ -329,8 +329,13 @@ function crearVentana(puente: Puente): void {
   v.on('focus', () => puente.alVolver())
 
   // Los enlaces externos se abren en el navegador, solo http y https; la ventana nunca navega a otra página.
+  // Con IRIDIUM_NAVEGADOR=falso (las pruebas) no se abre: se anota en `enlacesAfuera`, para que la prueba lo vea.
   const abrirAfuera = (url: string) => {
-    if (/^https?:\/\//.test(url)) void shell.openExternal(url)
+    if (!/^https?:\/\//.test(url)) return
+    if (process.env.IRIDIUM_NAVEGADOR === 'falso') {
+      const g = globalThis as { enlacesAfuera?: string[] }
+      g.enlacesAfuera = [...(g.enlacesAfuera ?? []), url]
+    } else void shell.openExternal(url)
   }
   v.webContents.setWindowOpenHandler(({ url }) => {
     abrirAfuera(url)

@@ -4,6 +4,8 @@ import { defineConfig } from '@playwright/test'
 // Las ventanas se abren fuera de la pantalla y de la barra de tareas, y las consolas de Scripts escondidas: el usuario
 // puede seguir usando la PC mientras corren (D-072). Para mirarlas: IRIDIUM_OCULTA=0.
 process.env.IRIDIUM_OCULTA ??= '1'
+// Los enlaces a internet no abren el navegador del usuario: la app los anota y la prueba los mira.
+process.env.IRIDIUM_NAVEGADOR = 'falso'
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 60_000,

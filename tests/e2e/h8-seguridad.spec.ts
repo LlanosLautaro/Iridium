@@ -80,6 +80,9 @@ test('no navega a otra página ni abre ventanas', async () => {
   expect(await direccion()).toBe(antes)
   expect(app.windows()).toHaveLength(1)
   expect(await enLaPagina('document.body.innerText')).toContain('Alfa')
+  // Los de internet van al navegador (con IRIDIUM_NAVEGADOR=falso, solo se anotan); los de archivo, a ningún lado.
+  const afuera = await app.evaluate(() => (globalThis as { enlacesAfuera?: string[] }).enlacesAfuera ?? [])
+  expect(afuera.map((u) => new URL(u).host)).toEqual(['example.com', 'example.com'])
 })
 
 test('la política de contenido no deja cargar ni ejecutar nada de afuera', async () => {
