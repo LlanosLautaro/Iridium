@@ -72,7 +72,7 @@ Compartir está publicado; falta la invitación (Q-126).
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: DI-I3, tanda 3 — el marco con lo de T-58 (la barra de abajo sin ruido, el `chip` de estado como Señal, PZ-7). Si llegan Q-163 o Q-146, procesarlas antes.
+Diseño: DI-I3, tanda 3 — el marco con lo de T-58 (la barra de abajo sin ruido, el `chip` de estado como Señal, PZ-7, y T-65: ver que la IA sigue trabajando aunque espere algo de fondo). Si llegan Q-163 o Q-146, procesarlas antes.
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

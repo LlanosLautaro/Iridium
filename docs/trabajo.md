@@ -258,6 +258,10 @@ Las piezas agrupadas (acciones, navegación, avisos, del dominio), cada una con 
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
 La altura de la barra, de los controles y de las filas, los anchos de los paneles: tokens con su uso en lugar de números sueltos en `piezas.css`. Sistema las muestra; el control puede avisar de una medida repetida escrita a mano. Antes de DI-I3. Hecho el 2026-11-12 (D-119).
 
+## T-65 — Ver que la IA sigue trabajando aunque espere algo de fondo
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-14 · Origen: R-53
+Cuando la IA deja algo corriendo de fondo (por ejemplo, las pruebas con la app abierta, que tardan diez minutos) y espera el aviso, la conversación se ve terminada: no hay nada que diga que sigue trabajando ni cuánto falta. El usuario pide un indicador de que está trabajando o esperando; un porcentaje sería ideal, pero alcanza con eso. Ver qué avisa Claude Code de las tareas de fondo y de las esperas, y mostrarlo en la cabecera de la conversación y en la pestaña del proyecto. Va con la tanda del marco de DI-I3.
+
 ## T-64 — Que un proyecto sepa cuándo el framework le pide algo
 Estado: pendiente · Frente: Orden · Fecha: 2026-11-12 · Origen: Q-160
 Con D-115 el usuario tuvo que pedirle a mano a otro proyecto que pasara su design system: «ese proyecto no sabía que debía hacer eso». Propuso que Iridium le avise al proyecto (por ejemplo, con una línea en su `estado.md`). Cada proyecto ya tiene la fecha de su framework (`**Framework:** AAAA-MM-DD` en `docs/README.md`). Q-161 (A, D-118): novedades del framework con fecha, «N novedades» en la tarjeta y en Skills › Framework, y **Ponerse al día**. Detrás de Diseño; las primeras novedades, las fichas de las piezas (D-117) y las medidas fijas (D-119).
