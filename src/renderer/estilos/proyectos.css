@@ -202,7 +202,7 @@
 }
 /* Estado y preguntas comparten línea; si no entran, las preguntas bajan en vez de cortar el estado */
 /* La cuenta de la bandeja, arriba a la derecha (W-2) */
-.tarjeta .cuenta-bandeja.en-tarjeta {
+.tarjeta .en-tarjeta {
   grid-column: 3;
   grid-row: 1;
   margin-top: 1px;

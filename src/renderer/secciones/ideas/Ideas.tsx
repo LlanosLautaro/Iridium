@@ -1,6 +1,6 @@
 // Ideas del inicio (frente Orden, 04-ux.md › W-10, H-18): anotar una idea sin la IA, en un proyecto o suelta, y ver
 // juntas las ideas `nueva` de todos los proyectos con framework (agrupadas por proyecto, el de la más reciente
-// primero) y las sueltas de `Ideas/ideas.md` al final. Una de un proyecto abre su Trabajo en ese ítem; una suelta se
+// primero) y las sueltas de `Ideas/ideas.md` al final. Una de un proyecto abre su `trabajo.md` en ese ítem; una suelta se
 // despliega acá con Hablar de esta idea, que la pone arriba del cuadro del chat general.
 import { type CSSProperties, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { Idea, ListaIdeas } from '../../../compartido/ideas'
@@ -112,7 +112,7 @@ export function Ideas() {
   }, [recien, nuevas, sueltas])
 
   const abrirEnTrabajo = (ruta: string, codigo: string) => {
-    abrirProyecto(ruta, 'trabajo')
+    abrirProyecto(ruta, 'docs')
     abrirTrabajo(ruta, codigo)
   }
   const alternar = (titulo: string) =>
@@ -332,7 +332,7 @@ function IdeaDeProyecto({
 }) {
   return (
     <li className={recien ? 'tb-item recien' : 'tb-item'} data-clave={clave}>
-      <button type="button" className="tb-fila" title={`Abrir en el Trabajo de ${nombre}`} onClick={abrir}>
+      <button type="button" className="tb-fila" title={`Abrir en el trabajo.md de ${nombre}`} onClick={abrir}>
         <span className="t">{i.codigo}</span>
         <span className="tit">{i.titulo}</span>
         <span className="fr" />

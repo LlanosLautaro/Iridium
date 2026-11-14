@@ -172,7 +172,7 @@ try {
     await enviar(win, `Mensaje ${i}: ${'texto de relleno '.repeat(i % 7 === 0 ? 40 : 3)}`)
     await win.waitForFunction(
       (n) =>
-        !document.querySelector('.ses.activa')?.textContent?.includes('Trabajando') &&
+        !document.querySelector('.barra-proyectos .proy.elegido')?.textContent?.includes('Trabajando') &&
         (document.querySelector('.hilo')?.textContent ?? '').includes(`Mensaje ${n}:`),
       i,
       { timeout: 30_000 },

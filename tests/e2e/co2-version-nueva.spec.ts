@@ -103,7 +103,7 @@ test('con una sesión trabajando, Actualizar pregunta; Cancelar no reinicia y ce
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Algo lento')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
 
   await win.locator('.actualizar-it').getByRole('button', { name: 'Actualizar' }).click()
   const dialogo = win.getByRole('alertdialog')
@@ -135,7 +135,7 @@ test('con Esperar, Iridium se reinicia solo cuando la sesión termina (F-6, R-12
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Algo')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
 
   await win.locator('.actualizar-it').getByRole('button', { name: 'Actualizar' }).click()
   const dialogo = win.getByRole('alertdialog')

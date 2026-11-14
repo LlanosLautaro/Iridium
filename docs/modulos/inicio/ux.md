@@ -4,7 +4,7 @@
 > Usa los principios de interacción y el design system generales (`04-ux.md`, `06-ui.md`). Alcance: `definicion.md` (Q-113). Se arma igual que Skills (`modulos/skills/ux.md` › SK-W1): sin maqueta aparte, se aprueba con las capturas de la app real.
 
 ## Puntos de entrada y salida
-- **Entrar:** el ícono **Ideas** de la barra del inicio, el cuarto, debajo de Skills; o `Ctrl+4`. Dentro de un proyecto no aparece.
+- **Entrar:** el ícono **Ideas** de la barra del inicio, el tercero, debajo de Skills; o `Ctrl+3` (D-111; antes `Ctrl+4`). Dentro de un proyecto no aparece.
 - **Salir:** cualquier otro ícono, el botón de inicio o una ficha de sesión. Guarda la idea elegida y lo escrito mientras Iridium está abierto (H-6).
 - **Va a otro lugar:** un proyecto que la idea toca (abre su vista) y **Abrir como proyecto** (la carpeta `Ideas` en la vista de proyecto, con Docs, Git y los demás). Volver es el ícono Ideas.
 

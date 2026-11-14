@@ -121,7 +121,7 @@ test('mientras la IA trabaja no se puede cambiar; al terminar, sí', async () =>
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Algo lento')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
 
   await win.keyboard.press('Control+,')
   await win.getByRole('dialog').getByRole('button', { name: 'Proyectos' }).click()

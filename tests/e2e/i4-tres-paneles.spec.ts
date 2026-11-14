@@ -64,7 +64,7 @@ async function abrir(): Promise<{ app: ElectronApplication; win: Page }> {
  * las muestra en vez de «Terminada»). */
 async function terminado(win: Page) {
   await expect(win.locator('.hilo .md').last()).toContainText('Listo')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).not.toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).not.toContainText('Trabajando')
 }
 
 test.beforeEach(async () => {
@@ -107,7 +107,10 @@ test.afterEach(async () => {
 
 test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y de vuelta (H-7, F-4)', async () => {
   const { app, win } = await abrir()
-  await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('1')
+  await expect(win.getByRole('button', { name: /^Inicio/ })).toHaveAttribute(
+    'aria-label',
+    /^Inicio, 1 en la bandeja/,
+  )
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
@@ -210,7 +213,9 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   const entrada = win.locator('[data-seccion="pendientes"]')
   await expect(entrada.locator('.pend')).toHaveText([/Q-3/])
   // La pestaña lleva el ícono del proyecto (la inicial, si no tiene) (Q-62).
-  await expect(win.locator('.ses', { hasText: 'Alfa' }).locator('.ico-proy')).toHaveText('A')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).locator('.ico-proy')).toHaveText(
+    'A',
+  )
   // El cuadro de la conversación crece con lo que se escribe y no lo pierde al dejar de escribir (Q-62).
   const cuadro = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   const alto = async () => (await cuadro.boundingBox())?.height ?? 0

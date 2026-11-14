@@ -102,30 +102,8 @@ await win.waitForTimeout(300)
 await win.screenshot({ path: `${SALIDA}/5-proyecto-anteriores.png` })
 await win.keyboard.press('Escape')
 
-// Pendientes con las preguntas reales: solo se miran, nada se envía.
-await win.keyboard.press('Control+2')
-await win.waitForSelector('.pend:not(.silueta-pend), .mensaje', { timeout: 30_000 })
-await win.waitForTimeout(400)
-await win.screenshot({ path: `${SALIDA}/6-pendientes.png` })
-const proyectos = await win.locator('.columna .proy').count()
-for (let i = 1; i < Math.min(proyectos, 4); i++) {
-  await win.locator('.columna .proy').nth(i).click()
-  await win.waitForSelector('.pend:not(.silueta-pend), .mensaje', { timeout: 30_000 })
-  await win.waitForTimeout(400)
-  await win.screenshot({ path: `${SALIDA}/6-pendientes-${i + 1}.png` })
-}
-const detalles = win.locator('.pend .detalles-btn').first()
-if (await detalles.count()) await detalles.click()
-const ver = win.locator('.cita .enlace', { hasText: 'Ver entero' }).first()
-if (await ver.count()) {
-  await ver.click()
-  await win.waitForSelector('.panel-doc .doc-texto', { timeout: 10_000 })
-  await win.waitForTimeout(500)
-  await win.screenshot({ path: `${SALIDA}/6-pendientes-ver-entero.png` })
-  await win.keyboard.press('Escape')
-}
 // Skills con las carpetas reales de Claude (SK-I1): solo se mira; Pasar al framework no se toca (gasta uso).
-await win.keyboard.press('Control+3')
+await win.keyboard.press('Control+2')
 await win.waitForSelector('.sk-columna .sk-fila', { timeout: 30_000 })
 await win.waitForTimeout(800)
 console.log('skills:', await win.textContent('.sk-columna .titulo'))
@@ -145,7 +123,7 @@ await win.waitForSelector('.sk-detalle .codigo', { timeout: 10_000 })
 await win.waitForTimeout(400)
 await win.screenshot({ path: `${SALIDA}/9-skills-archivos.png` })
 // Ideas con el ideas.md real (IN-I1): solo se mira; no se manda nada al chat.
-await win.keyboard.press('Control+4')
+await win.keyboard.press('Control+3')
 await win.waitForSelector('.id-columna .sk-fila', { timeout: 30_000 })
 await win.waitForTimeout(600)
 console.log('ideas:', await win.textContent('.id-columna .titulo'))

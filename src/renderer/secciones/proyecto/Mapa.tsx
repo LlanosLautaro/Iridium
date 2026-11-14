@@ -425,7 +425,7 @@ function BloqueFrentes({
                       key={t.codigo}
                       type="button"
                       className="fila-mapa"
-                      title="Abrir en Trabajo"
+                      title="Abrir en trabajo.md"
                       onClick={() => abrirTrabajo(ruta, t.codigo)}
                     >
                       <span className="q">{t.codigo}</span>

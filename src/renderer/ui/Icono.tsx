@@ -28,6 +28,8 @@ const TRAZOS = {
       <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
     </>
   ),
+  // El inicio (R-22): una casa, la de las maquetas.
+  inicio: <path d="M4 10.5L12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15V15h-6v5.5H5.5A1.5 1.5 0 0 1 4 19z" />,
   marca: (
     <>
       <path d="M4 6h10M4 12h16M4 18h7" />
@@ -140,14 +142,6 @@ const TRAZOS = {
     <>
       <circle cx="11" cy="11" r="7" />
       <path d="m20 20-4-4" />
-    </>
-  ),
-  // Trabajo de un proyecto (W-11): una lista con sus marcas, lo que se va a hacer y lo hecho.
-  trabajo: (
-    <>
-      <path d="M10 6h11M10 12h11M10 18h11" />
-      <path d="M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11" />
-      <path d="M3.5 18h3" />
     </>
   ),
   mapa: (

@@ -168,7 +168,7 @@ test('mientras la IA del código de Iridium trabaja, Actualizar queda deshabilit
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Seguí')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Iridium' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Iridium' })).toContainText('Trabajando')
   await expect(actualizar).toBeDisabled()
   await expect(actualizar).toHaveAttribute('title', 'Espera a que la IA de Iridium termine')
   await expect(win.locator('.actualizar-it')).toContainText('espera a que la IA de Iridium termine')

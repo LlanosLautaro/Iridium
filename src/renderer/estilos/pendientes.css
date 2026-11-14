@@ -1,10 +1,5 @@
-/* Pendientes (04-ux.md › W-5 y W-6, docs/ui/vista-pendientes.html): columna de proyectos, los pendientes del elegido
-   y el documento citado en un panel a la derecha. */
-.pend-vista {
-  flex: 1;
-  display: flex;
-  min-height: 0;
-}
+/* Los pendientes de un proyecto, en su Bandeja de entrada (04-ux.md › W-5 y W-6, docs/ui/vista-pendientes.html). Sin
+   la Bandeja de todos (D-111): la columna de proyectos queda para la de Skills. */
 
 /* Texto de un documento del proyecto (citas y panel): el HTML que arma el visor */
 .doc-texto {
@@ -106,7 +101,7 @@
   background: var(--sel-fondo);
 }
 
-/* Columna de proyectos */
+/* La columna de proyectos (la de Skills) */
 .columna {
   flex: none;
   width: 236px;
@@ -143,7 +138,7 @@
   letter-spacing: 0.02em;
   color: var(--texto-3);
 }
-.proy {
+.columna .proy {
   width: calc(100% - 12px);
   margin: 0 6px;
   display: flex;
@@ -154,11 +149,11 @@
   border-radius: var(--radio-fila);
   color: var(--texto-2);
 }
-.proy:hover {
+.columna .proy:hover {
   background: var(--hover);
   color: var(--texto);
 }
-.proy[aria-current="true"] {
+.columna .proy[aria-current="true"] {
   background: var(--sel-fondo);
   color: var(--texto);
 }
@@ -175,30 +170,13 @@
   color: var(--texto-3);
   font: 600 11px / 1 var(--ui);
 }
-.proy .nom {
+.columna .proy .nom {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 13px;
-}
-.proy .cuenta-proy {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font: 500 12px / 1 var(--mono);
-  color: var(--texto-2);
-}
-.proy .cuenta-proy.frena {
-  color: var(--espera);
-}
-.proy .cuenta-proy.ok {
-  color: var(--ok);
-}
-.proy .cuenta-proy.error {
-  color: var(--error);
-  font-family: var(--ui);
 }
 .proy-silueta {
   display: flex;
@@ -213,21 +191,6 @@
   background: var(--medidor-fondo);
   border-radius: var(--radio-control);
 }
-.leyenda {
-  flex: none;
-  padding: 10px 16px 12px;
-  border-top: 1px solid var(--borde-suave);
-  display: grid;
-  gap: 4px;
-  color: var(--texto-3);
-  font-size: 12px;
-}
-.leyenda > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
 /* Pendientes del proyecto elegido */
 .principal-pend {
   flex: 1;
@@ -616,30 +579,6 @@ textarea.campo-texto.crece {
   font-size: 14px;
 }
 
-/* Panel derecho: el documento entero, angosto */
-.panel-doc {
-  flex: none;
-  width: 380px;
-  background: var(--lateral);
-  border-left: 1px solid var(--borde);
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  animation: abre 0.2s var(--sale);
-}
-.panel-doc .cab-panel {
-  gap: 8px;
-}
-.panel-doc .cab-panel .ruta {
-  font: 500 12px / 1 var(--mono);
-  color: var(--texto-2);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.panel-doc .cab-panel > button {
-  margin-left: auto;
-}
 .doc {
   position: relative;
   flex: 1;
@@ -655,23 +594,17 @@ textarea.campo-texto.crece {
 .opcion-radio.otro .campo-texto {
   flex: 1;
 }
-.leyenda .ic {
-  width: 12px;
-  height: 12px;
-}
 .r-puntos .ic {
   width: 13px;
   height: 13px;
   flex: none;
   transform: translateY(2px);
 }
-.proy .cuenta-proy .ic,
 .opcion-radio .rec .ic,
 .cita.falta .ic {
   width: 13px;
   height: 13px;
 }
-.leyenda .ok .ic,
 .r-puntos .si .ic {
   color: var(--ok);
 }

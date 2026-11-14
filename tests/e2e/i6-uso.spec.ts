@@ -48,7 +48,7 @@ async function mandar(win: Page, texto: string, fin = 'Terminada') {
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill(texto)
   await campo.press('Enter')
-  await expect(win.locator('.ses.activa')).toContainText(fin)
+  await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText(fin)
 }
 
 test.beforeEach(async () => {
@@ -169,7 +169,7 @@ test('sin sesión de Claude Code no se envía nada y Reintentar lo vuelve a mand
   await expect(falla).toContainText('Claude Code no tiene sesión iniciada')
   await expect(falla).toContainText('No se envió nada')
   await expect(falla).toContainText('«Hacé la grilla»')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).not.toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).not.toContainText('Trabajando')
   await win.screenshot({ path: 'test-results/i6-sin-sesion.png' })
   await falla.getByRole('button', { name: 'Reintentar' }).click()
   await expect(falla).toHaveCount(2)
@@ -200,7 +200,7 @@ test('Iniciar sesión desde Iridium: el chip y el aviso abren el login y despué
   await expect(falla.getByRole('button', { name: 'Iniciar sesión' })).toHaveCount(0)
   await win.screenshot({ path: 'test-results/co1-con-sesion.png' })
   await falla.getByRole('button', { name: 'Reintentar' }).click()
-  await expect(win.locator('.ses.activa')).toContainText('Terminada', { timeout: 15_000 })
+  await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Terminada', { timeout: 15_000 })
   await expect(win.locator('.falla-motor')).toHaveCount(1)
   await app.close()
 })
@@ -260,7 +260,7 @@ test('sin red dice que reintenta mientras trabaja y termina con un aviso en cast
   await expect(win.locator('.ahora', { hasText: 'Trabajando' })).toHaveCount(0)
   await win.screenshot({ path: 'test-results/d10-reintentando.png' })
   await expect(reintento).toContainText('reintento 2 de 3')
-  await expect(win.locator('.ses.activa')).toContainText('Error')
+  await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Error')
   await expect(reintento).toHaveCount(0)
   const aviso = win.locator('.linea-aviso.error')
   await expect(aviso).toContainText('No hay conexión con Claude: revisá internet.')
@@ -272,7 +272,7 @@ test('sin red dice que reintenta mientras trabaja y termina con un aviso en cast
   await campo.press('Enter')
   await expect(reintento).toContainText('reintento 1 de 3')
   await win.getByRole('button', { name: 'Detener' }).click()
-  await expect(win.locator('.ses.activa')).toContainText('Terminada')
+  await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Terminada')
   await expect(win.locator('.linea-aviso', { hasText: 'Detuviste a la IA.' })).toBeVisible()
   await app.close()
 })
@@ -283,7 +283,7 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Algo lento en Alfa')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
 
@@ -298,12 +298,12 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
   await expect(aviso).toHaveCount(0)
 
   // En el proyecto a la vista no hay aviso: se ve en la conversación.
-  await win.locator('.ses', { hasText: 'Beta' }).locator('.pestana-ses').click()
+  await win.locator('.barra-proyectos .proy', { hasText: 'Beta' }).getByRole('tab').click()
   const campo2 = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo2.fill('Hacé algo en Beta')
   await campo2.press('Enter')
   // Al terminar, la pestaña lleva su cuenta de la bandeja (04-ux.md › Un número que manda).
-  await expect(win.locator('.ses.activa .cuenta-bandeja')).toHaveText('1')
+  await expect(win.locator('.barra-proyectos .proy.elegido .cuenta')).toHaveText('1')
   await expect(win.locator('.pedido')).toContainText('Dejó 1 pregunta')
   await expect(win.locator('.aviso')).toHaveCount(0)
   await app.close()
@@ -315,7 +315,7 @@ test('cerrar con sesiones trabajando pregunta; Cerrar igual las frena y quedan p
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Algo lento')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
 
   const cerrar = () => app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.close())
   await cerrar()
@@ -326,7 +326,7 @@ test('cerrar con sesiones trabajando pregunta; Cerrar igual las frena y quedan p
   await win.screenshot({ path: 'test-results/i6-cerrar.png' })
   await dialogo.getByRole('button', { name: 'Cancelar' }).click()
   await expect(dialogo).toHaveCount(0)
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
 
   await cerrar()
   const cerrada = app.waitForEvent('close')

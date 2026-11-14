@@ -149,8 +149,8 @@ test('Enviar ahora sin el proyecto abierto en Iridium: queda guardado y la tarje
 
 test('Revisión en Iridium: el contador en gris, la lista con la captura y el detalle', async () => {
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  await expect(botonRevision().locator('.badge')).toHaveText('1')
-  await expect(botonRevision().locator('.badge')).toHaveClass(/neutro/)
+  await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 1 abierto/)
+  await expect(botonRevision().locator('.punto')).not.toHaveClass(/ambar/)
   await botonRevision().click()
   const fila = seccion().locator('.fila-com', { hasText: 'R-1' })
   await expect(fila).toContainText('el botón queda muy pegado')
@@ -193,8 +193,10 @@ test('Enviar ahora desde la app con el proyecto abierto: entra a la conversació
   const md = await readFile(join(revisionAlfa(), 'R-2.md'), 'utf8')
   expect(md).toMatch(/— enviado a la sesión/)
   // La IA (falsa) terminó su turno.
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).not.toContainText('Trabajando', { timeout: 15_000 })
-  await expect(botonRevision().locator('.badge')).toHaveText('2')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).not.toContainText('Trabajando', {
+    timeout: 15_000,
+  })
+  await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 2 abierto/)
   await win.screenshot({ path: join(SALIDA, 'revision-r2-conversacion.png') })
 
   // Tocar la tarjeta abre el comentario en Revisión.
@@ -210,7 +212,9 @@ test('Enviar ahora desde Revisión, la IA lo cierra y pasa a Cerrados; se reabre
   await seccion().getByRole('button', { name: 'Enviar ahora' }).click()
   await expect(seccion().locator('.det-barra')).toContainText('enviado a la sesión de Alfa')
   await expect(win.locator('.hilo .msg-com')).toHaveCount(2)
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).not.toContainText('Trabajando', { timeout: 15_000 })
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).not.toContainText('Trabajando', {
+    timeout: 15_000,
+  })
 
   // La IA lo cierra en el archivo, como le pide la instrucción.
   const r1 = join(revisionAlfa(), 'R-1.md')
@@ -223,7 +227,7 @@ test('Enviar ahora desde Revisión, la IA lo cierra y pasa a Cerrados; se reabre
   )
   await expect(seccion().locator('.det-barra')).toContainText('cerrado')
   await expect(seccion().locator('.historia li.cerro')).toContainText('separó el título con 12 px')
-  await expect(botonRevision().locator('.badge')).toHaveText('1')
+  await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 1 abierto/)
 
   await seccion().getByRole('button', { name: 'Atrás' }).click()
   await seccion()
@@ -241,7 +245,7 @@ test('Enviar ahora desde Revisión, la IA lo cierra y pasa a Cerrados; se reabre
   await seccion().locator('.reabrir').getByRole('button', { name: 'Reabrir' }).click()
   await expect(seccion().locator('.det-barra')).toContainText('abierto')
   await expect(seccion().locator('.historia')).toContainText('reabierto: en el celular sigue chico')
-  await expect(botonRevision().locator('.badge')).toHaveText('2')
+  await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 2 abierto/)
   expect(await readFile(r1, 'utf8')).toMatch(
     /\*\*Estado:\*\* abierto[\s\S]*— reabierto: en el celular sigue chico/,
   )
@@ -261,7 +265,7 @@ test('R-9: lo que la IA deja para después queda en Anotados, no en Cerrados ni 
       .replace('**Estado:** abierto', '**Estado:** anotado')
       .trimEnd()}\n- 2026-10-29 16:00 — anotado por la IA: \`10-operacion.md\` › Backlog (Should)\n`,
   )
-  await expect(botonRevision().locator('.badge')).toHaveText('1')
+  await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 1 abierto/)
   await seccion()
     .getByRole('button', { name: /^Anotados/ })
     .click()

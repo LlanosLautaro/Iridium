@@ -1,6 +1,6 @@
 // OR-I2 con la app abierta y el motor falso: la cabecera común de las secciones (04-ux.md › W-9). Cada sección del
 // proyecto la lleva con su título, a la misma altura y en el mismo lugar; los filtros van en su segunda fila, fijos
-// arriba; vacía, una línea de para qué es. En el inicio, Proyectos y la Bandeja de entrada usan la misma.
+// arriba; vacía, una línea de para qué es. En el inicio, Proyectos usa la misma.
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -89,7 +89,6 @@ test.afterEach(async () => {
 const SECCIONES: [boton: string, titulo: string][] = [
   ['Bandeja de entrada', 'Bandeja de entrada'],
   ['Mapa', 'Mapa'],
-  ['Trabajo', 'Trabajo'],
   ['Revisión', 'Revisión'],
   ['Diseño', 'Diseño'],
   ['Archivos', 'Archivos'],
@@ -121,7 +120,7 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
   // La Bandeja: la cuenta junto al título y los filtros por frente en la segunda fila, fijos al desplazar.
   await barra.getByRole('button', { name: /^Bandeja de entrada/ }).click()
   const bandeja = win.locator('[data-seccion="pendientes"]')
-  await expect(bandeja.locator('.cab-1 .cuenta-bandeja')).toHaveText('2')
+  await expect(bandeja.locator('.cab-1 .cuenta')).toHaveText('2')
   const filtros = bandeja.locator('.cab-2').getByRole('group', { name: 'Filtrar por frente' })
   await expect(filtros).toContainText('Todos 2')
   await expect(filtros).toContainText('Compartir 1')
@@ -133,36 +132,18 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
   await barra.getByRole('button', { name: /^Revisión/ }).click()
   await win.screenshot({ path: 'test-results/or2-cabecera-revision.png' })
 
-  // Scripts: la cuenta; Trabajo, de un proyecto sin framework, la línea que lo dice.
+  // Scripts: la cuenta.
   await barra.getByRole('button', { name: 'Scripts' }).click()
   await expect(win.locator('[data-seccion="scripts"] .cab-1 > .n')).toHaveText('1')
-  await barra.getByRole('button', { name: 'Trabajo' }).click()
-  await expect(win.locator('[data-seccion="trabajo"] .cab-vacia')).toContainText(
-    'todavía no pasó al framework',
-  )
-  await win.screenshot({ path: 'test-results/or2-cabecera-ideas.png' })
   await app.close()
 })
 
-test('en el inicio, Proyectos y la Bandeja de entrada usan la misma cabecera', async () => {
+test('en el inicio, Proyectos usa la misma cabecera', async () => {
   const { app, win } = await abrir()
   const proyectos = win.locator('.grilla-proyectos .cab-seccion')
   await expect(proyectos.locator('h1')).toHaveText('Proyectos')
   await expect(proyectos.locator('.cab-1 > .n')).toHaveText('1')
   await expect(proyectos.getByRole('button', { name: 'Nuevo proyecto' })).toBeVisible()
   expect((await proyectos.boundingBox())?.height).toBe(40)
-
-  await win
-    .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Bandeja de entrada/ })
-    .click()
-  const cab = win.locator('.principal-pend .cab-seccion')
-  await expect(cab.locator('h2')).toHaveText('Alfa')
-  await expect(cab.getByRole('button', { name: 'Abrir' })).toBeVisible()
-  await expect(cab.locator('.cab-2').getByRole('group', { name: 'Filtrar por frente' })).toBeVisible()
-  // El título de la columna, a la misma altura.
-  expect((await win.locator('.columna .titulo').boundingBox())?.height).toBe(40)
-  expect((await cab.boundingBox())?.height).toBe(78)
-  await win.screenshot({ path: 'test-results/or2-cabecera-inicio-bandeja.png' })
   await app.close()
 })

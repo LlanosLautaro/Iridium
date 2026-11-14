@@ -69,7 +69,7 @@ test('lo escrito en el chat queda al cambiar de proyecto y al cerrar; al abrir, 
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   await expect(campo()).toHaveValue('')
-  await win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana-ses').click()
+  await win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
   await expect(campo()).toHaveValue('Quiero que la grilla\nse ordene por fecha')
   // Se cierra Iridium con Alfa a la vista, enseguida: lo escrito llega igual al disco.
   await app.close()
@@ -77,7 +77,7 @@ test('lo escrito en el chat queda al cambiar de proyecto y al cerrar; al abrir, 
   ;({ app, win } = await abrir())
   // Abre directo en Alfa, en su sección principal, con lo escrito.
   await expect(win.locator('.zona-principal .cab-proyecto h1')).toHaveText('Alfa')
-  await expect(win.locator('.act.activo')).toHaveAttribute('aria-label', /Bandeja de entrada/)
+  await expect(win.locator('.act.elegida')).toHaveAttribute('aria-label', /Bandeja de entrada/)
   await expect(campo()).toHaveValue('Quiero que la grilla\nse ordene por fecha')
   await win.screenshot({ path: 'test-results/d060-vuelve.png' })
   // Al enviar se borra, también del disco.
@@ -95,10 +95,10 @@ test('lo escrito en el chat queda al cambiar de proyecto y al cerrar; al abrir, 
   await app.close()
 })
 
-test('lo marcado y escrito en una prueba de Pendientes queda aunque se cierre Iridium (R-3)', async () => {
+test('lo marcado y escrito en una prueba de la Bandeja queda aunque se cierre Iridium (R-3)', async () => {
   let { app, win } = await abrir()
-  await expect(win.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
-  await win.keyboard.press('Control+2')
+  // Alfa tiene preguntas: se entra por su Bandeja de entrada (sin la Bandeja de todos, D-111).
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const q4 = () => win.locator('article.pend[data-q="Q-4"]')
   await q4().getByRole('checkbox', { name: 'Se ven todas las tarjetas' }).check()
   await q4().getByRole('textbox', { name: 'Nota de: Se ordenan por fecha' }).fill('se ordenan al revés')
@@ -106,9 +106,8 @@ test('lo marcado y escrito en una prueba de Pendientes queda aunque se cierre Ir
   await win.waitForTimeout(600)
   await app.close()
 
+  // Abre de vuelta en Alfa (D-060), en su Bandeja.
   ;({ app, win } = await abrir())
-  await expect(win.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
-  await win.keyboard.press('Control+2')
   await expect(q4().getByRole('checkbox', { name: 'Se ven todas las tarjetas' })).toBeChecked()
   await expect(q4().getByRole('textbox', { name: 'Nota de: Se ordenan por fecha' })).toHaveValue(
     'se ordenan al revés',
@@ -128,7 +127,7 @@ test('el chat de la vista de Proyectos conversa en la carpeta Ideas, sin Seguí 
   await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
   await expect(chat.locator('.hilo')).toContainText('Una idea: un lanzador de juegos')
   await expect(chat.locator('.hilo')).toContainText('Listo: dejé el estado al día.')
-  await expect(win.locator('.ses', { hasText: 'Ideas' })).toContainText('Terminada')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Ideas' })).toContainText('Terminada')
   // Se ve en el chat: no hay aviso.
   await expect(win.locator('.aviso')).toHaveCount(0)
   // La grilla sigue a la izquierda.

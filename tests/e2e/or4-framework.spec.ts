@@ -100,19 +100,18 @@ test('los avisos de la tarjeta llevan a su lista en Framework; Ideas lleva a Fra
 
   // Ideas: la línea de los que no pasaron lleva a Framework.
   await win.keyboard.press('Control+1')
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   await expect(win.locator('.id-viejos')).toContainText('Las ideas de Gamma no aparecen')
   await win.locator('.id-viejos').getByRole('button', { name: 'Ver en Framework' }).click()
   await expect(framework).toBeVisible()
   await app.close()
 })
 
-test('una carpeta simple: sin Mapa ni Trabajo, el recuadro en Archivos y Pasar al framework (W-3, OR-8)', async () => {
+test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Pasar al framework (W-3, OR-8)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
   await expect(barra.getByRole('button', { name: 'Mapa' })).toHaveCount(0)
-  await expect(barra.getByRole('button', { name: 'Trabajo' })).toHaveCount(0)
   await expect(barra.getByRole('button', { name: 'Docs' })).toHaveCount(0)
   // Sin estado.md no hay próximo paso: el chat no ofrece Seguí.
   await expect(win.getByRole('button', { name: 'Seguí' })).toHaveCount(0)

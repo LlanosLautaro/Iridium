@@ -100,7 +100,7 @@ const entrar = async (nombre: string) => {
   await win.locator(`.tarjeta[title^="${nombre}"]`).click()
   await win.waitForSelector('.zona-principal > .cab-proyecto h1')
 }
-const seccion = (nombre: string) =>
+const seccion = (nombre: string | RegExp) =>
   win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
     .getByRole('button', { name: nombre })
@@ -109,8 +109,8 @@ async function mandar(t: string, fin = /Terminada|pregunta/) {
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill(t)
   await campo.press('Enter')
-  await win.locator('.ses.activa', { hasText: 'Trabajando' }).waitFor({ timeout: 10_000 })
-  await win.locator('.ses.activa', { hasText: fin }).waitFor({ timeout: 30_000 })
+  await win.locator('.barra-proyectos .proy.elegido', { hasText: 'Trabajando' }).waitFor({ timeout: 10_000 })
+  await win.locator('.barra-proyectos .proy.elegido', { hasText: fin }).waitFor({ timeout: 30_000 })
 }
 
 try {
@@ -138,11 +138,11 @@ try {
         espera: t.querySelector('.senal.ambar')?.textContent ?? null,
       })),
     )
-    const badge = await win
-      .locator('[aria-label^="Pendientes"] .badge')
-      .textContent()
+    const total = await win
+      .getByRole('button', { name: /^Inicio/ })
+      .getAttribute('aria-label')
       .catch(() => null)
-    return { tarjetas, badgePendientes: badge }
+    return { tarjetas, totalInicio: total }
   })
   await paso('H-1-archivados', async () => {
     await win.getByRole('switch', { name: /Archivados/ }).click()
@@ -382,9 +382,11 @@ try {
     await foto('H-4-B-antes')
     const antesDeSegui = (await texto('.chat-cab'))[0]?.replace(/\s+/g, ' ')
     await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
-    await win.locator('.ses.activa', { hasText: 'Trabajando' }).waitFor({ timeout: 10_000 })
+    await win
+      .locator('.barra-proyectos .proy.elegido', { hasText: 'Trabajando' })
+      .waitFor({ timeout: 10_000 })
     await foto('H-2-trabajando')
-    const ficha = await win.locator('.ses.activa').innerText()
+    const ficha = await win.locator('.barra-proyectos .proy.elegido').innerText()
     const detener = await win.getByRole('button', { name: 'Detener' }).isVisible()
     await win.locator('.pedido').waitFor({ timeout: 30_000 })
     await win.waitForTimeout(300)
@@ -394,7 +396,7 @@ try {
       fichaTrabajando: ficha.replace(/\s+/g, ' '),
       detenerVisible: detener,
       pedido: (await win.locator('.pedido').innerText()).replace(/\s+/g, ' '),
-      fichaAlTerminar: (await win.locator('.ses.activa').innerText()).replace(/\s+/g, ' '),
+      fichaAlTerminar: (await win.locator('.barra-proyectos .proy.elegido').innerText()).replace(/\s+/g, ' '),
       chipCabecera: await win
         .locator('.zona-principal > .cab-proyecto .senal.ambar')
         .textContent()
@@ -442,11 +444,13 @@ try {
     await foto('H-2-tarjeta')
     return {
       tarjeta: (await win.locator(`.tarjeta[title^="${B}"]`).innerText()).replace(/\s+/g, ' '),
-      fichas: (await win.locator('.ses').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
+      fichas: (await win.locator('.barra-proyectos .proy').allInnerTexts()).map((s) =>
+        s.replace(/\s+/g, ' '),
+      ),
     }
   })
   await paso('H-2-tocar-ficha', async () => {
-    await win.locator('.ses', { hasText: B }).locator('.pestana-ses').click()
+    await win.locator('.barra-proyectos .proy', { hasText: B }).getByRole('tab').click()
     return {
       h1: await win.locator('.zona-principal > .cab-proyecto h1').textContent(),
       turnos: await win.locator('.turno').count(),
@@ -465,7 +469,7 @@ try {
     await foto('H-14-detenida')
     const r = {
       aviso: await win.locator('.linea-aviso.detenida').last().textContent(),
-      ficha: (await win.locator('.ses.activa').innerText()).replace(/\s+/g, ' '),
+      ficha: (await win.locator('.barra-proyectos .proy.elegido').innerText()).replace(/\s+/g, ' '),
       detener: await win.getByRole('button', { name: 'Detener' }).count(),
     }
     await mandar('Seguí después de detener')
@@ -476,11 +480,11 @@ try {
   await paso('H-6-H-13-cambiar-y-aviso', async () => {
     await win.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('Algo lento en B')
     await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
-    await win.locator('.ses', { hasText: B }).filter({ hasText: 'Trabajando' }).waitFor()
+    await win.locator('.barra-proyectos .proy', { hasText: B }).filter({ hasText: 'Trabajando' }).waitFor()
     await entrar(A)
     await seccion('Docs')
     await win.waitForTimeout(300)
-    const sigue = await win.locator('.ses', { hasText: B }).innerText()
+    const sigue = await win.locator('.barra-proyectos .proy', { hasText: B }).innerText()
     const aviso = win.locator('.aviso')
     await aviso.waitFor({ timeout: 30_000 })
     await foto('H-13-aviso')
@@ -490,37 +494,39 @@ try {
     const h1 = await win.locator('.zona-principal > .cab-proyecto h1').textContent()
     // Volver a A: sigue en Docs.
     await win
-      .locator('.ses', { hasText: A })
-      .locator('.pestana-ses')
+      .locator('.barra-proyectos .proy', { hasText: A })
+      .getByRole('tab')
       .click()
       .catch(async () => entrar(A))
     await win.waitForTimeout(300)
     const seccionActiva = await win
-      .locator('.act.activo')
+      .locator('.act.elegida')
       .getAttribute('aria-label')
       .catch(() => null)
     await foto('H-6-vuelve-a-A')
     return { bMientras: sigue.replace(/\s+/g, ' '), textoAviso, botones, abrirLleva: h1, seccionActiva }
   })
 
-  // H-9, H-10, H-11, F-3: Pendientes con las Q-n reales; responder la Q-900 de A y la prueba de C.
+  // H-9, H-10, H-11, F-3: la Bandeja de cada proyecto con las Q-n reales (sin la Bandeja de todos, D-111); responder
+  // la Q-900 de A y la prueba de C.
+  const bandeja = async (nombre: string) => {
+    await entrar(nombre)
+    await seccion(/^Bandeja de entrada/)
+    await win.waitForSelector('[data-seccion="pendientes"] .pend:not(.silueta-pend)', { timeout: 30_000 })
+  }
   await paso('H-9-pendientes', async () => {
-    await win.keyboard.press('Control+2')
-    await win.waitForSelector('.columna .proy', { timeout: 30_000 })
+    await bandeja(A)
     await win.waitForTimeout(400)
     await foto('H-9-pendientes')
     return {
-      badge: await win
-        .locator('[aria-label^="Pendientes"] .badge')
-        .textContent()
+      totalInicio: await win
+        .getByRole('button', { name: /^Inicio/ })
+        .getAttribute('aria-label')
         .catch(() => null),
-      columna: (await win.locator('.columna').innerText()).replace(/\s+/g, ' '),
-      primero: await win.locator('.cab-proy h2').textContent(),
-      grupos: await win.locator('.grupo').allInnerTexts(),
+      grupos: await win.locator('[data-seccion="pendientes"] .grupo').allInnerTexts(),
     }
   })
   await paso('H-10-decision', async () => {
-    await win.locator('.columna .proy', { hasText: A }).click()
     const q = win.locator('.pend[data-q="Q-900"]')
     await q.waitFor()
     const det = q.getByRole('button', { name: /Mostrar detalles/ })
@@ -536,12 +542,10 @@ try {
     return {
       opciones: opciones.map((s) => s.replace(/\s+/g, ' ')),
       archivo: await readFile(join(raiz, A, 'docs', 'respuestas', 'Q-900.md'), 'utf8'),
-      seguiResaltado: await win.locator('.cab-proy button.principal').count(),
-      cabecera: (await win.locator('.cab-proy').innerText()).replace(/\s+/g, ' '),
     }
   })
   await paso('H-11-prueba-a-medias', async () => {
-    await win.locator('.columna .proy', { hasText: C }).click()
+    await bandeja(C)
     const q = win.locator(`.pend[data-q="${QC}"]`)
     await q.waitFor()
     const casillas = q.getByRole('checkbox')
@@ -557,8 +561,8 @@ try {
     await foto('H-11-a-medias')
     const meta = await q.locator('.meta').innerText()
     // Sigue a medias al salir y volver.
-    await win.locator('.columna .proy', { hasText: B }).click()
-    await win.locator('.columna .proy', { hasText: C }).click()
+    await entrar(B)
+    await bandeja(C)
     const sigueMarcada = await q.getByRole('checkbox').nth(1).isChecked()
     await q.getByRole('button', { name: 'Enviar' }).click()
     await q.locator('.meta', { hasText: /Respondida/ }).waitFor({ timeout: 10_000 })
@@ -585,12 +589,11 @@ try {
       .first()
       .getByRole('button', { name: 'Ver entero' })
       .click()
-    await win.locator('.panel-doc .doc-texto').waitFor({ timeout: 10_000 })
+    // Sin la Bandeja de todos, «Ver entero» abre el documento en Docs (D-111).
+    await win.locator('[data-seccion="docs"]:not([hidden]) .doc-texto').waitFor({ timeout: 10_000 })
     await win.waitForTimeout(300)
     await foto('H-9-ver-entero')
-    const r = { ruta: await win.locator('.panel-doc .ruta').textContent() }
-    await win.keyboard.press('Escape')
-    return r
+    return { seccion: await win.locator('.act.elegida').getAttribute('aria-label') }
   })
 
   // Frentes y Postergar (D-063), en la entrada de C: solo se mira.
@@ -686,7 +689,7 @@ try {
       await mandar(msg, /Error|Terminada/)
       r[clave] = {
         aviso: (await win.locator('.falla-motor').last().innerText()).replace(/\s+/g, ' '),
-        ficha: (await win.locator('.ses.activa').innerText()).replace(/\s+/g, ' '),
+        ficha: (await win.locator('.barra-proyectos .proy.elegido').innerText()).replace(/\s+/g, ' '),
       }
       await foto(`F-5-${clave}`)
     }
@@ -698,7 +701,7 @@ try {
   await paso('F-6-cerrar', async () => {
     await win.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('Algo lento para cerrar')
     await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
-    await win.locator('.ses.activa', { hasText: 'Trabajando' }).waitFor()
+    await win.locator('.barra-proyectos .proy.elegido', { hasText: 'Trabajando' }).waitFor()
     await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.close())
     const d = win.getByRole('alertdialog')
     await d.waitFor({ timeout: 5000 })
@@ -708,7 +711,7 @@ try {
       foco: await win.evaluate(() => document.activeElement?.textContent),
     }
     await d.getByRole('button', { name: 'Cancelar' }).click()
-    const sigue = (await win.locator('.ses.activa').innerText()).replace(/\s+/g, ' ')
+    const sigue = (await win.locator('.barra-proyectos .proy.elegido').innerText()).replace(/\s+/g, ' ')
     await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.close())
     const cerrada = app.waitForEvent('close')
     await win.getByRole('alertdialog').getByRole('button', { name: 'Cerrar igual' }).click()

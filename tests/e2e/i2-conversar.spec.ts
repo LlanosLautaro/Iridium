@@ -59,7 +59,7 @@ test('Seguí trabaja, termina y muestra las preguntas que dejó con Responder (H
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
 
-  const pestana = win.locator('.ses', { hasText: 'Alfa' })
+  const pestana = win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })
   await expect(pestana).toContainText('Trabajando')
   await expect(win.locator('.ahora')).toContainText('Trabajando')
   await expect(win.locator('.turno').first()).toContainText('Seguí con el proyecto.')
@@ -71,8 +71,8 @@ test('Seguí trabaja, termina y muestra las preguntas que dejó con Responder (H
   await expect(win.locator('.pedido').getByRole('button', { name: 'Responder' })).toBeVisible()
   // La IA escribió la pregunta en el estado.md del proyecto; la pestaña la cuenta, en amarillo porque frena.
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'estado.md'), 'utf8')).toContain('- **Q-1 — ')
-  await expect(pestana.locator('.cuenta-bandeja')).toHaveText('1')
-  await expect(pestana.locator('.cuenta-bandeja')).toHaveClass(/frena/)
+  await expect(pestana.locator('.cuenta')).toHaveText('1')
+  await expect(pestana.locator('.cuenta')).toHaveClass(/frena/)
   await expect(win.locator('.chat-cab')).toContainText('empezada en Iridium')
   await win.screenshot({ path: 'test-results/i2-terminada.png' })
   await app.close()
@@ -90,12 +90,12 @@ test('Detener frena a la IA en el acto y se retoma con Seguí (H-14)', async () 
   await win.getByRole('button', { name: 'Detener' }).click()
   await expect(win.locator('.linea-aviso.detenida')).toHaveText('Detuviste a la IA.')
   await expect(win.getByRole('button', { name: 'Detener' })).toHaveCount(0)
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Terminada')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
   await win.screenshot({ path: 'test-results/i2-detenida.png' })
 
   await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Terminada')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
   await expect(win.locator('.hilo .md').last()).toContainText('Listo')
   await app.close()
 })
@@ -106,7 +106,7 @@ test('dos proyectos trabajan a la vez y cambiar entre ellos no corta nada (H-2, 
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Algo lento en Alfa')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
 
   await win.keyboard.press('Control+1')
   // En la grilla, la tarjeta muestra el mismo estado que la ficha (H-2).
@@ -115,22 +115,26 @@ test('dos proyectos trabajan a la vez y cambiar entre ellos no corta nada (H-2, 
   await expect(win.locator('.turno')).toHaveCount(0)
   await campo.fill('Algo lento en Beta')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Beta' })).toContainText('Trabajando')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
-  await expect(win.locator('.ses.activa')).toContainText('Beta')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Beta' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
+  await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Beta')
   await win.screenshot({ path: 'test-results/i2-dos-sesiones.png' })
 
   // La ficha de Alfa lleva a Alfa, con su conversación como estaba.
-  await win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana-ses').click()
+  await win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
   await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
   await expect(win.locator('.turno').first()).toContainText('Algo lento en Alfa')
   await expect(win.locator('.hilo')).not.toContainText('Beta')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Terminada', { timeout: 15_000 })
-  await expect(win.locator('.ses', { hasText: 'Beta' })).toContainText('Terminada', { timeout: 15_000 })
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada', {
+    timeout: 15_000,
+  })
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Beta' })).toContainText('Terminada', {
+    timeout: 15_000,
+  })
 
   // La ficha de una sesión terminada se cierra con × y la conversación queda.
   await win.getByRole('button', { name: 'Cerrar Beta' }).click()
-  await expect(win.locator('.ses', { hasText: 'Beta' })).toHaveCount(0)
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Beta' })).toHaveCount(0)
   await app.close()
 })
 
@@ -140,13 +144,13 @@ test('Nueva abre una conversación en blanco que empieza con lo que se escribe, 
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Primera charla')
   await campo.press('Enter')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Terminada')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
 
   // Nueva no manda nada: muestra la conversación en blanco y se puede volver a la anterior.
   await win.locator('.chat-cab').getByRole('button', { name: 'Nueva' }).click()
   await expect(win.locator('.turno')).toHaveCount(0)
   await expect(win.locator('.sin-conversacion')).toContainText('conversación nueva')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Terminada')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
   await win.getByRole('button', { name: 'Volver a la anterior' }).click()
   await expect(win.locator('.turno').first()).toContainText('Primera charla')
 
@@ -159,7 +163,7 @@ test('Nueva abre una conversación en blanco que empieza con lo que se escribe, 
   await expect(win.locator('.turno').first()).toContainText('Una idea aparte')
   await expect(win.locator('.hilo')).not.toContainText('Primera charla')
   await expect(win.locator('.hilo')).not.toContainText('Seguí con el proyecto.')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Terminada')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
   await win.screenshot({ path: 'test-results/i3-nueva-en-blanco.png' })
   await app.close()
 })
@@ -172,7 +176,7 @@ test('lo que la IA deja de fondo se ve mientras lo espera, y retoma sola cuando 
   await campo.press('Enter')
 
   // Terminó el turno, pero espera lo de fondo: lo dice la conversación y la pestaña, y Detener sigue a mano.
-  const pestana = win.locator('.ses', { hasText: 'Alfa' })
+  const pestana = win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })
   await expect(win.locator('.ahora.esperando')).toContainText(
     'Esperando lo que dejó de fondo · Pruebas con la app abierta',
   )

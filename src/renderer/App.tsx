@@ -63,7 +63,7 @@ function useConexion() {
   ])
 }
 
-/** Ctrl+1 Proyectos, Ctrl+2 Pendientes (04-ux.md › Principios de interacción); Ctrl+, los Ajustes (AJ-W1); Ctrl+= y Ctrl+- el tamaño. */
+/** Ctrl+1 Proyectos, Ctrl+2 Skills, Ctrl+3 Ideas (04-ux.md › Principios de interacción, D-111); Ctrl+, los Ajustes (AJ-W1); Ctrl+= y Ctrl+- el tamaño. */
 function useAtajos() {
   const irA = usarEstado((s) => s.irA)
   const abrirAjustes = usarEstado((s) => s.abrirAjustes)

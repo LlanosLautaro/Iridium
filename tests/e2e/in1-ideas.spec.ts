@@ -1,6 +1,6 @@
-// Ideas del inicio con la app abierta y el motor falso (frente Orden, 04-ux.md › W-10; antes IN-I1): Ctrl+4, las ideas
+// Ideas del inicio con la app abierta y el motor falso (frente Orden, 04-ux.md › W-10; antes IN-I1): Ctrl+3, las ideas
 // nuevas de cada proyecto con framework y las sueltas, anotar con el selector de proyecto, Hablar de esta idea en el
-// chat general, una de un proyecto que abre su Trabajo, la lista que se actualiza sola, la grilla solo con proyectos
+// chat general, una de un proyecto que abre su trabajo.md, la lista que se actualiza sola, la grilla solo con proyectos
 // (Ideas y Skills están en la carpeta Iridium, D-083) y Abrir como proyecto desde Ideas y Skills.
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -115,10 +115,10 @@ test('la grilla solo con proyectos y el chat general al lado (IN-3)', async () =
   await app.close()
 })
 
-test('Ctrl+4: las nuevas de cada proyecto y las sueltas, anotar con el selector y Hablar de esta idea (W-10)', async () => {
+test('Ctrl+3: las nuevas de cada proyecto y las sueltas, anotar con el selector y Hablar de esta idea (W-10)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
 
   const ideas = win.getByRole('region', { name: 'Ideas' })
   await expect(ideas.getByRole('heading', { name: 'Ideas', level: 1 })).toBeVisible()
@@ -181,13 +181,14 @@ test('Ctrl+4: las nuevas de cada proyecto y las sueltas, anotar con el selector 
   ).toBeVisible()
   await expect(chat.getByText('Listo: dejé el estado al día.')).toBeVisible()
 
-  // Una de un proyecto abre su Trabajo, en ese ítem.
+  // Una de un proyecto abre su trabajo.md en Docs, en ese ítem (sin la sección Trabajo, D-112).
   await ideas.getByRole('button', { name: /T-3\s*Exportar el plan como imagen/ }).click()
-  const trabajo = win.locator('[data-seccion="trabajo"]')
-  await expect(trabajo.locator('.tb-item.abierto[data-codigo="T-3"]')).toBeVisible()
+  const docs = win.locator('[data-seccion="docs"]')
+  await expect(docs.locator('.barra-doc .nom')).toHaveText('trabajo.md')
+  await expect(docs.locator('[id="t-3"]')).toBeInViewport()
 
   // De vuelta, el selector sigue en el último elegido.
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   await expect(win.getByRole('region', { name: 'Ideas' }).locator('.destino .menu-boton')).toHaveText(
     'Suelta',
   )
@@ -197,7 +198,7 @@ test('Ctrl+4: las nuevas de cada proyecto y las sueltas, anotar con el selector 
 test('la lista se actualiza sola: una idea que la IA pasa a pendiente sale (W-10)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   const ideas = win.getByRole('region', { name: 'Ideas' })
   await expect(ideas.locator('.tb-grupo-t')).toHaveText(['Delta 1', 'Alfa 2', 'Sueltas 7'])
 
@@ -215,26 +216,26 @@ test('la lista se actualiza sola: una idea que la IA pasa a pendiente sale (W-10
 test('Abrir como proyecto desde Ideas y desde Skills (IN-3)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   await win
     .getByRole('region', { name: 'Ideas' })
     .getByRole('button', { name: 'Abrir como proyecto' })
     .click()
   // La vista de proyecto de Ideas, con sus íconos (Docs, Git…).
   await expect(win.getByRole('button', { name: /^Docs/ })).toBeVisible()
-  await expect(win.locator('.ses, .pestana-ses').filter({ hasText: 'Ideas' }).first()).toBeVisible()
+  await expect(win.locator('.barra-proyectos .proy').filter({ hasText: 'Ideas' }).first()).toBeVisible()
   await win.screenshot({ path: 'test-results/in1-abrir-ideas.png' })
 
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   await win
     .getByRole('navigation', { name: 'Skills' })
     .getByRole('button', { name: 'Abrir como proyecto' })
     .click()
   await expect(win.getByRole('button', { name: /^Docs/ })).toBeVisible()
-  await expect(win.locator('.ses, .pestana-ses').filter({ hasText: 'Skills' }).first()).toBeVisible()
+  await expect(win.locator('.barra-proyectos .proy').filter({ hasText: 'Skills' }).first()).toBeVisible()
 
   // De vuelta en Ideas.
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   await expect(win.getByRole('region', { name: 'Ideas' })).toBeVisible()
   await win.screenshot({ path: 'test-results/in1-ideas-abrir.png' })
   await app.close()
@@ -244,7 +245,7 @@ test('sin ideas.md; sin la carpeta Ideas se crea; si no se puede, lo dice', asyn
   await rm(join(iridium, 'Ideas', 'ideas.md'))
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   await expect(win.getByRole('region', { name: 'Ideas' }).locator('.tb-grupo-t')).toHaveText([
     'Delta 1',
     'Alfa 2',
@@ -255,7 +256,7 @@ test('sin ideas.md; sin la carpeta Ideas se crea; si no se puede, lo dice', asyn
   await rm(join(iridium, 'Ideas'), { recursive: true })
   const nueva = await abrir()
   await expect(nueva.win.getByText('Gamma').first()).toBeVisible()
-  await nueva.win.keyboard.press('Control+4')
+  await nueva.win.keyboard.press('Control+3')
   await expect(nueva.win.getByRole('region', { name: 'Ideas' }).locator('.tb-grupo-t')).toHaveText([
     'Delta 1',
     'Alfa 2',
@@ -269,7 +270,7 @@ test('sin ideas.md; sin la carpeta Ideas se crea; si no se puede, lo dice', asyn
   await writeFile(join(iridium, 'Ideas'), '')
   const otra = await abrir()
   await expect(otra.win.getByText('Gamma').first()).toBeVisible()
-  await otra.win.keyboard.press('Control+4')
+  await otra.win.keyboard.press('Control+3')
   await expect(otra.win.getByText(/no pudo crearla/).first()).toBeVisible()
   await expect(otra.win.locator('.chat-falta')).toContainText('Chat general')
   await expect(otra.win.getByRole('button', { name: 'Abrir como proyecto' })).toHaveCount(0)

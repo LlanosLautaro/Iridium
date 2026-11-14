@@ -273,11 +273,7 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
   return (
     <div className="recuadro-simple" role="note">
       <b>Esta carpeta no sigue el framework</b>
-      <p>
-        {pasando
-          ? 'La IA la está pasando al framework…'
-          : 'Se ve y se conversa, sin Mapa, Trabajo ni preguntas.'}
-      </p>
+      <p>{pasando ? 'La IA la está pasando al framework…' : 'Se ve y se conversa, sin Mapa ni preguntas.'}</p>
       {error && (
         <p className="error" role="alert">
           {error}

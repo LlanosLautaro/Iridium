@@ -4,7 +4,7 @@
 > Usa los principios de interacción y el design system generales (`04-ux.md`, `06-ui.md`). Alcance: `definicion.md` (D-064). Validada con Q-89, con el chat a la derecha y el formato en `docs/README.md` (D-068).
 
 ## Puntos de entrada y salida
-- **Entrar:** un ícono **Skills** en la barra de íconos del inicio, después de Proyectos y Pendientes (`04-ux.md` › Arquitectura de información ya lo preveía, B-11); o `Ctrl+3`. Dentro de un proyecto no aparece: las skills son de toda la PC.
+- **Entrar:** un ícono **Skills** en la barra de íconos del inicio, después de Proyectos (`04-ux.md` › Arquitectura de información ya lo preveía, B-11); o `Ctrl+2` (D-111; antes `Ctrl+3`). Dentro de un proyecto no aparece: las skills son de toda la PC.
 - **Salir:** cualquier otro ícono, el botón de inicio o una ficha de sesión. Como todas las secciones, guarda la skill elegida y lo escrito mientras Iridium está abierto (H-6).
 - **Va a otro lugar:** solo «Ver la conversación» de un proyecto atrasado, que abre ese proyecto en su vista; volver es el ícono Skills. Lo demás pasa en la sección: el chat de `Skills` está a la derecha y «Poner al día» manda el pedido sin salir (D-068).
 - Armada como una columna de lista, un detalle y el chat, para que más adelante pueda ir como panel del módulo Inicio sin rehacerla (`propuesta.md`).

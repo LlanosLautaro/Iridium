@@ -1,43 +1,23 @@
-/* Marco de la app (04-ux.md › W-1, D-041): barra de título propia con el inicio y las sesiones, la barra de íconos
-   que cambia entre el inicio y el proyecto, y la barra de estado. Sale de docs/ui/vista-proyecto.html. */
+/* Marco de la app (04-ux.md › W-1, D-041), como el de las maquetas (docs/diseno/piezas.css › El marco; DI-I3, tanda 4):
+   arriba el inicio y la barra de proyectos, a la izquierda la de secciones y abajo la de estado. La barra de arriba es
+   la de título propia: se arrastra desde el espacio libre y los botones de Windows van a la derecha (titleBarOverlay). */
 .app {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  grid-template-rows: 36px minmax(0, 1fr) 26px;
+  grid-template-columns: var(--ancho-secciones) minmax(0, 1fr);
+  grid-template-rows: var(--alto-barra) minmax(0, 1fr) var(--alto-estado);
   height: 100vh;
 }
 
-/* Barra de título: se arrastra desde el espacio libre; los botones de Windows van a la derecha (titleBarOverlay) */
 .titulo {
   grid-column: 1 / -1;
   display: flex;
   align-items: stretch;
   min-width: 0;
-  background: var(--barra);
   border-bottom: 1px solid var(--borde);
   -webkit-app-region: drag;
 }
 .titulo button {
   -webkit-app-region: no-drag;
-}
-.inicio {
-  position: relative;
-  flex: none;
-  width: 48px;
-  display: grid;
-  place-items: center;
-  color: var(--primario);
-  border-right: 1px solid var(--borde);
-}
-.inicio:hover {
-  background: var(--hover);
-}
-.inicio.activo {
-  background: var(--fondo);
-}
-.inicio .ic {
-  width: 19px;
-  height: 19px;
 }
 .titulo .arrastre {
   flex: 1;
@@ -49,155 +29,149 @@
   width: 138px;
 }
 
-/* El total de la bandeja, en el botón de inicio: un punto, como en las maquetas (PZ-7); el número, al pasar el mouse
-   (R-50) */
-.inicio .cuenta-bandeja.en-inicio {
+/* El inicio (R-22): la casa, con un punto si algo espera en algún proyecto (ámbar si frena); el número, al pasar el
+   mouse (R-50) */
+.boton-menu {
+  position: relative;
+  flex: none;
+  width: var(--ancho-secciones);
+  display: grid;
+  place-items: center;
+  color: var(--texto-2);
+  border-right: 1px solid var(--borde);
+}
+.boton-menu:hover {
+  color: var(--texto);
+  background: var(--hover);
+}
+.boton-menu > span {
   position: absolute;
   top: 9px;
   right: 11px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--texto-3);
-  font-size: 0;
-}
-.inicio .cuenta-bandeja.en-inicio.frena {
-  background: var(--espera);
 }
 
-/* La marca de un ícono de la barra: solo los comentarios abiertos de la Revisión, un punto gris como en las maquetas
-   (PZ-7); el número, al pasar el mouse (R-50) */
-.badge {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--texto-3);
-  font-size: 0;
-}
-
-.sesiones {
+/* La barra de proyectos (W-4, D-043): una pestaña por proyecto abierto; el elegido se apoya en la sección de abajo */
+.barra-proyectos {
   display: flex;
   align-items: stretch;
+  gap: 2px;
   min-width: 0;
   overflow: hidden;
 }
-/* Una pestaña por sesión abierta (W-4) y la del proyecto abierto */
-.ses {
+.barra-proyectos .proy {
   display: flex;
   align-items: center;
-  padding-right: 6px;
-  border-right: 1px solid var(--borde);
-  color: var(--texto-3);
-  white-space: nowrap;
-  position: relative;
   min-width: 0;
-  -webkit-app-region: no-drag;
-}
-.ses:hover {
+  max-width: var(--ancho-proyecto);
+  padding-right: var(--esp-2);
   color: var(--texto-2);
-  background: var(--hover);
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: var(--radio-control) var(--radio-control) 0 0;
 }
-.ses.activa {
-  background: var(--fondo);
+.barra-proyectos .proy:hover {
   color: var(--texto);
 }
-.ses.activa::before {
-  content: "";
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: 0;
-  height: 2px;
-  border-radius: 0 0 var(--radio-medidor) var(--radio-medidor);
-  background: var(--primario);
+.barra-proyectos .proy.elegido {
+  color: var(--texto);
+  background: var(--tarjeta);
+  box-shadow: inset 0 0 0 1px var(--borde);
+  clip-path: inset(0 0 -1px 0);
+  margin-bottom: -1px;
 }
-.ses .pestana-ses {
+.barra-proyectos .proy > [role="tab"] {
   align-self: stretch;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 6px 0 14px;
+  gap: var(--esp-2);
   min-width: 0;
+  padding: 0 var(--esp-2) 0 var(--esp-3);
+  color: inherit;
 }
-.ses .ico-proy {
+.barra-proyectos .ico-proy {
   flex: none;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: var(--radio-control);
   overflow: hidden;
-  background: var(--caja);
   display: grid;
   place-items: center;
-  font: 600 11px / 1 var(--ui);
-  color: var(--texto-2);
+  font: 600 10px / 1 var(--ui);
+  color: var(--texto-3);
 }
-.ses .ico-proy img {
+.barra-proyectos .ico-proy img {
   width: 100%;
   height: 100%;
   display: block;
 }
-.ses .nom {
-  font-weight: 600;
-  max-width: 180px;
+.barra-proyectos .nom {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.ses .cerrar {
+.barra-proyectos .cerrar {
+  flex: none;
   width: 20px;
   height: 20px;
   display: grid;
   place-items: center;
   border-radius: var(--radio-control);
   color: var(--texto-3);
+  opacity: 0;
 }
 
-/* Barra de íconos */
+/* La barra de secciones (D-041): en el inicio, Proyectos, Skills e Ideas; en un proyecto, las suyas en dos grupos */
 .actividad {
-  background: var(--lateral);
   border-right: 1px solid var(--borde);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4px 0 6px;
+  gap: 2px;
+  padding-top: var(--esp-2);
+}
+.actividad .sep {
+  width: 18px;
+  height: 1px;
+  background: var(--borde);
+  margin: var(--esp-2) 0;
 }
 .act {
   position: relative;
-  width: 48px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
   color: var(--texto-3);
+  border-radius: var(--radio-control);
 }
 .act .ic {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 .act:hover {
   color: var(--texto);
+  background: var(--hover);
 }
-.act.activo {
-  color: var(--primario);
+.act.elegida {
+  color: var(--texto);
 }
-.act.activo::before {
+.act.elegida::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 11px;
-  bottom: 11px;
+  left: -6px;
+  top: 9px;
+  bottom: 9px;
   width: 2px;
-  background: var(--primario);
+  border-radius: 2px;
+  background: var(--texto);
 }
-.act .badge {
+/* Los comentarios abiertos de la Revisión: un punto gris, esperan a la IA (R-50); el número, al pasar el mouse */
+.act > span {
+  position: absolute;
   top: 7px;
   right: 7px;
-}
-/* La línea entre los dos grupos de la barra del proyecto (W-3). */
-.act-linea {
-  width: 24px;
-  margin: 6px 0;
-  border: 0;
-  border-top: 1px solid var(--borde);
+  width: 6px;
+  height: 6px;
 }
 
 .trabajo {
@@ -322,11 +296,16 @@
 }
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
-.ses .cerrar .ic {
+.barra-proyectos .proy:hover .cerrar,
+.barra-proyectos .proy.elegido .cerrar,
+.barra-proyectos .cerrar:focus-visible {
+  opacity: 1;
+}
+.barra-proyectos .cerrar .ic {
   width: 12px;
   height: 12px;
 }
-.ses .cerrar:hover {
+.barra-proyectos .cerrar:hover {
   color: var(--texto);
   background: var(--hover);
 }

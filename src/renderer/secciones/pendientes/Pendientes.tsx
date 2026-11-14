@@ -1,102 +1,15 @@
-// La Bandeja de entrada (H-9, F-3, 04-ux.md › W-5): la columna de proyectos que esperan algo, todas las preguntas del
-// elegido con lo que citan, filtros por frente y las en pausa al final y, con «Ver entero», el documento en un panel a
-// la derecha. Lo escrito vive en el estado de la ventana (no se pierde al cambiar de proyecto ni de filtro); se guarda
-// en el disco solo con Enviar o Guardar a medias.
-import { type ReactNode, useCallback, useEffect, useState } from 'react'
-import type { PendienteVista, TarjetaProyecto } from '../../../compartido/puente'
-import { columnaPendientes, fichaDe, usarEstado } from '../../estado'
+// Los pendientes de un proyecto (H-9, F-3, 04-ux.md › W-5), en su Bandeja de entrada (D-043): todas sus preguntas con
+// lo que citan, filtros por frente y las en pausa al final. Sin la Bandeja de todos (D-111): lo que espera de cada
+// proyecto se ve en el suyo y, desde la grilla, en la cuenta de su tarjeta. Lo escrito vive en el estado de la ventana
+// (no se pierde al cambiar de proyecto ni de filtro) y se guarda a medias solo (R-3).
+import { type ReactNode, useState } from 'react'
+import type { Destino, PendienteVista, TarjetaProyecto } from '../../../compartido/puente'
+import { usarEstado } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { Cuenta } from '../../ui/Cuenta'
 import { Icono } from '../../ui/Icono'
-import { textoHito } from '../proyectos/Tarjeta'
 import { enPausa, filtrosPorFrente, NUCLEO, TODOS } from './filtros'
-import { type Destino, PanelDocumento } from './PanelDocumento'
 import { Pendiente } from './Pendiente'
-
-function IconoProyecto({ p }: { p: TarjetaProyecto }) {
-  if (p.icono) return <img className="ico-proy" src={p.icono} alt="" />
-  return (
-    <span className="ico-proy sin-icono" aria-hidden="true">
-      {p.inicial}
-    </span>
-  )
-}
-
-function Columna({
-  actual,
-  elegir,
-  conError,
-}: {
-  actual: string | null
-  elegir: (ruta: string) => void
-  conError: ReadonlySet<string>
-}) {
-  const lista = usarEstado((s) => s.lista)
-  const { conPendientes, respondidas } = columnaPendientes(lista)
-  const total = conPendientes.reduce((n, p) => n + p.preguntas.sinResponder, 0)
-  const fila = (p: TarjetaProyecto, tipo: 'pendientes' | 'respondidas') => {
-    const { sinResponder, frenan, respondidas: r } = p.preguntas
-    let cuenta: ReactNode = <Cuenta n={sinResponder} frenan={frenan} />
-    if (conError.has(p.ruta))
-      cuenta = (
-        <span className="cuenta-proy error">
-          <Icono nombre="error" />
-          Error
-        </span>
-      )
-    else if (tipo === 'respondidas')
-      cuenta = (
-        <span className="cuenta-proy ok" title="Respondidas, sin procesar">
-          <Icono nombre="check" />
-          {r}
-        </span>
-      )
-    return (
-      <button
-        key={p.ruta}
-        type="button"
-        className="proy"
-        aria-current={p.ruta === actual}
-        onClick={() => elegir(p.ruta)}
-      >
-        <IconoProyecto p={p} />
-        <span className="nom" title={p.nombre}>
-          {p.nombre}
-        </span>
-        {cuenta}
-      </button>
-    )
-  }
-  return (
-    <nav className="columna" aria-label="Proyectos con algo en la bandeja">
-      <div className="titulo">
-        <h1>Bandeja de entrada</h1>
-        <span className="n">{total}</span>
-      </div>
-      <div className="lista">
-        {conPendientes.map((p) => fila(p, 'pendientes'))}
-        {respondidas.length > 0 && (
-          <>
-            <div className="seccion">Respondidas, sin procesar</div>
-            {respondidas.map((p) => fila(p, 'respondidas'))}
-          </>
-        )}
-      </div>
-      <div className="leyenda">
-        <span className="frena">
-          <span className="cuenta-bandeja frena" aria-hidden="true">
-            2
-          </span>
-          <span>en ámbar: frena el proyecto</span>
-        </span>
-        <span className="ok">
-          <Icono nombre="check" />
-          <span>respondidas; la IA todavía no las leyó</span>
-        </span>
-      </div>
-    </nav>
-  )
-}
 
 const GRUPOS: { titulo: string; de: (p: PendienteVista) => boolean }[] = [
   { titulo: 'Frenan el proyecto', de: (p) => p.estado === 'sin-responder' && p.frena },
@@ -117,51 +30,6 @@ function Siluetas() {
         </div>
       ))}
     </div>
-  )
-}
-
-function Proyecto({ p, abrirDoc }: { p: TarjetaProyecto; abrirDoc: (d: Destino) => void }) {
-  const ficha = usarEstado((s) => fichaDe(s.fichas, p.ruta))
-  const abrirProyecto = usarEstado((s) => s.abrirProyecto)
-  const n = p.preguntas.sinResponder
-  const acciones = (
-    <>
-      <button type="button" className="boton secundario" onClick={() => abrirProyecto(p.ruta)}>
-        <Icono nombre="abrir" />
-        Abrir
-      </button>
-      {ficha?.estado === 'trabajando' ? (
-        <span className="senal">
-          <Icono nombre="sync" gira />
-          La IA trabaja
-        </span>
-      ) : (
-        <button
-          type="button"
-          className={n === 0 ? 'boton principal' : 'boton secundario'}
-          title="Arranca la sesión del proyecto sin abrirlo"
-          onClick={() => void window.iridium.seguir(p.ruta, {})}
-        >
-          <Icono nombre="play" />
-          Seguí
-        </button>
-      )}
-    </>
-  )
-
-  return (
-    <section className="principal-pend">
-      <ListaPendientes
-        p={p}
-        abrirDoc={abrirDoc}
-        cabecera={{
-          titulo: p.nombre,
-          icono: <IconoProyecto p={p} />,
-          sub: p.hito ? textoHito(p.hito) : undefined,
-          acciones,
-        }}
-      />
-    </section>
   )
 }
 
@@ -261,110 +129,5 @@ export function ListaPendientes({
         {pie}
       </div>
     </>
-  )
-}
-
-export function Pendientes() {
-  const lista = usarEstado((s) => s.lista)
-  const elegido = usarEstado((s) => s.pendientesDe)
-  const todos = usarEstado((s) => s.pendientes)
-  const ponerPendientes = usarEstado((s) => s.ponerPendientes)
-  const irAPendientes = usarEstado((s) => s.irAPendientes)
-  const irA = usarEstado((s) => s.irA)
-  const [doc, setDoc] = useState<Destino | null>(null)
-
-  const { conPendientes, respondidas } = columnaPendientes(lista)
-  const enColumna = [...conPendientes, ...respondidas]
-  // El elegido, si sigue en la columna (o se llegó a él desde un proyecto); si no, el primero.
-  const tarjeta =
-    (lista?.tipo === 'lista' ? lista.proyectos.find((p) => p.ruta === elegido) : undefined) ?? enColumna[0]
-  const actual = tarjeta?.ruta ?? null
-  const conError = new Set(
-    Object.values(todos)
-      .filter((x) => x.tipo === 'error')
-      .map((x) => x.ruta),
-  )
-
-  // El elegido queda fijo: al responder, la columna se reordena, pero la vista no salta a otro proyecto (F-3).
-  useEffect(() => {
-    if (actual && actual !== elegido) irAPendientes(actual)
-  }, [actual, elegido, irAPendientes])
-
-  // Se relee cada vez que cambia la lista: la vigilancia avisa cuando cambia un `estado.md` o una respuesta.
-  useEffect(() => {
-    if (!actual || !lista) return
-    let vigente = true
-    void window.iridium.pendientes(actual).then((p) => {
-      if (vigente) ponerPendientes(p)
-    })
-    return () => {
-      vigente = false
-    }
-  }, [actual, lista, ponerPendientes])
-
-  const elegir = useCallback(
-    (ruta: string) => {
-      setDoc(null)
-      irAPendientes(ruta)
-    },
-    [irAPendientes],
-  )
-
-  if (!lista)
-    return (
-      <main className="trabajo">
-        <div className="pend-vista">
-          <nav className="columna" aria-label="Proyectos con algo en la bandeja">
-            <div className="titulo">
-              <h1>Bandeja de entrada</h1>
-            </div>
-            <div className="lista carga" aria-busy="true">
-              {[70, 55, 80].map((w) => (
-                <div key={w} className="proy-silueta">
-                  <span className="linea-silueta" style={{ width: 20, height: 20, borderRadius: 5 }} />
-                  <span className="linea-silueta" style={{ width: `${w}%` }} />
-                </div>
-              ))}
-            </div>
-          </nav>
-          <section className="principal-pend">
-            <Siluetas />
-          </section>
-        </div>
-      </main>
-    )
-
-  if (!tarjeta)
-    return (
-      <main className="trabajo">
-        <div className="pendientes">
-          <div className="mensaje" role="status">
-            <span className="senal">
-              <Icono nombre="check" />
-              Al día
-            </span>
-            <h2>Nada en tu bandeja</h2>
-            <p>Cuando la IA necesite algo de vos, aparece acá.</p>
-            <div className="acc">
-              <button type="button" className="boton secundario" onClick={() => irA('proyectos')}>
-                <Icono nombre="proyectos" />
-                Ir a Proyectos
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
-    )
-
-  return (
-    <main className="trabajo">
-      <div className="pend-vista">
-        <Columna actual={actual} elegir={elegir} conError={conError} />
-        <Proyecto key={tarjeta.ruta} p={tarjeta} abrirDoc={setDoc} />
-        {doc && (
-          <PanelDocumento ruta={tarjeta.ruta} destino={doc} navegar={setDoc} cerrar={() => setDoc(null)} />
-        )}
-      </div>
-    </main>
   )
 }

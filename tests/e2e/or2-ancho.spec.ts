@@ -92,7 +92,7 @@ test('360 px en cada vista; cada una recuerda el suyo y no pasa de la mitad', as
   await win.screenshot({ path: 'test-results/or2-ancho-mitad.png' })
 
   // Skills, con el suyo.
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   await expect(win.getByRole('complementary', { name: 'Chat de Skills' })).toHaveJSProperty(
     'offsetWidth',
     360,
@@ -101,7 +101,7 @@ test('360 px en cada vista; cada una recuerda el suyo y no pasa de la mitad', as
   const skills = await anchoChat(win)
   expect(Math.abs(skills - 320)).toBeLessThanOrEqual(2)
   // Ideas comparte el de la vista general.
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   await expect(win.getByRole('complementary', { name: 'Chat general' })).toHaveJSProperty('offsetWidth', 360)
   await app.close()
 
@@ -112,7 +112,7 @@ test('360 px en cada vista; cada una recuerda el suyo y no pasa de la mitad', as
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', beta)
   await win.getByRole('tab', { name: /Alfa/ }).click()
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', alfa)
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', skills)
   // Doble clic, el de entrada: solo en esta vista.
   await win.keyboard.press('Control+1')

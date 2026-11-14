@@ -135,9 +135,8 @@ test('los menús se recorren con las flechas, Esc vuelve al botón y Tab afuera 
 
 test('al cambiar de pantalla con un atajo o abrir un proyecto con Enter, el foco va al título (Defecto 19)', async () => {
   const { app, win } = await abrir()
-  // Sin nada que responder, Pendientes no tiene título de columna: el foco va a «Nada te espera».
   await win.keyboard.press('Control+2')
-  await expect(win.getByRole('heading', { name: 'Nada en tu bandeja' })).toBeFocused()
+  await expect(win.getByRole('heading', { name: 'Skills', level: 1 })).toBeFocused()
   await win.keyboard.press('Control+1')
   await expect(win.getByRole('heading', { name: 'Proyectos', level: 1 })).toBeFocused()
 

@@ -161,11 +161,11 @@ test('el Mapa en operación: el frente activo, los que esperan y los que están 
   await expect(docs.locator('.barra-doc .nom')).toHaveText('modulos/revision/estado.md')
   await docs.getByRole('button', { name: 'Atrás' }).click()
 
-  // Un T-n en curso abre Trabajo con ese ítem desplegado.
+  // Un T-n en curso abre trabajo.md en Docs, en ese ítem (sin la sección Trabajo, D-112); Atrás vuelve al Mapa.
   await bloque.locator('button.fila-mapa', { hasText: 'T-12' }).click()
-  const trabajo = win.locator('[data-seccion="trabajo"]')
-  await expect(trabajo).toBeVisible()
-  await expect(trabajo).toContainText('Con filtros arriba, no una pestaña por frente.')
+  await expect(docs.locator('.barra-doc .nom')).toHaveText('trabajo.md')
+  await expect(docs.locator('[id="t-12"]')).toBeInViewport()
+  await docs.getByRole('button', { name: 'Atrás' }).click()
 
   // Una pregunta lleva a la Bandeja de entrada.
   await win

@@ -96,9 +96,8 @@ await win.setViewportSize({ width: ancho, height: alto })
 
 // Las secciones de afuera de los proyectos.
 for (const [nombre, atajo] of [
-  ['pendientes', '2'],
-  ['skills', '3'],
-  ['ideas', '4'],
+  ['skills', '2'],
+  ['ideas', '3'],
 ] as const) {
   await paso(nombre, async () => {
     await win.keyboard.press(`Control+${atajo}`)
@@ -106,11 +105,11 @@ for (const [nombre, atajo] of [
   })
 }
 await paso('skills-detalle', async () => {
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   await win.locator('.sk-columna .sk-fila').first().click()
 })
 await paso('ideas-detalle', async () => {
-  await win.keyboard.press('Control+4')
+  await win.keyboard.press('Control+3')
   await win.locator('.id-columna .sk-fila').first().click()
 })
 
@@ -177,7 +176,7 @@ await app.close()
 await writeFile(`${SALIDA}/fallas.txt`, fallas.join('\n'))
 console.log(fallas.length ? `Fallaron ${fallas.length}:\n${fallas.join('\n')}` : 'Sin fallas.')
 
-// La app de hoy con el nombre de su maqueta (DS-7). Los pasos sin maqueta (el menú de la tarjeta, Pendientes) no van.
+// La app de hoy con el nombre de su maqueta (DS-7). Los pasos sin maqueta (el menú de la tarjeta) no van.
 if (appHoy) {
   const MAQUETA: Record<string, string> = {
     grilla: 'grilla',

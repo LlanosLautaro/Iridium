@@ -229,17 +229,6 @@ code,
   color: var(--texto-2);
 }
 
-/* La cuenta de la bandeja (04-ux.md › Un número que manda, D-100), como la Cuenta de las maquetas (PZ-7): el número
-   solo, sin píldora; gris, o ámbar si algo frena (R-50) */
-.cuenta-bandeja {
-  flex: none;
-  font: var(--estilo-codigo);
-  color: var(--texto-3);
-}
-.cuenta-bandeja.frena {
-  color: var(--espera);
-}
-
 /* Un enlace chico dentro de una línea de texto («Ver», «Ver en Framework») */
 .mini-link {
   flex: none;

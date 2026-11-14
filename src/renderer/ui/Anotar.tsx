@@ -15,7 +15,7 @@ export function Anotar({
   anotar: (texto: string) => Promise<ResultadoAnotar>
   /** Ya escrita: el código que le tocó (vacío si es suelta) y el texto anotado. */
   alAnotar?: (codigo: string, texto: string) => void
-  /** A qué va (W-10); en Trabajo, nada: es este proyecto. */
+  /** A qué va (W-10). */
   selector?: ReactNode
   campo?: RefObject<HTMLInputElement | null>
   alEscape?: () => void

@@ -3,13 +3,12 @@
 // «Mostrar detalles» (Q-62): lo que se lee siempre es la pregunta y lo que hay que marcar. Las respondidas sin
 // procesar muestran lo elegido y se pueden corregir hasta que la IA las procesa.
 import { type MouseEvent, useLayoutEffect, useRef, useState } from 'react'
-import type { CitaVista, PendienteVista } from '../../../compartido/puente'
+import type { CitaVista, Destino, PendienteVista } from '../../../compartido/puente'
 import { type Borrador, OTRO, puedeEnviar, tieneAlgo } from '../../../compartido/respuestas'
 import { claveBorrador, usarEstado } from '../../estado'
 import { useAltoDelTexto } from '../../ui/altoDelTexto'
 import { guardarLuego, noGuardar } from '../../ui/guardarLuego'
 import { Icono } from '../../ui/Icono'
-import type { Destino } from './PanelDocumento'
 
 /** Un campo de una línea que crece hacia abajo con lo que se escribe, para leerlo entero. */
 function CampoCrece({

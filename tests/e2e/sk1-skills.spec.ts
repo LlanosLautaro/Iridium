@@ -1,4 +1,4 @@
-// SK-I1 con la app abierta y el motor falso (modulos/skills/diseno-tecnico.md › Pruebas): Ctrl+3, los grupos y la
+// SK-I1 con la app abierta y el motor falso (modulos/skills/diseno-tecnico.md › Pruebas): Ctrl+2, los grupos y la
 // doble, el chat de Skills con «Sobre la skill …», Skills › Framework con Pasar al framework (W-13) y la falta de la
 // carpeta Skills (D-083).
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
@@ -85,10 +85,10 @@ test.afterEach(async () => {
   await rm(base, { recursive: true, force: true, maxRetries: 5 })
 })
 
-test('Ctrl+3: la lista por origen, la doble y Framework con Pasar al framework (SK-1, SK-2, W-13)', async () => {
+test('Ctrl+2: la lista por origen, la doble y Framework con Pasar al framework (SK-1, SK-2, W-13)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
 
   const lista = win.getByRole('navigation', { name: 'Skills' })
   await expect(lista.getByRole('heading', { name: 'Skills' })).toBeVisible()
@@ -168,7 +168,7 @@ test('Ctrl+3: la lista por origen, la doble y Framework con Pasar al framework (
 test('el chat de Skills con «Sobre la skill …» (SK-3)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   const lista = win.getByRole('navigation', { name: 'Skills' })
   await lista.getByTitle('gestor-proyectos', { exact: true }).click()
   const detalle = win.getByRole('region', { name: 'La skill gestor-proyectos' })
@@ -205,7 +205,7 @@ test('el chat de Skills con «Sobre la skill …» (SK-3)', async () => {
 test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   const lista = win.getByRole('navigation', { name: 'Skills' })
   await lista.getByTitle('hitos-desarrollo-app', { exact: true }).click()
   const detalle = win.getByRole('region', { name: 'La skill hitos-desarrollo-app' })
@@ -256,7 +256,7 @@ test('sin la carpeta Skills (no se pudo crear), el aviso en lugar del chat', asy
   await writeFile(join(iridium, 'Skills'), '')
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   await expect(win.getByText('no pudo crearla')).toBeVisible()
   // Sin la carpeta, Framework se ve igual: no depende de las skills.
   await expect(win.getByRole('region', { name: 'Framework' })).toContainText('framework viejo')
@@ -267,7 +267,7 @@ test('sin la carpeta Skills (no se pudo crear), el aviso en lugar del chat', asy
 test('la lista de skills cambia de ancho arrastrando su borde y lo recuerda (R-6)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
-  await win.keyboard.press('Control+3')
+  await win.keyboard.press('Control+2')
   const lista = win.locator('nav.sk-columna')
   await expect(lista.getByTitle('hitos-desarrollo-app', { exact: true })).toBeVisible()
   expect(Math.round((await lista.boundingBox())?.width ?? 0)).toBe(264)
@@ -293,7 +293,7 @@ test('la lista de skills cambia de ancho arrastrando su borde y lo recuerda (R-6
   await app.close()
   const otra = await abrir()
   await expect(otra.win.getByText('Gamma').first()).toBeVisible()
-  await otra.win.keyboard.press('Control+3')
+  await otra.win.keyboard.press('Control+2')
   await expect(otra.win.getByRole('separator', { name: /lista de skills/ })).toHaveAttribute(
     'aria-valuenow',
     '260',

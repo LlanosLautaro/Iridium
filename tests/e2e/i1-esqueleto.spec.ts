@@ -64,11 +64,19 @@ test('la grilla muestra los proyectos en orden, con hito y preguntas; los archiv
   const alfa = win.locator('.tarjeta', { hasText: 'Alfa' })
   await expect(alfa).toContainText('Hito 7 · Construcción')
   // La cuenta arriba a la derecha, amarilla y con «!» porque una frena (D-100); el total, solo en el inicio.
-  await expect(alfa.locator('.cuenta-bandeja')).toHaveText('2')
-  await expect(alfa.locator('.cuenta-bandeja')).toHaveClass(/frena/)
+  await expect(alfa.locator('.cuenta')).toHaveText('2')
+  await expect(alfa.locator('.cuenta')).toHaveClass(/frena/)
   await expect(win.locator('.tarjeta', { hasText: 'Gestor' })).toContainText('Sin estado')
-  await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('2')
-  await expect(win.locator('[aria-label^="Bandeja de entrada"] .badge')).toHaveCount(0)
+  await expect(win.getByRole('button', { name: /^Inicio/ })).toHaveAttribute(
+    'aria-label',
+    /^Inicio, 2 en la bandeja/,
+  )
+  // Sin la Bandeja de todos (D-111): en el inicio, Proyectos, Skills e Ideas.
+  const secciones = win.getByRole('navigation', { name: 'Secciones' }).getByRole('button')
+  await expect(secciones).toHaveCount(4)
+  await expect(secciones.nth(1)).toHaveAttribute('title', 'Skills (Ctrl+2)')
+  await expect(secciones.nth(2)).toHaveAttribute('title', 'Ideas (Ctrl+3)')
+  await expect(win.getByRole('button', { name: /^Bandeja de entrada/ })).toHaveCount(0)
   // Claude abajo solo cuando falla (D-108): con sesión, nada.
   await expect(win.locator('[data-motor="listo"]')).toHaveText('')
 
@@ -88,12 +96,12 @@ test('la grilla se actualiza sola cuando cambia un estado.md o llega una respues
   await expect(beta).toContainText('Hito 1 · Exploración')
   await writeFile(join(raiz, 'Beta', 'docs', 'estado.md'), estado('2 — Definición', '- **Q-1 — ¿Nombre?**'))
   await expect(beta).toContainText('Hito 2 · Definición')
-  await expect(beta.locator('.cuenta-bandeja')).toHaveText('1')
-  await expect(beta.locator('.cuenta-bandeja')).not.toHaveClass(/frena/)
+  await expect(beta.locator('.cuenta')).toHaveText('1')
+  await expect(beta.locator('.cuenta')).not.toHaveClass(/frena/)
 
   await mkdir(join(raiz, 'Beta', 'docs', 'respuestas'))
   await writeFile(join(raiz, 'Beta', 'docs', 'respuestas', 'Q-1.md'), '# Q-1 — ¿Nombre?\n\nBeta.\n')
-  await expect(beta.locator('.cuenta-bandeja')).toHaveCount(0)
+  await expect(beta.locator('.cuenta')).toHaveCount(0)
 
   await proyecto('Nuevo', { '.proyecto.json': ficha('idea') })
   await expect(win.locator('.tarjeta', { hasText: 'Nuevo' })).toBeVisible()
@@ -107,7 +115,7 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
   await expect(cabecera.locator('h1')).toHaveText('Alfa')
   await expect(cabecera).toContainText('Hito 7 · Construcción')
   // La cabecera no repite la cuenta: la tiene la pestaña (W-3).
-  await expect(cabecera.locator('.cuenta-bandeja')).toHaveCount(0)
+  await expect(cabecera.locator('.cuenta')).toHaveCount(0)
   await expect(win.locator('.sin-conversacion')).toContainText('Hacer la grilla.')
   // La barra de íconos es la del proyecto; nada de otro proyecto.
   const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
@@ -120,24 +128,24 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
   )
   await expect(win.locator('[data-seccion="pendientes"] .pend')).toHaveCount(2)
   await expect(win.locator('.trabajo')).not.toContainText('Beta')
-  await expect(win.locator('.ses.activa')).toContainText('Alfa')
+  await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Alfa')
   await expect(win.locator('.chat .compositor')).toBeVisible()
 
   // Las pestañas de los proyectos abiertos quedan (D-043), con sus preguntas; también al volver a abrir la app.
-  await expect(win.locator('.ses', { hasText: 'Alfa' }).locator('.cuenta-bandeja')).toHaveText('2')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).locator('.cuenta')).toHaveText('2')
   await win.getByRole('button', { name: /^Inicio/ }).click()
   await expect(win.locator('.grilla')).toBeVisible()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  await expect(win.locator('.ses .nom')).toHaveText(['Alfa', 'Beta'])
+  await expect(win.locator('.barra-proyectos .nom')).toHaveText(['Alfa', 'Beta'])
   await app.close()
   const otra = await abrir()
-  await expect(otra.win.locator('.ses .nom')).toHaveText(['Alfa', 'Beta'])
-  await otra.win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana-ses').click()
+  await expect(otra.win.locator('.barra-proyectos .nom')).toHaveText(['Alfa', 'Beta'])
+  await otra.win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
   await expect(otra.win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
   // × la saca de la barra; si era la abierta, se vuelve al inicio.
   await otra.win.getByRole('button', { name: 'Cerrar Alfa' }).click()
   await expect(otra.win.locator('.grilla')).toBeVisible()
-  await expect(otra.win.locator('.ses .nom')).toHaveText(['Beta'])
+  await expect(otra.win.locator('.barra-proyectos .nom')).toHaveText(['Beta'])
   await otra.app.close()
 })
 

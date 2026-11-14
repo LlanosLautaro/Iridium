@@ -1,5 +1,5 @@
-// Lo que está siempre (04-ux.md › W-1, D-041): la barra de título con el inicio y las sesiones, la barra de íconos
-// (cambia entre el inicio y el proyecto abierto) y la de estado.
+// Lo que está siempre (04-ux.md › W-1, D-041), como el marco de las maquetas (DI-I3, tanda 4): arriba el inicio y la
+// barra de proyectos, a la izquierda la de secciones (cambia entre el inicio y el proyecto abierto) y abajo la de estado.
 import { type ReactNode, useEffect, useState } from 'react'
 import { estadoActualizar, tiempoArmando } from '../../compartido/actualizar'
 import { textoDeCuenta } from '../../compartido/cuentas'
@@ -36,16 +36,16 @@ function BotonActividad({
   return (
     <button
       type="button"
-      className={activa ? 'act activo' : 'act'}
+      className={activa ? 'act elegida' : 'act'}
       title={`${nombre}${detalle}${n > 0 ? ` · ${n} ${queCuenta}` : ''}`}
       aria-label={`${nombre}${n > 0 ? `, ${n} ${queCuenta}` : ''}`}
       aria-current={activa ? 'page' : undefined}
       onClick={alTocar}
     >
       <Icono nombre={icono} />
-      {/* Solo los comentarios abiertos de la Revisión, un punto gris: esperan a la IA, no al usuario (R-50). La bandeja
-      no lleva marca en su ícono: el total está en el botón de inicio y el de cada proyecto, en su pestaña. */}
-      {n > 0 && <span className="badge neutro">{n > 99 ? '99+' : n}</span>}
+      {/* Solo los comentarios abiertos de la Revisión, un punto gris: esperan a la IA, no al usuario (R-50); el número
+      está en el nombre. La bandeja no lleva marca en su ícono: lo de cada proyecto está en su pestaña. */}
+      {n > 0 && <span className="punto" />}
     </button>
   )
 }
@@ -57,7 +57,7 @@ function BotonAjustes() {
   return (
     <button
       type="button"
-      className={abierta ? 'act activo boton-ajustes' : 'act boton-ajustes'}
+      className={abierta ? 'act elegida boton-ajustes' : 'act boton-ajustes'}
       title="Ajustes (Ctrl+,)"
       aria-label="Ajustes"
       aria-haspopup="dialog"
@@ -68,7 +68,7 @@ function BotonAjustes() {
   )
 }
 
-/** La barra de íconos (D-041): en el inicio, Proyectos y Pendientes; dentro de un proyecto, sus secciones. */
+/** La barra de secciones (D-041): en el inicio, Proyectos, Skills e Ideas (D-111); dentro de un proyecto, las suyas. */
 function BarraActividad() {
   const seccion = usarEstado((s) => s.seccion)
   const lista = usarEstado((s) => s.lista)
@@ -100,7 +100,7 @@ function BarraActividad() {
     return (
       <nav className="actividad" aria-label="Secciones del proyecto">
         {visibles.filter((s) => s.grupo === 'sigue').map(boton)}
-        {visibles.some((s) => s.grupo === 'sigue') && <hr className="act-linea" />}
+        {visibles.some((s) => s.grupo === 'sigue') && <div className="sep" />}
         {visibles.filter((s) => s.grupo === 'dentro').map(boton)}
         <BotonAjustes />
       </nav>
@@ -167,8 +167,8 @@ export function SenalSesion({ ficha }: { ficha: FichaSesion }) {
 }
 
 /**
- * El botón de arriba a la izquierda (D-041): el inicio, con el único total de la bandeja de la app (04-ux.md › Un
- * número que manda); gris, o amarillo con «!» si algo frena.
+ * El botón de arriba a la izquierda (D-041, R-22): el inicio, con un punto si algo espera en algún proyecto (04-ux.md ›
+ * Un número que manda); gris, o ámbar si algo frena. El número, al pasar el mouse (R-50).
  */
 function BotonInicio() {
   const seccion = usarEstado((s) => s.seccion)
@@ -179,13 +179,14 @@ function BotonInicio() {
   return (
     <button
       type="button"
-      className={seccion === 'proyecto' ? 'inicio' : 'inicio activo'}
-      title={`Proyectos y Bandeja de entrada${detalle}`}
+      className="boton-menu"
+      title={`Inicio${detalle}`}
       aria-label={`Inicio${detalle}`}
+      aria-current={seccion === 'proyecto' ? undefined : 'page'}
       onClick={irAlInicio}
     >
-      <Icono nombre="marca" />
-      <Cuenta n={n} frenan={frenan} clase="en-inicio" />
+      <Icono nombre="inicio" />
+      {n > 0 && <span className={frenan > 0 ? 'punto ambar' : 'punto'} />}
     </button>
   )
 }
@@ -210,9 +211,9 @@ function EstadoPestana({
 }
 
 /**
- * La barra de título propia (D-041): el inicio y una pestaña por cada proyecto abierto, con su ícono (Q-62), que
- * queda aunque no trabaje (D-043); tocar una abre el proyecto y × la cierra (salvo mientras la IA trabaja). Se
- * arrastra desde el espacio libre; los tres botones de la derecha los dibuja Windows.
+ * La barra de título propia (D-041): el inicio y la barra de proyectos, una pestaña por cada proyecto abierto, con su
+ * ícono (Q-62), que queda aunque no trabaje (D-043); tocar una abre el proyecto y × la cierra (salvo mientras la IA
+ * trabaja). Se arrastra desde el espacio libre; los tres botones de la derecha los dibuja Windows.
  */
 function BarraTitulo() {
   const fichas = usarEstado((s) => s.fichas)
@@ -222,25 +223,23 @@ function BarraTitulo() {
   const abierto = usarEstado((s) => s.proyectoAbierto)
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
   const cerrarPestana = usarEstado((s) => s.cerrarPestana)
-  // Las guardadas que siguen en la carpeta, más las sesiones que arrancaron sin abrir el proyecto (Seguí desde
-  // Pendientes) y el abierto.
+  // Las guardadas que siguen en la carpeta, más las sesiones que arrancaron sin abrir el proyecto y el abierto.
   const rutas = guardadas.filter((r) => lista?.tipo !== 'lista' || tarjetaDe(lista, r))
   for (const r of [...fichas.map((f) => f.ruta), ...(abierto ? [abierto] : [])])
     if (!rutas.includes(r)) rutas.push(r)
   return (
     <header className="titulo">
       <BotonInicio />
-      <div className="sesiones" role="tablist" aria-label="Proyectos abiertos">
+      <div className="barra-proyectos" role="tablist" aria-label="Proyectos abiertos">
         {rutas.map((ruta) => {
           const tarjeta = tarjetaDe(lista, ruta)
           const ficha = fichas.find((f) => f.ruta === ruta) ?? null
           const nombre = tarjeta?.nombre ?? ruta.split(/[\\/]/).pop() ?? ruta
           const activa = seccion === 'proyecto' && abierto === ruta
           return (
-            <div key={ruta} className={activa ? 'ses activa' : 'ses'}>
+            <div key={ruta} className={activa ? 'proy elegido' : 'proy'}>
               <button
                 type="button"
-                className="pestana-ses"
                 role="tab"
                 aria-selected={activa}
                 title={`Abrir ${nombre}`}

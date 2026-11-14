@@ -25,7 +25,7 @@ import type { Borrador } from '../compartido/respuestas'
 import { seccionDeEntrada } from './secciones/proyecto/entrada'
 import { guardarLuego } from './ui/guardarLuego'
 
-export type Seccion = 'proyectos' | 'pendientes' | 'skills' | 'ideas' | 'proyecto'
+export type Seccion = 'proyectos' | 'skills' | 'ideas' | 'proyecto'
 
 /** Las secciones de la ventana de Ajustes (AJ-W1); el frente Compartir suma las suyas. */
 export type SeccionAjustes = 'perfil' | 'ia' | 'apariencia' | 'proyectos' | 'acerca'
@@ -36,7 +36,6 @@ export type SeccionProyecto =
   | 'pendientes'
   | 'mapa'
   | 'docs'
-  | 'trabajo'
   | 'archivos'
   | 'revision'
   | 'git'
@@ -56,7 +55,6 @@ export interface PasoAtras {
   archivo?: string | null
   linea?: number | null
   comentario?: string | null
-  item?: string | null
 }
 
 /** Lo que cada proyecto recuerda mientras la app está abierta. */
@@ -73,8 +71,6 @@ export interface VistaProyecto {
   carpetas: string[]
   /** El comentario de la Revisión que se ve entero (`R-14`); null = la lista. */
   comentario: string | null
-  /** El `T-n` que se abrió en Trabajo desde un enlace (se despliega y se ve); null = ninguno. */
-  item: string | null
   /** Lo elegido en Git: un commit, `sin-guardar` o null (lo primero que haya). */
   commit: string | null
   /** El archivo sin guardar que se mira solo en Git; null = la lista de todos. */
@@ -95,7 +91,6 @@ const VISTA_INICIAL: VistaProyecto = {
   linea: null,
   carpetas: [],
   comentario: null,
-  item: null,
   commit: null,
   archivoGit: null,
   gitPlegadas: [],
@@ -163,8 +158,6 @@ interface EstadoApp {
   conversaciones: Record<string, ConversacionVista>
   /** Las sesiones abiertas desde que se abrió la app, en el orden en que se abrieron (H-2). */
   fichas: FichaSesion[]
-  /** El proyecto elegido en Pendientes (W-5); null = el primero de la columna. */
-  pendientesDe: string | null
   /** Los pendientes de cada proyecto que se miró, tal como llegaron. */
   pendientes: Record<string, PendientesProyecto>
   /** Lo escrito en cada pendiente y todavía no enviado, por `ruta|Q-n`: no se pierde al cambiar (W-5). */
@@ -228,8 +221,6 @@ interface EstadoApp {
   escribirEnCampo(ruta: string, texto: string): void
   soltarCampo(ruta: string): void
   irA(seccion: Exclude<Seccion, 'proyecto'>): void
-  /** Pendientes, con ese proyecto elegido (desde Responder o desde un proyecto). */
-  irAPendientes(ruta?: string): void
   /** Los pendientes dentro del proyecto (su primera sección): desde un aviso o desde el proyecto mismo. */
   responderEn(ruta: string): void
   ponerPendientes(p: PendientesProyecto): void
@@ -256,7 +247,7 @@ interface EstadoApp {
   abrirComentario(ruta: string, codigo: string | null): void
   /** Abre Diseño con una maqueta grande (relativa a `docs/diseno/`), desde un comentario; lo de antes queda para Atrás. */
   abrirMaqueta(ruta: string, maqueta: string): void
-  /** Abre Trabajo en un `T-n` (F-4); lo de antes queda para Atrás. */
+  /** Abre `docs/trabajo.md` en Docs, en ese `T-n` (F-4; sin la sección Trabajo, D-112); lo de antes queda para Atrás. */
   abrirTrabajo(ruta: string, codigo: string): void
   /** Vuelve un paso: a la sección, al documento o al archivo de antes. */
   volver(ruta: string): void
@@ -320,7 +311,6 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   iniciandoSesion: false,
   conversaciones: {},
   fichas: [],
-  pendientesDe: null,
   pendientes: {},
   borradores: {},
   paraElCampo: {},
@@ -379,11 +369,6 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   irA: (seccion) => {
     soltarVista(get())
     set({ seccion, inicio: seccion })
-    noAbierto(get())
-  },
-  irAPendientes: (ruta) => {
-    soltarVista(get())
-    set({ seccion: 'pendientes', inicio: 'pendientes', ...(ruta ? { pendientesDe: ruta } : {}) })
     noAbierto(get())
   },
   responderEn: (ruta) => {
@@ -471,11 +456,8 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     const v = vistaDe(get().vistas, ruta)
     get().cambiarVista(ruta, { seccion: 'diseno', maqueta, atras: conPaso(v) })
   },
-  abrirTrabajo: (ruta, codigo) => {
-    const v = vistaDe(get().vistas, ruta)
-    if (v.seccion === 'trabajo' && v.item === codigo) return
-    get().cambiarVista(ruta, { seccion: 'trabajo', item: codigo, atras: conPaso(v) })
-  },
+  abrirTrabajo: (ruta, codigo) =>
+    get().abrirDoc(ruta, { documento: 'docs/trabajo.md', ancla: codigo.toLowerCase() }),
   volver: (ruta) => {
     const v = vistaDe(get().vistas, ruta)
     const paso = v.atras.at(-1)
@@ -483,10 +465,10 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     get().cambiarVista(ruta, {
       seccion: paso.seccion,
       atras: v.atras.slice(0, -1),
-      ...(paso.doc ? { doc: { ...paso.doc } } : {}),
+      // En Docs sin documento elegido se veía el primero (`estado.md`): se vuelve a él.
+      ...(paso.seccion === 'docs' ? { doc: paso.doc ? { ...paso.doc } : null } : {}),
       ...(paso.archivo !== undefined ? { archivo: paso.archivo, linea: paso.linea ?? null } : {}),
       ...(paso.comentario !== undefined ? { comentario: paso.comentario } : {}),
-      ...(paso.item !== undefined ? { item: paso.item } : {}),
     })
   },
   ponerLista: (lista) => set({ lista }),
@@ -572,7 +554,6 @@ function conPaso(v: VistaProyecto, arriba?: number): PasoAtras[] {
     paso.linea = v.linea
   }
   if (v.seccion === 'revision') paso.comentario = v.comentario
-  if (v.seccion === 'trabajo') paso.item = v.item
   return [...v.atras, paso].slice(-PASOS_ATRAS)
 }
 
@@ -695,26 +676,6 @@ export function totalBandeja(lista: ListaProyectos | null): { n: number; frenan:
     frenan += p.preguntas.frenan
   }
   return { n, frenan }
-}
-
-/**
- * La columna de Pendientes (W-5): los proyectos no archivados con algo sin responder, primero los que tienen alguno
- * que frena (después, en el orden de la grilla), y aparte los que solo tienen respondidas sin procesar.
- */
-export function columnaPendientes(lista: ListaProyectos | null): {
-  conPendientes: TarjetaProyecto[]
-  respondidas: TarjetaProyecto[]
-} {
-  if (lista?.tipo !== 'lista') return { conPendientes: [], respondidas: [] }
-  const vivos = lista.proyectos.filter((p) => !p.archivado)
-  const con = vivos.filter((p) => p.preguntas.sinResponder > 0)
-  return {
-    conPendientes: [
-      ...con.filter((p) => p.preguntas.frenan > 0),
-      ...con.filter((p) => p.preguntas.frenan === 0),
-    ],
-    respondidas: vivos.filter((p) => p.preguntas.sinResponder === 0 && p.preguntas.respondidas > 0),
-  }
 }
 
 /** Suma las entradas nuevas; una que ya estaba (la del control al terminar de corregir, W-12) se cambia en su lugar. */

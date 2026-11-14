@@ -263,9 +263,6 @@ for (const tema of ['negro']) {
     const win = abierta.win
     await pantalla(win, tema, 'proyectos')
     await win.keyboard.press('Control+2')
-    await win.waitForSelector('.pend, .pendientes, h1', { timeout: 10_000 }).catch(() => {})
-    await pantalla(win, tema, 'pendientes')
-    await win.keyboard.press('Control+3')
     await win.waitForSelector('.sk-columna .sk-fila', { timeout: 30_000 })
     await pantalla(win, tema, 'skills')
     // Ajustes, con Ctrl+, y cada pestaña; Escape cierra y devuelve el foco.

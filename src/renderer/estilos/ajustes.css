@@ -1,6 +1,7 @@
 /* La ventana de Ajustes (modulos/apariencia/ux.md › AJ-W1; maqueta docs/ui/vista-ajustes.html). */
 .boton-ajustes {
   margin-top: auto;
+  margin-bottom: var(--esp-2);
 }
 
 .ajustes-velo {

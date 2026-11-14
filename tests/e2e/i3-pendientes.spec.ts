@@ -1,6 +1,6 @@
-// I-3: Pendientes con el motor falso: la columna de proyectos, responder una decisión y una prueba (también a
-// medias), «Ver entero» en el panel, cambiar algo afuera mientras se responde, Seguí resaltado y Responder desde la
-// conversación (H-9, H-10, H-11, F-3).
+// I-3: la Bandeja de entrada de cada proyecto con el motor falso (sin la Bandeja de todos, D-111): responder una
+// decisión y una prueba (también a medias), «Ver entero» en Docs, cambiar algo afuera mientras se responde y Responder
+// desde la conversación (H-9, H-10, H-11, F-3).
 import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -52,6 +52,17 @@ async function abrir(extra: Record<string, string> = {}): Promise<{ app: Electro
   return { app, win }
 }
 
+/** La Bandeja de entrada de un proyecto, desde la grilla. */
+async function bandeja(win: Page, nombre: string) {
+  await win.keyboard.press('Control+1')
+  await win.locator('.tarjeta', { hasText: nombre }).click()
+  await win
+    .getByRole('navigation', { name: 'Secciones del proyecto' })
+    .getByRole('button', { name: /^Bandeja de entrada/ })
+    .click()
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText(nombre)
+}
+
 test.beforeEach(async () => {
   raiz = await mkdtemp(join(tmpdir(), 'iridium-e2e-'))
   datos = await mkdtemp(join(tmpdir(), 'iridium-e2e-datos-'))
@@ -81,18 +92,11 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 5 })
 })
 
-test('la columna, los pendientes con lo que citan y «Ver entero» en el panel (H-9)', async () => {
+test('los pendientes del proyecto con lo que citan y «Ver entero» en Docs (H-9)', async () => {
   const { app, win } = await abrir()
-  await win
-    .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Bandeja de entrada/ })
-    .click()
-  const columna = win.locator('.columna')
-  // Primero el que tiene alguno que frena; aparte, el que solo tiene respondidas sin procesar.
-  await expect(columna.locator('.proy')).toHaveText([/Alfa.*2/, /Beta.*1/, /Gestor.*1/])
-  await expect(columna.locator('.seccion')).toHaveText('Respondidas, sin procesar')
-  await expect(columna.locator('.titulo .n')).toHaveText('3')
-  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
+  // Alfa tiene preguntas: se entra por su Bandeja.
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await expect(win.locator('.act.elegida')).toHaveAttribute('aria-label', /^Bandeja de entrada/)
 
   const q7 = win.locator('.pend[data-q="Q-7"]')
   await expect(q7.locator('.meta')).toContainText('decisión')
@@ -103,30 +107,27 @@ test('la columna, los pendientes con lo que citan y «Ver entero» en el panel (
   await expect(q7.locator('.cita').first()).toContainText('Las miniaturas se generan al importar')
   await expect(q7.locator('.cita').nth(1)).toContainText('Grilla de cuatro columnas')
   await expect(q7.locator('.opcion-radio').first()).toContainText('recomendada')
-  await expect(win.locator('.grupo')).toHaveText(['Frenan el proyecto', 'Sin responder'])
+  await expect(win.locator('.grupo-pend .grupo')).toHaveText(['Frenan el proyecto', 'Sin responder'])
   await win.screenshot({ path: 'test-results/i3-pendientes.png' })
 
+  // «Ver entero» abre el documento en Docs, en su sección; Atrás vuelve a la Bandeja.
   await q7.locator('.cita').nth(1).getByRole('button', { name: 'Ver entero' }).click()
-  const panel = win.locator('.panel-doc')
-  await expect(panel.locator('.ruta')).toHaveText('04-ux.md')
-  await expect(panel.locator('.marcada')).toHaveText('W-14 — Galería')
-  await expect(panel).toContainText('W-13 — Inicio')
+  const docs = win.locator('[data-seccion="docs"]')
+  await expect(docs.locator('.barra-doc .nom')).toHaveText('04-ux.md')
+  await expect(docs.locator('[id="w-14"]')).toBeInViewport()
   await win.screenshot({ path: 'test-results/i3-ver-entero.png' })
-  await win.keyboard.press('Escape')
-  await expect(panel).toHaveCount(0)
+  await win.keyboard.press('Alt+ArrowLeft')
+  await expect(q7).toBeVisible()
 
-  // Los códigos del contexto también abren el panel.
+  // Los códigos del contexto también llevan a su documento.
   await q7.locator('.contexto a', { hasText: 'D-032' }).click()
-  await expect(panel.locator('.ruta')).toHaveText('decisiones.md')
+  await expect(docs.locator('.barra-doc .nom')).toHaveText('decisiones.md')
   await app.close()
 })
 
-test('responder una decisión y una prueba, también a medias; Seguí resaltado al final (H-10, H-11, F-3)', async () => {
+test('responder una decisión y una prueba, también a medias (H-10, H-11, F-3)', async () => {
   const { app, win } = await abrir()
-  await win
-    .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Bandeja de entrada/ })
-    .click()
+  await bandeja(win, 'Alfa')
   const q7 = win.locator('.pend[data-q="Q-7"]')
   const enviar7 = q7.getByRole('button', { name: 'Enviar' })
   await expect(enviar7).toBeDisabled()
@@ -137,10 +138,12 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-7.md'), 'utf8')).toBe(
     '# Q-7 — ¿La miniatura muestra el modelo 3D o la textura plana?\n\n**Opción:** B) plana\n\nMás liviana.\n',
   )
-  // Baja el total del inicio y el número de la columna, que se reordena; la vista sigue en Alfa.
-  await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('2')
-  await expect(win.locator('.proy', { hasText: 'Alfa' })).toContainText('1')
-  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
+  // Baja el total del inicio y la cuenta de la pestaña.
+  await expect(win.getByRole('button', { name: /^Inicio/ })).toHaveAttribute(
+    'aria-label',
+    /^Inicio, 2 en la bandeja/,
+  )
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).locator('.cuenta')).toHaveText('1')
 
   // La prueba: lo escrito sigue al ir a otro proyecto y volver.
   const q8 = win.locator('.pend[data-q="Q-8"]')
@@ -155,15 +158,14 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
   expect((await nota.boundingBox())?.height ?? 0).toBeGreaterThan(alto * 2)
   await nota.fill('')
   await q8.getByRole('textbox', { name: 'Nota de: Clasifica en Pendientes' }).fill('no aparece la tarjeta')
-  await win.locator('.proy', { hasText: 'Beta' }).click()
-  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Beta')
-  await win.locator('.proy', { hasText: 'Alfa' }).click()
+  await bandeja(win, 'Beta')
+  await bandeja(win, 'Alfa')
   await expect(q8.getByRole('checkbox', { name: 'Abre la app sin errores' })).toBeChecked()
 
   // A medias: queda en Iridium, no en el proyecto.
   await q8.getByRole('button', { name: 'Guardar a medias' }).click()
   await expect(q8.locator('.meta')).toContainText('A medias')
-  await expect(win.locator('.grupo')).toHaveText(['A medias', 'Respondidas, sin procesar'])
+  await expect(win.locator('.grupo-pend .grupo')).toHaveText(['A medias', 'Respondidas, sin procesar'])
   expect(await readdir(join(raiz, 'Alfa', 'docs', 'respuestas'))).toEqual(['Q-7.md'])
   await win.screenshot({ path: 'test-results/i3-a-medias.png' })
 
@@ -181,34 +183,18 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
     ].join('\n'),
   )
 
-  // Nada sin responder: Seguí resaltado; arranca la sesión sin abrir el proyecto.
-  const segui = win.locator('.principal-pend .cab-seccion').getByRole('button', { name: 'Seguí' })
-  await expect(segui).toHaveClass(/principal/)
-  await expect(win.locator('.principal-pend .cab-seccion .cuenta-bandeja')).toHaveCount(0)
-  await win.screenshot({ path: 'test-results/i3-todo-respondido.png' })
-  await segui.click()
-  await expect(win.locator('.principal-pend .cab-seccion')).toContainText('La IA trabaja')
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Trabajando')
-  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
-
   // Corregir una respondida.
   await q7.getByRole('button', { name: 'Corregir' }).click()
   await q7.getByText('3D', { exact: true }).click()
   await q7.getByRole('button', { name: 'Enviar' }).click()
   await expect(q7.locator('.respuesta')).toContainText('3D')
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-7.md'), 'utf8')).toContain('A) 3D')
-  // Con la IA trabajando, cerrar pregunta (F-6): se espera a que termine.
-  await expect(win.locator('.ses', { hasText: 'Alfa' })).not.toContainText('Trabajando')
   await app.close()
 })
 
 test('si la respuesta cambió afuera, pregunta antes de reemplazarla', async () => {
   const { app, win } = await abrir()
-  await win
-    .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Bandeja de entrada/ })
-    .click()
-  await win.locator('.proy', { hasText: 'Beta' }).click()
+  await bandeja(win, 'Beta')
   const q2 = win.locator('.pend[data-q="Q-2"]')
   await q2.getByText('Notas', { exact: true }).click()
   // Mientras tanto, alguien la responde desde el Gestor.
@@ -253,10 +239,7 @@ test('sin nada que responder: «Nada en tu bandeja»', async () => {
   await rm(join(raiz, 'Gestor'), { recursive: true })
   await proyecto('Alfa', { '.proyecto.json': ficha, 'docs/estado.md': estado('(ninguna)') })
   const { app, win } = await abrir()
-  await win
-    .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Bandeja de entrada/ })
-    .click()
-  await expect(win.locator('.mensaje h2')).toHaveText('Nada en tu bandeja')
+  await bandeja(win, 'Alfa')
+  await expect(win.locator('[data-seccion="pendientes"]')).toContainText('Nada en tu bandeja')
   await app.close()
 })

@@ -171,7 +171,7 @@ const VIEJAS = [
 /** Las clases viejas que todavía tiene cada sección. */
 const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
-  'base.css': ['mini-link', 'cuenta-bandeja', 'cab-filtros', 'cab-filtro'],
+  'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
   'conversacion.css': ['aviso-afuera', 'md'],
   'git.css': [
     'commit',
@@ -184,32 +184,21 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'git-cuenta',
     'opcion-radio',
   ],
-  'ideas.css': ['columna', 'anotar', 'menu-boton', 'menu-lista'],
-  'marco.css': [
-    'actualizar',
-    'menu-boton',
-    'cuenta-bandeja',
-    'badge',
-    'menu-lista',
-    'ses',
-    'desplegable',
-    'pestana-ses',
-  ],
+  // DI-I3, tanda 4: las filas y los grupos de Trabajo pasaron de trabajo.css (sin la sección, D-112) a Ideas, que los usa
+  'ideas.css': ['tb-fila', 'columna', 'plegable', 'anotar', 'menu-boton', 'menu-lista'],
+  'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
   'pendientes.css': [
     'columna',
-    'panel-doc',
     'respuesta',
     'pend',
     'aviso-doc',
     'falla',
     'gp-casilla',
     'frente-q',
-    'cab-panel',
     'doc-texto',
     'opcion-radio',
     'campo-texto',
     'punto-casilla',
-    'cuenta-proy',
   ],
   'proyecto.css': [
     'atras',
@@ -240,7 +229,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'peligro',
     'aviso-grilla',
     'mudanza',
-    'cuenta-bandeja',
     'aviso-fw',
     'menu-contextual',
     'cab-proyecto',
@@ -257,7 +245,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'arbol-lista',
     'arbol-nodo',
   ],
-  'trabajo.css': ['tb-fila', 'plegable', 'anotar', 'cab-filtro'],
   'uso.css': [
     'falla-motor',
     'menu-boton',
@@ -272,19 +259,19 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 
 /** Cuántas veces se usa cada token de antes (`tokens-viejos.css`) en la app: como mucho esto. */
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
-  '--lateral': 5,
-  '--barra': 2,
-  '--caja': 30,
+  '--lateral': 3,
+  '--barra': 1,
+  '--caja': 29,
   '--medidor-fondo': 5,
-  '--primario': 53,
+  '--primario': 49,
   '--primario-texto': 13,
   '--trabaja': 3,
-  '--ok': 21,
+  '--ok': 20,
   '--sobre-color': 1,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,
-  '--radio-medidor': 7,
+  '--radio-medidor': 5,
   '--sombra-flotante': 1,
 }
 

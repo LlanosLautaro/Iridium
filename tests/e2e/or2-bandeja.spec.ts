@@ -88,19 +88,19 @@ test.afterEach(async () => {
 test('un número que manda: el total en el inicio, la cuenta de cada tarjeta y pestaña; amarillo solo si frena', async () => {
   const { app, win } = await abrir()
   // El total de los dos proyectos, sin la en pausa (3 de Alfa y 1 de Beta); amarillo porque una de Alfa frena.
-  const inicio = win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')
-  await expect(inicio).toHaveText('4')
-  await expect(inicio).toHaveClass(/frena/)
-  await expect(win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.cuenta-bandeja')).toHaveClass(/frena/)
-  const beta = win.locator('.tarjeta', { hasText: 'Beta' }).locator('.cuenta-bandeja')
+  const inicio = win.getByRole('button', { name: /^Inicio/ })
+  await expect(inicio).toHaveAttribute('aria-label', /^Inicio, 4 en la bandeja; una frena/)
+  await expect(inicio.locator('.punto')).toHaveClass(/ambar/)
+  await expect(win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.cuenta')).toHaveClass(/frena/)
+  const beta = win.locator('.tarjeta', { hasText: 'Beta' }).locator('.cuenta')
   await expect(beta).toHaveText('1')
   await expect(beta).not.toHaveClass(/frena/)
-  // El ícono de la Bandeja no repite el número.
-  await expect(win.getByRole('navigation', { name: 'Secciones' }).locator('.badge')).toHaveCount(0)
+  // Los íconos de la barra no repiten el número.
+  await expect(win.getByRole('navigation', { name: 'Secciones' }).locator('.punto')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/or2-proyectos.png' })
 
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  const pestana = win.locator('.ses', { hasText: 'Beta' }).locator('.cuenta-bandeja')
+  const pestana = win.locator('.barra-proyectos .proy', { hasText: 'Beta' }).locator('.cuenta')
   await expect(pestana).toHaveText('1')
   await expect(pestana).not.toHaveClass(/frena/)
   await app.close()
@@ -108,12 +108,9 @@ test('un número que manda: el total en el inicio, la cuenta de cada tarjeta y p
 
 test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar y las en pausa al final, plegadas', async () => {
   const { app, win } = await abrir()
-  await win
-    .getByRole('navigation', { name: 'Secciones' })
-    .getByRole('button', { name: /^Bandeja de entrada/ })
-    .click()
-  await expect(win.locator('.columna h1')).toHaveText('Bandeja de entrada')
-  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Alfa')
+  // Alfa tiene preguntas: se entra por su Bandeja (sin la Bandeja de todos, D-111).
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await expect(win.locator('[data-seccion="pendientes"] .cab-seccion h2')).toHaveText('Bandeja de entrada')
 
   const filtros = win.getByRole('group', { name: 'Filtrar por frente' }).getByRole('button')
   await expect(filtros).toHaveText(['Todos 3', 'Núcleo 1', 'Compartir 2'])
@@ -140,8 +137,10 @@ test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar 
   await win.screenshot({ path: 'test-results/or2-bandeja-pausa.png' })
 
   // Beta, con un solo frente: sin filtros.
-  await win.locator('.proy', { hasText: 'Beta' }).click()
-  await expect(win.locator('.principal-pend .cab-seccion h2')).toHaveText('Beta')
+  await win.keyboard.press('Control+1')
+  await win.locator('.tarjeta', { hasText: 'Beta' }).click()
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
+  await expect(win.locator('[data-seccion="pendientes"] .pend').first()).toBeVisible()
   await expect(win.getByRole('group', { name: 'Filtrar por frente' })).toHaveCount(0)
   await app.close()
 })

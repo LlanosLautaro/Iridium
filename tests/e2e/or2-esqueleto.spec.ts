@@ -83,7 +83,9 @@ async function barra(win: Page): Promise<string[]> {
   return win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
     .locator(':scope > *')
-    .evaluateAll((els) => els.map((e) => (e.tagName === 'HR' ? '—' : (e.getAttribute('aria-label') ?? ''))))
+    .evaluateAll((els) =>
+      els.map((e) => (e.classList.contains('sep') ? '—' : (e.getAttribute('aria-label') ?? ''))),
+    )
 }
 
 test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa; después, como se lo dejó', async () => {
@@ -99,7 +101,6 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   expect(await barra(win)).toEqual([
     'Bandeja de entrada',
     'Mapa',
-    'Trabajo',
     'Revisión',
     'Diseño',
     '—',
@@ -112,7 +113,7 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   await win.screenshot({ path: 'test-results/or2-esqueleto-alfa.png' })
 
   // Beta no tiene nada en la bandeja: entra al Mapa.
-  await win.locator('button.inicio').click()
+  await win.locator('button.boton-menu').click()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   await expect(actual).toHaveAttribute('aria-label', 'Mapa')
   await expect(win.locator('[data-seccion="mapa"]')).toBeVisible()
@@ -123,8 +124,8 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
     .getByRole('navigation', { name: 'Secciones del proyecto' })
     .getByRole('button', { name: 'Docs' })
     .click()
-  await win.locator('button.inicio').click()
-  await win.locator('.ses', { hasText: 'Beta' }).locator('.pestana-ses').click()
+  await win.locator('button.boton-menu').click()
+  await win.locator('.barra-proyectos .proy', { hasText: 'Beta' }).getByRole('tab').click()
   await expect(actual).toHaveAttribute('aria-label', 'Docs')
   await app.close()
 })
