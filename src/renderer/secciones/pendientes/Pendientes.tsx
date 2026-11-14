@@ -39,14 +39,14 @@ function Columna({
     let cuenta: ReactNode = <Cuenta n={sinResponder} frenan={frenan} />
     if (conError.has(p.ruta))
       cuenta = (
-        <span className="cuenta error">
+        <span className="cuenta-proy error">
           <Icono nombre="error" />
           Error
         </span>
       )
     else if (tipo === 'respondidas')
       cuenta = (
-        <span className="cuenta ok" title="Respondidas, sin procesar">
+        <span className="cuenta-proy ok" title="Respondidas, sin procesar">
           <Icono nombre="check" />
           {r}
         </span>
@@ -126,7 +126,7 @@ function Proyecto({ p, abrirDoc }: { p: TarjetaProyecto; abrirDoc: (d: Destino) 
   const n = p.preguntas.sinResponder
   const acciones = (
     <>
-      <button type="button" className="btn secundario" onClick={() => abrirProyecto(p.ruta)}>
+      <button type="button" className="boton secundario" onClick={() => abrirProyecto(p.ruta)}>
         <Icono nombre="abrir" />
         Abrir
       </button>
@@ -138,7 +138,7 @@ function Proyecto({ p, abrirDoc }: { p: TarjetaProyecto; abrirDoc: (d: Destino) 
       ) : (
         <button
           type="button"
-          className={n === 0 ? 'btn secundario resaltado' : 'btn secundario'}
+          className={n === 0 ? 'boton principal' : 'boton secundario'}
           title="Arranca la sesión del proyecto sin abrirlo"
           onClick={() => void window.iridium.seguir(p.ruta, {})}
         >
@@ -205,7 +205,7 @@ export function ListaPendientes({
             <div className="acc">
               <button
                 type="button"
-                className="btn secundario"
+                className="boton secundario"
                 onClick={() => void window.iridium.pendientes(p.ruta).then(ponerPendientes)}
               >
                 <Icono nombre="reintentar" />
@@ -346,7 +346,7 @@ export function Pendientes() {
             <h2>Nada en tu bandeja</h2>
             <p>Cuando la IA necesite algo de vos, aparece acá.</p>
             <div className="acc">
-              <button type="button" className="btn secundario" onClick={() => irA('proyectos')}>
+              <button type="button" className="boton secundario" onClick={() => irA('proyectos')}>
                 <Icono nombre="proyectos" />
                 Ir a Proyectos
               </button>

@@ -322,7 +322,7 @@
   flex: none;
   transition: transform 0.15s var(--sale);
 }
-.btn.detener > svg,
+.detener > svg,
 .linea-aviso.detenida > svg {
   fill: currentColor;
   stroke: none;

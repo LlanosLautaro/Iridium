@@ -7,13 +7,13 @@
   grid-template-columns: minmax(0, 1fr) 5px min(var(--ancho-chat, 360px), max(300px, 50%));
   grid-template-rows: minmax(0, 1fr);
 }
-.principal {
+.zona-principal {
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
 }
-.principal > .cabecera {
+.zona-principal > .cab-proyecto {
   height: 40px;
   border-bottom-color: var(--borde);
   min-width: 0;
@@ -68,11 +68,6 @@
   min-width: 0;
   flex: 1;
   line-height: 1.25;
-}
-.btn.chico {
-  height: 26px;
-  padding: 0 9px;
-  gap: 6px;
 }
 .anteriores .menu-boton {
   width: 28px;
@@ -200,7 +195,7 @@
 .compositor textarea::placeholder {
   color: var(--texto-3);
 }
-.compositor .fila {
+.compositor .fila-comp {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -373,7 +368,7 @@
   height: 13px;
   color: var(--primario);
 }
-.fr-cab .btn {
+.fr-cab > button {
   margin-left: auto;
 }
 .bloque-frentes h4 {
@@ -551,11 +546,11 @@
   gap: 18px;
   align-content: start;
 }
-.mapa .filas {
+.mapa .filas-mapa {
   display: grid;
   gap: 2px;
 }
-.mapa .fila {
+.mapa .fila-mapa {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -720,13 +715,13 @@
   grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
   min-height: 0;
 }
-.arbol {
+.arbol-lista {
   overflow: auto;
   padding: 6px 0 20px;
   border-right: 1px solid var(--borde);
   background: color-mix(in oklab, var(--lateral) 50%, var(--fondo));
 }
-.arbol h3 {
+.arbol-lista h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -738,7 +733,7 @@
   text-transform: uppercase;
   color: var(--texto-3);
 }
-.nodo {
+.arbol-nodo {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -749,32 +744,32 @@
   text-align: left;
   white-space: nowrap;
 }
-.nodo.sel {
+.arbol-nodo.sel {
   background: var(--sel-fondo);
   color: var(--texto);
 }
-.nodo .ic {
+.arbol-nodo .ic {
   width: 14px;
   height: 14px;
   color: var(--texto-3);
 }
-.nodo .chev {
+.arbol-nodo .chev {
   width: 12px;
   flex: none;
   display: grid;
   place-items: center;
 }
-.nodo .nombre {
+.arbol-nodo .nombre {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.nodo.cargando,
-.nodo.vacio {
+.arbol-nodo.cargando,
+.arbol-nodo.vacio {
   padding-left: calc(28px + var(--n, 0) * 14px);
   color: var(--texto-3);
   font-size: var(--tam-chico);
 }
-.nodo.error {
+.arbol-nodo.error {
   padding-left: calc(28px + var(--n, 0) * 14px);
   color: var(--error);
   font-size: var(--tam-chico);
@@ -984,21 +979,21 @@
 }
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
-.principal > .cabecera h1 {
+.zona-principal > .cab-proyecto h1 {
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
 }
-.principal > .cabecera .sub {
+.zona-principal > .cab-proyecto .sub {
   color: var(--texto-3);
   white-space: nowrap;
 }
-.principal > .cabecera .chip {
+.zona-principal > .cab-proyecto .chip {
   margin-left: 4px;
 }
-.principal > .cabecera button.chip:hover {
+.zona-principal > .cab-proyecto button.chip:hover {
   background: var(--espera-fondo);
   border-color: var(--espera);
 }
@@ -1017,10 +1012,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.btn.sigue:not(:disabled) {
-  border-color: color-mix(in oklab, var(--primario) 55%, transparent);
-  color: var(--primario-texto);
 }
 .anteriores .menu-boton .ic {
   width: 16px;
@@ -1045,7 +1036,7 @@
   color: var(--primario);
   font: 700 14px / 1.5 var(--mono);
 }
-.compositor .fila .der {
+.compositor .fila-comp .der {
   margin-left: auto;
   display: flex;
   gap: 6px;
@@ -1065,26 +1056,26 @@
 .hito-card h4 .n {
   font: 500 12px / 1 var(--mono);
 }
-.mapa button.fila:hover {
+.mapa button.fila-mapa:hover {
   background: var(--hover);
 }
-.mapa .fila.sel {
+.mapa .fila-mapa.sel {
   background: var(--sel-fondo);
 }
-.mapa .fila .t {
+.mapa .fila-mapa .t {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.mapa .fila .t.tenue {
+.mapa .fila-mapa .t.tenue {
   color: var(--texto-2);
 }
-.mapa .fila .q {
+.mapa .fila-mapa .q {
   font: 700 12px / 1 var(--mono);
 }
-.mapa .fila .est {
+.mapa .fila-mapa .est {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1092,22 +1083,22 @@
   color: var(--texto-3);
   white-space: nowrap;
 }
-.mapa .fila .ic {
+.mapa .fila-mapa .ic {
   width: 13px;
   height: 13px;
 }
-.mapa .fila .hora {
+.mapa .fila-mapa .hora {
   font: 400 12px / 1 var(--mono);
   color: var(--texto-3);
 }
-.mapa .fila.ver-mas {
+.mapa .fila-mapa.ver-mas {
   color: var(--texto-3);
   font-size: var(--tam-chico);
 }
-.mapa .fila.trabaja {
+.mapa .fila-mapa.trabaja {
   color: var(--trabaja);
 }
-.mapa .fila.mono {
+.mapa .fila-mapa.mono {
   font: 500 12.5px / 1 var(--mono);
   color: var(--texto-2);
 }
@@ -1191,20 +1182,20 @@
   color: var(--texto);
   background: var(--hover);
 }
-.arbol h3 .atras {
+.arbol-lista h3 .atras {
   text-transform: none;
   letter-spacing: normal;
 }
-button.nodo:hover {
+button.arbol-nodo:hover {
   background: var(--hover);
   color: var(--texto);
 }
-.nodo .chev .ic {
+.arbol-nodo .chev .ic {
   width: 12px;
   height: 12px;
   transition: transform 0.15s var(--sale);
 }
-.nodo[aria-expanded="true"] .chev .ic {
+.arbol-nodo[aria-expanded="true"] .chev .ic {
   transform: rotate(90deg);
 }
 
@@ -1243,7 +1234,7 @@ button.nodo:hover {
 .recuadro-simple p.error {
   color: var(--error);
 }
-.recuadro-simple .btn {
+.recuadro-simple > button {
   grid-column: 2;
   grid-row: 1 / span 3;
 }

@@ -124,7 +124,7 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
     .getByRole('button', { name: 'Docs' })
     .click()
   await win.locator('button.inicio').click()
-  await win.locator('.ses', { hasText: 'Beta' }).locator('.pestana').click()
+  await win.locator('.ses', { hasText: 'Beta' }).locator('.pestana-ses').click()
   await expect(actual).toHaveAttribute('aria-label', 'Docs')
   await app.close()
 })

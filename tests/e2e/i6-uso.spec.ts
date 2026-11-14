@@ -293,12 +293,12 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
   await win.screenshot({ path: 'test-results/i6-aviso.png' })
   await aviso.getByRole('button', { name: 'Responder en Alfa' }).click()
   // Lleva a los pendientes de Alfa, dentro del proyecto (no a los de todos).
-  await expect(win.locator('.principal > .cabecera h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
   await expect(win.locator('.resumen')).toContainText('Q-1')
   await expect(aviso).toHaveCount(0)
 
   // En el proyecto a la vista no hay aviso: se ve en la conversación.
-  await win.locator('.ses', { hasText: 'Beta' }).locator('.pestana').click()
+  await win.locator('.ses', { hasText: 'Beta' }).locator('.pestana-ses').click()
   const campo2 = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo2.fill('Hacé algo en Beta')
   await campo2.press('Enter')

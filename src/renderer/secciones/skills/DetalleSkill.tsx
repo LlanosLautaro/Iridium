@@ -65,7 +65,7 @@ export function DetalleSkill({
         <h2 title={s.nombre}>{s.nombre}</h2>
         <div className="origen">
           <span>{origenEnPalabras(s)}</span>
-          <button type="button" className="btn secundario chico" onClick={abrir}>
+          <button type="button" className="boton secundario chico" onClick={abrir}>
             <Icono nombre="carpeta" />
             Abrir carpeta
           </button>
@@ -80,10 +80,10 @@ export function DetalleSkill({
         )}
       </div>
       <div className="partida sk-partida">
-        <nav className="arbol" aria-label={`Archivos de ${s.nombre}`}>
+        <nav className="arbol-lista" aria-label={`Archivos de ${s.nombre}`}>
           <button
             type="button"
-            className={lugar.archivo === null ? 'nodo sel sk-resumen' : 'nodo sk-resumen'}
+            className={lugar.archivo === null ? 'arbol-nodo sel sk-resumen' : 'arbol-nodo sk-resumen'}
             aria-current={lugar.archivo === null}
             onClick={() => recordar({ archivo: null })}
           >
@@ -113,7 +113,7 @@ export function DetalleSkill({
                   s.doble.sobra !== null && (
                     <button
                       type="button"
-                      className="btn secundario chico"
+                      className="boton secundario chico"
                       disabled={!hayChat}
                       title="Escribe el pedido en el chat de la derecha: lo mandás o lo cambiás antes"
                       onClick={() => pedir(pedidoSacar(s))}
@@ -133,7 +133,7 @@ export function DetalleSkill({
                 accion={
                   <button
                     type="button"
-                    className="btn secundario chico"
+                    className="boton secundario chico"
                     disabled={!hayChat}
                     title="Escribe el pedido en el chat de la derecha: lo mandás o lo cambiás antes"
                     onClick={() => pedir(pedidoArreglar(s))}

@@ -107,7 +107,7 @@ test('si la carpeta falta, la fila lo dice y Cambiar… es el principal', async 
   await win.getByRole('dialog').getByRole('button', { name: 'Proyectos' }).click()
   const fila = win.locator('.carpeta-proyectos')
   await expect(fila).toContainText('No se encuentra')
-  await expect(fila.getByRole('button', { name: 'Cambiar…' })).toHaveClass(/primario/)
+  await expect(fila.getByRole('button', { name: 'Cambiar…' })).toHaveClass(/principal/)
   await win.screenshot({ path: 'test-results/co4-falta.png' })
   await cuadro(app, otra)
   await fila.getByRole('button', { name: 'Cambiar…' }).click()

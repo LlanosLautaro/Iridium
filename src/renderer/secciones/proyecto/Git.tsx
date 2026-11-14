@@ -67,9 +67,9 @@ function useGit(ruta: string, visible: boolean): [GitProyecto | null, () => void
 
 function Numeros({ a }: { a: ArchivoGit }) {
   if (a.mas === null && a.menos === null)
-    return <span className="cuenta">{a.cambio === 'borrado' ? '' : 'binario'}</span>
+    return <span className="git-cuenta">{a.cambio === 'borrado' ? '' : 'binario'}</span>
   return (
-    <span className="cuenta">
+    <span className="git-cuenta">
       <span className="mas" title={`${a.mas ?? 0} líneas agregadas`}>
         +{a.mas ?? 0}
       </span>
@@ -315,7 +315,7 @@ function Remoto({ r, publicar }: { r: RemotoGit; publicar: (() => void) | null }
           <small>No está en GitHub.</small>
           <button
             type="button"
-            className="btn secundario chico publicar"
+            className="boton secundario chico publicar"
             disabled={!publicar}
             title={publicar ? undefined : 'Todavía no tiene commits: no hay nada para publicar.'}
             onClick={publicar ?? undefined}
@@ -374,7 +374,7 @@ function FilaArchivo({ a, sel, elegir }: { a: ArchivoGit; sel: boolean; elegir: 
   return (
     <button
       type="button"
-      className={sel ? 'nodo fila-git sel' : 'nodo fila-git'}
+      className={sel ? 'arbol-nodo fila-git sel' : 'arbol-nodo fila-git'}
       aria-current={sel}
       title={`${a.ruta} · ${LETRA[a.cambio].titulo}`}
       onClick={elegir}
@@ -448,7 +448,7 @@ function CuerpoGit({ ruta }: { ruta: string }) {
 
   return (
     <div className="partida git">
-      <nav className="arbol" aria-label="Git del proyecto">
+      <nav className="arbol-lista" aria-label="Git del proyecto">
         <div
           className="rama"
           title={g.sinRama ? 'No hay una rama elegida: se mira un commit suelto' : 'La rama'}
@@ -480,9 +480,9 @@ function CuerpoGit({ ruta }: { ruta: string }) {
           alternar={() => alternar('cambios')}
         >
           {g.cambios.length === 0 ? (
-            <div className="nodo vacio">Nada sin guardar: todo está en commits.</div>
+            <div className="arbol-nodo vacio">Nada sin guardar: todo está en commits.</div>
           ) : cambios.length === 0 ? (
-            <div className="nodo vacio">Todo lo cambiado está preparado.</div>
+            <div className="arbol-nodo vacio">Todo lo cambiado está preparado.</div>
           ) : (
             cambios.map(fila)
           )}
@@ -493,7 +493,7 @@ function CuerpoGit({ ruta }: { ruta: string }) {
           plegada={plegadas.includes('historial')}
           alternar={() => alternar('historial')}
         >
-          {g.historial.length === 0 && <div className="nodo vacio">Todavía no hay commits.</div>}
+          {g.historial.length === 0 && <div className="arbol-nodo vacio">Todavía no hay commits.</div>}
           {g.historial.map((c) => (
             <button
               key={c.hash}
@@ -511,7 +511,7 @@ function CuerpoGit({ ruta }: { ruta: string }) {
               </small>
             </button>
           ))}
-          {g.hayMas && <div className="nodo vacio">Se muestran los últimos {g.historial.length}.</div>}
+          {g.hayMas && <div className="arbol-nodo vacio">Se muestran los últimos {g.historial.length}.</div>}
         </Plegable>
       </nav>
       <div className="visor">

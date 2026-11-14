@@ -97,7 +97,10 @@ export function Skills() {
 
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
-      <div className="principal sk-vista" style={{ '--ancho-lista': `${anchoLista}px` } as CSSProperties}>
+      <div
+        className="zona-principal sk-vista"
+        style={{ '--ancho-lista': `${anchoLista}px` } as CSSProperties}
+      >
         {skills ? (
           <ListaDeSkills
             lista={skills}

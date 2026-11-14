@@ -72,14 +72,14 @@ function Paso({ ruta, paso }: { ruta: string; paso: PasoMapa }) {
   const destino = paso.destino
   if (!destino)
     return (
-      <div className="fila" title={`${paso.texto} · ${palabra}`}>
+      <div className="fila-mapa" title={`${paso.texto} · ${palabra}`}>
         {contenido}
       </div>
     )
   return (
     <button
       type="button"
-      className={paso.estado === 'en-curso' ? 'fila sel' : 'fila'}
+      className={paso.estado === 'en-curso' ? 'fila-mapa sel' : 'fila-mapa'}
       title={`${paso.texto} · ${palabra} · abrir su sección`}
       onClick={() => abrirDoc(ruta, destino)}
     >
@@ -115,9 +115,9 @@ function ListaPasos({
       {pasos.length === 0 ? (
         <span className="vacio">{vacio}</span>
       ) : (
-        <div className="filas">
+        <div className="filas-mapa">
           {ocultos > 0 && (
-            <button type="button" className="fila ver-mas" onClick={() => setTodos(true)}>
+            <button type="button" className="fila-mapa ver-mas" onClick={() => setTodos(true)}>
               +{ocultos} anteriores
             </button>
           )}
@@ -159,12 +159,12 @@ function EnTuBandeja({ ruta, preguntas }: { ruta: string; preguntas: PreguntaNue
       {preguntas.length === 0 ? (
         <span className="vacio">Nada en tu bandeja.</span>
       ) : (
-        <div className="filas">
+        <div className="filas-mapa">
           {preguntas.map((q) => (
             <button
               key={q.codigo}
               type="button"
-              className="fila espera-fila"
+              className="fila-mapa espera-fila"
               title={`Responder en la Bandeja de entrada${q.frena ? ' · frena el proyecto' : ''}`}
               onClick={() => responderEn(ruta)}
             >
@@ -255,14 +255,14 @@ function TarjetaHito({
         <ChipHito h={h} />
         <div className="der">
           {volver && (
-            <button type="button" className="btn secundario chico" onClick={volver}>
+            <button type="button" className="boton secundario chico" onClick={volver}>
               Volver
             </button>
           )}
           {documento && !actual && (
             <button
               type="button"
-              className="btn secundario chico"
+              className="boton secundario chico"
               onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
             >
               <Icono nombre="docs" />
@@ -386,7 +386,7 @@ function BloqueFrentes({
             {documento && (
               <button
                 type="button"
-                className="btn secundario chico"
+                className="boton secundario chico"
                 onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
               >
                 <Icono nombre="docs" />
@@ -418,12 +418,12 @@ function BloqueFrentes({
               {activo.trabajo.length === 0 ? (
                 <span className="vacio">Ningún trabajo en curso.</span>
               ) : (
-                <div className="filas">
+                <div className="filas-mapa">
                   {activo.trabajo.map((t) => (
                     <button
                       key={t.codigo}
                       type="button"
-                      className="fila"
+                      className="fila-mapa"
                       title="Abrir en Trabajo"
                       onClick={() => abrirTrabajo(ruta, t.codigo)}
                     >
@@ -491,7 +491,7 @@ export function Mapa({ ruta }: { ruta: string }) {
           documento && (
             <button
               type="button"
-              className="btn secundario chico"
+              className="boton secundario chico"
               onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
             >
               <Icono nombre="docs" />
@@ -529,12 +529,12 @@ function CuerpoMapa({ ruta, m }: { ruta: string; m: MapaProyecto | null }) {
             {m.documentos.length > 0 ? ' Estos son los documentos que tiene:' : ' Tampoco tiene documentos.'}
           </p>
           {m.documentos.length > 0 && (
-            <div className="filas">
+            <div className="filas-mapa">
               {m.documentos.map((d) => (
                 <button
                   key={d}
                   type="button"
-                  className="fila mono"
+                  className="fila-mapa mono"
                   onClick={() => abrirDoc(ruta, { documento: d, ancla: '' })}
                 >
                   <Icono nombre="docs" />

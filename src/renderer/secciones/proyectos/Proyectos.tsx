@@ -55,7 +55,7 @@ function Mudanza({ lista }: { lista: ListaProyectos }) {
         {nombres.length > 1 ? 'las guarda' : 'la guarda'} en la carpeta de Iridium, dentro de tus proyectos:{' '}
         <span className="ruta">{carpeta}</span>.{resultado && <span className="error"> {resultado}</span>}
       </p>
-      <button type="button" className="btn primario" onClick={mover} disabled={moviendo}>
+      <button type="button" className="boton principal" onClick={mover} disabled={moviendo}>
         <Icono nombre="carpeta" />
         {moviendo ? 'Moviendo…' : 'Mover'}
       </button>
@@ -141,11 +141,11 @@ export function Proyectos() {
         <span className="ruta">{lista.raiz}</span>
         <p>Puede que el disco no esté conectado o que la carpeta se haya movido.</p>
         <div className="acc">
-          <button type="button" className="btn primario" onClick={elegirCarpeta} disabled={eligiendo}>
+          <button type="button" className="boton principal" onClick={elegirCarpeta} disabled={eligiendo}>
             <Icono nombre="carpeta" />
             Elegir la carpeta
           </button>
-          <button type="button" className="btn secundario" onClick={reintentar}>
+          <button type="button" className="boton secundario" onClick={reintentar}>
             <Icono nombre="reintentar" />
             Reintentar
           </button>
@@ -160,11 +160,11 @@ export function Proyectos() {
         <span className="ruta">{lista.raiz}</span>
         <p>Creá un proyecto nuevo ahí o elegí otra carpeta de proyectos.</p>
         <div className="acc">
-          <button type="button" className="btn primario" onClick={() => setNuevo(true)}>
+          <button type="button" className="boton principal" onClick={() => setNuevo(true)}>
             <Icono nombre="mas" />
             Nuevo proyecto
           </button>
-          <button type="button" className="btn secundario" onClick={elegirCarpeta} disabled={eligiendo}>
+          <button type="button" className="boton secundario" onClick={elegirCarpeta} disabled={eligiendo}>
             <Icono nombre="carpeta" />
             Elegir otra carpeta
           </button>
@@ -194,7 +194,7 @@ export function Proyectos() {
   const ancho = useAnchoConversacion('general')
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
-      <section className="principal grilla-proyectos" aria-label="Proyectos">
+      <section className="zona-principal grilla-proyectos" aria-label="Proyectos">
         <Cabecera
           nivel={1}
           titulo="Proyectos"
@@ -209,14 +209,14 @@ export function Proyectos() {
           acciones={
             lista?.tipo === 'lista' && (
               <>
-                <button type="button" className="btn secundario chico" onClick={() => setNuevo(true)}>
+                <button type="button" className="boton principal chico" onClick={() => setNuevo(true)}>
                   <Icono nombre="mas" />
                   Nuevo proyecto
                 </button>
                 {conGrilla && (
                   <button
                     type="button"
-                    className="interruptor"
+                    className="interruptor-arch"
                     role="switch"
                     aria-checked={verArchivados}
                     title="Mostrar los archivados al final, más tenues"
@@ -253,7 +253,7 @@ export function Proyectos() {
               )}
               <button
                 type="button"
-                className="btn-ic"
+                className="boton solo-icono"
                 aria-label="Cerrar el aviso"
                 onClick={() => setAviso(null)}
               >

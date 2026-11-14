@@ -140,11 +140,11 @@
   box-shadow: 0 0 0 3px var(--seleccion);
 }
 
-.cuenta-claude > .btn {
+.cuenta-claude > button {
   justify-self: end;
 }
-.carpeta-proyectos > .btn,
-.carpeta-iridium > .btn {
+.carpeta-proyectos > button,
+.carpeta-iridium > button {
   justify-self: end;
 }
 .version-iridium > .valor {

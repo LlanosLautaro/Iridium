@@ -66,7 +66,7 @@ export function PanelDocumento({
         </span>
         <button
           type="button"
-          className="btn-ic"
+          className="boton solo-icono"
           title="Cerrar (Esc)"
           aria-label="Cerrar el documento"
           onClick={cerrar}

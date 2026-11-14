@@ -135,7 +135,7 @@ function Preguntas({ entrada, ruta }: { entrada: Extract<Entrada, { tipo: 'pregu
       <div className="acc">
         <button
           type="button"
-          className="btn primario"
+          className="boton principal"
           onClick={() => usarEstado.getState().responderEn(ruta)}
         >
           Responder
@@ -174,14 +174,19 @@ function SinSesion({ entrada, ruta }: { entrada: Extract<Entrada, { tipo: 'sin-s
       {entrada.reintentar && <p className="nota">Lo que escribiste: «{entrada.reintentar}»</p>}
       <div className="acc">
         {!conSesion && (
-          <button type="button" className="btn primario chico" disabled={iniciando} onClick={iniciarSesion}>
+          <button
+            type="button"
+            className="boton principal chico"
+            disabled={iniciando}
+            onClick={iniciarSesion}
+          >
             <Icono nombre={iniciando ? 'sync' : 'abrir'} gira={iniciando} />
             {iniciando ? 'Esperando el navegador…' : 'Iniciar sesión'}
           </button>
         )}
         <button
           type="button"
-          className={`btn ${conSesion ? 'primario' : 'secundario'} chico`}
+          className={`boton ${conSesion ? 'principal' : 'secundario'} chico`}
           disabled={reintentando || trabajando}
           onClick={() => {
             setReintentando(true)
@@ -503,7 +508,7 @@ function Hilo({
     >
       {c.anteriores > 0 && (
         <div className="mas-arriba">
-          <button type="button" className="btn secundario" onClick={() => void verAnteriores()}>
+          <button type="button" className="boton secundario" onClick={() => void verAnteriores()}>
             Ver mensajes anteriores ({c.anteriores})
           </button>
         </div>
@@ -725,7 +730,7 @@ export function Conversacion({
         <div className="acc">
           <button
             type="button"
-            className="btn secundario"
+            className="boton secundario"
             disabled={enviando}
             onClick={() => cambiarVista(ruta, { enBlanco: false })}
           >
@@ -755,7 +760,7 @@ export function Conversacion({
         {enBlanco && (
           <button
             type="button"
-            className="btn secundario"
+            className="boton secundario"
             disabled={enviando}
             onClick={() => cambiarVista(ruta, { enBlanco: false })}
           >
@@ -801,7 +806,7 @@ export function Conversacion({
         <Anteriores ruta={ruta} actual={enBlanco ? null : (c?.id ?? null)} trabajando={trabajando} />
         <button
           type="button"
-          className="btn secundario chico"
+          className="boton sin-fondo chico"
           disabled={enviando || trabajando || enBlanco}
           title={
             general
@@ -816,7 +821,7 @@ export function Conversacion({
         {!general && !simple && (
           <button
             type="button"
-            className="btn secundario chico sigue"
+            className="boton principal chico"
             disabled={enviando || trabajando}
             title={
               trabajando
@@ -854,7 +859,7 @@ export function Conversacion({
               y olvidar detalles. Conviene seguir en una <b>Nueva</b>; el estado del proyecto queda en sus
               documentos.
             </span>
-            <button type="button" className="btn secundario chico" onClick={nueva}>
+            <button type="button" className="boton sin-fondo chico" onClick={nueva}>
               Nueva
             </button>
           </p>
@@ -912,14 +917,14 @@ export function Conversacion({
               onKeyDown={alTeclado}
             />
           </div>
-          <div className="fila">
+          <div className="fila-comp">
             <ModeloYEsfuerzo ruta={ruta} />
             {hayConversacion && c?.contexto && <MedidorContexto contexto={c.contexto} />}
             <div className="der">
               {trabajando && (
                 <button
                   type="button"
-                  className="btn secundario detener"
+                  className="boton secundario detener"
                   title="Detener a la IA en el acto (se retoma con Seguí)"
                   onClick={() => void window.iridium.detener(ruta)}
                 >
@@ -929,7 +934,7 @@ export function Conversacion({
               )}
               <button
                 type="button"
-                className="btn-ic"
+                className="boton solo-icono chico"
                 title="Enviar (Enter; Shift+Enter, salto de línea)"
                 aria-label="Enviar"
                 disabled={texto.trim() === '' || enviando}

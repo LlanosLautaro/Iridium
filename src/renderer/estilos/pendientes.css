@@ -183,20 +183,20 @@
   white-space: nowrap;
   font-size: 13px;
 }
-.proy .cuenta {
+.proy .cuenta-proy {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font: 500 12px / 1 var(--mono);
   color: var(--texto-2);
 }
-.proy .cuenta.frena {
+.proy .cuenta-proy.frena {
   color: var(--espera);
 }
-.proy .cuenta.ok {
+.proy .cuenta-proy.ok {
   color: var(--ok);
 }
-.proy .cuenta.error {
+.proy .cuenta-proy.error {
   color: var(--error);
   font-family: var(--ui);
 }
@@ -235,11 +235,6 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-}
-/* «Seguí» se resalta cuando no queda nada sin responder: verde de contorno, nunca de fondo */
-.btn.secundario.resaltado {
-  border-color: var(--primario);
-  color: var(--primario);
 }
 .pendientes {
   flex: 1;
@@ -438,7 +433,7 @@
   display: grid;
   gap: 8px;
 }
-.opcion {
+.opcion-radio {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -448,30 +443,30 @@
   border-radius: var(--radio-bloque);
   cursor: pointer;
 }
-.opcion:hover {
+.opcion-radio:hover {
   border-color: var(--texto-3);
 }
-.opcion:has(input:checked) {
+.opcion-radio:has(input:checked) {
   border-color: var(--primario);
   background: var(--sel-fondo);
 }
-.opcion input[type="radio"],
-.punto input[type="checkbox"] {
+.opcion-radio input[type="radio"],
+.punto-casilla input[type="checkbox"] {
   accent-color: var(--primario);
   width: 15px;
   height: 15px;
   margin: 0;
   flex: none;
 }
-.opcion .l {
+.opcion-radio .l {
   font: 700 12.5px / 1 var(--mono);
   color: var(--texto-2);
 }
-.opcion .t {
+.opcion-radio .t {
   font-size: 14px;
   color: var(--texto);
 }
-.opcion .rec {
+.opcion-radio .rec {
   margin-left: auto;
   display: inline-flex;
   align-items: center;
@@ -480,7 +475,7 @@
   font-size: var(--tam-chico);
   white-space: nowrap;
 }
-.campo {
+.campo-texto {
   height: 30px;
   padding: 0 10px;
   border: 1px solid var(--borde-control);
@@ -492,20 +487,20 @@
   outline: 0;
   min-width: 0;
 }
-.campo:focus {
+.campo-texto:focus {
   border-color: var(--primario);
 }
-.campo::placeholder {
+.campo-texto::placeholder {
   color: var(--texto-3);
 }
-textarea.campo {
+textarea.campo-texto {
   height: auto;
   min-height: 64px;
   padding: 8px 10px;
   resize: vertical;
   line-height: 1.5;
 }
-textarea.campo.crece {
+textarea.campo-texto.crece {
   min-height: 30px;
   padding: 5px 10px;
   resize: none;
@@ -528,7 +523,7 @@ textarea.campo.crece {
   display: grid;
   gap: 6px;
 }
-.punto {
+.punto-casilla {
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr) minmax(180px, 38%);
   align-items: center;
@@ -538,10 +533,10 @@ textarea.campo.crece {
   border: 1px solid var(--borde-fuerte);
   border-radius: var(--radio-bloque);
 }
-.punto:has(input:checked) {
+.punto-casilla:has(input:checked) {
   border-color: color-mix(in oklab, var(--primario) 45%, var(--borde-fuerte));
 }
-.punto .texto-punto {
+.punto-casilla .texto-punto {
   font-size: 14px;
 }
 
@@ -642,7 +637,7 @@ textarea.campo.crece {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.panel-doc .cab-panel .btn-ic {
+.panel-doc .cab-panel > button {
   margin-left: auto;
 }
 .doc {
@@ -657,7 +652,7 @@ textarea.campo.crece {
 }
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
-.opcion.otro .campo {
+.opcion-radio.otro .campo-texto {
   flex: 1;
 }
 .leyenda .ic {
@@ -670,8 +665,8 @@ textarea.campo.crece {
   flex: none;
   transform: translateY(2px);
 }
-.proy .cuenta .ic,
-.opcion .rec .ic,
+.proy .cuenta-proy .ic,
+.opcion-radio .rec .ic,
 .cita.falta .ic {
   width: 13px;
   height: 13px;

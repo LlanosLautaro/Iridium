@@ -69,14 +69,14 @@ test('lo escrito en el chat queda al cambiar de proyecto y al cerrar; al abrir, 
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   await expect(campo()).toHaveValue('')
-  await win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana').click()
+  await win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana-ses').click()
   await expect(campo()).toHaveValue('Quiero que la grilla\nse ordene por fecha')
   // Se cierra Iridium con Alfa a la vista, enseguida: lo escrito llega igual al disco.
   await app.close()
 
   ;({ app, win } = await abrir())
   // Abre directo en Alfa, en su sección principal, con lo escrito.
-  await expect(win.locator('.principal .cabecera h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal .cab-proyecto h1')).toHaveText('Alfa')
   await expect(win.locator('.act.activo')).toHaveAttribute('aria-label', /Bandeja de entrada/)
   await expect(campo()).toHaveValue('Quiero que la grilla\nse ordene por fecha')
   await win.screenshot({ path: 'test-results/d060-vuelve.png' })

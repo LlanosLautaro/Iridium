@@ -222,7 +222,7 @@ test('Abrir como proyecto desde Ideas y desde Skills (IN-3)', async () => {
     .click()
   // La vista de proyecto de Ideas, con sus íconos (Docs, Git…).
   await expect(win.getByRole('button', { name: /^Docs/ })).toBeVisible()
-  await expect(win.locator('.ses, .pestana').filter({ hasText: 'Ideas' }).first()).toBeVisible()
+  await expect(win.locator('.ses, .pestana-ses').filter({ hasText: 'Ideas' }).first()).toBeVisible()
   await win.screenshot({ path: 'test-results/in1-abrir-ideas.png' })
 
   await win.keyboard.press('Control+3')
@@ -231,7 +231,7 @@ test('Abrir como proyecto desde Ideas y desde Skills (IN-3)', async () => {
     .getByRole('button', { name: 'Abrir como proyecto' })
     .click()
   await expect(win.getByRole('button', { name: /^Docs/ })).toBeVisible()
-  await expect(win.locator('.ses, .pestana').filter({ hasText: 'Skills' }).first()).toBeVisible()
+  await expect(win.locator('.ses, .pestana-ses').filter({ hasText: 'Skills' }).first()).toBeVisible()
 
   // De vuelta en Ideas.
   await win.keyboard.press('Control+4')

@@ -6,7 +6,7 @@ export function AbrirComoProyecto({ abrir, carpeta }: { abrir: () => void; carpe
   return (
     <button
       type="button"
-      className="btn-ic abrir-como-proyecto"
+      className="boton solo-icono abrir-como-proyecto"
       title={`Abrir como proyecto: la carpeta ${carpeta}, con Docs, Git y lo demás`}
       aria-label="Abrir como proyecto"
       onClick={abrir}

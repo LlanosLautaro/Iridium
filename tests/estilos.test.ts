@@ -74,6 +74,9 @@ const PIEZAS = [
   'info',
 ]
 
+/** Las variantes del Botón (PZ-1), que van solas en el HTML junto a `.boton`: una sección no las usa para otra cosa. */
+const VARIANTES = ['principal', 'secundario', 'sin-fondo', 'peligroso', 'solo-icono']
+
 /**
  * Las clases de hoy que reemplazan las piezas (ux.md › Las piezas, columna Reemplaza), sin las que siguen en el marco
  * nuevo (`.proy`, `.act`, `.cerrar`) ni las que son variantes de una pieza (`.aviso`, `.mensaje`).
@@ -142,35 +145,58 @@ const VIEJAS = [
   'ses',
   'md',
   'doc-texto',
+  // DI-I3, tanda 2: lo que usaba el nombre de una pieza para otra cosa, renombrado hasta que su sección pase a la pieza
+  'cab-filtros',
+  'cab-filtro',
+  'arbol-lista',
+  'arbol-nodo',
+  'git-cuenta',
+  'opcion-radio',
+  'campo-texto',
+  'punto-casilla',
+  'cuenta-proy',
+  'desplegable',
+  'pestana-ses',
+  'cab-proyecto',
+  'fila-comp',
+  'filas-mapa',
+  'fila-mapa',
+  'interruptor-arch',
+  'selector-ia',
+  'velo-dialogo',
 ]
 
-// ── Lo que falta pasar (DI-I3, tanda 1: el punto de partida). Solo baja. ──
-
-/** Las secciones que hoy usan el nombre de una pieza para otra cosa. */
-const CHOQUES_PENDIENTES: Record<string, string[]> = {
-  'base.css': ['filtros', 'filtro'],
-  'git.css': ['opcion', 'cuenta', 'arbol'],
-  'marco.css': ['menu', 'pestana'],
-  'pendientes.css': ['campo', 'opcion', 'cuenta', 'punto'],
-  'proyecto.css': ['filas', 'fila', 'cabecera', 'arbol', 'nodo'],
-  'proyectos.css': ['interruptor', 'cabecera'],
-  'skills.css': ['arbol', 'nodo'],
-  'trabajo.css': ['filtro', 'menu'],
-  'uso.css': ['fila', 'selector', 'velo'],
-}
+// ── Lo que falta pasar (DI-I3; el punto de partida es la tanda 1). Solo baja. ──
 
 /** Las clases viejas que todavía tiene cada sección. */
 const VIEJAS_PENDIENTES: Record<string, string[]> = {
-  'ajustes.css': ['btn', 'ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
-  'base.css': ['btn', 'chip', 'btn-ic', 'mini-link', 'cuenta-bandeja'],
-  'conversacion.css': ['btn', 'aviso-afuera', 'md'],
-  'diseno.css': ['btn'],
-  'git.css': ['commit', 'arch', 'fila-git', 'remoto', 'plegable', 'aviso-git'],
-  'ideas.css': ['btn', 'columna', 'anotar', 'menu-boton', 'menu-lista'],
-  'marco.css': ['chip', 'actualizar', 'menu-boton', 'cuenta-bandeja', 'badge', 'menu-lista', 'ses'],
+  'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
+  'base.css': ['chip', 'mini-link', 'cuenta-bandeja', 'cab-filtros', 'cab-filtro'],
+  'conversacion.css': ['aviso-afuera', 'md'],
+  'git.css': [
+    'commit',
+    'arch',
+    'fila-git',
+    'remoto',
+    'plegable',
+    'aviso-git',
+    'arbol-lista',
+    'git-cuenta',
+    'opcion-radio',
+  ],
+  'ideas.css': ['columna', 'anotar', 'menu-boton', 'menu-lista'],
+  'marco.css': [
+    'chip',
+    'actualizar',
+    'menu-boton',
+    'cuenta-bandeja',
+    'badge',
+    'menu-lista',
+    'ses',
+    'desplegable',
+    'pestana-ses',
+  ],
   'pendientes.css': [
-    'btn',
-    'btn-ic',
     'columna',
     'panel-doc',
     'respuesta',
@@ -181,9 +207,12 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'frente-q',
     'cab-panel',
     'doc-texto',
+    'opcion-radio',
+    'campo-texto',
+    'punto-casilla',
+    'cuenta-proy',
   ],
   'proyecto.css': [
-    'btn',
     'chip',
     'atras',
     'script-fila',
@@ -202,20 +231,46 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'chat-cab',
     'cab-panel',
     'doc-texto',
+    'arbol-lista',
+    'arbol-nodo',
+    'cab-proyecto',
+    'fila-comp',
+    'filas-mapa',
+    'fila-mapa',
   ],
   'proyectos.css': [
-    'btn-ic',
     'peligro',
     'aviso-grilla',
     'mudanza',
     'cuenta-bandeja',
     'aviso-fw',
     'menu-contextual',
+    'cab-proyecto',
+    'interruptor-arch',
   ],
   'revision.css': ['reabrir', 'fila-com', 'rev-vacio'],
-  'skills.css': ['chip', 'sk-fila', 'sk-proy', 'sk-grupo', 'aviso-detalle', 'sk-avisos', 'aviso-punto'],
-  'trabajo.css': ['btn', 'tb-fila', 'plegable', 'anotar'],
-  'uso.css': ['btn', 'peligro', 'falla-motor', 'menu-boton', 'medidor', 'menu-lista', 'dialogo'],
+  'skills.css': [
+    'chip',
+    'sk-fila',
+    'sk-proy',
+    'sk-grupo',
+    'aviso-detalle',
+    'sk-avisos',
+    'aviso-punto',
+    'arbol-lista',
+    'arbol-nodo',
+  ],
+  'trabajo.css': ['tb-fila', 'plegable', 'anotar', 'cab-filtro'],
+  'uso.css': [
+    'falla-motor',
+    'menu-boton',
+    'medidor',
+    'menu-lista',
+    'dialogo',
+    'fila-comp',
+    'selector-ia',
+    'velo-dialogo',
+  ],
 }
 
 /** Cuántas veces se usa cada token de antes (`tokens-viejos.css`) en la app: como mucho esto. */
@@ -224,11 +279,11 @@ const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--barra': 2,
   '--caja': 30,
   '--medidor-fondo': 5,
-  '--primario': 57,
-  '--primario-texto': 14,
+  '--primario': 53,
+  '--primario-texto': 13,
   '--trabaja': 5,
   '--ok': 23,
-  '--sobre-color': 3,
+  '--sobre-color': 1,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,
@@ -294,12 +349,33 @@ describe('el control de estilos (DI-I3)', () => {
     expect([...usados].filter((u) => !definidos.has(u))).toEqual([])
   })
 
-  it('las secciones no rehacen las piezas (lo que falta pasar, solo baja)', () => {
-    const hoy = porHoja((c) => PIEZAS.filter((p) => c.has(p)))
+  it('las piezas entran a la app y ninguna sección usa sus nombres para otra cosa', () => {
+    // Después de la base y antes de las secciones: una sección acomoda una pieza, no la pisa.
+    expect(leer('src/renderer/main.tsx')).toContain(
+      "import './estilos/base.css'\nimport './estilos/piezas.css'\n",
+    )
     expect(
-      hoy,
-      'si una sección dejó de chocar, sacala de CHOQUES_PENDIENTES; si choca una nueva, usá la pieza',
-    ).toEqual(CHOQUES_PENDIENTES)
+      porHoja((c) => PIEZAS.filter((p) => c.has(p))),
+      'una sección no rehace una pieza ni usa su nombre: usá la pieza o poné otro nombre',
+    ).toEqual({})
+    // Las variantes del Botón tampoco: el área `.principal` de antes (una columna) partía en dos el botón principal.
+    expect(
+      porHoja((c) => VARIANTES.filter((v) => c.has(v))),
+      'una variante de una pieza no es una clase de sección: poné otro nombre',
+    ).toEqual({})
+  })
+
+  it('los botones son la pieza Botón (PZ-1): ningún componente usa btn ni btn-ic', () => {
+    const malos = archivosDelRenderer()
+      .filter((a) => a.endsWith('.tsx'))
+      .flatMap((a) =>
+        texto(a)
+          .split('\n')
+          .map((l, i) => [l, i] as const)
+          .filter(([l]) => /['"`](?:[^'"`]* )?btn(?:-ic)?(?=[ '"`])/.test(l))
+          .map(([l, i]) => `${a.slice(RAIZ.length + 1)}:${i + 1} ${l.trim()}`),
+      )
+    expect(malos).toEqual([])
   })
 
   it('las clases viejas del inventario se van (lo que falta pasar, solo baja)', () => {

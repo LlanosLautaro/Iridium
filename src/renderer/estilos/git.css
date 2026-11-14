@@ -1,5 +1,5 @@
 /* Git (H-16): la rama, lo sin guardar y el historial a la izquierda; lo elegido con sus archivos a la derecha */
-.partida.git .arbol {
+.partida.git .arbol-lista {
   padding-top: 0;
 }
 .rama {
@@ -26,7 +26,7 @@
   color: var(--espera);
   font-size: var(--tam-chico);
 }
-.arbol h3 span {
+.arbol-lista h3 span {
   font-family: var(--mono);
   letter-spacing: 0;
 }
@@ -157,17 +157,17 @@
 .letra.borrado {
   color: var(--error);
 }
-.cuenta {
+.git-cuenta {
   display: flex;
   gap: 8px;
   flex: none;
   color: var(--texto-3);
   font: 600 12px var(--mono);
 }
-.cuenta .mas {
+.git-cuenta .mas {
   color: var(--ok);
 }
-.cuenta .menos {
+.git-cuenta .menos {
   color: var(--error);
 }
 
@@ -398,7 +398,7 @@
   display: grid;
   gap: 6px;
 }
-.publicar-github .opcion small {
+.publicar-github .opcion-radio small {
   display: block;
   color: var(--texto-3);
   font-size: 12px;

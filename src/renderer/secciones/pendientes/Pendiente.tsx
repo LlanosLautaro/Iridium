@@ -29,7 +29,7 @@ function CampoCrece({
     <textarea
       ref={ref}
       rows={1}
-      className="campo crece"
+      className="campo-texto crece"
       value={valor}
       onChange={(e) => alCambiar(e.target.value)}
       {...resto}
@@ -141,7 +141,7 @@ function Formulario({
       {conPuntos && (
         <div className="puntos">
           {p.puntos.map((punto, i) => (
-            <div key={punto} className="punto">
+            <div key={punto} className="punto-casilla">
               <input
                 type="checkbox"
                 aria-labelledby={`${id}-p${i}`}
@@ -169,7 +169,7 @@ function Formulario({
       {conOpciones && (
         <div className="opciones" role="radiogroup" aria-label={`Opciones de ${p.codigo}`}>
           {p.opciones.map((o) => (
-            <label key={o.letra} className="opcion">
+            <label key={o.letra} className="opcion-radio">
               <input
                 type="radio"
                 name={id}
@@ -187,7 +187,7 @@ function Formulario({
               )}
             </label>
           ))}
-          <label className="opcion otro">
+          <label className="opcion-radio otro">
             <input
               type="radio"
               name={id}
@@ -217,7 +217,7 @@ function Formulario({
         </div>
       ) : (
         <textarea
-          className="campo"
+          className="campo-texto"
           value={b.nota}
           aria-label={`Tu respuesta a ${p.codigo}`}
           placeholder="Tu respuesta"
@@ -448,7 +448,7 @@ export function Pendiente({
             No se guardó
           </span>
           <span>{envio.mensaje} Lo que escribiste sigue acá.</span>
-          <button type="button" className="btn secundario acc" onClick={() => void enviar()}>
+          <button type="button" className="boton secundario acc" onClick={() => void enviar()}>
             <Icono nombre="reintentar" />
             Reintentar
           </button>
@@ -467,10 +467,10 @@ export function Pendiente({
             <Resumen p={envio.afuera} />
           </div>
           <div className="acc">
-            <button type="button" className="btn secundario" onClick={() => usarLaDeAfuera(envio.afuera)}>
+            <button type="button" className="boton secundario" onClick={() => usarLaDeAfuera(envio.afuera)}>
               Dejar la de afuera
             </button>
-            <button type="button" className="btn primario" onClick={() => void enviar(true)}>
+            <button type="button" className="boton principal" onClick={() => void enviar(true)}>
               Reemplazar con la mía
             </button>
           </div>
@@ -484,7 +484,7 @@ export function Pendiente({
             {corrigiendo && (
               <button
                 type="button"
-                className="btn secundario"
+                className="boton secundario"
                 disabled={guardando}
                 onClick={() => soltarBorrador(ruta, p.codigo)}
               >
@@ -494,7 +494,7 @@ export function Pendiente({
             {conMedias && !corrigiendo && (
               <button
                 type="button"
-                className="btn secundario"
+                className="boton secundario"
                 disabled={guardando || (!tieneAlgo(b) && p.estado !== 'a-medias')}
                 title="Guarda lo marcado sin enviarlo: la IA no lo ve"
                 onClick={() => void aMedias()}
@@ -505,7 +505,7 @@ export function Pendiente({
             {p.tipo === 'prueba' && !corrigiendo && (
               <button
                 type="button"
-                className="btn secundario"
+                className="boton secundario"
                 disabled={guardando}
                 title="La deja para después como aprobada provisional, con lo que marcaste: la IA la anota con dónde mirar si falla"
                 onClick={() => void enviar(false, true)}
@@ -515,7 +515,7 @@ export function Pendiente({
             )}
             <button
               type="button"
-              className="btn primario"
+              className="boton principal"
               disabled={guardando || !puedeEnviar(b, p)}
               onClick={() => void enviar()}
             >
@@ -527,7 +527,7 @@ export function Pendiente({
             <span className="ayuda">La IA la lee cuando retome el proyecto</span>
             <button
               type="button"
-              className="btn secundario"
+              className="boton secundario"
               onClick={() => escribirBorrador(ruta, p.codigo, p.borrador)}
             >
               Corregir

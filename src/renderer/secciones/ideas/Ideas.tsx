@@ -137,7 +137,7 @@ export function Ideas() {
 
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
-      <section className="principal ideas-inicio" aria-label="Ideas">
+      <section className="zona-principal ideas-inicio" aria-label="Ideas">
         <Cabecera
           nivel={1}
           titulo="Ideas"
@@ -175,7 +175,7 @@ export function Ideas() {
               <p className="script-msg error" role="alert">
                 <Icono nombre="error" />
                 No se pudieron leer las ideas de los proyectos: {errorNuevas}
-                <button type="button" className="btn secundario chico" onClick={leerNuevas}>
+                <button type="button" className="boton secundario chico" onClick={leerNuevas}>
                   Reintentar
                 </button>
               </p>
@@ -418,7 +418,7 @@ function Suelta({
             </dl>
           )}
           <div>
-            <button type="button" className="btn secundario chico" onClick={hablar}>
+            <button type="button" className="boton secundario chico" onClick={hablar}>
               <Icono nombre="enviar" />
               Hablar de esta idea
             </button>
@@ -458,7 +458,7 @@ function AvisoSueltas({ lista, reintentar }: { lista: ListaIdeas | null; reinten
       <p className="script-msg error" role="alert">
         <Icono nombre="error" />
         No se pudo leer <code>ideas.md</code>: {lista.mensaje}
-        <button type="button" className="btn secundario chico" onClick={reintentar}>
+        <button type="button" className="boton secundario chico" onClick={reintentar}>
           Reintentar
         </button>
       </p>

@@ -239,7 +239,7 @@ function BarraTitulo() {
             <div key={ruta} className={activa ? 'ses activa' : 'ses'}>
               <button
                 type="button"
-                className="pestana"
+                className="pestana-ses"
                 role="tab"
                 aria-selected={activa}
                 title={`Abrir ${nombre}`}

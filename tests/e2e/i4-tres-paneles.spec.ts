@@ -120,19 +120,19 @@ test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y d
   const tarjeta = mapa.locator('.hito-card')
   await expect(tarjeta.locator('h3')).toHaveText('Construcción')
   await expect(tarjeta.locator('.proximo')).toContainText('Terminar I-2 según D-12')
-  await expect(tarjeta.locator('.fila', { hasText: 'I-1 — Importar' })).toContainText('hecho')
-  await expect(tarjeta.locator('.fila', { hasText: 'I-2 — Galería' })).toContainText('en curso')
+  await expect(tarjeta.locator('.fila-mapa', { hasText: 'I-1 — Importar' })).toContainText('hecho')
+  await expect(tarjeta.locator('.fila-mapa', { hasText: 'I-2 — Galería' })).toContainText('en curso')
   await expect(tarjeta.locator('.espera-fila')).toContainText('Q-3')
   await win.screenshot({ path: 'test-results/i4-mapa.png' })
 
   // Otro hito: su portón.
   await mapa.locator('.h', { hasText: '4' }).click()
   await expect(tarjeta.locator('h3')).toHaveText('UX')
-  await expect(tarjeta.locator('.fila')).toHaveText([/Historias\..*hecho/, /Flujos\..*pendiente/])
+  await expect(tarjeta.locator('.fila-mapa')).toHaveText([/Historias\..*hecho/, /Flujos\..*pendiente/])
   await tarjeta.getByRole('button', { name: 'Volver' }).click()
 
   // Un paso abre su sección en Docs; Atrás vuelve al Mapa.
-  await tarjeta.locator('.fila', { hasText: 'I-2 — Galería' }).click()
+  await tarjeta.locator('.fila-mapa', { hasText: 'I-2 — Galería' }).click()
   const docs = win.locator('[data-seccion="docs"]')
   await expect(docs.locator('.barra-doc .nom')).toHaveText('07-construccion.md')
   await expect(docs.locator('.marcada')).toHaveText('I-2 — Galería')
@@ -218,7 +218,7 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   await cuadro.fill('una línea\notra\notra más\ny otra')
   const alto4 = await alto()
   expect(alto4).toBeGreaterThan(alto1 + 40)
-  await win.locator('.cabecera h1').click()
+  await win.locator('.cab-proyecto h1').click()
   expect(await alto()).toBe(alto4)
   await cuadro.fill('')
   expect(await alto()).toBe(alto1)
@@ -258,26 +258,26 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
 
   await barra.getByRole('button', { name: 'Archivos' }).click()
   const archivos = win.locator('[data-seccion="archivos"]')
-  await expect(archivos.locator('.arbol > .nodo, .arbol > div > .nodo')).toHaveText([
+  await expect(archivos.locator('.arbol-lista > .arbol-nodo, .arbol-lista > div > .arbol-nodo')).toHaveText([
     'docs',
     'src',
     '.proyecto.json',
     'icono.png',
     'marca.txt',
   ])
-  await archivos.locator('.nodo', { hasText: 'src' }).click()
-  await archivos.locator('.nodo', { hasText: 'app.ts' }).click()
+  await archivos.locator('.arbol-nodo', { hasText: 'src' }).click()
+  await archivos.locator('.arbol-nodo', { hasText: 'app.ts' }).click()
   await expect(archivos.locator('.visor-cab')).toContainText('2 líneas · TypeScript · solo lectura')
   await expect(archivos.locator('.codigo .c')).toHaveText('// La app')
   await expect(archivos.locator('.codigo .k').first()).toHaveText('export')
   await win.screenshot({ path: 'test-results/i4-archivos.png' })
 
-  await archivos.locator('.nodo', { hasText: 'icono.png' }).click()
+  await archivos.locator('.arbol-nodo', { hasText: 'icono.png' }).click()
   await expect(archivos.locator('.imagen img')).toBeVisible()
 
   // Un .md de los documentos se abre en Docs; Atrás vuelve al archivo.
-  await archivos.locator('.nodo', { hasText: 'docs' }).first().click()
-  await archivos.locator('.nodo', { hasText: 'decisiones.md' }).click()
+  await archivos.locator('.arbol-nodo', { hasText: 'docs' }).first().click()
+  await archivos.locator('.arbol-nodo', { hasText: 'decisiones.md' }).click()
   await archivos.getByRole('button', { name: 'Ver en Docs' }).click()
   await expect(win.locator('[data-seccion="docs"] .barra-doc .nom')).toHaveText('decisiones.md')
   await win.keyboard.press('Alt+ArrowLeft')
@@ -330,7 +330,7 @@ test('el ancho de la conversación se arrastra y se recuerda; las conversaciones
 
   // Al volver a abrir la app, vuelve a Alfa (D-060) y el ancho es el que se dejó.
   ;({ app, win } = await abrir())
-  await expect(win.locator('.principal .cabecera h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal .cab-proyecto h1')).toHaveText('Alfa')
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', ancho)
   await win.getByRole('separator', { name: /Ancho de la conversación/ }).dblclick()
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', 360)

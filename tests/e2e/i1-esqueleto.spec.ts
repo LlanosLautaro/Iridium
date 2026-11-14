@@ -102,7 +102,7 @@ test('la grilla se actualiza sola cuando cambia un estado.md o llega una respues
 test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la derecha; volver al inicio', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  const cabecera = win.locator('.principal > .cabecera')
+  const cabecera = win.locator('.zona-principal > .cab-proyecto')
   await expect(cabecera.locator('h1')).toHaveText('Alfa')
   await expect(cabecera).toContainText('Hito 7 · Construcción')
   // La cabecera no repite la cuenta: la tiene la pestaña (W-3).
@@ -131,8 +131,8 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
   await app.close()
   const otra = await abrir()
   await expect(otra.win.locator('.ses .nom')).toHaveText(['Alfa', 'Beta'])
-  await otra.win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana').click()
-  await expect(otra.win.locator('.principal > .cabecera h1')).toHaveText('Alfa')
+  await otra.win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana-ses').click()
+  await expect(otra.win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
   // × la saca de la barra; si era la abierta, se vuelve al inicio.
   await otra.win.getByRole('button', { name: 'Cerrar Alfa' }).click()
   await expect(otra.win.locator('.grilla')).toBeVisible()

@@ -75,14 +75,14 @@ function Fila({ p }: { p: ProyectoFramework }) {
           <Icono nombre="sync" gira />
           Pasando al framework…
         </span>
-        <button type="button" className="btn secundario chico" onClick={() => abrirProyecto(p.ruta)}>
+        <button type="button" className="boton secundario chico" onClick={() => abrirProyecto(p.ruta)}>
           Ver la conversación
         </button>
       </>
     )
   else if (trabajando)
     accion = (
-      <button type="button" className="btn secundario chico" disabled title="Su IA está trabajando">
+      <button type="button" className="boton secundario chico" disabled title="Su IA está trabajando">
         Pasar al framework
       </button>
     )
@@ -90,14 +90,14 @@ function Fila({ p }: { p: ProyectoFramework }) {
     accion = (
       <>
         {loMande && ficha?.estado === 'error' && (
-          <button type="button" className="btn secundario chico" onClick={() => abrirProyecto(p.ruta)}>
+          <button type="button" className="boton secundario chico" onClick={() => abrirProyecto(p.ruta)}>
             <Icono nombre="error" />
             Ver el error
           </button>
         )}
         <button
           type="button"
-          className="btn secundario chico"
+          className="boton secundario chico"
           disabled={mandando}
           title="Le manda el pedido a la IA de este proyecto: gasta uso"
           onClick={() => void pasar()}

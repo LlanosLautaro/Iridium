@@ -112,7 +112,7 @@
   border-radius: 0 0 var(--radio-medidor) var(--radio-medidor);
   background: var(--primario);
 }
-.ses .pestana {
+.ses .pestana-ses {
   align-self: stretch;
   display: flex;
   align-items: center;
@@ -261,7 +261,7 @@
 }
 
 /* Un menú que se despliega desde un botón */
-.menu {
+.desplegable {
   position: relative;
   min-width: 0;
 }

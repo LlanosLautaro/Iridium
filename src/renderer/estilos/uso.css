@@ -219,7 +219,7 @@
 }
 
 /* El cuadro de la conversación: modelo y esfuerzo a la izquierda, el contexto y Enviar a la derecha */
-.compositor .fila {
+.compositor .fila-comp {
   min-width: 0;
 }
 .ajustes-ia {
@@ -228,18 +228,18 @@
   gap: 2px;
   min-width: 0;
 }
-.selector .menu-boton {
+.selector-ia .menu-boton {
   height: 24px;
   padding: 0 7px;
   font-size: 12px;
 }
-.selector .nom {
+.selector-ia .nom {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 120px;
 }
-.selector .menu-lista {
+.selector-ia .menu-lista {
   top: auto;
   bottom: 30px;
   width: 300px;
@@ -262,7 +262,7 @@
   font-size: 12px;
   color: var(--texto-3);
 }
-.selector.ctx {
+.selector-ia.ctx {
   margin-left: 4px;
 }
 .contexto-alto {
@@ -344,7 +344,7 @@
 }
 
 /* F-6: la confirmación de cerrar con sesiones trabajando */
-.velo {
+.velo-dialogo {
   position: fixed;
   inset: 0;
   z-index: 50;
@@ -375,13 +375,6 @@
   justify-content: flex-end;
   gap: 8px;
   margin-top: 6px;
-}
-.btn.peligro {
-  background: var(--error);
-  color: var(--sobre-color);
-}
-.btn.peligro:hover:not(:disabled) {
-  filter: brightness(1.1);
 }
 
 .aviso .x:hover {

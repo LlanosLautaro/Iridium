@@ -20,7 +20,7 @@ export function Menu({
 }: {
   boton: ReactNode
   titulo: string
-  /** Clases del contenedor (`menu`, más las que se pasen). */
+  /** Clases del contenedor (`desplegable`, más las que se pasen). */
   clase?: string
   deshabilitado?: boolean
   alAbrir?: () => void
@@ -83,7 +83,7 @@ export function Menu({
     // biome-ignore lint/a11y/noStaticElementInteractions: solo mira a dónde va el foco para cerrar el menú al salir con Tab.
     <div
       ref={ref}
-      className={clase ? `menu ${clase}` : 'menu'}
+      className={clase ? `desplegable ${clase}` : 'desplegable'}
       onBlur={(e) => {
         // Tab fuera del menú lo cierra; un clic adentro en algo que no toma el foco, no.
         if (abierto && e.relatedTarget && !ref.current?.contains(e.relatedTarget)) setAbierto(false)

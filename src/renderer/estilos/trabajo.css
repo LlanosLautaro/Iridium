@@ -48,13 +48,13 @@
 .bajo-campo.error {
   color: var(--error);
 }
-.bajo-campo .btn {
+.bajo-campo > button {
   margin-left: auto;
   flex: none;
 }
 
 /* El menú de frentes, a la derecha de los filtros (W-9) */
-.cab-2 .filtro.menu {
+.cab-2 .cab-filtro.frentes {
   margin-left: auto;
   border-color: var(--borde-fuerte);
   border-radius: var(--radio-control);

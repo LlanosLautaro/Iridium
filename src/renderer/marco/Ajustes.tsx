@@ -104,7 +104,7 @@ export function Ajustes() {
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: el clic en el fondo cierra, como Esc (que sí es del teclado).
     <div
-      className="velo ajustes-velo"
+      className="velo-dialogo ajustes-velo"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) cerrarAjustes()
       }}

@@ -28,7 +28,7 @@ function ConfirmarPedido({
   const primero = useRef<HTMLButtonElement>(null)
   useEffect(() => primero.current?.focus(), [])
   return (
-    <div className="velo">
+    <div className="velo-dialogo">
       <div
         className="dialogo"
         role="dialog"
@@ -45,12 +45,12 @@ function ConfirmarPedido({
           Van apareciendo acá a medida que las guarda. Gasta uso de tu suscripción.
         </p>
         <div className="acc">
-          <button ref={primero} type="button" className="btn secundario" onClick={cerrar}>
+          <button ref={primero} type="button" className="boton sin-fondo" onClick={cerrar}>
             Cancelar
           </button>
           <button
             type="button"
-            className="btn primario"
+            className="boton principal"
             onClick={() => {
               pedir()
               cerrar()
@@ -194,7 +194,7 @@ export function Diseno({ ruta }: { ruta: string }) {
           comentarios > 0 && (
             <button
               type="button"
-              className="btn fantasma chico"
+              className="boton sin-fondo chico"
               title="Los comentarios abiertos de la Revisión"
               onClick={() => abrirSeccion(ruta, 'revision')}
             >
@@ -259,7 +259,7 @@ export function Diseno({ ruta }: { ruta: string }) {
           </p>
           <button
             type="button"
-            className="btn secundario chico"
+            className="boton secundario chico"
             disabled={trabajando}
             title={
               trabajando ? 'Su IA está trabajando' : 'Le manda el pedido a la IA del proyecto: gasta uso'

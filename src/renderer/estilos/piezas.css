@@ -2,8 +2,8 @@
    cada pieza son los de docs/diseno/piezas.css, tal cual (el control de estilos, tests/estilos.test.ts, los compara).
    Cambiar una pieza es cambiarla en la maqueta y acá en el mismo cambio. El marco y la conversación de esa hoja no
    están: son de la app (marco.css, conversacion.css). Solo usa var(--…): ningún color escrito.
-   Se suma a main.tsx con la primera tanda que pasa una sección a las piezas: hoy varias secciones usan los mismos
-   nombres de clase (.fila, .menu, .filtro…) para otra cosa, y el control lleva la cuenta de esos choques. */
+   main.tsx la suma después de la base y antes de las secciones (DI-I3, tanda 2). Ninguna sección usa el nombre de una
+   pieza para otra cosa: lo que todavía no pasó a la pieza lleva otro nombre (.fila-mapa, .arbol-nodo…). */
 
 /* ───────── PZ-1 · Botón ─────────
    Grupo: Acciones

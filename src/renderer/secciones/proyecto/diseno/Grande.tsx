@@ -127,7 +127,12 @@ export function Grande({
   return (
     <div className="di-grande">
       <div className="di-grande-cab">
-        <button type="button" className="btn fantasma chico" onClick={volver} title="Volver al lienzo (Esc)">
+        <button
+          type="button"
+          className="boton sin-fondo chico"
+          onClick={volver}
+          title="Volver al lienzo (Esc)"
+        >
           <Icono nombre="atras" />
           Volver
         </button>
@@ -137,7 +142,7 @@ export function Grande({
         </span>
         <button
           type="button"
-          className="btn fantasma chico"
+          className="boton sin-fondo chico"
           aria-pressed={comentando}
           onClick={comentar}
           title="Comentar esta maqueta (F8 con el foco en ella)"

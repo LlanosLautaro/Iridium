@@ -63,7 +63,7 @@ export function EliminarProyecto({
 
   const regenerables = plan?.regenerables ?? []
   return (
-    <div className="velo">
+    <div className="velo-dialogo">
       <div
         className="dialogo eliminar-proyecto"
         role="alertdialog"
@@ -105,7 +105,7 @@ export function EliminarProyecto({
           <button
             ref={cancelar}
             type="button"
-            className="btn secundario"
+            className="boton sin-fondo"
             disabled={eliminando}
             onClick={cerrar}
           >
@@ -113,7 +113,7 @@ export function EliminarProyecto({
           </button>
           <button
             type="button"
-            className="btn peligro"
+            className="boton principal peligroso"
             disabled={!plan || eliminando}
             onClick={() => void eliminar()}
           >

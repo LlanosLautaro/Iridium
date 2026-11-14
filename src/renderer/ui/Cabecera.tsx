@@ -19,12 +19,12 @@ export function Filtros({
   etiqueta: string
 }) {
   return (
-    <fieldset className="filtros" aria-label={etiqueta}>
+    <fieldset className="cab-filtros" aria-label={etiqueta}>
       {filtros.map((f) => (
         <button
           key={f.clave}
           type="button"
-          className={f.clave === elegido ? 'filtro sel' : 'filtro'}
+          className={f.clave === elegido ? 'cab-filtro sel' : 'cab-filtro'}
           aria-pressed={f.clave === elegido}
           title={f.titulo}
           onClick={() => elegir(f.clave)}

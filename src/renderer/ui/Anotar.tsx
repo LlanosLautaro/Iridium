@@ -67,7 +67,7 @@ export function Anotar({
           }}
         />
         {selector}
-        <button type="submit" className="btn secundario" disabled={texto.trim() === '' || enviando}>
+        <button type="submit" className="boton secundario" disabled={texto.trim() === '' || enviando}>
           Anotar
         </button>
       </form>
@@ -75,7 +75,7 @@ export function Anotar({
         <p className="bajo-campo error" role="alert">
           <Icono nombre="x" />
           <span>{error.charAt(0).toUpperCase() + error.slice(1)}</span>
-          <button type="button" className="btn secundario chico" onClick={() => void enviar()}>
+          <button type="button" className="boton secundario chico" onClick={() => void enviar()}>
             Reintentar
           </button>
         </p>

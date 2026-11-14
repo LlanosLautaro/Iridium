@@ -145,7 +145,7 @@ test('el Mapa en operación: el frente activo, los que esperan y los que están 
   await expect(bloque.locator('.fr-cab h3')).toHaveText('Orden')
   await expect(bloque.locator('.fr-paso')).toHaveText('4. UX · en curso')
   await expect(bloque.locator('.fr-texto')).toContainText('reescribir 04-ux.md sin capas')
-  await expect(bloque.locator('button.fila', { hasText: 'T-12' })).toContainText(
+  await expect(bloque.locator('button.fila-mapa', { hasText: 'T-12' })).toContainText(
     'Bandeja agrupada por frente',
   )
   await expect(bloque.locator('.espera-fila')).toHaveText([/Q-139.*¿Las pantallas van así\?.*!/])
@@ -162,7 +162,7 @@ test('el Mapa en operación: el frente activo, los que esperan y los que están 
   await docs.getByRole('button', { name: 'Atrás' }).click()
 
   // Un T-n en curso abre Trabajo con ese ítem desplegado.
-  await bloque.locator('button.fila', { hasText: 'T-12' }).click()
+  await bloque.locator('button.fila-mapa', { hasText: 'T-12' }).click()
   const trabajo = win.locator('[data-seccion="trabajo"]')
   await expect(trabajo).toBeVisible()
   await expect(trabajo).toContainText('Con filtros arriba, no una pestaña por frente.')

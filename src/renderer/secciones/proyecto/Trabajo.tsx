@@ -139,7 +139,7 @@ export function Trabajo({ ruta }: { ruta: string }) {
         cuenta={items.length > 0 ? items.length : undefined}
         acciones={
           !vacio && (
-            <button type="button" className="btn secundario chico" onClick={abrirCampo}>
+            <button type="button" className="boton secundario chico" onClick={abrirCampo}>
               <Icono nombre="mas" />
               Anotar una idea
             </button>
@@ -151,7 +151,7 @@ export function Trabajo({ ruta }: { ruta: string }) {
               <Filtros filtros={filtros} elegido={filtro} elegir={setFiltro} etiqueta="Filtrar por estado" />
               {frentes.length > 1 && (
                 <select
-                  className="filtro menu"
+                  className="cab-filtro frentes"
                   aria-label="Filtrar por frente"
                   value={frente}
                   onChange={(e) => setFrente(e.target.value)}
@@ -334,7 +334,7 @@ function TrabajoViejo({ ruta, ideas }: { ruta: string; ideas: IdeasProyecto }) {
                 </h4>
                 <button
                   type="button"
-                  className="btn secundario chico"
+                  className="boton secundario chico"
                   title={`Abrir ${nombreDoc(s.documento)} en Docs`}
                   onClick={() => abrirDoc(ruta, { documento: s.documento, ancla: s.ancla ?? '' })}
                 >

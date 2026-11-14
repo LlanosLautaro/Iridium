@@ -81,7 +81,7 @@ test('360 px en cada vista; cada una recuerda el suyo y no pasa de la mitad', as
   await win.getByRole('button', { name: /^Inicio/ }).click()
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', 360)
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  await expect(win.locator('.principal .cabecera h1')).toHaveText('Beta')
+  await expect(win.locator('.zona-principal .cab-proyecto h1')).toHaveText('Beta')
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', 360)
 
   // Beta hasta el tope: la mitad de la zona de trabajo, no más.

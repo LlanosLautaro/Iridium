@@ -72,19 +72,19 @@ export function ArbolArchivos({
   const sangria = { '--n': nivel } as CSSProperties
   if (!c)
     return (
-      <div className="nodo cargando" style={sangria}>
+      <div className="arbol-nodo cargando" style={sangria}>
         Leyendo…
       </div>
     )
   if (c.tipo === 'error')
     return (
-      <div className="nodo error" style={sangria} title={c.mensaje}>
+      <div className="arbol-nodo error" style={sangria} title={c.mensaje}>
         {c.mensaje}
       </div>
     )
   if (c.hijos.length === 0 && nivel > 0)
     return (
-      <div className="nodo vacio" style={sangria}>
+      <div className="arbol-nodo vacio" style={sangria}>
         (vacía)
       </div>
     )
@@ -97,7 +97,7 @@ export function ArbolArchivos({
             <div key={n.ruta}>
               <button
                 type="button"
-                className="nodo"
+                className="arbol-nodo"
                 style={sangria}
                 aria-expanded={abierta}
                 title={n.ruta}
@@ -119,7 +119,7 @@ export function ArbolArchivos({
           <button
             key={n.ruta}
             type="button"
-            className={eleccion.elegido === n.ruta ? 'nodo sel' : 'nodo'}
+            className={eleccion.elegido === n.ruta ? 'arbol-nodo sel' : 'arbol-nodo'}
             style={sangria}
             aria-current={eleccion.elegido === n.ruta}
             title={n.ruta}
@@ -149,7 +149,7 @@ function VerEnDocs({ ruta, archivo }: { ruta: string; archivo: string }) {
   return (
     <button
       type="button"
-      className="btn secundario chico"
+      className="boton secundario chico"
       title="Leerlo en Docs, con los códigos como enlaces"
       onClick={() => abrirDoc(ruta, { documento: archivo, ancla: '' })}
     >
@@ -285,7 +285,7 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
       )}
       <button
         type="button"
-        className="btn secundario chico"
+        className="boton secundario chico"
         disabled={trabajando}
         title={trabajando ? 'Su IA está trabajando' : 'Le manda el pedido a la IA de esta carpeta: gasta uso'}
         onClick={pasar}
@@ -329,7 +329,7 @@ export function Archivos({ ruta }: { ruta: string }) {
       <Cabecera titulo="Archivos" acciones={atras > 0 && <BotonAtras ruta={ruta} />} />
       {simple && <CarpetaSimple ruta={ruta} />}
       <div className="partida">
-        <nav className="arbol" aria-label={`Archivos de ${nombre}`}>
+        <nav className="arbol-lista" aria-label={`Archivos de ${nombre}`}>
           <h3>{nombre}</h3>
           <ArbolArchivos fuente={fuente} eleccion={eleccion} />
         </nav>

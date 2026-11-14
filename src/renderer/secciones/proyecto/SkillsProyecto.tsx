@@ -50,7 +50,7 @@ export function SkillsProyecto({ ruta }: { ruta: string }) {
                 <h4>{s.nombre}</h4>
                 <button
                   type="button"
-                  className="btn secundario chico"
+                  className="boton secundario chico"
                   title={`Ver ${s.archivo} en Archivos`}
                   onClick={() => abrirArchivo(ruta, s.archivo)}
                 >

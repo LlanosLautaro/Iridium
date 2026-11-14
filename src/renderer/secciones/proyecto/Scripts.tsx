@@ -54,7 +54,7 @@ function Boton({
   return (
     <button
       type="button"
-      className="btn secundario chico"
+      className="boton secundario chico"
       disabled={s.falta !== null || corriendo}
       title={s.falta ?? (conNombre ? `${s.nombre}: ${que}` : que)}
       onClick={correr}

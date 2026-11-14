@@ -86,7 +86,7 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
   return (
     <div className="ajustes-ia">
       <Menu
-        clase="selector"
+        clase="selector-ia"
         titulo={`Modelo: ${nombreModelo(elegido, modelos)}. Vale desde el próximo mensaje.`}
         boton={
           <>
@@ -120,7 +120,7 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
         )}
       </Menu>
       <Menu
-        clase="selector"
+        clase="selector-ia"
         deshabilitado={esfuerzos.length === 0}
         titulo={
           esfuerzos.length === 0
@@ -299,7 +299,7 @@ export function MedidorContexto({ contexto }: { contexto: ContextoConversacion }
     vence === null ? '' : vigente ? `; la caché vence en ${cacheCorta(vence, ahora)}` : '; la caché venció'
   return (
     <Menu
-      clase="selector ctx"
+      clase="selector-ia ctx"
       titulo={`Contexto: ${miles(contexto.usados)} de ${miles(contexto.maximo)} tokens (${pc(contexto.porcentaje)})${cache}. Tocá para ver el detalle.`}
       boton={
         <span className="medidor-ctx" data-nivel={nivel}>

@@ -106,7 +106,7 @@ export function ListaDeSkills({
                   <span>
                     No se pudo leer <code>{error.carpeta}</code>
                   </span>
-                  <button type="button" className="btn secundario chico" onClick={reintentar}>
+                  <button type="button" className="boton secundario chico" onClick={reintentar}>
                     <Icono nombre="reintentar" />
                     Reintentar
                   </button>

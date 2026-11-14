@@ -39,7 +39,7 @@ export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (r
   }
 
   return (
-    <div className="velo">
+    <div className="velo-dialogo">
       <form
         className="dialogo nuevo-proyecto"
         role="dialog"
@@ -60,7 +60,7 @@ export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (r
           <span>Nombre</span>
           <input
             ref={campo}
-            className="campo"
+            className="campo-texto"
             value={nombre}
             maxLength={80}
             spellCheck={false}
@@ -78,10 +78,10 @@ export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (r
           </p>
         )}
         <div className="acc">
-          <button type="button" className="btn secundario" disabled={creando} onClick={cerrar}>
+          <button type="button" className="boton sin-fondo" disabled={creando} onClick={cerrar}>
             Cancelar
           </button>
-          <button type="submit" className="btn primario" disabled={!nombre.trim() || creando}>
+          <button type="submit" className="boton principal" disabled={!nombre.trim() || creando}>
             {creando ? 'Creando…' : 'Crear'}
           </button>
         </div>

@@ -61,13 +61,13 @@ function Aviso({ a }: { a: AvisoSesion }) {
       </button>
       {detalle && <span className="d">{detalle}</span>}
       <div className="acc">
-        <button type="button" className="btn secundario chico" onClick={() => abrirProyecto(a.ruta)}>
+        <button type="button" className="boton secundario chico" onClick={() => abrirProyecto(a.ruta)}>
           Abrir
         </button>
         {espera && (
           <button
             type="button"
-            className="btn primario chico"
+            className="boton principal chico"
             onClick={() => {
               quitar(a.id)
               responderEn(a.ruta)
@@ -136,7 +136,7 @@ export function ConfirmarCierre() {
   if (!cierre) return null
   const nombres = cierre.map((r) => tarjetaDe(lista, r)?.nombre ?? r.split(/[\\/]/).pop() ?? r)
   return (
-    <div className="velo">
+    <div className="velo-dialogo">
       <div
         className="dialogo"
         role="alertdialog"
@@ -155,7 +155,7 @@ export function ConfirmarCierre() {
           <button
             ref={cancelar}
             type="button"
-            className="btn secundario"
+            className="boton sin-fondo"
             disabled={cerrando}
             onClick={() => ponerCierre(null)}
           >
@@ -164,7 +164,7 @@ export function ConfirmarCierre() {
           {reiniciando && (
             <button
               type="button"
-              className="btn secundario"
+              className="boton secundario"
               disabled={cerrando}
               title="La versión nueva queda lista: Iridium se reinicia solo cuando terminen"
               onClick={esperar}
@@ -174,7 +174,7 @@ export function ConfirmarCierre() {
           )}
           <button
             type="button"
-            className="btn peligro"
+            className="boton principal peligroso"
             disabled={cerrando}
             onClick={() => {
               setCerrando(true)

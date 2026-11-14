@@ -121,8 +121,8 @@ test('dos proyectos trabajan a la vez y cambiar entre ellos no corta nada (H-2, 
   await win.screenshot({ path: 'test-results/i2-dos-sesiones.png' })
 
   // La ficha de Alfa lleva a Alfa, con su conversación como estaba.
-  await win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana').click()
-  await expect(win.locator('.principal > .cabecera h1')).toHaveText('Alfa')
+  await win.locator('.ses', { hasText: 'Alfa' }).locator('.pestana-ses').click()
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
   await expect(win.locator('.turno').first()).toContainText('Algo lento en Alfa')
   await expect(win.locator('.hilo')).not.toContainText('Beta')
   await expect(win.locator('.ses', { hasText: 'Alfa' })).toContainText('Terminada', { timeout: 15_000 })

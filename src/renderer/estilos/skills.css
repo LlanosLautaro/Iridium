@@ -203,13 +203,13 @@
 .sk-partida {
   grid-template-columns: minmax(170px, 210px) minmax(0, 1fr);
 }
-.sk-partida .arbol {
+.sk-partida .arbol-lista {
   padding-top: 8px;
 }
-.sk-partida .arbol h3 {
+.sk-partida .arbol-lista h3 {
   margin-top: 6px;
 }
-.nodo.sk-resumen {
+.arbol-nodo.sk-resumen {
   font-weight: 500;
 }
 .sk-detalle .cuerpo {

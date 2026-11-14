@@ -285,7 +285,7 @@ for (const tema of ['negro']) {
       .catch(() => false)
     // Un proyecto con todas sus secciones.
     await win.locator('.tarjeta[title^="Centro de Desarrollo"]').click()
-    await win.waitForSelector('.principal > .cabecera h1')
+    await win.waitForSelector('.zona-principal > .cab-proyecto h1')
     const nav = win.getByRole('navigation', { name: 'Secciones del proyecto' })
     const nombres = await nav
       .locator('button')

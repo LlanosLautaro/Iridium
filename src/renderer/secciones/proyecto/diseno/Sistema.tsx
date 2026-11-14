@@ -172,7 +172,7 @@ export function Sistema({
         </div>
       )}
       <div className="di-sistema-acc">
-        <button type="button" className="btn fantasma chico" onClick={abrirTokens}>
+        <button type="button" className="boton sin-fondo chico" onClick={abrirTokens}>
           <Icono nombre="archivo" />
           Abrir tokens
         </button>
@@ -217,7 +217,7 @@ export function Sistema({
               La IA las arma en <code>piezas.html</code>, con cada pieza y sus variantes.
             </p>
             {pedir && (
-              <button type="button" className="btn secundario chico" onClick={pedir}>
+              <button type="button" className="boton secundario chico" onClick={pedir}>
                 Pedírselo a la IA
               </button>
             )}

@@ -44,7 +44,7 @@ function CuentaClaude() {
       </div>
       <button
         type="button"
-        className={`btn ${conSesion ? 'secundario' : 'primario'} chico`}
+        className={`boton ${conSesion ? 'sin-fondo' : 'principal'} chico`}
         disabled={iniciando || motor.tipo === 'verificando'}
         onClick={iniciarSesion}
       >

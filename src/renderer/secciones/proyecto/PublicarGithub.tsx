@@ -27,7 +27,7 @@ export function SinRepositorio({ ruta, listo }: { ruta: string; listo: (r: Resul
         <div className="acc">
           <button
             type="button"
-            className="btn primario chico"
+            className="boton principal chico"
             disabled={trabajando}
             onClick={() => void crear()}
           >
@@ -95,7 +95,7 @@ export function PublicarGithub({
   }
 
   return (
-    <div className="velo">
+    <div className="velo-dialogo">
       <form
         className="dialogo publicar-github"
         role="dialog"
@@ -129,7 +129,7 @@ export function PublicarGithub({
           <span>Nombre</span>
           <input
             ref={campo}
-            className="campo"
+            className="campo-texto"
             value={nombre}
             maxLength={100}
             spellCheck={false}
@@ -139,13 +139,13 @@ export function PublicarGithub({
           {!valido && <small>Solo letras sin acento, números, puntos, guiones y guiones bajos.</small>}
         </label>
         <div className="opciones" role="radiogroup" aria-label="Quién lo ve">
-          <label className="opcion">
+          <label className="opcion-radio">
             <input type="radio" name="visibilidad" checked={privado} onChange={() => setPrivado(true)} />
             <span className="t">
               Privado <small>Solo vos y a quien invites.</small>
             </span>
           </label>
-          <label className="opcion">
+          <label className="opcion-radio">
             <input type="radio" name="visibilidad" checked={!privado} onChange={() => setPrivado(false)} />
             <span className="t">
               Público <small>Cualquiera puede verlo; solo vos lo cambiás.</small>
@@ -158,12 +158,12 @@ export function PublicarGithub({
           </p>
         )}
         <div className="acc">
-          <button type="button" className="btn secundario" disabled={enviando} onClick={cerrar}>
+          <button type="button" className="boton sin-fondo" disabled={enviando} onClick={cerrar}>
             Cancelar
           </button>
           <button
             type="submit"
-            className="btn primario"
+            className="boton principal"
             disabled={cuenta?.tipo !== 'ok' || !valido || enviando}
           >
             {enviando ? 'Publicando…' : 'Publicar'}

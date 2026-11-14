@@ -184,7 +184,7 @@ function AvisoElectron({ ruta }: { ruta: string }) {
       </div>
       <button
         type="button"
-        className="btn secundario chico sigue"
+        className="boton sin-fondo chico"
         title="Escribe el pedido en la conversación, sin enviarlo"
         onClick={() =>
           escribirEnCampo(
@@ -276,12 +276,12 @@ function Reabrir({ ruta, codigo, cerrar }: { ruta: string; codigo: string; cerra
         </p>
       )}
       <div className="pie">
-        <button type="button" className="btn secundario chico" onClick={cerrar}>
+        <button type="button" className="boton sin-fondo chico" onClick={cerrar}>
           Cancelar
         </button>
         <button
           type="button"
-          className="btn secundario chico sigue"
+          className="boton secundario chico"
           disabled={enviando}
           onClick={() => void confirmar()}
         >
@@ -343,7 +343,7 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
         )}
         <div className="acc">
           {cerrado && !reabriendo && (
-            <button type="button" className="btn secundario chico" onClick={() => setReabriendo(true)}>
+            <button type="button" className="boton secundario chico" onClick={() => setReabriendo(true)}>
               <Icono nombre="reabrir" />
               Reabrir
             </button>
@@ -369,7 +369,7 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
           {!cerrado && envio !== 'enviado' && envio !== 'sin-sesion' && (
             <button
               type="button"
-              className="btn secundario chico"
+              className="boton secundario chico"
               disabled={envio === 'enviando'}
               title="Mandarlo a la sesión de este proyecto: si la IA trabaja, entra en su turno"
               onClick={() => void enviar()}

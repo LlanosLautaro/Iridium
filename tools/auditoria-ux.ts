@@ -83,8 +83,8 @@ await paso('arranque', () => win.waitForSelector('.tarjeta', { timeout: 60_000 }
 await paso('grilla', () =>
   win.waitForSelector('[data-motor]:not([data-motor="verificando"])', { timeout: 30_000 }),
 )
-await paso('grilla-archivados', () => win.click('.interruptor'))
-await win.click('.interruptor').catch(() => {})
+await paso('grilla-archivados', () => win.click('.interruptor-arch'))
+await win.click('.interruptor-arch').catch(() => {})
 await paso('tarjeta-menu', () => win.locator('.tarjeta').first().click({ button: 'right' }))
 await win.keyboard.press('Escape')
 await paso('nuevo-proyecto', () => win.getByRole('button', { name: 'Nuevo proyecto' }).click())

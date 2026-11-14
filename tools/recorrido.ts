@@ -67,7 +67,9 @@ async function abrir(extra: Record<string, string> = {}) {
   const win = await app.firstWindow()
   await win.setViewportSize({ width: 1440, height: 900 })
   // Abre en la grilla o, si se cerró dentro de un proyecto, en ese proyecto (D-060).
-  await win.waitForSelector('.grilla:not(.carga) .tarjeta, .principal > .cabecera h1', { timeout: 60_000 })
+  await win.waitForSelector('.grilla:not(.carga) .tarjeta, .zona-principal > .cab-proyecto h1', {
+    timeout: 60_000,
+  })
   return { app, win }
 }
 
@@ -96,7 +98,7 @@ const inicio = async () => {
 const entrar = async (nombre: string) => {
   await inicio()
   await win.locator(`.tarjeta[title^="${nombre}"]`).click()
-  await win.waitForSelector('.principal > .cabecera h1')
+  await win.waitForSelector('.zona-principal > .cab-proyecto h1')
 }
 const seccion = (nombre: string) =>
   win
@@ -176,7 +178,7 @@ try {
     await win.waitForTimeout(800)
     await foto('H-3-H-4-abrir-iridium')
     return {
-      h1: await win.locator('.principal > .cabecera h1').textContent(),
+      h1: await win.locator('.zona-principal > .cab-proyecto h1').textContent(),
       chatCab: (await texto('.chat-cab'))[0]?.replace(/\s+/g, ' '),
       botones: await win.locator('.chat-cab button').allInnerTexts(),
       turnos: await win.locator('.turno').count(),
@@ -214,7 +216,7 @@ try {
         .textContent()
         .catch(() => null),
       titulo: await m.locator('.hito-card h3').textContent(),
-      filas: (await m.locator('.hito-card .fila').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
+      filas: (await m.locator('.hito-card .fila-mapa').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
       frentes: await m.locator('.frente').allInnerTexts(),
     }
   })
@@ -225,7 +227,7 @@ try {
     await foto('H-7-frente-compartir')
     const r = {
       titulo: await m.locator('.hito-card h3').textContent(),
-      filas: (await m.locator('.hito-card .fila').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
+      filas: (await m.locator('.hito-card .fila-mapa').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
     }
     await m.locator('.frente').first().click()
     return r
@@ -235,7 +237,7 @@ try {
     await m.locator('.h', { hasText: /^4$/ }).click()
     await win.waitForTimeout(300)
     await foto('H-7-hito-4')
-    await m.locator('.hito-card .fila').first().click()
+    await m.locator('.hito-card .fila-mapa').first().click()
     const docs = win.locator('[data-seccion="docs"]')
     await docs.locator('.doc-texto').waitFor({ timeout: 10_000 })
     await win.waitForTimeout(400)
@@ -292,25 +294,25 @@ try {
   await paso('H-15-archivos', async () => {
     await seccion('Archivos')
     const a = win.locator('[data-seccion="archivos"]')
-    const raizArbol = await a.locator('.nodo').allInnerTexts()
+    const raizArbol = await a.locator('.arbol-nodo').allInnerTexts()
     await a
-      .locator('.nodo', { hasText: /^docs$/ })
+      .locator('.arbol-nodo', { hasText: /^docs$/ })
       .first()
       .click()
-    await a.locator('.nodo', { hasText: /^ui$/ }).first().click()
-    await a.locator('.nodo', { hasText: 'ajustes-fondo.png' }).first().click()
+    await a.locator('.arbol-nodo', { hasText: /^ui$/ }).first().click()
+    await a.locator('.arbol-nodo', { hasText: 'ajustes-fondo.png' }).first().click()
     await win.waitForTimeout(500)
     await foto('H-15-imagen')
     const imagen = await a.locator('img').count()
     await a
-      .locator('.nodo', { hasText: /^package\.json$/ })
+      .locator('.arbol-nodo', { hasText: /^package\.json$/ })
       .first()
       .click()
     await a.locator('.codigo').waitFor({ timeout: 10_000 })
     await foto('H-15-codigo')
     const editable = await a.locator('.codigo [contenteditable="true"], .codigo textarea').count()
     await a
-      .locator('.nodo', { hasText: 'README.md' })
+      .locator('.arbol-nodo', { hasText: 'README.md' })
       .first()
       .click()
       .catch(() => {})
@@ -327,7 +329,7 @@ try {
   await paso('H-16-git', async () => {
     await seccion('Git')
     const g = win.locator('[data-seccion="git"]:not([hidden])')
-    await g.locator('.arbol .commit').first().waitFor({ timeout: 15_000 })
+    await g.locator('.arbol-lista .commit').first().waitFor({ timeout: 15_000 })
     const r = {
       rama: await g.locator('.rama').textContent(),
       remoto: await g
@@ -335,14 +337,14 @@ try {
         .textContent()
         .catch(() => null),
       plegables: await g.locator('.plegable h3').allInnerTexts(),
-      commits: (await g.locator('.arbol .commit').allInnerTexts())
+      commits: (await g.locator('.arbol-lista .commit').allInnerTexts())
         .slice(0, 4)
         .map((s) => s.replace(/\s+/g, ' ')),
       botonesDeAccion: await g
         .getByRole('button', { name: /^(commit|push|pull|subir|deshacer|descartar|guardar|sincronizar)/i })
         .count(),
     }
-    await g.locator('.arbol .commit:not(:has-text("Cambios sin guardar"))').first().click()
+    await g.locator('.arbol-lista .commit:not(:has-text("Cambios sin guardar"))').first().click()
     await g.locator('.arch button').first().waitFor({ timeout: 15_000 })
     const archivos = await g.locator('.arch button').count()
     const difAntes = await g.locator('.dif').count()
@@ -394,7 +396,7 @@ try {
       pedido: (await win.locator('.pedido').innerText()).replace(/\s+/g, ' '),
       fichaAlTerminar: (await win.locator('.ses.activa').innerText()).replace(/\s+/g, ' '),
       chipCabecera: await win
-        .locator('.principal > .cabecera .chip.espera')
+        .locator('.zona-principal > .cab-proyecto .chip.espera')
         .textContent()
         .catch(() => null),
     }
@@ -444,9 +446,9 @@ try {
     }
   })
   await paso('H-2-tocar-ficha', async () => {
-    await win.locator('.ses', { hasText: B }).locator('.pestana').click()
+    await win.locator('.ses', { hasText: B }).locator('.pestana-ses').click()
     return {
-      h1: await win.locator('.principal > .cabecera h1').textContent(),
+      h1: await win.locator('.zona-principal > .cab-proyecto h1').textContent(),
       turnos: await win.locator('.turno').count(),
     }
   })
@@ -485,11 +487,11 @@ try {
     const textoAviso = (await aviso.innerText()).replace(/\s+/g, ' ')
     const botones = await aviso.getByRole('button').allInnerTexts()
     await aviso.getByRole('button', { name: /Abrir/ }).click()
-    const h1 = await win.locator('.principal > .cabecera h1').textContent()
+    const h1 = await win.locator('.zona-principal > .cab-proyecto h1').textContent()
     // Volver a A: sigue en Docs.
     await win
       .locator('.ses', { hasText: A })
-      .locator('.pestana')
+      .locator('.pestana-ses')
       .click()
       .catch(async () => entrar(A))
     await win.waitForTimeout(300)
@@ -525,8 +527,8 @@ try {
     if (await det.count()) await det.click()
     await win.waitForTimeout(300)
     await foto('H-10-decision')
-    const opciones = await q.locator('.opcion').allInnerTexts()
-    await q.locator('.opcion').first().click()
+    const opciones = await q.locator('.opcion-radio').allInnerTexts()
+    await q.locator('.opcion-radio').first().click()
     await q.getByRole('textbox', { name: 'Nota' }).fill('Respuesta de la tanda 4 (copia).')
     await q.getByRole('button', { name: 'Enviar' }).click()
     await q.locator('.meta', { hasText: 'Respondida' }).waitFor({ timeout: 10_000 })
@@ -534,9 +536,7 @@ try {
     return {
       opciones: opciones.map((s) => s.replace(/\s+/g, ' ')),
       archivo: await readFile(join(raiz, A, 'docs', 'respuestas', 'Q-900.md'), 'utf8'),
-      seguiResaltado: await win
-        .locator('.cab-proy button.resaltado, .cab-proy .segui.resaltado, .cab-proy [data-resaltado]')
-        .count(),
+      seguiResaltado: await win.locator('.cab-proy button.principal').count(),
       cabecera: (await win.locator('.cab-proy').innerText()).replace(/\s+/g, ' '),
     }
   })
@@ -721,7 +721,7 @@ try {
     ;({ app, win } = await abrir({ IRIDIUM_FALSO_ESTADO: 'sin-sesion' }))
     const barra = (await win.locator('.estado-barra').innerText()).replace(/\s+/g, ' ')
     const proyectoAlAbrir = await win
-      .locator('.principal > .cabecera h1')
+      .locator('.zona-principal > .cab-proyecto h1')
       .textContent()
       .catch(() => null)
     await entrar(B)

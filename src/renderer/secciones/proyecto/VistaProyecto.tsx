@@ -89,7 +89,7 @@ export function VistaProyecto() {
             <h2>Este proyecto ya no está en la carpeta de proyectos</h2>
             <span className="ruta">{ruta}</span>
             <div className="acc">
-              <button type="button" className="btn secundario" onClick={() => irA('proyectos')}>
+              <button type="button" className="boton secundario" onClick={() => irA('proyectos')}>
                 Volver a Proyectos
               </button>
             </div>
@@ -108,8 +108,8 @@ export function VistaProyecto() {
 
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
-      <section className="principal" aria-label={p.nombre}>
-        <div className="cabecera">
+      <section className="zona-principal" aria-label={p.nombre}>
+        <div className="cab-proyecto">
           <h1 title={p.nombre}>{p.nombre}</h1>
           {p.hito && <span className="sub">{textoHito(p.hito)}</span>}
         </div>

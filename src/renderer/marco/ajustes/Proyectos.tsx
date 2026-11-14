@@ -61,7 +61,7 @@ function CarpetaDeProyectos() {
       </div>
       <button
         type="button"
-        className={`btn ${falta ? 'primario' : 'secundario'} chico`}
+        className={`boton ${falta ? 'principal' : 'sin-fondo'} chico`}
         disabled={eligiendo || trabajando || lista === null}
         onClick={() => void cambiar()}
       >

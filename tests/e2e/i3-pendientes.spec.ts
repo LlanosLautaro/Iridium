@@ -102,7 +102,7 @@ test('la columna, los pendientes con lo que citan y «Ver entero» en el panel (
   await q7.getByRole('button', { name: 'Mostrar detalles (contexto y 2 citas)' }).click()
   await expect(q7.locator('.cita').first()).toContainText('Las miniaturas se generan al importar')
   await expect(q7.locator('.cita').nth(1)).toContainText('Grilla de cuatro columnas')
-  await expect(q7.locator('.opcion').first()).toContainText('recomendada')
+  await expect(q7.locator('.opcion-radio').first()).toContainText('recomendada')
   await expect(win.locator('.grupo')).toHaveText(['Frenan el proyecto', 'Sin responder'])
   await win.screenshot({ path: 'test-results/i3-pendientes.png' })
 
@@ -183,7 +183,7 @@ test('responder una decisión y una prueba, también a medias; Seguí resaltado 
 
   // Nada sin responder: Seguí resaltado; arranca la sesión sin abrir el proyecto.
   const segui = win.locator('.principal-pend .cab-seccion').getByRole('button', { name: 'Seguí' })
-  await expect(segui).toHaveClass(/resaltado/)
+  await expect(segui).toHaveClass(/principal/)
   await expect(win.locator('.principal-pend .cab-seccion .cuenta-bandeja')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/i3-todo-respondido.png' })
   await segui.click()
@@ -233,14 +233,14 @@ test('Responder en la conversación y la Bandeja de entrada llevan a las pregunt
   const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
   await secciones.getByRole('button', { name: 'Mapa' }).click()
   await secciones.getByRole('button', { name: /^Bandeja de entrada/ }).click()
-  await expect(win.locator('.principal > .cabecera h1')).toHaveText('Beta')
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
   await expect(win.locator('.resumen .pend').first()).toBeVisible()
 
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Gestor' }).click()
   await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
   await win.locator('.pedido').getByRole('button', { name: 'Responder' }).click()
-  await expect(win.locator('.principal > .cabecera h1')).toHaveText('Gestor')
+  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Gestor')
   await expect(win.locator('.resumen .pend[data-q="Q-4"]')).toContainText(
     '¿La prueba del motor falso funciona?',
   )
