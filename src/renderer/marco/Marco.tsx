@@ -124,42 +124,42 @@ function BarraActividad() {
   )
 }
 
-function Reloj() {
-  const [ahora, setAhora] = useState(() => new Date())
-  useEffect(() => {
-    const t = setInterval(() => setAhora(new Date()), 15_000)
-    return () => clearInterval(t)
-  }, [])
-  const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
-  return <time>{hora}</time>
-}
-
-/** El estado de una sesión con ícono y palabra (H-2): trabajando · terminada (con sus preguntas) · error. */
-export function ChipSesion({ ficha }: { ficha: FichaSesion }) {
+/**
+ * El estado de una sesión con ícono y palabra (H-2), como Señal (PZ-7): trabajando · esperando lo que dejó de fondo
+ * (T-65) · terminada (con sus preguntas, en ámbar) · error (en rojo).
+ */
+export function SenalSesion({ ficha }: { ficha: FichaSesion }) {
   if (ficha.estado === 'trabajando')
     return (
-      <span className="chip trab">
+      <span className="senal">
         <Icono nombre="sync" gira />
         Trabajando
       </span>
     )
   if (ficha.estado === 'error')
     return (
-      <span className="chip error" title={ficha.motivo ?? undefined}>
+      <span className="senal rojo" title={ficha.motivo ?? undefined}>
         <Icono nombre="error" />
         Error
+      </span>
+    )
+  if (ficha.fondo?.length)
+    return (
+      <span className="senal" title={`Esperando lo que dejó de fondo: ${ficha.fondo.join(' · ')}`}>
+        <Icono nombre="sync" gira />
+        Esperando
       </span>
     )
   const n = ficha.preguntas.length
   if (n > 0)
     return (
-      <span className="chip espera">
+      <span className="senal ambar">
         <Icono nombre="espera" />
         {n} {n === 1 ? 'pregunta' : 'preguntas'}
       </span>
     )
   return (
-    <span className="chip ok">
+    <span className="senal">
       <Icono nombre="check" />
       Terminada
     </span>
@@ -191,7 +191,7 @@ function BotonInicio() {
 }
 
 /**
- * El estado de un proyecto en su pestaña (D-043, W-4): trabajando o con error; si no, su cuenta de la bandeja (la
+ * El estado de un proyecto en su pestaña (D-043, W-4): trabajando, esperando lo de fondo o con error; si no, su cuenta de la bandeja (la
  * misma regla de color que el inicio) o, sin nada, terminada si todavía no se vio. Si no hay nada de eso, solo el
  * nombre.
  */
@@ -202,9 +202,10 @@ function EstadoPestana({
   ficha: FichaSesion | null
   preguntas: { sinResponder: number; frenan: number }
 }) {
-  if (ficha?.estado === 'trabajando' || ficha?.estado === 'error') return <ChipSesion ficha={ficha} />
+  if (ficha?.estado === 'trabajando' || ficha?.estado === 'error' || ficha?.fondo?.length)
+    return <SenalSesion ficha={ficha} />
   if (preguntas.sinResponder > 0) return <Cuenta n={preguntas.sinResponder} frenan={preguntas.frenan} />
-  if (ficha) return <ChipSesion ficha={ficha} />
+  if (ficha) return <SenalSesion ficha={ficha} />
   return null
 }
 
@@ -272,42 +273,34 @@ function BarraTitulo() {
   )
 }
 
-function ChipMotor({ motor }: { motor: EstadoMotor }) {
+/**
+ * Claude abajo solo cuando falla (D-108, R-21): sin sesión, en rojo, y tocarlo inicia sesión (CO-I1); con una clave
+ * de API en vez de la suscripción, en ámbar; si no arranca, en rojo. Verificando o listo, nada.
+ */
+function SenalClaude({ motor }: { motor: EstadoMotor }) {
   const iniciando = usarEstado((s) => s.iniciandoSesion)
   const iniciarSesion = usarEstado((s) => s.iniciarSesion)
   switch (motor.tipo) {
     case 'verificando':
-      return (
-        <span className="chip neutro" title="Comprobando que Claude Code tenga sesión iniciada">
-          <Icono nombre="sync" gira />
-          Verificando Claude
-        </span>
-      )
     case 'listo':
-      return (
-        <span className="chip ok" title="Claude Code tiene sesión iniciada y usa tu suscripción">
-          <Icono nombre="check" />
-          Claude{motor.suscripcion ? ` · ${motor.suscripcion.replace(/^Claude\s+/i, '')}` : ''}
-        </span>
-      )
+      return null
     case 'sin-sesion':
-      // CO-I1: el chip mismo inicia sesión (abre el navegador).
       return (
         <button
           type="button"
-          className="chip error"
+          className="senal rojo"
           disabled={iniciando}
           title="Abre el navegador para entrar con tu cuenta de Claude, como desde VS Code"
           onClick={iniciarSesion}
         >
           <Icono nombre={iniciando ? 'sync' : 'error'} gira={iniciando} />
-          {iniciando ? 'Esperando el navegador…' : 'Sin sesión de Claude · Iniciar sesión'}
+          {iniciando ? 'Esperando el navegador…' : 'Claude sin sesión · Iniciar sesión'}
         </button>
       )
     case 'clave-api':
       return (
         <span
-          className="chip espera"
+          className="senal ambar"
           title={`Claude Code usa una clave de API (${motor.origen}) en vez de tu suscripción: gastaría por uso`}
         >
           <Icono nombre="espera" />
@@ -316,7 +309,7 @@ function ChipMotor({ motor }: { motor: EstadoMotor }) {
       )
     case 'falla':
       return (
-        <span className="chip error" title={motor.motivo}>
+        <span className="senal rojo" title={motor.motivo}>
           <Icono nombre="error" />
           Claude no arranca
         </span>
@@ -391,7 +384,7 @@ function Actualizar() {
   if (error || estado.tipo === 'fallo')
     return (
       <span className="it actualizar-it">
-        <span className="chip error" title={error ?? (estado.tipo === 'fallo' ? estado.motivo : undefined)}>
+        <span className="senal rojo" title={error ?? (estado.tipo === 'fallo' ? estado.motivo : undefined)}>
           <Icono nombre="error" />
           No se pudo actualizar
         </span>
@@ -457,19 +450,13 @@ function AccesoVersionesGithub() {
     : 'Iridium baja sus versiones nuevas de GitHub: iniciá sesión una vez con la cuenta que invitaron.'
   return (
     <span className="it acceso-versiones" title={error ?? ayuda}>
-      <span className={`chip ${error ? 'error' : 'espera'}`}>
+      <span className={`senal ${error ? 'rojo' : 'ambar'}`}>
         <Icono nombre={error ? 'error' : 'espera'} />
         {sinPermiso
           ? 'Sin acceso a las versiones nuevas'
           : 'Para recibir versiones nuevas, iniciá sesión en GitHub'}
       </span>
-      <button
-        type="button"
-        className="chip neutro"
-        disabled={entrando}
-        title={ayuda}
-        onClick={() => void entrar()}
-      >
+      <button type="button" className="senal" disabled={entrando} title={ayuda} onClick={() => void entrar()}>
         <Icono nombre={entrando ? 'sync' : 'reintentar'} gira={entrando} />
         {entrando ? 'Esperando a GitHub…' : sinPermiso ? 'Probar de nuevo' : 'Iniciar sesión'}
       </button>
@@ -477,22 +464,22 @@ function AccesoVersionesGithub() {
   )
 }
 
+/**
+ * La barra de abajo sin ruido (D-108): Claude solo cuando falla, lo de la sección, Actualizar y, a la derecha, el uso.
+ * Sin las sesiones abiertas ni la hora: las pestañas ya dicen qué trabaja.
+ */
 function BarraEstado({ children }: { children?: ReactNode }) {
   const motor = usarEstado((s) => s.motor)
-  const n = usarEstado((s) => s.fichas.length)
   return (
     <footer className="estado-barra">
-      <span className="it" data-motor={motor.tipo}>
-        <ChipMotor motor={motor} />
+      <span className="it claude" data-motor={motor.tipo}>
+        <SenalClaude motor={motor} />
       </span>
       {children}
       <Actualizar />
       <AccesoVersionesGithub />
       <span className="der">
         <UsoEnLaBarra />
-      </span>
-      <span className="it">
-        {n === 0 ? 'Sin sesiones abiertas' : `${n} ${n === 1 ? 'sesión' : 'sesiones'}`} · <Reloj />
       </span>
     </footer>
   )

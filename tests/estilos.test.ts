@@ -171,7 +171,7 @@ const VIEJAS = [
 /** Las clases viejas que todavía tiene cada sección. */
 const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
-  'base.css': ['chip', 'mini-link', 'cuenta-bandeja', 'cab-filtros', 'cab-filtro'],
+  'base.css': ['mini-link', 'cuenta-bandeja', 'cab-filtros', 'cab-filtro'],
   'conversacion.css': ['aviso-afuera', 'md'],
   'git.css': [
     'commit',
@@ -186,7 +186,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   ],
   'ideas.css': ['columna', 'anotar', 'menu-boton', 'menu-lista'],
   'marco.css': [
-    'chip',
     'actualizar',
     'menu-boton',
     'cuenta-bandeja',
@@ -213,7 +212,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'cuenta-proy',
   ],
   'proyecto.css': [
-    'chip',
     'atras',
     'script-fila',
     'script',
@@ -250,7 +248,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   ],
   'revision.css': ['reabrir', 'fila-com', 'rev-vacio'],
   'skills.css': [
-    'chip',
     'sk-fila',
     'sk-proy',
     'sk-grupo',
@@ -281,8 +278,8 @@ const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--medidor-fondo': 5,
   '--primario': 53,
   '--primario-texto': 13,
-  '--trabaja': 5,
-  '--ok': 23,
+  '--trabaja': 3,
+  '--ok': 21,
   '--sobre-color': 1,
   '--esp-sm': 4,
   '--esp-md': 3,

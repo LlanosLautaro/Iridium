@@ -207,6 +207,11 @@
   color: var(--espera);
 }
 
+/* Terminó el turno y espera lo que dejó de fondo (T-65): sigue, pero no está escribiendo. */
+.ahora.esperando {
+  color: var(--texto-2);
+}
+
 /* Detenida o error: una línea dentro del turno */
 .linea-aviso {
   display: flex;

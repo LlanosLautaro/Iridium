@@ -34,7 +34,7 @@ async function abrir(): Promise<{ app: ElectronApplication; win: Page }> {
   abiertas.push(app)
   const win = await app.firstWindow()
   // Vuelve a lo que estaba abierto (D-060): la barra de estado está siempre.
-  await expect(win.locator('.estado-barra')).toContainText('Claude')
+  await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
   return { app, win }
 }
 

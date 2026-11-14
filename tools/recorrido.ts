@@ -135,7 +135,7 @@ try {
       ts.map((t) => ({
         nombre: t.querySelector('.nombre')?.textContent,
         texto: (t as HTMLElement).innerText.replace(/\s+/g, ' '),
-        espera: t.querySelector('.chip.espera')?.textContent ?? null,
+        espera: t.querySelector('.senal.ambar')?.textContent ?? null,
       })),
     )
     const badge = await win
@@ -163,7 +163,7 @@ try {
         '## Preguntas abiertas\n- **Q-900 — ¿Pregunta de la tanda 4?**\n  Tipo: decisión · frena\n  Opciones: A) Sí · B) No\n',
       ),
     )
-    const chip = win.locator(`.tarjeta[title^="${B}"] .chip.espera`)
+    const chip = win.locator(`.tarjeta[title^="${B}"] .senal.ambar`)
     await chip.waitFor({ timeout: 10_000 })
     const conQ = await chip.textContent()
     await foto('H-1-se-actualiza-sola')
@@ -396,7 +396,7 @@ try {
       pedido: (await win.locator('.pedido').innerText()).replace(/\s+/g, ' '),
       fichaAlTerminar: (await win.locator('.ses.activa').innerText()).replace(/\s+/g, ' '),
       chipCabecera: await win
-        .locator('.zona-principal > .cab-proyecto .chip.espera')
+        .locator('.zona-principal > .cab-proyecto .senal.ambar')
         .textContent()
         .catch(() => null),
     }

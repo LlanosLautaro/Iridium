@@ -39,6 +39,8 @@ const ESPERA_VERIFICAR_MS = 30_000
 const ESPERA_SALIR_MS = 5000
 /** Lo que se espera al uso o al contexto al terminar un turno, antes de cerrar la sesión. */
 const ESPERA_DATOS_MS = 10_000
+/** Cuánto se espera a que la IA retome después de que terminó lo que dejó de fondo, antes de cerrar la sesión (T-65). */
+const ESPERA_RETOMA_MS = 60_000
 /** Mientras una sesión trabaja, cada cuánto informa el uso: un turno largo no deja el medidor atrás (Defecto 16). */
 export const RELEER_USO_TURNO_MS = 2 * 60_000
 /** Lo que se espera a que el usuario termine de iniciar sesión en el navegador antes de dejar de esperar. */
@@ -637,6 +639,10 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
       let modelo: string | null = null
       /** La caché de la conversación: cuánto dura y desde cuándo corre (el último pedido al modelo). */
       const cache: CacheSesion = { cacheMs: null, ultimoPedido: null }
+      /** Lo que la IA dejó corriendo de fondo, sin lo que no es trabajo (los que solo miran), por id (T-65). */
+      let fondo = new Map<string, string>()
+      /** Terminó un turno con algo de fondo: la sesión queda abierta hasta que la IA retome y termine. */
+      let esperandoFondo = false
 
       const terminarEntrada = () => {
         terminada = true
@@ -647,6 +653,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
           const texto = cola.shift()
           if (texto !== undefined) {
             turnoAbierto = true
+            esperandoFondo = false
             yield { type: 'user', message: { role: 'user', content: texto }, parent_tool_use_id: null }
             continue
           }
@@ -734,11 +741,26 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
               anunciada = true
               alEvento({ tipo: 'conversacion', id: m.session_id })
             }
-            if (m.type === 'system' && m.subtype === 'api_retry') {
+            if (m.type === 'system' && m.subtype === 'background_tasks_changed') {
+              // La lista entera cada vez (se reemplaza, no se suma): así un aviso perdido no deja nada colgado.
+              fondo = new Map(m.tasks.filter((t) => !t.ambient).map((t) => [t.task_id, t.description]))
+              alEvento({ tipo: 'fondo', tareas: [...fondo.values()] })
+              // Terminó lo de fondo: si la IA no retoma en un rato, la sesión se cierra igual (no queda abierta sin trabajar).
+              if (fondo.size === 0 && esperandoFondo)
+                setTimeout(() => {
+                  if (esperandoFondo && !turnoAbierto) terminarEntrada()
+                }, ESPERA_RETOMA_MS).unref?.()
+            } else if (m.type === 'system' && m.subtype === 'api_retry') {
               // Claude Code no llega a Claude y reintenta solo: sin esto, la sesión parece colgada (Defecto 10).
               reintento = reintentoDe(m)
               alEvento({ tipo: 'reintento', reintento })
             } else if (m.type === 'assistant' && m.parent_tool_use_id === null) {
+              // Terminó lo de fondo y Claude Code se lo avisó a la IA: retoma sola, sin un mensaje del usuario.
+              if (!turnoAbierto && esperandoFondo) {
+                turnoAbierto = true
+                esperandoFondo = false
+                alEvento({ tipo: 'retoma' })
+              }
               if (m.error) errorDeMensaje = m.error
               else reintento = null
               if (typeof m.message.model === 'string' && m.message.model !== '<synthetic>') {
@@ -774,9 +796,12 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
               reintento = null
               if (sigue) continue
               await datosDelTurno()
-              // Sin nada en cola, la sesión se cierra: un Claude Code abierto sin trabajar ocupa memoria. Si mientras
-              // se leían los datos llegó otro mensaje, ya arrancó otro turno y sigue abierta.
-              if (!turnoAbierto && cola.length === 0) terminarEntrada()
+              // Con algo de fondo, la sesión queda abierta: cuando termine, Claude Code se lo avisa a la IA y ella
+              // retoma (T-65); cerrarla lo cortaría a la mitad.
+              if (!turnoAbierto && fondo.size > 0) esperandoFondo = true
+              // Sin nada en cola ni de fondo, la sesión se cierra: un Claude Code abierto sin trabajar ocupa memoria.
+              // Si mientras se leían los datos llegó otro mensaje, ya arrancó otro turno y sigue abierta.
+              else if (!turnoAbierto && cola.length === 0) terminarEntrada()
             }
           }
         } catch (e) {
@@ -817,7 +842,15 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
           void sesion.applyFlagSettings({ outputStyle: t }).catch(() => {})
         },
         async detener() {
-          if (terminada || !turnoAbierto) return
+          if (terminada) return
+          // Solo espera algo de fondo: se corta y la sesión se cierra (ya no hay turno que detener).
+          if (!turnoAbierto) {
+            if (esperandoFondo) {
+              terminarEntrada()
+              sesion.close()
+            }
+            return
+          }
           deteniendo = true
           cola.length = 0
           await sesion.interrupt().catch(() => {})

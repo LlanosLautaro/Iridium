@@ -6,7 +6,7 @@ import { textoDeCuenta } from '../../../compartido/cuentas'
 import { textoFrente } from '../../../compartido/en-que'
 import type { FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
 import type { Estado } from '../../../compartido/tipos'
-import { ChipSesion } from '../../marco/Marco'
+import { SenalSesion } from '../../marco/Marco'
 import { Cuenta } from '../../ui/Cuenta'
 import { Icono, type NombreIcono } from '../../ui/Icono'
 
@@ -71,7 +71,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
           </span>
           <span className="nombre">{p.nombre}</span>
           <span className="linea2">
-            <span className="chip error">
+            <span className="senal rojo">
               <Icono nombre="error" />
               Ficha dañada
             </span>
@@ -151,7 +151,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
         {p.framework === 'viejo' && <span className="viejo">framework viejo</span>}
         {ficha && (
           <span className="sesion">
-            <ChipSesion ficha={ficha} />
+            <SenalSesion ficha={ficha} />
           </span>
         )}
         {p.archivado && (

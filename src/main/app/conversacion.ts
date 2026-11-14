@@ -103,6 +103,8 @@ interface Proyecto {
   revisando: boolean
   /** Cuántos mensajes mandó el usuario: si cambia mientras corre el control, ese turno sigue y se revisa después. */
   envios: number
+  /** Lo que la IA dejó corriendo de fondo (T-65); va en la ficha mientras haya algo. */
+  fondo: string[]
 }
 
 export class Conversaciones {
@@ -142,6 +144,7 @@ export class Conversaciones {
         controlando: null,
         revisando: false,
         envios: 0,
+        fondo: [],
       }
       this.proyectos.set(ruta, p)
     }
@@ -186,7 +189,20 @@ export class Conversaciones {
 
   private emitir(p: Proyecto, entradas: Entrada[], reiniciar = false): void {
     p.entradas.push(...entradas)
-    this.d.alCambio({ ruta: p.ruta, id: p.id, reiniciar, entradas, ficha: p.ficha, contexto: p.contexto })
+    this.d.alCambio({
+      ruta: p.ruta,
+      id: p.id,
+      reiniciar,
+      entradas,
+      ficha: this.ficha(p),
+      contexto: p.contexto,
+    })
+  }
+
+  /** La ficha con lo que sigue de fondo, si hay algo (T-65). */
+  private ficha(p: Proyecto): FichaSesion | null {
+    if (!p.ficha) return null
+    return p.fondo.length > 0 ? { ...p.ficha, fondo: p.fondo } : p.ficha
   }
 
   /** Lee el contexto de la conversación sin mandar nada (una vez por conversación) y lo avisa cuando llega. */
@@ -297,7 +313,7 @@ export class Conversaciones {
       usadaAfuera: afuera,
       entradas: p.entradas.slice(desde),
       anteriores: desde,
-      ficha: p.ficha,
+      ficha: this.ficha(p),
       contexto: p.contexto,
     }
   }
@@ -524,12 +540,46 @@ export class Conversaciones {
       case 'uso':
         this.d.alUso?.(e.uso)
         return
-      case 'cerrada':
+      case 'fondo':
+        p.fondo = e.tareas
+        this.emitir(p, [])
+        return
+      case 'retoma':
+        // Terminó lo que había dejado de fondo y la IA sigue sola: vuelve a trabajar, como con un mensaje (T-65).
+        if (this.trabajando(p) || p.revisando) return
+        p.antes = new Set([...p.antes, ...(p.ficha?.preguntas.map((q) => q.codigo) ?? [])])
+        p.ficha = { ruta: p.ruta, estado: 'trabajando', preguntas: [], motivo: null }
+        this.emitir(p, [])
+        return
+      case 'cerrada': {
         p.sesion = null
+        const habiaFondo = p.fondo.length > 0
+        p.fondo = []
         if (this.trabajando(p) && !p.revisando)
           this.terminarTurno(p, 'error', 'Claude Code se cerró sin terminar el turno.')
+        else {
+          // Claude Code escribe sus últimas líneas al cerrar, a veces mucho después del turno (con algo de fondo): no
+          // es que la conversación se usó afuera (R-54).
+          this.usadaAhora(p)
+          if (habiaFondo) this.emitir(p, [])
+        }
         return
+      }
     }
+  }
+
+  /** La conversación la usó Iridium hasta ahora (R-54): después de lo que se guardó al terminar el turno. */
+  private usadaAhora(p: Proyecto): void {
+    const id = p.id
+    if (!id || p.usoCentro === null) return
+    const fin = this.ahora()
+    p.usoCentro = fin
+    const antes = [...this.guardando]
+    const guardar = Promise.all(antes)
+      .then(() => this.d.registro.guardar(id, this.resumenInicial(p, 'iridium'), { ultimoUso: fin }))
+      .catch(() => {})
+    this.guardando.add(guardar)
+    void guardar.then(() => this.guardando.delete(guardar))
   }
 
   private terminarTurno(

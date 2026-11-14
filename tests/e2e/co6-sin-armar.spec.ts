@@ -95,7 +95,7 @@ async function versionLista(commit: string) {
 test('con commits sin armar aparece Actualizar; arma, se puede cancelar y, con la versión lista, reinicia solo (R-12)', async () => {
   test.setTimeout(120_000)
   const { app: a, win } = await abrir()
-  await expect(win.locator('.estado-barra')).toContainText('Claude')
+  await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
   const barra = win.locator('.actualizar-it')
   await expect(barra).toHaveCount(0)
 
@@ -144,8 +144,8 @@ test('si el armado falla: «No se pudo actualizar» con el motivo, Reintentar y 
     JSON.stringify({ fecha: '2026-11-06T14:05:00', motivo: 'No se pudo armar. Iridium quedó como estaba.' }),
   )
   await barra.getByRole('button', { name: 'Cancelar' }).click()
-  await expect(barra.locator('.chip.error')).toContainText('No se pudo actualizar', { timeout: 15_000 })
-  await expect(barra.locator('.chip.error')).toHaveAttribute(
+  await expect(barra.locator('.senal.rojo')).toContainText('No se pudo actualizar', { timeout: 15_000 })
+  await expect(barra.locator('.senal.rojo')).toHaveAttribute(
     'title',
     'No se pudo armar. Iridium quedó como estaba.',
   )

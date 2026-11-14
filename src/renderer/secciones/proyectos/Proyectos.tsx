@@ -133,7 +133,7 @@ export function Proyectos() {
   else if (lista.tipo === 'error') {
     contenido = (
       <div className="mensaje error" role="alert">
-        <span className="chip error">
+        <span className="senal rojo">
           <Icono nombre="error" />
           No se puede leer
         </span>

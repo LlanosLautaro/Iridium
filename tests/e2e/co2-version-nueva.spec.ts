@@ -77,7 +77,7 @@ test.afterEach(async () => {
 
 test('la versión nueva aparece sola abajo y Actualizar la pone y la abre (CO-I2)', async () => {
   const { app: a, win } = await abrir()
-  await expect(win.locator('.estado-barra')).toContainText('Claude')
+  await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
   await expect(win.locator('.actualizar-it')).toHaveCount(0)
 
   // La arma `pnpm actualizar` con Iridium abierto: Actualizar aparece en unos segundos, sin hacer nada.

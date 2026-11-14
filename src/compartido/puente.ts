@@ -285,6 +285,11 @@ export interface FichaSesion {
   motivo: string | null
   /** Mientras trabaja: Claude Code no llega a Claude y está reintentando (Defecto 10); se va con lo próximo que llega. */
   reintento?: ReintentoSesion | null
+  /**
+   * Lo que la IA dejó corriendo de fondo (T-65), con su descripción. Con el turno terminado, la IA espera eso para
+   * seguir sola: la sesión no terminó del todo.
+   */
+  fondo?: string[]
 }
 
 /** Un reintento de Claude Code: `intento` de `maximo`; `causa`, sin conexión o el servidor de Claude con un error. */

@@ -240,7 +240,7 @@ Un atajo y se habla: el texto entra al mensaje para la IA. Para dirigir con idea
 
 ## T-58 — Lo que DI-I3 cambia en la app además de pasar las piezas
 Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-28, R-29, R-38, D-108 a D-111
-Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3), la sección Trabajo de un proyecto, Ideas como bloc de notas (D-112) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas.
+Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3), la sección Trabajo de un proyecto, Ideas como bloc de notas (D-112) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas. La barra de abajo quedó hecha en la tanda 3 (2026-11-14); sacar la Bandeja de todos y Trabajo va en la tanda 4.
 
 ## T-59 — Rehacer Trabajo e Ideas
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155
@@ -259,8 +259,8 @@ Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: Q-159, D-114
 La altura de la barra, de los controles y de las filas, los anchos de los paneles: tokens con su uso en lugar de números sueltos en `piezas.css`. Sistema las muestra; el control puede avisar de una medida repetida escrita a mano. Antes de DI-I3. Hecho el 2026-11-12 (D-119).
 
 ## T-65 — Ver que la IA sigue trabajando aunque espere algo de fondo
-Estado: pendiente · Frente: Diseño · Fecha: 2026-11-14 · Origen: R-53
-Cuando la IA deja algo corriendo de fondo (por ejemplo, las pruebas con la app abierta, que tardan diez minutos) y espera el aviso, la conversación se ve terminada: no hay nada que diga que sigue trabajando ni cuánto falta. El usuario pide un indicador de que está trabajando o esperando; un porcentaje sería ideal, pero alcanza con eso. Ver qué avisa Claude Code de las tareas de fondo y de las esperas, y mostrarlo en la cabecera de la conversación y en la pestaña del proyecto. Va con la tanda del marco de DI-I3.
+Estado: hecho · Frente: Diseño · Fecha: 2026-11-14 · Origen: R-53
+Cuando la IA deja algo corriendo de fondo (por ejemplo, las pruebas con la app abierta, que tardan diez minutos) y espera el aviso, la conversación se ve terminada: no hay nada que diga que sigue trabajando ni cuánto falta. El usuario pide un indicador de que está trabajando o esperando; un porcentaje sería ideal, pero alcanza con eso. Ver qué avisa Claude Code de las tareas de fondo y de las esperas, y mostrarlo en la cabecera de la conversación y en la pestaña del proyecto. Va con la tanda del marco de DI-I3. Hecho el 2026-11-14 (DI-I3, tanda 3): Claude Code avisa la lista de lo que corre de fondo, no cuánto falta; la conversación lo nombra con Detener, la pestaña dice «Esperando», la sesión queda abierta y la IA retoma sola (también arregló R-54).
 
 ## T-64 — Que un proyecto sepa cuándo el framework le pide algo
 Estado: pendiente · Frente: Orden · Fecha: 2026-11-12 · Origen: Q-160

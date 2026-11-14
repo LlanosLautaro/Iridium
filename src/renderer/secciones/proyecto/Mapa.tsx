@@ -47,7 +47,8 @@ function ChipHito({ h }: { h: HitoMapa }) {
   const e = HITO[h.estado]
   return (
     <span
-      className={`chip hito-${h.estado}`}
+      // La Señal (PZ-7): ámbar lo reabierto y rojo lo que frena; lo demás, gris (D-108).
+      className={h.estado === 'bloqueado' ? 'senal rojo' : h.estado === 'reabierto' ? 'senal ambar' : 'senal'}
       title={h.estado === 'otro' ? 'Se muestra tal cual: no es un estado del framework' : h.estadoTexto}
     >
       <Icono nombre={e.icono} />

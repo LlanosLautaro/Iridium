@@ -163,3 +163,26 @@ test('Nueva abre una conversación en blanco que empieza con lo que se escribe, 
   await win.screenshot({ path: 'test-results/i3-nueva-en-blanco.png' })
   await app.close()
 })
+
+test('lo que la IA deja de fondo se ve mientras lo espera, y retoma sola cuando termina (T-65)', async () => {
+  const { app, win } = await abrir({ IRIDIUM_FALSO_PASO_MS: '300' })
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo.fill('Corré las pruebas de fondo')
+  await campo.press('Enter')
+
+  // Terminó el turno, pero espera lo de fondo: lo dice la conversación y la pestaña, y Detener sigue a mano.
+  const pestana = win.locator('.ses', { hasText: 'Alfa' })
+  await expect(win.locator('.ahora.esperando')).toContainText(
+    'Esperando lo que dejó de fondo · Pruebas con la app abierta',
+  )
+  await expect(pestana).toContainText('Esperando')
+  await expect(win.getByRole('button', { name: 'Detener' })).toBeVisible()
+  await win.screenshot({ path: 'test-results/t65-esperando.png' })
+
+  // Cuando termina, la IA retoma sola y cierra.
+  await expect(win.locator('.hilo')).toContainText('Terminaron las pruebas de fondo', { timeout: 15_000 })
+  await expect(pestana).toContainText('Terminada')
+  await expect(win.locator('.ahora')).toHaveCount(0)
+  await app.close()
+})

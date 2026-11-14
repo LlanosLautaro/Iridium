@@ -115,7 +115,7 @@ function Preguntas({ entrada, ruta }: { entrada: Extract<Entrada, { tipo: 'pregu
   return (
     <div className="pedido">
       <div className="meta">
-        <span className="chip espera">
+        <span className="senal ambar">
           <Icono nombre="espera" />
           Dejó {n} {n === 1 ? 'pregunta' : 'preguntas'}
         </span>
@@ -531,6 +531,13 @@ function Hilo({
           {ficha.reintento.intento} de {ficha.reintento.maximo}. Podés esperar o detenerla.
         </div>
       )}
+      {!trabajando && ficha?.fondo && ficha.fondo.length > 0 && (
+        // Terminó el turno pero dejó algo corriendo (T-65): cuando termine, sigue sola.
+        <div className="ahora esperando" role="status">
+          <Icono nombre="sync" gira />
+          Esperando lo que dejó de fondo · {ficha.fondo.join(' · ')}
+        </div>
+      )}
     </section>
   )
 }
@@ -650,6 +657,7 @@ export function Conversacion({
   const caja = useRef<HTMLTextAreaElement>(null)
   useAltoDelTexto(caja, texto, 0)
   const trabajando = ficha?.estado === 'trabajando'
+  const esperandoFondo = !trabajando && (ficha?.fondo?.length ?? 0) > 0
   const enBlanco = pidioEnBlanco && !trabajando
 
   // Otra sección dejó un pedido para la IA (Pedírselo a la IA, H-R7): queda escrito, sin enviar.
@@ -921,11 +929,15 @@ export function Conversacion({
             <ModeloYEsfuerzo ruta={ruta} />
             {hayConversacion && c?.contexto && <MedidorContexto contexto={c.contexto} />}
             <div className="der">
-              {trabajando && (
+              {(trabajando || esperandoFondo) && (
                 <button
                   type="button"
                   className="boton secundario detener"
-                  title="Detener a la IA en el acto (se retoma con Seguí)"
+                  title={
+                    trabajando
+                      ? 'Detener a la IA en el acto (se retoma con Seguí)'
+                      : 'Cortar lo que dejó de fondo (se retoma con Seguí)'
+                  }
                   onClick={() => void window.iridium.detener(ruta)}
                 >
                   <Icono nombre="cuadro" />

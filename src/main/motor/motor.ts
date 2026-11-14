@@ -60,7 +60,15 @@ export type EventoMotor =
   | { tipo: 'contexto'; contexto: ContextoConversacion }
   /** El uso de la suscripción cambió (llega con las respuestas). */
   | { tipo: 'uso'; uso: UsoMotor }
-  /** La sesión se cerró: al terminar el turno sin nada en cola, o porque falló. */
+  /**
+   * Lo que la IA dejó corriendo de fondo (unas pruebas, un comando largo) cambió: la lista entera de lo que sigue vivo,
+   * con su descripción (T-65). Si un turno termina con algo de fondo, la sesión queda abierta: cuando eso termina,
+   * Claude Code se lo avisa a la IA y ella retoma sola.
+   */
+  | { tipo: 'fondo'; tareas: string[] }
+  /** La IA retomó sola, sin un mensaje del usuario: terminó algo que había dejado de fondo (T-65). */
+  | { tipo: 'retoma' }
+  /** La sesión se cerró: al terminar el turno sin nada en cola ni de fondo, o porque falló. */
   | { tipo: 'cerrada' }
 
 /** Lo que se sabe al abrir la app, sin mandar mensajes: la cuenta, los modelos y el uso. */
@@ -98,7 +106,7 @@ export interface SesionMotor {
   ajustar(ajuste: AjusteIa): void
   /** Cambia el estilo de respuesta desde el próximo mensaje; null = el de Claude Code. */
   ponerTono(tono: string | null): void
-  /** Corta el turno en el acto; el turno termina como «detenida». */
+  /** Corta el turno en el acto; el turno termina como «detenida». Si solo espera algo de fondo, lo corta y se cierra. */
   detener(): Promise<void>
   /** Termina la sesión (al cerrar la app). */
   cerrar(): void
@@ -189,7 +197,7 @@ const CONTEXTO_FALSO = { inicial: 20_000, porTurno: 30_000, maximo: 200_000 }
 /**
  * El motor de las pruebas: no abre Claude Code ni gasta uso. Imita los eventos del real: lee el estado, escribe,
  * termina; un mensaje con «lento» tarda diez veces más (para probar Detener). Un mensaje con «falla», «agotado» o
- * «sin sesión» termina con ese error (F-5); con «sin red», reintenta tres veces sin hacer nada y termina sin conexión,
+ * «sin sesión» termina con ese error (F-5); con «de fondo», deja algo corriendo y retoma sola al rato (T-65); con «sin red», reintenta tres veces sin hacer nada y termina sin conexión,
  * como el real (Defecto 10). Cada turno suma contexto y uso. Guarda las conversaciones en memoria.
  */
 export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
@@ -279,6 +287,7 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
       let anunciada = false
       let temporizadores: NodeJS.Timeout[] = []
       let alDetener: (() => void) | null = null
+      let esperandoFondo = false
       const cola: string[] = []
 
       const emitir = (m: MensajeMotor) => {
@@ -331,11 +340,15 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
           }
           guardada.tokens = Math.min(CONTEXTO_FALSO.maximo, guardada.tokens + CONTEXTO_FALSO.porTurno)
           const sigue = cola.splice(0).join('\n\n')
+          // «de fondo» (T-65): deja unas pruebas corriendo, termina el turno y retoma sola cuando terminan.
+          const deFondo = !sigue && /de fondo/i.test(texto)
+          if (deFondo) alEvento({ tipo: 'fondo', tareas: ['Pruebas con la app abierta (de prueba)'] })
           alEvento({ tipo: 'turno', resultado: 'ok', motivo: null, sigue: sigue !== '' })
           alEvento({ tipo: 'contexto', contexto: contextoDe(guardada.tokens) })
           const nuevo = sumarUso(2)
           if (nuevo) alEvento({ tipo: 'uso', uso: nuevo })
           if (sigue) turno(sigue)
+          else if (deFondo) esperarFondo(ms)
           else cerrar()
         }
         // Un paso detrás del otro, como la IA de verdad: el siguiente espera a que termine el anterior. Un turno
@@ -373,6 +386,28 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
           cerrar()
         }
       }
+      /** Lo de fondo tarda tres pasos; al terminar, la IA retoma sola un turno corto y la sesión se cierra. */
+      const esperarFondo = (ms: number) => {
+        esperandoFondo = true
+        temporizadores = [
+          setTimeout(() => {
+            alDetener = null
+            esperandoFondo = false
+            alEvento({ tipo: 'fondo', tareas: [] })
+            alEvento({ tipo: 'retoma' })
+            emitir({ tipo: 'ia', texto: 'Terminaron las pruebas de fondo: pasan todas.', cuando: Date.now() })
+            alEvento({ tipo: 'turno', resultado: 'ok', motivo: null, sigue: false })
+            cerrar()
+          }, ms * 3),
+        ]
+        // Detener mientras espera corta lo de fondo y cierra la sesión, como el real.
+        alDetener = () => {
+          alDetener = null
+          esperandoFondo = false
+          alEvento({ tipo: 'fondo', tareas: [] })
+          cerrar()
+        }
+      }
 
       return {
         enviar(texto) {
@@ -382,8 +417,16 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
             alEvento({ tipo: 'conversacion', id })
           }
           guardada.mensajes.push({ tipo: 'usuario', texto, cuando: Date.now() })
+          // Esperando lo de fondo, un mensaje abre un turno (la prueba no espera a que termine).
+          if (esperandoFondo) {
+            esperandoFondo = false
+            alDetener = null
+            for (const t of temporizadores) clearTimeout(t)
+            alEvento({ tipo: 'fondo', tareas: [] })
+            turno(texto)
+          }
           // Como el real: lo que llega mientras trabaja se junta para el turno siguiente.
-          if (alDetener) cola.push(texto)
+          else if (alDetener) cola.push(texto)
           else turno(texto)
           return true
         },

@@ -69,7 +69,8 @@ test('la grilla muestra los proyectos en orden, con hito y preguntas; los archiv
   await expect(win.locator('.tarjeta', { hasText: 'Gestor' })).toContainText('Sin estado')
   await expect(win.getByRole('button', { name: /^Inicio/ }).locator('.cuenta-bandeja')).toHaveText('2')
   await expect(win.locator('[aria-label^="Bandeja de entrada"] .badge')).toHaveCount(0)
-  await expect(win.locator('[data-motor]')).toHaveText('Claude · max')
+  // Claude abajo solo cuando falla (D-108): con sesión, nada.
+  await expect(win.locator('[data-motor="listo"]')).toHaveText('')
 
   await win.getByRole('switch', { name: /Archivados/ }).click()
   await expect(nombres).toHaveText(['Alfa', 'Gestor', 'Beta', 'Archivo'])

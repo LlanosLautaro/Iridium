@@ -383,18 +383,18 @@ export function Pendiente({
         <span className="q">{p.codigo}</span>
         <span className="tipo">{p.tipo}</span>
         {p.frena && p.estado !== 'respondida' && !p.enPausa && (
-          <span className="chip espera">
+          <span className="senal ambar">
             <Icono nombre="espera" />
             Frena
           </span>
         )}
         {p.estado === 'respondida' && (
-          <span className="chip ok">
+          <span className="senal">
             <Icono nombre="check" />
             {p.postergada ? 'Postergada, sin procesar' : 'Respondida, sin procesar'}
           </span>
         )}
-        {p.estado === 'a-medias' && <span className="chip neutro">A medias</span>}
+        {p.estado === 'a-medias' && <span className="senal">A medias</span>}
         {p.frente && (
           <span className="frente-q" title={`Es del frente ${p.frente}`}>
             {p.frente}
@@ -443,7 +443,7 @@ export function Pendiente({
 
       {envio.tipo === 'error' && (
         <div className="falla" role="alert">
-          <span className="chip error">
+          <span className="senal rojo">
             <Icono nombre="error" />
             No se guardó
           </span>

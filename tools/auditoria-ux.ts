@@ -81,7 +81,7 @@ const delProyecto = (nombre: string) =>
 
 await paso('arranque', () => win.waitForSelector('.tarjeta', { timeout: 60_000 }))
 await paso('grilla', () =>
-  win.waitForSelector('[data-motor]:not([data-motor="verificando"])', { timeout: 30_000 }),
+  win.waitForSelector('[data-motor]:not([data-motor="verificando"])', { state: 'attached', timeout: 30_000 }),
 )
 await paso('grilla-archivados', () => win.click('.interruptor-arch'))
 await win.click('.interruptor-arch').catch(() => {})

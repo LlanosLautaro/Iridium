@@ -230,7 +230,7 @@ test('Enviar ahora desde Revisión, la IA lo cierra y pasa a Cerrados; se reabre
     .getByRole('button', { name: /^Cerrados/ })
     .click()
   const cerrado = seccion().locator('.fila-com', { hasText: 'R-1' })
-  await expect(cerrado.locator('.chip.ok')).toContainText('cerrado')
+  await expect(cerrado.locator('.senal')).toContainText('cerrado')
   await expect(cerrado.locator('.hizo')).toContainText('separó el título con 12 px')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-cerrados.png') })
 
@@ -266,7 +266,7 @@ test('R-9: lo que la IA deja para después queda en Anotados, no en Cerrados ni 
     .getByRole('button', { name: /^Anotados/ })
     .click()
   const anotado = seccion().locator('.fila-com', { hasText: 'R-1' })
-  await expect(anotado.locator('.chip.neutro')).toContainText('anotado')
+  await expect(anotado.locator('.senal')).toContainText('anotado')
   await expect(anotado.locator('.hizo.anotado')).toContainText('Backlog (Should)')
   await expect(seccion().getByRole('button', { name: /^Cerrados/ })).toContainText('0')
   await win.screenshot({ path: join(SALIDA, 'revision-r9-anotados.png') })

@@ -76,38 +76,6 @@ code,
   white-space: nowrap;
 }
 
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  height: 20px;
-  padding: 0 7px;
-  border: 1px solid color-mix(in oklab, currentColor 45%, transparent);
-  border-radius: var(--radio-control);
-  font: 600 var(--tam-chico) / 1 var(--ui);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-.chip .ic {
-  width: 12px;
-  height: 12px;
-}
-.chip.trab {
-  color: var(--trabaja);
-}
-.chip.espera {
-  color: var(--espera);
-}
-.chip.error {
-  color: var(--error);
-}
-.chip.ok {
-  color: var(--ok);
-}
-.chip.neutro {
-  color: var(--texto-2);
-}
-
 /* Vacío y error: un mensaje con la ruta y la acción */
 .mensaje {
   max-width: 460px;

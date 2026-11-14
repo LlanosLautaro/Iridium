@@ -131,12 +131,12 @@ function Fila({ ruta, c }: { ruta: string; c: VistaComentario }) {
       </div>
       <div className="meta-der">
         {cerrado ? (
-          <span className="chip ok">
+          <span className="senal">
             <Icono nombre="check" />
             cerrado{c.cierre ? ` ${fechaComentario(c.cierre.fecha)}` : ''}
           </span>
         ) : anotado ? (
-          <span className="chip neutro" title="Quedó en un plan: se cierra cuando esté hecho">
+          <span className="senal" title="Quedó en un plan: se cierra cuando esté hecho">
             <Icono nombre="docs" />
             anotado{c.anotacion ? ` ${fechaComentario(c.anotacion.fecha)}` : ''}
           </span>
@@ -326,17 +326,17 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
         <BotonAtras ruta={ruta} />
         <span className="cod-r">{c.codigo}</span>
         {cerrado ? (
-          <span className="chip ok">
+          <span className="senal">
             <Icono nombre="check" />
             cerrado
           </span>
         ) : c.estado === 'anotado' ? (
-          <span className="chip neutro" title="Quedó en un plan: se cierra cuando esté hecho">
+          <span className="senal" title="Quedó en un plan: se cierra cuando esté hecho">
             <Icono nombre="docs" />
             anotado
           </span>
         ) : (
-          <span className="chip neutro">
+          <span className="senal">
             <Icono nombre="circulo" />
             abierto
           </span>
@@ -349,19 +349,19 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
             </button>
           )}
           {!cerrado && envio === 'enviado' && (
-            <span className="chip ok" role="status">
+            <span className="senal" role="status">
               <Icono nombre="check" />
               enviado a la sesión de {nombre}
             </span>
           )}
           {!cerrado && envio === 'sin-sesion' && (
-            <span className="chip neutro" role="status">
+            <span className="senal" role="status">
               <Icono nombre="espera" />
               sin sesión abierta: la IA lo ve al empezar
             </span>
           )}
           {!cerrado && envio === 'no-existe' && (
-            <span className="chip error" role="alert">
+            <span className="senal rojo" role="alert">
               <Icono nombre="error" />
               no se pudo enviar
             </span>

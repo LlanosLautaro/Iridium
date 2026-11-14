@@ -159,7 +159,7 @@ test('el contexto de la conversación y el modelo y el esfuerzo del proyecto, qu
 
 test('sin sesión de Claude Code no se envía nada y Reintentar lo vuelve a mandar (F-5)', async () => {
   const { app, win } = await abrir({ IRIDIUM_FALSO_ESTADO: 'sin-sesion' })
-  await expect(win.locator('.estado-barra')).toContainText('Sin sesión de Claude')
+  await expect(win.locator('.estado-barra')).toContainText('Claude sin sesión')
   await expect(win.locator('.estado-barra .uso')).toHaveCount(0)
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
@@ -178,7 +178,7 @@ test('sin sesión de Claude Code no se envía nada y Reintentar lo vuelve a mand
 
 test('Iniciar sesión desde Iridium: el chip y el aviso abren el login y después Reintentar manda (CO-I1)', async () => {
   const { app, win } = await abrir({ IRIDIUM_FALSO_ESTADO: 'sin-sesion', IRIDIUM_FALSO_PASO_MS: '600' })
-  const chip = win.locator('.estado-barra').getByRole('button', { name: /Sin sesión de Claude/ })
+  const chip = win.locator('.estado-barra').getByRole('button', { name: /Claude sin sesión/ })
   await expect(chip).toContainText('Iniciar sesión')
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
@@ -194,7 +194,7 @@ test('Iniciar sesión desde Iridium: el chip y el aviso abren el login y despué
   await win.screenshot({ path: 'test-results/co1-esperando.png' })
 
   // El motor falso «inicia sesión» en dos pasos: el marco y el aviso se enteran solos.
-  await expect(win.locator('.estado-barra')).toContainText('Claude · max')
+  await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
   await expect(falla).toHaveAttribute('data-tipo', 'resuelta')
   await expect(falla).toContainText('Ya tenés sesión en Claude')
   await expect(falla.getByRole('button', { name: 'Iniciar sesión' })).toHaveCount(0)
@@ -207,13 +207,13 @@ test('Iniciar sesión desde Iridium: el chip y el aviso abren el login y despué
 
 test('si un turno dice que no hay sesión, el chip y el aviso lo muestran y Ajustes ofrece entrar (R-5, Q-93)', async () => {
   const { app, win } = await abrir()
-  await expect(win.locator('.estado-barra')).toContainText('Claude · max')
+  await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await mandar(win, 'Algo sin sesión', 'Error')
   const falla = win.locator('.falla-motor')
   await expect(falla).toContainText('Claude Code no tiene sesión iniciada')
   await expect(falla.getByRole('button', { name: 'Iniciar sesión' })).toBeVisible()
-  await expect(win.locator('.estado-barra')).toContainText('Sin sesión de Claude · Iniciar sesión')
+  await expect(win.locator('.estado-barra')).toContainText('Claude sin sesión · Iniciar sesión')
 
   await win.keyboard.press('Control+,')
   await win.getByRole('dialog').getByRole('button', { name: 'IA', exact: true }).click()

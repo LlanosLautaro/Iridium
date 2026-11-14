@@ -193,4 +193,73 @@ describe('Conversaciones', () => {
     const avisos = cambios.flatMap((x) => x.entradas).filter((e) => e.tipo === 'aviso')
     expect(avisos.map((a) => a.tipo === 'aviso' && a.clase)).toEqual(['error'])
   })
+
+  it('con algo de fondo, el turno termina esperándolo y la IA retoma sola cuando termina (T-65)', async () => {
+    const { c } = armar()
+    await c.seguir(alfa, { texto: 'Corré las pruebas de fondo' })
+    await hasta(() => fichaDe(alfa)?.estado === 'terminada' && (fichaDe(alfa)?.fondo?.length ?? 0) > 0)
+    expect(fichaDe(alfa)?.fondo).toEqual(['Pruebas con la app abierta (de prueba)'])
+    // Mientras espera, la sesión sigue abierta: la conversación no se avisa como usada afuera.
+    expect((await c.abrir(alfa)).ficha?.fondo).toHaveLength(1)
+    const antes = cambios.length
+    await hasta(() => cambios.slice(antes).some((x) => x.ficha?.estado === 'trabajando'))
+    await hasta(() => fichaDe(alfa)?.estado === 'terminada' && !fichaDe(alfa)?.fondo)
+    const textos = cambios.flatMap((x) => x.entradas).map((e) => (e.tipo === 'ia' ? e.html : ''))
+    expect(textos.some((t) => t.includes('Terminaron las pruebas de fondo'))).toBe(true)
+  })
+
+  it('Detener mientras espera lo de fondo lo corta y cierra la sesión (T-65)', async () => {
+    const { c } = armar(crearMotorFalso({ pasoMs: 50 }))
+    await c.seguir(alfa, { texto: 'Corré las pruebas de fondo' })
+    await hasta(() => (fichaDe(alfa)?.fondo?.length ?? 0) > 0 && fichaDe(alfa)?.estado === 'terminada')
+    await c.detener(alfa)
+    expect(fichaDe(alfa)).toMatchObject({ estado: 'terminada' })
+    expect(fichaDe(alfa)?.fondo).toBeUndefined()
+    // No retoma: lo de fondo se cortó.
+    const despues = cambios.length
+    await new Promise((r) => setTimeout(r, 300))
+    expect(cambios.slice(despues).some((x) => x.ficha?.estado === 'trabajando')).toBe(false)
+  })
+
+  it('lo que Claude Code escribe al cerrar la sesión, después del turno, no es «usada afuera» (R-54)', async () => {
+    let emitir: (e: EventoMotor) => void = () => {}
+    let reloj = 1_000_000_000
+    let modificada = reloj
+    const motor: Motor = {
+      ...crearMotorFalso(),
+      conversaciones: async () => [{ id: 'x', modificada, titulo: 'Hola' }],
+      mensajes: async () => [],
+      abrir: (_o, f) => {
+        emitir = f
+        return {
+          enviar: () => true,
+          ajustar: () => {},
+          ponerTono: () => {},
+          detener: async () => {},
+          cerrar: () => {},
+        }
+      },
+    }
+    const registro = new ArchivoSesiones(join(raiz, 'datos', 'sesiones.json'))
+    const armarCon = () =>
+      new Conversaciones({
+        motor,
+        registro,
+        preguntas: leerPreguntasAbiertas,
+        alCambio: (x) => cambios.push(x),
+        ahora: () => reloj,
+      })
+    const c = armarCon()
+    await c.seguir(alfa, { texto: 'Hola' })
+    emitir({ tipo: 'conversacion', id: 'x' })
+    emitir({ tipo: 'turno', resultado: 'ok', motivo: null, sigue: false })
+    await hasta(() => fichaDe(alfa)?.estado === 'terminada')
+    // Diez minutos después termina lo de fondo y Claude Code escribe sus últimas líneas al cerrarse.
+    reloj += 9 * 60_000
+    modificada = reloj
+    emitir({ tipo: 'cerrada' })
+    await c.detenerTodo()
+    reloj += 60_000
+    expect((await armarCon().abrir(alfa)).usadaAfuera).toBeNull()
+  })
 })

@@ -501,24 +501,6 @@
   letter-spacing: 0.02em;
   color: var(--texto-3);
 }
-.chip.hito-completo {
-  color: var(--ok);
-}
-.chip.hito-en-curso {
-  color: var(--trabaja);
-}
-.chip.hito-reabierto {
-  color: var(--espera);
-}
-.chip.hito-bloqueado {
-  color: var(--error);
-}
-.chip.hito-pendiente,
-.chip.hito-saltado,
-.chip.hito-en-pausa,
-.chip.hito-otro {
-  color: var(--texto-2);
-}
 .proximo {
   max-width: 72ch;
   padding: 12px 14px;
@@ -989,13 +971,6 @@
 .zona-principal > .cab-proyecto .sub {
   color: var(--texto-3);
   white-space: nowrap;
-}
-.zona-principal > .cab-proyecto .chip {
-  margin-left: 4px;
-}
-.zona-principal > .cab-proyecto button.chip:hover {
-  background: var(--espera-fondo);
-  border-color: var(--espera);
 }
 .chat-cab .tit b {
   display: block;

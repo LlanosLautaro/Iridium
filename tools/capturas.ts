@@ -19,8 +19,11 @@ const win = await app.firstWindow()
 await win.setViewportSize({ width: 1440, height: 900 })
 await win.waitForSelector('.grilla:not(.carga) .tarjeta', { timeout: 60_000 })
 console.log(`grilla en ${((Date.now() - t0) / 1000).toFixed(1)} s`)
-await win.waitForSelector('[data-motor]:not([data-motor="verificando"])', { timeout: 60_000 })
-console.log('motor:', await win.textContent('[data-motor]'))
+await win.waitForSelector('[data-motor]:not([data-motor="verificando"])', {
+  state: 'attached',
+  timeout: 60_000,
+})
+console.log('motor:', await win.getAttribute('[data-motor]', 'data-motor'))
 await win.waitForTimeout(400)
 await win.screenshot({ path: `${SALIDA}/1-proyectos.png` })
 

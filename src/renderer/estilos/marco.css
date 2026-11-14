@@ -226,22 +226,15 @@
   padding: 0 8px;
   white-space: nowrap;
 }
-.estado-barra button.chip {
-  background: none;
-  cursor: pointer;
+/* Claude solo cuando falla (D-108): sin nada que decir, el lugar no ocupa espacio. */
+.estado-barra .claude:empty {
+  display: none;
 }
-.estado-barra button.chip:hover:not(:disabled) {
-  background: color-mix(in oklab, currentColor 12%, transparent);
-}
-.estado-barra button.chip:disabled {
-  cursor: default;
+.estado-barra .it > button:hover:not(:disabled) {
+  text-decoration: underline;
 }
 .estado-barra .der {
   margin-left: auto;
-}
-.estado-barra time {
-  font-family: var(--mono);
-  color: var(--texto-2);
 }
 
 /* Una sección que todavía no está construida */
@@ -359,7 +352,7 @@
 }
 
 /* Actualizar (W-1, R-12): un botón chico de contorno del color de lo activo; armando, el ícono que gira y el tiempo
-   en mono; falló, el chip rojo con sus enlaces. */
+   en mono; falló, la señal roja con sus enlaces. */
 .estado-barra .actualizar {
   display: inline-flex;
   align-items: center;

@@ -607,10 +607,11 @@ function aLaVista(s: Pick<EstadoApp, 'seccion' | 'proyectoAbierto' | 'lista'>, r
 /**
  * H-13: cuando la IA de un proyecto que no está a la vista termina o falla, aparece su aviso; las preguntas que dejó
  * llegan un momento después y lo completan. Si el proyecto está a la vista, no hay aviso: se ve en la conversación.
+ * Si dejó algo de fondo, todavía no terminó: el aviso llega cuando retome y termine (T-65).
  */
 function conAviso(s: EstadoApp, ruta: string, ficha: FichaSesion | null): AvisoSesion[] {
   const antes = s.fichas.find((f) => f.ruta === ruta)
-  if (!ficha || ficha.estado === 'trabajando' || aLaVista(s, ruta)) return s.avisos
+  if (!ficha || ficha.estado === 'trabajando' || ficha.fondo?.length || aLaVista(s, ruta)) return s.avisos
   const preguntas = ficha.preguntas.length
   const frenan = ficha.preguntas.filter((q) => q.frena).length
   const aviso = s.avisos.find((a) => a.ruta === ruta)

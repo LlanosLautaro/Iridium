@@ -131,7 +131,7 @@ function Proyecto({ p, abrirDoc }: { p: TarjetaProyecto; abrirDoc: (d: Destino) 
         Abrir
       </button>
       {ficha?.estado === 'trabajando' ? (
-        <span className="chip trab">
+        <span className="senal">
           <Icono nombre="sync" gira />
           La IA trabaja
         </span>
@@ -196,7 +196,7 @@ export function ListaPendientes({
         <Cabecera {...cabecera} cuenta={cuenta} />
         <div className="pendientes">
           <div className="mensaje error" role="alert">
-            <span className="chip error">
+            <span className="senal rojo">
               <Icono nombre="error" />
               No se pudo leer
             </span>
@@ -339,7 +339,7 @@ export function Pendientes() {
       <main className="trabajo">
         <div className="pendientes">
           <div className="mensaje" role="status">
-            <span className="chip ok">
+            <span className="senal">
               <Icono nombre="check" />
               Al día
             </span>

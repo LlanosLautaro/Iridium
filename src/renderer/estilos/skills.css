@@ -344,10 +344,6 @@
   align-items: center;
   gap: 8px;
 }
-.sk-proy .chip .ic {
-  width: 10px;
-  height: 10px;
-}
 .sk-estado.al-dia {
   color: var(--texto-2);
 }

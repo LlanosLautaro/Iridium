@@ -71,7 +71,7 @@ function Fila({ p }: { p: ProyectoFramework }) {
   else if (trabajando && (loMande || mandando))
     accion = (
       <>
-        <span className="chip trab">
+        <span className="senal">
           <Icono nombre="sync" gira />
           Pasando al framework…
         </span>
