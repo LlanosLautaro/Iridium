@@ -2702,3 +2702,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** armar no corta nada (la app sigue abierta), pero tomar el código a mitad de un cambio sí: por eso espera a que no haya cambios sin commitear y a que la IA de Iridium esté libre, lo que también cubre una IA que trabaje desde fuera de Iridium. Reiniciar corta las sesiones y la vista: solo pasa cuando nadie trabaja ni espera y nadie usa la PC; la PC quieta tres minutos es la señal más simple de que el usuario no está mirando, y la vista vuelve igual (el proyecto abierto, la ventana y los borradores se guardan).
 
 **Consecuencias:** las versiones entran solas, sin tocar nada. Si el usuario está usando la PC con una versión lista, entra al rato de dejarla o al cerrar Iridium. Si sale mal, `pnpm volver` sigue igual y la versión que falla ya no se vuelve a armar sola. La copia compartida también se reinicia sola con la versión bajada de GitHub, con las mismas condiciones.
+
+## D-123 — Chat nuevo por tamaño y tiempo, y arranque liviano
+- **Fecha:** 2026-11-15
+- **Ámbito:** proceso (framework, instrucciones globales y este proyecto)
+- **Hito o paso:** 10, operación (T-68)
+- **Estado:** vigente
+
+**Contexto:** la regla era proponer un chat nuevo al terminar cada iteración. El usuario dudó de que conviniera por el costo de arrancar. Medido sobre 115 conversaciones (`research/costo-de-contexto.md`): releer la conversación es el 62 % del gasto, cada paso cuesta más del doble pasados los 300 mil tokens y arrancar cuesta lo mismo que unos 8–10 pasos de un chat cargado.
+
+**Decisión:** Q-168 (A). Un chat nuevo se propone cuando la conversación pasa unos 200 mil tokens o se compactó, cuando cambia el tema, después de más de una hora sin mensajes (la caché venció) o al cerrar una iteración si lo que sigue es largo y el contexto ya pesa. Con la conversación liviana y una tarea chica, se sigue en el mismo chat. El arranque se aliviana: «En qué estamos ahora» en cinco líneas cortas (la historia, en el documento del frente) y el `CLAUDE.md` sin la lista de herramientas y variables, que pasa a `docs/herramientas-ia.md` y se lee cuando hace falta.
+
+**Motivo:** lo que más gasta es releer, y crece con el largo del chat; lo que se lee al arrancar se paga en cada paso de cada chat.
+
+**Consecuencias:** cambia `SKILL.md` › Al cerrar cada sesión, `referencias/07-construccion.md` y las instrucciones globales (`.iridium/Skills/instrucciones/CLAUDE-global.md`). Se vuelve a medir hacia el 2026-11-29 (T-68).

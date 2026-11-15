@@ -275,9 +275,11 @@ Estado: hecho · Fecha: 2026-11-15 · Origen: pedido del usuario
 Que Iridium recuerde si estaba maximizada o en ventana y vuelva así al abrir. Hecho el 2026-11-15: al cerrar se guardan en `config.json` (`ventana`) el lugar y el tamaño sin maximizar y si estaba maximizada; al abrir vuelve igual. Si ese lugar ya no se ve (se desconectó un monitor), abre con el tamaño de siempre, maximizada si lo estaba. Las pruebas (ventana oculta) no lo guardan ni lo usan. Pruebas: `tests/t66-ventana.test.ts`.
 
 ## T-67 — Actualizar solo, sin cortar a la IA
-Estado: hecho · Fecha: 2026-11-15 · Origen: pedido del usuario
+Estado: en curso · Fecha: 2026-11-15 · Origen: pedido del usuario
 Que las actualizaciones locales sean automáticas, sin hacerse mientras la IA trabaja o espera. Hecho el 2026-11-15 (D-122): con commits sin armar, ningún archivo a medio cambiar y la IA de Iridium libre un minuto, arma sola; con la versión lista, se reinicia sola cuando ninguna IA trabaja ni espera lo que dejó de fondo y la PC lleva 3 minutos sin usarse. El botón sigue para hacerlo ya. No reintenta solo un armado que falló ni arma lo que `pnpm volver` dejó afuera (`release/retenido.json`) hasta que haya otro commit; una versión que no entró tampoco se reintenta sola. Pruebas: `tests/or2-actualizar.test.ts`, `tests/co6-sin-armar.test.ts` y `co6-sin-armar.spec.ts` › solo.
+Q-167 (2026-11-15): la ventana y el reinicio con la PC quieta andan, pero tras un commit de la IA no apareció «Actualizando…» solo. El usuario pide que la espera sea por Iridium sin usar (minimizada, de fondo o sin actividad en su ventana) y no por la PC, porque la sigue usando para otras cosas. Se corrigen las dos cosas antes de la tanda 6 de Diseño; cambia D-122.
 
 ## T-68 — Medir si conviene un chat nuevo o seguir en el mismo
-Estado: nueva · Fecha: 2026-11-15 · Origen: pregunta del usuario, Q-168
+Estado: en curso · Fecha: 2026-11-15 · Origen: pregunta del usuario, Q-168
 Con los registros de Claude Code se midió cuánto cuesta arrancar un chat y cuánto cuesta cada paso según el contexto (`research/costo-de-contexto.md`). Chat nuevo conviene cuando el viejo pasó ~200 mil o la caché venció (más de una hora); no para tareas chicas. Volver a medir hacia el 2026-11-29 con el ajuste que elija el usuario en Q-168 y comparar el costo por iteración cerrada.
+Q-168 (A, D-123): aplicada el 2026-11-15 la regla por tamaño y tiempo (framework e instrucciones globales) y el arranque liviano (`estado.md` corto, `CLAUDE.md` sin la lista de herramientas, que pasa a `herramientas-ia.md`). Pendiente: volver a medir hacia el 2026-11-29; si el `estado.md` largo se repite, que el control marque «En qué estamos ahora» de más de cinco líneas o muy largo.

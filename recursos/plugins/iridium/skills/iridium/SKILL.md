@@ -280,7 +280,7 @@ Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa l
 6. La ficha, cierta.
 7. El código commiteado (o por qué no).
 
-Al pasar un portón o terminar una iteración, cerrá así y decí en una línea que conviene un chat nuevo: la sesión nueva lee `estado.md` y sigue, sin repetir contexto.
+Al pasar un portón o terminar una iteración, cerrá así. Un chat nuevo se paga una vez (relee las instrucciones y `estado.md`); seguir se paga en cada paso (relee la conversación entera): decí en una línea que conviene un chat nuevo solo si la conversación pasó unos 200 mil tokens o se compactó, si cambia el tema o si el trabajo que sigue es largo y el contexto ya es pesado. Con la conversación liviana y la tarea siguiente chica, seguí en el mismo chat. Después de más de una hora sin mensajes la caché vence y retomar un chat largo es lo más caro: ahí siempre conviene uno nuevo, que lee `estado.md` y sigue sin repetir contexto.
 
 ## Archivos del framework
 

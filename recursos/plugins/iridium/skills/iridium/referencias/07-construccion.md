@@ -35,7 +35,7 @@ Cada iteración tiene un objetivo en una frase, una lista de historias y su **co
 4. **Verificar antes de mostrar:** recorrer uno por uno los criterios de aceptación de las historias de la iteración contra lo construido (con la app abierta, no de memoria) y anotar en el log cuáles se cumplen y cuáles no. Lo que falta se termina o se dice; una iteración no se da por hecha con un criterio sin cumplir.
 5. **Revisar con el usuario:** mostrar lo construido funcionando (capturas, demo, criterios de aceptación cumplidos), nunca el código, con su prueba como `Q-n` de tipo prueba (un punto por cosa que tiene que comprobar); ajustar.
 6. **Documentar:** actualizar el log de iteraciones, `estado.md` y los documentos afectados. Si algo cambió respecto del diseño o la arquitectura, actualizar ese documento y registrar la decisión.
-7. **Cerrar la sesión:** hacer el cierre de sesión y proponer un chat nuevo para la siguiente iteración (`SKILL.md` › Al cerrar cada sesión de un proyecto). Si la iteración es larga, se corta también entre historias.
+7. **Cerrar la sesión:** hacer el cierre de sesión y, si la conversación ya es pesada, proponer un chat nuevo para la siguiente iteración (`SKILL.md` › Al cerrar cada sesión de un proyecto, que dice cuándo conviene). Si la iteración es larga, se corta también entre historias.
 
 > **Con impeccable:** si la skill `impeccable` está instalada, activa su hook en el proyecto al empezar este hito (`/impeccable hooks on`) y pasa `polish` antes de mostrar al usuario cada iteración que cambió la interfaz. Ver `referencias/integraciones.md`.
 
