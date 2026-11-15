@@ -118,24 +118,24 @@ test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y d
     .click()
 
   const mapa = win.locator('[data-seccion="mapa"]')
-  await expect(mapa.locator('.h')).toHaveText(['0', '4', '7', '8'])
-  await expect(mapa.locator('.hitos .tot')).toHaveText('2 de 4 hechos')
-  const tarjeta = mapa.locator('.hito-card')
+  await expect(mapa.locator('.hitos .pestana')).toHaveText(['0', '4', '7', '8'])
+  await expect(mapa.locator('.hitos .total-hitos')).toHaveText('2 de 4 hechos')
+  const tarjeta = mapa.locator('.hito-mapa')
   await expect(tarjeta.locator('h3')).toHaveText('Construcción')
-  await expect(tarjeta.locator('.proximo')).toContainText('Terminar I-2 según D-12')
-  await expect(tarjeta.locator('.fila-mapa', { hasText: 'I-1 — Importar' })).toContainText('hecho')
-  await expect(tarjeta.locator('.fila-mapa', { hasText: 'I-2 — Galería' })).toContainText('en curso')
-  await expect(tarjeta.locator('.espera-fila')).toContainText('Q-3')
+  await expect(tarjeta.locator('.proximo-paso')).toContainText('Terminar I-2 según D-12')
+  await expect(tarjeta.locator('.fila', { hasText: 'I-1 — Importar' })).toContainText('hecho')
+  await expect(tarjeta.locator('.fila', { hasText: 'I-2 — Galería' })).toContainText('en curso')
+  await expect(tarjeta.locator('.pregunta-mapa')).toContainText('Q-3')
   await win.screenshot({ path: 'test-results/i4-mapa.png' })
 
   // Otro hito: su portón.
-  await mapa.locator('.h', { hasText: '4' }).click()
+  await mapa.locator('.hitos .pestana', { hasText: '4' }).click()
   await expect(tarjeta.locator('h3')).toHaveText('UX')
-  await expect(tarjeta.locator('.fila-mapa')).toHaveText([/Historias\..*hecho/, /Flujos\..*pendiente/])
+  await expect(tarjeta.locator('.fila')).toHaveText([/Historias\..*hecho/, /Flujos\..*pendiente/])
   await tarjeta.getByRole('button', { name: 'Volver' }).click()
 
   // Un paso abre su sección en Docs; Atrás vuelve al Mapa.
-  await tarjeta.locator('.fila-mapa', { hasText: 'I-2 — Galería' }).click()
+  await tarjeta.locator('.fila', { hasText: 'I-2 — Galería' }).click()
   const docs = win.locator('[data-seccion="docs"]')
   await expect(docs.locator('.barra-doc .nom')).toHaveText('07-construccion.md')
   await expect(docs.locator('.marcada')).toHaveText('I-2 — Galería')
@@ -143,7 +143,7 @@ test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y d
   await expect(mapa).toBeVisible()
 
   // Un código del próximo paso también.
-  await tarjeta.locator('.proximo a', { hasText: 'D-12' }).click()
+  await tarjeta.locator('.proximo-paso a', { hasText: 'D-12' }).click()
   await expect(docs.locator('.marcada')).toHaveText('D-12 — Grilla de cuatro columnas')
   await app.close()
 })
@@ -273,8 +273,8 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   await archivos.locator('.arbol-nodo', { hasText: 'src' }).click()
   await archivos.locator('.arbol-nodo', { hasText: 'app.ts' }).click()
   await expect(archivos.locator('.visor-cab')).toContainText('2 líneas · TypeScript · solo lectura')
-  await expect(archivos.locator('.codigo .c')).toHaveText('// La app')
-  await expect(archivos.locator('.codigo .k').first()).toHaveText('export')
+  await expect(archivos.locator('.visor-codigo .c')).toHaveText('// La app')
+  await expect(archivos.locator('.visor-codigo .k').first()).toHaveText('export')
   await win.screenshot({ path: 'test-results/i4-archivos.png' })
 
   await archivos.locator('.arbol-nodo', { hasText: 'icono.png' }).click()

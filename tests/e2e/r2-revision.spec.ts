@@ -78,6 +78,12 @@ test.beforeAll(async () => {
   await writeFile(join(gamma, '.proyecto.json'), ficha)
   await writeFile(join(gamma, 'package.json'), JSON.stringify({ devDependencies: { electron: '44.0.0' } }))
   await writeFile(join(gamma, 'src', 'main.ts'), "import { app } from 'electron'\n")
+  // Sigue el framework: una carpeta simple no tiene Revisión (D-095).
+  await mkdir(join(gamma, 'docs'), { recursive: true })
+  await writeFile(
+    join(gamma, 'docs', 'estado.md'),
+    '# Estado\n\n## Hito actual\n7 — Construcción\n\n## Preguntas abiertas\n(ninguna)\n\n## Próximo paso\nSeguir.\n',
+  )
 
   const extension = join(base, 'extension')
   await cp(join(process.cwd(), 'out', 'extension'), extension, { recursive: true })
@@ -171,7 +177,7 @@ test('Revisión en Iridium: el contador en gris, la lista con la captura y el de
   await seccion().locator('.enlace-archivo').click()
   const archivos = win.locator('[data-seccion="archivos"]')
   await expect(archivos.locator('.visor-cab .ruta')).toHaveText('src/Tarjeta.jsx')
-  await expect(archivos.locator('.codigo .marcada')).toContainText('<button')
+  await expect(archivos.locator('.visor-codigo .marcada')).toContainText('<button')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-archivo.png') })
   await archivos.getByRole('button', { name: 'Atrás' }).click()
   await expect(seccion().locator('.det-barra')).toContainText('R-1')

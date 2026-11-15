@@ -146,7 +146,7 @@ try {
   let t = Date.now()
   await win.click(`.tarjeta[title^="${IRIDIUM}"]`)
   await seccion(win, 'Mapa')
-  await win.waitForSelector('[data-seccion="mapa"] .hito-card', { timeout: 30_000 })
+  await win.waitForSelector('[data-seccion="mapa"] .hito-mapa', { timeout: 30_000 })
   anotar('mapaDeIridiumMs', Date.now() - t)
   await seccion(win, 'Docs')
   await win.waitForSelector('[data-seccion="docs"] .doc-texto', { timeout: 30_000 })
@@ -205,7 +205,7 @@ try {
   await win.waitForSelector('.grilla:not(.carga) .tarjeta')
   await win.locator(`.tarjeta[title^="${B}"]`).click()
   await seccion(win, 'Mapa')
-  await win.waitForSelector('[data-seccion="mapa"] .hito-card, [data-seccion="mapa"] .vacia', {
+  await win.waitForSelector('[data-seccion="mapa"] .hito-mapa, [data-seccion="mapa"] .vacia', {
     timeout: 30_000,
   })
   anotar('cambiarDeProyectoConTresTrabajandoMs', Date.now() - t)

@@ -104,7 +104,7 @@ for (const nombre of elegidos) {
   await win.waitForTimeout(500)
   await win.screenshot({ path: `${SALIDA}/${nombre}-2-proyecto.png` })
   await seccion(win, 'Mapa')
-  await win.waitForSelector('[data-seccion="mapa"] .hito-card', { timeout: 30_000 })
+  await win.waitForSelector('[data-seccion="mapa"] .hito-mapa', { timeout: 30_000 })
   await win.waitForTimeout(400)
   await win.screenshot({ path: `${SALIDA}/${nombre}-3-mapa.png` })
   await seccion(win, 'Pendientes y scripts').catch(() => {})

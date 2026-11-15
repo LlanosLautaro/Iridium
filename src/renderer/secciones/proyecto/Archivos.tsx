@@ -218,7 +218,7 @@ export function VisorArchivo({
       {actual?.tipo === 'texto' && (
         <div
           ref={codigo}
-          className="codigo"
+          className="visor-codigo"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: cada línea la escapa y colorea el proceso principal (core/archivos.ts).
           dangerouslySetInnerHTML={{
             __html: actual.lineas

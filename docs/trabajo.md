@@ -223,8 +223,9 @@ Estado: pendiente · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
 `11-ideas-detalle` se queda esperando un clic (30 s) y no saca la pantalla, en los dos temas. Se arregla con la página de antes y después de DI-I1, que necesita las 30.
 
 ## T-54 — Cinco pruebas con la app abierta quedaron viejas
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-08 · Origen: DI-I1 (`test-results/e2e-completo.log`)
+Estado: hecho · Frente: Orden · Fecha: 2026-11-08 · Origen: DI-I1 (`test-results/e2e-completo.log`)
 Fallan igual en el commit anterior a DI-I1 (79d8c59), así que no son de Diseño (DI-I3 tanda 4: `r7-r8` y la primera de `in1-ideas` se pusieron al día y pasan; quedan las otras tres): `in1-ideas.spec.ts` (las dos: la línea de los que no pasaron ahora suma «Ver en Framework», T-51), `or4-mapa.spec.ts` › la tabla ancha en Docs no se desplaza en su recuadro (A-10), `r2-revision.spec.ts` › un proyecto Electron sin la línea (no encuentra el botón de Revisión) y `r7-r8-proyectos.spec.ts` › sus ideas y sus skills (no hay Trabajo en la barra). Ver en cada una si cambió la app a propósito (se corrige la prueba) o si es un error (se corrige la app); la de la tabla puede ser el criterio de Q-146.
+Hecho el 2026-11-15 con DI-I3 tanda 7: dos pruebas al día (sin framework no hay Docs ni Revisión, D-095) y un error de la app corregido (las palabras de una tabla se cortaban por letra y la tabla nunca se desplazaba, A-10). Detalle en `modulos/diseno/estado.md` › tanda 7.
 
 ## T-55 — Diagramas que dibuja la IA, con recorrido paso a paso
 Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)

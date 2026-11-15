@@ -206,18 +206,18 @@ try {
   // H-7, H-8, F-4: el Mapa de Iridium, una caja a su documento, un código, Atrás.
   await paso('H-7-mapa', async () => {
     await seccion('Mapa')
-    await win.waitForSelector('[data-seccion="mapa"] .hito-card', { timeout: 30_000 })
+    await win.waitForSelector('[data-seccion="mapa"] .hito-mapa', { timeout: 30_000 })
     await win.waitForTimeout(400)
     await foto('H-7-mapa')
     const m = win.locator('[data-seccion="mapa"]')
     return {
-      hitos: await m.locator('.h').allInnerTexts(),
+      hitos: await m.locator('.hitos .pestana').allInnerTexts(),
       cuenta: await m
         .locator('.cuenta')
         .textContent()
         .catch(() => null),
-      titulo: await m.locator('.hito-card h3').textContent(),
-      filas: (await m.locator('.hito-card .fila-mapa').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
+      titulo: await m.locator('.hito-mapa h3').textContent(),
+      filas: (await m.locator('.hito-mapa .fila').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
       frentes: await m.locator('.frente').allInnerTexts(),
     }
   })
@@ -227,18 +227,18 @@ try {
     await win.waitForTimeout(300)
     await foto('H-7-frente-compartir')
     const r = {
-      titulo: await m.locator('.hito-card h3').textContent(),
-      filas: (await m.locator('.hito-card .fila-mapa').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
+      titulo: await m.locator('.hito-mapa h3').textContent(),
+      filas: (await m.locator('.hito-mapa .fila').allInnerTexts()).map((s) => s.replace(/\s+/g, ' ')),
     }
     await m.locator('.frente').first().click()
     return r
   })
   await paso('H-8-caja-a-documento', async () => {
     const m = win.locator('[data-seccion="mapa"]')
-    await m.locator('.h', { hasText: /^4$/ }).click()
+    await m.locator('.hitos .pestana', { hasText: /^4$/ }).click()
     await win.waitForTimeout(300)
     await foto('H-7-hito-4')
-    await m.locator('.hito-card .fila-mapa').first().click()
+    await m.locator('.hito-mapa .fila').first().click()
     const docs = win.locator('[data-seccion="docs"]')
     await docs.locator('.doc-texto').waitFor({ timeout: 10_000 })
     await win.waitForTimeout(400)
@@ -270,7 +270,7 @@ try {
       r.trasAtras = await docs.locator('.barra-doc .nom').textContent()
     }
     await seccion('Mapa')
-    r.vuelveAlMapa = await win.locator('[data-seccion="mapa"] .hito-card').isVisible()
+    r.vuelveAlMapa = await win.locator('[data-seccion="mapa"] .hito-mapa').isVisible()
     await win
       .getByRole('button', { name: 'Ver el hito actual' })
       .click()
@@ -278,7 +278,7 @@ try {
     return r
   })
   await paso('F-4-seccion-inexistente', async () => {
-    await win.locator('[data-seccion="mapa"] .proximo a').first().click()
+    await win.locator('[data-seccion="mapa"] .proximo-paso a').first().click()
     const docs = win.locator('[data-seccion="docs"]')
     await docs.locator('.doc-texto').waitFor({ timeout: 10_000 })
     await foto('F-4-proximo-paso')
@@ -309,9 +309,9 @@ try {
       .locator('.arbol-nodo', { hasText: /^package\.json$/ })
       .first()
       .click()
-    await a.locator('.codigo').waitFor({ timeout: 10_000 })
+    await a.locator('.visor-codigo').waitFor({ timeout: 10_000 })
     await foto('H-15-codigo')
-    const editable = await a.locator('.codigo [contenteditable="true"], .codigo textarea').count()
+    const editable = await a.locator('.visor-codigo [contenteditable="true"], .visor-codigo textarea').count()
     await a
       .locator('.arbol-nodo', { hasText: 'README.md' })
       .first()

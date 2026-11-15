@@ -221,8 +221,8 @@ test('Abrir como proyecto desde Ideas y desde Skills (IN-3)', async () => {
     .getByRole('region', { name: 'Ideas' })
     .getByRole('button', { name: 'Abrir como proyecto' })
     .click()
-  // La vista de proyecto de Ideas, con sus íconos (Docs, Git…).
-  await expect(win.getByRole('button', { name: /^Docs/ })).toBeVisible()
+  // La vista de proyecto de Ideas, con sus íconos (Archivos, Git…); sin framework, sin Docs (D-095).
+  await expect(win.getByRole('button', { name: /^Archivos/ })).toBeVisible()
   await expect(win.locator('.barra-proyectos .proy').filter({ hasText: 'Ideas' }).first()).toBeVisible()
   await win.screenshot({ path: 'test-results/in1-abrir-ideas.png' })
 
@@ -231,7 +231,7 @@ test('Abrir como proyecto desde Ideas y desde Skills (IN-3)', async () => {
     .getByRole('navigation', { name: 'Skills' })
     .getByRole('button', { name: 'Abrir como proyecto' })
     .click()
-  await expect(win.getByRole('button', { name: /^Docs/ })).toBeVisible()
+  await expect(win.getByRole('button', { name: /^Archivos/ })).toBeVisible()
   await expect(win.locator('.barra-proyectos .proy').filter({ hasText: 'Skills' }).first()).toBeVisible()
 
   // De vuelta en Ideas.

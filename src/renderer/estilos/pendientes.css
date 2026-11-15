@@ -63,9 +63,11 @@
 .doc-texto .gp-tabla-caja {
   overflow-x: auto;
 }
+/* En una tabla, las palabras no se cortan por la mitad: si no entra, se desplaza dentro de su recuadro (A-10) */
 .doc-texto table {
   border-collapse: collapse;
   font-size: var(--tam-chico);
+  overflow-wrap: normal;
 }
 .doc-texto th,
 .doc-texto td {

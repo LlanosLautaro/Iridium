@@ -178,19 +178,15 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
   // DI-I3, tanda 6: la Bandeja pasó a las piezas; quedan el texto de los documentos y la columna de Skills
   'pendientes.css': ['columna', 'aviso-doc', 'gp-casilla', 'doc-texto'],
+  // DI-I3, tanda 7: el Mapa pasó a las piezas
   'proyecto.css': [
     'atras',
     'script-fila',
     'script',
-    'bloque-frentes',
-    'hito-card',
-    'proximo',
     'aviso-doc',
-    'sin-guia',
     'recuadro-simple',
     'menu-boton',
     'ancho-lectura',
-    'frena-punto',
     'menu-lista',
     'barra-doc',
     'cab-panel',
@@ -198,8 +194,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'arbol-lista',
     'arbol-nodo',
     'cab-proyecto',
-    'filas-mapa',
-    'fila-mapa',
   ],
   'proyectos.css': [
     'peligro',
@@ -228,17 +222,15 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--lateral': 3,
   '--barra': 1,
-  '--caja': 26,
+  '--caja': 24,
   '--medidor-fondo': 5,
-  '--primario': 37,
+  '--primario': 33,
   '--primario-texto': 9,
-  '--trabaja': 2,
-  '--ok': 15,
-  '--sobre-color': 1,
+  '--ok': 13,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,
-  '--radio-medidor': 5,
+  '--radio-medidor': 4,
   '--sombra-flotante': 1,
 }
 

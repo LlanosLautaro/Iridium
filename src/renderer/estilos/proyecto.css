@@ -128,212 +128,143 @@
   color: var(--texto-3);
 }
 
-/* Mapa (W-7, D-035): dónde está el proyecto y qué sigue */
+/* Mapa (W-7, D-035): dónde está el proyecto y qué sigue. Con las piezas desde DI-I3, tanda 7
+   (docs/diseno/pantallas/mapa.html): los hitos son Pestañas de números, los grupos Bloques, lo de cada uno Filas y los
+   estados Señales; aquí solo va cómo se acomodan. */
 .mapa {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 24px 60px;
+  padding: var(--esp-5) var(--esp-6) var(--esp-7);
 }
 .mapa-int {
-  max-width: 880px;
-  margin: 0 auto;
-  display: grid;
-  gap: 16px;
+  max-width: var(--ancho-centrado);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
 }
-/* La fila de hitos (W-7): un casillero por hito y la cuenta de hechos a la derecha */
+/* La fila de hitos: el rótulo, un número por hito y la cuenta de hechos a la derecha */
 .hitos {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--esp-3);
   min-width: 0;
   margin: 0;
   padding: 0;
   border: 0;
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
 }
-.hitos .rot {
-  margin-right: 6px;
+.numeros-hitos {
+  flex-wrap: wrap;
+  min-width: 0;
 }
-.hitos .tot {
+.hitos .total-hitos {
   margin-left: auto;
-  padding-left: 12px;
-  font: 500 12px / 1 var(--mono);
   white-space: nowrap;
 }
-.h {
-  position: relative;
-  flex: none;
-  width: 30px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-control);
-  color: var(--texto-3);
-  font: 500 12px / 1 var(--mono);
-}
-.h:hover {
-  border-color: var(--texto-3);
-  color: var(--texto);
-}
-.h.h-completo {
-  border-color: transparent;
-  background: color-mix(in oklab, var(--ok) 12%, transparent);
-  color: var(--texto-2);
-}
-.h.h-en-curso {
-  border-color: var(--primario);
-  color: var(--texto);
-  font-weight: 700;
-}
-.h.h-reabierto {
-  border-color: var(--espera-borde);
+.hitos .numeros-hitos > .h-reabierto {
   color: var(--espera);
 }
-.h.h-saltado,
-.h.h-en-pausa,
-.h.h-otro {
-  border-style: dashed;
-}
-.h.h-bloqueado {
-  border-color: color-mix(in oklab, var(--error) 45%, var(--borde));
+.hitos .numeros-hitos > .h-bloqueado {
   color: var(--error);
 }
-/* El hito que se está mirando lleva una raya debajo */
-.h[aria-current="true"]::after {
-  content: "";
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  bottom: -6px;
-  height: 2px;
-  border-radius: var(--radio-medidor);
-  background: var(--texto-2);
-}
-.h.h-en-curso[aria-current="true"]::after {
-  background: var(--primario);
+.hitos .numeros-hitos > .h-saltado {
+  text-decoration: line-through;
 }
 
-/* El bloque de frentes (W-7, A-5): el activo arriba; debajo, una línea por estado */
-.bloque-frentes {
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-tarjeta);
-  background: var(--caja);
-}
-.fr-activo {
-  display: grid;
-  gap: 14px;
-  padding: 14px 16px 14px;
-}
-.fr-cab {
+/* El hito que se mira o el frente activo: el rótulo, el nombre grande, su paso o su estado y sus acciones a la derecha */
+.parte-mapa {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: var(--esp-4);
+  padding: var(--esp-5) 0 var(--esp-6);
+  border-bottom: 1px solid var(--borde);
 }
-.fr-cab .rot {
-  font: 600 12px / 1 var(--ui);
-  color: var(--texto-3);
-  letter-spacing: 0.02em;
-}
-.fr-cab h3 {
-  font: 600 16px / 1.2 var(--ui);
-}
-.fr-paso {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--texto-2);
-}
-.fr-paso .ic {
-  width: 13px;
-  height: 13px;
-  color: var(--primario);
-}
-.fr-cab > button {
-  margin-left: auto;
-}
-.bloque-frentes h4 {
+.cab-parte {
   display: flex;
   align-items: baseline;
-  gap: 6px;
-  margin-bottom: 5px;
-  font: 600 12px / 1 var(--ui);
-  letter-spacing: 0.02em;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+}
+.cab-parte h3 {
+  margin: 0;
+  font: var(--estilo-documento);
+}
+.cab-parte .paso-frente {
+  color: var(--texto-2);
+}
+.cab-parte .acciones-parte {
+  margin-left: auto;
+  display: flex;
+  gap: var(--esp-2);
+  align-self: center;
+}
+.proximo-paso {
+  max-width: none;
+}
+.proximo-paso > :last-child {
+  margin-bottom: 0;
+}
+.dos-mapa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--esp-5);
+}
+@container (min-width: 700px) {
+  .dos-mapa {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--esp-5) var(--esp-6);
+  }
+}
+/* Los dos Bloques lado a lado empiezan a la misma altura (le gana a «Bloque + Bloque» de la pieza) */
+.dos-mapa > :nth-child(2) {
+  margin-top: 0;
+}
+.nada-mapa {
+  margin: 0;
+  font: var(--estilo-meta);
   color: var(--texto-3);
 }
-.bloque-frentes .n {
-  font: 500 11.5px / 1 var(--mono);
+.mapa .ver-mas {
+  align-self: flex-start;
 }
-.doc-texto.fr-texto {
-  max-width: 72ch;
-  font-size: 14px;
-  color: var(--texto);
-}
-.fr-otros {
+
+/* Los demás frentes, una línea por estado, cada nombre a su estado.md */
+.lineas-frentes {
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
-  gap: 6px 10px;
-  padding: 9px 16px 10px;
-  font-size: 13px;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: var(--esp-2) var(--esp-3);
+  margin: 0;
+  padding-top: var(--esp-5);
 }
-.fr-activo + .fr-otros {
-  border-top: 1px solid var(--borde-suave);
-}
-.fr-otros:empty {
+.lineas-frentes:empty {
   display: none;
 }
-.fr-otros .rot {
+.lineas-frentes dt {
   color: var(--texto-3);
 }
-.fr-otros .nombres {
+.lineas-frentes dd {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 2px 0;
-}
-.fr-otros .sep {
-  margin: 0 6px;
-  color: var(--texto-3);
-}
-.fr-otros .sin-carpeta {
-  color: var(--texto-2);
+  gap: var(--esp-1) var(--esp-3);
+  margin: 0;
 }
 .enlace-frente {
   padding: 0;
-  border: 0;
-  background: none;
-  color: var(--texto-2);
-  font: inherit;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-}
-.enlace-frente:hover {
   color: var(--texto);
 }
-/* Lo que frena: el «!» ámbar de la cuenta (D-100), no solo color */
-.frena-punto {
-  display: inline-grid;
-  place-items: center;
-  flex: none;
-  width: 18px;
-  height: 18px;
-  margin-left: 6px;
-  border-radius: var(--radio-control);
-  background: var(--espera);
-  color: var(--sobre-color);
-  font: 700 11px / 1 var(--ui);
+.enlace-frente:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Lo último de la IA (D-035): una línea al pie */
 .ultimo-ia {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--esp-2);
   min-width: 0;
-  font-size: 12.5px;
+  padding-top: var(--esp-5);
+  font: var(--estilo-meta);
   color: var(--texto-3);
 }
 .ultimo-ia q {
@@ -343,115 +274,14 @@
   white-space: nowrap;
   color: var(--texto-2);
 }
-.ultimo-ia .rot {
+.ultimo-ia .rotulo-ultimo {
   flex: none;
 }
-.ultimo-ia .trabaja {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--trabaja);
-}
-.ultimo-ia .trabaja .ic {
-  width: 13px;
-  height: 13px;
-}
 
-.hito-card {
-  display: grid;
-  gap: 18px;
-  padding: 18px 20px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-tarjeta);
-  background: var(--elevado);
-}
-.hito-card .cab {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.hito-card .detalle {
-  margin-top: -10px;
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.hito-card h4 {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 8px;
-  font: 600 var(--tam-chico) / 1 var(--ui);
-  letter-spacing: 0.02em;
-  color: var(--texto-3);
-}
-.proximo {
-  max-width: 72ch;
-  padding: 12px 14px;
-  border-radius: var(--radio-bloque);
-  background: var(--caja);
-  border: 1px solid var(--borde-suave);
-}
-.doc-texto.proximo {
-  font-size: 14.5px;
-  color: var(--texto);
-}
-.dos {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
-}
-@container (min-width: 700px) {
-  .dos {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 18px 32px;
-  }
-}
-.columna-mapa {
-  display: grid;
-  gap: 18px;
-  align-content: start;
-}
-.mapa .filas-mapa {
-  display: grid;
-  gap: 2px;
-}
-.mapa .fila-mapa {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 30px;
-  min-width: 0;
-  margin: 0 -8px;
-  padding: 4px 8px;
-  border-radius: var(--radio-fila);
-  color: var(--texto);
-  font-size: 13.5px;
-  text-align: left;
-}
-.est.paso-espera {
-  color: var(--espera);
-}
-.vacio {
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.sin-guia {
-  max-width: 460px;
-  margin: 24px auto 0;
-  display: grid;
-  gap: 10px;
-  padding: 20px 22px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-tarjeta);
-  background: var(--elevado);
-}
-.sin-guia h3 {
-  font: 600 16px / 1.4 var(--ui);
-}
-.sin-guia p {
-  color: var(--texto-2);
-  line-height: 1.6;
+/* Sin framework: el Recuadro punteado y debajo sus documentos */
+.docs-sin-guia {
+  max-width: var(--ancho-cuadro);
+  margin: var(--esp-4) auto 0;
 }
 
 /* Docs y Scripts (W-8, D-035): un lector liviano */
@@ -675,7 +505,7 @@
   gap: 10px;
   white-space: nowrap;
 }
-.codigo {
+.visor-codigo {
   padding: 8px 0 30px;
   font: 12.5px / 1.6 var(--mono);
   color: var(--texto);
@@ -684,11 +514,11 @@
   width: max-content;
   min-width: 100%;
 }
-.codigo > div {
+.visor-codigo > div {
   min-height: 1.6em;
   padding-right: 16px;
 }
-.codigo > div::before {
+.visor-codigo > div::before {
   counter-increment: l;
   content: counter(l);
   display: inline-block;
@@ -699,22 +529,22 @@
   opacity: 0.6;
   user-select: none;
 }
-.codigo > div.marcada {
+.visor-codigo > div.marcada {
   background: var(--sel-fondo);
   box-shadow: inset 2px 0 0 var(--primario);
 }
-.codigo > div.marcada::before {
+.visor-codigo > div.marcada::before {
   color: var(--primario-texto);
   opacity: 1;
 }
-.codigo .c {
+.visor-codigo .c {
   color: var(--texto-3);
 }
-.codigo .k {
+.visor-codigo .k {
   color: var(--primario-texto);
 }
-.codigo .s,
-.codigo .n {
+.visor-codigo .s,
+.visor-codigo .n {
   color: var(--cod-cadena);
 }
 .imagen {
@@ -868,79 +698,11 @@
 .menu-lista > button.conv.actual {
   background: var(--sel-fondo);
 }
-.hito-card .cab .num {
-  font: 500 12px / 1 var(--mono);
-  color: var(--texto-3);
-}
-.hito-card .cab h3 {
-  font: 600 17px / 1.3 var(--ui);
-}
-.hito-card .cab .der {
-  margin-left: auto;
-  display: flex;
-  gap: 6px;
-}
-.hito-card h4 .n {
-  font: 500 12px / 1 var(--mono);
-}
-.mapa button.fila-mapa:hover {
-  background: var(--hover);
-}
-.mapa .fila-mapa.sel {
-  background: var(--sel-fondo);
-}
-.mapa .fila-mapa .t {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.mapa .fila-mapa .t.tenue {
-  color: var(--texto-2);
-}
-.mapa .fila-mapa .q {
-  font: 700 12px / 1 var(--mono);
-}
-.mapa .fila-mapa .est {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--texto-3);
-  white-space: nowrap;
-}
-.mapa .fila-mapa .ic {
-  width: 13px;
-  height: 13px;
-}
-.mapa .fila-mapa .hora {
-  font: 400 12px / 1 var(--mono);
-  color: var(--texto-3);
-}
-.mapa .fila-mapa.ver-mas {
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.mapa .fila-mapa.trabaja {
-  color: var(--trabaja);
-}
-.mapa .fila-mapa.mono {
-  font: 500 12.5px / 1 var(--mono);
-  color: var(--texto-2);
-}
+
 .mapa .espera-fila .ic {
   color: var(--texto-3);
 }
-.est.paso-hecho .ic {
-  color: var(--ok);
-}
-.est.paso-en-curso .ic {
-  color: var(--primario);
-}
-.est.paso-reabierto .ic {
-  color: var(--espera);
-}
+
 .barra-doc .menu-boton .ic {
   transform: rotate(90deg);
 }
@@ -972,15 +734,13 @@
   margin-top: 16px;
   color: var(--texto-2);
 }
-.lectura .doc-texto a,
-.proximo.doc-texto a {
+.lectura .doc-texto a {
   color: inherit;
   text-decoration: underline dotted;
   text-decoration-color: var(--texto-3);
   text-underline-offset: 3px;
 }
-.lectura .doc-texto a:hover,
-.proximo.doc-texto a:hover {
+.lectura .doc-texto a:hover {
   color: var(--primario-texto);
   text-decoration-color: currentColor;
 }

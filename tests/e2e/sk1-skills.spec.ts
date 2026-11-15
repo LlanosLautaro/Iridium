@@ -216,12 +216,12 @@ test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', as
   await arbol.getByRole('button', { name: 'SKILL.md' }).click()
   await expect(detalle.locator('.visor-cab')).toContainText('SKILL.md')
   await expect(detalle.locator('.visor-cab')).toContainText('solo lectura')
-  await expect(detalle.locator('.codigo')).toContainText('Formato vigente')
+  await expect(detalle.locator('.visor-codigo')).toContainText('Formato vigente')
   await expect(detalle.getByRole('button', { name: 'Ver en Docs' })).toHaveCount(0)
 
   await arbol.getByRole('button', { name: 'references' }).click()
   await arbol.getByRole('button', { name: 'actualizar-formato.md' }).click()
-  await expect(detalle.locator('.codigo')).toContainText('Pasos para poner al día un proyecto.')
+  await expect(detalle.locator('.visor-codigo')).toContainText('Pasos para poner al día un proyecto.')
   await win.screenshot({ path: 'test-results/sk1-archivos.png' })
 
   // Otra skill tiene su propio lugar; al volver, sigue en el archivo que se miraba.
@@ -232,7 +232,7 @@ test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', as
       .getByRole('button', { name: 'Resumen' }),
   ).toHaveAttribute('aria-current', 'true')
   await lista.getByTitle('hitos-desarrollo-app', { exact: true }).click()
-  await expect(detalle.locator('.codigo')).toContainText('Pasos para poner al día un proyecto.')
+  await expect(detalle.locator('.visor-codigo')).toContainText('Pasos para poner al día un proyecto.')
 
   // Solo carpetas de la lista, y sin salir de la de la skill.
   const intentos = await win.evaluate(async () => {

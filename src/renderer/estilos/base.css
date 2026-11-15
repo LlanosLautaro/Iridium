@@ -29,6 +29,10 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--borde-fuerte) transparent;
 }
+/* Los enlaces, del color de su texto, como en la base de las maquetas (docs/diseno/piezas.css) */
+a {
+  color: inherit;
+}
 button {
   font: inherit;
   color: inherit;

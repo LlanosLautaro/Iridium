@@ -32,16 +32,28 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 en curso: tandas 1 a 6 probadas; sigue la 7, el Mapa) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 en curso: tandas 1 a 6 probadas; la 7, el Mapa, espera Q-171) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 6 están probadas (la Bandeja, en Q-170) y sigue la 7, el Mapa. Historia y detalle en `modulos/diseno/estado.md`.
+**Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 6 están probadas; la 7, el Mapa, está hecha y espera tu prueba (Q-171). Historia y detalle en `modulos/diseno/estado.md`.
 Orden espera tu prueba de OR-I4 (Q-146); Compartir, la invitación (Q-126).
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
+- **Q-171 — Probá el Mapa nuevo (DI-I3, tanda 7)**
+  Tipo: prueba · Frente: Diseño
+  Contexto: la versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo). Mirá el Mapa de Iridium y comparalo con la maqueta (Diseño › Pantallas › Mapa). Detalle en `modulos/diseno/estado.md` › tanda 7.
+  - [ ] Se parece a la maqueta: «Hitos» con los números sin borde (el actual con fondo gris) y «N de M hechos» a la derecha; la cabecera dice el hito
+  - [ ] El frente activo va sin caja: el nombre grande, su paso en gris y «Abrir estado.md» a la derecha; debajo el Próximo paso y, lado a lado, «En curso» y «En tu bandeja» empezando a la misma altura
+  - [ ] Lo que frena dice «Frena» en ámbar (en la bandeja del frente y en «Sin frente»), no un «!»
+  - [ ] Abajo, una línea gris y los demás frentes en filas («En espera», «En operación»); tocar uno abre su `estado.md`
+  - [ ] Tocar un hito muestra su detalle con sus pasos como filas y su estado a la derecha; **Volver** trae el frente activo
+  - [ ] Los enlaces del Próximo paso (y los de la Bandeja y la conversación) ya no salen azules
+  - [ ] En Archivos, un archivo de código se sigue viendo bien (con sus números de línea y colores)
+  - [ ] En Docs, una tabla que no entra (por ejemplo la de Módulos con la conversación ancha) se desplaza de costado en vez de cortar las palabras por la mitad
+
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.
@@ -62,7 +74,7 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: DI-I3, tanda 7 — el Mapa pasa a las piezas. Si llega Q-146, procesarla antes.
+Diseño: DI-I3, tanda 8 — Ideas como bloc de notas (D-112) pasa a las piezas. Si llega Q-171 o Q-146, procesarlas antes (lo que falle del Mapa se corrige primero).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

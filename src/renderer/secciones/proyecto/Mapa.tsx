@@ -2,8 +2,9 @@
 // detalle). Con un frente en curso manda el bloque de frentes (frente Orden, A-5): el activo con su paso, su Próximo
 // paso, su trabajo en curso y sus preguntas, y debajo los que esperan y los que están en operación, cada uno a su
 // `estado.md`. Sin frente en curso, el detalle del hito actual. Al pie, lo último de la IA. Tocar un paso abre su
-// sección en Docs (F-4). Se relee solo cuando cambia un documento del proyecto.
-import { type MouseEvent, useCallback, useEffect, useState } from 'react'
+// sección en Docs (F-4). Se relee solo cuando cambia un documento del proyecto. Desde DI-I3, tanda 7, con las piezas
+// (docs/diseno/pantallas/mapa.html): los hitos son Pestañas de números, los grupos Bloques y lo de cada uno, Filas.
+import { type MouseEvent, type ReactNode, useCallback, useEffect, useState } from 'react'
 import type {
   EstadoHito,
   EstadoPaso,
@@ -63,8 +64,11 @@ function Paso({ ruta, paso }: { ruta: string; paso: PasoMapa }) {
   const palabra = e.palabra || paso.estadoTexto
   const contenido = (
     <>
-      <span className="t">{paso.texto}</span>
-      <span className={`est paso-${paso.estado}`}>
+      <span className="principal-fila">
+        <span className="titulo-fila">{paso.texto}</span>
+      </span>
+      {/* La Señal (PZ-7): ámbar lo que espera tu prueba o se reabrió; lo demás, gris (D-108). */}
+      <span className={paso.estado === 'espera' || paso.estado === 'reabierto' ? 'senal ambar' : 'senal'}>
         {palabra}
         <Icono nombre={e.icono} gira={paso.estado === 'en-curso'} />
       </span>
@@ -73,14 +77,14 @@ function Paso({ ruta, paso }: { ruta: string; paso: PasoMapa }) {
   const destino = paso.destino
   if (!destino)
     return (
-      <div className="fila-mapa" title={`${paso.texto} · ${palabra}`}>
+      <div className="fila" title={`${paso.texto} · ${palabra}`}>
         {contenido}
       </div>
     )
   return (
     <button
       type="button"
-      className={paso.estado === 'en-curso' ? 'fila-mapa sel' : 'fila-mapa'}
+      className={paso.estado === 'en-curso' ? 'fila se-abre elegida' : 'fila se-abre'}
       title={`${paso.texto} · ${palabra} · abrir su sección`}
       onClick={() => abrirDoc(ruta, destino)}
     >
@@ -104,21 +108,21 @@ function ListaPasos({
   const hechos = pasos.filter((p) => p.estado === 'hecho').length
   const ocultos = todos ? 0 : Math.max(0, pasos.length - PASOS_VISIBLES)
   return (
-    <div>
-      <h4>
+    <div className="bloque">
+      <h4 className="bloque-titulo">
         {titulo}
         {pasos.length > 0 && (
-          <span className="n">
+          <span className="cuenta">
             {hechos} de {pasos.length}
           </span>
         )}
       </h4>
       {pasos.length === 0 ? (
-        <span className="vacio">{vacio}</span>
+        <p className="nada-mapa">{vacio}</p>
       ) : (
-        <div className="filas-mapa">
+        <div className="filas">
           {ocultos > 0 && (
-            <button type="button" className="fila-mapa ver-mas" onClick={() => setTodos(true)}>
+            <button type="button" className="boton sin-fondo chico ver-mas" onClick={() => setTodos(true)}>
               +{ocultos} anteriores
             </button>
           )}
@@ -149,30 +153,32 @@ function Pasos({ ruta, h }: { ruta: string; h: HitoMapa }) {
   )
 }
 
-/** Las preguntas sin responder: cada una lleva a la Bandeja de entrada; la que frena, con el «!» ámbar (D-100). */
+/** Las preguntas sin responder: cada una lleva a la Bandeja de entrada; la que frena, con «Frena» en ámbar (D-100). */
 function EnTuBandeja({ ruta, preguntas }: { ruta: string; preguntas: PreguntaNueva[] }) {
   const responderEn = usarEstado((s) => s.responderEn)
   return (
-    <div>
-      <h4>
-        En tu bandeja <span className="n">{preguntas.length}</span>
+    <div className="bloque">
+      <h4 className="bloque-titulo">
+        En tu bandeja{' '}
+        <span className={preguntas.some((q) => q.frena) ? 'cuenta frena' : 'cuenta'}>{preguntas.length}</span>
       </h4>
       {preguntas.length === 0 ? (
-        <span className="vacio">Nada en tu bandeja.</span>
+        <p className="nada-mapa">Nada en tu bandeja.</p>
       ) : (
-        <div className="filas-mapa">
+        <div className="filas">
           {preguntas.map((q) => (
             <button
               key={q.codigo}
               type="button"
-              className="fila-mapa espera-fila"
+              className="fila se-abre pregunta-mapa"
               title={`Responder en la Bandeja de entrada${q.frena ? ' · frena el proyecto' : ''}`}
               onClick={() => responderEn(ruta)}
             >
-              <span className="q">{q.codigo}</span>
-              <span className="t">{q.pregunta}</span>
-              {q.frena ? <span className="frena-punto">!</span> : <span className="est">{q.tipo}</span>}
-              <Icono nombre="chev" />
+              <span className="codigo">{q.codigo}</span>
+              <span className="principal-fila">
+                <span className="titulo-fila">{q.pregunta}</span>
+              </span>
+              {q.frena ? <span className="senal ambar">Frena</span> : <span className="meta">{q.tipo}</span>}
             </button>
           ))}
         </div>
@@ -213,7 +219,7 @@ function LoUltimo({ ruta }: { ruta: string }) {
   return (
     <div className="ultimo-ia">
       {trabajando ? (
-        <span className="trabaja">
+        <span className="senal">
           <Icono nombre="sync" gira />
           Trabajando
           {herramienta?.tipo === 'herramienta' &&
@@ -221,14 +227,36 @@ function LoUltimo({ ruta }: { ruta: string }) {
         </span>
       ) : (
         <>
-          <span className="rot">Lo último de la IA:</span>
+          <span className="rotulo-ultimo">Lo último de la IA:</span>
           <q title={texto}>{texto}</q>
           {ultima?.tipo === 'ia' && ultima.cuando !== null && <span>· {hora(ultima.cuando)}</span>}
         </>
       )}
-      <button type="button" className="mini-link" onClick={ver}>
+      <button type="button" className="boton sin-fondo chico" onClick={ver}>
         Ver
       </button>
+    </div>
+  )
+}
+
+/** La cabecera de una parte del Mapa (el hito que se mira o el frente activo): rótulo, nombre, estado y acciones. */
+function CabParte({
+  rotulo,
+  nombre,
+  estado,
+  acciones,
+}: {
+  rotulo: string
+  nombre: string
+  estado: ReactNode
+  acciones: ReactNode
+}) {
+  return (
+    <div className="cab-parte">
+      <span className="bloque-titulo">{rotulo}</span>
+      <h3>{nombre}</h3>
+      {estado}
+      <span className="acciones-parte">{acciones}</span>
     </div>
   )
 }
@@ -249,44 +277,46 @@ function TarjetaHito({
   const pasos = <Pasos key={h.numero} ruta={ruta} h={h} />
   const documento = h.documento
   return (
-    <section className="hito-card" aria-label={`Hito ${h.numero}`}>
-      <div className="cab">
-        <span className="num">Hito {String(h.numero).padStart(2, '0')}</span>
-        <h3>{h.nombre}</h3>
-        <ChipHito h={h} />
-        <div className="der">
-          {volver && (
-            <button type="button" className="boton secundario chico" onClick={volver}>
-              Volver
-            </button>
-          )}
-          {documento && !actual && (
-            <button
-              type="button"
-              className="boton secundario chico"
-              onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
-            >
-              <Icono nombre="docs" />
-              Abrir {nombreDoc(documento)}
-            </button>
-          )}
-        </div>
-      </div>
-      {actual && m.detalleActual && <p className="detalle">{m.detalleActual}</p>}
-      {h.estado === 'saltado' && h.estadoTexto && <p className="vacio">{h.estadoTexto}</p>}
+    <section className="parte-mapa hito-mapa" aria-label={`Hito ${h.numero}`}>
+      <CabParte
+        rotulo={`Hito ${h.numero}`}
+        nombre={h.nombre}
+        estado={<ChipHito h={h} />}
+        acciones={
+          <>
+            {volver && (
+              <button type="button" className="boton sin-fondo" onClick={volver}>
+                Volver
+              </button>
+            )}
+            {documento && !actual && (
+              <button
+                type="button"
+                className="boton sin-fondo"
+                onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
+              >
+                <Icono nombre="docs" />
+                Abrir {nombreDoc(documento)}
+              </button>
+            )}
+          </>
+        }
+      />
+      {actual && m.detalleActual && <p className="nada-mapa">{m.detalleActual}</p>}
+      {h.estado === 'saltado' && h.estadoTexto && <p className="nada-mapa">{h.estadoTexto}</p>}
       {actual ? (
         <>
-          <div>
-            <h4>Próximo paso</h4>
+          <div className="bloque">
+            <h4 className="bloque-titulo">Próximo paso</h4>
             {m.proximoHtml ? (
-              <TextoDoc ruta={ruta} html={m.proximoHtml} clase="proximo" />
+              <TextoDoc ruta={ruta} html={m.proximoHtml} />
             ) : (
-              <span className="vacio">
+              <p className="nada-mapa">
                 <code>estado.md</code> no dice el próximo paso.
-              </span>
+              </p>
             )}
           </div>
-          <div className="dos">
+          <div className="dos-mapa">
             {pasos}
             <EnTuBandeja ruta={ruta} preguntas={m.preguntas} />
           </div>
@@ -298,12 +328,12 @@ function TarjetaHito({
   )
 }
 
-/** Un texto en HTML seguro del proceso principal, con sus enlaces a los documentos. */
-function TextoDoc({ ruta, html, clase }: { ruta: string; html: string; clase: string }) {
+/** Un Próximo paso (el Texto de documento, PZ-12) en HTML seguro del proceso principal, con sus enlaces a los documentos. */
+function TextoDoc({ ruta, html }: { ruta: string; html: string }) {
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents lint/a11y/noStaticElementInteractions: solo delega los clics de los enlaces de adentro, que ya son enfocables.
     <div
-      className={`${clase} doc-texto`}
+      className="texto-doc conversacion proximo-paso"
       onClick={(e) => tocarEnlace(e, ruta)}
       // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
       dangerouslySetInnerHTML={{ __html: html }}
@@ -315,12 +345,7 @@ function TextoDoc({ ruta, html, clase }: { ruta: string; html: string; clase: st
 function NombreFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
   const abrirDoc = usarEstado((s) => s.abrirDoc)
   const documento = f.documento
-  if (!documento)
-    return (
-      <span className="sin-carpeta" title="Todavía no tiene su carpeta en docs/modulos">
-        {f.nombre}
-      </span>
-    )
+  if (!documento) return <span title="Todavía no tiene su carpeta en docs/modulos">{f.nombre}</span>
   return (
     <button
       type="button"
@@ -333,20 +358,17 @@ function NombreFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
   )
 }
 
-/** Los frentes en un estado, en una línea («En espera   Diseño · Capacidades»). */
+/** Los frentes en un estado, en una línea («En espera   Diseño   Capacidades»). */
 function LineaFrentes({ ruta, rotulo, frentes }: { ruta: string; rotulo: string; frentes: FrenteMapa[] }) {
   if (frentes.length === 0) return null
   return (
     <>
-      <span className="rot">{rotulo}</span>
-      <span className="nombres">
-        {frentes.map((f, i) => (
-          <span key={f.clave}>
-            {i > 0 && <span className="sep">·</span>}
-            <NombreFrente ruta={ruta} f={f} />
-          </span>
+      <dt>{rotulo}</dt>
+      <dd>
+        {frentes.map((f) => (
+          <NombreFrente key={f.clave} ruta={ruta} f={f} />
         ))}
-      </span>
+      </dd>
     </>
   )
 }
@@ -372,35 +394,32 @@ function BloqueFrentes({
   const documento = activo?.documento ?? null
   const sinFrente = m.preguntas
   return (
-    <section className="bloque-frentes" aria-label="Frentes">
+    <section className="frentes-mapa" aria-label="Frentes">
       {activo && (
-        <div className="fr-activo">
-          <div className="fr-cab">
-            <span className="rot">Frente activo</span>
-            <h3>{activo.nombre}</h3>
-            {activo.paso && (
-              <span className="fr-paso">
-                <Icono nombre="cuadro" />
-                {activo.paso} · en curso
-              </span>
-            )}
-            {documento && (
-              <button
-                type="button"
-                className="boton secundario chico"
-                onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
-              >
-                <Icono nombre="docs" />
-                Abrir estado.md
-              </button>
-            )}
-          </div>
-          <div>
-            <h4>Próximo paso</h4>
+        <div className="parte-mapa frente-activo">
+          <CabParte
+            rotulo="Frente activo"
+            nombre={activo.nombre}
+            estado={activo.paso && <span className="paso-frente">{activo.paso}</span>}
+            acciones={
+              documento && (
+                <button
+                  type="button"
+                  className="boton sin-fondo"
+                  onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
+                >
+                  <Icono nombre="docs" />
+                  Abrir estado.md
+                </button>
+              )
+            }
+          />
+          <div className="bloque">
+            <h4 className="bloque-titulo">Próximo paso</h4>
             {activo.proximoHtml ? (
-              <TextoDoc ruta={ruta} html={activo.proximoHtml} clase="fr-texto" />
+              <TextoDoc ruta={ruta} html={activo.proximoHtml} />
             ) : (
-              <span className="vacio">
+              <p className="nada-mapa">
                 {documento ? (
                   <>
                     Su <code>estado.md</code> no dice el próximo paso.
@@ -408,29 +427,30 @@ function BloqueFrentes({
                 ) : (
                   'Todavía no tiene su carpeta en docs/modulos.'
                 )}
-              </span>
+              </p>
             )}
           </div>
-          <div className="dos">
-            <div>
-              <h4>
-                En curso <span className="n">{activo.trabajo.length}</span>
+          <div className="dos-mapa">
+            <div className="bloque">
+              <h4 className="bloque-titulo">
+                En curso <span className="cuenta">{activo.trabajo.length}</span>
               </h4>
               {activo.trabajo.length === 0 ? (
-                <span className="vacio">Ningún trabajo en curso.</span>
+                <p className="nada-mapa">Ningún trabajo en curso.</p>
               ) : (
-                <div className="filas-mapa">
+                <div className="filas">
                   {activo.trabajo.map((t) => (
                     <button
                       key={t.codigo}
                       type="button"
-                      className="fila-mapa"
+                      className="fila se-abre"
                       title="Abrir en trabajo.md"
                       onClick={() => abrirTrabajo(ruta, t.codigo)}
                     >
-                      <span className="q">{t.codigo}</span>
-                      <span className="t">{t.titulo}</span>
-                      <Icono nombre="chev" />
+                      <span className="codigo">{t.codigo}</span>
+                      <span className="principal-fila">
+                        <span className="titulo-fila">{t.titulo}</span>
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -440,7 +460,7 @@ function BloqueFrentes({
           </div>
         </div>
       )}
-      <div className="fr-otros">
+      <dl className="lineas-frentes">
         <LineaFrentes ruta={ruta} rotulo="También en curso" frentes={con('en curso')} />
         <LineaFrentes ruta={ruta} rotulo="En espera" frentes={[...con('pendiente'), ...con('nueva')]} />
         <LineaFrentes ruta={ruta} rotulo="En pausa" frentes={con('en pausa')} />
@@ -448,8 +468,8 @@ function BloqueFrentes({
         <LineaFrentes ruta={ruta} rotulo="Sin estado" frentes={con(null)} />
         {activo && sinFrente.length > 0 && (
           <>
-            <span className="rot">Sin frente</span>
-            <span className="nombres">
+            <dt>Sin frente</dt>
+            <dd>
               <button
                 type="button"
                 className="enlace-frente"
@@ -460,11 +480,11 @@ function BloqueFrentes({
                   ? `${sinFrente[0]?.codigo} en tu bandeja`
                   : `${sinFrente.length} en tu bandeja`}
               </button>
-              {sinFrente.some((q) => q.frena) && <span className="frena-punto">!</span>}
-            </span>
+              {sinFrente.some((q) => q.frena) && <span className="senal ambar">Frena</span>}
+            </dd>
           </>
         )}
-      </div>
+      </dl>
     </section>
   )
 }
@@ -488,11 +508,12 @@ export function Mapa({ ruta }: { ruta: string }) {
     <>
       <Cabecera
         titulo="Mapa"
+        sub={actual && `Hito ${actual.numero} · ${actual.nombre}`}
         acciones={
           documento && (
             <button
               type="button"
-              className="boton secundario chico"
+              className="boton sin-fondo"
               onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
             >
               <Icono nombre="docs" />
@@ -514,37 +535,43 @@ function CuerpoMapa({ ruta, m }: { ruta: string; m: MapaProyecto | null }) {
   if (m.tipo === 'error')
     return (
       <div className="mapa">
-        <p className="aviso-doc" role="alert">
+        <div className="recuadro error" role="alert">
           <Icono nombre="error" />
-          {m.mensaje}
-        </p>
+          <div className="cuerpo-recuadro">{m.mensaje}</div>
+        </div>
       </div>
     )
   if (m.tipo === 'sin-guia')
     return (
       <div className="mapa">
-        <div className="sin-guia">
-          <h3>Este proyecto no sigue el framework todavía</h3>
-          <p>
-            No tiene <code>docs/estado.md</code>, así que no hay hitos para mostrar.
-            {m.documentos.length > 0 ? ' Estos son los documentos que tiene:' : ' Tampoco tiene documentos.'}
-          </p>
-          {m.documentos.length > 0 && (
-            <div className="filas-mapa">
-              {m.documentos.map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  className="fila-mapa mono"
-                  onClick={() => abrirDoc(ruta, { documento: d, ancla: '' })}
-                >
-                  <Icono nombre="docs" />
-                  {nombreDoc(d)}
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="recuadro punteado">
+          <div className="cuerpo-recuadro">
+            <strong>Este proyecto no sigue el framework todavía</strong>
+            <p>
+              No tiene <code>docs/estado.md</code>, así que no hay hitos para mostrar.
+              {m.documentos.length > 0
+                ? ' Estos son los documentos que tiene:'
+                : ' Tampoco tiene documentos.'}
+            </p>
+          </div>
         </div>
+        {m.documentos.length > 0 && (
+          <div className="filas docs-sin-guia">
+            {m.documentos.map((d) => (
+              <button
+                key={d}
+                type="button"
+                className="fila se-abre"
+                onClick={() => abrirDoc(ruta, { documento: d, ancla: '' })}
+              >
+                <Icono nombre="docs" />
+                <span className="principal-fila">
+                  <span className="titulo-fila">{nombreDoc(d)}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     )
 
@@ -553,26 +580,30 @@ function CuerpoMapa({ ruta, m }: { ruta: string; m: MapaProyecto | null }) {
   const activo = m.frentes.find((x) => x.estado === 'en curso') ?? null
   // Con un frente en curso manda el bloque; tocar un hito muestra su detalle en su lugar (Volver lo saca).
   const verHito = mirado !== null || !activo
+  // La pestaña elegida es el hito que se mira; con el bloque de frentes, el actual (como en la maqueta).
+  const elegido = mirado ?? m.actual
   return (
     <div className="mapa">
       <div className="mapa-int">
         {m.hitos.length > 0 && (
           <fieldset className="hitos" aria-label="Hitos">
-            <span className="rot">Hitos</span>
-            {m.hitos.map((x) => (
-              <button
-                key={x.numero}
-                type="button"
-                className={`h h-${x.estado}`}
-                aria-current={verHito && x.numero === h?.numero}
-                title={`Hito ${x.numero} · ${x.nombre} · ${x.estadoTexto}`}
-                aria-label={`Hito ${x.numero}, ${x.nombre}, ${x.estadoTexto}`}
-                onClick={() => setMirado(x.numero === mirado ? null : x.numero)}
-              >
-                {x.numero}
-              </button>
-            ))}
-            <span className="tot">
+            <span className="bloque-titulo">Hitos</span>
+            <div className="pestanas numeros numeros-hitos">
+              {m.hitos.map((x) => (
+                <button
+                  key={x.numero}
+                  type="button"
+                  className={`pestana h-${x.estado}${x.estado === 'completo' ? ' hecho' : ''}${x.numero === elegido ? ' elegida' : ''}`}
+                  aria-current={verHito && x.numero === h?.numero}
+                  title={`Hito ${x.numero} · ${x.nombre} · ${x.estadoTexto}`}
+                  aria-label={`Hito ${x.numero}, ${x.nombre}, ${x.estadoTexto}`}
+                  onClick={() => setMirado(x.numero === mirado ? null : x.numero)}
+                >
+                  {x.numero}
+                </button>
+              ))}
+            </div>
+            <span className="cuenta total-hitos">
               {hechos} de {m.hitos.length} hechos
             </span>
           </fieldset>

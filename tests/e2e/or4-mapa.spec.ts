@@ -54,12 +54,13 @@ const ESTADO = `# Estado del proyecto
 Seguir con Orden.
 `
 
-// Una tabla más ancha que la sección: se desplaza dentro de su recuadro (A-10).
+// Una tabla más ancha que la sección: se desplaza dentro de su recuadro (A-10). Las celdas llevan palabras que no se
+// cortan: con palabras sueltas (o rutas, que se cortan en las barras) la tabla se aprieta y entra.
 const columnas = Array.from({ length: 9 }, (_, i) => `Columna ${i + 1}`)
 const TABLA_ANCHA = [
   `| ${columnas.join(' | ')} |`,
   `|${'---|'.repeat(9)}`,
-  `| ${columnas.map(() => 'una celda con bastante texto').join(' | ')} |`,
+  `| ${columnas.map(() => '`estado_del_modulo_de_revision`').join(' | ')} |`,
   '',
 ].join('\n')
 
@@ -138,20 +139,20 @@ test('el Mapa en operación: el frente activo, los que esperan y los que están 
     .getByRole('button', { name: 'Mapa' })
     .click()
   const mapa = win.locator('[data-seccion="mapa"]')
-  await expect(mapa.locator('.hitos .tot')).toHaveText('2 de 3 hechos')
+  await expect(mapa.locator('.hitos .total-hitos')).toHaveText('2 de 3 hechos')
   await expect(mapa.getByRole('button', { name: 'Abrir 10-operacion.md' })).toBeVisible()
 
   const bloque = mapa.getByRole('region', { name: 'Frentes' })
-  await expect(bloque.locator('.fr-cab h3')).toHaveText('Orden')
-  await expect(bloque.locator('.fr-paso')).toHaveText('4. UX · en curso')
-  await expect(bloque.locator('.fr-texto')).toContainText('reescribir 04-ux.md sin capas')
-  await expect(bloque.locator('button.fila-mapa', { hasText: 'T-12' })).toContainText(
+  await expect(bloque.locator('.frente-activo h3')).toHaveText('Orden')
+  await expect(bloque.locator('.paso-frente')).toHaveText('4. UX')
+  await expect(bloque.locator('.proximo-paso')).toContainText('reescribir 04-ux.md sin capas')
+  await expect(bloque.locator('button.fila', { hasText: 'T-12' })).toContainText(
     'Bandeja agrupada por frente',
   )
-  await expect(bloque.locator('.espera-fila')).toHaveText([/Q-139.*¿Las pantallas van así\?.*!/])
-  const otros = bloque.locator('.fr-otros')
-  await expect(otros.locator('.rot')).toHaveText(['En espera', 'En operación'])
-  await expect(otros).toContainText('En esperaDiseño·Capacidades')
+  await expect(bloque.locator('.pregunta-mapa')).toHaveText([/Q-139.*¿Las pantallas van así\?.*Frena/])
+  const otros = bloque.locator('.lineas-frentes')
+  await expect(otros.locator('dt')).toHaveText(['En espera', 'En operación'])
+  await expect(otros).toContainText('En esperaDiseñoCapacidades')
   await expect(otros).toContainText('En operaciónRevisión')
   await win.screenshot({ path: 'test-results/or4-mapa.png' })
 
@@ -162,7 +163,7 @@ test('el Mapa en operación: el frente activo, los que esperan y los que están 
   await docs.getByRole('button', { name: 'Atrás' }).click()
 
   // Un T-n en curso abre trabajo.md en Docs, en ese ítem (sin la sección Trabajo, D-112); Atrás vuelve al Mapa.
-  await bloque.locator('button.fila-mapa', { hasText: 'T-12' }).click()
+  await bloque.locator('button.fila', { hasText: 'T-12' }).click()
   await expect(docs.locator('.barra-doc .nom')).toHaveText('trabajo.md')
   await expect(docs.locator('[id="t-12"]')).toBeInViewport()
   await docs.getByRole('button', { name: 'Atrás' }).click()
@@ -172,7 +173,7 @@ test('el Mapa en operación: el frente activo, los que esperan y los que están 
     .getByRole('navigation', { name: 'Secciones del proyecto' })
     .getByRole('button', { name: 'Mapa' })
     .click()
-  await bloque.locator('.espera-fila').click()
+  await bloque.locator('.pregunta-mapa').click()
   await expect(win.locator('[data-seccion="pendientes"]')).toBeVisible()
   await app.close()
 })
