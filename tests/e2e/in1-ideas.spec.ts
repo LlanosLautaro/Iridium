@@ -109,7 +109,7 @@ test('la grilla solo con proyectos y el chat general al lado (IN-3)', async () =
   await expect(grilla.locator('.tarjeta', { hasText: 'Ideas' })).toHaveCount(0)
   await expect(grilla.locator('.tarjeta', { hasText: 'Skills' })).toHaveCount(0)
   await expect(grilla.locator('.cab-1 > .n')).toHaveText('4')
-  await expect(win.getByRole('complementary', { name: 'Chat general' }).locator('.chat-cab')).toContainText(
+  await expect(win.getByRole('complementary', { name: 'Chat general' }).locator('.cab-conv')).toContainText(
     'Ideas y proyectos',
   )
   await app.close()
@@ -177,7 +177,7 @@ test('Ctrl+3: las nuevas de cada proyecto y las sueltas, anotar con el selector 
   await win.getByLabel('Mensaje para la IA').fill('¿Esto podría ser un proyecto?')
   await win.keyboard.press('Enter')
   await expect(
-    chat.locator('.propio', { hasText: 'Sobre la idea «Planificador de comidas de la semana»: ¿Esto' }),
+    chat.locator('.mensaje-yo', { hasText: 'Sobre la idea «Planificador de comidas de la semana»: ¿Esto' }),
   ).toBeVisible()
   await expect(chat.getByText('Listo: dejé el estado al día.')).toBeVisible()
 
@@ -261,7 +261,7 @@ test('sin ideas.md; sin la carpeta Ideas se crea; si no se puede, lo dice', asyn
     'Delta 1',
     'Alfa 2',
   ])
-  await expect(nueva.win.locator('.chat-cab').first()).toContainText('Ideas y proyectos')
+  await expect(nueva.win.locator('.cab-conv').first()).toContainText('Ideas y proyectos')
   expect(await readFile(join(iridium, 'Ideas', 'CLAUDE.md'), 'utf8')).toContain('## Cuando una idea madura')
   await nueva.app.close()
 

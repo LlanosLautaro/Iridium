@@ -63,13 +63,15 @@ test('lo tuyo en burbuja; de la IA, el proceso aparte (plegado al terminar) y la
   // Mientras trabaja, el proceso se ve entero y sin plegar.
   await campo.fill('Algo lento: ordená la grilla por fecha')
   await campo.press('Enter')
-  await expect(hilo.locator('.turno.usuario .propio')).toHaveText('Algo lento: ordená la grilla por fecha')
+  await expect(hilo.locator('.turno.usuario .mensaje-yo')).toHaveText(
+    'Algo lento: ordená la grilla por fecha',
+  )
   await expect(hilo.locator('.turno.ia .proceso-ia').first()).toContainText('Leyó docs/estado.md')
   await expect(hilo.locator('.turno.ia .proceso-ia.plegado')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/d061-trabajando.png' })
 
   // Al terminar: el proceso queda en una línea y la respuesta, aparte.
-  await expect(hilo.locator('.md.respuesta-ia')).toHaveText('Listo: dejé el estado al día.', {
+  await expect(hilo.locator('.respuesta-ia')).toHaveText('Listo: dejé el estado al día.', {
     timeout: 20_000,
   })
   const proceso = hilo.locator('.proceso-ia.plegado')
@@ -78,7 +80,7 @@ test('lo tuyo en burbuja; de la IA, el proceso aparte (plegado al terminar) y la
 
   await campo.fill('Ahora sumale un filtro por etiqueta, y contame qué cambiaste')
   await campo.press('Enter')
-  await expect(hilo.locator('.md.respuesta-ia')).toHaveCount(2)
+  await expect(hilo.locator('.respuesta-ia')).toHaveCount(2)
   await expect(hilo.locator('.turno.usuario')).toHaveCount(2)
   await win.screenshot({ path: 'test-results/d061-chat.png' })
 

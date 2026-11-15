@@ -114,7 +114,7 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Pasar al f
   await expect(barra.getByRole('button', { name: 'Mapa' })).toHaveCount(0)
   await expect(barra.getByRole('button', { name: 'Docs' })).toHaveCount(0)
   // Sin estado.md no hay próximo paso: el chat no ofrece Seguí.
-  await expect(win.getByRole('button', { name: 'Seguí' })).toHaveCount(0)
+  await expect(win.getByRole('button', { name: 'Continuar' })).toHaveCount(0)
   await expect(win.getByText('Esta carpeta no sigue el framework: no hay un próximo paso.')).toBeVisible()
   const archivos = win.locator('[data-seccion="archivos"]')
   const recuadro = archivos.locator('.recuadro-simple')
@@ -125,7 +125,7 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Pasar al f
   await recuadro.getByRole('button', { name: 'Pasar al framework' }).click()
   await expect(recuadro).toHaveCount(0, { timeout: 15_000 })
   await expect(barra.getByRole('button', { name: 'Mapa' })).toBeVisible()
-  await expect(win.getByRole('button', { name: 'Seguí' })).toBeVisible()
+  await expect(win.getByRole('button', { name: 'Continuar' })).toBeVisible()
   await app.close()
 })
 

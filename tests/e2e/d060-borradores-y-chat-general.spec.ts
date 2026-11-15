@@ -120,16 +120,16 @@ test('el chat de la vista de Proyectos conversa en la carpeta Ideas, sin Seguí 
   // La carpeta Ideas la crea Iridium en su carpeta (D-083): el chat está desde la primera vez.
   const { app, win } = await abrir()
   const chat = win.locator('aside.chat')
-  await expect(chat.locator('.chat-cab')).toContainText('Ideas y proyectos')
+  await expect(chat.locator('.cab-conv')).toContainText('Ideas y proyectos')
   await expect(chat).toContainText('ideas.md')
-  await expect(chat.getByRole('button', { name: 'Seguí' })).toHaveCount(0)
+  await expect(chat.getByRole('button', { name: 'Continuar' })).toHaveCount(0)
   await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('Una idea: un lanzador de juegos')
   await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
   await expect(chat.locator('.hilo')).toContainText('Una idea: un lanzador de juegos')
   await expect(chat.locator('.hilo')).toContainText('Listo: dejé el estado al día.')
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Ideas' })).toContainText('Terminada')
   // Se ve en el chat: no hay aviso.
-  await expect(win.locator('.aviso')).toHaveCount(0)
+  await expect(win.locator('.aviso-flotante')).toHaveCount(0)
   // La grilla sigue a la izquierda.
   await expect(win.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
   await win.screenshot({ path: 'test-results/d060-chat-general.png' })

@@ -178,12 +178,12 @@ test('el chat de Skills con «Sobre la skill …» (SK-3)', async () => {
   const chat = win.getByRole('complementary', { name: 'Chat de Skills' })
   await expect(chat.getByText('Skills y configuración de Claude')).toBeVisible()
   await expect(chat.getByText('Sobre la skill')).toBeVisible()
-  await expect(chat.getByRole('button', { name: 'Seguí' })).toHaveCount(0)
+  await expect(chat.getByRole('button', { name: 'Continuar' })).toHaveCount(0)
   await win.screenshot({ path: 'test-results/sk1-skill.png' })
   await win.getByLabel('Mensaje para la IA').fill('¿Qué hace?')
   await win.keyboard.press('Enter')
   await expect(
-    chat.locator('.propio', { hasText: 'Sobre la skill gestor-proyectos: ¿Qué hace?' }),
+    chat.locator('.mensaje-yo', { hasText: 'Sobre la skill gestor-proyectos: ¿Qué hace?' }),
   ).toBeVisible()
   await expect(chat.getByText('Listo: dejé el estado al día.')).toBeVisible()
 
@@ -192,7 +192,7 @@ test('el chat de Skills con «Sobre la skill …» (SK-3)', async () => {
   await expect(chat.getByText('Sobre la skill', { exact: true })).toHaveCount(0)
   await win.getByLabel('Mensaje para la IA').fill('Y en general?')
   await win.keyboard.press('Enter')
-  await expect(chat.locator('.propio', { hasText: /^Y en general\?$/ })).toBeVisible()
+  await expect(chat.locator('.mensaje-yo', { hasText: /^Y en general\?$/ })).toBeVisible()
   // Con la IA trabajando, cerrar Iridium pregunta (F-6): se espera a que termine.
   await expect(chat.getByText('Listo: dejé el estado al día.')).toHaveCount(2)
 

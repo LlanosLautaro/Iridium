@@ -1,6 +1,7 @@
 // La conversación con la IA del proyecto (04-ux.md › W-3; H-4, H-5, H-14, H-17), siempre a la derecha (D-041): en su
-// barra, las conversaciones anteriores, Nueva y Seguí; la última conversación (también la de VS Code), el campo de
+// barra, las conversaciones anteriores, Nueva y Continuar; la última conversación (también la de VS Code), el campo de
 // texto y Detener. Los códigos y las citas de la IA abren Docs (F-4). Cada proyecto guarda la suya y su posición (H-6).
+// Con las piezas de las maquetas (docs/diseno/piezas.css › La conversación; DI-I3, tanda 5) y en español neutro (D-110).
 import {
   type KeyboardEvent,
   memo,
@@ -63,6 +64,8 @@ function cuandoFue(ms: number): string {
   return `el ${d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })} a las ${hora(ms)}`
 }
 
+const mayuscula = (t: string) => t.charAt(0).toUpperCase() + t.slice(1)
+
 type Turno =
   | { quien: 'usuario'; clave: string; entrada: Extract<Entrada, { tipo: 'usuario' }> }
   | { quien: 'ia'; clave: string; entradas: Exclude<Entrada, { tipo: 'usuario' }>[] }
@@ -113,33 +116,31 @@ function Herramientas({ lista }: { lista: Extract<Entrada, { tipo: 'herramienta'
 function Preguntas({ entrada, ruta }: { entrada: Extract<Entrada, { tipo: 'preguntas' }>; ruta: string }) {
   const n = entrada.preguntas.length
   return (
-    <div className="pedido">
-      <div className="meta">
-        <span className="senal ambar">
-          <Icono nombre="espera" />
-          Dejó {n} {n === 1 ? 'pregunta' : 'preguntas'}
-        </span>
-      </div>
-      <ul className="lista-q">
-        {entrada.preguntas.map((q) => (
-          <li key={q.codigo} className="fila-q">
-            <span className="q">{q.codigo}</span>
-            <span className="tipo">
-              {q.tipo}
-              {q.frena && ' · frena'}
-            </span>
-            <span className="texto">{q.pregunta}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="acc">
-        <button
-          type="button"
-          className="boton principal"
-          onClick={() => usarEstado.getState().responderEn(ruta)}
-        >
-          Responder
-        </button>
+    <div className="recuadro aviso pedido">
+      <Icono nombre="espera" />
+      <div className="cuerpo-recuadro">
+        <strong>Dejó {n === 1 ? '1 pregunta' : `${n} preguntas`}</strong>
+        <ul className="lista-q">
+          {entrada.preguntas.map((q) => (
+            <li key={q.codigo} className="fila-q">
+              <span className="q">{q.codigo}</span>
+              <span className="tipo">
+                {q.tipo}
+                {q.frena && ' · frena'}
+              </span>
+              <span className="texto">{q.pregunta}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="acciones-recuadro">
+          <button
+            type="button"
+            className="boton secundario chico"
+            onClick={() => usarEstado.getState().responderEn(ruta)}
+          >
+            Responder
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -156,65 +157,69 @@ function SinSesion({ entrada, ruta }: { entrada: Extract<Entrada, { tipo: 'sin-s
   const iniciarSesion = usarEstado((s) => s.iniciarSesion)
   const [reintentando, setReintentando] = useState(false)
   return (
-    <div className="falla-motor" data-tipo={conSesion ? 'resuelta' : undefined} role="alert">
-      <p className="tit">
-        <Icono nombre={conSesion ? 'check' : 'error'} />
-        {conSesion ? 'Ya tenés sesión en Claude' : 'Claude Code no tiene sesión iniciada'}
-      </p>
-      <p>
-        {entrada.enviado
-          ? 'La sesión se cortó porque Claude Code perdió el inicio de sesión. '
-          : 'No se envió nada. '}
-        {conSesion
-          ? 'Tocá Reintentar para seguir.'
-          : iniciando
-            ? 'Terminá de entrar en el navegador; si Claude pide un código, pegalo en la ventana que se abrió. Iridium lo nota solo.'
-            : 'Iniciá sesión con tu cuenta de Claude: se abre el navegador, como desde la extensión de VS Code.'}
-      </p>
-      {entrada.reintentar && <p className="nota">Lo que escribiste: «{entrada.reintentar}»</p>}
-      <div className="acc">
-        {!conSesion && (
+    <div
+      className={`recuadro falla-ia${conSesion ? '' : ' error'}`}
+      data-tipo={conSesion ? 'resuelta' : 'sin-sesion'}
+      role="alert"
+    >
+      <Icono nombre={conSesion ? 'check' : 'error'} />
+      <div className="cuerpo-recuadro">
+        <strong>{conSesion ? 'Ya tienes sesión en Claude' : 'Claude Code no tiene sesión iniciada'}</strong>
+        <span>
+          {entrada.enviado
+            ? 'La sesión se cortó porque Claude Code perdió el inicio de sesión. '
+            : 'No se envió nada. '}
+          {conSesion
+            ? 'Toca Reintentar para seguir.'
+            : iniciando
+              ? 'Termina de entrar en el navegador; si Claude pide un código, pégalo en la ventana que se abrió. Iridium lo nota solo.'
+              : 'Inicia sesión con tu cuenta de Claude: se abre el navegador, como desde la extensión de VS Code.'}
+        </span>
+        {entrada.reintentar && <span className="nota">Lo que escribiste: «{entrada.reintentar}»</span>}
+        <div className="acciones-recuadro">
+          {!conSesion && (
+            <button
+              type="button"
+              className="boton secundario chico"
+              disabled={iniciando}
+              onClick={iniciarSesion}
+            >
+              <Icono nombre={iniciando ? 'sync' : 'abrir'} gira={iniciando} />
+              {iniciando ? 'Esperando el navegador…' : 'Iniciar sesión'}
+            </button>
+          )}
           <button
             type="button"
-            className="boton principal chico"
-            disabled={iniciando}
-            onClick={iniciarSesion}
+            className={`boton ${conSesion ? 'secundario' : 'sin-fondo'} chico`}
+            disabled={reintentando || trabajando}
+            onClick={() => {
+              setReintentando(true)
+              void window.iridium
+                .seguir(ruta, entrada.reintentar ? { texto: entrada.reintentar } : {})
+                .finally(() => setReintentando(false))
+            }}
           >
-            <Icono nombre={iniciando ? 'sync' : 'abrir'} gira={iniciando} />
-            {iniciando ? 'Esperando el navegador…' : 'Iniciar sesión'}
+            <Icono nombre="reintentar" />
+            {reintentando ? 'Verificando…' : 'Reintentar'}
           </button>
-        )}
-        <button
-          type="button"
-          className={`boton ${conSesion ? 'principal' : 'secundario'} chico`}
-          disabled={reintentando || trabajando}
-          onClick={() => {
-            setReintentando(true)
-            void window.iridium
-              .seguir(ruta, entrada.reintentar ? { texto: entrada.reintentar } : {})
-              .finally(() => setReintentando(false))
-          }}
-        >
-          <Icono nombre="reintentar" />
-          {reintentando ? 'Verificando…' : 'Reintentar'}
-        </button>
+        </div>
       </div>
     </div>
   )
 }
 
-/** F-5: se agotó el uso; dice cuándo se libera. La conversación queda para Seguí. */
+/** F-5: se agotó el uso; dice cuándo se libera. La conversación queda para Continuar. */
 function UsoAgotado({ entrada }: { entrada: Extract<Entrada, { tipo: 'uso-agotado' }> }) {
   return (
-    <div className="falla-motor" data-tipo="uso" role="alert">
-      <p className="tit">
-        <Icono nombre="espera" />
-        Se agotó el uso de tu suscripción
-      </p>
-      <p>
-        {entrada.libera !== null ? `Se libera ${cuandoSera(entrada.libera)}. ` : ''}
-        La conversación queda guardada: cuando se libere, tocá Seguí y retoma desde acá.
-      </p>
+    <div className="recuadro aviso falla-ia" data-tipo="uso" role="alert">
+      <Icono nombre="espera" />
+      <div className="cuerpo-recuadro">
+        <strong>Se agotó el uso de tu suscripción</strong>
+        <span>
+          {entrada.libera !== null ? `Se libera ${cuandoSera(entrada.libera)}. ` : ''}
+          La conversación queda guardada: cuando se libere, toca Continuar y retoma desde aquí.
+        </span>
+      </div>
     </div>
   )
 }
@@ -239,8 +244,14 @@ function Pasos({ pasos }: { pasos: Paso[] }) {
       continue
     }
     soltarHerramientas()
-    // biome-ignore lint/security/noDangerouslySetInnerHtml: lo arma markdown-it en el proceso principal, sin HTML crudo.
-    partes.push(<div key={e.id} className="md nota-ia" dangerouslySetInnerHTML={{ __html: e.html }} />)
+    partes.push(
+      <div
+        key={e.id}
+        className="texto-doc conversacion nota-ia"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: lo arma markdown-it en el proceso principal, sin HTML crudo.
+        dangerouslySetInnerHTML={{ __html: e.html }}
+      />,
+    )
   }
   soltarHerramientas()
   return <>{partes}</>
@@ -333,12 +344,17 @@ function Control({ entrada }: { entrada: Extract<Entrada, { tipo: 'control' }> }
   )
 }
 
-/** El nombre de quien habla (AJ-2): el que se eligió en Ajustes o «Vos» e «IA»; largo, se corta y se ve entero al pasar. */
-function Quien({ ia = false }: { ia?: boolean }) {
+/** El nombre de quien habla (AJ-2): el que se eligió en Ajustes o «Tú» e «IA». */
+function usarNombre(ia: boolean): string {
   const nombre = usarEstado((s) => (ia ? s.preferencias.nombreIa : s.preferencias.nombreUsuario))
-  const texto = nombre || (ia ? 'IA' : 'Vos')
+  return nombre || (ia ? 'IA' : 'Tú')
+}
+
+/** El nombre de la IA arriba de lo suyo; largo, se corta y se ve entero al pasar. */
+function Quien({ ia = false }: { ia?: boolean }) {
+  const texto = usarNombre(ia)
   return (
-    <span className="nombre" title={nombre ? texto : undefined}>
+    <span className="nombre" title={texto}>
       {texto}
     </span>
   )
@@ -369,10 +385,13 @@ function TurnoIa({
   const respuesta = turno.entradas.slice(corte)
   const hayRespuesta = respuesta.some((e) => e.tipo === 'ia')
   return (
-    <div className="turno ia">
-      <div className="quien ia">
+    <div className="turno ia mensaje-ia">
+      {/* Sin ruido (D-108): la hora, al pasar el mouse. */}
+      <div
+        className="quien"
+        title={cuando?.tipo === 'ia' && cuando.cuando !== null ? hora(cuando.cuando) : undefined}
+      >
         <Quien ia />
-        {cuando?.tipo === 'ia' && cuando.cuando !== null && <time>{hora(cuando.cuando)}</time>}
       </div>
       {pasos.length > 0 && <Proceso pasos={pasos} plegable={!enCurso && hayRespuesta} />}
       {sueltas.map((e) => (
@@ -380,8 +399,12 @@ function TurnoIa({
       ))}
       {respuesta.map((e) =>
         e.tipo === 'ia' ? (
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: lo arma markdown-it en el proceso principal, sin HTML crudo.
-          <div key={e.id} className="md respuesta-ia" dangerouslySetInnerHTML={{ __html: e.html }} />
+          <div
+            key={e.id}
+            className="texto-doc conversacion respuesta-ia"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: lo arma markdown-it en el proceso principal, sin HTML crudo.
+            dangerouslySetInnerHTML={{ __html: e.html }}
+          />
         ) : e.tipo === 'herramienta' ? null : (
           <Final key={e.id} e={e} ruta={ruta} />
         ),
@@ -391,10 +414,15 @@ function TurnoIa({
 }
 
 /** Lo que escribió el usuario; un comentario de la Revisión enviado se ve como tarjeta que lo abre (W-R4). */
-function MensajePropio({ ruta, texto }: { ruta: string; texto: string }) {
+function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; quien: string }) {
   const abrirComentario = usarEstado((s) => s.abrirComentario)
   const com = leerMensaje(texto)
-  if (!com) return <p className="propio">{texto}</p>
+  if (!com)
+    return (
+      <p className="mensaje-yo" title={quien}>
+        {texto}
+      </p>
+    )
   return (
     <button
       type="button"
@@ -431,16 +459,18 @@ const Turnos = memo(function Turnos({
   ruta: string
   trabajando: boolean
 }) {
+  // Lo propio va sin nombre arriba, como en las maquetas: el nombre (AJ-2) y la hora, al pasar el mouse.
+  const yo = usarNombre(false)
   return (
     <>
       {turnos.map((t, i) =>
         t.quien === 'usuario' ? (
           <div key={t.clave} className="turno usuario">
-            <div className="quien">
-              <Quien />
-              {t.entrada.cuando !== null && <time>{hora(t.entrada.cuando)}</time>}
-            </div>
-            <MensajePropio ruta={ruta} texto={t.entrada.texto} />
+            <MensajePropio
+              ruta={ruta}
+              texto={t.entrada.texto}
+              quien={t.entrada.cuando !== null ? `${yo} · ${hora(t.entrada.cuando)}` : yo}
+            />
           </div>
         ) : (
           <TurnoIa key={t.clave} turno={t} ruta={ruta} enCurso={trabajando && i === turnos.length - 1} />
@@ -528,7 +558,7 @@ function Hilo({
         <div className="ahora reintentando" role="status">
           <Icono nombre="espera" />
           {ficha.reintento.causa === 'conexion' ? 'Sin conexión con Claude' : 'Claude no responde'}: reintento{' '}
-          {ficha.reintento.intento} de {ficha.reintento.maximo}. Podés esperar o detenerla.
+          {ficha.reintento.intento} de {ficha.reintento.maximo}. Puedes esperar o detenerla.
         </div>
       )}
       {!trabajando && ficha?.fondo && ficha.fondo.length > 0 && (
@@ -567,6 +597,7 @@ function Anteriores({
   return (
     <Menu
       clase="anteriores"
+      claseBoton="boton solo-icono"
       titulo={
         trabajando
           ? 'Mientras la IA trabaja no se cambia de conversación'
@@ -600,7 +631,7 @@ function Anteriores({
               <time>{fechaCorta(c.modificada)}</time>
               <small>
                 {c.origen === 'vscode' ? 'VS Code' : 'Iridium'}
-                {c.id === actual && ' · la que está abierta'}
+                {c.id === actual && ' · abierta'}
               </small>
             </button>
           ))}
@@ -717,19 +748,19 @@ export function Conversacion({
   const hayConversacion = !enBlanco && ((c?.entradas.length ?? 0) > 0 || (c?.anteriores ?? 0) > 0)
 
   const vacio = general ? (
-    <div className="sin-conversacion">
+    <div className="sin-conversacion mensaje-ia">
       <div className="quien">
         <Quien ia />
         {enBlanco && ' · conversación nueva'}
       </div>
       {chat === 'skills' ? (
-        <p>
-          Preguntame por una skill o pedime que la cambie: elegila a la izquierda y lo que escribas va sobre
+        <p className="texto-doc conversacion">
+          Pregúntame por una skill o pídeme que la cambie: elígela a la izquierda y lo que escribas va sobre
           ella. Los cambios quedan en la carpeta <code>{p.nombre}</code>, con git, y se pueden deshacer.
         </p>
       ) : (
-        <p>
-          Contame una idea que todavía no sabés dónde va, pedime que cree un proyecto o preguntame por varios
+        <p className="texto-doc conversacion">
+          Cuéntame una idea que todavía no sabes dónde va, pídeme que cree un proyecto o pregúntame por varios
           a la vez. Las ideas quedan anotadas en <code>{p.nombre}/ideas.md</code> hasta que decidamos dónde
           van.
         </p>
@@ -748,23 +779,24 @@ export function Conversacion({
       )}
     </div>
   ) : (
-    <div className="sin-conversacion">
+    <div className="sin-conversacion mensaje-ia">
       <div className="quien">
         <Quien ia />
         {enBlanco && ' · conversación nueva'}
       </div>
       {simple ? (
-        <p>
-          Esta carpeta no sigue el framework: no hay un próximo paso. Escribime abajo lo que quieras que haga.
+        <p className="texto-doc conversacion">
+          Esta carpeta no sigue el framework: no hay un próximo paso. Escríbeme abajo lo que quieras que haga.
         </p>
       ) : (
-        <p>
-          Con <b>Seguí</b> voy a leer <code>docs/estado.md</code> y hacer el próximo paso{paso ? ':' : '.'}
+        <p className="texto-doc conversacion">
+          Con <b>Continuar</b> voy a leer <code>docs/estado.md</code> y hacer el próximo paso
+          {paso ? ':' : '.'}
         </p>
       )}
-      {paso && <p className="paso">{paso}</p>}
+      {paso && <p className="texto-doc conversacion paso-siguiente">{paso}</p>}
       <div className="acc">
-        {!simple && <span className="nota">O escribile abajo lo que quieras que haga.</span>}
+        {!simple && <span className="nota">O escríbeme abajo lo que quieras que haga.</span>}
         {enBlanco && (
           <button
             type="button"
@@ -790,26 +822,18 @@ export function Conversacion({
         : general
           ? 'Ideas y proyectos'
           : 'Sin conversación todavía'
-  const subtitulo = enBlanco
-    ? general
-      ? 'En blanco: empieza con lo que escribas'
-      : 'En blanco: empieza con lo que escribas o con Seguí'
-    : hayConversacion && c
-      ? `${c.modificada !== null ? cuandoFue(c.modificada) : 'hoy'} · empezada en ${c.origen === 'vscode' ? 'VS Code' : 'Iridium'}`
-      : chat === 'skills'
-        ? `El chat de Skills: trabaja en la carpeta ${p.nombre}`
-        : general
-          ? `El chat general: trabaja en la carpeta ${p.nombre}`
-          : simple
-            ? 'Escribile lo que quieras que haga'
-            : 'Seguí lee estado.md y hace el próximo paso'
+  // Sin ruido (D-108): debajo del título, cuándo fue y si se empezó en VS Code; lo demás lo dice la conversación.
+  const subtitulo =
+    !enBlanco && hayConversacion && c
+      ? `${mayuscula(c.modificada !== null ? cuandoFue(c.modificada) : 'hoy')}${c.origen === 'vscode' ? ' · empezada en VS Code' : ''}`
+      : null
 
   return (
     <>
-      <div className="chat-cab">
-        <div className="tit">
+      <div className="cab-conv">
+        <div className="nombre-conv">
           <b title={titulo}>{titulo}</b>
-          <small title={subtitulo}>{subtitulo}</small>
+          {subtitulo && <span title={subtitulo}>{subtitulo}</span>}
         </div>
         <Anteriores ruta={ruta} actual={enBlanco ? null : (c?.id ?? null)} trabajando={trabajando} />
         <button
@@ -819,7 +843,7 @@ export function Conversacion({
           title={
             general
               ? 'Abrir una conversación en blanco: empieza con lo que le escribas'
-              : 'Abrir una conversación en blanco: empieza con lo que le escribas, o con Seguí'
+              : 'Abrir una conversación en blanco: empieza con lo que le escribas, o con Continuar'
           }
           onClick={nueva}
         >
@@ -841,7 +865,7 @@ export function Conversacion({
             onClick={() => void seguir(texto.trim() ? { texto } : {})}
           >
             <Icono nombre="play" />
-            Seguí
+            Continuar
           </button>
         )}
       </div>
@@ -859,102 +883,93 @@ export function Conversacion({
       )}
 
       {c && hayConversacion && !trabajando && (c.contexto?.porcentaje ?? 0) >= CONTEXTO_ALTO && (
-        <div className="retomar">
-          <p className="aviso-afuera contexto-alto" role="note">
-            <Icono nombre="espera" />
-            <span>
-              Esta conversación lleva {pc(c.contexto?.porcentaje ?? 0)} del contexto: la IA empieza a resumir
-              y olvidar detalles. Conviene seguir en una <b>Nueva</b>; el estado del proyecto queda en sus
-              documentos.
-            </span>
-            <button type="button" className="boton sin-fondo chico" onClick={nueva}>
-              Nueva
-            </button>
-          </p>
+        <div className="recuadro aviso retomar contexto-alto" role="note">
+          <Icono nombre="espera" />
+          <span className="cuerpo-recuadro">
+            Esta conversación lleva {pc(c.contexto?.porcentaje ?? 0)} del contexto: la IA empieza a resumir y
+            olvidar detalles. Conviene seguir en una <b>Nueva</b>; el estado del proyecto queda en sus
+            documentos.
+          </span>
+          <button type="button" className="boton sin-fondo chico" onClick={nueva}>
+            Nueva
+          </button>
         </div>
       )}
 
       {c && hayConversacion && !trabajando && c.usadaAfuera !== null && (
-        <div className="retomar">
-          <p className="aviso-afuera" role="note">
-            <Icono nombre="espera" />
-            <span>
-              Esta conversación se usó fuera de Iridium {cuandoFue(c.usadaAfuera)}: puede estar abierta en VS
-              Code. Si la seguís acá, las dos escriben en la misma; con <b>Nueva</b> no se pisan.
-            </span>
-          </p>
+        <div className="recuadro aviso retomar usada-afuera" role="note">
+          <Icono nombre="espera" />
+          <span className="cuerpo-recuadro">
+            Esta conversación se usó fuera de Iridium {cuandoFue(c.usadaAfuera)}: puede estar abierta en VS
+            Code. Si la sigues aquí, las dos escriben en la misma; con <b>Nueva</b> no se pisan.
+          </span>
         </div>
       )}
 
+      {/* Una sola línea alrededor (la pieza de las maquetas): lo escrito arriba, el pie abajo. */}
       <div className="compositor">
-        <div className="caja">
-          {sobre && (
-            <div className="sobre-skill">
-              <span title={`El mensaje sale con «${sobreQue(sobre)}:» al principio`}>
-                {sobre.que === 'idea' ? (
-                  <>
-                    Sobre la idea <b>«{sobre.nombre}»</b>
-                  </>
-                ) : (
-                  <>
-                    Sobre la skill <b>{sobre.nombre}</b>
-                  </>
-                )}
-              </span>
-              <button
-                type="button"
-                className="quitar"
-                aria-label={`Que el mensaje no sea sobre esa ${sobre.que ?? 'skill'}`}
-                title={`Que el mensaje no sea sobre esa ${sobre.que ?? 'skill'}`}
-                onClick={sobre.quitar}
-              >
-                <Icono nombre="x" />
-              </button>
-            </div>
-          )}
-          <div className="prompt">
-            <span className="sig" aria-hidden="true">
-              &gt;
-            </span>
-            <textarea
-              ref={caja}
-              placeholder={trabajando ? 'Sumale algo a lo que está haciendo…' : 'Escribile a la IA…'}
-              aria-label="Mensaje para la IA"
-              value={texto}
-              onChange={(e) => setTexto(e.target.value)}
-              onKeyDown={alTeclado}
-            />
-          </div>
-          <div className="fila-comp">
-            <ModeloYEsfuerzo ruta={ruta} />
-            {hayConversacion && c?.contexto && <MedidorContexto contexto={c.contexto} />}
-            <div className="der">
-              {(trabajando || esperandoFondo) && (
-                <button
-                  type="button"
-                  className="boton secundario detener"
-                  title={
-                    trabajando
-                      ? 'Detener a la IA en el acto (se retoma con Seguí)'
-                      : 'Cortar lo que dejó de fondo (se retoma con Seguí)'
-                  }
-                  onClick={() => void window.iridium.detener(ruta)}
-                >
-                  <Icono nombre="cuadro" />
-                  Detener
-                </button>
+        {sobre && (
+          <div className="sobre-skill">
+            <span title={`El mensaje sale con «${sobreQue(sobre)}:» al principio`}>
+              {sobre.que === 'idea' ? (
+                <>
+                  Sobre la idea <b>«{sobre.nombre}»</b>
+                </>
+              ) : (
+                <>
+                  Sobre la skill <b>{sobre.nombre}</b>
+                </>
               )}
+            </span>
+            <button
+              type="button"
+              className="quitar"
+              aria-label={`Que el mensaje no sea sobre esa ${sobre.que ?? 'skill'}`}
+              title={`Que el mensaje no sea sobre esa ${sobre.que ?? 'skill'}`}
+              onClick={sobre.quitar}
+            >
+              <Icono nombre="x" />
+            </button>
+          </div>
+        )}
+        <textarea
+          ref={caja}
+          placeholder={trabajando ? 'Suma algo a lo que está haciendo…' : 'Escribe a la IA…'}
+          aria-label="Mensaje para la IA"
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          onKeyDown={alTeclado}
+        />
+        {/* El pie se parte en dos renglones si no entra: Detener nunca tapa el medidor del contexto. */}
+        <div className="pie-comp">
+          <ModeloYEsfuerzo ruta={ruta} />
+          {hayConversacion && c?.contexto && <MedidorContexto contexto={c.contexto} />}
+          <div className="enviar">
+            {(trabajando || esperandoFondo) && (
               <button
                 type="button"
-                className="boton solo-icono chico"
-                title="Enviar (Enter; Shift+Enter, salto de línea)"
-                aria-label="Enviar"
-                disabled={texto.trim() === '' || enviando}
-                onClick={enviar}
+                className="boton secundario chico detener"
+                title={
+                  trabajando
+                    ? 'Detener a la IA en el acto (se retoma con Continuar)'
+                    : 'Cortar lo que dejó de fondo (se retoma con Continuar)'
+                }
+                onClick={() => void window.iridium.detener(ruta)}
               >
-                <Icono nombre="flecha" />
+                <Icono nombre="cuadro" />
+                Detener
               </button>
-            </div>
+            )}
+            <button
+              type="button"
+              className="boton solo-icono chico"
+              title="Enviar (Enter; Shift+Enter, salto de línea)"
+              aria-label="Enviar"
+              disabled={texto.trim() === '' || enviando}
+              onClick={enviar}
+            >
+              <Icono nombre="flecha" />
+            </button>
           </div>
         </div>
       </div>

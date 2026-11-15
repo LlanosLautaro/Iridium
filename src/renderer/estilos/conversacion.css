@@ -1,58 +1,131 @@
-/* La conversación con la IA (04-ux.md › W-3; H-4, H-5, H-14). Sale de docs/ui/vista-proyecto.html.
+/* La conversación con la IA (04-ux.md › W-3; H-4, H-5, H-14), como la de las maquetas (docs/diseno/piezas.css ›
+   La conversación; DI-I3, tanda 5): la cabecera, los mensajes y el compositor con una sola línea alrededor. Los avisos
+   son la pieza Recuadro, los botones la pieza Botón y lo que escribe la IA el Texto de documento (PZ-4, PZ-1, PZ-12).
    Los íconos van al final, de menor a mayor especificidad. */
-/* D-061: lo tuyo en una burbuja a la derecha; lo de la IA a todo el ancho, con su proceso aparte de la respuesta */
-.turno {
-  padding: 12px 0;
+
+/* La cabecera: el nombre de la conversación y cuándo fue; las anteriores, Nueva y Continuar */
+.cab-conv {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  flex: none;
+  min-height: var(--alto-cabecera-conversacion);
+  padding: var(--esp-2) var(--esp-3) var(--esp-2) var(--esp-4);
 }
+.cab-conv .nombre-conv {
+  flex: 1;
+  min-width: 0;
+}
+.cab-conv .nombre-conv b {
+  display: block;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cab-conv .nombre-conv span {
+  display: block;
+  font-size: var(--tam-chico);
+  color: var(--texto-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Los mensajes se apoyan en el compositor: lo último queda justo arriba */
+.hilo {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--esp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+}
+.hilo > * {
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  margin-left: auto;
+  margin-right: auto;
+}
+.hilo > :first-child {
+  margin-top: auto;
+}
+
+/* D-061: lo tuyo a la derecha, sobre el gris elevado; lo de la IA a todo el ancho, con su proceso aparte */
 .turno.usuario {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
-.turno.usuario .quien {
-  gap: 8px;
-}
-.turno.usuario .quien time {
-  margin-left: 0;
-}
-.quien {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-  font: 600 13px / 1 var(--ui);
-  letter-spacing: 0.02em;
-  color: var(--texto-2);
-}
-.quien.ia {
-  color: var(--primario);
-}
-.quien time {
-  margin-left: auto;
-  font: 400 12px / 1 var(--mono);
-  color: var(--texto-3);
-  letter-spacing: 0;
-}
-.propio {
-  max-width: min(88%, 64ch);
-  padding: 9px 14px;
-  border: 1px solid color-mix(in oklab, var(--primario) 22%, transparent);
-  border-radius: var(--radio-tarjeta) var(--radio-tarjeta) var(--radio-control) var(--radio-tarjeta);
-  background: color-mix(in oklab, var(--primario) 8%, var(--elevado));
-  font-size: var(--tam-lectura);
-  line-height: 1.6;
-  color: var(--texto);
+.mensaje-yo {
+  max-width: 85%;
+  margin: 0;
+  padding: var(--esp-2) var(--esp-3);
+  background: var(--elevado);
+  border-radius: var(--radio-bloque);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 .turno.usuario .msg-com {
-  width: min(88%, 64ch);
+  width: min(85%, 64ch);
+}
+.mensaje-ia {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.mensaje-ia .quien {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-1);
+  margin-bottom: var(--esp-1);
+  font-size: var(--tam-chico);
+  color: var(--texto-3);
+}
+/* El nombre de quien habla (AJ-2): uno largo se corta con «…» y se ve entero al pasar el mouse. */
+.mensaje-ia .quien .nombre {
+  min-width: 0;
+  max-width: 24ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* En un panel angosto, los títulos de la respuesta no crecen como en un documento */
+.mensaje-ia h1,
+.mensaje-ia h2,
+.mensaje-ia h3 {
+  font: 600 var(--tam-base) / 1.4 var(--ui);
+  margin: var(--esp-4) 0 var(--esp-2);
+}
+.mensaje-ia :is(p, ul, ol, pre, table, blockquote):last-child {
+  margin-bottom: 0;
+}
+
+/* Sin conversación todavía: lo que hace Continuar y el próximo paso */
+.sin-conversacion {
+  display: grid;
+  gap: var(--esp-2);
+}
+.sin-conversacion p {
+  margin: 0;
+}
+.sin-conversacion .paso-siguiente {
+  color: var(--texto-2);
+}
+.sin-conversacion .acc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-3);
+}
+.nota {
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
 }
 
 /* El proceso: lo que hizo y fue contando en el camino, atenuado sobre un riel */
 .proceso-ia {
-  margin: 2px 0 4px;
-  padding-left: 12px;
+  margin: 2px 0 var(--esp-1);
+  padding-left: var(--esp-3);
   border-left: 2px solid var(--borde-fuerte);
 }
 .proceso-ia.plegado {
@@ -71,24 +144,19 @@
   color: var(--texto-2);
 }
 .proceso-ia .proceso-cab .proceso-n {
-  font: 400 12px / 1 var(--mono);
+  font: var(--estilo-codigo);
 }
-.md.nota-ia {
-  font-size: var(--tam-base);
-  line-height: 1.55;
+.nota-ia {
   color: var(--texto-2);
 }
-.md.nota-ia code {
-  color: var(--texto-2);
-}
-.proceso-ia + .md,
+.proceso-ia + .respuesta-ia,
 .proceso-ia + .linea-aviso {
-  margin-top: 10px;
+  margin-top: var(--esp-2);
 }
 
 /* Lo que usó la IA: una línea que se despliega */
 .herramientas {
-  margin: 6px 0 4px;
+  margin: 6px 0 var(--esp-1);
 }
 .herramientas > button {
   display: inline-flex;
@@ -105,119 +173,49 @@
 }
 .herramientas ul {
   list-style: none;
-  padding: 4px 0 0 20px;
+  padding: var(--esp-1) 0 0 20px;
   display: grid;
   gap: 3px;
 }
 .herramientas li {
   display: flex;
-  gap: 8px;
+  gap: var(--esp-2);
   color: var(--texto-3);
   font-size: var(--tam-chico);
   min-width: 0;
 }
 .cod {
-  font: 500 12px / 1.5 var(--mono);
+  font: var(--estilo-codigo);
   color: var(--texto-2);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* El texto de la IA (Markdown) */
-.md {
-  font-size: var(--tam-lectura);
-  line-height: 1.65;
-  color: var(--texto);
-  max-width: 72ch;
-  overflow-wrap: anywhere;
-}
-.md + .md,
-.herramientas + .md {
-  margin-top: 8px;
-}
-.md > * + * {
-  margin-top: 8px;
-}
-.md ul,
-.md ol {
-  padding-left: 22px;
-}
-.md li + li {
-  margin-top: 3px;
-}
-.md h1,
-.md h2,
-.md h3,
-.md h4 {
-  font: 600 15px / 1.4 var(--ui);
-  margin-top: 14px;
-}
-.md strong {
-  font-weight: 600;
-}
-.md a {
-  color: var(--primario-texto);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.md code {
-  padding: 1px 5px;
-  background: var(--elevado);
-  color: var(--primario-texto);
-  font: 13px / 1.5 var(--mono);
-}
-.md pre {
-  padding: 10px 12px;
-  background: var(--elevado);
-  border-radius: var(--radio-bloque);
-  overflow-x: auto;
-}
-.md pre code {
-  padding: 0;
-  background: none;
-  color: var(--texto-2);
-}
-.md blockquote {
-  padding-left: 12px;
-  border-left: 2px solid var(--borde-fuerte);
-  color: var(--texto-2);
-}
-.md table {
-  border-collapse: collapse;
-  font-size: var(--tam-base);
-}
-.md th,
-.md td {
-  padding: 4px 10px;
-  border: 1px solid var(--borde);
-  text-align: left;
+:is(.nota-ia, .respuesta-ia, .herramientas) + :is(.nota-ia, .respuesta-ia) {
+  margin-top: var(--esp-2);
 }
 
+/* Lo que pasa ahora: trabajando, reintentando o esperando lo que dejó de fondo (T-65). Gris: lo que anda (D-108). */
 .ahora {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 0 4px;
-  color: var(--trabaja);
+  gap: var(--esp-2);
+  color: var(--texto-2);
   font-size: var(--tam-chico);
 }
-
 .ahora.reintentando {
   color: var(--espera);
 }
-
-/* Terminó el turno y espera lo que dejó de fondo (T-65): sigue, pero no está escribiendo. */
 .ahora.esperando {
-  color: var(--texto-2);
+  color: var(--texto-3);
 }
 
 /* Detenida o error: una línea dentro del turno */
 .linea-aviso {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 10px;
+  gap: var(--esp-2);
+  margin-top: var(--esp-2);
   font-size: var(--tam-base);
   color: var(--texto-2);
 }
@@ -225,24 +223,15 @@
   color: var(--error);
 }
 
-/* Las preguntas que dejó al terminar (H-5) */
-.pedido {
-  margin: 14px 0 4px;
-  max-width: 72ch;
-  border: 1px solid var(--espera-borde);
-  border-radius: var(--radio-tarjeta);
-  background: var(--espera-fondo);
-  padding: 14px 16px;
-  display: grid;
-  gap: 10px;
-}
-.pedido .meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Las preguntas que dejó al terminar (H-5) y las fallas del motor (F-5): la pieza Recuadro dentro del turno */
+.pedido,
+.falla-ia {
+  margin-top: var(--esp-3);
 }
 .lista-q {
   list-style: none;
+  margin: var(--esp-1) 0 0;
+  padding: 0;
   display: grid;
   gap: 6px;
 }
@@ -250,10 +239,10 @@
   display: grid;
   grid-template-columns: auto auto 1fr;
   align-items: baseline;
-  gap: 10px;
+  gap: var(--esp-2);
 }
 .lista-q .q {
-  font: 700 12.5px / 1 var(--mono);
+  font: var(--estilo-codigo);
   color: var(--texto);
 }
 .lista-q .tipo {
@@ -262,49 +251,75 @@
   white-space: nowrap;
 }
 .lista-q .texto {
-  font-size: 14.5px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-.pedido .acc {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
+  color: var(--texto);
 }
 
 .mas-arriba {
   display: flex;
   justify-content: center;
-  padding: 4px 0 12px;
 }
 .cargando {
   margin-top: auto;
-  padding: 18px 0;
 }
 
-/* El aviso de D-027 sobre el compositor, si la conversación se usó hace poco fuera de Iridium */
+/* Arriba del compositor: el contexto alto y si se usó fuera de Iridium (D-027) */
 .retomar {
   flex: none;
-  padding: 0 14px;
-}
-.retomar > * {
-  max-width: 780px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.aviso-afuera {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--espera-borde);
-  border-radius: var(--radio-bloque);
-  background: var(--espera-fondo);
-  color: var(--texto-2);
-  font-size: var(--tam-base);
+  margin: 0 var(--esp-3) var(--esp-2);
+  font-size: var(--tam-chico);
   line-height: 1.5;
+}
+.contexto-alto {
+  align-items: center;
+}
+
+/* El compositor: una sola línea alrededor; lo escrito arriba y el pie abajo */
+.compositor {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  margin: 0 var(--esp-3) var(--esp-3);
+  padding: var(--esp-3);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-bloque);
+}
+.compositor:focus-within {
+  border-color: var(--borde-control);
+}
+.compositor textarea {
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--texto);
+  font: var(--estilo-cuerpo);
+  min-height: 44px;
+  max-height: 40vh;
+}
+.compositor textarea::placeholder {
+  color: var(--texto-3);
+}
+/* El pie: modelo, esfuerzo y contexto a la izquierda; Detener y Enviar a la derecha. Si no entra en un renglón, se
+   parte: Detener baja con Enviar y no tapa el medidor. */
+.pie-comp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-1);
+  min-width: 0;
+}
+.pie-comp .enviar {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--esp-1);
+}
+.ajustes-ia {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
 }
 
 /* Íconos */
@@ -313,13 +328,6 @@
   width: 13px;
   height: 13px;
   flex: none;
-}
-.aviso-afuera > svg {
-  width: 14px;
-  height: 14px;
-  flex: none;
-  margin-top: 2px;
-  color: var(--espera);
 }
 .herramientas > button > svg {
   width: 13px;
@@ -346,29 +354,23 @@
 .herramientas[data-abierta] > button > svg {
   transform: rotate(90deg);
 }
-
-/* El nombre de quien habla (AJ-2): uno largo se corta con «…» y se ve entero al pasar el mouse. */
-.quien .nombre {
-  min-width: 0;
-  max-width: 24ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.falla-ia[data-tipo="resuelta"] > .ic {
+  color: var(--texto-2);
 }
 
 /* W-12: lo que el control le devolvió a la IA. En gris: le habla a la IA, no al usuario (D-100). */
 .control-ia {
-  margin-top: 10px;
+  margin-top: var(--esp-2);
   border: 1px solid var(--borde-fuerte);
   border-radius: var(--radio-bloque);
-  font-size: 12.5px;
+  font-size: var(--tam-chico);
   line-height: 1.45;
 }
 .control-ia > button {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--esp-2);
   padding: 7px 10px;
   color: var(--texto-2);
   text-align: left;
@@ -398,12 +400,13 @@
 }
 .control-ia li .donde {
   display: block;
-  font: 400 11.5px / 1.4 var(--mono);
+  font: var(--estilo-meta);
+  font-family: var(--mono);
   color: var(--texto-3);
 }
 .control-ia li.hecho::before {
   content: "✓ ";
-  color: var(--ok);
+  color: var(--texto-2);
 }
 .control-ia li.queda::before {
   content: "! ";

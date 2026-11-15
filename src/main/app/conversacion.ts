@@ -700,7 +700,8 @@ export class Conversaciones {
           tipo: 'aviso',
           id: this.id(),
           clase: 'error',
-          texto: 'No hay conexión con Claude: revisá internet. Con Seguí se retoma la misma conversación.',
+          texto:
+            'No hay conexión con Claude: revisa internet. Con Continuar se retoma la misma conversación.',
         })
       else
         avisos.push({
@@ -708,7 +709,7 @@ export class Conversaciones {
           id: this.id(),
           clase: 'error',
           // El motivo viene de Claude Code, a veces sin punto final.
-          texto: `La sesión falló${motivo ? `: ${motivo.replace(/[^.!?…]$/, '$&.')}` : '.'} Con Seguí se retoma la misma conversación.`,
+          texto: `La sesión falló${motivo ? `: ${motivo.replace(/[^.!?…]$/, '$&.')}` : '.'} Con Continuar se retoma la misma conversación.`,
         })
     }
     this.emitir(p, avisos)

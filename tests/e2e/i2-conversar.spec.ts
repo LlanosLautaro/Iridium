@@ -57,13 +57,13 @@ test.afterEach(async () => {
 test('Seguí trabaja, termina y muestra las preguntas que dejó con Responder (H-4, H-5)', async () => {
   const { app, win } = await abrir({ IRIDIUM_FALSO_PREGUNTA: '1' })
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
+  await win.locator('.cab-conv').getByRole('button', { name: 'Continuar' }).click()
 
   const pestana = win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })
   await expect(pestana).toContainText('Trabajando')
   await expect(win.locator('.ahora')).toContainText('Trabajando')
-  await expect(win.locator('.turno').first()).toContainText('Seguí con el proyecto.')
-  await expect(win.locator('.hilo .md').first()).toContainText('Leí docs/estado.md')
+  await expect(win.locator('.turno').first()).toContainText('Continúa con el proyecto.')
+  await expect(win.locator('.hilo .texto-doc').first()).toContainText('Leí docs/estado.md')
 
   await expect(win.locator('.pedido')).toContainText('Dejó 1 pregunta')
   await expect(win.locator('.pedido')).toContainText('Q-1')
@@ -73,7 +73,7 @@ test('Seguí trabaja, termina y muestra las preguntas que dejó con Responder (H
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'estado.md'), 'utf8')).toContain('- **Q-1 — ')
   await expect(pestana.locator('.cuenta')).toHaveText('1')
   await expect(pestana.locator('.cuenta')).toHaveClass(/frena/)
-  await expect(win.locator('.chat-cab')).toContainText('empezada en Iridium')
+  await expect(win.locator('.cab-conv')).toContainText('Hoy')
   await win.screenshot({ path: 'test-results/i2-terminada.png' })
   await app.close()
 })
@@ -93,10 +93,10 @@ test('Detener frena a la IA en el acto y se retoma con Seguí (H-14)', async () 
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
   await win.screenshot({ path: 'test-results/i2-detenida.png' })
 
-  await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
+  await win.locator('.cab-conv').getByRole('button', { name: 'Continuar' }).click()
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Trabajando')
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
-  await expect(win.locator('.hilo .md').last()).toContainText('Listo')
+  await expect(win.locator('.hilo .texto-doc').last()).toContainText('Listo')
   await app.close()
 })
 
@@ -147,7 +147,7 @@ test('Nueva abre una conversación en blanco que empieza con lo que se escribe, 
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
 
   // Nueva no manda nada: muestra la conversación en blanco y se puede volver a la anterior.
-  await win.locator('.chat-cab').getByRole('button', { name: 'Nueva' }).click()
+  await win.locator('.cab-conv').getByRole('button', { name: 'Nueva' }).click()
   await expect(win.locator('.turno')).toHaveCount(0)
   await expect(win.locator('.sin-conversacion')).toContainText('conversación nueva')
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
@@ -155,14 +155,14 @@ test('Nueva abre una conversación en blanco que empieza con lo que se escribe, 
   await expect(win.locator('.turno').first()).toContainText('Primera charla')
 
   // El primer mensaje en blanco empieza la conversación nueva con ese texto.
-  await win.locator('.chat-cab').getByRole('button', { name: 'Nueva' }).click()
+  await win.locator('.cab-conv').getByRole('button', { name: 'Nueva' }).click()
   // El cursor queda en el campo para escribir de una (R-52).
   await expect(campo).toBeFocused()
   await campo.fill('Una idea aparte')
   await campo.press('Enter')
   await expect(win.locator('.turno').first()).toContainText('Una idea aparte')
   await expect(win.locator('.hilo')).not.toContainText('Primera charla')
-  await expect(win.locator('.hilo')).not.toContainText('Seguí con el proyecto.')
+  await expect(win.locator('.hilo')).not.toContainText('Continúa con el proyecto.')
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada')
   await win.screenshot({ path: 'test-results/i3-nueva-en-blanco.png' })
   await app.close()

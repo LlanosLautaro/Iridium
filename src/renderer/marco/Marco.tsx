@@ -255,7 +255,7 @@ function BarraTitulo() {
                 <button
                   type="button"
                   className="cerrar"
-                  title="Cerrar la pestaña (la conversación queda para Seguí)"
+                  title="Cerrar la pestaña (la conversación queda para Continuar)"
                   aria-label={`Cerrar ${nombre}`}
                   onClick={() => cerrarPestana(ruta)}
                 >

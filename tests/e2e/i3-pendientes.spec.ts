@@ -224,7 +224,7 @@ test('Responder en la conversación y la Bandeja de entrada llevan a las pregunt
 
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Gestor' }).click()
-  await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
+  await win.locator('.cab-conv').getByRole('button', { name: 'Continuar' }).click()
   await win.locator('.pedido').getByRole('button', { name: 'Responder' }).click()
   await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Gestor')
   await expect(win.locator('.resumen .pend[data-q="Q-4"]')).toContainText(

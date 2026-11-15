@@ -62,7 +62,7 @@ function Ritmo({ r, semana }: { r: RitmoSemana; semana: VentanaUso }) {
       <p className="ritmo" data-alcanza="no">
         <Icono nombre="error" />
         <span>
-          La semana está agotada. Mientras tanto, Seguí no funciona en ningún proyecto; las conversaciones
+          La semana está agotada. Mientras tanto, Continuar no funciona en ningún proyecto; las conversaciones
           quedan para después.
         </span>
       </p>

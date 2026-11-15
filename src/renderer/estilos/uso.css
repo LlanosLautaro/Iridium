@@ -218,28 +218,14 @@
   color: var(--texto);
 }
 
-/* El cuadro de la conversación: modelo y esfuerzo a la izquierda, el contexto y Enviar a la derecha */
-.compositor .fila-comp {
-  min-width: 0;
-}
-.ajustes-ia {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  min-width: 0;
-}
-.selector-ia .menu-boton {
-  height: 24px;
-  padding: 0 7px;
-  font-size: 12px;
-}
-.selector-ia .nom {
+/* El modelo, el esfuerzo y el contexto en el pie del compositor (la conversación, DI-I3 tanda 5): sus menús */
+.elegir-ia .nom {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 120px;
 }
-.selector-ia .menu-lista {
+.elegir-ia .menu-lista {
   top: auto;
   bottom: 30px;
   width: 300px;
@@ -262,14 +248,8 @@
   font-size: 12px;
   color: var(--texto-3);
 }
-.selector-ia.ctx {
+.elegir-ia.ctx {
   margin-left: 4px;
-}
-.contexto-alto {
-  align-items: center;
-}
-.contexto-alto > span {
-  flex: 1;
 }
 
 /* H-13: los avisos, abajo a la derecha (prototipo ui/vista-mapa-docs.html) */
@@ -282,7 +262,7 @@
   gap: 8px;
   width: 320px;
 }
-.aviso {
+.aviso-flotante {
   display: grid;
   grid-template-columns: 18px 1fr auto;
   gap: 4px 10px;
@@ -293,26 +273,26 @@
   box-shadow: var(--sombra-flotante);
   animation: llega-aviso 0.3s var(--sale) both;
 }
-.aviso[data-estado="espera"] {
+.aviso-flotante[data-estado="espera"] {
   border-color: var(--espera-borde);
 }
-.aviso > svg {
+.aviso-flotante > svg {
   width: 15px;
   height: 15px;
   margin-top: 2px;
   color: var(--ok);
 }
-.aviso[data-estado="espera"] > svg {
+.aviso-flotante[data-estado="espera"] > svg {
   color: var(--espera);
 }
-.aviso[data-estado="error"] > svg {
+.aviso-flotante[data-estado="error"] > svg {
   color: var(--error);
 }
-.aviso .t {
+.aviso-flotante .t {
   font-weight: 600;
   line-height: 1.35;
 }
-.aviso .x {
+.aviso-flotante .x {
   width: 22px;
   height: 22px;
   display: grid;
@@ -320,16 +300,16 @@
   border-radius: var(--radio-control);
   color: var(--texto-3);
 }
-.aviso .x svg {
+.aviso-flotante .x svg {
   width: 12px;
   height: 12px;
 }
-.aviso .d {
+.aviso-flotante .d {
   grid-column: 2 / 4;
   font-size: var(--tam-chico);
   color: var(--texto-2);
 }
-.aviso .acc {
+.aviso-flotante .acc {
   grid-column: 2 / 4;
   display: flex;
   justify-content: flex-end;
@@ -377,7 +357,7 @@
   margin-top: 6px;
 }
 
-.aviso .x:hover {
+.aviso-flotante .x:hover {
   background: var(--hover);
   color: var(--texto);
 }
@@ -411,58 +391,12 @@
   color: var(--error);
 }
 
-/* F-5: los errores del motor, con qué hacer */
-.falla-motor {
-  margin-top: 10px;
-  max-width: 72ch;
-  display: grid;
-  gap: 8px;
-  padding: 12px 14px;
-  border: 1px solid color-mix(in oklab, var(--error) 35%, var(--borde));
-  border-radius: var(--radio-tarjeta);
-  background: color-mix(in oklab, var(--error) 5%, var(--fondo));
-  font-size: var(--tam-base);
-  line-height: 1.5;
-  color: var(--texto-2);
-}
-.falla-motor[data-tipo="uso"] {
-  border-color: var(--espera-borde);
-  background: var(--espera-fondo);
-}
-.falla-motor .tit {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: var(--texto);
-}
-.falla-motor .tit > svg {
-  width: 14px;
-  height: 14px;
-  flex: none;
-  color: var(--error);
-}
-.falla-motor[data-tipo="uso"] .tit > svg {
-  color: var(--espera);
-}
-.falla-motor[data-tipo="resuelta"] {
-  border-color: color-mix(in oklab, var(--ok) 35%, var(--borde));
-  background: color-mix(in oklab, var(--ok) 5%, var(--fondo));
-}
-.falla-motor[data-tipo="resuelta"] .tit > svg {
-  color: var(--ok);
-}
-.falla-motor .acc {
-  display: flex;
-  gap: 8px;
-}
-
 .menu-lista > button.opcion-ia[aria-checked="true"] b {
   color: var(--primario);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aviso {
+  .aviso-flotante {
     animation: none;
   }
 }

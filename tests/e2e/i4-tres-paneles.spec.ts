@@ -63,7 +63,7 @@ async function abrir(): Promise<{ app: ElectronApplication; win: Page }> {
 /** Terminó el turno: la pestaña ya no dice «Trabajando» y la IA cerró con «Listo» (D-043: con preguntas, la pestaña
  * las muestra en vez de «Terminada»). */
 async function terminado(win: Page) {
-  await expect(win.locator('.hilo .md').last()).toContainText('Listo')
+  await expect(win.locator('.hilo .texto-doc').last()).toContainText('Listo')
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).not.toContainText('Trabajando')
 }
 
@@ -196,11 +196,11 @@ test('Docs: códigos que saltan, Atrás con Alt+←, «En esta página», tablas
   await expect(docs.locator('tbody tr:visible')).toHaveCount(9)
 
   // Una sección que no está.
-  await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
+  await win.locator('.cab-conv').getByRole('button', { name: 'Continuar' }).click()
   await terminado(win)
   // La cita está en una nota del proceso, que al terminar queda plegado (D-061).
   await win.locator('.hilo .proceso-cab').first().click()
-  await win.locator('.hilo .md a', { hasText: 'docs/estado.md' }).first().click()
+  await win.locator('.hilo .texto-doc a', { hasText: 'docs/estado.md' }).first().click()
   await expect(docs.locator('.barra-doc .nom')).toHaveText('estado.md')
   await win.screenshot({ path: 'test-results/i4-docs.png' })
   await app.close()
@@ -222,7 +222,7 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   const alto1 = await alto()
   await cuadro.fill('una línea\notra\notra más\ny otra')
   const alto4 = await alto()
-  expect(alto4).toBeGreaterThan(alto1 + 40)
+  expect(alto4).toBeGreaterThan(alto1 + 30)
   await win.locator('.cab-proyecto h1').click()
   expect(await alto()).toBe(alto4)
   await cuadro.fill('')
@@ -311,19 +311,19 @@ test('el ancho de la conversación se arrastra y se recuerda; las conversaciones
   await campo.fill('Primera charla')
   await campo.press('Enter')
   await terminado(win)
-  await win.locator('.chat-cab').getByRole('button', { name: 'Nueva' }).click()
+  await win.locator('.cab-conv').getByRole('button', { name: 'Nueva' }).click()
   await campo.fill('Segunda charla')
   await campo.press('Enter')
   await terminado(win)
-  await expect(win.locator('.chat-cab .tit b')).toHaveText('Segunda charla')
+  await expect(win.locator('.cab-conv .nombre-conv b')).toHaveText('Segunda charla')
 
   await win.getByRole('button', { name: 'Conversaciones anteriores', exact: true }).click()
   const lista = win.locator('.anteriores .menu-lista')
   await expect(lista.locator('.conv b')).toHaveText(['Segunda charla', 'Primera charla'])
-  await expect(lista.locator('.conv').first()).toContainText('la que está abierta')
+  await expect(lista.locator('.conv').first()).toContainText('abierta')
   await win.screenshot({ path: 'test-results/i4-anteriores.png' })
   await lista.locator('.conv', { hasText: 'Primera charla' }).click()
-  await expect(win.locator('.chat-cab .tit b')).toHaveText('Primera charla')
+  await expect(win.locator('.cab-conv .nombre-conv b')).toHaveText('Primera charla')
   await expect(win.locator('.turno').first()).toContainText('Primera charla')
   await expect(win.locator('.hilo')).not.toContainText('Segunda charla')
   await campo.fill('Sigo en la primera')

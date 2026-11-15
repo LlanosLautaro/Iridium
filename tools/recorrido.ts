@@ -179,8 +179,8 @@ try {
     await foto('H-3-H-4-abrir-iridium')
     return {
       h1: await win.locator('.zona-principal > .cab-proyecto h1').textContent(),
-      chatCab: (await texto('.chat-cab'))[0]?.replace(/\s+/g, ' '),
-      botones: await win.locator('.chat-cab button').allInnerTexts(),
+      chatCab: (await texto('.cab-conv'))[0]?.replace(/\s+/g, ' '),
+      botones: await win.locator('.cab-conv button').allInnerTexts(),
       turnos: await win.locator('.turno').count(),
       secciones: await win
         .getByRole('navigation', { name: 'Secciones del proyecto' })
@@ -380,8 +380,8 @@ try {
     await entrar(B)
     await win.waitForTimeout(400)
     await foto('H-4-B-antes')
-    const antesDeSegui = (await texto('.chat-cab'))[0]?.replace(/\s+/g, ' ')
-    await win.locator('.chat-cab').getByRole('button', { name: 'Seguí' }).click()
+    const antesDeSegui = (await texto('.cab-conv'))[0]?.replace(/\s+/g, ' ')
+    await win.locator('.cab-conv').getByRole('button', { name: 'Continuar' }).click()
     await win
       .locator('.barra-proyectos .proy.elegido', { hasText: 'Trabajando' })
       .waitFor({ timeout: 10_000 })
@@ -473,7 +473,10 @@ try {
       detener: await win.getByRole('button', { name: 'Detener' }).count(),
     }
     await mandar('Seguí después de detener')
-    return { ...r, retomaConMensaje: (await win.locator('.hilo .md').last().innerText()).slice(0, 120) }
+    return {
+      ...r,
+      retomaConMensaje: (await win.locator('.hilo .texto-doc').last().innerText()).slice(0, 120),
+    }
   })
 
   // H-6 y H-13: B trabaja lento; paso a A y luego a la grilla: B sigue, avisa al terminar.
@@ -485,7 +488,7 @@ try {
     await seccion('Docs')
     await win.waitForTimeout(300)
     const sigue = await win.locator('.barra-proyectos .proy', { hasText: B }).innerText()
-    const aviso = win.locator('.aviso')
+    const aviso = win.locator('.aviso-flotante')
     await aviso.waitFor({ timeout: 30_000 })
     await foto('H-13-aviso')
     const textoAviso = (await aviso.innerText()).replace(/\s+/g, ' ')
@@ -642,7 +645,7 @@ try {
     await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('')
     return {
       chatFalta: falta,
-      cab: (await chat.locator('.chat-cab').innerText()).replace(/\s+/g, ' '),
+      cab: (await chat.locator('.cab-conv').innerText()).replace(/\s+/g, ' '),
       vuelveGeneral,
       vuelveB,
     }
@@ -688,7 +691,7 @@ try {
     ] as const) {
       await mandar(msg, /Error|Terminada/)
       r[clave] = {
-        aviso: (await win.locator('.falla-motor').last().innerText()).replace(/\s+/g, ' '),
+        aviso: (await win.locator('.falla-ia').last().innerText()).replace(/\s+/g, ' '),
         ficha: (await win.locator('.barra-proyectos .proy.elegido').innerText()).replace(/\s+/g, ' '),
       }
       await foto(`F-5-${clave}`)
@@ -730,13 +733,13 @@ try {
     await entrar(B)
     await win.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('Hacé la grilla')
     await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
-    await win.locator('.falla-motor').last().waitFor({ timeout: 10_000 })
+    await win.locator('.falla-ia').last().waitFor({ timeout: 10_000 })
     await win.waitForTimeout(300)
     await foto('F-5-sin-sesion')
     const r = {
       barra,
       proyectoAlAbrir,
-      aviso: (await win.locator('.falla-motor').last().innerText()).replace(/\s+/g, ' '),
+      aviso: (await win.locator('.falla-ia').last().innerText()).replace(/\s+/g, ' '),
     }
     await app.close()
     return r
@@ -761,7 +764,7 @@ try {
     await win.locator('.turno').first().waitFor({ timeout: 30_000 })
     await win.waitForTimeout(800)
     await foto('H-4-ultima-conversacion-real')
-    const cab = (await win.locator('.chat-cab').innerText()).replace(/\s+/g, ' ')
+    const cab = (await win.locator('.cab-conv').innerText()).replace(/\s+/g, ' ')
     await win.getByRole('button', { name: 'Conversaciones anteriores', exact: true }).click()
     await win.waitForSelector('.anteriores .conv', { timeout: 15_000 })
     await foto('H-17-anteriores-reales')
@@ -776,7 +779,7 @@ try {
     await win.locator('.anteriores .conv').nth(2).click()
     await win.waitForTimeout(800)
     await foto('H-17-otra-conversacion')
-    const cabOtra = (await win.locator('.chat-cab').innerText()).replace(/\s+/g, ' ')
+    const cabOtra = (await win.locator('.cab-conv').innerText()).replace(/\s+/g, ' ')
     await app.close()
     await rm(reales, { recursive: true, force: true, maxRetries: 5 }).catch(() => {})
     return { cab, lista, marcadas: marcadas.slice(0, 4), cabOtra }

@@ -86,7 +86,8 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
   return (
     <div className="ajustes-ia">
       <Menu
-        clase="selector-ia"
+        clase="elegir-ia"
+        claseBoton="boton sin-fondo chico"
         titulo={`Modelo: ${nombreModelo(elegido, modelos)}. Vale desde el próximo mensaje.`}
         boton={
           <>
@@ -120,7 +121,8 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
         )}
       </Menu>
       <Menu
-        clase="selector-ia"
+        clase="elegir-ia"
+        claseBoton="boton sin-fondo chico"
         deshabilitado={esfuerzos.length === 0}
         titulo={
           esfuerzos.length === 0
@@ -299,8 +301,9 @@ export function MedidorContexto({ contexto }: { contexto: ContextoConversacion }
     vence === null ? '' : vigente ? `; la caché vence en ${cacheCorta(vence, ahora)}` : '; la caché venció'
   return (
     <Menu
-      clase="selector-ia ctx"
-      titulo={`Contexto: ${miles(contexto.usados)} de ${miles(contexto.maximo)} tokens (${pc(contexto.porcentaje)})${cache}. Tocá para ver el detalle.`}
+      clase="elegir-ia ctx"
+      claseBoton="boton sin-fondo chico"
+      titulo={`Contexto: ${miles(contexto.usados)} de ${miles(contexto.maximo)} tokens (${pc(contexto.porcentaje)})${cache}. Toca para ver el detalle.`}
       boton={
         <span className="medidor-ctx" data-nivel={nivel}>
           <Anillo porcentaje={contexto.porcentaje} />

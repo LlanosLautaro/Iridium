@@ -109,9 +109,9 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
     if (!caja) throw new Error(`sin cabecera en ${boton}`)
     cajas.push({ top: caja.y, height: caja.height, filtros: (await cab.locator('.cab-2').count()) > 0 })
   }
-  // Todas en el mismo lugar; sin filtros, con la misma altura que la de la conversación (la línea, pareja).
-  const chat = await win.locator('.chat-cab').boundingBox()
-  expect(chat?.height).toBe(40)
+  // Todas en el mismo lugar y con la misma altura sin filtros; la de la conversación, sin línea, la de las maquetas.
+  const chat = await win.locator('.cab-conv').boundingBox()
+  expect(chat?.height).toBe(48)
   for (const c of cajas) {
     expect(c.top).toBe(cajas[0]?.top)
     expect(c.height).toBe(c.filtros ? 78 : 40)

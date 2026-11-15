@@ -52,7 +52,7 @@ export function instruccionRevision(abiertos: number): string | null {
 }
 
 /** El mensaje de Seguí: el `CLAUDE.md` del proyecto le dice que lea `estado.md` (F-1). */
-export const MENSAJE_SEGUI = 'Seguí con el proyecto.'
+export const MENSAJE_SEGUI = 'Continúa con el proyecto.'
 
 /** Lo que se le avisa a la IA al retomar después de Detener: sin esto, cree que le rechazaron un comando (S-2). */
 export const AVISO_DETENIDA =

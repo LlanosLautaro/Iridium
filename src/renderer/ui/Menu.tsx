@@ -14,6 +14,7 @@ export function Menu({
   boton,
   titulo,
   clase,
+  claseBoton = 'menu-boton',
   deshabilitado,
   alAbrir,
   children,
@@ -22,6 +23,8 @@ export function Menu({
   titulo: string
   /** Clases del contenedor (`desplegable`, más las que se pasen). */
   clase?: string
+  /** Las clases del botón que lo abre: el de antes (`menu-boton`) o la pieza Botón (`boton sin-fondo chico`). */
+  claseBoton?: string
   deshabilitado?: boolean
   alAbrir?: () => void
   children: (cerrar: () => void) => ReactNode
@@ -92,7 +95,7 @@ export function Menu({
       <button
         ref={refBoton}
         type="button"
-        className="menu-boton"
+        className={claseBoton}
         aria-haspopup="menu"
         aria-expanded={abierto}
         title={titulo}

@@ -48,7 +48,7 @@ function Aviso({ a }: { a: AvisoSesion }) {
   const espera = a.estado === 'terminada' && a.preguntas > 0
   return (
     <div
-      className="aviso"
+      className="aviso-flotante"
       data-estado={a.estado === 'error' ? 'error' : espera ? 'espera' : 'ok'}
       role={a.estado === 'error' ? 'alert' : 'status'}
       onPointerEnter={() => setEncima(true)}
@@ -149,7 +149,7 @@ export function ConfirmarCierre() {
         </h2>
         <p id="cierre-d">
           {reiniciando ? 'Reiniciar' : 'Cerrar'} {nombres.length === 1 ? 'la frena' : 'las frena'}. Las
-          conversaciones quedan guardadas: con Seguí se retoman y la IA sabe que la detuviste.
+          conversaciones quedan guardadas: con Continuar se retoman y la IA sabe que la detuviste.
         </p>
         <div className="acc">
           <button

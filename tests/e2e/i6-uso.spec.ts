@@ -137,7 +137,7 @@ test('el contexto de la conversación y el modelo y el esfuerzo del proyecto, qu
   await expect(win.locator('.contexto-alto')).toContainText('85 % del contexto')
   await win.screenshot({ path: 'test-results/i6-conversacion.png' })
   await win.locator('.contexto-alto').getByRole('button', { name: 'Nueva' }).click()
-  await expect(win.locator('.chat-cab')).toContainText('Conversación nueva')
+  await expect(win.locator('.cab-conv')).toContainText('Conversación nueva')
   await expect(ctx).toHaveCount(0)
 
   // Beta no eligió nada: usa los de Claude Code.
@@ -157,6 +157,45 @@ test('el contexto de la conversación y el modelo y el esfuerzo del proyecto, qu
   await app.close()
 })
 
+test('con el panel angosto, Detener no tapa el medidor del contexto (DI-I3, tanda 5)', async () => {
+  const { app, win } = await abrir({ IRIDIUM_FALSO_PASO_MS: '30' })
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await mandar(win, 'Hacé la grilla')
+  // El panel en su ancho mínimo: 300 px.
+  const chat = win.locator('aside.chat')
+  const divisor = win.getByRole('separator', { name: /Ancho de la conversación/ })
+  const caja = await divisor.boundingBox()
+  if (!caja) throw new Error('sin divisor')
+  await win.mouse.move(caja.x + 2, caja.y + 200)
+  await win.mouse.down()
+  await win.mouse.move(caja.x + 200, caja.y + 200, { steps: 5 })
+  await win.mouse.up()
+  await expect(chat).toHaveJSProperty('offsetWidth', 300)
+
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo.fill('Algo lento')
+  await campo.press('Enter')
+  const detener = win.locator('.compositor').getByRole('button', { name: 'Detener' })
+  await expect(detener).toBeVisible()
+  const ctx = await win.locator('.compositor .medidor-ctx').boundingBox()
+  const det = await detener.boundingBox()
+  if (!ctx || !det) throw new Error('sin medidor o sin Detener')
+  const sePisan =
+    ctx.x < det.x + det.width &&
+    det.x < ctx.x + ctx.width &&
+    ctx.y < det.y + det.height &&
+    det.y < ctx.y + ctx.height
+  expect(sePisan).toBe(false)
+  // Todo dentro del cuadro.
+  const comp = await win.locator('.compositor').boundingBox()
+  if (!comp) throw new Error('sin compositor')
+  expect(det.x + det.width).toBeLessThanOrEqual(comp.x + comp.width)
+  await win.locator('.compositor').screenshot({ path: 'test-results/t5-detener-angosto.png' })
+  await win.screenshot({ path: 'test-results/t5-conversacion-angosta.png' })
+  await detener.click()
+  await app.close()
+})
+
 test('sin sesión de Claude Code no se envía nada y Reintentar lo vuelve a mandar (F-5)', async () => {
   const { app, win } = await abrir({ IRIDIUM_FALSO_ESTADO: 'sin-sesion' })
   await expect(win.locator('.estado-barra')).toContainText('Claude sin sesión')
@@ -165,7 +204,7 @@ test('sin sesión de Claude Code no se envía nada y Reintentar lo vuelve a mand
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Hacé la grilla')
   await campo.press('Enter')
-  const falla = win.locator('.falla-motor')
+  const falla = win.locator('.falla-ia')
   await expect(falla).toContainText('Claude Code no tiene sesión iniciada')
   await expect(falla).toContainText('No se envió nada')
   await expect(falla).toContainText('«Hacé la grilla»')
@@ -184,7 +223,7 @@ test('Iniciar sesión desde Iridium: el chip y el aviso abren el login y despué
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Hacé la grilla')
   await campo.press('Enter')
-  const falla = win.locator('.falla-motor')
+  const falla = win.locator('.falla-ia')
   await expect(falla).toContainText('se abre el navegador')
   await win.screenshot({ path: 'test-results/co1-sin-sesion.png' })
 
@@ -196,12 +235,12 @@ test('Iniciar sesión desde Iridium: el chip y el aviso abren el login y despué
   // El motor falso «inicia sesión» en dos pasos: el marco y el aviso se enteran solos.
   await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
   await expect(falla).toHaveAttribute('data-tipo', 'resuelta')
-  await expect(falla).toContainText('Ya tenés sesión en Claude')
+  await expect(falla).toContainText('Ya tienes sesión en Claude')
   await expect(falla.getByRole('button', { name: 'Iniciar sesión' })).toHaveCount(0)
   await win.screenshot({ path: 'test-results/co1-con-sesion.png' })
   await falla.getByRole('button', { name: 'Reintentar' }).click()
   await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Terminada', { timeout: 15_000 })
-  await expect(win.locator('.falla-motor')).toHaveCount(1)
+  await expect(win.locator('.falla-ia')).toHaveCount(1)
   await app.close()
 })
 
@@ -210,7 +249,7 @@ test('si un turno dice que no hay sesión, el chip y el aviso lo muestran y Ajus
   await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await mandar(win, 'Algo sin sesión', 'Error')
-  const falla = win.locator('.falla-motor')
+  const falla = win.locator('.falla-ia')
   await expect(falla).toContainText('Claude Code no tiene sesión iniciada')
   await expect(falla.getByRole('button', { name: 'Iniciar sesión' })).toBeVisible()
   await expect(win.locator('.estado-barra')).toContainText('Claude sin sesión · Iniciar sesión')
@@ -231,7 +270,7 @@ test('el uso agotado dice cuándo se libera y queda marcado; una falla deja la f
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await mandar(win, 'Algo que deja el uso agotado', 'Error')
-  const falla = win.locator('.falla-motor[data-tipo="uso"]')
+  const falla = win.locator('.falla-ia[data-tipo="uso"]')
   await expect(falla).toContainText('Se agotó el uso de tu suscripción')
   await expect(falla).toContainText(/Se libera (hoy|mañana) a las/)
   await expect(win.locator('.estado-barra .uso')).toContainText(/agotado\s*· se libera (hoy|mañana) a las/)
@@ -239,7 +278,7 @@ test('el uso agotado dice cuándo se libera y queda marcado; una falla deja la f
 
   await mandar(win, 'Ahora una falla', 'Error')
   await expect(win.locator('.linea-aviso.error')).toContainText('error de prueba')
-  await expect(win.locator('.linea-aviso.error')).toContainText('Con Seguí se retoma')
+  await expect(win.locator('.linea-aviso.error')).toContainText('Con Continuar se retoma')
   await app.close()
   const registros = await readdir(join(datos, 'registros'))
   const hoy = await readFile(join(datos, 'registros', registros[0] ?? ''), 'utf8')
@@ -263,7 +302,7 @@ test('sin red dice que reintenta mientras trabaja y termina con un aviso en cast
   await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Error')
   await expect(reintento).toHaveCount(0)
   const aviso = win.locator('.linea-aviso.error')
-  await expect(aviso).toContainText('No hay conexión con Claude: revisá internet.')
+  await expect(aviso).toContainText('No hay conexión con Claude: revisa internet.')
   await expect(aviso).not.toContainText('Connection refused')
   await win.screenshot({ path: 'test-results/d10-sin-conexion.png' })
 
@@ -287,7 +326,7 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
 
-  const aviso = win.locator('.aviso')
+  const aviso = win.locator('.aviso-flotante')
   await expect(aviso).toContainText('Alfa terminó y dejó 1 pregunta', { timeout: 15_000 })
   await expect(aviso).toContainText('Frena')
   await win.screenshot({ path: 'test-results/i6-aviso.png' })
@@ -305,7 +344,7 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
   // Al terminar, la pestaña lleva su cuenta de la bandeja (04-ux.md › Un número que manda).
   await expect(win.locator('.barra-proyectos .proy.elegido .cuenta')).toHaveText('1')
   await expect(win.locator('.pedido')).toContainText('Dejó 1 pregunta')
-  await expect(win.locator('.aviso')).toHaveCount(0)
+  await expect(win.locator('.aviso-flotante')).toHaveCount(0)
   await app.close()
 })
 

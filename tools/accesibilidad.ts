@@ -175,7 +175,7 @@ function conFoco() {
   const huella = (c: CSSStyleDeclaration) =>
     [c.outlineStyle, c.outlineWidth, c.outlineColor, c.boxShadow, c.borderColor, c.backgroundColor].join('|')
   // Lo que cambia al tener foco: el elemento o, si no, su caja (los campos sin borde propio).
-  const caja = el.closest('.caja') as HTMLElement | null
+  const caja = el.closest('.compositor') as HTMLElement | null
   const conF = huella(cs) + (caja ? huella(getComputedStyle(caja)) : '')
   const r = el.getBoundingClientRect()
   const nombre = (
@@ -214,7 +214,7 @@ async function recorrerConTab(win: Page, n = 70) {
       const el = document.activeElement as HTMLElement
       el.blur()
       const cs = getComputedStyle(el)
-      const caja = el.closest('.caja') as HTMLElement | null
+      const caja = el.closest('.compositor') as HTMLElement | null
       const h = (c: CSSStyleDeclaration) =>
         [c.outlineStyle, c.outlineWidth, c.outlineColor, c.boxShadow, c.borderColor, c.backgroundColor].join(
           '|',
