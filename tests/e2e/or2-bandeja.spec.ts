@@ -117,30 +117,30 @@ test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar 
   await expect(filtros.first()).toHaveAttribute('aria-pressed', 'true')
 
   // Solo la que frena lleva el ámbar.
-  await expect(win.locator('.pend.frena')).toHaveCount(1)
-  await expect(win.locator('.pend.frena')).toHaveAttribute('data-q', 'Q-2')
+  await expect(win.locator('.pregunta.frena')).toHaveCount(1)
+  await expect(win.locator('.pregunta.frena')).toHaveAttribute('data-q', 'Q-2')
   // La en pausa, al final y plegada.
   const pausa = win.locator('.en-pausa')
   await expect(pausa.locator('summary')).toHaveText(/En pausa\s*1/)
-  await expect(pausa.locator('.pend[data-q="Q-3"]')).toBeHidden()
+  await expect(pausa.locator('.pregunta[data-q="Q-3"]')).toBeHidden()
   await win.screenshot({ path: 'test-results/or2-bandeja.png' })
 
   await win.getByRole('button', { name: 'Compartir 2' }).click()
-  await expect(win.locator('.grupo-pend:not(.en-pausa) .pend')).toHaveCount(2)
-  await expect(win.locator('.pend[data-q="Q-1"]')).toHaveCount(0)
+  await expect(win.locator('.grupo-q:not(.en-pausa) .pregunta')).toHaveCount(2)
+  await expect(win.locator('.pregunta[data-q="Q-1"]')).toHaveCount(0)
   await win.getByRole('button', { name: 'Núcleo 1' }).click()
-  await expect(win.locator('.grupo-pend:not(.en-pausa) .pend')).toHaveCount(1)
-  await expect(win.locator('.pend[data-q="Q-1"]')).toBeVisible()
+  await expect(win.locator('.grupo-q:not(.en-pausa) .pregunta')).toHaveCount(1)
+  await expect(win.locator('.pregunta[data-q="Q-1"]')).toBeVisible()
 
   await pausa.locator('summary').click()
-  await expect(pausa.locator('.pend[data-q="Q-3"]')).toBeVisible()
+  await expect(pausa.locator('.pregunta[data-q="Q-3"]')).toBeVisible()
   await win.screenshot({ path: 'test-results/or2-bandeja-pausa.png' })
 
   // Beta, con un solo frente: sin filtros.
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
-  await expect(win.locator('[data-seccion="pendientes"] .pend').first()).toBeVisible()
+  await expect(win.locator('[data-seccion="pendientes"] .pregunta').first()).toBeVisible()
   await expect(win.getByRole('group', { name: 'Filtrar por frente' })).toHaveCount(0)
   await app.close()
 })
@@ -149,7 +149,7 @@ test('R-55: el frente elegido en la Bandeja queda al cambiar de proyecto y al ce
   let { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win.getByRole('button', { name: 'Compartir 2' }).click()
-  await expect(win.locator('.grupo-pend:not(.en-pausa) .pend')).toHaveCount(2)
+  await expect(win.locator('.grupo-q:not(.en-pausa) .pregunta')).toHaveCount(2)
 
   // A Beta y de vuelta a Alfa por su pestaña: sigue en Compartir.
   await win.keyboard.press('Control+1')
@@ -157,17 +157,17 @@ test('R-55: el frente elegido en la Bandeja queda al cambiar de proyecto y al ce
   await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
   await win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
   await expect(win.getByRole('button', { name: 'Compartir 2' })).toHaveAttribute('aria-pressed', 'true')
-  await expect(win.locator('.grupo-pend:not(.en-pausa) .pend')).toHaveCount(2)
+  await expect(win.locator('.grupo-q:not(.en-pausa) .pregunta')).toHaveCount(2)
   await app.close()
 
   // Al abrir de nuevo, Alfa vuelve en Compartir.
   ;({ app, win } = await abrir())
   await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
   await expect(win.getByRole('button', { name: 'Compartir 2' })).toHaveAttribute('aria-pressed', 'true')
-  await expect(win.locator('.pend[data-q="Q-1"]')).toHaveCount(0)
+  await expect(win.locator('.pregunta[data-q="Q-1"]')).toHaveCount(0)
   // Todos no se guarda: es lo de siempre.
   await win.getByRole('button', { name: 'Todos 3' }).click()
-  await expect(win.locator('.pend[data-q="Q-1"]')).toBeVisible()
+  await expect(win.locator('.pregunta[data-q="Q-1"]')).toBeVisible()
   await app.close()
 })
 

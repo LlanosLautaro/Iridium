@@ -1,23 +1,26 @@
-// Un pendiente de W-5: código, tipo y si frena; la pregunta; y el formulario para responder (H-10: opciones, Otro y
-// nota; H-11 y W-6: un punto por casilla con su nota). El contexto y lo que cita, con su texto, van plegados en
-// «Mostrar detalles» (Q-62): lo que se lee siempre es la pregunta y lo que hay que marcar. Las respondidas sin
-// procesar muestran lo elegido y se pueden corregir hasta que la IA las procesa.
-import { type MouseEvent, useLayoutEffect, useRef, useState } from 'react'
+// Un pendiente de W-5 con las piezas (DI-I3, tanda 6; `docs/diseno/pantallas/bandeja.html`): código, tipo y si frena
+// como Señales; la pregunta, que se pliega desde su título (R-39); y el formulario para responder (H-10: opciones, Otro
+// y nota; H-11 y W-6: una fila por casilla con su nota). El contexto y lo que cita van plegados en «Mostrar detalles»
+// (Q-62). Lo escrito se guarda solo (R-3), sin «Guardar a medias» (T-58). Las respondidas sin procesar muestran lo
+// elegido y se pueden corregir hasta que la IA las procesa.
+import { type MouseEvent, useId, useLayoutEffect, useRef, useState } from 'react'
 import type { CitaVista, Destino, PendienteVista } from '../../../compartido/puente'
-import { type Borrador, OTRO, puedeEnviar, tieneAlgo } from '../../../compartido/respuestas'
+import { type Borrador, OTRO, puedeEnviar } from '../../../compartido/respuestas'
 import { claveBorrador, usarEstado } from '../../estado'
 import { useAltoDelTexto } from '../../ui/altoDelTexto'
 import { guardarLuego, noGuardar } from '../../ui/guardarLuego'
 import { Icono } from '../../ui/Icono'
 
-/** Un campo de una línea que crece hacia abajo con lo que se escribe, para leerlo entero. */
+/** Un Campo (PZ-5) de una línea que crece hacia abajo con lo que se escribe, para leerlo entero. */
 function CampoCrece({
   valor,
   alCambiar,
+  clase,
   ...resto
 }: {
   valor: string
   alCambiar: (v: string) => void
+  clase: string
   id?: string
   placeholder?: string
   'aria-label'?: string
@@ -28,7 +31,7 @@ function CampoCrece({
     <textarea
       ref={ref}
       rows={1}
-      className="campo-texto crece"
+      className={`campo chico crece ${clase}`}
       value={valor}
       onChange={(e) => alCambiar(e.target.value)}
       {...resto}
@@ -47,8 +50,8 @@ export function alTocarEnlace(e: MouseEvent, abrirDoc: (d: Destino) => void): vo
   else if (externo) window.open(externo)
 }
 
-/** Un bloque que empieza plegado si es largo, con «Mostrar todo». */
-function Plegable({ html, clase }: { html: string; clase: string }) {
+/** El texto de una cita (Texto de documento, PZ-12), plegado si es largo, con «Mostrar todo». */
+function TextoPlegable({ html }: { html: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const [largo, setLargo] = useState(false)
   const [abierto, setAbierto] = useState(false)
@@ -60,14 +63,14 @@ function Plegable({ html, clase }: { html: string; clase: string }) {
     <>
       <div
         ref={ref}
-        className={abierto ? clase : largo ? `${clase} plegada larga` : `${clase} plegada`}
+        className={`texto-doc conversacion texto-cita${abierto ? '' : largo ? ' plegado largo' : ' plegado'}`}
         // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
         dangerouslySetInnerHTML={{ __html: html }}
       />
       {(largo || abierto) && (
         <button
           type="button"
-          className="enlace plegar"
+          className="boton sin-fondo chico plegar-cita"
           aria-expanded={abierto}
           onClick={() => setAbierto(!abierto)}
         >
@@ -82,19 +85,19 @@ function Cita({ c, abrirDoc }: { c: CitaVista; abrirDoc: (d: Destino) => void })
   if (c.tipo === 'falta')
     return (
       <div className="cita falta">
-        <div className="cab">
+        <div className="cab-cita">
           <span className="ref">{c.etiqueta}</span>
         </div>
-        <p>
+        <span className="senal">
           <Icono nombre="busca" />
           No se encontró la sección: puede que haya cambiado de nombre.
-        </p>
+        </span>
       </div>
     )
   const ver = (
     <button
       type="button"
-      className="enlace"
+      className="boton sin-fondo chico ver-cita"
       onClick={() => abrirDoc({ documento: c.ruta, ancla: c.tipo === 'seccion' ? c.ancla : '' })}
     >
       Ver entero
@@ -103,7 +106,7 @@ function Cita({ c, abrirDoc }: { c: CitaVista; abrirDoc: (d: Destino) => void })
   if (c.tipo === 'documento')
     return (
       <div className="cita">
-        <div className="cab">
+        <div className="cab-cita">
           <span className="ref">{c.etiqueta}</span>
           {ver}
         </div>
@@ -113,16 +116,17 @@ function Cita({ c, abrirDoc }: { c: CitaVista; abrirDoc: (d: Destino) => void })
   const nombre = c.titulo.replace(/^[A-Z]{1,4}-?\d{1,4}\s*[—–:-]\s*/, '')
   return (
     <div className="cita">
-      <div className="cab">
+      <div className="cab-cita">
         <span className="ref">{c.etiqueta}</span>
         {nombre !== '' && !c.etiqueta.endsWith(c.titulo) && <span className="nombre">{nombre}</span>}
         {ver}
       </div>
-      {c.html !== '' && <Plegable html={c.html} clase="doc-texto" />}
+      {c.html !== '' && <TextoPlegable html={c.html} />}
     </div>
   )
 }
 
+/** Las casillas y las opciones (Campo, PZ-5, en Filas, PZ-2), o el área de texto libre. La nota general va al pie. */
 function Formulario({
   p,
   b,
@@ -133,14 +137,13 @@ function Formulario({
   cambiar: (cambio: Partial<Borrador>) => void
 }) {
   const id = p.codigo.toLowerCase()
-  const conOpciones = p.opciones.length > 0
-  const conPuntos = p.puntos.length > 0
-  return (
-    <div className="responder">
-      {conPuntos && (
-        <div className="puntos">
-          {p.puntos.map((punto, i) => (
-            <div key={punto} className="punto-casilla">
+  if (p.puntos.length > 0)
+    return (
+      <div className="filas con-lineas puntos-q">
+        {p.puntos.map((punto, i) => (
+          <div key={punto} className="fila punto-q">
+            {/* La casilla marca; el texto no (puede tener enlaces): por eso no es un label. */}
+            <span className="casilla texto-punto">
               <input
                 type="checkbox"
                 aria-labelledby={`${id}-p${i}`}
@@ -151,24 +154,27 @@ function Formulario({
               />
               <span
                 id={`${id}-p${i}`}
-                className="texto-punto"
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
                 dangerouslySetInnerHTML={{ __html: p.puntosHtml[i] ?? '' }}
               />
-              <CampoCrece
-                valor={b.notas[i] ?? ''}
-                placeholder="Nota, si falló"
-                aria-label={`Nota de: ${punto}`}
-                alCambiar={(v) => cambiar({ notas: b.notas.map((n, j) => (j === i ? v : n)) })}
-              />
-            </div>
-          ))}
-        </div>
-      )}
-      {conOpciones && (
-        <div className="opciones" role="radiogroup" aria-label={`Opciones de ${p.codigo}`}>
-          {p.opciones.map((o) => (
-            <label key={o.letra} className="opcion-radio">
+            </span>
+            <CampoCrece
+              clase="nota-punto"
+              valor={b.notas[i] ?? ''}
+              placeholder="Nota, si falló"
+              aria-label={`Nota de: ${punto}`}
+              alCambiar={(v) => cambiar({ notas: b.notas.map((n, j) => (j === i ? v : n)) })}
+            />
+          </div>
+        ))}
+      </div>
+    )
+  if (p.opciones.length > 0)
+    return (
+      <div className="filas con-lineas opciones-q" role="radiogroup" aria-label={`Opciones de ${p.codigo}`}>
+        {p.opciones.map((o) => (
+          <label key={o.letra} className="fila opcion-q">
+            <span className="opcion">
               <input
                 type="radio"
                 name={id}
@@ -176,17 +182,19 @@ function Formulario({
                 checked={b.opcion === o.letra}
                 onChange={() => cambiar({ opcion: o.letra })}
               />
-              <span className="l">{o.letra})</span>
-              <span className="t">{o.texto}</span>
-              {o.recomendada && (
-                <span className="rec">
-                  <Icono nombre="estrella" />
-                  recomendada
-                </span>
-              )}
-            </label>
-          ))}
-          <label className="opcion-radio otro">
+            </span>
+            <span className="letra">{o.letra})</span>
+            <span className="texto-opcion">{o.texto}</span>
+            {o.recomendada && (
+              <span className="senal recomendada">
+                <Icono nombre="estrella" />
+                recomendada
+              </span>
+            )}
+          </label>
+        ))}
+        <label className="fila opcion-q otro">
+          <span className="opcion">
             <input
               type="radio"
               name={id}
@@ -194,36 +202,26 @@ function Formulario({
               checked={b.opcion === OTRO}
               onChange={() => cambiar({ opcion: OTRO })}
             />
-            <span className="l">Otro</span>
-            <CampoCrece
-              valor={b.otro}
-              placeholder="Contalo con tus palabras"
-              aria-label="Otra respuesta"
-              alCambiar={(v) => cambiar({ otro: v, opcion: OTRO })}
-            />
-          </label>
-        </div>
-      )}
-      {conOpciones || conPuntos ? (
-        <div className="fila-nota">
-          <label htmlFor={`${id}-nota`}>{conPuntos ? 'Nota general' : 'Nota'}</label>
+          </span>
+          <span className="letra">Otro</span>
           <CampoCrece
-            id={`${id}-nota`}
-            valor={b.nota}
-            placeholder="Opcional"
-            alCambiar={(v) => cambiar({ nota: v })}
+            clase="campo-otro"
+            valor={b.otro}
+            placeholder="Cuéntalo con tus palabras"
+            aria-label="Otra respuesta"
+            alCambiar={(v) => cambiar({ otro: v, opcion: OTRO })}
           />
-        </div>
-      ) : (
-        <textarea
-          className="campo-texto"
-          value={b.nota}
-          aria-label={`Tu respuesta a ${p.codigo}`}
-          placeholder="Tu respuesta"
-          onChange={(e) => cambiar({ nota: e.target.value })}
-        />
-      )}
-    </div>
+        </label>
+      </div>
+    )
+  return (
+    <textarea
+      className="area"
+      value={b.nota}
+      aria-label={`Tu respuesta a ${p.codigo}`}
+      placeholder="Tu respuesta"
+      onChange={(e) => cambiar({ nota: e.target.value })}
+    />
   )
 }
 
@@ -232,7 +230,7 @@ function Resumen({ p }: { p: PendienteVista }) {
   const b = p.borrador
   const elegida = p.opciones.find((o) => o.letra === b.opcion)
   return (
-    <div className="respuesta">
+    <div className="resumen-q">
       {p.postergada && (
         <span className="r">
           <b>Postergada:</b>
@@ -291,18 +289,23 @@ export function Pendiente({
   ruta,
   p,
   abrirDoc,
+  primera = false,
 }: {
   ruta: string
   p: PendienteVista
   abrirDoc: (d: Destino) => void
+  /** La primera de la lista: va abierta y su Enviar es el principal de la pantalla (un principal como mucho). */
+  primera?: boolean
 }) {
   const enMemoria = usarEstado((s) => s.borradores[claveBorrador(ruta, p.codigo)])
   const escribirBorrador = usarEstado((s) => s.escribirBorrador)
   const soltarBorrador = usarEstado((s) => s.soltarBorrador)
   const ponerPendiente = usarEstado((s) => s.ponerPendiente)
   const [envio, setEnvio] = useState<Envio>({ tipo: 'quieto' })
-  const [preguntaEntera, setPreguntaEntera] = useState(false)
+  // R-39: la primera (la que frena, si hay) y lo que se está escribiendo quedan abiertos; las demás, plegadas.
+  const [abierta, setAbierta] = useState(primera || p.estado === 'a-medias' || enMemoria !== undefined)
   const [detalles, setDetalles] = useState(false)
+  const cuerpo = useId()
   const hayDetalles = p.contextoHtml !== '' || p.citas.length > 0
 
   // Una respondida se corrige cuando tiene algo escrito en memoria.
@@ -317,7 +320,6 @@ export function Pendiente({
     if (p.estado !== 'respondida')
       guardarLuego(clave, () => void window.iridium.aMedias(ruta, p.codigo, nuevo).catch(() => {}))
   }
-  const larga = p.pregunta.length > 150
 
   const enviar = async (forzar = false, postergar = false) => {
     noGuardar(clave)
@@ -347,41 +349,29 @@ export function Pendiente({
     }
   }
 
-  const aMedias = async () => {
-    noGuardar(clave)
-    setEnvio({ tipo: 'guardando' })
-    const r = await window.iridium.aMedias(ruta, p.codigo, b).catch(() => null)
-    if (!r) {
-      setEnvio({ tipo: 'error', mensaje: 'No se pudo guardar a medias.' })
-      return
-    }
-    soltarBorrador(ruta, p.codigo)
-    ponerPendiente(ruta, r)
-    setEnvio({ tipo: 'quieto' })
-  }
-
   const usarLaDeAfuera = (afuera: PendienteVista) => {
     soltarBorrador(ruta, p.codigo)
     ponerPendiente(ruta, afuera)
     setEnvio({ tipo: 'quieto' })
   }
 
-  const conMedias = p.puntos.length > 0 || p.tipo === 'prueba' || p.tipo === 'tarea'
   const guardando = envio.tipo === 'guardando'
   const mostrarFormulario = p.estado !== 'respondida' || corrigiendo
+  const frena = p.frena && p.estado !== 'respondida' && !p.enPausa
+  const conNota = p.opciones.length > 0 || p.puntos.length > 0
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: solo delega los clics de los enlaces de adentro, que ya son enfocables.
     <article
-      className={`pend${p.estado === 'respondida' ? '' : ' abierta'}${p.frena && p.estado !== 'respondida' && !p.enPausa ? ' frena' : ''}`}
+      className={`pregunta${frena ? ' frena' : ''}`}
       data-q={p.codigo}
       aria-label={`${p.codigo}: ${p.pregunta}`}
       onClick={(e) => alTocarEnlace(e, abrirDoc)}
     >
-      <div className="meta">
-        <span className="q">{p.codigo}</span>
-        <span className="tipo">{p.tipo}</span>
-        {p.frena && p.estado !== 'respondida' && !p.enPausa && (
+      <div className="cab-q">
+        <span className="cuenta">{p.codigo}</span>
+        <span className="senal">{p.tipo}</span>
+        {frena && (
           <span className="senal ambar">
             <Icono nombre="espera" />
             Frena
@@ -395,145 +385,153 @@ export function Pendiente({
         )}
         {p.estado === 'a-medias' && <span className="senal">A medias</span>}
         {p.frente && (
-          <span className="frente-q" title={`Es del frente ${p.frente}`}>
+          <span className="senal frente-pregunta" title={`Es del frente ${p.frente}`}>
             {p.frente}
           </span>
         )}
       </div>
-      <h3 className={larga && !preguntaEntera ? 'plegada' : undefined}>{p.pregunta}</h3>
-      {larga && (
+      <h3>
         <button
           type="button"
-          className="enlace mas"
-          aria-expanded={preguntaEntera}
-          onClick={() => setPreguntaEntera(!preguntaEntera)}
-        >
-          {preguntaEntera ? 'Plegar la pregunta' : 'Ver la pregunta entera'}
-        </button>
-      )}
-      {hayDetalles && (
-        <button
-          type="button"
-          className="enlace detalles-btn"
-          aria-expanded={detalles}
-          onClick={() => setDetalles(!detalles)}
+          className="titulo-q"
+          aria-expanded={abierta}
+          aria-controls={cuerpo}
+          onClick={() => setAbierta(!abierta)}
         >
           <Icono nombre="chev" />
-          {detalles ? 'Ocultar detalles' : `Mostrar detalles (${queHay(p)})`}
+          {p.pregunta}
         </button>
-      )}
-      {detalles && (
-        <div className="detalles">
-          {p.contextoHtml !== '' && (
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
-            <div className="contexto" dangerouslySetInnerHTML={{ __html: p.contextoHtml }} />
+      </h3>
+      {abierta && (
+        <div className="cuerpo-q" id={cuerpo}>
+          {hayDetalles && (
+            <button
+              type="button"
+              className="boton sin-fondo chico detalles-q"
+              aria-expanded={detalles}
+              onClick={() => setDetalles(!detalles)}
+            >
+              <Icono nombre="chev" />
+              {detalles ? 'Ocultar detalles' : `Mostrar detalles · ${queHay(p)}`}
+            </button>
           )}
-          {p.citas.length > 0 && (
-            <div className="citas">
+          {detalles && (
+            <div className="detalles">
+              {p.contextoHtml !== '' && (
+                <div
+                  className="texto-doc conversacion contexto"
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
+                  dangerouslySetInnerHTML={{ __html: p.contextoHtml }}
+                />
+              )}
               {p.citas.map((c) => (
                 <Cita key={c.etiqueta} c={c} abrirDoc={abrirDoc} />
               ))}
             </div>
           )}
-        </div>
-      )}
 
-      {mostrarFormulario ? <Formulario p={p} b={b} cambiar={cambiar} /> : <Resumen p={p} />}
+          {mostrarFormulario ? <Formulario p={p} b={b} cambiar={cambiar} /> : <Resumen p={p} />}
 
-      {envio.tipo === 'error' && (
-        <div className="falla" role="alert">
-          <span className="senal rojo">
-            <Icono nombre="error" />
-            No se guardó
-          </span>
-          <span>{envio.mensaje} Lo que escribiste sigue acá.</span>
-          <button type="button" className="boton secundario acc" onClick={() => void enviar()}>
-            <Icono nombre="reintentar" />
-            Reintentar
-          </button>
-        </div>
-      )}
-      {envio.tipo === 'aviso' && (
-        <div className="falla" role="status">
-          <span>{envio.mensaje}</span>
-        </div>
-      )}
-      {envio.tipo === 'cambio' && (
-        <div className="falla cambio" role="alert">
-          <div className="txt">
-            <strong>La respuesta cambió fuera de Iridium.</strong> Alguien la escribió mientras respondías
-            (por ejemplo, desde el Gestor). Esto es lo que dice ahora:
-            <Resumen p={envio.afuera} />
+          {envio.tipo === 'error' && (
+            <div className="recuadro error" role="alert">
+              <Icono nombre="error" />
+              <div className="cuerpo-recuadro">
+                <strong>No se guardó</strong>
+                <span>{envio.mensaje} Lo que escribiste sigue aquí.</span>
+                <div className="acciones-recuadro">
+                  <button type="button" className="boton secundario chico" onClick={() => void enviar()}>
+                    <Icono nombre="reintentar" />
+                    Reintentar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {envio.tipo === 'aviso' && (
+            <div className="recuadro" role="status">
+              <span>{envio.mensaje}</span>
+            </div>
+          )}
+          {envio.tipo === 'cambio' && (
+            <div className="recuadro aviso" role="alert">
+              <Icono nombre="espera" />
+              <div className="cuerpo-recuadro">
+                <span>
+                  <strong>La respuesta cambió fuera de Iridium.</strong> Alguien la escribió mientras
+                  respondías (por ejemplo, desde el Gestor). Esto es lo que dice ahora:
+                </span>
+                <Resumen p={envio.afuera} />
+                <div className="acciones-recuadro">
+                  <button
+                    type="button"
+                    className="boton secundario chico"
+                    onClick={() => usarLaDeAfuera(envio.afuera)}
+                  >
+                    Dejar la de afuera
+                  </button>
+                  <button type="button" className="boton secundario chico" onClick={() => void enviar(true)}>
+                    Reemplazar con la mía
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="pie-q">
+            {mostrarFormulario ? (
+              <>
+                {conNota && (
+                  <CampoCrece
+                    clase="nota-q"
+                    valor={b.nota}
+                    placeholder={p.puntos.length > 0 ? 'Nota general (opcional)' : 'Nota (opcional)'}
+                    aria-label={p.puntos.length > 0 ? 'Nota general' : 'Nota'}
+                    alCambiar={(v) => cambiar({ nota: v })}
+                  />
+                )}
+                {p.tipo === 'prueba' && !corrigiendo && (
+                  <button
+                    type="button"
+                    className="boton sin-fondo"
+                    disabled={guardando}
+                    title="La deja para después como aprobada provisional, con lo que marcaste: la IA la anota con dónde mirar si falla"
+                    onClick={() => void enviar(false, true)}
+                  >
+                    Postergar
+                  </button>
+                )}
+                {corrigiendo && (
+                  <button
+                    type="button"
+                    className="boton secundario"
+                    disabled={guardando}
+                    onClick={() => soltarBorrador(ruta, p.codigo)}
+                  >
+                    Cancelar
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={primera ? 'boton principal' : 'boton secundario'}
+                  disabled={guardando || !puedeEnviar(b, p)}
+                  onClick={() => void enviar()}
+                >
+                  {guardando ? 'Guardando…' : 'Enviar'}
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                className="boton secundario"
+                title="Se puede corregir hasta que la IA la lea, cuando retome el proyecto"
+                onClick={() => escribirBorrador(ruta, p.codigo, p.borrador)}
+              >
+                Corregir
+              </button>
+            )}
           </div>
-          <div className="acc">
-            <button type="button" className="boton secundario" onClick={() => usarLaDeAfuera(envio.afuera)}>
-              Dejar la de afuera
-            </button>
-            <button type="button" className="boton principal" onClick={() => void enviar(true)}>
-              Reemplazar con la mía
-            </button>
-          </div>
         </div>
       )}
-
-      <div className="acciones">
-        {mostrarFormulario ? (
-          <>
-            <span className="ayuda">Se guarda en respuestas/{p.codigo}.md</span>
-            {corrigiendo && (
-              <button
-                type="button"
-                className="boton secundario"
-                disabled={guardando}
-                onClick={() => soltarBorrador(ruta, p.codigo)}
-              >
-                Cancelar
-              </button>
-            )}
-            {conMedias && !corrigiendo && (
-              <button
-                type="button"
-                className="boton secundario"
-                disabled={guardando || (!tieneAlgo(b) && p.estado !== 'a-medias')}
-                title="Guarda lo marcado sin enviarlo: la IA no lo ve"
-                onClick={() => void aMedias()}
-              >
-                Guardar a medias
-              </button>
-            )}
-            {p.tipo === 'prueba' && !corrigiendo && (
-              <button
-                type="button"
-                className="boton secundario"
-                disabled={guardando}
-                title="La deja para después como aprobada provisional, con lo que marcaste: la IA la anota con dónde mirar si falla"
-                onClick={() => void enviar(false, true)}
-              >
-                Postergar
-              </button>
-            )}
-            <button
-              type="button"
-              className="boton principal"
-              disabled={guardando || !puedeEnviar(b, p)}
-              onClick={() => void enviar()}
-            >
-              {guardando ? 'Guardando…' : 'Enviar'}
-            </button>
-          </>
-        ) : (
-          <>
-            <span className="ayuda">La IA la lee cuando retome el proyecto</span>
-            <button
-              type="button"
-              className="boton secundario"
-              onClick={() => escribirBorrador(ruta, p.codigo, p.borrador)}
-            >
-              Corregir
-            </button>
-          </>
-        )}
-      </div>
     </article>
   )
 }

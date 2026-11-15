@@ -398,7 +398,7 @@
   display: grid;
   gap: 6px;
 }
-.publicar-github .opcion-radio small {
+.publicar-github .opcion-publicar small {
   display: block;
   color: var(--texto-3);
   font-size: 12px;

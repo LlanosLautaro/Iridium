@@ -211,7 +211,7 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
   const entrada = win.locator('[data-seccion="pendientes"]')
-  await expect(entrada.locator('.pend')).toHaveText([/Q-3/])
+  await expect(entrada.locator('.pregunta')).toHaveText([/Q-3/])
   // La pestaña lleva el ícono del proyecto (la inicial, si no tiene) (Q-62).
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).locator('.ico-proy')).toHaveText(
     'A',
@@ -228,7 +228,7 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   await cuadro.fill('')
   expect(await alto()).toBe(alto1)
   // Los detalles de la pregunta, plegados (Q-62); los scripts, en lista después de los pendientes (Q-63).
-  await expect(entrada.locator('.pend .detalles')).toHaveCount(0)
+  await expect(entrada.locator('.pregunta .detalles')).toHaveCount(0)
   const lista = entrada.locator('.pendientes .lista-scripts')
   // El botón lleva el nombre, a la izquierda (R-2).
   await expect(lista.locator('.script-fila > button')).toHaveText(['Dejar una marca', 'Instalar'])

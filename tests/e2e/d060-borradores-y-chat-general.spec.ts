@@ -4,6 +4,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
+import { abrirPregunta } from './pregunta'
 
 let raiz: string
 let datos: string
@@ -99,7 +100,8 @@ test('lo marcado y escrito en una prueba de la Bandeja queda aunque se cierre Ir
   let { app, win } = await abrir()
   // Alfa tiene preguntas: se entra por su Bandeja de entrada (sin la Bandeja de todos, D-111).
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  const q4 = () => win.locator('article.pend[data-q="Q-4"]')
+  const q4 = () => win.locator('article.pregunta[data-q="Q-4"]')
+  await abrirPregunta(q4())
   await q4().getByRole('checkbox', { name: 'Se ven todas las tarjetas' }).check()
   await q4().getByRole('textbox', { name: 'Nota de: Se ordenan por fecha' }).fill('se ordenan al revés')
   // Sin tocar Guardar a medias ni Enviar: se guarda solo apenas se deja de escribir.
@@ -112,7 +114,7 @@ test('lo marcado y escrito en una prueba de la Bandeja queda aunque se cierre Ir
   await expect(q4().getByRole('textbox', { name: 'Nota de: Se ordenan por fecha' })).toHaveValue(
     'se ordenan al revés',
   )
-  await expect(q4().locator('.meta')).toContainText('A medias')
+  await expect(q4().locator('.cab-q')).toContainText('A medias')
   await app.close()
 })
 

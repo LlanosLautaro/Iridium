@@ -125,7 +125,7 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
   await expect(filtros).toContainText('Todos 2')
   await expect(filtros).toContainText('Compartir 1')
   await filtros.getByRole('button', { name: /^Compartir/ }).click()
-  await expect(bandeja.locator('.pend')).toHaveCount(1)
+  await expect(bandeja.locator('.pregunta')).toHaveCount(1)
   await win.screenshot({ path: 'test-results/or2-cabecera-bandeja.png' })
 
   // Revisión: los grupos son los filtros de la cabecera.

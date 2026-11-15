@@ -53,14 +53,14 @@ export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (r
       >
         <h2 id="nuevo-t">Nuevo proyecto</h2>
         <p id="nuevo-d">
-          Se crea la carpeta en tu carpeta de proyectos con la plantilla básica. Después le contás a la IA de
+          Se crea la carpeta en tu carpeta de proyectos con la plantilla básica. Después le cuentas a la IA de
           qué se trata, en la conversación.
         </p>
         <label className="campo-nuevo">
           <span>Nombre</span>
           <input
             ref={campo}
-            className="campo-texto"
+            className="campo"
             value={nombre}
             maxLength={80}
             spellCheck={false}

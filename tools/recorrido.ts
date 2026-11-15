@@ -9,6 +9,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, type Page } from '@playwright/test'
+import { abrirPregunta } from '../tests/e2e/pregunta.ts'
 import { elegirProyectos } from './proyectos-copia.ts'
 
 const raiz = process.argv[2]
@@ -515,7 +516,7 @@ try {
   const bandeja = async (nombre: string) => {
     await entrar(nombre)
     await seccion(/^Bandeja de entrada/)
-    await win.waitForSelector('[data-seccion="pendientes"] .pend:not(.silueta-pend)', { timeout: 30_000 })
+    await win.waitForSelector('[data-seccion="pendientes"] .pregunta', { timeout: 30_000 })
   }
   await paso('H-9-pendientes', async () => {
     await bandeja(A)
@@ -526,21 +527,22 @@ try {
         .getByRole('button', { name: /^Inicio/ })
         .getAttribute('aria-label')
         .catch(() => null),
-      grupos: await win.locator('[data-seccion="pendientes"] .grupo').allInnerTexts(),
+      grupos: await win.locator('[data-seccion="pendientes"] .grupo-q .bloque-titulo').allInnerTexts(),
     }
   })
   await paso('H-10-decision', async () => {
-    const q = win.locator('.pend[data-q="Q-900"]')
+    const q = win.locator('.pregunta[data-q="Q-900"]')
     await q.waitFor()
+    await abrirPregunta(q)
     const det = q.getByRole('button', { name: /Mostrar detalles/ })
     if (await det.count()) await det.click()
     await win.waitForTimeout(300)
     await foto('H-10-decision')
-    const opciones = await q.locator('.opcion-radio').allInnerTexts()
-    await q.locator('.opcion-radio').first().click()
+    const opciones = await q.locator('.opcion-q').allInnerTexts()
+    await q.locator('.opcion-q').first().click()
     await q.getByRole('textbox', { name: 'Nota' }).fill('Respuesta de la tanda 4 (copia).')
     await q.getByRole('button', { name: 'Enviar' }).click()
-    await q.locator('.meta', { hasText: 'Respondida' }).waitFor({ timeout: 10_000 })
+    await q.locator('.cab-q', { hasText: 'Respondida' }).waitFor({ timeout: 10_000 })
     await foto('H-10-respondida')
     return {
       opciones: opciones.map((s) => s.replace(/\s+/g, ' ')),
@@ -549,8 +551,9 @@ try {
   })
   await paso('H-11-prueba-a-medias', async () => {
     await bandeja(C)
-    const q = win.locator(`.pend[data-q="${QC}"]`)
+    const q = win.locator(`.pregunta[data-q="${QC}"]`)
     await q.waitFor()
+    await abrirPregunta(q)
     const casillas = q.getByRole('checkbox')
     const n = await casillas.count()
     await casillas.nth(0).check()
@@ -562,13 +565,14 @@ try {
     if (hayGuardar) await guardar.click()
     await win.waitForTimeout(500)
     await foto('H-11-a-medias')
-    const meta = await q.locator('.meta').innerText()
+    const meta = await q.locator('.cab-q').innerText()
     // Sigue a medias al salir y volver.
     await entrar(B)
     await bandeja(C)
+    await abrirPregunta(q)
     const sigueMarcada = await q.getByRole('checkbox').nth(1).isChecked()
     await q.getByRole('button', { name: 'Enviar' }).click()
-    await q.locator('.meta', { hasText: /Respondida/ }).waitFor({ timeout: 10_000 })
+    await q.locator('.cab-q', { hasText: /Respondida/ }).waitFor({ timeout: 10_000 })
     await foto('H-11-respondida')
     return {
       puntos: n,
@@ -579,10 +583,10 @@ try {
     }
   })
   await paso('H-9-ver-entero', async () => {
-    const ver = win.locator('.cita .enlace, .cita button', { hasText: 'Ver entero' }).first()
+    const ver = win.locator('.cita button', { hasText: 'Ver entero' }).first()
     if (!(await ver.count())) {
       const det = win
-        .locator('.pend')
+        .locator('.pregunta')
         .getByRole('button', { name: /Mostrar detalles/ })
         .first()
       if (await det.count()) await det.click()
@@ -605,7 +609,7 @@ try {
     await win.waitForTimeout(400)
     await foto('D-063-entrada-C')
     return {
-      pendientes: (await win.locator('[data-seccion="pendientes"] .pend').allInnerTexts()).map((s) =>
+      pendientes: (await win.locator('[data-seccion="pendientes"] .pregunta').allInnerTexts()).map((s) =>
         s.replace(/\s+/g, ' ').slice(0, 160),
       ),
       postergar: await win

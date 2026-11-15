@@ -5,6 +5,7 @@ import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promis
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
+import { abrirPregunta } from './pregunta'
 
 let raiz: string
 let datos: string
@@ -98,16 +99,16 @@ test('los pendientes del proyecto con lo que citan y «Ver entero» en Docs (H-9
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await expect(win.locator('.act.elegida')).toHaveAttribute('aria-label', /^Bandeja de entrada/)
 
-  const q7 = win.locator('.pend[data-q="Q-7"]')
-  await expect(q7.locator('.meta')).toContainText('decisión')
-  await expect(q7.locator('.meta')).toContainText('Frena')
+  const q7 = win.locator('.pregunta[data-q="Q-7"]')
+  await expect(q7.locator('.cab-q')).toContainText('decisión')
+  await expect(q7.locator('.cab-q')).toContainText('Frena')
   // El contexto y las citas, plegados en «Mostrar detalles» (Q-62).
   await expect(q7.locator('.cita')).toHaveCount(0)
-  await q7.getByRole('button', { name: 'Mostrar detalles (contexto y 2 citas)' }).click()
+  await q7.getByRole('button', { name: 'Mostrar detalles · contexto y 2 citas' }).click()
   await expect(q7.locator('.cita').first()).toContainText('Las miniaturas se generan al importar')
   await expect(q7.locator('.cita').nth(1)).toContainText('Grilla de cuatro columnas')
-  await expect(q7.locator('.opcion-radio').first()).toContainText('recomendada')
-  await expect(win.locator('.grupo-pend .grupo')).toHaveText(['Frenan el proyecto', 'Sin responder'])
+  await expect(q7.locator('.opcion-q').first()).toContainText('recomendada')
+  await expect(win.locator('.grupo-q .bloque-titulo')).toHaveText([/^Frenan el proyecto/, /^Sin responder/])
   await win.screenshot({ path: 'test-results/i3-pendientes.png' })
 
   // «Ver entero» abre el documento en Docs, en su sección; Atrás vuelve a la Bandeja.
@@ -128,13 +129,13 @@ test('los pendientes del proyecto con lo que citan y «Ver entero» en Docs (H-9
 test('responder una decisión y una prueba, también a medias (H-10, H-11, F-3)', async () => {
   const { app, win } = await abrir()
   await bandeja(win, 'Alfa')
-  const q7 = win.locator('.pend[data-q="Q-7"]')
+  const q7 = win.locator('.pregunta[data-q="Q-7"]')
   const enviar7 = q7.getByRole('button', { name: 'Enviar' })
   await expect(enviar7).toBeDisabled()
   await q7.getByText('plana', { exact: true }).click()
   await q7.getByRole('textbox', { name: 'Nota' }).fill('Más liviana.')
   await enviar7.click()
-  await expect(q7.locator('.meta')).toContainText('Respondida, sin procesar')
+  await expect(q7.locator('.cab-q')).toContainText('Respondida, sin procesar')
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-7.md'), 'utf8')).toBe(
     '# Q-7 — ¿La miniatura muestra el modelo 3D o la textura plana?\n\n**Opción:** B) plana\n\nMás liviana.\n',
   )
@@ -146,7 +147,8 @@ test('responder una decisión y una prueba, también a medias (H-10, H-11, F-3)'
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).locator('.cuenta')).toHaveText('1')
 
   // La prueba: lo escrito sigue al ir a otro proyecto y volver.
-  const q8 = win.locator('.pend[data-q="Q-8"]')
+  const q8 = win.locator('.pregunta[data-q="Q-8"]')
+  await abrirPregunta(q8)
   // Tocar el texto del punto no lo marca: solo la casilla.
   await q8.getByText('Abre la app sin errores', { exact: true }).click()
   await expect(q8.getByRole('checkbox', { name: 'Abre la app sin errores' })).not.toBeChecked()
@@ -162,16 +164,15 @@ test('responder una decisión y una prueba, también a medias (H-10, H-11, F-3)'
   await bandeja(win, 'Alfa')
   await expect(q8.getByRole('checkbox', { name: 'Abre la app sin errores' })).toBeChecked()
 
-  // A medias: queda en Iridium, no en el proyecto.
-  await q8.getByRole('button', { name: 'Guardar a medias' }).click()
-  await expect(q8.locator('.meta')).toContainText('A medias')
-  await expect(win.locator('.grupo-pend .grupo')).toHaveText(['A medias', 'Respondidas, sin procesar'])
+  // A medias: se guarda solo (sin «Guardar a medias», T-58) y queda en Iridium, no en el proyecto.
+  await expect(q8.getByRole('button', { name: 'Guardar a medias' })).toHaveCount(0)
+  await expect(q8).not.toContainText('Se guarda en respuestas/')
   expect(await readdir(join(raiz, 'Alfa', 'docs', 'respuestas'))).toEqual(['Q-7.md'])
   await win.screenshot({ path: 'test-results/i3-a-medias.png' })
 
   await q8.getByRole('checkbox', { name: 'El número baja al responder' }).check()
   await q8.getByRole('button', { name: 'Enviar' }).click()
-  await expect(q8.locator('.meta')).toContainText('Respondida, sin procesar')
+  await expect(q8.locator('.cab-q')).toContainText('Respondida, sin procesar')
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-8.md'), 'utf8')).toBe(
     [
       '# Q-8 — ¿I-4 (clasificar) funciona como esperabas?',
@@ -183,11 +184,12 @@ test('responder una decisión y una prueba, también a medias (H-10, H-11, F-3)'
     ].join('\n'),
   )
 
-  // Corregir una respondida.
+  // Corregir una respondida (plegada al pasar a Respondidas).
+  await abrirPregunta(q7)
   await q7.getByRole('button', { name: 'Corregir' }).click()
   await q7.getByText('3D', { exact: true }).click()
   await q7.getByRole('button', { name: 'Enviar' }).click()
-  await expect(q7.locator('.respuesta')).toContainText('3D')
+  await expect(q7.locator('.resumen-q')).toContainText('3D')
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-7.md'), 'utf8')).toContain('A) 3D')
   await app.close()
 })
@@ -195,7 +197,7 @@ test('responder una decisión y una prueba, también a medias (H-10, H-11, F-3)'
 test('si la respuesta cambió afuera, pregunta antes de reemplazarla', async () => {
   const { app, win } = await abrir()
   await bandeja(win, 'Beta')
-  const q2 = win.locator('.pend[data-q="Q-2"]')
+  const q2 = win.locator('.pregunta[data-q="Q-2"]')
   await q2.getByText('Notas', { exact: true }).click()
   // Mientras tanto, alguien la responde desde el Gestor.
   await mkdir(join(raiz, 'Beta', 'docs', 'respuestas'), { recursive: true })
@@ -204,11 +206,11 @@ test('si la respuesta cambió afuera, pregunta antes de reemplazarla', async () 
     '# Q-2 — ¿Por qué área empezamos?\n\n**Opción:** A) Archivos\n',
   )
   await q2.getByRole('button', { name: 'Enviar' }).click()
-  await expect(q2.locator('.falla.cambio')).toContainText('La respuesta cambió fuera de Iridium')
-  await expect(q2.locator('.falla.cambio')).toContainText('Archivos')
+  await expect(q2.locator('.recuadro.aviso')).toContainText('La respuesta cambió fuera de Iridium')
+  await expect(q2.locator('.recuadro.aviso')).toContainText('Archivos')
   await win.screenshot({ path: 'test-results/i3-cambio-afuera.png' })
   await q2.getByRole('button', { name: 'Reemplazar con la mía' }).click()
-  await expect(q2.locator('.meta')).toContainText('Respondida, sin procesar')
+  await expect(q2.locator('.cab-q')).toContainText('Respondida, sin procesar')
   expect(await readFile(join(raiz, 'Beta', 'docs', 'respuestas', 'Q-2.md'), 'utf8')).toContain('B) Notas')
   await app.close()
 })
@@ -220,14 +222,14 @@ test('Responder en la conversación y la Bandeja de entrada llevan a las pregunt
   await secciones.getByRole('button', { name: 'Mapa' }).click()
   await secciones.getByRole('button', { name: /^Bandeja de entrada/ }).click()
   await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
-  await expect(win.locator('.resumen .pend').first()).toBeVisible()
+  await expect(win.locator('.resumen .pregunta').first()).toBeVisible()
 
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Gestor' }).click()
   await win.locator('.cab-conv').getByRole('button', { name: 'Continuar' }).click()
   await win.locator('.pedido').getByRole('button', { name: 'Responder' }).click()
   await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Gestor')
-  await expect(win.locator('.resumen .pend[data-q="Q-4"]')).toContainText(
+  await expect(win.locator('.resumen .pregunta[data-q="Q-4"]')).toContainText(
     '¿La prueba del motor falso funciona?',
   )
   await app.close()

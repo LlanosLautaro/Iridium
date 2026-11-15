@@ -1,5 +1,5 @@
 // Los pendientes de un proyecto (H-9, F-3, 04-ux.md › W-5), en su Bandeja de entrada (D-043): todas sus preguntas con
-// lo que citan, filtros por frente y las en pausa al final. Sin la Bandeja de todos (D-111): lo que espera de cada
+// lo que citan, en Bloques (PZ-3) con su cuenta, filtros por frente y las en pausa al final. Sin la Bandeja de todos (D-111): lo que espera de cada
 // proyecto se ve en el suyo y, desde la grilla, en la cuenta de su tarjeta. Lo escrito vive en el estado de la ventana
 // (no se pierde al cambiar de proyecto ni de filtro) y se guarda a medias solo (R-3). El frente elegido se recuerda
 // por proyecto en `config.json`: queda al cambiar de proyecto y al cerrar Iridium (R-55).
@@ -17,8 +17,8 @@ import { Icono } from '../../ui/Icono'
 import { enPausa, filtrosPorFrente, NUCLEO, TODOS } from './filtros'
 import { Pendiente } from './Pendiente'
 
-const GRUPOS: { titulo: string; de: (p: PendienteVista) => boolean }[] = [
-  { titulo: 'Frenan el proyecto', de: (p) => p.estado === 'sin-responder' && p.frena },
+const GRUPOS: { titulo: string; frenan?: boolean; de: (p: PendienteVista) => boolean }[] = [
+  { titulo: 'Frenan el proyecto', frenan: true, de: (p) => p.estado === 'sin-responder' && p.frena },
   { titulo: 'Sin responder', de: (p) => p.estado === 'sin-responder' && !p.frena },
   { titulo: 'A medias', de: (p) => p.estado === 'a-medias' },
   { titulo: 'Respondidas, sin procesar', de: (p) => p.estado === 'respondida' },
@@ -28,11 +28,10 @@ function Siluetas() {
   return (
     <div className="pendientes carga" role="status" aria-busy="true" aria-label="Cargando pendientes">
       {[1, 2].map((n) => (
-        <div key={n} className="pend silueta-pend">
+        <div key={n} className="silueta-pregunta">
           <span className="linea-silueta" style={{ width: '30%' }} />
           <span className="linea-silueta" style={{ width: '80%', height: 14 }} />
-          <span className="linea-silueta" style={{ height: 48, borderRadius: 8 }} />
-          <span className="linea-silueta" style={{ height: 34, borderRadius: 8 }} />
+          <span className="linea-silueta" style={{ height: 48 }} />
         </div>
       ))}
     </div>
@@ -76,22 +75,21 @@ export function ListaPendientes({
       <>
         <Cabecera {...cabecera} cuenta={cuenta} />
         <div className="pendientes">
-          <div className="mensaje error" role="alert">
-            <span className="senal rojo">
-              <Icono nombre="error" />
-              No se pudo leer
-            </span>
-            <h2>No puedo ver la bandeja de {p.nombre}</h2>
-            <p>{datos.mensaje}</p>
-            <div className="acc">
-              <button
-                type="button"
-                className="boton secundario"
-                onClick={() => void window.iridium.pendientes(p.ruta).then(ponerPendientes)}
-              >
-                <Icono nombre="reintentar" />
-                Reintentar
-              </button>
+          <div className="recuadro error" role="alert">
+            <Icono nombre="error" />
+            <div className="cuerpo-recuadro">
+              <strong>No se puede ver la bandeja de {p.nombre}</strong>
+              <span>{datos.mensaje}</span>
+              <div className="acciones-recuadro">
+                <button
+                  type="button"
+                  className="boton secundario chico"
+                  onClick={() => void window.iridium.pendientes(p.ruta).then(ponerPendientes)}
+                >
+                  <Icono nombre="reintentar" />
+                  Reintentar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -104,6 +102,9 @@ export function ListaPendientes({
   const activas = datos.pendientes.filter((x) => !enPausa(x) && delFiltro(x))
   const pausadas = datos.pendientes.filter(enPausa)
   const vacia = datos.pendientes.length === pausadas.length
+  const grupos = GRUPOS.map((g) => ({ ...g, ps: activas.filter(g.de) })).filter((g) => g.ps.length > 0)
+  // La primera de la lista va abierta y lleva el principal de la pantalla (R-39, ux.md › Reglas).
+  const primera = grupos[0]?.ps[0]?.codigo
   return (
     <>
       <Cabecera
@@ -114,29 +115,38 @@ export function ListaPendientes({
             <Filtros filtros={filtros} elegido={elegido} elegir={setFiltro} etiqueta="Filtrar por frente" />
           )
         }
-        vacia={vacia && 'Nada en tu bandeja. Cuando la IA necesite algo de vos, aparece acá.'}
+        vacia={vacia && 'Nada en tu bandeja. Cuando la IA necesite algo de ti, aparece aquí.'}
       />
       <div className="pendientes">
-        {GRUPOS.map((g) => {
-          const ps = activas.filter(g.de)
-          if (ps.length === 0) return null
-          return (
-            <div key={g.titulo} className="grupo-pend">
-              <h3 className="grupo">{g.titulo}</h3>
-              {ps.map((x) => (
+        {grupos.map((g) => (
+          <section key={g.titulo} className="bloque grupo-q" aria-label={g.titulo}>
+            <h2 className="bloque-titulo">
+              {g.titulo} <span className={g.frenan ? 'cuenta frena' : 'cuenta'}>{g.ps.length}</span>
+            </h2>
+            <div className="preguntas">
+              {g.ps.map((x) => (
+                <Pendiente
+                  key={x.codigo}
+                  ruta={p.ruta}
+                  p={x}
+                  abrirDoc={abrirDoc}
+                  primera={x.codigo === primera}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+        {pausadas.length > 0 && (
+          <details className="grupo-q en-pausa">
+            <summary className="bloque-titulo">
+              <Icono nombre="chev" />
+              En pausa <span className="cuenta">{pausadas.length}</span>
+            </summary>
+            <div className="preguntas">
+              {pausadas.map((x) => (
                 <Pendiente key={x.codigo} ruta={p.ruta} p={x} abrirDoc={abrirDoc} />
               ))}
             </div>
-          )
-        })}
-        {pausadas.length > 0 && (
-          <details className="grupo-pend en-pausa">
-            <summary className="grupo">
-              En pausa <span className="n">{pausadas.length}</span>
-            </summary>
-            {pausadas.map((x) => (
-              <Pendiente key={x.codigo} ruta={p.ruta} p={x} abrirDoc={abrirDoc} />
-            ))}
           </details>
         )}
         {pie}

@@ -129,7 +129,7 @@ export function PublicarGithub({
           <span>Nombre</span>
           <input
             ref={campo}
-            className="campo-texto"
+            className="campo"
             value={nombre}
             maxLength={100}
             spellCheck={false}
@@ -139,16 +139,16 @@ export function PublicarGithub({
           {!valido && <small>Solo letras sin acento, números, puntos, guiones y guiones bajos.</small>}
         </label>
         <div className="opciones" role="radiogroup" aria-label="Quién lo ve">
-          <label className="opcion-radio">
+          <label className="opcion opcion-publicar">
             <input type="radio" name="visibilidad" checked={privado} onChange={() => setPrivado(true)} />
             <span className="t">
-              Privado <small>Solo vos y a quien invites.</small>
+              Privado <small>Solo tú y a quien invites.</small>
             </span>
           </label>
-          <label className="opcion-radio">
+          <label className="opcion opcion-publicar">
             <input type="radio" name="visibilidad" checked={!privado} onChange={() => setPrivado(false)} />
             <span className="t">
-              Público <small>Cualquiera puede verlo; solo vos lo cambiás.</small>
+              Público <small>Cualquiera puede verlo; solo tú lo cambias.</small>
             </span>
           </label>
         </div>

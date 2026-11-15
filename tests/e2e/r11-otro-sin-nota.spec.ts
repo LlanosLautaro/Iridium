@@ -4,6 +4,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { _electron as electron, expect, test } from '@playwright/test'
+import { abrirPregunta } from './pregunta'
 
 let raiz: string
 let datos: string
@@ -60,14 +61,16 @@ test('Otro sin nota, con un Enter en el medio, queda respondida con lo escrito (
   const win = await app.firstWindow()
   await win.setViewportSize({ width: 1440, height: 900 })
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  const q = win.locator('article.pend[data-q="Q-1"]')
+  const q = win.locator('article.pregunta[data-q="Q-1"]')
+  await abrirPregunta(q)
   const campo = q.getByRole('textbox', { name: 'Otra respuesta' })
   await campo.pressSequentially('Algo como bandeja', { delay: 20 })
   await campo.press('Enter')
   await campo.pressSequentially('de entrada', { delay: 20 })
   await q.getByRole('button', { name: 'Enviar' }).click()
-  await expect(q.locator('.meta')).toContainText('Respondida', { timeout: 10_000 })
-  await expect(q.locator('.respuesta')).toContainText('Algo como bandeja de entrada')
+  await expect(q.locator('.cab-q')).toContainText('Respondida', { timeout: 10_000 })
+  await abrirPregunta(q)
+  await expect(q.locator('.resumen-q')).toContainText('Algo como bandeja de entrada')
   const texto = await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-1.md'), 'utf8')
   expect(texto).toContain('**Opción:** Otro: Algo como bandeja de entrada')
   // Corregir la trae de vuelta con lo escrito.

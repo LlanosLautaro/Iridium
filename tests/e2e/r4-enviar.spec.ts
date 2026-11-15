@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { _electron as electron, expect, test } from '@playwright/test'
+import { abrirPregunta } from './pregunta'
 
 let raiz: string
 let datos: string
@@ -72,18 +73,20 @@ Paso ${vuelta++}.
   const esperas = [0, 100, 390, 420, 480, 900]
   for (const [i, espera] of esperas.entries()) {
     const n = i + 1
-    const q = win.locator(`article.pend[data-q="Q-${n}"]`)
+    const q = win.locator(`article.pregunta[data-q="Q-${n}"]`)
+    await abrirPregunta(q)
     await q
       .getByRole('textbox', { name: 'Otra respuesta' })
       .pressSequentially('A me parece la mejor', { delay: 30 })
-    await q.locator('.fila-nota textarea').pressSequentially('más oscuro', { delay: 30 })
+    await q.getByRole('textbox', { name: 'Nota', exact: true }).pressSequentially('más oscuro', { delay: 30 })
     await win.waitForTimeout(espera)
     await q.getByRole('button', { name: 'Enviar' }).click()
-    await expect(q.locator('.meta')).toContainText('Respondida', { timeout: 10_000 })
+    await expect(q.locator('.cab-q')).toContainText('Respondida', { timeout: 10_000 })
     const texto = await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', `Q-${n}.md`), 'utf8')
     expect(texto, `esperando ${espera} ms`).toContain('**Opción:** Otro: A me parece la mejor')
     expect(texto, `esperando ${espera} ms`).toContain('más oscuro')
-    await expect(q.locator('.respuesta')).toContainText('A me parece la mejor')
+    await abrirPregunta(q)
+    await expect(q.locator('.resumen-q')).toContainText('A me parece la mejor')
   }
   clearInterval(ruido)
   await app.close()

@@ -126,7 +126,7 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
     'aria-current',
     'page',
   )
-  await expect(win.locator('[data-seccion="pendientes"] .pend')).toHaveCount(2)
+  await expect(win.locator('[data-seccion="pendientes"] .pregunta')).toHaveCount(2)
   await expect(win.locator('.trabajo')).not.toContainText('Beta')
   await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Alfa')
   await expect(win.locator('.chat .compositor')).toBeVisible()

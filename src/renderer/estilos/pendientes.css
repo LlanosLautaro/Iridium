@@ -1,5 +1,6 @@
-/* Los pendientes de un proyecto, en su Bandeja de entrada (04-ux.md › W-5 y W-6, docs/ui/vista-pendientes.html). Sin
-   la Bandeja de todos (D-111): la columna de proyectos queda para la de Skills. */
+/* Los pendientes de un proyecto, en su Bandeja de entrada (04-ux.md › W-5 y W-6), con las piezas desde DI-I3, tanda 6
+   (docs/diseno/pantallas/bandeja.html). Arriba quedan el texto de los documentos y la columna de proyectos, que usan
+   Docs y Skills hasta que sus secciones pasen. */
 
 /* Texto de un documento del proyecto (citas y panel): el HTML que arma el visor */
 .doc-texto {
@@ -39,15 +40,13 @@
   font-weight: 600;
   color: var(--texto);
 }
-.doc-texto a,
-.pend .contexto a {
+.doc-texto a {
   color: var(--primario-texto);
   text-decoration: underline;
   text-decoration-color: var(--borde-fuerte);
   text-underline-offset: 3px;
 }
-.doc-texto code,
-.pend .contexto code {
+.doc-texto code {
   font: 12.5px / 1.5 var(--mono);
   color: var(--texto-2);
 }
@@ -202,113 +201,263 @@
 .pendientes {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 32px 72px;
+  padding: var(--esp-5) var(--esp-6) var(--esp-7);
 }
 .pendientes > * {
-  max-width: 780px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: var(--ancho-centrado);
+  margin-inline: auto;
 }
-.grupo {
-  margin: 22px 0 10px;
-  font: 600 var(--tam-chico) / 1 var(--ui);
-  letter-spacing: 0.02em;
-  color: var(--texto-3);
+.silueta-pregunta {
+  display: grid;
+  gap: var(--esp-3);
+  padding: var(--esp-5) 0;
 }
-.grupo-pend:first-child .grupo {
-  margin-top: 0;
-}
-/* En pausa (OR-6): al final, plegadas, sin contar */
-.en-pausa > summary {
-  cursor: pointer;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.en-pausa > summary::before {
-  content: "›";
-  display: inline-block;
-  transition: transform 0.12s;
-}
-.en-pausa[open] > summary::before {
-  transform: rotate(90deg);
-}
-.en-pausa > summary .n {
-  font-family: var(--mono);
-}
-.en-pausa > summary + .pend {
-  margin-top: 0;
-}
-.en-pausa > .pend {
-  opacity: 0.85;
+.silueta-pregunta + .silueta-pregunta {
+  border-top: 1px solid var(--borde);
 }
 
-/* Una pregunta: tarjeta suave; solo la que frena lleva el ámbar (D-100): el borde, el fondo de pedido y «Frena» */
-.pend {
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-tarjeta);
-  background: var(--elevado);
-  padding: 16px 18px;
-  display: grid;
-  gap: 12px;
+/* Los grupos son Bloques (PZ-3); las preguntas, sin borde, con una línea gris entre ellas */
+.grupo-q + .grupo-q {
+  margin-top: var(--esp-5);
 }
-.pend + .pend,
-.silueta-pend + .silueta-pend {
-  margin-top: 12px;
-}
-.pend.frena {
-  border-color: color-mix(in oklab, var(--espera) 55%, transparent);
-  background: var(--espera-fondo);
-}
-.pend .meta {
+/* Una pregunta: el código, el tipo y lo que frena en Señales (PZ-7); se pliega desde su título (R-39) */
+.pregunta {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: var(--esp-3);
+  padding: var(--esp-5) 0;
+}
+.pregunta + .pregunta {
+  border-top: 1px solid var(--borde);
+}
+.cab-q {
+  display: flex;
+  align-items: baseline;
+  gap: var(--esp-3);
   flex-wrap: wrap;
 }
-.pend .meta .q {
-  font: 700 12.5px / 1 var(--mono);
-  color: var(--texto);
-}
-.pend .meta .tipo {
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-}
-/* El módulo del que es la pregunta (D-063), a la derecha de la línea */
-.pend .meta .frente-q {
+.cab-q .frente-pregunta {
   margin-left: auto;
-  padding: 2px 8px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-pildora);
+}
+.pregunta h3 {
+  margin: 0;
+  font: var(--estilo-titulo);
+  line-height: 1.35;
+}
+.titulo-q {
+  all: unset;
+  display: flex;
+  align-items: baseline;
+  gap: var(--esp-2);
+  cursor: pointer;
+}
+.titulo-q .ic {
+  align-self: center;
   color: var(--texto-3);
-  font-size: var(--tam-chico);
+  transition: transform 0.12s var(--sale);
 }
-.pend h3 {
-  font: 600 16px / 1.4 var(--ui);
-  max-width: 72ch;
+.titulo-q:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 4px;
+  border-radius: var(--radio-control);
 }
-.pend h3.plegada {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.cuerpo-q {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
 }
-.pend .mas,
-.pend .plegar {
-  justify-self: start;
-  margin-top: -6px;
+
+/* «Mostrar detalles» (Q-62): el contexto y las citas, plegados */
+.detalles-q {
+  align-self: flex-start;
+  margin-left: calc(-1 * var(--esp-2));
 }
-.pend .contexto {
-  font-size: 13.5px;
-  line-height: 1.6;
+.detalles-q .ic {
+  transition: transform 0.12s var(--sale);
+}
+.detalles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+.pregunta .contexto {
   color: var(--texto-2);
-  max-width: 72ch;
 }
-.pend .contexto.plegada {
+.pregunta .contexto > :last-child {
+  margin-bottom: 0;
+}
+
+/* Lo que cita la pregunta, con su texto ahí mismo: una línea gris a la izquierda, sin caja */
+.cita {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+  padding-left: var(--esp-3);
+  border-left: 2px solid var(--borde-fuerte);
+  min-width: 0;
+}
+.cab-cita {
+  display: flex;
+  align-items: baseline;
+  gap: var(--esp-2);
+  min-width: 0;
+}
+.cab-cita .ref {
+  font: var(--estilo-codigo);
+  color: var(--texto-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.cab-cita .nombre {
+  font-size: var(--tam-chico);
+  color: var(--texto-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.ver-cita {
+  margin-left: auto;
+}
+.cita.falta {
+  border-left-style: dashed;
+}
+.texto-cita {
+  color: var(--texto-2);
+}
+.texto-cita.plegado {
   max-height: calc(1.6em * 3.5);
   overflow: hidden;
 }
+.texto-cita.largo {
+  mask-image: linear-gradient(to bottom, var(--fondo) 55%, transparent);
+}
+.plegar-cita {
+  align-self: flex-start;
+  margin-left: calc(-1 * var(--esp-2));
+}
+
+/* Responder: una fila por casilla con su nota, las opciones en filas, la nota general al pie */
+.punto-q,
+.opcion-q {
+  align-items: flex-start;
+  padding-block: var(--esp-2);
+}
+.texto-punto {
+  flex: 1;
+  line-height: 1.5;
+}
+.pregunta .crece {
+  height: auto;
+  min-height: var(--alto-campo-chico);
+  padding-block: 5px;
+  line-height: 1.4;
+  resize: none;
+  overflow: hidden;
+}
+.nota-punto {
+  flex: none;
+  width: 260px;
+}
+.opcion-q {
+  cursor: pointer;
+}
+.opcion-q:has(input:checked) {
+  background: var(--sel-fondo);
+}
+.opcion-q .letra {
+  flex: none;
+  min-width: 2.5ch;
+  font: var(--estilo-codigo);
+  color: var(--texto-2);
+  line-height: 1.5;
+}
+.texto-opcion {
+  flex: 1;
+  line-height: 1.5;
+}
+.opcion-q .recomendada {
+  align-self: center;
+}
+.campo-otro {
+  flex: 1;
+}
+.pie-q {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--esp-3);
+}
+.nota-q {
+  flex: 1;
+}
+
+/* En pausa (OR-6): al final, plegadas y sin contar; va al final porque acomoda lo de arriba */
+.en-pausa > summary {
+  cursor: pointer;
+  list-style: none;
+}
+.en-pausa > summary .ic {
+  width: 14px;
+  height: 14px;
+  align-self: center;
+  transition: transform 0.12s var(--sale);
+}
+.en-pausa .pregunta {
+  opacity: 0.85;
+}
+
+/* Respondida, sin procesar: lo elegido en texto, corregible hasta que la IA lo procesa */
+.resumen-q {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+}
+.resumen-q .r b {
+  font: var(--estilo-codigo);
+  color: var(--texto-2);
+  margin-right: 6px;
+}
+.resumen-q .nota {
+  color: var(--texto-2);
+  font-size: var(--tam-chico);
+  white-space: pre-wrap;
+}
+.r-puntos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.r-punto {
+  display: flex;
+  align-items: baseline;
+  gap: var(--esp-2);
+}
+.resumen-q .r-puntos .ic {
+  width: 13px;
+  height: 13px;
+  transform: translateY(2px);
+}
+.resumen-q .si .ic {
+  color: var(--texto-2);
+}
+.resumen-q .no .ic {
+  color: var(--error);
+}
+
+/* Lo plegable abierto: la flecha gira (al final, porque acomoda las flechas de arriba) */
+.titulo-q[aria-expanded="true"] .ic,
+.detalles-q[aria-expanded="true"] .ic,
+.en-pausa[open] > summary .ic {
+  transform: rotate(90deg);
+}
+
+/* Lo que comparten los documentos (Docs, el Mapa), hasta que pasen a las piezas */
 .enlace {
   color: var(--texto-2);
   font-size: var(--tam-chico);
@@ -320,265 +469,6 @@
   color: var(--texto);
   text-decoration-color: var(--texto-3);
 }
-
-/* Lo que cita el pendiente, con su texto ahí mismo */
-.citas {
-  display: grid;
-  gap: 8px;
-}
-.cita {
-  border: 1px solid var(--borde-suave);
-  border-radius: var(--radio-bloque);
-  background: var(--caja);
-  padding: 10px 12px;
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-}
-.cita .cab {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-}
-.cita .ref {
-  font: 500 12px / 1.4 var(--mono);
-  color: var(--primario-texto);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
-.cita .nombre {
-  font-size: var(--tam-chico);
-  font-weight: 600;
-  color: var(--texto-2);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
-.cita .cab .enlace {
-  margin-left: auto;
-  flex: none;
-}
-.pend .plegada.larga {
-  mask-image: linear-gradient(to bottom, var(--fondo) 55%, transparent);
-}
-.cita .doc-texto.plegada {
-  max-height: calc(1.6em * 3.5);
-  overflow: hidden;
-}
-.cita .plegar {
-  margin-top: 0;
-}
-.cita.falta {
-  background: none;
-  border-style: dashed;
-}
-.cita.falta .ref {
-  color: var(--texto-2);
-}
-.cita.falta p {
-  color: var(--texto-3);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--tam-chico);
-}
-
-/* Responder: puntos con nota, opciones, texto libre */
-.responder {
-  display: grid;
-  gap: 8px;
-}
-.opciones {
-  display: grid;
-  gap: 8px;
-}
-.opcion-radio {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 38px;
-  padding: 8px 12px;
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-bloque);
-  cursor: pointer;
-}
-.opcion-radio:hover {
-  border-color: var(--texto-3);
-}
-.opcion-radio:has(input:checked) {
-  border-color: var(--primario);
-  background: var(--sel-fondo);
-}
-.opcion-radio input[type="radio"],
-.punto-casilla input[type="checkbox"] {
-  accent-color: var(--primario);
-  width: 15px;
-  height: 15px;
-  margin: 0;
-  flex: none;
-}
-.opcion-radio .l {
-  font: 700 12.5px / 1 var(--mono);
-  color: var(--texto-2);
-}
-.opcion-radio .t {
-  font-size: 14px;
-  color: var(--texto);
-}
-.opcion-radio .rec {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--primario);
-  font-size: var(--tam-chico);
-  white-space: nowrap;
-}
-.campo-texto {
-  height: 30px;
-  padding: 0 10px;
-  border: 1px solid var(--borde-control);
-  border-radius: var(--radio-control);
-  background: var(--fondo);
-  color: var(--texto);
-  font: inherit;
-  font-size: 13.5px;
-  outline: 0;
-  min-width: 0;
-}
-.campo-texto:focus {
-  border-color: var(--primario);
-}
-.campo-texto::placeholder {
-  color: var(--texto-3);
-}
-textarea.campo-texto {
-  height: auto;
-  min-height: 64px;
-  padding: 8px 10px;
-  resize: vertical;
-  line-height: 1.5;
-}
-textarea.campo-texto.crece {
-  min-height: 30px;
-  padding: 5px 10px;
-  resize: none;
-  overflow: hidden;
-  line-height: 1.4;
-}
-.fila-nota {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: start;
-  gap: 10px;
-  margin-top: 2px;
-}
-.fila-nota label {
-  padding-top: 7px;
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.puntos {
-  display: grid;
-  gap: 6px;
-}
-.punto-casilla {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) minmax(180px, 38%);
-  align-items: center;
-  gap: 10px;
-  min-height: 38px;
-  padding: 4px 6px 4px 12px;
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-bloque);
-}
-.punto-casilla:has(input:checked) {
-  border-color: color-mix(in oklab, var(--primario) 45%, var(--borde-fuerte));
-}
-.punto-casilla .texto-punto {
-  font-size: 14px;
-}
-
-.acciones {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: flex-end;
-}
-.acciones .ayuda {
-  margin-right: auto;
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.falla {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid color-mix(in oklab, var(--error) 35%, var(--borde));
-  border-radius: var(--radio-bloque);
-  font-size: var(--tam-chico);
-  color: var(--texto-2);
-}
-.falla .acc {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-}
-.falla.cambio {
-  align-items: flex-start;
-  flex-direction: column;
-  border-color: var(--espera-borde);
-}
-.falla.cambio .txt {
-  display: grid;
-  gap: 8px;
-}
-.falla.cambio strong {
-  color: var(--texto);
-  font-weight: 600;
-}
-
-/* Respondida, sin procesar: lo elegido, corregible hasta que la IA lo procesa */
-.respuesta {
-  display: grid;
-  gap: 4px;
-  padding: 10px 12px;
-  border-radius: var(--radio-bloque);
-  background: var(--caja);
-  border: 1px solid var(--borde-suave);
-}
-.respuesta .r {
-  font-size: 14px;
-  color: var(--texto);
-}
-.respuesta .r b {
-  font: 700 12.5px / 1 var(--mono);
-  color: var(--texto-2);
-  margin-right: 6px;
-}
-.respuesta .nota {
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-  white-space: pre-wrap;
-}
-.r-puntos {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 3px;
-}
-.r-punto {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font-size: 14px;
-}
-
 .doc {
   position: relative;
   flex: 1;
@@ -588,47 +478,4 @@ textarea.campo-texto.crece {
 .aviso-doc {
   color: var(--texto-3);
   font-size: var(--tam-chico);
-}
-
-/* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
-.opcion-radio.otro .campo-texto {
-  flex: 1;
-}
-.r-puntos .ic {
-  width: 13px;
-  height: 13px;
-  flex: none;
-  transform: translateY(2px);
-}
-.opcion-radio .rec .ic,
-.cita.falta .ic {
-  width: 13px;
-  height: 13px;
-}
-.r-puntos .si .ic {
-  color: var(--ok);
-}
-.r-puntos .no .ic {
-  color: var(--error);
-}
-
-/* «Mostrar detalles» (Q-62): el contexto y las citas, plegados */
-.pend .detalles-btn {
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: -4px;
-}
-.pend .detalles {
-  display: grid;
-  gap: 10px;
-}
-.pend .detalles-btn .ic {
-  width: 12px;
-  height: 12px;
-  transition: transform 0.15s var(--sale);
-}
-.pend .detalles-btn[aria-expanded="true"] .ic {
-  transform: rotate(90deg);
 }

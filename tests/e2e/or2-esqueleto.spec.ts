@@ -97,7 +97,7 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   // Alfa tiene una pregunta: entra a su Bandeja.
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await expect(actual).toHaveAttribute('aria-label', /^Bandeja de entrada/)
-  await expect(win.locator('[data-seccion="pendientes"] .pend')).toHaveCount(1)
+  await expect(win.locator('[data-seccion="pendientes"] .pregunta')).toHaveCount(1)
   expect(await barra(win)).toEqual([
     'Bandeja de entrada',
     'Mapa',
