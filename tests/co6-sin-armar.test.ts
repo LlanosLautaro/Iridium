@@ -5,7 +5,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { armandoAhora, leerSinArmar } from '../src/main/infra/sin-armar'
+import { armandoAhora, leerSinArmar, VigiaSinArmar } from '../src/main/infra/sin-armar'
 
 let codigo: string
 let release: string
@@ -39,7 +39,15 @@ afterEach(async () => {
 
 describe('qué falta armar', () => {
   it('nada si el último commit es el de `main` (lo que está en la app)', async () => {
-    expect(await leerSinArmar(codigo, release)).toEqual({ carpeta: codigo, pendiente: null })
+    expect(await leerSinArmar(codigo, release)).toEqual({ carpeta: codigo, pendiente: null, limpio: true })
+  })
+
+  it('limpio solo sin archivos seguidos modificados: los nuevos sin seguir (las respuestas) no cuentan (T-67)', async () => {
+    await commit('T-67')
+    await writeFile(join(codigo, 'respuesta.md'), 'nueva, sin seguir')
+    expect((await leerSinArmar(codigo, release)).limpio).toBe(true)
+    await writeFile(join(codigo, 'cambio.txt'), 'a medias')
+    expect((await leerSinArmar(codigo, release)).limpio).toBe(false)
   })
 
   it('con commits nuevos, el último y su primera línea', async () => {
@@ -88,5 +96,21 @@ describe('armando', () => {
     expect(await armandoAhora(release)).toBe(false)
     await writeFile(join(release, 'armando.json'), '{ roto')
     expect(await armandoAhora(release)).toBe(false)
+  })
+})
+
+describe('lo que `pnpm volver` dejó afuera (T-67)', () => {
+  it('la vigía lo lee de `release/retenido.json`; sin el archivo, nada', async () => {
+    await commit('Lo que falla')
+    const vigia = new VigiaSinArmar(codigo, release, 'exit')
+    await vigia.mirar()
+    expect(vigia.ultimo().retenido).toBeNull()
+    const hash = git('rev-parse', '--short', 'HEAD')
+    await writeFile(
+      join(release, 'retenido.json'),
+      `﻿${JSON.stringify({ commit: hash, desde: '2026-11-15T12:00:00' })}`,
+    )
+    await vigia.mirar()
+    expect(vigia.ultimo()).toMatchObject({ pendiente: { commit: hash }, retenido: hash, limpio: true })
   })
 })

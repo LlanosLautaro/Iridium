@@ -76,5 +76,11 @@ if ($Release) { $argumentos.Release = $Release }
 & (Join-Path $PSScriptRoot 'actualizar.ps1') @argumentos
 $resultado = $LASTEXITCODE
 Set-Location $raiz
+# Lo que quedó afuera es lo que falla: Iridium no lo vuelve a armar solo (T-67) hasta que haya un commit nuevo.
+if ($resultado -eq 0) {
+  $retenido = [ordered]@{ commit = "$(& git rev-parse --short HEAD)".Trim(); desde = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss') }
+  $carpetaRelease = if ($Release) { $Release } else { Join-Path $raiz 'release' }
+  [IO.File]::WriteAllText((Join-Path $carpetaRelease 'retenido.json'), ($retenido | ConvertTo-Json), [Text.UTF8Encoding]::new($false))
+}
 QuitarCopia
 exit $resultado

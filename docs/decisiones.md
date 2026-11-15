@@ -128,6 +128,7 @@
 | D-119 | 2026-11-12 | framework | 10, frente Diseño, paso 7 (T-63) | Las medidas fijas son tokens `--alto-*` y `--ancho-*`, y el control avisa de una repetida a mano | vigente |
 | D-120 | 2026-11-12 | Diseño | 10, frente Diseño, paso 7 (R-49) | Los botones principales van delineados: fondo negro, letra y borde en color | vigente (ajusta D-109) |
 | D-121 | 2026-11-13 | Diseño | 10, frente Diseño, paso 7 (DI-I3) | La app y las maquetas comparten un solo `tokens.css`; las piezas entran a la app sección por sección | vigente |
+| D-122 | 2026-11-15 | producto | 10, operación (T-67) | Actualizar arma y reinicia solo, cuando ninguna IA trabaja y la PC está quieta | vigente (ajusta R-12 y CO-I6) |
 
 ---
 
@@ -2687,3 +2688,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** un solo archivo no se desfasa: cambiar un token en Diseño cambia la app y las maquetas a la vez. Pasar las piezas por sección evita romper lo que todavía no se rehízo.
 
 **Consecuencias:** desde esta tanda la app ya es negra (fondo, letra del sistema, grises), aunque con las formas de antes; el principal se ve blanco hasta que su sección pase a la pieza Botón. Al terminar DI-I3 se borra `tokens-viejos.css` y las listas del control quedan vacías.
+
+## D-122 — Actualizar arma y reinicia solo, cuando ninguna IA trabaja y la PC está quieta
+- **Fecha:** 2026-11-15
+- **Ámbito:** producto (Actualizar, R-12 y CO-I6)
+- **Hito o paso:** 10, operación (T-67)
+- **Estado:** vigente (ajusta R-12 y CO-I6: el botón sigue, para hacerlo ya)
+
+**Contexto:** el usuario pidió que las actualizaciones locales sean automáticas, con cuidado de que no pasen mientras la IA trabaja o espera. Hasta ahora, con commits sin armar aparecía **Actualizar** y había que tocarlo: armaba y reiniciaba en el acto.
+
+**Decisión:** Iridium arma solo cuando hay commits sin armar, ningún archivo seguido por git está modificado sin commitear (los nuevos sin seguir, como las respuestas, no cuentan) y la IA del código de Iridium lleva un minuto sin trabajar ni esperar algo de fondo. Con la versión lista, se reinicia solo cuando ninguna IA de ningún proyecto trabaja ni espera lo que dejó de fondo y la PC (no solo Iridium) lleva 3 minutos sin teclado ni mouse; si no se da, entra al cerrar, como siempre. No reintenta solo un armado que falló hasta que haya otro commit, no arma lo que `pnpm volver` dejó afuera (`release/retenido.json`) hasta que haya otro commit, y no reintenta sola una versión que no entró. **Actualizar** sigue para hacerlo ya. Las pruebas lo apagan (`IRIDIUM_ACTUALIZAR_SOLO=no`) o lo aceleran (un número).
+
+**Motivo:** armar no corta nada (la app sigue abierta), pero tomar el código a mitad de un cambio sí: por eso espera a que no haya cambios sin commitear y a que la IA de Iridium esté libre, lo que también cubre una IA que trabaje desde fuera de Iridium. Reiniciar corta las sesiones y la vista: solo pasa cuando nadie trabaja ni espera y nadie usa la PC; la PC quieta tres minutos es la señal más simple de que el usuario no está mirando, y la vista vuelve igual (el proyecto abierto, la ventana y los borradores se guardan).
+
+**Consecuencias:** las versiones entran solas, sin tocar nada. Si el usuario está usando la PC con una versión lista, entra al rato de dejarla o al cerrar Iridium. Si sale mal, `pnpm volver` sigue igual y la versión que falla ya no se vuelve a armar sola. La copia compartida también se reinicia sola con la versión bajada de GitHub, con las mismas condiciones.

@@ -6,6 +6,8 @@ import { defineConfig } from '@playwright/test'
 process.env.IRIDIUM_OCULTA ??= '1'
 // Los enlaces a internet no abren el navegador del usuario: la app los anota y la prueba los mira.
 process.env.IRIDIUM_NAVEGADOR = 'falso'
+// Actualizar no arma ni reinicia solo (T-67): las pruebas que lo miran lo prenden con una espera corta.
+process.env.IRIDIUM_ACTUALIZAR_SOLO ??= 'no'
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 60_000,

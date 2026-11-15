@@ -84,14 +84,15 @@ export async function leerFalloArmado(release: string): Promise<SinArmar['fallo'
 export async function leerSinArmar(
   codigo: string,
   release: string,
-): Promise<Omit<SinArmar, 'armando' | 'desde' | 'fallo'>> {
+): Promise<Omit<SinArmar, 'armando' | 'desde' | 'fallo' | 'retenido'>> {
   const ultimo = await git(codigo, ['log', '-1', '--format=%h%n%s'])
   const main = await git(codigo, ['rev-parse', '--short', 'main'])
-  if (!ultimo || !main) return { carpeta: codigo, pendiente: null }
+  if (!ultimo || !main) return { carpeta: codigo, pendiente: null, limpio: false }
+  const limpio = (await git(codigo, ['status', '--porcelain', '--untracked-files=no'])) === ''
   const [commit = '', mensaje = ''] = ultimo.split('\n')
   const lista = await leerVersionNueva(release)
   const armado = commit === main || lista?.commit === commit
-  return { carpeta: codigo, pendiente: armado ? null : { commit, mensaje } }
+  return { carpeta: codigo, pendiente: armado ? null : { commit, mensaje }, limpio }
 }
 
 export class VigiaSinArmar {
@@ -109,7 +110,15 @@ export class VigiaSinArmar {
     private readonly release: string,
     private readonly comando: string = process.env.IRIDIUM_ARMAR ?? COMANDO,
   ) {
-    this.actual = { carpeta: codigo, pendiente: null, armando: false, desde: null, fallo: null }
+    this.actual = {
+      carpeta: codigo,
+      pendiente: null,
+      armando: false,
+      desde: null,
+      fallo: null,
+      limpio: false,
+      retenido: null,
+    }
   }
 
   ultimo(): SinArmar {
@@ -120,8 +129,10 @@ export class VigiaSinArmar {
     const leido = await leerSinArmar(this.codigo, this.release)
     const marca = await marcaDeArmado(this.release)
     const armando = marca?.estado === 'vivo' || Date.now() - this.lanzado < ARRANQUE_MS
+    const retenido = (await leerJson(join(this.release, 'retenido.json')))?.commit
     const s: SinArmar = {
       ...leido,
+      retenido: typeof retenido === 'string' ? retenido : null,
       armando,
       desde: armando ? ((marca?.estado === 'vivo' ? marca.desde : null) ?? this.lanzado) : null,
       fallo: armando ? null : await leerFalloArmado(this.release),

@@ -88,6 +88,17 @@ const Config = z.object({
   tono: z.string().max(LARGO_AJUSTES.tono).catch(''),
   /** El tamaño de todo, con Ctrl+= y Ctrl+- (Defecto 17): 1 = normal. */
   zoom: z.number().min(0.5).max(3).catch(1),
+  /** La ventana como quedó al cerrar (T-66): su lugar y tamaño sin maximizar, y si estaba maximizada. */
+  ventana: z
+    .object({
+      x: z.number().int(),
+      y: z.number().int(),
+      width: z.number().int().positive(),
+      height: z.number().int().positive(),
+      maximizada: z.boolean(),
+    })
+    .nullable()
+    .catch(null),
 })
 export type Config = z.infer<typeof Config>
 
@@ -106,6 +117,7 @@ const PREDETERMINADA: Config = {
   nombreIa: '',
   tono: '',
   zoom: 1,
+  ventana: null,
 }
 
 export function preferenciasDe(c: Config): Preferencias {

@@ -4,11 +4,25 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { estadoActualizar, tiempoArmando } from '../src/compartido/actualizar'
+import {
+  actualizarSolo,
+  estadoActualizar,
+  queHacerSolo,
+  SOLO,
+  tiempoArmando,
+} from '../src/compartido/actualizar'
 import type { SinArmar, VersionNueva } from '../src/compartido/puente'
 import { leerFalloArmado, marcaDeArmado, VigiaSinArmar } from '../src/main/infra/sin-armar'
 
-const base: SinArmar = { carpeta: 'C:\\Iridium', pendiente: null, armando: false, desde: null, fallo: null }
+const base: SinArmar = {
+  carpeta: 'C:\\Iridium',
+  pendiente: null,
+  armando: false,
+  desde: null,
+  fallo: null,
+  limpio: true,
+  retenido: null,
+}
 const pendiente = { commit: 'abc1234', mensaje: 'Orden: Actualizar' }
 const version: VersionNueva = {
   fecha: '2026-11-06T14:05:00',
@@ -82,6 +96,52 @@ describe('el estado del botón', () => {
     expect(tiempoArmando(null, 0)).toBe('')
     expect(tiempoArmando(0, 30_000)).toBe('menos de un minuto')
     expect(tiempoArmando(0, 12 * 60_000 + 5)).toBe('12 min')
+  })
+})
+
+describe('Actualizar solo (T-67)', () => {
+  const libre = { iaIridiumOcupada: false, algunaOcupada: false, fallido: null }
+
+  it('arma con commits sin armar, sin cambios a medias y la IA de Iridium libre', () => {
+    expect(queHacerSolo({ ...libre, sinArmar: { ...base, pendiente }, version: null })).toBe('armar')
+    // Con una versión lista vieja y un commit nuevo, arma antes de reiniciar.
+    expect(queHacerSolo({ ...libre, sinArmar: { ...base, pendiente }, version })).toBe('armar')
+  })
+
+  it('no arma con cambios sin commitear, con la IA de Iridium trabajando o esperando, ni mientras arma', () => {
+    const s = { ...base, pendiente }
+    expect(queHacerSolo({ ...libre, sinArmar: { ...s, limpio: false }, version: null })).toBeNull()
+    expect(queHacerSolo({ ...libre, iaIridiumOcupada: true, sinArmar: s, version: null })).toBeNull()
+    expect(queHacerSolo({ ...libre, sinArmar: { ...s, armando: true }, version })).toBeNull()
+  })
+
+  it('no reintenta solo el commit que ya falló; con otro commit, sí', () => {
+    const fallo = { fecha: '2026-11-15T10:00:00', motivo: 'No se pudo armar.' }
+    const s = { ...base, pendiente, fallo }
+    expect(queHacerSolo({ ...libre, fallido: 'abc1234', sinArmar: s, version: null })).toBeNull()
+    expect(queHacerSolo({ ...libre, fallido: 'zzz0000', sinArmar: s, version: null })).toBe('armar')
+  })
+
+  it('no arma lo que `pnpm volver` dejó afuera; con un commit nuevo, sí', () => {
+    const s = { ...base, pendiente, retenido: 'abc1234' }
+    expect(queHacerSolo({ ...libre, sinArmar: s, version: null })).toBeNull()
+    expect(queHacerSolo({ ...libre, sinArmar: { ...s, retenido: 'zzz0000' }, version: null })).toBe('armar')
+  })
+
+  it('reinicia con la versión lista solo si ninguna IA trabaja ni espera, y no si ya no entró una vez', () => {
+    expect(queHacerSolo({ ...libre, sinArmar: base, version })).toBe('reiniciar')
+    expect(queHacerSolo({ ...libre, sinArmar: null, version })).toBe('reiniciar')
+    expect(queHacerSolo({ ...libre, algunaOcupada: true, sinArmar: base, version })).toBeNull()
+    const noEntro = { fecha: '2026-11-06T18:30:00', motivo: 'Windows no soltó la carpeta.' }
+    expect(queHacerSolo({ ...libre, sinArmar: base, version: { ...version, noEntro } })).toBeNull()
+    expect(queHacerSolo({ ...libre, sinArmar: base, version: null })).toBeNull()
+  })
+
+  it('prendido salvo con «no»; un número es la espera de las pruebas, sin esperar a la PC quieta', () => {
+    expect(actualizarSolo(undefined)).toEqual(SOLO)
+    expect(actualizarSolo('no')).toBeNull()
+    expect(actualizarSolo('500')).toEqual({ esperaMs: 500, quietoSeg: 0 })
+    expect(actualizarSolo('cualquier cosa')).toEqual(SOLO)
   })
 })
 

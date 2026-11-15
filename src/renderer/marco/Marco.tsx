@@ -1,9 +1,9 @@
 // Lo que está siempre (04-ux.md › W-1, D-041), como el marco de las maquetas (DI-I3, tanda 4): arriba el inicio y la
 // barra de proyectos, a la izquierda la de secciones (cambia entre el inicio y el proyecto abierto) y abajo la de estado.
 import { type ReactNode, useEffect, useState } from 'react'
-import { estadoActualizar, tiempoArmando } from '../../compartido/actualizar'
+import { estadoActualizar, queHacerSolo, tiempoArmando } from '../../compartido/actualizar'
 import { textoDeCuenta } from '../../compartido/cuentas'
-import type { EstadoMotor, FichaSesion } from '../../compartido/puente'
+import type { ActualizarSolo, EstadoMotor, FichaSesion } from '../../compartido/puente'
 import { tarjetaDe, totalBandeja, usarEstado, vistaDe } from '../estado'
 import { SECCIONES, SECCIONES_PROYECTO, type SeccionDeProyecto } from '../secciones'
 import { mismaRuta } from '../secciones/proyecto/enlaces'
@@ -320,6 +320,8 @@ function SenalClaude({ motor }: { motor: EstadoMotor }) {
  * Actualizar (R-12, T-46, 04-ux.md › W-1 y F-7): un solo botón junta «Armar» y «Reiniciar ahora». Con una versión
  * lista, reinicia (con F-6 si hay sesiones trabajando); sin ella, arma sin consola a la vista y reinicia sola al
  * terminar. Mientras la IA del código de Iridium trabaja, no arma: tomaría su trabajo a mitad de camino.
+ * Además lo hace solo (T-67, `queHacerSolo`): arma cuando los cambios están commiteados y la IA de Iridium lleva un rato
+ * libre, y reinicia cuando ninguna IA trabaja ni espera y la PC está quieta unos minutos.
  */
 function Actualizar() {
   const sinArmar = usarEstado((s) => s.sinArmar)
@@ -330,6 +332,11 @@ function Actualizar() {
     ),
   )
   const algunaTrabajando = usarEstado((s) => s.fichas.some((f) => f.estado === 'trabajando'))
+  const ocupada = (f: FichaSesion) => f.estado === 'trabajando' || !!f.fondo?.length
+  const iaIridiumOcupada = usarEstado((s) =>
+    s.fichas.some((f) => sinArmar !== null && ocupada(f) && mismaRuta(f.ruta, sinArmar.carpeta)),
+  )
+  const algunaOcupada = usarEstado((s) => s.fichas.some(ocupada))
   const reiniciando = usarEstado((s) => s.reiniciando)
   const reiniciarAhora = usarEstado((s) => s.reiniciarAhora)
   const pedido = usarEstado((s) => s.actualizarPedido)
@@ -338,6 +345,46 @@ function Actualizar() {
   const [error, setError] = useState<string | null>(null)
   const [ahora, setAhora] = useState(() => Date.now())
   const estado = estadoActualizar({ sinArmar, version, iaTrabajando })
+  const [solo, setSolo] = useState<ActualizarSolo | null>(null)
+  /** El commit que se armó solo: si falla, no se reintenta solo hasta que haya otro. */
+  const [armadoSolo, setArmadoSolo] = useState<string | null>(null)
+  const accion = solo
+    ? queHacerSolo({
+        sinArmar,
+        version,
+        iaIridiumOcupada,
+        algunaOcupada,
+        fallido: sinArmar?.fallo ? armadoSolo : null,
+      })
+    : null
+  const pendienteCommit = sinArmar?.pendiente?.commit ?? null
+
+  useEffect(() => {
+    void window.iridium.actualizarSolo().then(setSolo)
+  }, [])
+  // Armar solo: si sigue así todo el rato de espera (la IA no vuelve a trabajar ni llega otro commit).
+  useEffect(() => {
+    if (accion !== 'armar' || !solo || pedido) return
+    const t = setTimeout(() => {
+      setArmadoSolo(pendienteCommit)
+      void window.iridium.armar()
+    }, solo.esperaMs)
+    return () => clearTimeout(t)
+  }, [accion, solo, pedido, pendienteCommit])
+  // Reiniciar solo: se mira cada tanto si la PC está quieta; con alguien usándola, se espera.
+  useEffect(() => {
+    if (accion !== 'reiniciar' || !solo || reiniciando || alTerminar) return
+    let vivo = true
+    const mirar = async () => {
+      const quieta = (await window.iridium.segundosSinUso()) >= solo.quietoSeg
+      if (vivo && quieta) reiniciarAhora()
+    }
+    const t = setInterval(() => void mirar(), Math.min(15_000, Math.max(250, solo.esperaMs)))
+    return () => {
+      vivo = false
+      clearInterval(t)
+    }
+  }, [accion, solo, reiniciando, alTerminar, reiniciarAhora])
 
   // Pedido con Actualizar: apareció la versión que se armó (una lista distinta de la que había) y el script terminó
   // (después de dejar la versión lista todavía sube `main`), se reinicia.
@@ -397,7 +444,14 @@ function Actualizar() {
     )
   if (estado.tipo === 'armando')
     return (
-      <span className="it actualizar-it" title="La app se sigue usando; al terminar, se reinicia sola">
+      <span
+        className="it actualizar-it"
+        title={
+          pedido
+            ? 'La app se sigue usando; al terminar, se reinicia sola'
+            : 'La app se sigue usando; la versión nueva entra sola cuando ninguna IA trabaje y no uses la PC un rato'
+        }
+      >
         <span className="armando">
           <Icono nombre="sync" gira />
           Actualizando…
@@ -416,7 +470,13 @@ function Actualizar() {
         type="button"
         className="actualizar"
         disabled={bloqueado || reiniciando}
-        title={bloqueado ? 'Espera a que la IA de Iridium termine' : estado.detalle}
+        title={
+          bloqueado
+            ? 'Espera a que la IA de Iridium termine'
+            : solo
+              ? `${estado.detalle}. Entra sola cuando ninguna IA trabaje y no uses la PC un rato; Actualizar la pone ya`
+              : estado.detalle
+        }
         onClick={actualizar}
       >
         <Icono nombre={reiniciando ? 'sync' : 'bajar'} gira={reiniciando} />

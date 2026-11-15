@@ -5,13 +5,14 @@
 ## Cómo se trabaja en operación
 - **Errores y ajustes que reportás:** la IA los clasifica sola. Si rompen el uso o son de lo que está en curso, se arreglan en el momento (qué pasa, qué tendría que pasar, causa, arreglo y una prueba) y se arma; si no, van a `trabajo.md` como `T-n` `pendiente`. Se reportan en el chat del proyecto, en una `Q-n` o con la Revisión (F8) sobre la misma Iridium.
 - **Qué se mira en el uso diario:** las preguntas periódicas de la guía (qué usás más y qué casi nunca, qué molesta, qué errores aparecieron, qué cambió del ecosistema, si siguen valiendo los objetivos) y las señales de que algo no funciona de `02-definicion.md` › Criterios de éxito: volver a VS Code para conversar con la IA, Pendientes con preguntas de más o de menos, un proyecto frenado sin que se note.
-- **Cada versión:** se arma con **Armar** o `pnpm actualizar` y entra al cerrar Iridium; si sale mal, `pnpm volver` (`09-lanzamiento.md` › Vuelta atrás). Las que marcan algo van a `09-lanzamiento.md` › Historial de lanzamientos.
+- **Cada versión:** Iridium la arma y la pone solo cuando nadie la usa (D-122), o ya con **Actualizar** o `pnpm actualizar`; si sale mal, `pnpm volver` (`09-lanzamiento.md` › Vuelta atrás). Las que marcan algo van a `09-lanzamiento.md` › Historial de lanzamientos.
 - **Mantenimiento:** en cada sesión de operación, `pnpm audit` y `pnpm outdated`. Los parches de la misma versión se suben con las pruebas completas; las versiones mayores (Electron, Vite) van como un `T-n` propio. Si cambia algo de Claude Code o del SDK que rompe el motor, se vuelve al hito 3 para esa área.
 - **Revisión de la documentación:** con cada módulo nuevo o cambio grande, que `docs/` diga lo que hace la app (y `DESIGN.md`, con `impeccable` › document).
 
 ## Señales recogidas
 | Fecha | Fuente | Observación |
 |---|---|---|
+| 2026-11-15 | Pedido del usuario | La ventana vuelve maximizada o como estaba (T-66) y las actualizaciones locales son automáticas sin cortar a la IA (T-67, D-122): hechas; falta tu prueba (Q-167) |
 | 2026-11-02 | Hito 8 (Q-108) | Tu recorrido completo sin problemas; los defectos que quedan abiertos son los dos menores de abajo |
 | 2026-11-04 | Q-117 | Faltaba lo de VS Code para crear el repositorio y publicarlo en GitHub: ajuste chico (D-081), construido; falta probarlo con GitHub de verdad (Q-118) |
 | 2026-11-04 | Pedido del usuario | Compartir Iridium ya y que las versiones nuevas le lleguen a la otra persona: repo nuevo (D-084, hecho), versiones en GitHub que la copia baja sola (D-085, hecho y probado); dónde publicar, en Q-123 |

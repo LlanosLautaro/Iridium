@@ -1,8 +1,9 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
 import { mkdir, readdir, rename } from 'node:fs/promises'
 import { basename, dirname, join, normalize } from 'node:path'
-import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { type BrowserWindow, dialog, ipcMain, powerMonitor, shell } from 'electron'
 import { z } from 'zod'
+import { actualizarSolo } from '../../compartido/actualizar'
 import {
   type AccesoVersiones,
   CANALES,
@@ -421,6 +422,8 @@ export function registrarPuente(s: Servicios): Puente {
     s.registro.escribir('Actualizar: arma')
     return s.sinArmar.armar()
   })
+  ipcMain.handle(CANALES.actualizarSolo, () => actualizarSolo(process.env.IRIDIUM_ACTUALIZAR_SOLO))
+  ipcMain.handle(CANALES.segundosSinUso, () => powerMonitor.getSystemIdleTime())
   ipcMain.handle(CANALES.cancelarArmado, async () => {
     s.registro.escribir('Actualizar: Cancelar')
     await s.sinArmar?.cancelar()

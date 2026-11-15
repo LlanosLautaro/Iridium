@@ -256,6 +256,25 @@ export interface SinArmar {
    * proceso muerto: se cerró la consola). Se borra al volver a armar.
    */
   fallo: { fecha: string; motivo: string } | null
+  /**
+   * Sin cambios a medio hacer: ningún archivo seguido por git está modificado sin commitear (los nuevos sin seguir, como
+   * las respuestas, no cuentan). Actualizar solo (T-67) arma únicamente así.
+   */
+  limpio: boolean
+  /**
+   * El commit que `pnpm volver` dejó afuera porque fallaba (`release/retenido.json`): Actualizar solo (T-67) no lo arma
+   * hasta que haya otro commit. null si no hay.
+   */
+  retenido: string | null
+}
+
+/**
+ * Actualizar solo (T-67): cuánto espera con los cambios quietos y la IA libre antes de armar, y cuántos segundos sin
+ * usar la PC hacen falta para reiniciar. null: apagado (`IRIDIUM_ACTUALIZAR_SOLO=no`, las pruebas).
+ */
+export interface ActualizarSolo {
+  esperaMs: number
+  quietoSeg: number
 }
 
 /** Si Claude Code tiene sesión iniciada y usa la suscripción (05-arquitectura.md › La interfaz `Motor`, `verificar`). */
@@ -776,6 +795,8 @@ export const CANALES = {
   sinArmar: 'app:sin-armar',
   sinArmarCambio: 'app:sin-armar-cambio',
   armar: 'app:armar',
+  actualizarSolo: 'app:actualizar-solo',
+  segundosSinUso: 'app:segundos-sin-uso',
   cancelarArmado: 'app:cancelar-armado',
   verConsolaArmado: 'app:ver-consola-armado',
   accesoVersiones: 'app:acceso-versiones',
@@ -875,6 +896,10 @@ export interface ApiIridium {
   armar(): Promise<{ tipo: 'ok'; mensaje: string } | { tipo: 'error'; mensaje: string }>
   /** Cancelar el armado (W-1): lo corta; la app que se usa sigue igual. */
   cancelarArmado(): Promise<void>
+  /** Si Actualizar arma y reinicia solo (T-67), y con qué esperas; null, apagado. */
+  actualizarSolo(): Promise<ActualizarSolo | null>
+  /** Cuántos segundos lleva la PC sin que se toque el teclado ni el mouse (en cualquier programa). */
+  segundosSinUso(): Promise<number>
   /** Ver la consola (W-1): abre lo que escribió el último armado. */
   verConsolaArmado(): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>
   /** Si la copia compartida ve las versiones (Q-123); null si no es una copia compartida. */

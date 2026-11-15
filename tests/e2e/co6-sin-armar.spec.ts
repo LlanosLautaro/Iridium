@@ -157,6 +157,36 @@ test('si el armado falla: «No se pudo actualizar» con el motivo, Reintentar y 
   await a.close()
 })
 
+test('solo: con la IA libre arma sin tocar nada y, con la versión lista y la PC quieta, reinicia (T-67)', async () => {
+  test.setTimeout(120_000)
+  const { app: a, win } = await abrir({ IRIDIUM_ACTUALIZAR_SOLO: '500' })
+  await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)
+  const barra = win.locator('.actualizar-it')
+
+  // Con un cambio sin commitear (la IA a mitad de camino) no arma, aunque haya un commit nuevo.
+  await commit('T-67: Actualizar solo')
+  const hash = git('rev-parse', '--short', 'HEAD')
+  await writeFile(join(codigo, 'cambio.txt'), 'a medias')
+  await expect(barra.getByRole('button', { name: 'Actualizar' })).toBeVisible({ timeout: 15_000 })
+  await win.waitForTimeout(3000)
+  await expect(barra).not.toContainText('Actualizando…')
+
+  // Commiteado, arma solo; con la versión lista, se reinicia solo con ella.
+  git('-c', 'user.name=Prueba', '-c', 'user.email=prueba@ejemplo', 'commit', '-qam', 'T-67: listo')
+  const ultimo = git('rev-parse', '--short', 'HEAD')
+  expect(ultimo).not.toBe(hash)
+  await expect(barra).toContainText('Actualizando…', { timeout: 20_000 })
+  const cerrada = a.waitForEvent('close', { timeout: 70_000 })
+  await versionLista(ultimo)
+  await cerrada
+  await expect
+    .poll(async () => readdir(join(release, 'win-unpacked')).catch(() => []), { timeout: 20_000 })
+    .toEqual(['Iridium.exe'])
+  expect(await readFile(join(release, 'actualizacion.log'), 'utf8')).toContain(
+    `Versión nueva puesta: ${ultimo}`,
+  )
+})
+
 test('mientras la IA del código de Iridium trabaja, Actualizar queda deshabilitado', async () => {
   test.setTimeout(90_000)
   await commit('CO-I6')

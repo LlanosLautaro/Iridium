@@ -270,3 +270,10 @@ Con D-115 el usuario tuvo que pedirle a mano a otro proyecto que pasara su desig
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: pregunta del usuario, Q-156
 impeccable (licencia Apache 2.0) trae guías para limpiar una pantalla (quitar lo que sobra, bajar el ruido, aclarar los textos, la tipografía) y un piso de calidad con comprobaciones (contraste, espacios, letra). Se pueden pasar en nuestras palabras a `referencias/06-ui.md` del framework, con la atribución que pide la licencia. Q-156 (A, D-113): hecho el 2026-11-09 en `referencias/06-ui.md` › Repaso antes de mostrar una maqueta.
 
+## T-66 — La ventana vuelve como quedó
+Estado: hecho · Fecha: 2026-11-15 · Origen: pedido del usuario
+Que Iridium recuerde si estaba maximizada o en ventana y vuelva así al abrir. Hecho el 2026-11-15: al cerrar se guardan en `config.json` (`ventana`) el lugar y el tamaño sin maximizar y si estaba maximizada; al abrir vuelve igual. Si ese lugar ya no se ve (se desconectó un monitor), abre con el tamaño de siempre, maximizada si lo estaba. Las pruebas (ventana oculta) no lo guardan ni lo usan. Pruebas: `tests/t66-ventana.test.ts`.
+
+## T-67 — Actualizar solo, sin cortar a la IA
+Estado: hecho · Fecha: 2026-11-15 · Origen: pedido del usuario
+Que las actualizaciones locales sean automáticas, sin hacerse mientras la IA trabaja o espera. Hecho el 2026-11-15 (D-122): con commits sin armar, ningún archivo a medio cambiar y la IA de Iridium libre un minuto, arma sola; con la versión lista, se reinicia sola cuando ninguna IA trabaja ni espera lo que dejó de fondo y la PC lleva 3 minutos sin usarse. El botón sigue para hacerlo ya. No reintenta solo un armado que falló ni arma lo que `pnpm volver` dejó afuera (`release/retenido.json`) hasta que haya otro commit; una versión que no entró tampoco se reintenta sola. Pruebas: `tests/or2-actualizar.test.ts`, `tests/co6-sin-armar.test.ts` y `co6-sin-armar.spec.ts` › solo.

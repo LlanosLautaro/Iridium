@@ -5,12 +5,13 @@ import { createRequire } from 'node:module'
 import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, normalize } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { app, BrowserWindow, Menu, protocol, session, shell, webContents } from 'electron'
+import { app, BrowserWindow, Menu, protocol, screen, session, shell, webContents } from 'electron'
 import { CANALES } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
 import { elegirComplementos } from './core/complementos'
 import { ENCABEZADO_CONTROL } from './core/control'
+import { comoAbrir, type VentanaGuardada } from './core/ventana'
 import { zoomSiguiente } from './core/zoom'
 import { ArchivoBorradores } from './infra/borradores'
 import { ArchivoConfig } from './infra/config'
@@ -282,13 +283,24 @@ async function arrancarRevision(puente: Puente): Promise<Receptor | null> {
   return receptor
 }
 
-function crearVentana(puente: Puente): void {
+const MINIMO = { width: 1024, height: 640 }
+
+function crearVentana(puente: Puente, guardada: VentanaGuardada | null): void {
   const colores = COLORES
+  // Como quedó al cerrar (T-66); oculta (las pruebas), siempre fuera de la pantalla y sin maximizar.
+  const como = oculta
+    ? { rect: null, maximizada: false }
+    : comoAbrir(
+        guardada,
+        screen.getAllDisplays().map((d) => d.workArea),
+        MINIMO,
+      )
   const v = new BrowserWindow({
     width: 1440,
     height: 900,
-    minWidth: 1024,
-    minHeight: 640,
+    ...(como.rect ?? {}),
+    minWidth: MINIMO.width,
+    minHeight: MINIMO.height,
     title: 'Iridium',
     backgroundColor: colores.fondo,
     show: false,
@@ -313,9 +325,14 @@ function crearVentana(puente: Puente): void {
   // El tamaño guardado (Defecto 17); Ctrl+= y los demás los atiende la ventana, con sus otros atajos.
   v.webContents.on('did-finish-load', () => ponerZoom(zoom))
   // Oculta, se «muestra» sin quitarle el foco a lo que el usuario está usando: no se ve, pero se dibuja.
-  v.once('ready-to-show', () => (oculta ? v.showInactive() : v.show()))
+  v.once('ready-to-show', () => {
+    if (oculta) return v.showInactive()
+    if (como.maximizada) v.maximize()
+    v.show()
+  })
   // Cerrar con sesiones trabajando se confirma en la ventana (F-6); sin sesiones, se cierra.
   v.on('close', (e) => {
+    guardarVentana(v)
     if (cerrarSinPreguntar) return
     const trabajando = puente.enMarcha()
     if (trabajando.length === 0) return
@@ -350,6 +367,13 @@ function crearVentana(puente: Puente): void {
   const urlDesarrollo = process.env.ELECTRON_RENDERER_URL
   if (urlDesarrollo) void v.loadURL(urlDesarrollo)
   else void v.loadFile(join(import.meta.dirname, '../renderer/index.html'))
+}
+
+/** Guarda cómo está la ventana (T-66): el lugar sin maximizar, para volver a él al desmaximizar. Oculta, no. */
+function guardarVentana(v: BrowserWindow): void {
+  if (oculta || v.isDestroyed() || v.isMinimized() || v.isFullScreen()) return
+  const r = v.getNormalBounds()
+  void config.guardar({ ventana: { ...r, maximizada: v.isMaximized() } }).catch(() => {})
 }
 
 /** Si en la maqueta se está escribiendo: un campo, o la tarjeta del comentario (la capa de la extensión). */
@@ -495,7 +519,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
     Menu.setApplicationMenu(null)
     protocol.handle(ESQUEMA_MAQUETA, (pedido) => maquetas.responder(pedido.url))
     filtrarPedidosDeMaquetas()
-    zoom = (await config.leer()).zoom
+    const leida = await config.leer()
+    zoom = leida.zoom
     const compartida = await actualizaciones
     if (release && !compartida) vigiaSinArmar = new VigiaSinArmar(dirname(release), release)
     const vigiaGithub =
@@ -549,7 +574,7 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         reiniciar = false
       },
     })
-    crearVentana(puente)
+    crearVentana(puente, leida.ventana)
     const revision = arrancarRevision(puente)
     vigiaGithub?.vigilar()
     app.on('window-all-closed', () => app.quit())
