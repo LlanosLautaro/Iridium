@@ -277,3 +277,7 @@ Que Iridium recuerde si estaba maximizada o en ventana y vuelva así al abrir. H
 ## T-67 — Actualizar solo, sin cortar a la IA
 Estado: hecho · Fecha: 2026-11-15 · Origen: pedido del usuario
 Que las actualizaciones locales sean automáticas, sin hacerse mientras la IA trabaja o espera. Hecho el 2026-11-15 (D-122): con commits sin armar, ningún archivo a medio cambiar y la IA de Iridium libre un minuto, arma sola; con la versión lista, se reinicia sola cuando ninguna IA trabaja ni espera lo que dejó de fondo y la PC lleva 3 minutos sin usarse. El botón sigue para hacerlo ya. No reintenta solo un armado que falló ni arma lo que `pnpm volver` dejó afuera (`release/retenido.json`) hasta que haya otro commit; una versión que no entró tampoco se reintenta sola. Pruebas: `tests/or2-actualizar.test.ts`, `tests/co6-sin-armar.test.ts` y `co6-sin-armar.spec.ts` › solo.
+
+## T-68 — Medir si conviene un chat nuevo o seguir en el mismo
+Estado: nueva · Fecha: 2026-11-15 · Origen: pregunta del usuario, Q-168
+Con los registros de Claude Code se midió cuánto cuesta arrancar un chat y cuánto cuesta cada paso según el contexto (`research/costo-de-contexto.md`). Chat nuevo conviene cuando el viejo pasó ~200 mil o la caché venció (más de una hora); no para tareas chicas. Volver a medir hacia el 2026-11-29 con el ajuste que elija el usuario en Q-168 y comparar el costo por iteración cerrada.

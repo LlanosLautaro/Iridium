@@ -41,9 +41,14 @@
 Antes, el frente **Orden** (D-091): OR-I1 a OR-I3 hechas y probadas; OR-I4 (el Mapa con frentes y Skills › Framework) construida, espera tu prueba (Q-146). **Nuevo proyecto** arma solo la plantilla básica, sin la IA (D-101).
 Compartir está publicado; falta la invitación (Q-126).
 Pedidos tuyos del 2026-11-15, hechos: la ventana vuelve maximizada o como estaba (T-66), y Actualizar arma y reinicia solo cuando ninguna IA trabaja ni espera y no usás la PC unos minutos (T-67, D-122); espera tu prueba, Q-167.
+Medido el 2026-11-15: cuánto conviene un chat nuevo frente a seguir en el mismo (T-68, `research/costo-de-contexto.md`); el ajuste a probar es Q-168.
 Arreglado el 2026-11-14: las pruebas automáticas ya no abren example.com en tu navegador (la prueba de seguridad lo pedía y la app lo mandaba afuera); ahora la app solo anota el enlace y la prueba verifica que lo habría abierto (`IRIDIUM_NAVEGADOR=falso`).
 
 ## Preguntas abiertas
+- **Q-168 — ¿Qué ajuste probamos para gastar menos contexto?**
+  Tipo: decisión
+  Contexto: `research/costo-de-contexto.md` (T-68). Chat nuevo conviene cuando el viejo pasó ~200 mil o pasó más de una hora; para algo chico conviene seguir. Releer la conversación es el 62 % del gasto. Se vuelve a medir hacia el 2026-11-29.
+  Opciones: A) Regla por tamaño y tiempo más arranque liviano (recomendada: ataca lo que más pesa y no toca código) · B) Solo la regla por tamaño y tiempo · C) Además, que Iridium avise cuándo conviene un chat nuevo (código, después de Diseño) · D) Dejarlo como está y solo volver a medir
 - **Q-167 — Probá la ventana como quedó y Actualizar solo**
   Tipo: prueba
   Contexto: T-66 y T-67 (D-122). La versión que tenés todavía no se actualiza sola: tocá **Actualizar** abajo una última vez. Desde esa, las siguientes entran solas.
