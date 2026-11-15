@@ -38,4 +38,12 @@ Para comparar, todo se pasa a «tokens de entrada equivalentes» con los pesos d
 3. **Que Iridium lo mida y lo muestre** (el medidor de contexto ya existe): avisar «conviene un chat nuevo» cuando el contexto pasa el umbral o la caché venció.
 
 ## Cómo volver a medir
-Mismo cálculo sobre los `.jsonl` con fecha posterior al ajuste, y comparar: costo medio por paso, contexto al terminar, costo del arranque (10 primeros pasos) y costo total por commit o por iteración cerrada (lo que de verdad importa: cuánto cuesta avanzar, no cuánto cuesta un paso).
+`node --experimental-strip-types tools/medir-uso.ts` (detalle en `herramientas-ia.md`). Guarda un resumen por conversación en `research/uso/sesiones.json` cada vez que corre: Claude Code borra sus registros de más de 30 días y sin ese resumen se perdería la línea de base (los primeros, del 2026-10-21, se borran desde el 2026-11-20). Después compara dos períodos del mismo largo antes y después del corte (por omisión, el commit de D-123: 2026-11-15 13:22).
+
+Qué mirar, de más confiable a menos:
+1. **Uso por paso** y **contexto al terminar**: lo que la regla cambia directamente; casi no dependen del tipo de trabajo.
+2. **Arranque** (10 primeros pasos): lo que cambia el arranque liviano.
+3. **Uso por commit** y **por 100 líneas de código**: lo que importa (cuánto cuesta avanzar), pero engañan: una tanda de diseño con muchas pruebas a mano mueve pocas líneas, una refactorización mueve muchas, y un commit puede ser chico o enorme. Sirven para ver una tendencia grande, no un 10 %.
+4. **Uso por día con uso**: depende sobre todo de cuánto trabajaste ese día.
+
+El git de este repo empieza el 2026-11-04 (D-084): un período «antes» que empiece antes no cuenta todos los commits.

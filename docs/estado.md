@@ -40,7 +40,7 @@
 **Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 5 están probadas y sigue la 6, la Bandeja. Historia y detalle en `modulos/diseno/estado.md`.
 **Actualizar solo** (T-67, D-122) no armó solo al llegar un commit (Q-167) y lo pediste atado al uso de Iridium, no de la PC: se corrige antes de seguir. La ventana que vuelve como quedó (T-66) anda.
 Orden espera tu prueba de OR-I4 (Q-146); Compartir, la invitación (Q-126).
-Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se vuelve a medir hacia el 2026-11-29.
+Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
