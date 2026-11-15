@@ -11,6 +11,7 @@ import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
 import { elegirComplementos } from './core/complementos'
 import { ENCABEZADO_CONTROL } from './core/control'
+import { abrirDeFondo, UsoDeIridium } from './core/uso-iridium'
 import { comoAbrir, type VentanaGuardada } from './core/ventana'
 import { zoomSiguiente } from './core/zoom'
 import { ArchivoBorradores } from './infra/borradores'
@@ -40,6 +41,8 @@ const COLORES = { fondo: '#000000', barra: '#000000', simbolos: '#a3a3a3' }
 const ALTO_BARRA = 36
 /** El tamaño de la ventana (Defecto 17): la barra de Windows de arriba crece con él. */
 let zoom = 1
+/** Cuánto lleva Iridium sin usarse (T-67): Actualizar solo reinicia recién ahí. */
+const uso = new UsoDeIridium()
 
 // Las pruebas y las herramientas abren la ventana sin que se vea (D-072): fuera de la pantalla y de la barra de tareas.
 // Chromium deja de dibujar las ventanas que cree tapadas; ahí se lo saca, para que las capturas salgan.
@@ -285,7 +288,7 @@ async function arrancarRevision(puente: Puente): Promise<Receptor | null> {
 
 const MINIMO = { width: 1024, height: 640 }
 
-function crearVentana(puente: Puente, guardada: VentanaGuardada | null): void {
+function crearVentana(puente: Puente, guardada: VentanaGuardada | null, deFondo: boolean): void {
   const colores = COLORES
   // Como quedó al cerrar (T-66); oculta (las pruebas), siempre fuera de la pantalla y sin maximizar.
   const como = oculta
@@ -327,6 +330,12 @@ function crearVentana(puente: Puente, guardada: VentanaGuardada | null): void {
   // Oculta, se «muestra» sin quitarle el foco a lo que el usuario está usando: no se ve, pero se dibuja.
   v.once('ready-to-show', () => {
     if (oculta) return v.showInactive()
+    // Actualizar solo reinició con Iridium minimizada o detrás de otra ventana (T-67): vuelve minimizada, sin tapar
+    // lo que se está usando ni quitarle el foco; al abrirla, se maximiza si lo estaba.
+    if (deFondo) {
+      if (como.maximizada) v.once('restore', () => v.maximize())
+      return v.minimize()
+    }
     if (como.maximizada) v.maximize()
     v.show()
   })
@@ -343,7 +352,10 @@ function crearVentana(puente: Puente, guardada: VentanaGuardada | null): void {
     ventana = null
   })
   // Lo gastado en VS Code o claude.ai mientras tanto: el uso se relee al volver (Defecto 16).
-  v.on('focus', () => puente.alVolver())
+  v.on('focus', () => {
+    uso.marcar()
+    puente.alVolver()
+  })
 
   // Los enlaces externos se abren en el navegador, solo http y https; la ventana nunca navega a otra página.
   // Con IRIDIUM_NAVEGADOR=falso (las pruebas) no se abre: se anota en `enlacesAfuera`, para que la prueba lo vea.
@@ -568,13 +580,25 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       vistos: new ArchivoVistos(join(carpetaDatos, 'diseno.json')),
       reiniciarAhora: () => {
         reiniciar = true
-        ventana?.close()
+        // Sin Iridium al frente (Actualizar solo, T-67), la versión nueva abre minimizada.
+        const deFondo = !!ventana && !ventana.isFocused() && !oculta
+        void config
+          .guardar({ abrirDeFondo: deFondo ? Date.now() : null })
+          .catch(() => {})
+          .finally(() => ventana?.close())
       },
       cancelarCierre: () => {
         reiniciar = false
+        void config.guardar({ abrirDeFondo: null }).catch(() => {})
       },
+      segundosSinUso: () => uso.segundosSinUsar(),
     })
-    crearVentana(puente, leida.ventana)
+    // El teclado y el mouse en la ventana o en la maqueta de Diseño (su `webview`) cuentan como usar Iridium.
+    app.on('web-contents-created', (_e, wc) => wc.on('input-event', () => uso.marcar()))
+    for (const wc of webContents.getAllWebContents()) wc.on('input-event', () => uso.marcar())
+    const deFondo = abrirDeFondo(leida.abrirDeFondo)
+    if (leida.abrirDeFondo !== null) void config.guardar({ abrirDeFondo: null }).catch(() => {})
+    crearVentana(puente, leida.ventana, deFondo)
     const revision = arrancarRevision(puente)
     vigiaGithub?.vigilar()
     app.on('window-all-closed', () => app.quit())

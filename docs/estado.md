@@ -38,11 +38,19 @@
 
 ## En qué estamos ahora
 **Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 5 están probadas y sigue la 6, la Bandeja. Historia y detalle en `modulos/diseno/estado.md`.
-**Actualizar solo** (T-67, D-122) no armó solo al llegar un commit (Q-167) y lo pediste atado al uso de Iridium, no de la PC: se corrige antes de seguir. La ventana que vuelve como quedó (T-66) anda.
+**Actualizar solo** (T-67, D-122): sí armaba solo (lo que esperaba era el reinicio, atado a la PC quieta); ahora se reinicia con Iridium 3 minutos sin usar y, si no estaba al frente, vuelve minimizada. Falta tu prueba (Q-169).
 Orden espera tu prueba de OR-I4 (Q-146); Compartir, la invitación (Q-126).
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
+- **Q-169 — Probá Actualizar solo con Iridium sin usar**
+  Tipo: prueba · Frente: núcleo
+  Contexto: T-67 y D-122. Esta versión entra sola: no hace falta tocar nada. «Actualizando…» dura unos 20 segundos, así que es fácil no verlo.
+  - [ ] La próxima vez que la IA de Iridium deje un commit, sin tocar nada, entre 1 y 2 minutos después el botón **Actualizar** de abajo dice en su ayuda (pasando el mouse) que trae ese commit
+  - [ ] Mientras usás Iridium (escribís, hacés clic o movés el mouse en ella), no se reinicia
+  - [ ] Con Iridium minimizada o detrás de otra ventana unos 3 minutos (por ejemplo, mirando YouTube) y ninguna IA trabajando, se reinicia sola y vuelve minimizada en la barra de tareas, sin taparte lo que mirabas
+  - [ ] Al abrirla desde la barra de tareas, está en el mismo proyecto, y maximizada si lo estaba
+
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
   Contexto: tocá **Actualizar** abajo para tener esta versión. Detalle en `modulos/orden/estado.md` › OR-I4. No toques **Pasar al framework** en un proyecto tuyo salvo que quieras pasarlo de verdad: manda el pedido a su IA y gasta uso.
@@ -63,8 +71,8 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Corregir Actualizar solo (T-67): averiguar por qué no armó solo tras un commit y cambiar «la PC quieta 3 minutos» por «Iridium sin usar 3 minutos» (minimizada, de fondo o sin teclado ni mouse en su ventana); con su prueba, D-122 al día. Después, Diseño: DI-I3, tanda 6, la Bandeja.
-**Leer antes:** `trabajo.md` › T-67; `decisiones.md` › D-122; `src/compartido/actualizar.ts` y `src/main/ipc/puente.ts` (lo de Actualizar solo).
+Diseño: DI-I3, tanda 6 — la Bandeja pasa a las piezas (sin «Guardar a medias» ni «Se guarda en respuestas/…», T-58). Si llega Q-169 o Q-146, procesarlas antes (lo que falle de T-67 se corrige primero).
+**Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

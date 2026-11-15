@@ -1,7 +1,7 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
 import { mkdir, readdir, rename } from 'node:fs/promises'
 import { basename, dirname, join, normalize } from 'node:path'
-import { type BrowserWindow, dialog, ipcMain, powerMonitor, shell } from 'electron'
+import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { z } from 'zod'
 import { actualizarSolo } from '../../compartido/actualizar'
 import {
@@ -135,6 +135,8 @@ export interface Servicios {
   } | null
   /** Actualizar con una versión lista: cierra la ventana como siempre (F-6 pregunta si hay sesiones) y al salir abre la versión nueva. */
   reiniciarAhora: () => void
+  /** Cuántos segundos lleva Iridium sin que se toque el teclado ni el mouse en su ventana (T-67). */
+  segundosSinUso: () => number
   /** Se canceló la confirmación de F-6: si era para reiniciar, ya no. */
   cancelarCierre: () => void
   /** Ctrl+= / Ctrl+- / Ctrl+0 (Defecto 17): la ventana agranda, achica o vuelve al tamaño normal. */
@@ -423,7 +425,7 @@ export function registrarPuente(s: Servicios): Puente {
     return s.sinArmar.armar()
   })
   ipcMain.handle(CANALES.actualizarSolo, () => actualizarSolo(process.env.IRIDIUM_ACTUALIZAR_SOLO))
-  ipcMain.handle(CANALES.segundosSinUso, () => powerMonitor.getSystemIdleTime())
+  ipcMain.handle(CANALES.segundosSinUso, () => s.segundosSinUso())
   ipcMain.handle(CANALES.cancelarArmado, async () => {
     s.registro.escribir('Actualizar: Cancelar')
     await s.sinArmar?.cancelar()

@@ -99,6 +99,11 @@ const Config = z.object({
     })
     .nullable()
     .catch(null),
+  /**
+   * Actualizar solo reinició sin Iridium al frente (T-67): cuándo. Al volver abre minimizada, sin tapar lo que se
+   * esté usando; se borra al abrir.
+   */
+  abrirDeFondo: z.number().nullable().catch(null),
 })
 export type Config = z.infer<typeof Config>
 
@@ -118,6 +123,7 @@ const PREDETERMINADA: Config = {
   tono: '',
   zoom: 1,
   ventana: null,
+  abrirDeFondo: null,
 }
 
 export function preferenciasDe(c: Config): Preferencias {

@@ -270,7 +270,7 @@ export interface SinArmar {
 
 /**
  * Actualizar solo (T-67): cuánto espera con los cambios quietos y la IA libre antes de armar, y cuántos segundos sin
- * usar la PC hacen falta para reiniciar. null: apagado (`IRIDIUM_ACTUALIZAR_SOLO=no`, las pruebas).
+ * usar Iridium hacen falta para reiniciar. null: apagado (`IRIDIUM_ACTUALIZAR_SOLO=no`, las pruebas).
  */
 export interface ActualizarSolo {
   esperaMs: number
@@ -898,7 +898,10 @@ export interface ApiIridium {
   cancelarArmado(): Promise<void>
   /** Si Actualizar arma y reinicia solo (T-67), y con qué esperas; null, apagado. */
   actualizarSolo(): Promise<ActualizarSolo | null>
-  /** Cuántos segundos lleva la PC sin que se toque el teclado ni el mouse (en cualquier programa). */
+  /**
+   * Cuántos segundos lleva Iridium sin usarse: sin teclado ni mouse en su ventana (minimizada o detrás de otra, no
+   * recibe nada). Usar la PC para otra cosa no cuenta (T-67, Q-167).
+   */
   segundosSinUso(): Promise<number>
   /** Ver la consola (W-1): abre lo que escribió el último armado. */
   verConsolaArmado(): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>

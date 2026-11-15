@@ -12,7 +12,7 @@
 ## Señales recogidas
 | Fecha | Fuente | Observación |
 |---|---|---|
-| 2026-11-15 | Pedido del usuario | La ventana vuelve maximizada o como estaba (T-66) y las actualizaciones locales son automáticas sin cortar a la IA (T-67, D-122): hechas; Q-167: T-66 anda, T-67 se corrige (no armó solo; la espera, por Iridium sin usar) |
+| 2026-11-15 | Pedido del usuario | La ventana vuelve maximizada o como estaba (T-66) y las actualizaciones locales son automáticas sin cortar a la IA (T-67, D-122): hechas; Q-167: T-66 anda; T-67 sí armaba solo y lo que esperaba era el reinicio: ahora espera a Iridium sin usar y vuelve minimizada si no estaba al frente (corregido; falta Q-169) |
 | 2026-11-02 | Hito 8 (Q-108) | Tu recorrido completo sin problemas; los defectos que quedan abiertos son los dos menores de abajo |
 | 2026-11-04 | Q-117 | Faltaba lo de VS Code para crear el repositorio y publicarlo en GitHub: ajuste chico (D-081), construido; falta probarlo con GitHub de verdad (Q-118) |
 | 2026-11-04 | Pedido del usuario | Compartir Iridium ya y que las versiones nuevas le lleguen a la otra persona: repo nuevo (D-084, hecho), versiones en GitHub que la copia baja sola (D-085, hecho y probado); dónde publicar, en Q-123 |

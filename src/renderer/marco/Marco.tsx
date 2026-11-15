@@ -321,7 +321,7 @@ function SenalClaude({ motor }: { motor: EstadoMotor }) {
  * lista, reinicia (con F-6 si hay sesiones trabajando); sin ella, arma sin consola a la vista y reinicia sola al
  * terminar. Mientras la IA del código de Iridium trabaja, no arma: tomaría su trabajo a mitad de camino.
  * Además lo hace solo (T-67, `queHacerSolo`): arma cuando los cambios están commiteados y la IA de Iridium lleva un rato
- * libre, y reinicia cuando ninguna IA trabaja ni espera y la PC está quieta unos minutos.
+ * libre, y reinicia cuando ninguna IA trabaja ni espera y nadie usa Iridium hace unos minutos (la PC puede seguir en uso).
  */
 function Actualizar() {
   const sinArmar = usarEstado((s) => s.sinArmar)
@@ -371,13 +371,13 @@ function Actualizar() {
     }, solo.esperaMs)
     return () => clearTimeout(t)
   }, [accion, solo, pedido, pendienteCommit])
-  // Reiniciar solo: se mira cada tanto si la PC está quieta; con alguien usándola, se espera.
+  // Reiniciar solo: se mira cada tanto si Iridium lleva el rato sin usarse; mientras se la usa, se espera.
   useEffect(() => {
     if (accion !== 'reiniciar' || !solo || reiniciando || alTerminar) return
     let vivo = true
     const mirar = async () => {
-      const quieta = (await window.iridium.segundosSinUso()) >= solo.quietoSeg
-      if (vivo && quieta) reiniciarAhora()
+      const sinUsar = (await window.iridium.segundosSinUso()) >= solo.quietoSeg
+      if (vivo && sinUsar) reiniciarAhora()
     }
     const t = setInterval(() => void mirar(), Math.min(15_000, Math.max(250, solo.esperaMs)))
     return () => {
@@ -449,7 +449,7 @@ function Actualizar() {
         title={
           pedido
             ? 'La app se sigue usando; al terminar, se reinicia sola'
-            : 'La app se sigue usando; la versión nueva entra sola cuando ninguna IA trabaje y no uses la PC un rato'
+            : 'La app se sigue usando; la versión nueva entra sola cuando ninguna IA trabaje y no uses Iridium un rato'
         }
       >
         <span className="armando">
@@ -474,7 +474,7 @@ function Actualizar() {
           bloqueado
             ? 'Espera a que la IA de Iridium termine'
             : solo
-              ? `${estado.detalle}. Entra sola cuando ninguna IA trabaje y no uses la PC un rato; Actualizar la pone ya`
+              ? `${estado.detalle}. Entra sola cuando ninguna IA trabaje y no uses Iridium un rato; Actualizar la pone ya`
               : estado.detalle
         }
         onClick={actualizar}

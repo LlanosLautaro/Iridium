@@ -12,6 +12,7 @@ import {
   tiempoArmando,
 } from '../src/compartido/actualizar'
 import type { SinArmar, VersionNueva } from '../src/compartido/puente'
+import { abrirDeFondo, UsoDeIridium } from '../src/main/core/uso-iridium'
 import { leerFalloArmado, marcaDeArmado, VigiaSinArmar } from '../src/main/infra/sin-armar'
 
 const base: SinArmar = {
@@ -137,11 +138,33 @@ describe('Actualizar solo (T-67)', () => {
     expect(queHacerSolo({ ...libre, sinArmar: base, version: null })).toBeNull()
   })
 
-  it('prendido salvo con «no»; un número es la espera de las pruebas, sin esperar a la PC quieta', () => {
+  it('prendido salvo con «no»; un número es la espera de las pruebas, sin esperar a que Iridium quede sin usar', () => {
     expect(actualizarSolo(undefined)).toEqual(SOLO)
     expect(actualizarSolo('no')).toBeNull()
     expect(actualizarSolo('500')).toEqual({ esperaMs: 500, quietoSeg: 0 })
     expect(actualizarSolo('cualquier cosa')).toEqual(SOLO)
+  })
+})
+
+describe('Iridium sin usar (T-67, Q-167)', () => {
+  it('cuenta desde el último toque en su ventana, no desde el de la PC', () => {
+    const uso = new UsoDeIridium(0)
+    expect(uso.segundosSinUsar(0)).toBe(0)
+    // Minimizada o detrás de otra ventana no le llega nada: el rato corre aunque se use la PC.
+    expect(uso.segundosSinUsar(179_999)).toBe(179)
+    expect(uso.segundosSinUsar(180_000)).toBeGreaterThanOrEqual(SOLO.quietoSeg)
+    uso.marcar(200_000)
+    expect(uso.segundosSinUsar(260_000)).toBe(60)
+    expect(uso.segundosSinUsar(100_000)).toBe(0)
+  })
+
+  it('abre de fondo solo con una marca reciente de un reinicio sin Iridium al frente', () => {
+    const ahora = 10_000_000
+    expect(abrirDeFondo(null, ahora)).toBe(false)
+    expect(abrirDeFondo(ahora - 20_000, ahora)).toBe(true)
+    // Una marca vieja: ese reinicio no pasó y ahora la abre el usuario.
+    expect(abrirDeFondo(ahora - 10 * 60_000, ahora)).toBe(false)
+    expect(abrirDeFondo(ahora + 60_000, ahora)).toBe(false)
   })
 })
 

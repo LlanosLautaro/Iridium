@@ -157,7 +157,7 @@ test('si el armado falla: «No se pudo actualizar» con el motivo, Reintentar y 
   await a.close()
 })
 
-test('solo: con la IA libre arma sin tocar nada y, con la versión lista y la PC quieta, reinicia (T-67)', async () => {
+test('solo: con la IA libre arma sin tocar nada y, con la versión lista e Iridium sin usar, reinicia (T-67)', async () => {
   test.setTimeout(120_000)
   const { app: a, win } = await abrir({ IRIDIUM_ACTUALIZAR_SOLO: '500' })
   await expect(win.locator('[data-motor="listo"]')).toHaveCount(1)

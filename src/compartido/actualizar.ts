@@ -49,9 +49,10 @@ export function tiempoArmando(desde: number | null, ahora: number): string {
 
 /**
  * Actualizar solo (T-67): con los cambios commiteados y la IA de Iridium libre un rato, arma; con la versión lista,
- * reinicia cuando ninguna IA trabaja ni espera lo que dejó de fondo y la PC lleva unos minutos sin usarse. El botón
- * sigue para hacerlo ya. Las pruebas lo apagan (`IRIDIUM_ACTUALIZAR_SOLO=no`) o lo aceleran (un número: la espera en
- * ms, y reinicia sin esperar a que la PC quede quieta).
+ * reinicia cuando ninguna IA trabaja ni espera lo que dejó de fondo e Iridium lleva unos minutos sin usarse (Q-167: la
+ * PC puede seguir en uso para otra cosa). El botón sigue para hacerlo ya. Las pruebas lo apagan
+ * (`IRIDIUM_ACTUALIZAR_SOLO=no`) o lo aceleran (un número: la espera en ms, y reinicia sin esperar a que Iridium quede
+ * sin usar).
  */
 export const SOLO: ActualizarSolo = { esperaMs: 60_000, quietoSeg: 180 }
 
@@ -75,7 +76,7 @@ export interface DatosSolo {
 /**
  * Qué toca hacer solo, si algo: `armar` (hay commits sin armar, sin cambios a medias, nada armándose y la IA de Iridium
  * libre, y no es lo que `pnpm volver` dejó afuera) o `reiniciar` (hay una versión lista que no falló al ponerse, nada nuevo por armar y ninguna IA ocupada). Las esperas (que siga así un
- * rato, que la PC esté quieta) las pone quien llama.
+ * rato, que Iridium esté sin usar) las pone quien llama.
  */
 export function queHacerSolo(d: DatosSolo): 'armar' | 'reiniciar' | null {
   const s = d.sinArmar
@@ -85,7 +86,7 @@ export function queHacerSolo(d: DatosSolo): 'armar' | 'reiniciar' | null {
     if (!s.limpio || d.iaIridiumOcupada || commit === d.fallido || commit === s.retenido) return null
     return 'armar'
   }
-  // Una versión que ya no entró (Defecto 3) no se reintenta sola: reiniciaría cada vez que la PC quede quieta.
+  // Una versión que ya no entró (Defecto 3) no se reintenta sola: reiniciaría cada vez que Iridium quede sin usar.
   if (d.version && !d.version.noEntro && !d.algunaOcupada) return 'reiniciar'
   return null
 }
