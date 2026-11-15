@@ -181,7 +181,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   // DI-I3, tanda 7: el Mapa pasó a las piezas
   'proyecto.css': [
     'atras',
-    'script-fila',
     'script',
     'aviso-doc',
     'recuadro-simple',
@@ -222,10 +221,10 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--lateral': 3,
   '--barra': 1,
-  '--caja': 24,
+  '--caja': 23,
   '--medidor-fondo': 5,
-  '--primario': 33,
-  '--primario-texto': 9,
+  '--primario': 30,
+  '--primario-texto': 8,
   '--ok': 13,
   '--esp-sm': 4,
   '--esp-md': 3,

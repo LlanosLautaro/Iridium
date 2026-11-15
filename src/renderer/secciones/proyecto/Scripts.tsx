@@ -37,30 +37,22 @@ function useScripts(ruta: string) {
   return { datos, ultima, correr }
 }
 
-function Boton({
-  s,
-  corriendo,
-  correr,
-  conNombre,
-}: {
-  s: ScriptVista
-  corriendo: boolean
-  correr: () => void
-  conNombre: boolean
-}) {
+/** Ejecutar va en verde (R-58): es lo que se viene a hacer; Abrir, como cualquier secundario. */
+function Boton({ s, corriendo, correr }: { s: ScriptVista; corriendo: boolean; correr: () => void }) {
   const abrir = s.modo === 'abrir'
   const accion = abrir ? 'Abrir' : 'Ejecutar'
   const que = s.modo === 'comando' ? `Corre «${s.valor}» en una ventana de consola` : s.valor
   return (
     <button
       type="button"
-      className="boton secundario chico"
+      className={abrir ? 'boton secundario chico' : 'boton secundario chico correr'}
       disabled={s.falta !== null || corriendo}
-      title={s.falta ?? (conNombre ? `${s.nombre}: ${que}` : que)}
+      title={s.falta ?? que}
+      aria-label={`${accion} «${s.nombre}»`}
       onClick={correr}
     >
       <Icono nombre={abrir ? 'abrir' : 'play'} />
-      {conNombre ? s.nombre : accion}
+      {accion}
     </button>
   )
 }
@@ -74,33 +66,48 @@ function Mensaje({ r }: { r: ResultadoScript }) {
   )
 }
 
-/** Los scripts en la vista de entrada, en lista después de los pendientes: el botón con el nombre y la descripción en una línea (R-2). */
+/**
+ * Los scripts en la vista de entrada, después de los pendientes: un Bloque con una Fila por script, su nombre, la
+ * descripción en dos líneas y el botón a la derecha (R-58). La sección Scripts los muestra con la descripción entera.
+ */
 export function ListaScripts({ ruta }: { ruta: string }) {
   const { datos, ultima, correr } = useScripts(ruta)
   const abrirSeccion = usarEstado((s) => s.abrirSeccion)
   if (!datos?.existe || datos.scripts.length === 0) return null
   return (
-    <section className="lista-scripts" aria-label="Scripts">
-      <div className="cab-scripts">
-        <h3 className="grupo">Scripts</h3>
-        <button type="button" className="enlace" onClick={() => abrirSeccion(ruta, 'scripts')}>
+    <section className="bloque lista-scripts" aria-label="Scripts">
+      <h2 className="bloque-titulo">
+        Scripts <span className="cuenta">{datos.scripts.length}</span>
+        <button
+          type="button"
+          className="boton sin-fondo chico derecha"
+          onClick={() => abrirSeccion(ruta, 'scripts')}
+        >
           Ver con detalles
         </button>
+      </h2>
+      <div className="filas con-lineas">
+        {datos.scripts.map((s) => {
+          const mia = ultima?.id === s.id ? ultima.estado : null
+          return (
+            <div key={s.id} className="fila con-detalle" data-script={s.id}>
+              <div className="principal-fila">
+                <span className="titulo-fila">{s.nombre}</span>
+                {s.descripcionHtml && (
+                  <span
+                    className="detalle desc-script"
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
+                    dangerouslySetInnerHTML={{ __html: s.descripcionHtml }}
+                  />
+                )}
+                {s.falta && <span className="detalle falta-script">{s.falta}</span>}
+                {mia && mia !== 'corriendo' && <Mensaje r={mia} />}
+              </div>
+              <Boton s={s} corriendo={mia === 'corriendo'} correr={() => void correr(s.id)} />
+            </div>
+          )
+        })}
       </div>
-      {datos.scripts.map((s) => {
-        const mia = ultima?.id === s.id ? ultima.estado : null
-        return (
-          <div key={s.id} className="script-fila" data-script={s.id}>
-            <Boton s={s} conNombre corriendo={mia === 'corriendo'} correr={() => void correr(s.id)} />
-            <span
-              className="desc"
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
-              dangerouslySetInnerHTML={{ __html: s.descripcionHtml }}
-            />
-            {mia && mia !== 'corriendo' && <Mensaje r={mia} />}
-          </div>
-        )
-      })}
     </section>
   )
 }
@@ -140,12 +147,7 @@ export function Scripts({ ruta }: { ruta: string }) {
               <div key={s.id} className="script" data-script={s.id}>
                 <div className="script-cab">
                   <h4>{s.nombre}</h4>
-                  <Boton
-                    s={s}
-                    conNombre={false}
-                    corriendo={mia === 'corriendo'}
-                    correr={() => void correr(s.id)}
-                  />
+                  <Boton s={s} corriendo={mia === 'corriendo'} correr={() => void correr(s.id)} />
                 </div>
                 {s.descripcionHtml && (
                   // biome-ignore lint/a11y/useKeyWithClickEvents lint/a11y/noStaticElementInteractions: solo delega los clics de los enlaces de adentro, que ya son enfocables.

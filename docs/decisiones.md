@@ -129,6 +129,8 @@
 | D-120 | 2026-11-12 | Diseño | 10, frente Diseño, paso 7 (R-49) | Los botones principales van delineados: fondo negro, letra y borde en color | vigente (ajusta D-109) |
 | D-121 | 2026-11-13 | Diseño | 10, frente Diseño, paso 7 (DI-I3) | La app y las maquetas comparten un solo `tokens.css`; las piezas entran a la app sección por sección | vigente |
 | D-122 | 2026-11-15 | producto | 10, operación (T-67) | Actualizar arma y reinicia solo, cuando ninguna IA trabaja e Iridium no se usa | vigente (ajusta R-12 y CO-I6; ajustada por Q-167) |
+| D-123 | 2026-11-15 | proceso | 10, operación (T-68) | Chat nuevo por tamaño y tiempo, y arranque liviano | vigente |
+| D-124 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (Q-171, R-56 a R-58) | Vuelve el color donde informa: medidores en verde, ámbar y rojo, enlaces azules, el código con colores y Ejecutar en verde | vigente (ajusta D-103 y D-108) |
 
 ---
 
@@ -2716,3 +2718,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** lo que más gasta es releer, y crece con el largo del chat; lo que se lee al arrancar se paga en cada paso de cada chat.
 
 **Consecuencias:** cambia `SKILL.md` › Al cerrar cada sesión, `referencias/07-construccion.md` y las instrucciones globales (`.iridium/Skills/instrucciones/CLAUDE-global.md`). Se vuelve a medir hacia el 2026-11-29 (T-68).
+
+## D-124 — Vuelve el color donde informa
+- **Fecha:** 2026-11-15
+- **Ámbito:** Diseño
+- **Hito o paso:** 10; frente Diseño, paso 7 (Q-171, R-56 a R-58)
+- **Estado:** vigente (ajusta D-103 y D-108)
+
+**Contexto:** con el negro sin acento (D-103) y «lo que anda bien no se anuncia» (D-108), los medidores de uso quedaron blancos, los enlaces del color del texto y el código de Archivos en grises. Al probar el Mapa (Q-171) el usuario pidió que los enlaces vuelvan a ser azules y notó que el código no tiene color; con F8 pidió el verde, naranja y rojo de los medidores (R-56) y color en el botón de los scripts (R-58).
+
+**Decisión:** el negro sigue sin acento, pero el color vuelve donde dice algo: los medidores (uso de la suscripción y contexto) en verde (`--bien`) que pasa a ámbar y rojo al llenarse; los enlaces dentro de un texto en azul (`--enlace`); el código con los colores de VS Code (`--cod-clave`, `--cod-cadena`, `--cod-comentario`, `--cod-numero`); y Ejecutar de un script con la letra en verde (no es el botón principal: el borde sigue gris). Son tokens de `docs/diseno/tokens.css`, así que valen para la app y las maquetas.
+
+**Motivo:** el color que distingue (cuánto queda, qué se puede tocar, qué es cada cosa en el código) ayuda a leer; el que decora sigue fuera.
+
+**Consecuencias:** `tokens.css` suma `--bien`, `--enlace` y `--cod-numero`, y cambia los tres colores del código. Los enlaces de las maquetas se ven azules dentro del Texto de documento (PZ-12).

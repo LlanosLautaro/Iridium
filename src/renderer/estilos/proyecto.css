@@ -537,15 +537,18 @@
   color: var(--primario-texto);
   opacity: 1;
 }
+/* El código con colores (D-124, Q-171) */
 .visor-codigo .c {
-  color: var(--texto-3);
+  color: var(--cod-comentario);
 }
 .visor-codigo .k {
-  color: var(--primario-texto);
+  color: var(--cod-clave);
 }
-.visor-codigo .s,
-.visor-codigo .n {
+.visor-codigo .s {
   color: var(--cod-cadena);
+}
+.visor-codigo .n {
+  color: var(--cod-numero);
 }
 .imagen {
   flex: 1;
@@ -579,45 +582,33 @@
   flex-direction: column;
 }
 
-/* Los scripts en la vista de entrada (D-044, Q-63): en lista, después de los pendientes; el botón lleva el nombre y
-   las descripciones arrancan todas a la misma altura (R-2) */
+/* Los scripts en la vista de entrada (D-044, Q-63, R-58): un Bloque con una Fila por script; la descripción en dos
+   líneas y Ejecutar en verde, lo que se viene a hacer */
 .lista-scripts {
-  margin-top: 28px;
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 6px;
+  margin-top: var(--esp-6);
 }
-.cab-scripts {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.lista-scripts .desc-script {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
 }
-.lista-scripts .grupo {
-  margin: 0 0 4px;
-}
-.script-fila {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: subgrid;
-  align-items: center;
-  gap: 4px 12px;
-  padding: 6px 12px 6px 6px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-bloque);
-  background: var(--caja);
-}
-.script-fila .desc {
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: var(--tam-chico);
-  color: var(--texto-3);
-}
-.script-fila .desc > * {
+.lista-scripts .desc-script > * {
   display: inline;
+  margin: 0;
+}
+.lista-scripts .falta-script {
+  color: var(--error);
+}
+.lista-scripts .correr {
+  color: var(--bien);
+}
+.lista-scripts .correr:hover {
+  color: var(--bien);
+  border-color: var(--bien);
+}
+.lista-scripts .script-msg {
+  margin-top: var(--esp-1);
 }
 
 /* La sección Scripts: cada uno con su descripción */
@@ -668,10 +659,6 @@
 }
 .script-msg.error {
   color: var(--error);
-}
-
-.script-fila .script-msg {
-  grid-column: 1 / -1;
 }
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */

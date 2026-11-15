@@ -32,27 +32,27 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 en curso: tandas 1 a 6 probadas; la 7, el Mapa, espera Q-171) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 en curso: tandas 1 a 7 probadas; D-124 espera Q-172) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 7. Construcción (OR-I4, espera la prueba; el paso 8 espera el rediseño, D-102) | en curso |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
+| Mapa (T-71) | sección | 1. Propuesta (el Mapa como una red de pasos por frente; pensarlo en el chat; orden con Capacidades a decidir) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 6 están probadas; la 7, el Mapa, está hecha y espera tu prueba (Q-171). Historia y detalle en `modulos/diseno/estado.md`.
+**Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 7 están probadas; el color vuelve donde informa (D-124) y F8 responde ya: esperan tu prueba (Q-172). El Mapa se rehará como frente propio (T-71). Historia y detalle en `modulos/diseno/estado.md`.
 Orden espera tu prueba de OR-I4 (Q-146); Compartir, la invitación (Q-126).
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
-- **Q-171 — Probá el Mapa nuevo (DI-I3, tanda 7)**
+- **Q-172 — Probá los colores, los scripts y F8**
   Tipo: prueba · Frente: Diseño
-  Contexto: la versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo). Mirá el Mapa de Iridium y comparalo con la maqueta (Diseño › Pantallas › Mapa). Detalle en `modulos/diseno/estado.md` › tanda 7.
-  - [ ] Se parece a la maqueta: «Hitos» con los números sin borde (el actual con fondo gris) y «N de M hechos» a la derecha; la cabecera dice el hito
-  - [ ] El frente activo va sin caja: el nombre grande, su paso en gris y «Abrir estado.md» a la derecha; debajo el Próximo paso y, lado a lado, «En curso» y «En tu bandeja» empezando a la misma altura
-  - [ ] Lo que frena dice «Frena» en ámbar (en la bandeja del frente y en «Sin frente»), no un «!»
-  - [ ] Abajo, una línea gris y los demás frentes en filas («En espera», «En operación»); tocar uno abre su `estado.md`
-  - [ ] Tocar un hito muestra su detalle con sus pasos como filas y su estado a la derecha; **Volver** trae el frente activo
-  - [ ] Los enlaces del Próximo paso (y los de la Bandeja y la conversación) ya no salen azules
-  - [ ] En Archivos, un archivo de código se sigue viendo bien (con sus números de línea y colores)
-  - [ ] En Docs, una tabla que no entra (por ejemplo la de Módulos con la conversación ancha) se desplaza de costado en vez de cortar las palabras por la mitad
+  Contexto: la versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo). Detalle en `modulos/diseno/estado.md` › Q-171 y los comentarios R-56 a R-59.
+  - [ ] Abajo a la derecha, los medidores de uso van en verde (y en ámbar o rojo cuando se llenan); el círculo del contexto en la conversación, también
+  - [ ] Los enlaces (en el Próximo paso, la Bandeja, la conversación y Docs) son azules
+  - [ ] En Archivos, un archivo de código tiene colores: palabras clave en azul, textos entre comillas en naranja, comentarios en verde
+  - [ ] Arriba, el proyecto elegido se distingue de las otras pestañas abiertas: línea blanca arriba y borde
+  - [ ] En la entrada de un proyecto, los scripts son filas con el nombre, la descripción en dos líneas y **Ejecutar** en verde a la derecha; tocarlo lo corre
+  - [ ] F8 muestra «Comentando» apenas lo apretás, y al dejar un comentario con Enter la tarjeta dice «Guardando…» enseguida
+  - [ ] F8 ya no se siente lento (si sigue, contame en qué momento: al apretarlo, al elegir algo o al dejar el comentario)
 
 - **Q-146 — Probá OR-I4: el Mapa con frentes y Skills › Framework**
   Tipo: prueba · Frente: Orden
@@ -74,7 +74,7 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: DI-I3, tanda 8 — Ideas como bloc de notas (D-112) pasa a las piezas. Si llega Q-171 o Q-146, procesarlas antes (lo que falle del Mapa se corrige primero).
+Diseño: DI-I3, tanda 8 — Ideas como bloc de notas (D-112) pasa a las piezas. Si llega Q-172 o Q-146, procesarlas antes (lo que falle de los colores, los scripts o F8 se corrige primero; si F8 sigue lento, que el ayudante meta el selector en Iridium sin pasar por la extensión).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

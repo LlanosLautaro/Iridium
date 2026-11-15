@@ -72,11 +72,14 @@
 .barra-proyectos .proy:hover {
   color: var(--texto);
 }
-/* El elegido tiene que verse entre varios (Q-165): el fondo de lo elegido y el borde que se ve sobre el negro */
+/* El elegido tiene que verse entre varios (Q-165, R-57): el fondo de lo elegido, el borde de lo que se toca y arriba
+   una línea blanca, lo activo */
 .barra-proyectos .proy.elegido {
   color: var(--texto);
   background: var(--sel-fondo);
-  box-shadow: inset 0 0 0 1px var(--borde-fuerte);
+  box-shadow:
+    inset 0 2px 0 var(--marcado),
+    inset 0 0 0 1px var(--borde-control);
   clip-path: inset(0 0 -1px 0);
   margin-bottom: -1px;
 }

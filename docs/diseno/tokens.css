@@ -1,7 +1,7 @@
 /* Los tokens de Iridium: la dirección negra sin acento, único tema (D-103, D-104). Sale de modulos/diseno/negro.css.
    Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo y lo marcado van
    en blanco. Un solo color de acción: el verde del botón principal (Enviar, Continuar; D-109), en la letra y el borde sobre negro (R-49). Las señales: ámbar lo que
-   espera del usuario, rojo un error.
+   espera del usuario, rojo un error. Con color también los medidores (verde, ámbar, rojo), los enlaces (azul) y el código (D-124).
    Cada token va en su línea con su uso después del `;` (D-114): Diseño › Sistema lo muestra y la IA elige el token
    por lo que dice, no por cómo se ve.
    Desde DI-I3 la app lo importa tal cual: cambiar un token cambia las maquetas y la app. */
@@ -43,11 +43,14 @@
   --error-fondo: #0f0506; /* el fondo de un aviso de error */
   --error-borde: #3d1a1c; /* el borde de un aviso de error */
   --seleccion: #ffffff2e; /* el texto seleccionado con el mouse */
+  --bien: #4cc38a; /* lo que tiene margen en un medidor (el uso de la suscripción, el contexto); se pone ámbar y rojo al llenarse (R-56) */
+  --enlace: #6cb6ff; /* un enlace dentro de un texto: los documentos, el Próximo paso, la Bandeja, la conversación (Q-171) */
 
   /* Código */
-  --cod-clave: #d4d4d8; /* las palabras clave en un bloque de código */
-  --cod-cadena: #b5b5ba; /* los textos entre comillas en un bloque de código */
-  --cod-comentario: #8a8a8a; /* los comentarios en un bloque de código */
+  --cod-clave: #569cd6; /* las palabras clave en un bloque de código */
+  --cod-cadena: #ce9178; /* los textos entre comillas en un bloque de código */
+  --cod-comentario: #6a9955; /* los comentarios en un bloque de código */
+  --cod-numero: #b5cea8; /* los números en un bloque de código */
   --cod-suma: #0b1a10; /* el fondo de una línea agregada en una diferencia */
   --cod-resta: #1c0a0b; /* el fondo de una línea quitada en una diferencia */
 

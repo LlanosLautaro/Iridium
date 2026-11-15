@@ -235,12 +235,15 @@ function pintarResalte(): void {
   if (!etiqueta.isConnected) capa.append(etiqueta)
 }
 
-function avisar(titulo: string, detalle: string, gris = false): void {
-  sombra.querySelector('.aviso')?.remove()
-  const a = document.createElement('div')
+/** Con `encima`, cambia lo que dice el aviso que está a la vista en vez de hacerlo aparecer de nuevo. */
+function avisar(titulo: string, detalle: string, gris = false, encima = false): void {
+  const previo = sombra.querySelector('.aviso')
+  const a = encima && previo instanceof HTMLDivElement ? previo : document.createElement('div')
+  if (a !== previo) previo?.remove()
   a.className = `aviso${gris ? ' gris' : ''}`
   a.setAttribute('role', 'status')
   a.innerHTML = `<span class="faro"></span><div><b>${esc(titulo)}</b><small>${esc(detalle)}</small></div>`
+  if (a === previo) return
   a.addEventListener('animationend', () => a.remove())
   capa.append(a)
 }
@@ -418,6 +421,10 @@ let dejando = false
 async function dejar(el: Element, texto: string, enviar = false): Promise<void> {
   if (dejando || !texto.trim()) return
   dejando = true
+  // Se ve ya que lo tomó: la captura y guardarlo pueden tardar, y la tarjeta quieta parecía no haber recibido el Enter.
+  const ayuda = tarjeta?.querySelector('.ayuda')
+  if (ayuda) ayuda.textContent = enviar ? 'Enviando…' : 'Guardando…'
+  for (const b of tarjeta?.querySelectorAll<HTMLButtonElement>('.pie .btn') ?? []) b.disabled = true
   try {
     const pista = await pistaReact(el)
     const r = el.getBoundingClientRect()
@@ -514,6 +521,8 @@ async function entrar(): Promise<void> {
   if (!anfitrion.isConnected) document.documentElement.append(anfitrion)
   document.documentElement.style.setProperty('cursor', 'crosshair', 'important')
   void cargarLetras()
+  // El aviso sale ya: preguntarle a Iridium puede tardar (la extensión se despierta), y sin él F8 parecía no andar.
+  avisar(proyecto ? `Comentando en ${proyecto}` : 'Comentando', 'F8 o Esc para salir.', true)
   estado = await pedir<Estado>({ tipo: 'estado', direccion: direccion() }).catch(
     () => ({ tipo: 'cerrado' }) as Estado,
   )
@@ -524,16 +533,29 @@ async function entrar(): Promise<void> {
       'Comentando · Iridium está cerrado',
       'Los comentarios quedan acá y se mandan al abrirlo. F8 o Esc para salir.',
       true,
+      true,
     )
   else if (!proyecto)
-    avisar('Comentando', '¿De qué proyecto es esta app? Lo elegís en la tarjeta. F8 o Esc para salir.', true)
+    avisar(
+      'Comentando',
+      '¿De qué proyecto es esta app? Lo elegís en la tarjeta. F8 o Esc para salir.',
+      true,
+      true,
+    )
   else if (estado.version && estado.version !== chrome.runtime.getManifest().version)
     avisar(
       `Comentando en ${proyecto}`,
       'Hay una versión nueva de la extensión: recargala en la página de extensiones.',
       true,
+      true,
     )
-  else avisar(`Comentando en ${proyecto}`, 'Alt+↑ elige la caja que lo contiene. F8 o Esc para salir.')
+  else
+    avisar(
+      `Comentando en ${proyecto}`,
+      'Alt+↑ elige la caja que lo contiene. F8 o Esc para salir.',
+      false,
+      true,
+    )
 }
 
 function salir(): void {

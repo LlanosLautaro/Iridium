@@ -29,9 +29,9 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--borde-fuerte) transparent;
 }
-/* Los enlaces, del color de su texto, como en la base de las maquetas (docs/diseno/piezas.css) */
+/* Los enlaces, en azul (D-124, Q-171): en la app son siempre enlaces dentro de un texto */
 a {
-  color: inherit;
+  color: var(--enlace);
 }
 button {
   font: inherit;

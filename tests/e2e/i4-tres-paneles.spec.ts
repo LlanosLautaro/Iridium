@@ -230,9 +230,12 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   // Los detalles de la pregunta, plegados (Q-62); los scripts, en lista después de los pendientes (Q-63).
   await expect(entrada.locator('.pregunta .detalles')).toHaveCount(0)
   const lista = entrada.locator('.pendientes .lista-scripts')
-  // El botón lleva el nombre, a la izquierda (R-2).
-  await expect(lista.locator('.script-fila > button')).toHaveText(['Dejar una marca', 'Instalar'])
-  await expect(lista.locator('.script-fila', { hasText: 'Instalar' }).getByRole('button')).toBeDisabled()
+  // Una fila por script, con su nombre y Ejecutar a la derecha (R-58).
+  await expect(lista.locator('.fila .titulo-fila')).toHaveText(['Dejar una marca', 'Instalar'])
+  await expect(lista.locator('.fila', { hasText: 'Dejar una marca' }).getByRole('button')).toHaveText(
+    'Ejecutar',
+  )
+  await expect(lista.locator('.fila', { hasText: 'Instalar' }).getByRole('button')).toBeDisabled()
   await win.screenshot({ path: 'test-results/i4-entrada.png' })
   await lista.getByRole('button', { name: 'Dejar una marca' }).click()
   await expect(lista.locator('.script-msg.ok')).toContainText('consola')

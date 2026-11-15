@@ -285,7 +285,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .texto-doc p, .texto-doc ul, .texto-doc ol { margin: 0 0 var(--esp-3); }
 .texto-doc ul, .texto-doc ol { padding-left: var(--esp-5); }
 .texto-doc li { margin-bottom: var(--esp-1); }
-.texto-doc a { text-decoration: underline; text-decoration-color: var(--texto-3); text-underline-offset: 3px; }
+.texto-doc a { color: var(--enlace); text-decoration: underline; text-decoration-color: var(--texto-3); text-underline-offset: 3px; }
 .texto-doc code { background: var(--elevado); padding: 1px 5px; border-radius: 4px; }
 .texto-doc blockquote { margin: 0 0 var(--esp-3); padding-left: var(--esp-4); border-left: 2px solid var(--borde-fuerte); color: var(--texto-2); }
 .texto-doc pre { background: var(--tarjeta); padding: var(--esp-3) var(--esp-4); border-radius: var(--radio-bloque); overflow: auto; font-size: var(--tam-chico); }

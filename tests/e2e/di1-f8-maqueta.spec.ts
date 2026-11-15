@@ -107,10 +107,11 @@ test('F8 sobre una maqueta grande: el comentario llega a su proyecto con la maqu
           { type: 'keyDown', keyCode: 'F8' },
           { type: 'keyUp', keyCode: 'F8' },
         ])
-        // El aviso aparece cuando Iridium responde y se va solo al terminar su animación: se mira seguido.
+        // El aviso sale ya («Comentando»), dice el proyecto cuando Iridium responde y se va solo al terminar su
+        // animación: se mira seguido.
         for (let i = 0; i < 15; i++) {
           const aviso = await enLaGrande<string>(app, AVISO).catch(() => '')
-          if (aviso) return aviso
+          if (aviso && aviso !== 'ComentandoF8 o Esc para salir.') return aviso
           await win.waitForTimeout(100)
         }
         if (await enLaGrande<boolean>(app, "!!document.querySelector('iridium-revision')").catch(() => false))

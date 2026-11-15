@@ -113,7 +113,7 @@
   white-space: nowrap;
   font: 500 12px / 1 var(--mono);
   color: var(--texto-2);
-  --medidor: var(--primario);
+  --medidor: var(--bien);
 }
 .medidor-ctx[data-nivel="alta"] {
   --medidor: var(--espera);
@@ -369,8 +369,8 @@
   inset: 0 auto 0 0;
   width: var(--v);
   border-radius: var(--radio-medidor);
-  background: var(--medidor, var(--primario));
-  box-shadow: 0 0 8px var(--medidor, var(--primario));
+  background: var(--medidor, var(--bien));
+  box-shadow: 0 0 8px var(--medidor, var(--bien));
 }
 .medidor[data-nivel="alta"],
 .ventana-uso[data-nivel="alta"] {
