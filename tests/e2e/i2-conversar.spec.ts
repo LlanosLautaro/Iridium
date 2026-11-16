@@ -122,7 +122,7 @@ test('dos proyectos trabajan a la vez y cambiar entre ellos no corta nada (H-2, 
 
   // La ficha de Alfa lleva a Alfa, con su conversación como estaba.
   await win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   await expect(win.locator('.turno').first()).toContainText('Algo lento en Alfa')
   await expect(win.locator('.hilo')).not.toContainText('Beta')
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).toContainText('Terminada', {

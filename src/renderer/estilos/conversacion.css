@@ -329,6 +329,10 @@
   height: 13px;
   flex: none;
 }
+/* La ruedita de Trabajando, en verde: lo que anda (R-63); el texto sigue gris */
+.ahora:not(.reintentando):not(.esperando) > svg {
+  color: var(--bien);
+}
 .herramientas > button > svg {
   width: 13px;
   height: 13px;

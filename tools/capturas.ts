@@ -39,7 +39,7 @@ const seccion = (nombre: string) =>
     .getByRole('button', { name: nombre })
     .click()
 await win.click('.tarjeta[title^="Centro de Desarrollo"]')
-await win.waitForSelector('[data-seccion="pendientes"] .lista-scripts', { timeout: 30_000 })
+await win.waitForSelector('[data-seccion="pendientes"] .pendientes', { timeout: 30_000 })
 await win.waitForTimeout(500)
 await win.screenshot({ path: `${SALIDA}/3-proyecto-entrada.png` })
 

@@ -139,7 +139,7 @@ test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar 
   // Beta, con un solo frente: sin filtros.
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Beta')
   await expect(win.locator('[data-seccion="pendientes"] .pregunta').first()).toBeVisible()
   await expect(win.getByRole('group', { name: 'Filtrar por frente' })).toHaveCount(0)
   await app.close()
@@ -154,7 +154,7 @@ test('R-55: el frente elegido en la Bandeja queda al cambiar de proyecto y al ce
   // A Beta y de vuelta a Alfa por su pestaña: sigue en Compartir.
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Beta')
   await win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
   await expect(win.getByRole('button', { name: 'Compartir 2' })).toHaveAttribute('aria-pressed', 'true')
   await expect(win.locator('.grupo-q:not(.en-pausa) .pregunta')).toHaveCount(2)
@@ -162,7 +162,7 @@ test('R-55: el frente elegido en la Bandeja queda al cambiar de proyecto y al ce
 
   // Al abrir de nuevo, Alfa vuelve en Compartir.
   ;({ app, win } = await abrir())
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   await expect(win.getByRole('button', { name: 'Compartir 2' })).toHaveAttribute('aria-pressed', 'true')
   await expect(win.locator('.pregunta[data-q="Q-1"]')).toHaveCount(0)
   // Todos no se guarda: es lo de siempre.

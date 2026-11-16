@@ -446,7 +446,7 @@
   transform: translateY(2px);
 }
 .resumen-q .si .ic {
-  color: var(--texto-2);
+  color: var(--bien); /* lo que funciona, en verde (R-69) */
 }
 .resumen-q .no .ic {
   color: var(--error);

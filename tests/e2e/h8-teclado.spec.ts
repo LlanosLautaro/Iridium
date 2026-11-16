@@ -73,7 +73,7 @@ test.afterEach(async () => {
 test('Ctrl+= agranda todo sin cortar la app, se recuerda al volver a abrir y Ctrl+0 lo vuelve (Defecto 17)', async () => {
   let { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  await expect(win.locator('main.trabajo h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   expect(await zoomDe(app)).toBeCloseTo(1)
 
   // 100 → 110 → 125 → 150 %.
@@ -142,7 +142,8 @@ test('al cambiar de pantalla con un atajo o abrir un proyecto con Enter, el foco
 
   await win.locator('.tarjeta', { hasText: 'Beta' }).focus()
   await win.keyboard.press('Enter')
-  await expect(win.getByRole('heading', { name: 'Beta', level: 1 })).toBeFocused()
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Beta')
+  await expect(win.locator('.seccion-vista:not([hidden]) .cab-seccion h2')).toBeFocused()
   // El próximo Tab sigue desde el título, no desde las pestañas de arriba.
   await win.keyboard.press('Tab')
   expect(await win.evaluate(() => !!document.activeElement?.closest('main.trabajo'))).toBe(true)

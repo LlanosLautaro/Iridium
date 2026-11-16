@@ -199,7 +199,7 @@ test('Nuevo proyecto crea la carpeta con la plantilla básica y la abre, sin la 
   await win.screenshot({ path: join(SALIDA, 'r7-nuevo.png') })
   await cuadro.getByRole('button', { name: 'Crear' }).click()
   await expect(cuadro).toHaveCount(0)
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Delta')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Delta')
   expect(await readFile(join(raiz, 'Delta', 'docs', 'estado.md'), 'utf8')).toContain(
     '0 — Idea cruda — en curso',
   )

@@ -508,7 +508,6 @@ export function Mapa({ ruta }: { ruta: string }) {
     <>
       <Cabecera
         titulo="Mapa"
-        sub={actual && `Hito ${actual.numero} · ${actual.nombre}`}
         acciones={
           documento && (
             <button

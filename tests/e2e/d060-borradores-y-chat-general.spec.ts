@@ -77,7 +77,7 @@ test('lo escrito en el chat queda al cambiar de proyecto y al cerrar; al abrir, 
 
   ;({ app, win } = await abrir())
   // Abre directo en Alfa, en su sección principal, con lo escrito.
-  await expect(win.locator('.zona-principal .cab-proyecto h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   await expect(win.locator('.act.elegida')).toHaveAttribute('aria-label', /Bandeja de entrada/)
   await expect(campo()).toHaveValue('Quiero que la grilla\nse ordene por fecha')
   await win.screenshot({ path: 'test-results/d060-vuelve.png' })

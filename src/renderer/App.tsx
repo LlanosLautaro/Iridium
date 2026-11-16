@@ -4,7 +4,6 @@ import { usarEstado } from './estado'
 import { Marco } from './marco/Marco'
 import { SECCIONES } from './secciones'
 import { VistaProyecto } from './secciones/proyecto/VistaProyecto'
-import { textoHito } from './secciones/proyectos/Tarjeta'
 import { guardarTodoYa } from './ui/guardarLuego'
 
 function useConexion() {
@@ -106,9 +105,11 @@ function useFocoAlCambiar(seccion: string, ruta: string | null) {
       return
     }
     const enfocar = () => {
-      // El título de la pantalla; sin él (Pendientes vacío), el primero que tenga.
-      const titulo =
-        document.querySelector<HTMLElement>('main h1') ?? document.querySelector<HTMLElement>('main h2')
+      // El título de la pantalla (en un proyecto, el de la sección a la vista: el h1 del proyecto es solo para el lector de pantalla, D-125); sin
+      // él (Pendientes vacío), el primero que tenga.
+      const raiz =
+        document.querySelector('main .seccion-vista:not([hidden])') ?? document.querySelector('main')
+      const titulo = raiz?.querySelector<HTMLElement>('h1') ?? raiz?.querySelector<HTMLElement>('h2')
       if (!titulo) return
       titulo.tabIndex = -1
       titulo.focus({ preventScroll: true })
@@ -137,18 +138,9 @@ export function App() {
   useConexion()
   useAtajos()
   const seccion = usarEstado((s) => s.seccion)
-  const lista = usarEstado((s) => s.lista)
   const ruta = usarEstado((s) => s.proyectoAbierto)
   const Vista = SECCIONES.find((s) => s.id === seccion)?.Vista
   useFocoAlCambiar(seccion, ruta)
 
-  const hito =
-    seccion === 'proyecto' && lista?.tipo === 'lista'
-      ? lista.proyectos.find((p) => p.ruta === ruta)?.hito
-      : null
-  const estado = hito ? <span className="it">{textoHito(hito)}</span> : undefined
-
-  return (
-    <Marco estado={estado}>{seccion === 'proyecto' ? <VistaProyecto /> : Vista ? <Vista /> : null}</Marco>
-  )
+  return <Marco>{seccion === 'proyecto' ? <VistaProyecto /> : Vista ? <Vista /> : null}</Marco>
 }

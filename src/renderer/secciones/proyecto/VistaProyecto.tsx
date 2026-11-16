@@ -5,7 +5,6 @@ import { type CSSProperties, useEffect } from 'react'
 import { type SeccionProyecto, tarjetaDe, usarEstado, vistaDe } from '../../estado'
 import { Divisor, useAnchoConversacion } from '../../ui/Divisor'
 import { SECCIONES_PROYECTO } from '..'
-import { textoHito } from '../proyectos/Tarjeta'
 import { Archivos } from './Archivos'
 import { Conversacion } from './Conversacion'
 import { Docs } from './Docs'
@@ -106,10 +105,8 @@ export function VistaProyecto() {
   return (
     <main className="trabajo proyecto" style={{ '--ancho-chat': `${ancho}px` } as CSSProperties}>
       <section className="zona-principal" aria-label={p.nombre}>
-        <div className="cab-proyecto">
-          <h1 title={p.nombre}>{p.nombre}</h1>
-          {p.hito && <span className="sub">{textoHito(p.hito)}</span>}
-        </div>
+        {/* Sin cabecera a la vista (D-125): el nombre lo dice la pestaña; el título queda para el lector de pantalla. */}
+        <h1 className="solo-lector">{p.nombre}</h1>
         <div className="vista">
           {SECCIONES_PROYECTO.filter((s) => vistas.has(s.id)).map((s) => (
             <div

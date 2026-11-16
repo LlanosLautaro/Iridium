@@ -332,7 +332,7 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
   await win.screenshot({ path: 'test-results/i6-aviso.png' })
   await aviso.getByRole('button', { name: 'Responder en Alfa' }).click()
   // Lleva a los pendientes de Alfa, dentro del proyecto (no a los de todos).
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   await expect(win.locator('.resumen')).toContainText('Q-1')
   await expect(aviso).toHaveCount(0)
 

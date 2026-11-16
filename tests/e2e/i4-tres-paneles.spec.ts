@@ -206,7 +206,7 @@ test('Docs: códigos que saltan, Atrás con Alt+←, «En esta página», tablas
   await app.close()
 })
 
-test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin node_modules, con colores e imágenes (D-043, H-15)', async () => {
+test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script; Archivos sin node_modules, con colores e imágenes (D-043, H-15)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
@@ -223,46 +223,30 @@ test('al entrar, pendientes y scripts: un botón ejecuta el script; Archivos sin
   await cuadro.fill('una línea\notra\notra más\ny otra')
   const alto4 = await alto()
   expect(alto4).toBeGreaterThan(alto1 + 30)
-  await win.locator('.cab-proyecto h1').click()
+  await win.locator('.seccion-vista:not([hidden]) .cab-seccion h2').first().click()
   expect(await alto()).toBe(alto4)
   await cuadro.fill('')
   expect(await alto()).toBe(alto1)
-  // Los detalles de la pregunta, plegados (Q-62); los scripts, en lista después de los pendientes (Q-63).
+  // Los detalles de la pregunta, plegados (Q-62); la Bandeja es solo bandeja: sin los scripts (R-70).
   await expect(entrada.locator('.pregunta .detalles')).toHaveCount(0)
-  const lista = entrada.locator('.pendientes .lista-scripts')
-  // Una fila por script, con su nombre y Ejecutar a la derecha (R-58).
-  await expect(lista.locator('.fila .titulo-fila')).toHaveText(['Dejar una marca', 'Instalar'])
-  await expect(lista.locator('.fila', { hasText: 'Dejar una marca' }).getByRole('button')).toHaveText(
-    'Ejecutar',
-  )
-  await expect(lista.locator('.fila', { hasText: 'Instalar' }).getByRole('button')).toBeDisabled()
+  await expect(entrada.locator('.lista-scripts')).toHaveCount(0)
+  await expect(entrada).not.toContainText('Ver con detalles')
   await win.screenshot({ path: 'test-results/i4-entrada.png' })
-  await lista.getByRole('button', { name: 'Dejar una marca' }).click()
-  await expect(lista.locator('.script-msg.ok')).toContainText('consola')
+
+  // Los scripts, en su sección: con su descripción y lo que falta; un botón ejecuta el script.
+  await barra.getByRole('button', { name: 'Scripts' }).click()
+  const scripts = win.locator('[data-seccion="scripts"]')
+  await expect(scripts.locator('.script h4')).toHaveText(['Dejar una marca', 'Instalar'])
+  await expect(scripts.locator('.script', { hasText: 'Instalar' })).toContainText('No se encuentra')
+  await expect(scripts.locator('.script', { hasText: 'Instalar' }).getByRole('button')).toBeDisabled()
+  await scripts.locator('.script', { hasText: 'Dejar una marca' }).getByRole('button').click()
+  await expect(scripts.locator('.script-msg.ok')).toContainText('consola')
   await expect
     .poll(async () => (await readFile(join(raiz, 'Alfa', 'marca.txt'), 'utf8').catch(() => '')).trim(), {
       timeout: 15_000,
     })
     .toBe('listo')
-
-  // La sección Scripts, con su descripción y lo que falta; Atrás vuelve a los pendientes.
-  await lista.getByRole('button', { name: 'Ver con detalles' }).click()
-  const scripts = win.locator('[data-seccion="scripts"]')
-  await expect(scripts.locator('.script h4')).toHaveText(['Dejar una marca', 'Instalar'])
-  await expect(scripts.locator('.script', { hasText: 'Instalar' })).toContainText('No se encuentra')
-  await expect(scripts.locator('.script', { hasText: 'Instalar' }).getByRole('button')).toBeDisabled()
   await win.screenshot({ path: 'test-results/i4-scripts.png' })
-  await scripts.getByRole('button', { name: 'Atrás' }).click()
-  await expect(entrada).toBeVisible()
-  // El botón lateral del mouse también vuelve (Q-63).
-  await lista.getByRole('button', { name: 'Ver con detalles' }).click()
-  await expect(scripts).toBeVisible()
-  await win.evaluate(() => {
-    window.dispatchEvent(new MouseEvent('mousedown', { button: 3 }))
-    window.dispatchEvent(new MouseEvent('mouseup', { button: 3 }))
-  })
-  await expect(entrada).toBeVisible()
-  await expect(scripts).toBeHidden()
 
   await barra.getByRole('button', { name: 'Archivos' }).click()
   const archivos = win.locator('[data-seccion="archivos"]')
@@ -338,7 +322,7 @@ test('el ancho de la conversación se arrastra y se recuerda; las conversaciones
 
   // Al volver a abrir la app, vuelve a Alfa (D-060) y el ancho es el que se dejó.
   ;({ app, win } = await abrir())
-  await expect(win.locator('.zona-principal .cab-proyecto h1')).toHaveText('Alfa')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', ancho)
   await win.getByRole('separator', { name: /Ancho de la conversación/ }).dblclick()
   await expect(win.locator('aside.chat')).toHaveJSProperty('offsetWidth', 360)

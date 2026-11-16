@@ -182,7 +182,7 @@ function BotonInicio() {
       className="boton-menu"
       title={`Inicio${detalle}`}
       aria-label={`Inicio${detalle}`}
-      aria-current={seccion === 'proyecto' ? undefined : 'page'}
+      aria-current={seccion === 'proyectos' ? 'page' : undefined}
       onClick={irAlInicio}
     >
       <Icono nombre="inicio" />
@@ -527,14 +527,13 @@ function AccesoVersionesGithub() {
  * La barra de abajo sin ruido (D-108): Claude solo cuando falla, lo de la sección, Actualizar y, a la derecha, el uso.
  * Sin las sesiones abiertas ni la hora: las pestañas ya dicen qué trabaja.
  */
-function BarraEstado({ children }: { children?: ReactNode }) {
+function BarraEstado() {
   const motor = usarEstado((s) => s.motor)
   return (
     <footer className="estado-barra">
       <span className="it claude" data-motor={motor.tipo}>
         <SenalClaude motor={motor} />
       </span>
-      {children}
       <Actualizar />
       <AccesoVersionesGithub />
       <span className="der">
@@ -544,13 +543,13 @@ function BarraEstado({ children }: { children?: ReactNode }) {
   )
 }
 
-export function Marco({ children, estado }: { children: ReactNode; estado?: ReactNode }) {
+export function Marco({ children }: { children: ReactNode }) {
   return (
     <div className="app">
       <BarraTitulo />
       <BarraActividad />
       {children}
-      <BarraEstado>{estado}</BarraEstado>
+      <BarraEstado />
       <Avisos />
       <Ajustes />
       <ConfirmarCierre />

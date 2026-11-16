@@ -100,7 +100,7 @@ for (const nombre of elegidos) {
   await win.waitForTimeout(300)
   await win.screenshot({ path: `${SALIDA}/${nombre}-1-proyectos.png` })
   await win.click('.tarjeta[title^="Centro de Desarrollo"]')
-  await win.waitForSelector('[data-seccion="pendientes"] .lista-scripts', { timeout: 30_000 })
+  await win.waitForSelector('[data-seccion="pendientes"] .pendientes', { timeout: 30_000 })
   await win.waitForTimeout(500)
   await win.screenshot({ path: `${SALIDA}/${nombre}-2-proyecto.png` })
   await seccion(win, 'Mapa')

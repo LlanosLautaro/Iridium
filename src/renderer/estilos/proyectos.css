@@ -73,6 +73,7 @@
 .lienzo {
   flex: 1;
   overflow-y: auto;
+  scrollbar-gutter: stable; /* el lugar de la barra, reservado: la grilla no salta al aparecer (R-61) */
   padding: 20px;
 }
 .mudanza {

@@ -32,24 +32,17 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 en curso: tandas 1 a 7 y D-124 probadas; las pestañas y las casillas verdes esperan Q-173) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 en curso: tandas 1 a 7, D-124 y las casillas verdes probadas; R-61 a R-70 resueltos, D-125) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (T-71) | sección | 1. Propuesta (el Mapa como una red de pasos por frente; pensarlo en el chat; orden con Capacidades a decidir) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 7 y el color donde informa (D-124) están probados; las pestañas con borde y las casillas verdes (R-60) esperan tu prueba (Q-173). El Mapa se rehará como frente propio (T-71). Historia y detalle en `modulos/diseno/estado.md`.
+**Frente activo: Diseño** (D-102): el rediseño negro pasa al código por tandas (DI-I3); las tandas 1 a 7, el color donde informa (D-124) y las casillas verdes están probados (Q-173). Los comentarios R-61 a R-70 están resueltos: la Bandeja sin scripts y el proyecto sin cabecera repetida (D-125); R-64, la imagen y el color de cada IA, va en T-72. El Mapa se rehará como frente propio (T-71). Historia y detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño; Compartir, la invitación (Q-126).
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
-- **Q-173 — Probá las pestañas y las casillas verdes**
-  Tipo: prueba · Frente: Diseño
-  Contexto: la versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo). Detalle en `modulos/diseno/estado.md` › Q-172 y R-60.
-  - [ ] Arriba, con varios proyectos abiertos, cada pestaña tiene su borde; la elegida se ve como antes (fondo gris, sin la línea blanca)
-  - [ ] En la Bandeja, una casilla marcada es verde con el tilde negro
-  - [ ] Una opción elegida (A, B u Otro) y el interruptor **Archivados** de Proyectos (Ctrl+1) prendido también son verdes
-
 - **Q-126 — Invitá a la otra persona al repo de Iridium**
   Tipo: tarea · frena
   Contexto: D-085 y Q-123 (A). Sin la invitación, su Iridium no ve las versiones nuevas (le aparece «Sin acceso a las versiones nuevas»). Si preferís, pasame su usuario de GitHub en la respuesta y la invito yo.
@@ -60,7 +53,7 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño: DI-I3, tanda 8 — Ideas como bloc de notas (D-112) pasa a las piezas. Si llega Q-173, procesarla antes (lo que falle de las pestañas o las casillas se corrige primero).
+Diseño: DI-I3, tanda 8 — Ideas como bloc de notas (D-112) pasa a las piezas. Lo de R-61 a R-70 entra en la próxima versión sin prueba aparte: si algo no quedó como querías, F8 sobre eso.
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

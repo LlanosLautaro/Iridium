@@ -61,7 +61,7 @@ async function bandeja(win: Page, nombre: string) {
     .getByRole('navigation', { name: 'Secciones del proyecto' })
     .getByRole('button', { name: /^Bandeja de entrada/ })
     .click()
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText(nombre)
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', nombre)
 }
 
 test.beforeEach(async () => {
@@ -221,14 +221,14 @@ test('Responder en la conversación y la Bandeja de entrada llevan a las pregunt
   const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
   await secciones.getByRole('button', { name: 'Mapa' }).click()
   await secciones.getByRole('button', { name: /^Bandeja de entrada/ }).click()
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Beta')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Beta')
   await expect(win.locator('.resumen .pregunta').first()).toBeVisible()
 
   await win.keyboard.press('Control+1')
   await win.locator('.tarjeta', { hasText: 'Gestor' }).click()
   await win.locator('.cab-conv').getByRole('button', { name: 'Continuar' }).click()
   await win.locator('.pedido').getByRole('button', { name: 'Responder' }).click()
-  await expect(win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Gestor')
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Gestor')
   await expect(win.locator('.resumen .pregunta[data-q="Q-4"]')).toContainText(
     '¿La prueba del motor falso funciona?',
   )

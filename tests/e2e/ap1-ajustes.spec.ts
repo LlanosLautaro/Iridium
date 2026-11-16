@@ -108,7 +108,7 @@ test('un solo tema, el negro; Apariencia elige el ancho de lectura y sigue al vo
   await app.close()
 
   ;({ app, win } = await abrir())
-  await expect(win.getByRole('heading', { name: 'Alfa', level: 1 })).toBeVisible()
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   await win.keyboard.press('Control+,')
   await win.getByRole('dialog').getByRole('button', { name: 'Apariencia' }).click()
   await expect(

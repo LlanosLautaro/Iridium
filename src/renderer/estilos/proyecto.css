@@ -13,11 +13,6 @@
   min-width: 0;
   min-height: 0;
 }
-.zona-principal > .cab-proyecto {
-  height: 40px;
-  border-bottom-color: var(--borde);
-  min-width: 0;
-}
 .vista {
   flex: 1;
   min-height: 0;
@@ -582,35 +577,6 @@
   flex-direction: column;
 }
 
-/* Los scripts en la vista de entrada (D-044, Q-63, R-58): un Bloque con una Fila por script; la descripción en dos
-   líneas y Ejecutar en verde, lo que se viene a hacer */
-.lista-scripts {
-  margin-top: var(--esp-6);
-}
-.lista-scripts .desc-script {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  white-space: normal;
-}
-.lista-scripts .desc-script > * {
-  display: inline;
-  margin: 0;
-}
-.lista-scripts .falta-script {
-  color: var(--error);
-}
-.lista-scripts .correr {
-  color: var(--bien);
-}
-.lista-scripts .correr:hover {
-  color: var(--bien);
-  border-color: var(--bien);
-}
-.lista-scripts .script-msg {
-  margin-top: var(--esp-1);
-}
-
 /* La sección Scripts: cada uno con su descripción */
 .scripts {
   flex: 1;
@@ -662,17 +628,6 @@
 }
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
-.zona-principal > .cab-proyecto h1 {
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-}
-.zona-principal > .cab-proyecto .sub {
-  color: var(--texto-3);
-  white-space: nowrap;
-}
 .menu-lista > button.conv {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

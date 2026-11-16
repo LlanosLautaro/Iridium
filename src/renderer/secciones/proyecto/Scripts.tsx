@@ -1,6 +1,6 @@
 // Los scripts del proyecto (C-11, D-043): un botón por cada script de `docs/scripts.md`. Un comando corre en una
-// ventana de consola; un archivo o una carpeta se abre con Windows. Van en dos lugares (D-044, Q-63): en lista después
-// de los pendientes de la vista de entrada, y en su sección, cada uno con su descripción entera.
+// ventana de consola; un archivo o una carpeta se abre con Windows. Van en su sección, cada uno con su descripción
+// entera; ya no en la vista de entrada, que es solo la bandeja (R-70).
 import type { ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import type { ResultadoScript, ScriptsProyecto } from '../../../compartido/puente'
@@ -63,52 +63,6 @@ function Mensaje({ r }: { r: ResultadoScript }) {
       <Icono nombre={r.tipo === 'ok' ? 'check' : 'error'} />
       {r.mensaje}
     </p>
-  )
-}
-
-/**
- * Los scripts en la vista de entrada, después de los pendientes: un Bloque con una Fila por script, su nombre, la
- * descripción en dos líneas y el botón a la derecha (R-58). La sección Scripts los muestra con la descripción entera.
- */
-export function ListaScripts({ ruta }: { ruta: string }) {
-  const { datos, ultima, correr } = useScripts(ruta)
-  const abrirSeccion = usarEstado((s) => s.abrirSeccion)
-  if (!datos?.existe || datos.scripts.length === 0) return null
-  return (
-    <section className="bloque lista-scripts" aria-label="Scripts">
-      <h2 className="bloque-titulo">
-        Scripts <span className="cuenta">{datos.scripts.length}</span>
-        <button
-          type="button"
-          className="boton sin-fondo chico derecha"
-          onClick={() => abrirSeccion(ruta, 'scripts')}
-        >
-          Ver con detalles
-        </button>
-      </h2>
-      <div className="filas con-lineas">
-        {datos.scripts.map((s) => {
-          const mia = ultima?.id === s.id ? ultima.estado : null
-          return (
-            <div key={s.id} className="fila con-detalle" data-script={s.id}>
-              <div className="principal-fila">
-                <span className="titulo-fila">{s.nombre}</span>
-                {s.descripcionHtml && (
-                  <span
-                    className="detalle desc-script"
-                    // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
-                    dangerouslySetInnerHTML={{ __html: s.descripcionHtml }}
-                  />
-                )}
-                {s.falta && <span className="detalle falta-script">{s.falta}</span>}
-                {mia && mia !== 'corriendo' && <Mensaje r={mia} />}
-              </div>
-              <Boton s={s} corriendo={mia === 'corriendo'} correr={() => void correr(s.id)} />
-            </div>
-          )
-        })}
-      </div>
-    </section>
   )
 }
 

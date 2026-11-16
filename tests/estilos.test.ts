@@ -192,7 +192,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'doc-texto',
     'arbol-lista',
     'arbol-nodo',
-    'cab-proyecto',
   ],
   'proyectos.css': [
     'peligro',

@@ -111,11 +111,10 @@ test('la grilla se actualiza sola cuando cambia un estado.md o llega una respues
 test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la derecha; volver al inicio', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  const cabecera = win.locator('.zona-principal > .cab-proyecto')
-  await expect(cabecera.locator('h1')).toHaveText('Alfa')
-  await expect(cabecera).toContainText('Hito 7 · Construcción')
-  // La cabecera no repite la cuenta: la tiene la pestaña (W-3).
-  await expect(cabecera.locator('.cuenta')).toHaveCount(0)
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
+  // Sin cabecera propia: el nombre lo dice la pestaña y el hito, el Mapa (R-65 a R-68).
+  await expect(win.locator('.zona-principal > .cab-proyecto')).toHaveCount(0)
+  await expect(win.locator('.estado-barra')).not.toContainText('Hito 7')
   await expect(win.locator('.sin-conversacion')).toContainText('Hacer la grilla.')
   // La barra de íconos es la del proyecto; nada de otro proyecto.
   const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
@@ -141,7 +140,7 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
   const otra = await abrir()
   await expect(otra.win.locator('.barra-proyectos .nom')).toHaveText(['Alfa', 'Beta'])
   await otra.win.locator('.barra-proyectos .proy', { hasText: 'Alfa' }).getByRole('tab').click()
-  await expect(otra.win.locator('.zona-principal > .cab-proyecto h1')).toHaveText('Alfa')
+  await expect(otra.win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
   // × la saca de la barra; si era la abierta, se vuelve al inicio.
   await otra.win.getByRole('button', { name: 'Cerrar Alfa' }).click()
   await expect(otra.win.locator('.grilla')).toBeVisible()

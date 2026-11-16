@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso: tanda 1 probada en Q-162, tanda 2 en Q-163, tanda 3 en Q-164, tanda 4 en Q-165, tanda 5 en Q-166, tanda 6 en Q-170 y tanda 7 en Q-171; el color de D-124 en Q-172) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso: tanda 1 probada en Q-162, tanda 2 en Q-163, tanda 3 en Q-164, tanda 4 en Q-165, tanda 5 en Q-166, tanda 6 en Q-170 y tanda 7 en Q-171; el color de D-124 en Q-172; las pestañas y las casillas verdes en Q-173) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -47,6 +47,17 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I3 — 2026-11-15 — Q-173 y los comentarios R-61 a R-70
+- **Q-173:** todo bien: cada pestaña con su borde y la elegida como antes; las casillas, las opciones y los interruptores prendidos, en verde.
+- **Sin ruido (R-65 a R-68, D-125):** fuera la cabecera del proyecto (el nombre y «Hito 10 · Operación» arriba de las secciones), el hito de la cabecera del Mapa y el de la barra de abajo. El nombre lo dice la pestaña y el hito, las pestañas del Mapa; las secciones ganan esos 40 px. Sale la clase `cab-proyecto` de `proyecto.css`.
+- **La Bandeja es solo bandeja (R-70, D-125):** fuera la lista de scripts de la vista de entrada; están en su sección. Sale el componente de la lista y sus estilos.
+- **El inicio lleva siempre a Proyectos (R-62, D-125):** antes volvía a la última sección del inicio (Skills o Ideas, si se venía de ahí).
+- **Verde donde algo anda (R-63, R-69):** la ruedita de «Trabajando» en la conversación y los tildes de lo que funciona en la respuesta de una prueba, con `--bien`.
+- **La grilla de Proyectos no salta (R-61):** reserva el lugar de la barra de desplazamiento.
+- **Anotado:** R-64 (la imagen y el color de cada IA) en T-72: es una función nueva, con Ajustes › Perfil, después de DI-I3.
+- **Las pruebas:** las que miraban el nombre en la cabecera miran el proyecto de la zona principal; `i1-esqueleto` comprueba que no hay cabecera ni hito abajo; `i4-tres-paneles` comprueba la Bandeja sin scripts y ejecuta el script desde su sección; `or2-esqueleto` suma el inicio desde Skills.
+- **El título del proyecto:** sin cabecera a la vista queda un h1 con el nombre solo para el lector de pantalla; al abrir un proyecto o cambiar de sección, el foco va al título de la sección a la vista (Defecto 19).
+- **Verificado:** `pnpm test` (734 pasan), `pnpm typecheck`, `pnpm lint` y el control del framework sin errores; con la app abierta, la suite entera dio 115 de 119 (log en `tools/salida/e2e-revision-r61-r70.log`): las 4 que fallaron buscaban el título del proyecto que se sacó; corregidas, esos archivos y los de la Bandeja y el esqueleto pasan 23 de 23 (`e2e-revision-r61-r70-2.log`). Captura: `test-results/i4-entrada.png`.
 ### DI-I3 — 2026-11-15 — Q-172 y R-60
 - **Q-172:** todo bien (los medidores en verde, los enlaces azules, el código con colores, los scripts como filas con Ejecutar en verde y F8 sin demora), salvo la pestaña: el proyecto elegido ya se distinguía; lo que no se distinguía eran las otras, sin ningún borde. Se vuelve atrás la línea blanca y el borde claro del elegido (queda el fondo de lo elegido con `--borde-fuerte`, como en Q-165) y cada pestaña lleva su borde `--borde-fuerte`, abierto abajo para apoyarse en la línea de la cabecera. R-57 suma esa línea en su historia.
 - **R-60, las casillas verdes:** `--marcado` (lo prendido) pasa del blanco al verde de los medidores (`#4cc38a`): las casillas marcadas, las opciones elegidas y los interruptores prendidos, en las piezas, en el texto de los documentos (las casillas hechas), en el interruptor de Archivos y en los tonos de Ajustes. El tilde sigue negro sobre el verde. El puente `--primario` (los focos y lo elegido de las secciones que faltan pasar) deja de apuntar a `--marcado` y apunta a `--texto`, para que no se vuelva verde todo lo que era blanco. Anotado en D-124.
@@ -243,5 +254,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 
 ## Próximo paso
 DI-I3 sigue sección por sección: Ideas como bloc de notas (D-112), Skills, Revisión, Docs, Archivos, Git, Scripts, Ajustes. Las listas del control bajan con cada una; al cerrar DI-I3 se borra `tokens-viejos.css`.
-La tanda 8 es Ideas como bloc de notas (D-112). Si llega Q-173, procesarla antes. El Mapa no se toca: se rehace en su frente (T-71).
+La tanda 8 es Ideas como bloc de notas (D-112); Q-173 y R-61 a R-70 ya están. El Mapa no se toca: se rehace en su frente (T-71).
 **Leer antes:** `decisiones.md` › D-110, D-112 y D-121, `ux.md` › Reglas que quedan escritas para el rediseño, la maqueta de Ideas (`docs/diseno/pantallas/ideas.html`), `src/renderer/secciones/ideas/Ideas.tsx`, `src/renderer/estilos/ideas.css` y `tests/estilos.test.ts`.

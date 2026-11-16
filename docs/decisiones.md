@@ -50,7 +50,7 @@
 | D-041 | 2026-10-28 | general | 7 (entre I-3 e I-4) | Tres paneles: secciones del proyecto, vista principal y conversación; barra de título propia | vigente |
 | D-042 | 2026-10-28 | general | 7 (I-4) | Archivos colorea el código con un lector propio y un color nuevo del design system para las cadenas | vigente |
 | D-043 | 2026-10-28 | general | 7 (I-4) | Un proyecto abre en sus pendientes y scripts; los scripts son botones (C-11 entra al MVP); las pestañas de los proyectos abiertos quedan | vigente |
-| D-044 | 2026-10-28 | general | 7 (I-4) | Los scripts van en lista después de los pendientes y vuelven a tener su sección; los detalles de una pregunta, plegados | vigente |
+| D-044 | 2026-10-28 | general | 7 (I-4) | Los scripts van en lista después de los pendientes y vuelven a tener su sección; los detalles de una pregunta, plegados | vigente (los scripts de la entrada, reemplazados por D-125) |
 | D-045 | 2026-10-28 | general | 7 | La conversación muestra el contexto y elige el modelo y el esfuerzo; el uso queda en la barra de estado | vigente |
 | D-046 | 2026-10-28 | general | 7 | La Revisión de la app entra al MVP, antes de I-5 e I-6, como módulo | vigente |
 | D-047 | 2026-10-28 | Revisión | 7 (módulo, pasos 2 y 3) | La Revisión sirve en web y en Electron desde el principio, con la misma extensión | vigente |
@@ -131,6 +131,7 @@
 | D-122 | 2026-11-15 | producto | 10, operación (T-67) | Actualizar arma y reinicia solo, cuando ninguna IA trabaja e Iridium no se usa | vigente (ajusta R-12 y CO-I6; ajustada por Q-167) |
 | D-123 | 2026-11-15 | proceso | 10, operación (T-68) | Chat nuevo por tamaño y tiempo, y arranque liviano | vigente |
 | D-124 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (Q-171, R-56 a R-58) | Vuelve el color donde informa: medidores en verde, ámbar y rojo, enlaces azules, el código con colores y Ejecutar en verde | vigente (ajusta D-103 y D-108) |
+| D-125 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (R-62, R-65 a R-68, R-70) | La Bandeja del proyecto es solo bandeja (los scripts, en su sección); el proyecto sin cabecera propia ni el hito repetido; el inicio lleva siempre a Proyectos | vigente (ajusta D-044) |
 
 ---
 
@@ -1187,7 +1188,7 @@ Y para dar lugar a la conversación: llevarla al centro como «modo foco» o ens
 - **Fecha:** 2026-10-28
 - **Ámbito:** general
 - **Hito o paso:** 7 (I-4, ajustes del usuario por Q-62 y Q-63)
-- **Estado:** vigente (ajusta D-043 › vista de entrada)
+- **Estado:** vigente (ajusta D-043 › vista de entrada); los scripts en la vista de entrada, reemplazados por D-125
 
 **Contexto:** al probar I-4 (Q-62), el usuario encontró que la vista de entrada en tres columnas (pendientes, scripts y conversación) no funcionaba: la de scripts le quitaba lugar a los pendientes. Y que cada pendiente mostraba demasiado texto antes de lo que hay que marcar: el contexto y el texto de cada cita, que casi nunca se leen.
 
@@ -2732,3 +2733,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** el color que distingue (cuánto queda, qué se puede tocar, qué es cada cosa en el código) ayuda a leer; el que decora sigue fuera.
 
 **Consecuencias:** `tokens.css` suma `--bien`, `--enlace` y `--cod-numero`, y cambia los tres colores del código. Los enlaces de las maquetas se ven azules dentro del Texto de documento (PZ-12). Con R-60 (2026-11-15) también lo prendido: `--marcado` pasa del blanco al verde de los medidores, así que las casillas marcadas, las opciones elegidas y los interruptores prendidos son verdes; los usos de antes de `--primario` (los focos y lo elegido) siguen en blanco.
+
+## D-125 — La Bandeja del proyecto es solo bandeja y el proyecto no repite su nombre ni su hito
+- **Fecha:** 2026-11-15
+- **Ámbito:** Diseño
+- **Hito o paso:** 10; frente Diseño, paso 7 (R-62, R-65 a R-68, R-70)
+- **Estado:** vigente (ajusta D-044)
+
+**Contexto:** con la Revisión, el usuario marcó como ruido («slop») el nombre del proyecto y «Hito 10 · Operación» arriba de las secciones, el mismo hito en la cabecera del Mapa y en la barra de abajo (R-65 a R-68). Pidió sacar los scripts de la Bandeja, porque la sección Scripts ya anda bien sola (R-70), y que el botón de inicio lleve siempre a Proyectos, aunque se viniera de Skills o Ideas (R-62).
+
+**Decisión:** la vista de entrada de un proyecto es solo la Bandeja: sus preguntas, sin la lista de scripts (están en su sección). El proyecto no tiene cabecera propia: el nombre lo dice su pestaña de arriba y el hito, las pestañas del Mapa; fuera también de la barra de abajo. El botón de arriba a la izquierda lleva siempre a Proyectos.
+
+**Motivo:** «sin ruido» (D-108): cada cosa se dice en un solo lugar.
+
+**Consecuencias:** las secciones del proyecto ganan los 40 px de la cabecera. `04-ux.md` › W-3 y D-044 quedan ajustados por esta.

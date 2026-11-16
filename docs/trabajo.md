@@ -296,3 +296,7 @@ Estado: nueva · Fecha: 2026-11-15
 Estado: nueva · Fecha: 2026-11-15 · Origen: R-59, Q-171
 El usuario quiere rehacer el Mapa como un frente propio: arriba, un mapa por frente, cada uno una red (un gráfico) de sus pasos, más fácil de leer, con un color por frente. Posibles motores: Mermaid, o un formato JSON propio con un motor a medida. Hay que pensarlo en el chat antes de construir (paso 1, Propuesta, del frente nuevo). Mientras tanto, lo que falla del Mapa de hoy no se pule (Q-171: el bloque del frente activo queda como está).
 
+
+## T-72 — La imagen y el color de cada IA en la conversación
+Estado: nueva · Fecha: 2026-11-15 · Origen: R-64
+El nombre de la IA en la conversación («Claudio») llevaría una imagen de perfil por fuente de IA (Claude, en este caso), elegida por el usuario, y un color también a elección. Va con Ajustes › Perfil (AJ-2, donde ya se elige el nombre) y con el color donde informa (D-124): hay que decidir si el color es libre o de una lista acotada para que no choque con el verde, el ámbar y el rojo, que ya dicen algo. Es una función nueva, no un arreglo: después de DI-I3.

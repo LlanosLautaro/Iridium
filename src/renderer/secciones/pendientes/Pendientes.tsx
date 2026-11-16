@@ -42,15 +42,12 @@ function Siluetas() {
 export function ListaPendientes({
   p,
   abrirDoc,
-  pie,
   cabecera,
 }: {
   p: TarjetaProyecto
   abrirDoc: (d: Destino) => void
   /** La cabecera de la sección (W-9): la cuenta y los filtros por frente los pone la lista. */
   cabecera: { titulo: string; icono?: ReactNode; sub?: ReactNode; acciones?: ReactNode }
-  /** Lo que va después de los pendientes, en el mismo desplazamiento (los scripts, en la vista de entrada). */
-  pie?: ReactNode
 }) {
   const datos = usarEstado((s) => s.pendientes[p.ruta])
   const ponerPendientes = usarEstado((s) => s.ponerPendientes)
@@ -149,7 +146,6 @@ export function ListaPendientes({
             </div>
           </details>
         )}
-        {pie}
       </div>
     </>
   )

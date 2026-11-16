@@ -130,6 +130,18 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   await app.close()
 })
 
+test('el botón de inicio lleva siempre a Proyectos, aunque se viniera de Skills (R-62)', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Beta' }).click()
+  await win.keyboard.press('Control+2')
+  await expect(win.getByRole('navigation', { name: 'Skills' })).toBeVisible()
+  await win.locator('.barra-proyectos .proy', { hasText: 'Beta' }).getByRole('tab').click()
+  await win.locator('button.boton-menu').click()
+  await expect(win.locator('.tarjeta', { hasText: 'Beta' })).toBeVisible()
+  await expect(win.locator('button.boton-menu')).toHaveAttribute('aria-current', 'page')
+  await app.close()
+})
+
 test('una carpeta sin docs/estado.md entra a Archivos', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Gamma' }).click()

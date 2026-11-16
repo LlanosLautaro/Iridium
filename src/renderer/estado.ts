@@ -145,8 +145,6 @@ export interface VistaIdeas {
 
 interface EstadoApp {
   seccion: Seccion
-  /** La última sección del inicio: adonde lleva el botón de arriba a la izquierda. */
-  inicio: Exclude<Seccion, 'proyecto'>
   /** Ruta del proyecto que se ve en la vista del proyecto. */
   proyectoAbierto: string | null
   vistas: Record<string, VistaProyecto>
@@ -230,7 +228,7 @@ interface EstadoApp {
   soltarBorrador(ruta: string, codigo: string): void
   /** `entrada`: la sección por la que se entra si es la primera vez (si no, la de W-3). */
   abrirProyecto(ruta: string, entrada?: SeccionProyecto): void
-  /** El botón de arriba a la izquierda: vuelve a la última sección del inicio. */
+  /** El botón de arriba a la izquierda: siempre a Proyectos, aunque se viniera de Skills o Ideas (R-62). */
   irAlInicio(): void
   /** × en una pestaña (D-043): deja de estar en la barra; si era el abierto, se vuelve al inicio. */
   cerrarPestana(ruta: string): void
@@ -265,7 +263,6 @@ interface EstadoApp {
 
 export const usarEstado = create<EstadoApp>((set, get) => ({
   seccion: 'proyectos',
-  inicio: 'proyectos',
   proyectoAbierto: null,
   vistas: {},
   lista: null,
@@ -369,14 +366,14 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     }),
   irA: (seccion) => {
     soltarVista(get())
-    set({ seccion, inicio: seccion })
+    set({ seccion })
     noAbierto(get())
   },
   responderEn: (ruta) => {
     get().abrirProyecto(ruta, 'pendientes')
     get().abrirSeccion(ruta, 'pendientes')
   },
-  irAlInicio: () => get().irA(get().inicio),
+  irAlInicio: () => get().irA('proyectos'),
   cerrarPestana: (ruta) => {
     const s = get()
     const ficha = s.fichas.find((f) => f.ruta === ruta)
