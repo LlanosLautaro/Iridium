@@ -152,6 +152,15 @@
         ],
         "createdAt": "2026-11-16T13:56:04.835Z",
         "reason": "Iridium design system: type sizes come from docs/diseno/tokens.css, the sober scale approved by the user for the whole app (D-104, D-108; DI-I2 approved in Q-154/Q-157); a mockup must not deviate from it"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/bandeja.html"
+        ],
+        "createdAt": "2026-11-16T14:25:01.160Z",
+        "reason": "Iridium design system: type sizes come from docs/diseno/tokens.css, the sober scale approved by the user for the whole app (D-104, D-108; DI-I2 approved in Q-154/Q-157); a mockup must not deviate from it"
       }
     ]
   }
