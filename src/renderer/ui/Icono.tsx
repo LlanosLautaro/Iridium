@@ -22,6 +22,15 @@ const TRAZOS = {
       <path d="M12 2v1.5M4.5 5.5l1 1M19.5 5.5l-1 1" />
     </>
   ),
+  // Lo que anotó la IA (frente Ideas, Q-176): el robot de las maquetas (`docs/diseno/piezas.js`).
+  robot: (
+    <>
+      <rect x="5" y="8" width="14" height="11" rx="2.5" />
+      <path d="M12 8V4.5" />
+      <circle cx="12" cy="4" r="0.5" />
+      <path d="M9.5 12.5v1.5M14.5 12.5v1.5M3 12.5v3M21 12.5v3" />
+    </>
+  ),
   pendientes: (
     <>
       <path d="M22 12h-6l-2 3h-4l-2-3H2" />

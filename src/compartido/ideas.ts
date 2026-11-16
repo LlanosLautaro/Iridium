@@ -65,3 +65,55 @@ export type NotaIdea = { tipo: 'ok'; texto: string } | { tipo: 'error'; mensaje:
 /** Los estados a los que la pasa Iridium (ID-3): aprobar, rechazar, volver a sin evaluar y marcar revisado. */
 export const ESTADOS_DESDE_IDEAS = ['nueva', 'pendiente', 'descartado', 'hecho'] as const
 export type EstadoDesdeIdeas = (typeof ESTADOS_DESDE_IDEAS)[number]
+
+/** Si la idea entra en el filtro (ID-3): «Todo» no muestra las hechas; un enlace revisado es una hecha. */
+export function entraEnFiltro(idea: IdeaVista, filtro: FiltroIdeas): boolean {
+  const enlace = idea.de === 'enlace'
+  switch (filtro) {
+    case 'todo':
+      return idea.estado !== 'hecha'
+    case 'para-revisar':
+      return enlace && idea.estado !== 'hecha'
+    case 'sin-evaluar':
+      return !enlace && idea.estado === 'sin-evaluar'
+    case 'aprobadas':
+      return !enlace && idea.estado === 'aprobada'
+    case 'rechazadas':
+      return !enlace && idea.estado === 'rechazada'
+    case 'hechas':
+      return idea.estado === 'hecha'
+  }
+}
+
+export function contarPorFiltro(ideas: readonly IdeaVista[]): Record<FiltroIdeas, number> {
+  const r = { todo: 0, 'para-revisar': 0, 'sin-evaluar': 0, aprobadas: 0, rechazadas: 0, hechas: 0 }
+  for (const i of ideas) for (const f of Object.keys(r) as FiltroIdeas[]) if (entraEnFiltro(i, f)) r[f]++
+  return r
+}
+
+/**
+ * El nombre de un enlace, de su dirección y sin leer la página (D-130): en GitHub, `dueño/repo`; si no, el último
+ * tramo de la dirección o el sitio. Una dirección que no se entiende, entera.
+ */
+export function nombreDeEnlace(url: string): { nombre: string; sitio: string | null } {
+  try {
+    const u = new URL(url)
+    const sitio = u.hostname.replace(/^www\./, '')
+    const tramos = u.pathname
+      .split('/')
+      .filter(Boolean)
+      .map((t) => {
+        try {
+          return decodeURIComponent(t)
+        } catch {
+          return t
+        }
+      })
+    if (sitio === 'github.com' && tramos.length >= 2)
+      return { nombre: `${tramos[0]}/${tramos[1]?.replace(/\.git$/, '')}`, sitio }
+    const ultimo = tramos.at(-1)?.replace(/\.(html?|php|aspx?)$/i, '')
+    return ultimo ? { nombre: ultimo, sitio } : { nombre: sitio, sitio: null }
+  } catch {
+    return { nombre: url, sitio: null }
+  }
+}

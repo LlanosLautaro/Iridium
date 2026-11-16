@@ -1,9 +1,12 @@
 // La sección Ideas (frente Ideas, D-128 a D-130; `modulos/ideas/diseno-tecnico.md`): de los `T-n` de `trabajo.md` a
 // la lista, y los cambios que hace Iridium en el texto de `trabajo.md`. Reglas puras: reciben y devuelven texto.
-import type { EstadoIdea, FiltroIdeas, IdeaVista } from '../../compartido/ideas'
+import type { EstadoIdea, IdeaVista } from '../../compartido/ideas'
 import type { Estado } from './estados'
 import { type ItemTrabajo, leerTrabajo, type TipoIdea } from './trabajo'
 import { partirLineas } from './visor/lineas'
+
+// Lo que también usa la pantalla vive en `compartido/ideas.ts`.
+export { contarPorFiltro, entraEnFiltro, nombreDeEnlace } from '../../compartido/ideas'
 
 /** Lo que se escribe al rechazar sin motivo (D-129: el framework pide uno en `descartado`). */
 export const MOTIVO_RECHAZO = 'Rechazada por el usuario.'
@@ -46,31 +49,6 @@ export function ideasDe(
   )
 }
 
-/** Si la idea entra en el filtro (ID-3): «Todo» no muestra las hechas; un enlace revisado es una hecha. */
-export function entraEnFiltro(idea: IdeaVista, filtro: FiltroIdeas): boolean {
-  const enlace = idea.de === 'enlace'
-  switch (filtro) {
-    case 'todo':
-      return idea.estado !== 'hecha'
-    case 'para-revisar':
-      return enlace && idea.estado !== 'hecha'
-    case 'sin-evaluar':
-      return !enlace && idea.estado === 'sin-evaluar'
-    case 'aprobadas':
-      return !enlace && idea.estado === 'aprobada'
-    case 'rechazadas':
-      return !enlace && idea.estado === 'rechazada'
-    case 'hechas':
-      return idea.estado === 'hecha'
-  }
-}
-
-export function contarPorFiltro(ideas: readonly IdeaVista[]): Record<FiltroIdeas, number> {
-  const r = { todo: 0, 'para-revisar': 0, 'sin-evaluar': 0, aprobadas: 0, rechazadas: 0, hechas: 0 }
-  for (const i of ideas) for (const f of Object.keys(r) as FiltroIdeas[]) if (entraEnFiltro(i, f)) r[f]++
-  return r
-}
-
 /** Lo que se escribió en el campo de arriba (ID-1, ID-4). */
 export type Anotado =
   | { tipo: 'idea'; titulo: string; nota: string }
@@ -105,33 +83,6 @@ export function limpiarTitulo(texto: string): string {
     .replace(/\s+/g, ' ')
     .replace(/^[#\s]+/, '')
     .trim()
-}
-
-/**
- * El nombre de un enlace, de su dirección y sin leer la página (D-130): en GitHub, `dueño/repo`; si no, el último
- * tramo de la dirección o el sitio. Una dirección que no se entiende, entera.
- */
-export function nombreDeEnlace(url: string): { nombre: string; sitio: string | null } {
-  try {
-    const u = new URL(url)
-    const sitio = u.hostname.replace(/^www\./, '')
-    const tramos = u.pathname
-      .split('/')
-      .filter(Boolean)
-      .map((t) => {
-        try {
-          return decodeURIComponent(t)
-        } catch {
-          return t
-        }
-      })
-    if (sitio === 'github.com' && tramos.length >= 2)
-      return { nombre: `${tramos[0]}/${tramos[1]?.replace(/\.git$/, '')}`, sitio }
-    const ultimo = tramos.at(-1)?.replace(/\.(html?|php|aspx?)$/i, '')
-    return ultimo ? { nombre: ultimo, sitio } : { nombre: sitio, sitio: null }
-  } catch {
-    return { nombre: url, sitio: null }
-  }
 }
 
 /** El código que sigue: el más alto + 1 (también los que no se pudieron leer bien). */

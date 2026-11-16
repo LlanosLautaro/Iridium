@@ -58,12 +58,14 @@ export interface SeccionDeProyecto {
 const sigue = (p: TarjetaProyecto) => p.framework !== null
 
 /**
- * Dentro de un proyecto (W-3, D-041; Revisión, D-046; Skills, R-8; Diseño, DS-8; sin Trabajo, D-112), en dos grupos. Lo que se sigue y
+ * Dentro de un proyecto (W-3, D-041; Ideas, D-128; Revisión, D-046; Skills, R-8; Diseño, DS-8; sin Trabajo, D-112), en dos grupos. Lo que se sigue y
  * Docs, solo si no es una carpeta simple; Skills, solo si el proyecto tiene alguna propia.
  */
 export const SECCIONES_PROYECTO: readonly SeccionDeProyecto[] = [
   { id: 'pendientes', nombre: 'Bandeja de entrada', icono: 'pendientes', grupo: 'sigue', soloSi: sigue },
   { id: 'mapa', nombre: 'Mapa', icono: 'mapa', grupo: 'sigue', soloSi: sigue },
+  // Las ideas y los enlaces para revisar (frente Ideas, D-128 a D-130): `T-n` de `trabajo.md` con `Idea:`.
+  { id: 'ideas', nombre: 'Ideas', icono: 'ideas', grupo: 'sigue', soloSi: sigue },
   { id: 'revision', nombre: 'Revisión', icono: 'revision', grupo: 'sigue', soloSi: sigue },
   // Las maquetas de `docs/diseno/` (frente Diseño, DS-8): de mirar y decidir, como el Mapa y la Revisión.
   { id: 'diseno', nombre: 'Diseño', icono: 'diseno', grupo: 'sigue', soloSi: sigue },

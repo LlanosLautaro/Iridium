@@ -10,6 +10,7 @@ import { Conversacion } from './Conversacion'
 import { Docs } from './Docs'
 import { Diseno } from './diseno/Diseno'
 import { Git } from './Git'
+import { IdeasProyecto } from './IdeasProyecto'
 import { Mapa } from './Mapa'
 import { Resumen } from './Resumen'
 import { Revision } from './Revision'
@@ -25,6 +26,8 @@ function Seccion({ ruta, id }: { ruta: string; id: SeccionProyecto }) {
       return <Resumen ruta={ruta} />
     case 'mapa':
       return <Mapa ruta={ruta} />
+    case 'ideas':
+      return <IdeasProyecto ruta={ruta} />
     case 'docs':
       return <Docs ruta={ruta} />
     case 'archivos':

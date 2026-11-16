@@ -298,6 +298,14 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .texto-doc.conversacion { font-size: var(--tam-base); line-height: 1.6; }
 .texto-doc.conversacion p { margin-bottom: var(--esp-2); }
 
+/* ───────── PZ-13 · Fila que se abre ─────────
+   Grupo: Contenido
+   Para qué: una fila que se abre en su lugar, sin salir de la lista: debajo, su contenido y sus botones (una idea).
+   Estados: cerrada (una Fila), abierta. */
+.fila.abierta { background: var(--sel-fondo); border-radius: var(--radio-bloque) var(--radio-bloque) 0 0; }
+.cuerpo-fila { padding: var(--esp-2) var(--esp-3) var(--esp-4) calc(var(--esp-2) + 28px + var(--esp-3)); background: var(--sel-fondo); border-radius: 0 0 var(--radio-bloque) var(--radio-bloque); }
+.cuerpo-fila .pie-fila { display: flex; flex-wrap: wrap; gap: var(--esp-2); margin-top: var(--esp-2); margin-left: calc(-1 * var(--esp-2)); }
+
 /* ───────── El marco ─────────
    Grupo: Del dominio
    Para qué: lo que rodea a todas las pantallas: la barra de proyectos, la de secciones, la sección elegida y la barra de

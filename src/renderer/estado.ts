@@ -35,6 +35,7 @@ export type SeccionAjustes = 'perfil' | 'ia' | 'apariencia' | 'proyectos' | 'ace
 export type SeccionProyecto =
   | 'pendientes'
   | 'mapa'
+  | 'ideas'
   | 'docs'
   | 'archivos'
   | 'revision'

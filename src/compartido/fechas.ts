@@ -29,3 +29,15 @@ export function fechaExacta(ms: number): string {
   const mm = String(f.getMinutes()).padStart(2, '0')
   return `${f.getDate()} ${MESES[f.getMonth()]} ${f.getFullYear()}, ${hh}:${mm}`
 }
+
+/** Un día `AAAA-MM-DD` corto, para una fila: «hoy», «ayer», «5 nov» (con el año si no es este). */
+export function diaCorto(fecha: string, hoy: Date): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fecha)
+  if (!m) return fecha
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))
+  const base = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())
+  const dias = Math.round((base.getTime() - d.getTime()) / DIA)
+  if (dias === 0) return 'hoy'
+  if (dias === 1) return 'ayer'
+  return `${d.getDate()} ${MESES[d.getMonth()]}${d.getFullYear() === hoy.getFullYear() ? '' : ` ${d.getFullYear()}`}`
+}

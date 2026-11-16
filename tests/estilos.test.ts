@@ -71,6 +71,7 @@ const PIEZAS = [
   'arbol',
   'nodo',
   'texto-doc',
+  'cuerpo-fila',
   'info',
 ]
 
@@ -271,7 +272,7 @@ describe('el control de estilos (DI-I3)', () => {
     const app = bloquesDePiezas(leer('src/renderer/estilos/piezas.css'))
     expect([...app.keys()]).toEqual([...maquetas.keys()])
     for (const [titulo, bloque] of maquetas) expect(app.get(titulo), titulo).toBe(bloque)
-    expect(maquetas.size).toBe(13)
+    expect(maquetas.size).toBe(14)
   })
 
   it('cada var(--…) de la app existe en los tokens o la define la app', () => {

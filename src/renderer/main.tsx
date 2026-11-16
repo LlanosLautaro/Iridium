@@ -15,6 +15,7 @@ import './estilos/uso.css'
 import './estilos/ajustes.css'
 import './estilos/skills.css'
 import './estilos/ideas.css'
+import './estilos/ideas-proyecto.css'
 import './estilos/diseno.css'
 import { App } from './App'
 

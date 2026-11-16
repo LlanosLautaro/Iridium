@@ -36,6 +36,7 @@ El juego del rediseño, con lo que reemplaza de hoy. La regla general: **se sepa
 | PZ-10 — Pestañas | de la barra lateral (íconos), de los proyectos abiertos, de una ventana (Ajustes), de una vista (Resumen · Archivos en Skills) | `.act`, `.ses`, `.ajustes nav button`, la navegación del detalle de Skills, la fila de hitos del Mapa (`.h`) | el marco, Ajustes, Skills, Mapa |
 | PZ-11 — Árbol | carpeta, archivo, elegido, con marca a la derecha (M, A) | `.arbol`/`.nodo` de Archivos, los archivos del detalle de Skills, la lista de cambios de Git | Archivos, Skills, Git |
 | PZ-12 — Texto de documento | lectura (Docs, Bandeja) y conversación; tablas con línea solo entre filas, citas, código | `.md` (conversación) y `.doc-texto` (Docs, Bandeja, panel de documento) | Docs, Bandeja, conversación, Mapa |
+| PZ-13 — Fila que se abre | cerrada (una Fila), abierta (su contenido y sus botones debajo, con el fondo de selección) | — (nueva, frente Ideas, ID-I1) | Ideas |
 
 PZ-11 y PZ-12 no estaban en la tabla de `definicion.md`: aparecieron al mirar las pantallas (el árbol se arma tres veces y el markdown, dos) y se suman ahí.
 

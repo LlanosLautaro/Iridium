@@ -68,6 +68,7 @@ export function BotonAtras({ ruta }: { ruta: string }) {
       : {
           pendientes: 'la Bandeja de entrada',
           mapa: 'el Mapa',
+          ideas: 'Ideas',
           docs: 'Docs',
           archivos: 'Archivos',
           revision: paso.comentario ? paso.comentario : 'Revisión',

@@ -1,0 +1,115 @@
+/* Ideas de un proyecto (frente Ideas, W-10; `docs/diseno/pantallas/ideas-proyecto-c.html`): el campo de arriba, los
+   grupos (Bloques, PZ-3) con sus Filas (PZ-2) y la idea abierta como Fila que se abre (PZ-13). El estado va en color:
+   verde aprobada, rojo rechazada (Q-175). */
+
+.idp-cuerpo {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--esp-6) var(--esp-7);
+}
+.idp-col {
+  max-width: var(--ancho-centrado);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+}
+
+/* El campo de arriba queda a la vista aunque la lista se desplace */
+.idp-anotar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-2);
+  padding-top: var(--esp-5);
+  padding-bottom: var(--esp-2);
+  background: var(--fondo);
+}
+.idp-campo {
+  flex: 1;
+  height: auto;
+  min-height: var(--alto-campo);
+  max-height: 40vh;
+  padding-block: var(--esp-2);
+  line-height: 1.4;
+  resize: none;
+  field-sizing: content;
+}
+
+/* Cada fila es un botón que la abre (o abre el enlace): ocupa la fila sin parecer un botón */
+.idp-abrir {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.idp-item .titulo-fila {
+  font-weight: 500;
+}
+.idp-item .icono-fila .ic {
+  width: 15px;
+  height: 15px;
+}
+.idp-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-3);
+}
+.idp-aprobada .icono-fila {
+  color: var(--bien);
+}
+.idp-rechazada .icono-fila {
+  color: var(--error);
+}
+.idp-rechazada .titulo-fila {
+  color: var(--texto-3);
+  font-weight: 400;
+}
+
+/* La idea abierta: su texto para escribir (la primera línea es el título) o el de la IA, para leer */
+.idp-nota {
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  min-height: 96px;
+  resize: none;
+  field-sizing: content;
+  padding: 0;
+  background: none;
+  font-size: var(--tam-base);
+}
+/* Texto libre, como en la maqueta: sin el borde del campo, ni al pasar ni al escribir */
+.idp-nota,
+.idp-nota:hover,
+.idp-nota:focus {
+  border-color: transparent;
+}
+.idp-texto-ia {
+  font-size: var(--tam-base);
+  white-space: pre-wrap;
+}
+.idp-leyendo,
+.idp-vacio {
+  margin: 0;
+  color: var(--texto-3);
+}
+.idp-vacio {
+  padding: var(--esp-4) 0;
+}
+.idp-elegido-bien,
+.idp-elegido-bien:hover {
+  color: var(--bien);
+}
+.idp-elegido-mal,
+.idp-elegido-mal:hover {
+  color: var(--error);
+}

@@ -15,10 +15,7 @@
   .item { cursor: pointer; }
   .item .icono-fila .ic { width: 15px; height: 15px; }
   .item .titulo-fila { font-weight: 500; }
-  .item.abierto { background: var(--sel-fondo); border-radius: var(--radio-bloque) var(--radio-bloque) 0 0; }
-  .cuerpo-idea { padding: var(--esp-2) var(--esp-3) var(--esp-4) calc(28px + var(--esp-3) * 2); background: var(--sel-fondo); border-radius: 0 0 var(--radio-bloque) var(--radio-bloque); }
-  .cuerpo-idea .texto-doc { font-size: var(--tam-base); outline: none; }
-  .cuerpo-idea .pie-idea { display: flex; gap: var(--esp-2); margin-top: var(--esp-2); margin-left: calc(-1 * var(--esp-2)); }
+  .cuerpo-fila .texto-doc { font-size: var(--tam-base); outline: none; }
   .enlace { display: inline-flex; align-items: center; gap: var(--esp-2); padding: 2px var(--esp-2); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto); font-size: var(--tam-base); }
   .texto-doc .enlace { text-decoration: none; }
   .enlace .ic { width: 14px; height: 14px; color: var(--texto-3); }
@@ -59,13 +56,13 @@
       <div class="grupo">
         <h2 class="bloque-titulo">Ideas <span class="cuenta">9</span></h2>
         <div class="filas">
-          <div class="fila item abierto"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Diagramas que dibuja la IA</span></span><span class="meta">hoy</span></div>
-          <div class="cuerpo-idea">
+          <div class="fila item abierta"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Diagramas que dibuja la IA</span></span><span class="meta">hoy</span></div>
+          <div class="cuerpo-fila">
             <div class="texto-doc" contenteditable="true" spellcheck="false">
               <p>Que la IA explique una parte de la app con un dibujo y lo recorra paso a paso. Salió de revisar <a class="enlace" href="#"><i data-ic="abrir"></i>excalidraw/excalidraw<span class="sitio">github.com</span></a></p>
               <span class="pegada" role="img" aria-label="Captura pegada"></span>
             </div>
-            <div class="pie-idea"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Hablar de esta idea</button><button class="boton sin-fondo chico"><i data-ic="ok"></i>Aprobar</button><button class="boton sin-fondo chico"><i data-ic="cerrar"></i>Rechazar</button><button class="boton sin-fondo chico"><i data-ic="derecha"></i>Mover a un proyecto</button><button class="boton sin-fondo chico"><i data-ic="papelera"></i>Borrar</button></div>
+            <div class="pie-fila"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Hablar de esta idea</button><button class="boton sin-fondo chico"><i data-ic="ok"></i>Aprobar</button><button class="boton sin-fondo chico"><i data-ic="cerrar"></i>Rechazar</button><button class="boton sin-fondo chico"><i data-ic="derecha"></i>Mover a un proyecto</button><button class="boton sin-fondo chico"><i data-ic="papelera"></i>Borrar</button></div>
           </div>
         </div>
         <div class="filas con-lineas">
