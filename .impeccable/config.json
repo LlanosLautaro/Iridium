@@ -134,6 +134,24 @@
         ],
         "createdAt": "2026-11-16T10:53:45.395Z",
         "reason": "IA: es la línea gris de 2px de las citas (blockquote) en el Texto de documento PZ-12, copia de docs/diseno/piezas.css aprobada en DI-I2 (Q-154); no es una tarjeta con acento"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-proyecto-c.html"
+        ],
+        "createdAt": "2026-11-16T13:56:04.631Z",
+        "reason": "Iridium design system: type sizes come from docs/diseno/tokens.css, the sober scale approved by the user for the whole app (D-104, D-108; DI-I2 approved in Q-154/Q-157); a mockup must not deviate from it"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-inicio-c.html"
+        ],
+        "createdAt": "2026-11-16T13:56:04.835Z",
+        "reason": "Iridium design system: type sizes come from docs/diseno/tokens.css, the sober scale approved by the user for the whole app (D-104, D-108; DI-I2 approved in Q-154/Q-157); a mockup must not deviate from it"
       }
     ]
   }
