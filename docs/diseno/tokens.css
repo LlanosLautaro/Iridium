@@ -29,7 +29,7 @@
   --texto-apagado: #4d4d4d; /* lo deshabilitado y los números de línea; nunca para texto que haya que leer */
 
   /* Lo principal y lo marcado */
-  --principal: #3ccf7f; /* la letra y el borde del botón principal y nada más: uno por pantalla (Enviar, Continuar; D-109, R-49) */
+  --principal: #3ccf7f; /* la letra y el borde del botón principal y nada más: uno por pantalla (Enviar, Continuar; D-109, R-49), salvo el Enviar de cada pregunta de la Bandeja (R-73) */
   --principal-hover: #5adb93; /* la letra y el borde del botón principal al pasar el mouse */
   --principal-fondo: #06140c; /* el fondo del botón principal al pasar el mouse; quieto, va sobre el negro */
   --sobre-principal: #000000; /* lo que va sobre lo marcado: el tilde de una casilla, la perilla de un interruptor */

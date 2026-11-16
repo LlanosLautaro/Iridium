@@ -179,7 +179,13 @@ export class Conversaciones {
         return { tipo: 'usuario', id: this.id(), texto, cuando: m.cuando }
       }
       case 'ia':
-        return { tipo: 'ia', id: this.id(), html: p.html(m.texto), cuando: m.cuando }
+        return {
+          tipo: 'ia',
+          id: this.id(),
+          html: p.html(m.texto),
+          cuando: m.cuando,
+          ...(m.final ? { final: true } : {}),
+        }
       case 'herramienta':
         return { tipo: 'herramienta', id: this.id(), accion: m.accion, objeto: m.objeto }
       case 'detenida':

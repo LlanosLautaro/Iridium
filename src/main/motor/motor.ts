@@ -13,8 +13,11 @@ import type {
 /** Un mensaje de una conversación, sin nada del SDK. */
 export type MensajeMotor =
   | { tipo: 'usuario'; texto: string; cuando: number | null }
-  /** Markdown, tal como lo escribió la IA. */
-  | { tipo: 'ia'; texto: string; cuando: number | null }
+  /**
+   * Markdown, tal como lo escribió la IA. `final`: con él terminó de responder (`end_turn`); si después sigue (un hook
+   * de fin de turno le pidió algo más), esa respuesta no se pliega en el proceso de lo que siguió (R-72).
+   */
+  | { tipo: 'ia'; texto: string; cuando: number | null; final?: boolean }
   /** Una herramienta que usó la IA, en palabras: «Leyó» `docs/estado.md`. */
   | { tipo: 'herramienta'; accion: string; objeto: string | null }
   /** El usuario la detuvo (así queda en el historial). */
@@ -317,8 +320,23 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
             await o.alTurno?.(carpeta, texto)
             emitir({ tipo: 'herramienta', accion: 'Editó', objeto: 'docs/estado.md' })
           },
-          () => emitir({ tipo: 'ia', texto: 'Listo: dejé el estado al día.', cuando: Date.now() }),
+          () =>
+            emitir({ tipo: 'ia', texto: 'Listo: dejé el estado al día.', cuando: Date.now(), final: true }),
         ]
+        // R-72: un hook de fin de turno que le pide algo más a la IA: responde, sigue con una herramienta y responde de nuevo.
+        if (/hook/i.test(texto))
+          pasos.splice(
+            pasos.length - 1,
+            0,
+            () =>
+              emitir({
+                tipo: 'ia',
+                texto: 'Primera respuesta, antes del hook.',
+                cuando: Date.now(),
+                final: true,
+              }),
+            () => emitir({ tipo: 'herramienta', accion: 'Ejecutó', objeto: 'el control de diseño' }),
+          )
         let detenido = false
         const terminar = () => {
           alDetener = null

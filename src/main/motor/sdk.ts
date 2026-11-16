@@ -370,15 +370,25 @@ export function textoDeUsuario(contenido: unknown): MensajeMotor | null {
 }
 
 /** Los textos y las herramientas de un mensaje de la IA. */
-export function mensajesDeIa(contenido: unknown, carpeta: string, cuando: number | null): MensajeMotor[] {
+export function mensajesDeIa(
+  contenido: unknown,
+  carpeta: string,
+  cuando: number | null,
+  final = false,
+): MensajeMotor[] {
   const salida: MensajeMotor[] = []
   for (const b of bloques(contenido)) {
     if (b.type === 'text' && typeof b.text === 'string' && b.text.trim() !== '')
-      salida.push({ tipo: 'ia', texto: b.text, cuando })
+      salida.push({ tipo: 'ia', texto: b.text, cuando, ...(final ? { final } : {}) })
     else if (b.type === 'tool_use' && typeof b.name === 'string')
       salida.push({ tipo: 'herramienta', ...describirHerramienta(b.name, b.input, carpeta) })
   }
   return salida
+}
+
+/** Si con este mensaje la IA terminó de responder (R-72): Claude Code guarda `end_turn` en el último texto. */
+function terminoDeResponder(mensaje: unknown): boolean {
+  return (mensaje as { stop_reason?: unknown } | null)?.stop_reason === 'end_turn'
 }
 
 /** Una conversación guardada, en mensajes de la app. Lo de los agentes (subconversaciones) no se muestra. */
@@ -390,7 +400,8 @@ export function mensajesDeHistorial(historial: readonly SessionMessage[], carpet
     if (m.type === 'user') {
       const u = textoDeUsuario(contenido)
       if (u) salida.push(u)
-    } else if (m.type === 'assistant') salida.push(...mensajesDeIa(contenido, carpeta, null))
+    } else if (m.type === 'assistant')
+      salida.push(...mensajesDeIa(contenido, carpeta, null, terminoDeResponder(m.message)))
   }
   return salida
 }
@@ -768,7 +779,12 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
                 cache.ultimoPedido = Date.now()
                 cache.cacheMs = cacheDe(m.message.usage) ?? cache.cacheMs
               }
-              for (const mensaje of mensajesDeIa(m.message.content, carpeta, Date.now()))
+              for (const mensaje of mensajesDeIa(
+                m.message.content,
+                carpeta,
+                Date.now(),
+                terminoDeResponder(m.message),
+              ))
                 alEvento({ tipo: 'mensaje', mensaje })
             } else if (m.type === 'rate_limit_event') {
               const r = m.rate_limit_info

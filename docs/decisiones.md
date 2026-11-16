@@ -134,6 +134,8 @@
 | D-125 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (R-62, R-65 a R-68, R-70) | La Bandeja del proyecto es solo bandeja (los scripts, en su sección); el proyecto sin cabecera propia ni el hito repetido; el inicio lleva siempre a Proyectos | vigente (ajusta D-044) |
 | D-126 | 2026-11-16 | Diseño | 10, frente Diseño, paso 7 (DI-I3, tanda 8) | La hoja de Ideas es `notas.md` de la carpeta Ideas, con las imágenes en `notas/`; fuera anotar sin la IA | vigente (ajusta W-10 y H-18) |
 | D-127 | 2026-11-16 | Ideas | 10, frente Ideas, paso 1 (T-69) | Las ideas de un proyecto se piensan como frente propio, con su UX y sus maquetas antes de construir | vigente |
+| D-128 | 2026-11-16 | Ideas | 10, frente Ideas, paso 1 (Q-175 a Q-177) | Ideas es una lista de ideas con estado y enlaces para revisar, igual en cada proyecto y en el inicio | vigente (reemplaza a D-112 y D-126 al construirse) |
+| D-129 | 2026-11-16 | Ideas | 10, frente Ideas, paso 2 (Q-179) | Aprobar una idea la pasa al trabajo de la IA como pendiente; rechazarla, a descartado | vigente |
 
 ---
 
@@ -2799,3 +2801,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** una sola manera de anotar en toda la app; cada idea separada, como la Ideas de antes, y el enlace con un fin.
 
 **Consecuencias:** la tanda 8 de DI-I3 (el bloc) no se pule: queda hasta que Ideas se construya; pegar enlaces e imágenes se reusa en la nota de cada idea. Dónde se guarda una idea se decide en el diseño técnico del frente.
+
+## D-129 — Aprobar una idea la pasa al trabajo de la IA como pendiente; rechazarla, a descartado
+- **Fecha:** 2026-11-16
+- **Ámbito:** Ideas
+- **Hito o paso:** 10; frente Ideas, paso 2 (Q-179)
+- **Estado:** vigente
+
+**Contexto:** D-128 le dio a cada idea un estado en color (sin evaluar, aprobada, rechazada, hecha). Faltaba qué hace Aprobar.
+
+**Decisión:** el estado de una idea es el de su trabajo, con el vocabulario del framework: sin evaluar es `nueva`, aprobada es `pendiente` (la IA la toma cuando le toque, en el orden del plan, sin otro paso), rechazada es `descartado` y hecha es `hecho`; una idea que la IA está haciendo (`en curso`) se ve aprobada. Iridium muestra las palabras del usuario; el archivo guarda las del framework.
+
+**Motivo:** aprobar ya dice «hacela»; y con los estados de siempre, el control y el Mapa no necesitan nada nuevo.
+
+**Consecuencias:** al rechazar, el motivo es opcional (el framework pide uno en `descartado`: si no se escribe, queda «rechazada por el usuario»). La IA, al arrancar algo nuevo, mira los `pendiente` como hasta ahora.

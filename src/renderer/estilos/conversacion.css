@@ -153,6 +153,10 @@
 .proceso-ia + .linea-aviso {
   margin-top: var(--esp-2);
 }
+/* R-72: después de una respuesta, el proceso de lo que siguió empieza un tramo nuevo. */
+.respuesta-ia + .proceso-ia {
+  margin-top: var(--esp-4);
+}
 
 /* Lo que usó la IA: una línea que se despliega */
 .herramientas {

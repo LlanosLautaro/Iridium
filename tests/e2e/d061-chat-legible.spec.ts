@@ -91,3 +91,26 @@ test('lo tuyo en burbuja; de la IA, el proceso aparte (plegado al terminar) y la
   await win.screenshot({ path: 'test-results/d061-proceso-abierto.png' })
   await app.close()
 })
+
+test('R-72: si la IA responde y un hook la hace seguir, esa respuesta no se pliega en el proceso', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  const hilo = win.locator('.hilo')
+  await campo.fill('Con un hook al final')
+  await campo.press('Enter')
+
+  // Dos tramos: cada respuesta, en letra de lectura y con su proceso plegado arriba.
+  await expect(hilo.locator('.respuesta-ia')).toHaveText(
+    ['Primera respuesta, antes del hook.', 'Listo: dejé el estado al día.'],
+    { timeout: 20_000 },
+  )
+  const procesos = hilo.locator('.proceso-ia.plegado')
+  await expect(procesos).toHaveCount(2)
+  await expect(procesos.nth(0).locator('.proceso-cab')).toContainText('Proceso2 herramientas · 1 nota')
+  await expect(procesos.nth(1).locator('.proceso-cab')).toContainText('Proceso1 herramienta')
+  await procesos.nth(1).locator('.proceso-cab').click()
+  await expect(procesos.nth(1)).not.toContainText('Primera respuesta')
+  await win.screenshot({ path: 'test-results/r72-dos-respuestas.png' })
+  await app.close()
+})

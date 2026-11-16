@@ -294,7 +294,7 @@ export function Pendiente({
   ruta: string
   p: PendienteVista
   abrirDoc: (d: Destino) => void
-  /** La primera de la lista: va abierta y su Enviar es el principal de la pantalla (un principal como mucho). */
+  /** La primera de la lista: va abierta. */
   primera?: boolean
 }) {
   const enMemoria = usarEstado((s) => s.borradores[claveBorrador(ruta, p.codigo)])
@@ -510,9 +510,10 @@ export function Pendiente({
                     Cancelar
                   </button>
                 )}
+                {/* R-73: el Enviar de cada pregunta es principal (verde): es lo que cierra esa pregunta. */}
                 <button
                   type="button"
-                  className={primera ? 'boton principal' : 'boton secundario'}
+                  className="boton principal"
                   disabled={guardando || !puedeEnviar(b, p)}
                   onClick={() => void enviar()}
                 >

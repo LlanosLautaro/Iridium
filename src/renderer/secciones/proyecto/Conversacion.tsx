@@ -363,6 +363,8 @@ function Quien({ ia = false }: { ia?: boolean }) {
 /**
  * Un turno de la IA (D-061): arriba el proceso (hasta la última herramienta) y después la respuesta, en letra de
  * lectura. Los avisos, errores y preguntas nunca quedan plegados. Mientras trabaja, todo es proceso.
+ * Si la IA respondió y después siguió (un hook de fin de turno le pidió algo más), cada respuesta cierra su tramo, con
+ * su proceso plegado arriba (R-72).
  */
 function TurnoIa({
   turno,
@@ -374,16 +376,7 @@ function TurnoIa({
   enCurso: boolean
 }) {
   const cuando = turno.entradas.find((e) => e.tipo === 'ia' && e.cuando !== null)
-  const ultima = turno.entradas.findLastIndex((e) => e.tipo === 'herramienta')
-  const corte = enCurso ? turno.entradas.length : ultima + 1
-  const pasos: Paso[] = []
-  const sueltas: Exclude<EntradaIa, Paso>[] = []
-  for (const e of turno.entradas.slice(0, corte)) {
-    if (e.tipo === 'ia' || e.tipo === 'herramienta') pasos.push(e)
-    else sueltas.push(e)
-  }
-  const respuesta = turno.entradas.slice(corte)
-  const hayRespuesta = respuesta.some((e) => e.tipo === 'ia')
+  const tramos = tramosDe(turno.entradas)
   return (
     <div className="turno ia mensaje-ia">
       {/* Sin ruido (D-108): la hora, al pasar el mouse. */}
@@ -393,6 +386,48 @@ function TurnoIa({
       >
         <Quien ia />
       </div>
+      {tramos.map((entradas, i) => (
+        <Tramo
+          key={entradas[0]?.id ?? i}
+          entradas={entradas}
+          ruta={ruta}
+          enCurso={enCurso && i === tramos.length - 1}
+        />
+      ))}
+    </div>
+  )
+}
+
+/** Corta el turno después de cada respuesta final (`final`) que tiene herramientas más adelante (R-72). */
+function tramosDe(entradas: EntradaIa[]): EntradaIa[][] {
+  const tramos: EntradaIa[][] = []
+  let desde = 0
+  const ultimaHerramienta = entradas.findLastIndex((e) => e.tipo === 'herramienta')
+  for (let i = 0; i < ultimaHerramienta; i++) {
+    const e = entradas[i]
+    const siguiente = entradas[i + 1]
+    if (e?.tipo === 'ia' && e.final && !(siguiente?.tipo === 'ia' && siguiente.final)) {
+      tramos.push(entradas.slice(desde, i + 1))
+      desde = i + 1
+    }
+  }
+  tramos.push(entradas.slice(desde))
+  return tramos
+}
+
+function Tramo({ entradas, ruta, enCurso }: { entradas: EntradaIa[]; ruta: string; enCurso: boolean }) {
+  const ultima = entradas.findLastIndex((e) => e.tipo === 'herramienta')
+  const corte = enCurso ? entradas.length : ultima + 1
+  const pasos: Paso[] = []
+  const sueltas: Exclude<EntradaIa, Paso>[] = []
+  for (const e of entradas.slice(0, corte)) {
+    if (e.tipo === 'ia' || e.tipo === 'herramienta') pasos.push(e)
+    else sueltas.push(e)
+  }
+  const respuesta = entradas.slice(corte)
+  const hayRespuesta = respuesta.some((e) => e.tipo === 'ia')
+  return (
+    <>
       {pasos.length > 0 && <Proceso pasos={pasos} plegable={!enCurso && hayRespuesta} />}
       {sueltas.map((e) => (
         <Final key={e.id} e={e} ruta={ruta} />
@@ -409,7 +444,7 @@ function TurnoIa({
           <Final key={e.id} e={e} ruta={ruta} />
         ),
       )}
-    </div>
+    </>
   )
 }
 

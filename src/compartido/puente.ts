@@ -328,8 +328,11 @@ export interface ReintentoSesion {
 /** Una línea de la conversación, ya lista para mostrar (04-ux.md › W-3). */
 export type Entrada =
   | { tipo: 'usuario'; id: string; texto: string; cuando: number | null }
-  /** El texto de la IA convertido de Markdown a HTML seguro (sin HTML crudo). */
-  | { tipo: 'ia'; id: string; html: string; cuando: number | null }
+  /**
+   * El texto de la IA convertido de Markdown a HTML seguro (sin HTML crudo). `final`: con él terminó de responder,
+   * aunque después siguiera por un hook (R-72).
+   */
+  | { tipo: 'ia'; id: string; html: string; cuando: number | null; final?: boolean }
   | { tipo: 'herramienta'; id: string; accion: string; objeto: string | null }
   | { tipo: 'aviso'; id: string; clase: 'detenida' | 'error'; texto: string }
   /**
