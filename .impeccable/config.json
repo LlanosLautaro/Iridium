@@ -125,6 +125,15 @@
         ],
         "createdAt": "2026-11-08T15:09:43.867Z",
         "reason": "IA: es la línea gris de las citas (blockquote) del texto de documento, PZ-12, no un acento de tarjeta"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/renderer/estilos/piezas.css"
+        ],
+        "createdAt": "2026-11-16T10:53:45.395Z",
+        "reason": "IA: es la línea gris de 2px de las citas (blockquote) en el Texto de documento PZ-12, copia de docs/diseno/piezas.css aprobada en DI-I2 (Q-154); no es una tarjeta con acento"
       }
     ]
   }
