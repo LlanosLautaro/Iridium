@@ -33,13 +33,13 @@
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 probadas; la tanda 8, el bloc de Ideas, espera Q-174 y se reemplazará por el frente Ideas, D-128) | en pausa |
-| Ideas (`modulos/ideas/estado.md`) | sección | 4. UX (definición aprobada; aprobar es pasar al trabajo, D-129; espera Q-180) | en curso |
+| Ideas (`modulos/ideas/estado.md`) | sección | 4. UX (escrita, espera Q-180; el diseño técnico, en borrador) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (T-71) | sección | 1. Propuesta (el Mapa como una red de pasos por frente; pensarlo en el chat; orden con Capacidades a decidir) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Ideas** (D-127, T-69): elegida la forma C (D-128): cada idea en su renglón, con su estado en color, las de la IA con un robot, «Para revisar» para los enlaces, y la misma forma en el inicio para las ideas sueltas. La Definición está aprobada; aprobar una idea la pasa al trabajo de la IA como pendiente (D-129). La UX está escrita (`modulos/ideas/ux.md`).
+**Frente activo: Ideas** (D-127, T-69): elegida la forma C (D-128): cada idea en su renglón, con su estado en color, las de la IA con un robot, «Para revisar» para los enlaces, y la misma forma en el inicio para las ideas sueltas. La Definición está aprobada; aprobar una idea la pasa al trabajo de la IA como pendiente (D-129). La UX está escrita (`modulos/ideas/ux.md`) y, mientras espera Q-180, el diseño técnico quedó en borrador (`modulos/ideas/diseno-tecnico.md`): cada idea es un `T-n` de `trabajo.md` con su nota aparte; el bloc de notas no se borra.
 Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) espera Q-174; el bloc se reemplazará por Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir queda en pausa (2026-11-16, a pedido del usuario): lo que falta para compartir Iridium por GitHub, la invitación (Q-126), se retoma cuando lo pida.
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
@@ -47,7 +47,7 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 ## Preguntas abiertas
 - **Q-180 — ¿Va cómo se usa Ideas?**
   Tipo: decisión · frena · Frente: Ideas
-  Contexto: lo que hace cada cosa, en `modulos/ideas/ux.md` › Historias de usuario (ID-1 a ID-8); lo que pasa con un enlace y con una idea aprobada, en › Flujos. Detalles que elegí yo: Enter anota y Shift+Enter abre una línea más; una idea abierta a la vez; Aprobar otra vez la devuelve a sin evaluar; las ideas de la IA no se borran, se rechazan; un enlace revisado pasa a Hechas.
+  Contexto: lo que hace cada cosa, en `modulos/ideas/ux.md` › Historias de usuario (ID-1 a ID-8); lo que pasa con un enlace y con una idea aprobada, en › Flujos. Detalles que elegí yo: Enter anota y Shift+Enter abre una línea más; una idea abierta a la vez; Aprobar otra vez la devuelve a sin evaluar; las ideas de la IA no se borran, se rechazan; un enlace revisado pasa a Hechas; el nombre de un enlace sale de su dirección (en GitHub, `dueño/repo`), sin que Iridium lea la página.
   Opciones: A) Sí, seguí con cómo se construye (recomendada: con esto ya se puede construir sin volver a preguntarte cómo se usa) · B) Cambiá algo (decime qué en el texto libre)
 
 - **Q-174 — Probá Ideas como bloc de notas**
@@ -69,7 +69,7 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Ideas: con Q-180, cerrar la UX y escribir el diseño técnico (dónde se guarda una idea con su nota y sus imágenes, y el formato nuevo en el framework con su control). Si llega antes Q-174, se procesa (del bloc solo se arregla lo que rompa el uso o lo que vuelve en cada idea: pegar enlaces e imágenes).
+Ideas: con Q-180, cerrar la UX y ajustar y cerrar el diseño técnico (ya en borrador); después, planificar la primera iteración. Si llega antes Q-174, se procesa (del bloc solo se arregla lo que rompa el uso o lo que vuelve en cada idea: pegar enlaces e imágenes).
 **Leer antes:** `modulos/ideas/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
