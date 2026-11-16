@@ -30,6 +30,7 @@ import { marcarVista, vistaDiseno } from '../app/diseno'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
 import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
+import { anotarIdea, cambiarEstadoIdea, guardarIdea, ideasDeProyecto, leerNotaIdea } from '../app/ideas'
 import { mapaDe } from '../app/mapa'
 import { guardarHoja, leerHoja, pegarImagenEnHoja } from '../app/notas'
 import { Pendientes } from '../app/pendientes'
@@ -73,11 +74,13 @@ import {
   CambioPreferencias,
   Codigo,
   CodigoComentario,
+  CodigoIdea,
   CommitPedido,
   Documento,
   Escrito,
   EsquemaBorrador,
   EstadoFicha,
+  EstadoIdeaEsquema,
   HashCommit,
   IdConversacion,
   IdScript,
@@ -599,6 +602,20 @@ export function registrarPuente(s: Servicios): Puente {
   // El trabajo de un proyecto (W-11) y las skills (R-8): solo leen.
   ipcMain.handle(CANALES.trabajoProyecto, async (_, ruta: unknown) =>
     trabajoDelProyecto(await docs.de(await proyecto(ruta))),
+  )
+  // La sección Ideas (D-130): la ventana manda lo escrito; este lado arma el `T-n` y escribe sin pisar a la IA.
+  ipcMain.handle(CANALES.ideasProyecto, async (_, ruta: unknown) => ideasDeProyecto(await proyecto(ruta)))
+  ipcMain.handle(CANALES.anotarIdea, async (_, ruta: unknown, escrito: unknown) =>
+    anotarIdea(await proyecto(ruta), Escrito.parse(escrito)),
+  )
+  ipcMain.handle(CANALES.estadoIdea, async (_, ruta: unknown, codigo: unknown, estado: unknown) =>
+    cambiarEstadoIdea(await proyecto(ruta), CodigoIdea.parse(codigo), EstadoIdeaEsquema.parse(estado)),
+  )
+  ipcMain.handle(CANALES.notaIdea, async (_, ruta: unknown, codigo: unknown) =>
+    leerNotaIdea(await proyecto(ruta), CodigoIdea.parse(codigo)),
+  )
+  ipcMain.handle(CANALES.guardarIdea, async (_, ruta: unknown, codigo: unknown, escrito: unknown) =>
+    guardarIdea(await proyecto(ruta), CodigoIdea.parse(codigo), TextoNotas.parse(escrito)),
   )
   ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
 

@@ -36,6 +36,8 @@ export interface IdeaVista {
   enlace: string | null
   /** El texto de `trabajo.md`: la idea de la IA o la descripción de un enlace (Markdown). */
   texto: string
+  /** Si tiene nota en `docs/ideas/T-n.md` (solo las del usuario). */
+  conNota: boolean
 }
 
 export const FILTROS_IDEAS = [
@@ -47,3 +49,19 @@ export const FILTROS_IDEAS = [
   'hechas',
 ] as const
 export type FiltroIdeas = (typeof FILTROS_IDEAS)[number]
+
+/** Las ideas de un proyecto: solo los que siguen el framework tienen `trabajo.md`. */
+export type IdeasDeProyecto =
+  | { tipo: 'ok'; ideas: IdeaVista[] }
+  | { tipo: 'sin-framework' }
+  | { tipo: 'error'; mensaje: string }
+
+/** Lo que devuelve un cambio: el código de la idea, o por qué no se pudo (la pantalla no pierde lo escrito, ID-11). */
+export type ResultadoIdea = { tipo: 'ok'; codigo: string } | { tipo: 'error'; mensaje: string }
+
+/** La nota de una idea, sin el título; '' si no tiene. */
+export type NotaIdea = { tipo: 'ok'; texto: string } | { tipo: 'error'; mensaje: string }
+
+/** Los estados a los que la pasa Iridium (ID-3): aprobar, rechazar, volver a sin evaluar y marcar revisado. */
+export const ESTADOS_DESDE_IDEAS = ['nueva', 'pendiente', 'descartado', 'hecho'] as const
+export type EstadoDesdeIdeas = (typeof ESTADOS_DESDE_IDEAS)[number]

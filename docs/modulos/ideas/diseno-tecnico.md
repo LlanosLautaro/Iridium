@@ -52,7 +52,7 @@ Todo lo que Iridium cambia en `trabajo.md` usa el cuidado de `modulos/orden/dise
 | Pegar un enlace solo (ID-4) | Agrega un `T-n` `nueva`, `Idea: enlace`, con `Enlace:` y lo escrito además como texto |
 | Escribir en una idea abierta (ID-2) | Guarda la nota un momento después de la última tecla (como el bloc); el título, si cambió |
 | Pegar una imagen | `docs/ideas/T-n/AAAA-MM-DD-n.<ext>`, sin pisar ninguna (como `pegarImagenEnHoja`) |
-| Aprobar / Rechazar (ID-3) | Cambia `Estado:` a `pendiente` / `descartado` (con «Rechazada por el usuario.» si el texto no dice un motivo, D-129); el mismo botón otra vez, a `nueva` |
+| Aprobar / Rechazar (ID-3) | Cambia `Estado:` a `pendiente` / `descartado` (con «Rechazada por el usuario.» si el texto no dice un motivo, D-129); el mismo botón otra vez, a `nueva`. A una idea sin `Idea:` le agrega `Idea: IA`, como hace la IA: si no, fuera de `nueva` dejaría de estar en Ideas |
 | Marcar un enlace revisado | `Estado: hecho` |
 | Borrar (ID-8) | Saca el `T-n` de `trabajo.md` y después su nota y su carpeta de imágenes. Solo `Idea: usuario` o `enlace` |
 

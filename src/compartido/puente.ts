@@ -3,6 +3,7 @@
 
 import type { AnchosConversacion } from './ancho-conversacion'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
+import type { EstadoDesdeIdeas, IdeasDeProyecto, NotaIdea, ResultadoIdea } from './ideas'
 import type { HojaNotas, ImagenPegada, ResultadoNotas } from './notas'
 import type { Borrador } from './respuestas'
 import type { ListaSkills, ProyectoFramework, SkillProyecto } from './skills'
@@ -827,6 +828,11 @@ export const CANALES = {
   planEliminarProyecto: 'proyectos:plan-eliminar',
   eliminarProyecto: 'proyectos:eliminar',
   trabajoProyecto: 'proyecto:trabajo',
+  ideasProyecto: 'proyecto:ideas',
+  anotarIdea: 'proyecto:anotar-idea',
+  estadoIdea: 'proyecto:estado-idea',
+  notaIdea: 'proyecto:nota-idea',
+  guardarIdea: 'proyecto:guardar-idea',
   skillsProyecto: 'proyecto:skills',
   abrirDiseno: 'diseno:abrir',
   marcarVista: 'diseno:marcar-vista',
@@ -1009,6 +1015,16 @@ export interface ApiIridium {
   eliminarProyecto(ruta: string): Promise<ResultadoFicha>
   /** El trabajo del proyecto (W-11): los `T-n` de `docs/trabajo.md` o, con framework viejo, sus ideas (R-8). */
   trabajoProyecto(ruta: string): Promise<TrabajoProyecto>
+  /** La sección Ideas del proyecto (D-130): los `T-n` con `Idea:` y los `nueva` sin él; se relee con `alCambiarDocs`. */
+  ideasProyecto(ruta: string): Promise<IdeasDeProyecto>
+  /** Anota lo escrito en el campo de arriba (ID-1, ID-4): una idea con su nota, o un enlace para revisar. */
+  anotarIdea(ruta: string, escrito: string): Promise<ResultadoIdea>
+  /** Aprobar (`pendiente`), rechazar (`descartado`), volver a sin evaluar (`nueva`) o marcar revisado (`hecho`). */
+  estadoIdea(ruta: string, codigo: string, estado: EstadoDesdeIdeas): Promise<ResultadoIdea>
+  /** La nota de una idea del usuario, sin el título (`docs/ideas/T-n.md`). */
+  notaIdea(ruta: string, codigo: string): Promise<NotaIdea>
+  /** Guarda una idea abierta: la primera línea es el título y el resto, la nota (ID-2). */
+  guardarIdea(ruta: string, codigo: string, escrito: string): Promise<ResultadoIdea>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */
   skillsProyecto(ruta: string): Promise<SkillProyecto[]>
   /** La sección Diseño (DS-11 a DS-13): los grupos de maquetas, el sistema y la base `maqueta://` de las miniaturas. */

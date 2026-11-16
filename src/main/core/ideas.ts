@@ -21,7 +21,10 @@ const ESTADO_IDEA: Record<Estado, EstadoIdea> = {
  * Los `T-n` que son ideas: los que tienen `Idea:` y los `nueva` sin él (se leen como de la IA, D-130). Lo más nuevo
  * primero: por fecha y, el mismo día, por código.
  */
-export function ideasDe(items: readonly ItemTrabajo[]): IdeaVista[] {
+export function ideasDe(
+  items: readonly ItemTrabajo[],
+  conNota: ReadonlySet<string> = new Set(),
+): IdeaVista[] {
   const ideas: IdeaVista[] = []
   for (const i of items) {
     const de = i.idea ?? (i.ideaTexto === null && i.estado === 'nueva' ? 'IA' : null)
@@ -34,6 +37,7 @@ export function ideasDe(items: readonly ItemTrabajo[]): IdeaVista[] {
       fecha: i.fecha,
       enlace: de === 'enlace' ? i.enlace : null,
       texto: i.texto,
+      conNota: de === 'usuario' && conNota.has(i.codigo),
     })
   }
   const numero = (c: string) => Number(c.slice(2))
@@ -186,22 +190,23 @@ function ubicar(
 
 /**
  * Cambia el estado de una idea (ID-3). Al pasarla a `descartado` sin texto, escribe `MOTIVO_RECHAZO`; al sacarla de
- * `descartado`, lo borra si es lo único que dice. null si el código no está.
+ * `descartado`, lo borra si es lo único que dice. A una idea sin `Idea:` le agrega `Idea: IA`, para que siga en Ideas
+ * fuera de `nueva` (D-130). null si el código no está.
  */
 export function cambiarEstado(texto: string, codigo: string, estado: Estado): string | null {
   const lineas = partirLineas(texto)
   const u = ubicar(lineas, codigo)
   if (!u) return null
-  const nuevo = `Estado: ${estado}`
+  const nuevo = [`Estado: ${estado}`, ...(u.item.ideaTexto === null ? ['Idea: IA'] : [])]
   let n = u.datos
   if (n === null) {
     n = u.item.linea + 1
-    lineas.splice(n, 0, nuevo)
+    lineas.splice(n, 0, nuevo.join(' · '))
   } else {
     const partes = (lineas[n] ?? '').split(/\s*·\s*/)
     const i = partes.findIndex((p) => /^\s*[*_]*estado[*_]*:/i.test(p))
-    if (i >= 0) partes[i] = nuevo
-    else partes.unshift(nuevo)
+    if (i >= 0) partes.splice(i, 1, ...nuevo)
+    else partes.unshift(...nuevo)
     lineas[n] = partes.join(' · ')
   }
   if (estado === 'descartado' && !u.item.texto) lineas.splice(n + 1, 0, MOTIVO_RECHAZO)

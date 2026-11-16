@@ -1,6 +1,7 @@
 // Esquemas que validan lo que llega desde la ventana (05-arquitectura.md › Seguridad: validar todo contenido externo).
 import { z } from 'zod'
 import { LARGO_NOMBRE_REPO } from '../../compartido/github'
+import { ESTADOS_DESDE_IDEAS } from '../../compartido/ideas'
 import {
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
@@ -58,6 +59,12 @@ export const Pedido = z
   .strict()
 
 export const Codigo = z.string().regex(/^Q-[1-9]\d{0,3}$/)
+
+/** Una idea de la sección Ideas: un `T-n` de `trabajo.md` (D-130). */
+export const CodigoIdea = z.string().regex(/^T-[1-9]\d{0,3}$/)
+
+/** Aprobar, rechazar, volver a sin evaluar o marcar revisado (ID-3). */
+export const EstadoIdeaEsquema = z.enum(ESTADOS_DESDE_IDEAS)
 
 /** Un documento del proyecto (después se comprueba que sea un `.md` sin salir de la carpeta). */
 export const Documento = z.string().min(1).max(512)

@@ -156,11 +156,16 @@ describe('los cambios en trabajo.md', () => {
 
   it('aprobar, rechazar sin motivo y volver a sin evaluar', () => {
     const aprobada = cambiarEstado(TRABAJO, 'T-2', 'pendiente') ?? ''
-    expect(aprobada).toContain('## T-2 — Una idea vieja de la IA\nEstado: pendiente · Fecha: 2026-11-02\n')
+    expect(aprobada).toContain(
+      '## T-2 — Una idea vieja de la IA\nEstado: pendiente · Idea: IA · Fecha: 2026-11-02\n',
+    )
     const rechazada = cambiarEstado(TRABAJO, 'T-2', 'descartado') ?? ''
-    expect(rechazada).toContain(`Estado: descartado · Fecha: 2026-11-02\n${MOTIVO_RECHAZO}\n`)
+    expect(rechazada).toContain(`Estado: descartado · Idea: IA · Fecha: 2026-11-02\n${MOTIVO_RECHAZO}\n`)
     expect(leerTrabajo(rechazada).items.find((i) => i.codigo === 'T-2')?.texto).toBe(MOTIVO_RECHAZO)
-    expect(cambiarEstado(rechazada, 'T-2', 'nueva')).toBe(TRABAJO)
+    // Se queda con `Idea: IA` (D-130): fuera de `nueva`, sin él dejaría de estar en Ideas.
+    expect(cambiarEstado(rechazada, 'T-2', 'nueva')).toBe(
+      TRABAJO.replace('Estado: nueva · Fecha: 2026-11-02', 'Estado: nueva · Idea: IA · Fecha: 2026-11-02'),
+    )
   })
 
   it('rechazar con un motivo escrito lo deja; un código que no está da null', () => {
@@ -172,7 +177,7 @@ describe('los cambios en trabajo.md', () => {
 
   it('un ítem sin línea de datos la recibe', () => {
     expect(cambiarEstado('# Trabajo\n\n## T-1 — a\ntexto\n', 'T-1', 'pendiente')).toBe(
-      '# Trabajo\n\n## T-1 — a\nEstado: pendiente\ntexto\n',
+      '# Trabajo\n\n## T-1 — a\nEstado: pendiente · Idea: IA\ntexto\n',
     )
   })
 

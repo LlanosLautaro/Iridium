@@ -39,7 +39,7 @@
 | Mapa (T-71) | sección | 1. Propuesta (el Mapa como una red de pasos por frente; pensarlo en el chat; orden con Capacidades a decidir) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones; en curso ID-I1 (Ideas en un proyecto). El bloc de notas sigue en la app hasta ID-I4.
+**Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones; en curso ID-I1 (Ideas en un proyecto): el formato, las reglas y la escritura con el puente están hechos; falta la pantalla. El bloc de notas sigue en la app hasta ID-I4.
 Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) espera Q-174; el bloc se reemplazará por Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir queda en pausa (2026-11-16, a pedido del usuario): lo que falta para compartir Iridium por GitHub, la invitación (Q-126), se retoma cuando lo pida.
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
@@ -64,7 +64,7 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Ideas, ID-I1, parte 3: la escritura cuidada en `trabajo.md` y en las notas, y el puente (las partes 1, el formato, y 2, las reglas de la lista, están hechas). Si llega Q-174, se procesa (del bloc solo se arregla lo que rompa el uso).
+Ideas, ID-I1, parte 4: la pantalla de Ideas en el proyecto con la maqueta C, sobre el puente de la parte 3 (las partes 1 a 3, el formato, las reglas y la escritura, están hechas). Si llega Q-174, se procesa (del bloc solo se arregla lo que rompa el uso).
 **Leer antes:** `modulos/ideas/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
