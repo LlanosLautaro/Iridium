@@ -2,6 +2,7 @@
 // `docs/diseno/pantallas/ideas-proyecto-c.html`): las ideas y los enlaces para revisar, que son `T-n` de `trabajo.md`
 // con `Idea:`. Arriba se anota; cada idea se abre en su lugar (la Fila que se abre, PZ-13) y se aprueba o se rechaza.
 // Lo que no se pudo guardar no se pierde: queda escrito y copiado, con el Recuadro de error arriba (ID-11).
+// Revisar con la IA y Hablar de esta idea van a la conversación de al lado (ID-4, ID-6).
 import { type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { diaCorto } from '../../../compartido/fechas'
 import {
@@ -12,7 +13,10 @@ import {
   type FiltroIdeas,
   type IdeasDeProyecto,
   type IdeaVista,
+  pedidoRevisar,
+  textoHablar,
 } from '../../../compartido/ideas'
+import { tarjetaDe, usarEstado } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { guardarLuego, noGuardar } from '../../ui/guardarLuego'
 import { Icono } from '../../ui/Icono'
@@ -105,6 +109,10 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   /** El texto de la idea abierta: el título en la primera línea y la nota debajo; null mientras se lee. */
   const [texto, setTexto] = useState<string | null>(null)
   const [menu, setMenu] = useState<{ codigo: string; en: Punto } | null>(null)
+  /** Los enlaces cuyo pedido de revisión se está mandando o ya se mandó (mientras la pantalla está abierta). */
+  const [pedidos, setPedidos] = useState<Record<string, 'enviando' | 'enviado'>>({})
+  const nombre = usarEstado((s) => tarjetaDe(s.lista, ruta)?.nombre ?? 'este proyecto')
+  const escribirEnCampo = usarEstado((s) => s.escribirEnCampo)
   const campo = useRef<HTMLTextAreaElement>(null)
   /** Lo último guardado de la idea abierta, para no volver a guardar lo mismo. */
   const guardado = useRef<string | null>(null)
@@ -214,6 +222,35 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   const aprobar = (i: IdeaVista) => cambiarEstado(i, i.estado === 'aprobada' ? 'nueva' : 'pendiente')
   const rechazar = (i: IdeaVista) => cambiarEstado(i, i.estado === 'rechazada' ? 'nueva' : 'descartado')
   const revisado = (i: IdeaVista) => cambiarEstado(i, i.estado === 'hecha' ? 'nueva' : 'hecho')
+
+  // Revisar con la IA (ID-9): el pedido va a la conversación de al lado; si la IA trabaja, se suma a lo que hace.
+  const revisarConIa = async (i: IdeaVista) => {
+    if (!i.enlace || pedidos[i.codigo] === 'enviando') return
+    setPedidos((p) => ({ ...p, [i.codigo]: 'enviando' }))
+    try {
+      await window.iridium.seguir(ruta, { texto: pedidoRevisar(i, nombre) })
+      setPedidos((p) => ({ ...p, [i.codigo]: 'enviado' }))
+      setFallo(null)
+    } catch (e) {
+      setPedidos(({ [i.codigo]: _, ...resto }) => resto)
+      setFallo({
+        titulo: 'No se pudo pedir la revisión',
+        mensaje: e instanceof Error ? e.message : String(e),
+      })
+    }
+  }
+
+  // Hablar de esta idea (ID-6): queda escrito en la conversación, sin enviar. Lo que esperaba guardarse se guarda
+  // antes, para que la IA lea la nota como está.
+  const hablar = async (i: IdeaVista) => {
+    const primera = i.codigo === abierta && texto !== null ? texto.split(/\r?\n/)[0]?.trim() : ''
+    if (primera && i.de === 'usuario' && texto !== null) {
+      noGuardar(claveGuardar(ruta, i.codigo))
+      if (!(await guardar(i.codigo, texto))) return
+    }
+    const titulo = primera || i.titulo
+    escribirEnCampo(ruta, textoHablar({ codigo: i.codigo, titulo }))
+  }
 
   const anotar = async () => {
     if (!escrito.trim() || anotando) return
@@ -344,6 +381,18 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
         {enlace && (
           <>
             <span className="acciones">
+              {idea.estado !== 'hecha' && (
+                <button
+                  type="button"
+                  className="boton sin-fondo chico"
+                  disabled={pedidos[idea.codigo] === 'enviando'}
+                  title="Le pide a la IA, en la conversación de al lado, que lo lea y proponga qué sacar"
+                  onClick={() => void revisarConIa(idea)}
+                >
+                  <Icono nombre="comentar" />
+                  {pedidos[idea.codigo] === 'enviado' ? 'Pedido a la IA' : 'Revisar con la IA'}
+                </button>
+              )}
               <button
                 type="button"
                 className="boton solo-icono chico"
@@ -381,32 +430,47 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
       ) : (
         <div className="texto-doc idp-texto-ia">{idea.texto.trim() || 'Sin más texto que el título.'}</div>
       )}
-      {idea.estado !== 'hecha' && (
-        <div className="pie-fila">
-          <button
-            type="button"
-            className={
-              idea.estado === 'aprobada' ? 'boton sin-fondo chico idp-elegido-bien' : 'boton sin-fondo chico'
-            }
-            aria-pressed={idea.estado === 'aprobada'}
-            onClick={() => void aprobar(idea)}
-          >
-            <Icono nombre="check" />
-            Aprobar
-          </button>
-          <button
-            type="button"
-            className={
-              idea.estado === 'rechazada' ? 'boton sin-fondo chico idp-elegido-mal' : 'boton sin-fondo chico'
-            }
-            aria-pressed={idea.estado === 'rechazada'}
-            onClick={() => void rechazar(idea)}
-          >
-            <Icono nombre="x" />
-            Rechazar
-          </button>
-        </div>
-      )}
+      <div className="pie-fila">
+        <button
+          type="button"
+          className="boton sin-fondo chico"
+          title="Lo deja escrito en la conversación de al lado, sin enviar"
+          onClick={() => void hablar(idea)}
+        >
+          <Icono nombre="comentar" />
+          Hablar de esta idea
+        </button>
+        {idea.estado !== 'hecha' && (
+          <>
+            <button
+              type="button"
+              className={
+                idea.estado === 'aprobada'
+                  ? 'boton sin-fondo chico idp-elegido-bien'
+                  : 'boton sin-fondo chico'
+              }
+              aria-pressed={idea.estado === 'aprobada'}
+              onClick={() => void aprobar(idea)}
+            >
+              <Icono nombre="check" />
+              Aprobar
+            </button>
+            <button
+              type="button"
+              className={
+                idea.estado === 'rechazada'
+                  ? 'boton sin-fondo chico idp-elegido-mal'
+                  : 'boton sin-fondo chico'
+              }
+              aria-pressed={idea.estado === 'rechazada'}
+              onClick={() => void rechazar(idea)}
+            >
+              <Icono nombre="x" />
+              Rechazar
+            </button>
+          </>
+        )}
+      </div>
     </div>
   )
 
@@ -498,6 +562,19 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                 <Icono nombre="abrir" />
                 Abrir en el navegador
               </button>
+              {ideaDelMenu.estado !== 'hecha' && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenu(null)
+                    void revisarConIa(ideaDelMenu)
+                  }}
+                >
+                  <Icono nombre="comentar" />
+                  Revisar con la IA
+                </button>
+              )}
               <button
                 type="button"
                 role="menuitem"
@@ -510,34 +587,47 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                 {ideaDelMenu.estado === 'hecha' ? 'Volver a para revisar' : 'Marcar como revisado'}
               </button>
             </>
-          ) : ideaDelMenu.estado === 'hecha' ? (
-            <p className="titulo-menu">Hecha: ya no se aprueba ni se rechaza</p>
           ) : (
             <>
               <button
                 type="button"
-                role="menuitemcheckbox"
-                aria-checked={ideaDelMenu.estado === 'aprobada'}
+                role="menuitem"
                 onClick={() => {
                   setMenu(null)
-                  void aprobar(ideaDelMenu)
+                  void hablar(ideaDelMenu)
                 }}
               >
-                <Icono nombre="check" />
-                {ideaDelMenu.estado === 'aprobada' ? 'Quitar la aprobación' : 'Aprobar'}
+                <Icono nombre="comentar" />
+                Hablar de esta idea
               </button>
-              <button
-                type="button"
-                role="menuitemcheckbox"
-                aria-checked={ideaDelMenu.estado === 'rechazada'}
-                onClick={() => {
-                  setMenu(null)
-                  void rechazar(ideaDelMenu)
-                }}
-              >
-                <Icono nombre="x" />
-                {ideaDelMenu.estado === 'rechazada' ? 'Quitar el rechazo' : 'Rechazar'}
-              </button>
+              {ideaDelMenu.estado !== 'hecha' && (
+                <>
+                  <button
+                    type="button"
+                    role="menuitemcheckbox"
+                    aria-checked={ideaDelMenu.estado === 'aprobada'}
+                    onClick={() => {
+                      setMenu(null)
+                      void aprobar(ideaDelMenu)
+                    }}
+                  >
+                    <Icono nombre="check" />
+                    {ideaDelMenu.estado === 'aprobada' ? 'Quitar la aprobación' : 'Aprobar'}
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitemcheckbox"
+                    aria-checked={ideaDelMenu.estado === 'rechazada'}
+                    onClick={() => {
+                      setMenu(null)
+                      void rechazar(ideaDelMenu)
+                    }}
+                  >
+                    <Icono nombre="x" />
+                    {ideaDelMenu.estado === 'rechazada' ? 'Quitar el rechazo' : 'Rechazar'}
+                  </button>
+                </>
+              )}
             </>
           )}
         </MenuContextual>

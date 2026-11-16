@@ -117,3 +117,21 @@ export function nombreDeEnlace(url: string): { nombre: string; sitio: string | n
     return { nombre: url, sitio: null }
   }
 }
+
+/**
+ * Revisar con la IA (ID-4, ID-9): el pedido que va a la conversación del proyecto, con el código del enlace para que la
+ * IA anote lo que salga con ese `Origen:` y lo pase a `hecho`. La descripción, si hay, va debajo.
+ */
+export function pedidoRevisar(
+  idea: Pick<IdeaVista, 'codigo' | 'enlace' | 'texto'>,
+  proyecto: string,
+): string {
+  const pedido = `Revisá ${idea.enlace} (${idea.codigo}): ¿qué podemos sacar de ahí para ${proyecto}?`
+  const descripcion = idea.texto.trim()
+  return descripcion ? `${pedido}\n\n${descripcion}` : pedido
+}
+
+/** Hablar de esta idea (ID-6): lo que queda en el campo de la conversación, sin enviar, para completarlo. */
+export function textoHablar(idea: Pick<IdeaVista, 'codigo' | 'titulo'>): string {
+  return `Hablemos de la idea ${idea.codigo} «${idea.titulo}»: `
+}

@@ -78,7 +78,7 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
 })
 
-test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechazar (ID-I1)', async () => {
+test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechazar (ID-I1); Revisar con la IA y Hablar de esta idea (ID-I2)', async () => {
   const { app, win } = await abrir()
   try {
     await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
@@ -117,6 +117,13 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     const revisar = ideas.locator('section[aria-label="Para revisar"]')
     await expect(revisar.locator('.idp-item')).toContainText('tldraw/tldraw')
     await expect(revisar.locator('.idp-item')).toContainText('github.com · Cómo arma las flechas')
+    // Revisar con la IA (ID-I2): el pedido va a la conversación de al lado, con el enlace, su código y el proyecto.
+    await revisar.getByRole('button', { name: 'Revisar con la IA' }).click()
+    await expect(revisar.getByRole('button', { name: 'Pedido a la IA' })).toBeVisible()
+    await expect(win.locator('.hilo')).toContainText(
+      'Revisá https://github.com/tldraw/tldraw (T-7): ¿qué podemos sacar de ahí para Alfa?',
+    )
+    await win.screenshot({ path: 'test-results/id2-revisar.png' })
     await revisar.getByRole('button', { name: 'Marcar como revisado' }).click()
     await expect(revisar).toHaveCount(0)
     await expect(filtros.getByRole('button', { name: 'Hechas 1' })).toBeVisible()
@@ -131,6 +138,14 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
       .poll(() => readFile(join(raiz, 'Alfa/docs/ideas/T-1.md'), 'utf8').catch(() => ''))
       .toContain('Que no suene si estoy mirando la ventana.')
     await expect.poll(trabajo).toContain('## T-1 — Un sonido cuando la IA termina (bajito)')
+
+    // Hablar de esta idea (ID-I2): queda escrito en la conversación, sin enviar, con su código y su título.
+    await ideas.locator('.cuerpo-fila').getByRole('button', { name: 'Hablar de esta idea' }).click()
+    const mensaje = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+    await expect(mensaje).toHaveValue('Hablemos de la idea T-1 «Un sonido cuando la IA termina (bajito)»: ')
+    await expect(mensaje).toBeFocused()
+    await mensaje.fill('')
+    await ideas.getByRole('textbox', { name: /Idea Un sonido/ }).click()
     await win.screenshot({ path: 'test-results/id1-ideas-abierta.png' })
 
     // Aprobar desde la idea abierta: verde, y en trabajo.md pasa a pendiente; el mismo botón la vuelve a sin evaluar.

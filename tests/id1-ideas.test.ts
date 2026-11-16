@@ -1,5 +1,6 @@
 // ID-I1: de los `T-n` de `trabajo.md` a la lista de Ideas, y los cambios que hace Iridium en el texto (D-128 a D-130).
 import { describe, expect, it } from 'vitest'
+import { pedidoRevisar, textoHablar } from '../src/compartido/ideas'
 import {
   agregarIdea,
   cambiarEstado,
@@ -192,5 +193,28 @@ describe('los cambios en trabajo.md', () => {
     expect(sin).toContain('Fecha: 2026-11-10\n\n## T-5 — Rechazada')
     const sinUltima = quitarIdea(TRABAJO, 'T-7') ?? ''
     expect(sinUltima.endsWith('Enlace: https://ejemplo.com/a\n')).toBe(true)
+  })
+})
+
+// ID-I2: lo que Revisar con la IA y Hablar de esta idea le dicen a la conversación.
+describe('lo que va a la conversación (ID-4, ID-6)', () => {
+  it('Revisar con la IA nombra el enlace, su código y el proyecto, con la descripción debajo', () => {
+    const enlace = ideas().find((i) => i.codigo === 'T-4')
+    expect(enlace && pedidoRevisar(enlace, 'Alfa')).toBe(
+      'Revisá https://github.com/anthropics/claude-code (T-4): ¿qué podemos sacar de ahí para Alfa?\n\nMirar los hooks.',
+    )
+  })
+
+  it('sin descripción, va solo el pedido', () => {
+    const revisado = ideas().find((i) => i.codigo === 'T-6')
+    expect(revisado && pedidoRevisar(revisado, 'Beta')).toBe(
+      'Revisá https://ejemplo.com/a (T-6): ¿qué podemos sacar de ahí para Beta?',
+    )
+  })
+
+  it('Hablar de esta idea deja su código y su título, listo para seguir escribiendo', () => {
+    expect(textoHablar({ codigo: 'T-3', titulo: 'Una mía aprobada' })).toBe(
+      'Hablemos de la idea T-3 «Una mía aprobada»: ',
+    )
   })
 })
