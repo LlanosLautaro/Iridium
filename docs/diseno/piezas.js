@@ -123,7 +123,14 @@ function armarMarco() {
   const marco = document.createElement('div')
   marco.className = 'marco' + (sinConv ? ' sin-conversacion' : '')
 
-  const secciones = tipo === 'proyecto' ? SECCIONES_PROYECTO : SECCIONES_INICIO
+  let secciones = tipo === 'proyecto' ? SECCIONES_PROYECTO : SECCIONES_INICIO
+  // Una sección que la app todavía no tiene (una propuesta, como Ideas de un proyecto) se suma después del Mapa solo
+  // en sus maquetas, con el nombre de data-nombre-seccion.
+  if (tipo === 'proyecto' && seccion && !secciones.some((s) => s?.[0] === seccion)) {
+    const i = secciones.findIndex((s) => s?.[0] === 'mapa') + 1
+    const propuesta = [seccion, cuerpo.dataset.nombreSeccion ?? seccion, location.pathname.split('/').pop()]
+    secciones = [...secciones.slice(0, i), propuesta, ...secciones.slice(i)]
+  }
   const botones = secciones
     .map((s) => {
       if (!s) return '<div class="sep"></div>'

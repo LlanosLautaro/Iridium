@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ideas de un proyecto · A, notas</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Propuesta A (frente Ideas): un mini Obsidian. A la izquierda, las notas del proyecto, una debajo de otra con su
+     primera línea; a la derecha, la nota abierta, que se escribe libre y se guarda sola, con enlaces e imágenes. */
+  .notas { flex: 1; display: grid; grid-template-columns: 280px 1fr; min-height: 0; }
+  .lista-notas { border-right: 1px solid var(--borde); display: flex; flex-direction: column; min-height: 0; }
+  .lista-notas .cab-lista { display: flex; align-items: center; gap: var(--esp-2); padding: var(--esp-3) var(--esp-3) var(--esp-2) var(--esp-4); }
+  .lista-notas .cab-lista h1 { margin: 0; font: var(--estilo-titulo); flex: 1; }
+  .lista-notas .buscar { margin: 0 var(--esp-3) var(--esp-2); }
+  .lista-notas .filas { overflow: auto; padding: 0 var(--esp-2) var(--esp-4); }
+  .nota { flex-direction: column; align-items: stretch; gap: 2px; padding: var(--esp-2) var(--esp-3); cursor: pointer; }
+  .nota .titulo-fila { font-weight: 500; }
+  .nota .linea-nota { display: flex; gap: var(--esp-2); font-size: var(--tam-chico); color: var(--texto-3); }
+  .nota .linea-nota .detalle { flex: 1; min-width: 0; font-size: var(--tam-chico); }
+  .abierta { overflow: auto; padding: var(--esp-5) var(--esp-7) var(--esp-7); }
+  .abierta .cab-nota { display: flex; align-items: center; gap: var(--esp-2); max-width: var(--ancho-lectura); margin-bottom: var(--esp-3); }
+  .abierta .cab-nota .gris-3 { font-size: var(--tam-chico); flex: 1; }
+  .abierta .texto-doc { outline: none; }
+  .abierta .texto-doc h1 { outline: none; }
+  .enlace { display: inline-flex; align-items: center; gap: var(--esp-2); padding: 2px var(--esp-2); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto); font-size: var(--tam-base); }
+  .texto-doc .enlace { text-decoration: none; }
+  .enlace:hover { border-color: var(--borde-control); }
+  .enlace .ic { width: 14px; height: 14px; color: var(--texto-3); }
+  .enlace .sitio { color: var(--texto-3); }
+  .pegada { display: block; width: 320px; height: 180px; margin: var(--esp-2) 0 var(--esp-4); border-radius: var(--radio-bloque); border: 1px solid var(--borde); background: var(--elevado); position: relative; overflow: hidden; }
+  .pegada::before { content: ""; position: absolute; inset: 24px 24px auto 24px; height: 12px; border-radius: 6px; background: var(--borde-fuerte); box-shadow: 0 24px 0 var(--borde), 0 48px 0 var(--borde), 0 72px 0 var(--borde); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="ideas" data-nombre-seccion="Ideas">
+<main class="seccion">
+  <div class="notas">
+    <aside class="lista-notas" aria-label="Notas">
+      <div class="cab-lista">
+        <h1>Ideas</h1>
+        <button class="boton sin-fondo chico"><i data-ic="mas"></i>Nota</button>
+      </div>
+      <input class="campo chico buscar" placeholder="Buscar en las notas">
+      <div class="filas">
+        <div class="fila nota elegida"><span class="titulo-fila">Diagramas que dibuja la IA</span><span class="linea-nota"><span class="detalle">Mirar cómo arma las flechas este repo…</span><span>hoy</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Dictado</span><span class="linea-nota"><span class="detalle">Hablarle a la conversación en vez de escribir</span><span>9 nov</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Un sonido cuando la IA termina</span><span class="linea-nota"><span class="detalle">Que no suene si estoy mirando la ventana</span><span>7 nov</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Repos para mirar</span><span class="linea-nota"><span class="detalle">tldraw · excalidraw · logseq</span><span>5 nov</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Aprobados provisionales</span><span class="linea-nota"><span class="detalle">Lo que probé a medias y quiero volver a ver</span><span>29 oct</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Comentar un documento párrafo por párrafo</span><span class="linea-nota"><span class="detalle">Como la Revisión, pero en Docs</span><span>22 oct</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Revisión para apps Android</span><span class="linea-nota"><span class="detalle">La extensión no llega al celular…</span><span>22 oct</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Iridium en Linux o en el celular</span><span class="linea-nota"><span class="detalle">Electron ya corre en Linux; el celular es otra cosa</span><span>21 oct</span></span></div>
+        <div class="fila nota"><span class="titulo-fila">Un canvas para pensar una idea con la IA</span><span class="linea-nota"><span class="detalle">Tarjetas sueltas que la IA ordena</span><span>21 oct</span></span></div>
+      </div>
+    </aside>
+    <section class="abierta" aria-label="Nota abierta">
+      <div class="cab-nota">
+        <span class="gris-3">Hoy, 18:40</span>
+        <button class="boton sin-fondo chico"><i data-ic="comentar"></i>Hablar de esta nota</button>
+        <button class="boton solo-icono chico" aria-label="Más" data-abre="menu-nota"><i data-ic="puntos"></i></button>
+      </div>
+      <div class="texto-doc" contenteditable="true" spellcheck="false">
+        <h1>Diagramas que dibuja la IA</h1>
+        <p>Que la IA pueda explicar una parte de la app con un dibujo, y recorrerlo paso a paso.</p>
+        <p>Mirar cómo arma las flechas entre tarjetas: <a class="enlace" href="#"><i data-ic="abrir"></i>tldraw/tldraw<span class="sitio">github.com</span></a></p>
+        <p>Y cómo guarda el dibujo en un archivo que se puede leer: <a class="enlace" href="#"><i data-ic="abrir"></i>excalidraw/excalidraw<span class="sitio">github.com</span></a></p>
+        <span class="pegada" role="img" aria-label="Captura pegada"></span>
+        <p>¿Mermaid alcanza? Se lee en GitHub sin nada más, pero no se puede mover a mano.</p>
+      </div>
+      <div class="menu" id="menu-nota" role="menu">
+        <button>Fijar arriba</button>
+        <button>Mover a otro proyecto</button>
+        <hr>
+        <button class="peligroso">Borrar la nota</button>
+      </div>
+    </section>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

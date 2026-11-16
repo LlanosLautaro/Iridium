@@ -10,3 +10,4 @@
 | Compartir | sección | en operación (con el hito 10) | `modulos/compartir/` |
 | Inicio | sección | en operación (con el hito 10) | `modulos/inicio/` |
 | Orden | sección | 3. Investigación (la auditoría) | `modulos/orden/` |
+| Ideas | sección | 1. Propuesta | `modulos/ideas/` |

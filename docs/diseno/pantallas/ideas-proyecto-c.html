@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ideas de un proyecto · C, ideas y enlaces para revisar</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Propuesta C (frente Ideas): cada cosa en su fila, como la Ideas de antes. Una idea se abre en su lugar y es una nota
+     chica (texto, enlaces, imágenes); un enlace pegado es un «para revisar»: la IA lo lee y propone qué sacar de ahí. */
+  .anotar { display: flex; gap: var(--esp-2); margin-bottom: var(--esp-4); }
+  .anotar .campo { flex: 1; }
+  .item { cursor: pointer; }
+  .item .icono-fila .ic { width: 15px; height: 15px; }
+  .item .titulo-fila { font-weight: 500; }
+  .item.abierto { background: var(--sel-fondo); border-radius: var(--radio-bloque) var(--radio-bloque) 0 0; }
+  .cuerpo-idea { padding: var(--esp-2) var(--esp-3) var(--esp-4) calc(28px + var(--esp-3) * 2); background: var(--sel-fondo); border-radius: 0 0 var(--radio-bloque) var(--radio-bloque); }
+  .cuerpo-idea .texto-doc { font-size: var(--tam-base); outline: none; }
+  .cuerpo-idea .pie-idea { display: flex; gap: var(--esp-2); margin-top: var(--esp-2); margin-left: calc(-1 * var(--esp-2)); }
+  .enlace { display: inline-flex; align-items: center; gap: var(--esp-2); padding: 2px var(--esp-2); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto); font-size: var(--tam-base); }
+  .texto-doc .enlace { text-decoration: none; }
+  .enlace .ic { width: 14px; height: 14px; color: var(--texto-3); }
+  .enlace .sitio { color: var(--texto-3); }
+  .pegada { display: block; width: 240px; height: 120px; margin: var(--esp-2) 0 var(--esp-3); border-radius: var(--radio-bloque); border: 1px solid var(--borde); background: var(--elevado); position: relative; overflow: hidden; }
+  .pegada::before { content: ""; position: absolute; inset: 18px 18px auto 18px; height: 10px; border-radius: 5px; background: var(--borde-fuerte); box-shadow: 0 20px 0 var(--borde), 0 40px 0 var(--borde); }
+  .grupo + .grupo { margin-top: var(--esp-5); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="ideas" data-nombre-seccion="Ideas">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Ideas</h1></div>
+    <div class="filtros"><button class="filtro elegido">Todo <span class="cuenta">11</span></button><button class="filtro">Ideas <span class="cuenta">8</span></button><button class="filtro">Para revisar <span class="cuenta">3</span></button><button class="filtro">Hechas</button></div>
+  </header>
+  <div class="contenido centrado">
+    <div>
+      <div class="anotar">
+        <input class="campo" placeholder="Una idea, o pegá un enlace para revisar…" aria-label="Anotar una idea o un enlace">
+        <button class="boton secundario">Anotar</button>
+      </div>
+
+      <div class="grupo">
+        <h2 class="bloque-titulo">Para revisar <span class="cuenta">3</span></h2>
+        <div class="filas con-lineas">
+          <div class="fila con-detalle item"><span class="icono-fila"><i data-ic="abrir"></i></span><span class="principal-fila"><span class="titulo-fila">tldraw/tldraw</span><span class="detalle">github.com · Cómo arma las flechas entre tarjetas</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Revisar con la IA</button><button class="boton solo-icono chico" aria-label="Marcar como hecha"><i data-ic="ok"></i></button></span><span class="meta">hoy</span></div>
+          <div class="fila con-detalle item"><span class="icono-fila"><i data-ic="abrir"></i></span><span class="principal-fila"><span class="titulo-fila">logseq/logseq</span><span class="detalle">github.com · Enlazar notas escribiendo su nombre</span></span><span class="acciones"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Revisar con la IA</button><button class="boton solo-icono chico" aria-label="Marcar como hecha"><i data-ic="ok"></i></button></span><span class="meta">5 nov</span></div>
+          <div class="fila con-detalle item"><span class="icono-fila"><i data-ic="abrir"></i></span><span class="principal-fila"><span class="titulo-fila">Cómo hacer un modo foco que no moleste</span><span class="detalle">un blog · artículo largo, mirar las capturas</span></span><span class="acciones"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Revisar con la IA</button><button class="boton solo-icono chico" aria-label="Marcar como hecha"><i data-ic="ok"></i></button></span><span class="meta">2 nov</span></div>
+        </div>
+      </div>
+
+      <div class="grupo">
+        <h2 class="bloque-titulo">Ideas <span class="cuenta">8</span></h2>
+        <div class="filas">
+          <div class="fila item abierto"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Diagramas que dibuja la IA</span></span><span class="meta">hoy</span></div>
+          <div class="cuerpo-idea">
+            <div class="texto-doc" contenteditable="true" spellcheck="false">
+              <p>Que la IA explique una parte de la app con un dibujo y lo recorra paso a paso. Salió de revisar <a class="enlace" href="#"><i data-ic="abrir"></i>excalidraw/excalidraw<span class="sitio">github.com</span></a></p>
+              <span class="pegada" role="img" aria-label="Captura pegada"></span>
+            </div>
+            <div class="pie-idea"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Hablar de esta idea</button><button class="boton sin-fondo chico"><i data-ic="ok"></i>Hecha</button><button class="boton sin-fondo chico"><i data-ic="papelera"></i>Borrar</button></div>
+          </div>
+        </div>
+        <div class="filas con-lineas">
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Dictado</span></span><span class="meta">9 nov</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Un sonido cuando la IA termina (que no suene si estoy mirando la ventana)</span></span><span class="meta">7 nov</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Aprobados provisionales</span></span><span class="meta">29 oct</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Comentar un documento párrafo por párrafo</span></span><span class="meta">22 oct</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Revisión para apps Android</span></span><span class="meta">22 oct</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Iridium en Linux o en el celular</span></span><span class="meta">21 oct</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Un canvas para pensar una idea con la IA</span></span><span class="meta">21 oct</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<template id="conversacion" data-titulo="Revisar excalidraw/excalidraw" data-detalle="Hoy, 18:40" data-seguir="no">
+<div class="mensaje-yo">Revisá excalidraw/excalidraw: ¿qué podemos sacar de ahí para Iridium?</div>
+<div class="mensaje-ia"><div class="quien">IA</div>
+  <div class="paso"><i data-ic="ok"></i> Leí el README y la carpeta de los dibujos</div>
+  <div class="texto-doc conversacion">
+    <p>Tres cosas que nos sirven:</p>
+    <ol>
+      <li><strong>El dibujo es un archivo de texto</strong> (JSON) que se guarda con el proyecto: la IA lo puede escribir y vos moverlo a mano.</li>
+      <li>Las flechas se pegan a las cajas y las siguen al moverlas.</li>
+      <li>Se exporta a imagen para pegarla en un documento.</li>
+    </ol>
+    <p>La 1 encaja con los diagramas que querías. ¿La anoto como idea?</p>
+  </div>
+</div>
+<div class="mensaje-yo">Sí, la 1</div>
+<div class="mensaje-ia"><div class="quien">IA</div>
+  <div class="paso"><i data-ic="ok"></i> Anoté «Diagramas que dibuja la IA» en Ideas y marqué el enlace como revisado</div>
+</div>
+</template>
+<script src="../piezas.js"></script>
+</body>
+</html>

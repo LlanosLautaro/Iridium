@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ideas de un proyecto · B, tarjetas</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Propuesta B (frente Ideas): cada idea, una tarjeta chica, como en la Ideas de antes pero con lo que tiene adentro
+     a la vista. Arriba, un campo para anotar o pegar un enlace; un clic en una tarjeta la abre en su lugar. */
+  .anotar { display: flex; gap: var(--esp-2); margin-bottom: var(--esp-5); }
+  .anotar .campo { flex: 1; }
+  .tarjetas { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--esp-3); align-items: start; }
+  .idea {
+    border: 1px solid var(--borde); border-radius: var(--radio-tarjeta); padding: var(--esp-3) var(--esp-4);
+    display: flex; flex-direction: column; gap: var(--esp-2); cursor: pointer; min-height: 120px;
+    transition: border-color .12s var(--sale), background .12s var(--sale);
+  }
+  .idea:hover { border-color: var(--borde-fuerte); background: var(--tarjeta); }
+  .idea .nombre { font-weight: 600; line-height: 1.35; }
+  .idea .desc { color: var(--texto-2); margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .idea .pie-i { margin-top: auto; display: flex; align-items: center; gap: var(--esp-2); font-size: var(--tam-chico); color: var(--texto-3); }
+  .idea .pie-i .derecha { margin-left: auto; }
+  .idea .pie-i .ic { width: 14px; height: 14px; }
+  .miniatura { height: 64px; border-radius: var(--radio-control); background: var(--elevado); position: relative; overflow: hidden; }
+  .miniatura::before { content: ""; position: absolute; inset: 12px 12px auto 12px; height: 8px; border-radius: 4px; background: var(--borde-fuerte); box-shadow: 0 16px 0 var(--borde), 0 32px 0 var(--borde); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="ideas" data-nombre-seccion="Ideas">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Ideas</h1></div>
+    <div class="filtros"><button class="filtro elegido">Todas</button><button class="filtro">Con enlaces</button><button class="filtro">Archivadas</button></div>
+  </header>
+  <div class="contenido centrado">
+    <div>
+      <div class="anotar">
+        <input class="campo" placeholder="Una idea o un enlace…" aria-label="Anotar una idea">
+        <button class="boton secundario">Anotar</button>
+      </div>
+      <div class="tarjetas">
+        <article class="idea"><span class="nombre">Diagramas que dibuja la IA</span><span class="miniatura" role="img" aria-label="Captura pegada"></span><p class="desc">Que la IA explique una parte de la app con un dibujo y lo recorra paso a paso.</p><div class="pie-i"><i data-ic="abrir"></i>2 enlaces<span class="derecha">hoy</span></div></article>
+        <article class="idea"><span class="nombre">tldraw/tldraw</span><p class="desc">Ver cómo arma las flechas entre tarjetas y cómo guarda el dibujo.</p><div class="pie-i"><i data-ic="abrir"></i>github.com<span class="derecha">hoy</span></div></article>
+        <article class="idea"><span class="nombre">Dictado</span><p class="desc">Hablarle a la conversación en vez de escribir; ¿el de Windows alcanza?</p><div class="pie-i"><span class="derecha">9 nov</span></div></article>
+        <article class="idea"><span class="nombre">Un sonido cuando la IA termina</span><p class="desc">Que no suene si estoy mirando la ventana.</p><div class="pie-i"><span class="derecha">7 nov</span></div></article>
+        <article class="idea"><span class="nombre">logseq/logseq</span><p class="desc">Cómo enlaza una nota con otra escribiendo su nombre entre corchetes.</p><div class="pie-i"><i data-ic="abrir"></i>github.com<span class="derecha">5 nov</span></div></article>
+        <article class="idea"><span class="nombre">Aprobados provisionales</span><p class="desc">Lo que probé a medias y quiero volver a mirar antes de darlo por bueno.</p><div class="pie-i"><span class="derecha">29 oct</span></div></article>
+        <article class="idea"><span class="nombre">Comentar un documento párrafo por párrafo</span><p class="desc">Como la Revisión, pero sobre Docs.</p><div class="pie-i"><span class="derecha">22 oct</span></div></article>
+        <article class="idea"><span class="nombre">Revisión para apps Android</span><p class="desc">La extensión del navegador no llega al celular: ¿un modo con capturas?</p><div class="pie-i"><span class="derecha">22 oct</span></div></article>
+        <article class="idea"><span class="nombre">Iridium en Linux o en el celular</span><p class="desc">Electron ya corre en Linux; el celular es otra cosa.</p><div class="pie-i"><span class="derecha">21 oct</span></div></article>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

@@ -133,6 +133,7 @@
 | D-124 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (Q-171, R-56 a R-58) | Vuelve el color donde informa: medidores en verde, ámbar y rojo, enlaces azules, el código con colores y Ejecutar en verde | vigente (ajusta D-103 y D-108) |
 | D-125 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (R-62, R-65 a R-68, R-70) | La Bandeja del proyecto es solo bandeja (los scripts, en su sección); el proyecto sin cabecera propia ni el hito repetido; el inicio lleva siempre a Proyectos | vigente (ajusta D-044) |
 | D-126 | 2026-11-16 | Diseño | 10, frente Diseño, paso 7 (DI-I3, tanda 8) | La hoja de Ideas es `notas.md` de la carpeta Ideas, con las imágenes en `notas/`; fuera anotar sin la IA | vigente (ajusta W-10 y H-18) |
+| D-127 | 2026-11-16 | Ideas | 10, frente Ideas, paso 1 (T-69) | Las ideas de un proyecto se piensan como frente propio, con su UX y sus maquetas antes de construir | vigente |
 
 ---
 
@@ -2766,3 +2767,18 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** un archivo de texto que se puede abrir en cualquier lado y que la IA lee sin nada especial; separado de `ideas.md` porque ese archivo tiene el formato de la IA y la hoja es del usuario.
 
 **Consecuencias:** si la IA cambia `notas.md` mientras el usuario escribe, gana lo último guardado (la hoja se actualiza sola cuando no se está escribiendo). Las sueltas que ya había en `ideas.md` no pasan a la hoja: siguen en ese archivo. Sale el código de anotar sin la IA (`Anotar`, los canales `anotarTrabajo`, `anotarSuelta`, `ideasNuevas` e `ideas`) y sus pruebas.
+
+## D-127 — Las ideas de un proyecto se piensan como frente propio, antes de construir
+- **Fecha:** 2026-11-16
+- **Ámbito:** Ideas
+- **Hito o paso:** 10; frente Ideas, paso 1 (T-69)
+- **Estado:** vigente
+
+**Contexto:** con la tanda 8 de DI-I3, Ideas pasó a ser un bloc de notas del inicio (D-112, D-126). El usuario quiere anotar ideas sin salir del proyecto (T-69) y guardar enlaces, sobre todo de repos, para revisar qué se puede sacar de ellos; y extraña de la Ideas de antes ver cada idea por separado. Sintió que el bloc se hizo apurado y pidió primero definir qué se quiere y después cómo, sin cargar la interfaz.
+
+**Decisión:** se abre el frente Ideas (sección), con el ciclo reducido desde la Propuesta. Las maquetas de las tres formas posibles (`docs/diseno/pantallas/ideas-proyecto-a.html` a `-c.html`) sirven para elegir; nada se construye hasta cerrar su UX.
+
+**Motivo:** es la tercera vez que Ideas cambia de forma (la lista de T-n, el bloc, ahora dentro del proyecto); decidirlo con las maquetas cuesta menos que rehacer código.
+
+**Consecuencias:** el frente Diseño queda en pausa mientras tanto (la tanda 8 puede cambiar según lo que se elija); su Q-174 sigue abierta. Las maquetas nuevas suman Ideas a la barra de un proyecto solo en ellas (`piezas.js`).
+

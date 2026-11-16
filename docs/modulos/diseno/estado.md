@@ -265,5 +265,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 
 ## Próximo paso
 DI-I3 sigue sección por sección: Ideas como bloc de notas (D-112), Skills, Revisión, Docs, Archivos, Git, Scripts, Ajustes. Las listas del control bajan con cada una; al cerrar DI-I3 se borra `tokens-viejos.css`.
-Primero, la respuesta de Q-174 (Ideas como bloc de notas): lo que falle se arregla antes de seguir. Después, la tanda 9 es Skills (`docs/diseno/pantallas/skills.html` y el detalle de una skill). El Mapa no se toca: se rehace en su frente (T-71).
+En pausa desde el 2026-11-16 (D-127): el frente Ideas decide antes qué es Ideas (Q-175 a Q-177). La respuesta de Q-174 se procesa igual; lo que falle del bloc se arregla solo si Q-177 lo mantiene. Después, la tanda 9 es Skills (`docs/diseno/pantallas/skills.html` y el detalle de una skill). El Mapa no se toca: se rehace en su frente (T-71).
 **Leer antes:** `respuestas/Q-174.md`, `decisiones.md` › D-110 y D-121, `ux.md` › Reglas que quedan escritas para el rediseño, las maquetas de Skills (`docs/diseno/pantallas/`), `src/renderer/secciones/skills/`, `src/renderer/estilos/skills.css` y `tests/estilos.test.ts`.
