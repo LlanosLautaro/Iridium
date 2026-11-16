@@ -288,7 +288,7 @@ Q-168 (A, D-123): aplicada el 2026-11-15 la regla por tamaño y tiempo (framewor
 
 ## T-69 — Un lugar donde anotar las ideas del proyecto sin salir de la tab del proyecto, ahora debo irme al panel general
 Estado: en curso · Frente: Ideas · Fecha: 2026-11-15
-Pasó a ser el frente Ideas (D-127): sumado a guardar enlaces de repos para revisar y a ver cada idea por separado, se decide con las maquetas antes de construir (Q-175 a Q-177).
+Pasó a ser el frente Ideas (D-127): sumado a guardar enlaces de repos para revisar y a ver cada idea por separado. Forma elegida en D-128 (la C); se construye después de su UX.
 
 ## T-70 — es posible un "session usage starter"? es decir, una pequeña herramienta que inicie con casi 0 tokens el periodo de 5hs de uso, de este modo se podría iniciar siempre cada 5hs independientemente de si y escribí algo o no, para aprovechar mejor los periodos de tiempo de 5hs, creo que esto es similar a los caché warmers que según entiendo anthropic los permite, quizás deberíamos echar un ojo antes de hacerlo
 Estado: nueva · Fecha: 2026-11-15

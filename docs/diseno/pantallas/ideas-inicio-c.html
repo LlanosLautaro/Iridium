@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ideas del inicio · C, las ideas sueltas</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Ideas del inicio con la forma C (Q-177): la misma lista que en un proyecto, para lo que todavía no tiene proyecto.
+     Al anotar, el proyecto elegido es «Sin proyecto» (ideas sueltas); «Mover a un proyecto» la pasa a uno.
+     Propuesta C (frente Ideas): cada cosa en su fila, como la Ideas de antes. Una idea se abre en su lugar y es una nota
+     chica (texto, enlaces, imágenes); un enlace pegado es un «para revisar»: la IA lo lee y propone qué sacar de ahí. */
+  .anotar { display: flex; gap: var(--esp-2); margin-bottom: var(--esp-4); }
+  .anotar .campo { flex: 1; }
+  .item { cursor: pointer; }
+  .item .icono-fila .ic { width: 15px; height: 15px; }
+  .item .titulo-fila { font-weight: 500; }
+  .item.abierto { background: var(--sel-fondo); border-radius: var(--radio-bloque) var(--radio-bloque) 0 0; }
+  .cuerpo-idea { padding: var(--esp-2) var(--esp-3) var(--esp-4) calc(28px + var(--esp-3) * 2); background: var(--sel-fondo); border-radius: 0 0 var(--radio-bloque) var(--radio-bloque); }
+  .cuerpo-idea .texto-doc { font-size: var(--tam-base); outline: none; }
+  .cuerpo-idea .pie-idea { display: flex; gap: var(--esp-2); margin-top: var(--esp-2); margin-left: calc(-1 * var(--esp-2)); }
+  .enlace { display: inline-flex; align-items: center; gap: var(--esp-2); padding: 2px var(--esp-2); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); color: var(--texto); font-size: var(--tam-base); }
+  .texto-doc .enlace { text-decoration: none; }
+  .enlace .ic { width: 14px; height: 14px; color: var(--texto-3); }
+  .enlace .sitio { color: var(--texto-3); }
+  .pegada { display: block; width: 240px; height: 120px; margin: var(--esp-2) 0 var(--esp-3); border-radius: var(--radio-bloque); border: 1px solid var(--borde); background: var(--elevado); position: relative; overflow: hidden; }
+  .pegada::before { content: ""; position: absolute; inset: 18px 18px auto 18px; height: 10px; border-radius: 5px; background: var(--borde-fuerte); box-shadow: 0 20px 0 var(--borde), 0 40px 0 var(--borde); }
+  .grupo + .grupo { margin-top: var(--esp-5); }
+  /* Q-175: el estado en color (verde aprobada, rojo rechazada; sin color, sin evaluar). Q-176: las de la IA llevan el robot y su código. */
+  .item.aprobada .icono-fila { color: var(--bien); }
+  .item.rechazada .icono-fila { color: var(--error); }
+  .item.rechazada .titulo-fila { color: var(--texto-3); font-weight: 400; }
+  .item .meta { display: inline-flex; gap: var(--esp-3); align-items: center; }
+</style>
+</head>
+<body data-marco="inicio" data-seccion="ideas">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Ideas</h1></div>
+    <div class="filtros"><button class="filtro elegido">Todo <span class="cuenta">12</span></button><button class="filtro">Para revisar <span class="cuenta">3</span></button><button class="filtro">Sin evaluar <span class="cuenta">5</span></button><button class="filtro">Aprobadas <span class="cuenta">3</span></button><button class="filtro">Rechazadas <span class="cuenta">1</span></button><button class="filtro">Hechas</button></div>
+  </header>
+  <div class="contenido centrado">
+    <div>
+      <div class="anotar">
+        <input class="campo" placeholder="Una idea, o pegá un enlace para revisar…" aria-label="Anotar una idea o un enlace">
+        <select class="selector" style="width:180px" aria-label="En qué proyecto"><option>Sin proyecto</option><option>Alfa</option><option>Beta</option><option>Gamma</option></select>
+        <button class="boton secundario">Anotar</button>
+      </div>
+
+      <div class="grupo">
+        <h2 class="bloque-titulo">Para revisar <span class="cuenta">3</span></h2>
+        <div class="filas con-lineas">
+          <div class="fila con-detalle item"><span class="icono-fila"><i data-ic="abrir"></i></span><span class="principal-fila"><span class="titulo-fila">tldraw/tldraw</span><span class="detalle">github.com · Cómo arma las flechas entre tarjetas</span></span><span class="acciones siempre"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Revisar con la IA</button><button class="boton solo-icono chico" aria-label="Marcar como revisado"><i data-ic="ok"></i></button></span><span class="meta">hoy</span></div>
+          <div class="fila con-detalle item"><span class="icono-fila"><i data-ic="abrir"></i></span><span class="principal-fila"><span class="titulo-fila">logseq/logseq</span><span class="detalle">github.com · Enlazar notas escribiendo su nombre</span></span><span class="acciones"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Revisar con la IA</button><button class="boton solo-icono chico" aria-label="Marcar como revisado"><i data-ic="ok"></i></button></span><span class="meta">5 nov</span></div>
+          <div class="fila con-detalle item"><span class="icono-fila"><i data-ic="abrir"></i></span><span class="principal-fila"><span class="titulo-fila">Cómo hacer un modo foco que no moleste</span><span class="detalle">un blog · artículo largo, mirar las capturas</span></span><span class="acciones"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Revisar con la IA</button><button class="boton solo-icono chico" aria-label="Marcar como revisado"><i data-ic="ok"></i></button></span><span class="meta">2 nov</span></div>
+        </div>
+      </div>
+
+      <div class="grupo">
+        <h2 class="bloque-titulo">Ideas <span class="cuenta">9</span></h2>
+        <div class="filas">
+          <div class="fila item abierto"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Diagramas que dibuja la IA</span></span><span class="meta">hoy</span></div>
+          <div class="cuerpo-idea">
+            <div class="texto-doc" contenteditable="true" spellcheck="false">
+              <p>Que la IA explique una parte de la app con un dibujo y lo recorra paso a paso. Salió de revisar <a class="enlace" href="#"><i data-ic="abrir"></i>excalidraw/excalidraw<span class="sitio">github.com</span></a></p>
+              <span class="pegada" role="img" aria-label="Captura pegada"></span>
+            </div>
+            <div class="pie-idea"><button class="boton sin-fondo chico"><i data-ic="comentar"></i>Hablar de esta idea</button><button class="boton sin-fondo chico"><i data-ic="ok"></i>Aprobar</button><button class="boton sin-fondo chico"><i data-ic="cerrar"></i>Rechazar</button><button class="boton sin-fondo chico"><i data-ic="derecha"></i>Mover a un proyecto</button><button class="boton sin-fondo chico"><i data-ic="papelera"></i>Borrar</button></div>
+          </div>
+        </div>
+        <div class="filas con-lineas">
+          <div class="fila item"><span class="icono-fila" aria-label="Anotada por la IA"><i data-ic="robot"></i></span><span class="principal-fila"><span class="titulo-fila">El Mapa como una red de pasos, uno por frente</span></span><span class="meta">15 nov</span></div>
+          <div class="fila item aprobada"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Dictado</span></span><span class="meta"><span class="senal verde">Aprobada</span>9 nov</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Un sonido cuando la IA termina (que no suene si estoy mirando la ventana)</span></span><span class="meta">7 nov</span></div>
+          <div class="fila item aprobada"><span class="icono-fila" aria-label="Anotada por la IA"><i data-ic="robot"></i></span><span class="principal-fila"><span class="titulo-fila">Avisar cuando el uso de la suscripción está por renovarse</span></span><span class="meta"><span class="senal verde">Aprobada</span>6 nov</span></div>
+          <div class="fila item aprobada"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Aprobados provisionales</span></span><span class="meta"><span class="senal verde">Aprobada</span>29 oct</span></div>
+          <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Comentar un documento párrafo por párrafo</span></span><span class="meta">22 oct</span></div>
+          <div class="fila item"><span class="icono-fila" aria-label="Anotada por la IA"><i data-ic="robot"></i></span><span class="principal-fila"><span class="titulo-fila">Iridium en Linux o en el celular</span></span><span class="meta">21 oct</span></div>
+          <div class="fila item rechazada"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Revisión para apps Android</span></span><span class="meta"><span class="senal rojo">Rechazada</span>22 oct</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

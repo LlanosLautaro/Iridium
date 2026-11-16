@@ -2782,3 +2782,20 @@ evision-cola-electron.json` y sale cuando Iridium está.
 
 **Consecuencias:** el frente Diseño queda en pausa mientras tanto (la tanda 8 puede cambiar según lo que se elija); su Q-174 sigue abierta. Las maquetas nuevas suman Ideas a la barra de un proyecto solo en ellas (`piezas.js`).
 
+
+## D-128 — Ideas es una lista de ideas con estado y enlaces para revisar, igual en cada proyecto y en el inicio
+- **Fecha:** 2026-11-16
+- **Ámbito:** Ideas
+- **Hito o paso:** 10; frente Ideas, paso 1 (Q-175 a Q-177)
+- **Estado:** vigente (reemplaza a D-112 y a D-126 cuando se construya; ajustará `04-ux.md` › W-10)
+
+**Contexto:** D-127 abrió el frente para decidir, con tres maquetas, qué es Ideas dentro de un proyecto y qué pasa con el bloc de notas del inicio.
+
+**Decisión:**
+1. La forma C (Q-175): cada idea en su renglón, que se abre en su lugar como una nota chica; los enlaces pegados van a «Para revisar», con Revisar con la IA. Además, cada idea tiene un estado en color: sin evaluar, aprobada (verde), rechazada (rojo) y hecha.
+2. Las ideas que anota la IA (los `T-n` que nacen como idea) aparecen en la misma lista, con un robot y su código (Q-176).
+3. Ideas del inicio tiene la misma forma, para lo que no tiene proyecto: al anotar, el proyecto por defecto es «Sin proyecto» (ideas sueltas), y Mover a un proyecto la pasa a uno (Q-177). El bloc de notas se va.
+
+**Motivo:** una sola manera de anotar en toda la app; cada idea separada, como la Ideas de antes, y el enlace con un fin.
+
+**Consecuencias:** la tanda 8 de DI-I3 (el bloc) no se pule: queda hasta que Ideas se construya; pegar enlaces e imágenes se reusa en la nota de cada idea. Dónde se guarda una idea se decide en el diseño técnico del frente.
