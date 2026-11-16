@@ -1,6 +1,7 @@
 // ID-I1: de los `T-n` de `trabajo.md` a la lista de Ideas, y los cambios que hace Iridium en el texto (D-128 a D-130).
 import { describe, expect, it } from 'vitest'
-import { pedidoRevisar, textoHablar } from '../src/compartido/ideas'
+import { leerCitas, mensajeConCitas, sumarCita } from '../src/compartido/citas'
+import { citaHablar, citaRevisar, pedidoRevisar } from '../src/compartido/ideas'
 import {
   agregarIdea,
   cambiarEstado,
@@ -212,9 +213,53 @@ describe('lo que va a la conversación (ID-4, ID-6)', () => {
     )
   })
 
-  it('Hablar de esta idea deja su código y su título, listo para seguir escribiendo', () => {
-    expect(textoHablar({ codigo: 'T-3', titulo: 'Una mía aprobada' })).toBe(
-      'Hablemos de la idea T-3 «Una mía aprobada»: ',
+  it('Hablar de esta idea la cita con su código y su título (Q-182)', () => {
+    expect(citaHablar({ codigo: 'T-3', titulo: 'Una mía aprobada' })).toEqual({
+      clave: 'T-3',
+      tipo: 'Idea',
+      nombre: 'T-3 · Una mía aprobada',
+      texto: 'Sobre la idea T-3 «Una mía aprobada»',
+    })
+  })
+
+  it('las citas salen al principio del mensaje, como cita, y después lo escrito (Q-182)', () => {
+    const enlace = ideas().find((i) => i.codigo === 'T-4')
+    if (!enlace) throw new Error('falta T-4')
+    const citas = [citaRevisar(enlace, 'Alfa'), citaHablar({ codigo: 'T-3', titulo: 'Una mía aprobada' })]
+    expect(mensajeConCitas(citas, 'Me interesan los hooks')).toBe(
+      '> Revisá https://github.com/anthropics/claude-code (T-4): ¿qué podemos sacar de ahí para Alfa?\n>\n> Mirar los hooks.\n\n' +
+        '> Sobre la idea T-3 «Una mía aprobada»\n\nMe interesan los hooks',
     )
+    // Sin nada escrito, salen solas.
+    expect(mensajeConCitas(citas.slice(1), '  ')).toBe('> Sobre la idea T-3 «Una mía aprobada»')
+    expect(mensajeConCitas([], 'Hola')).toBe('Hola')
+  })
+
+  it('citar lo mismo otra vez la reemplaza en su lugar, sin repetirla', () => {
+    const a = citaHablar({ codigo: 'T-3', titulo: 'Vieja' })
+    const b = citaHablar({ codigo: 'T-1', titulo: 'Otra' })
+    const otra = sumarCita(sumarCita(sumarCita([], a), b), citaHablar({ codigo: 'T-3', titulo: 'Nueva' }))
+    expect(otra.map((c) => c.nombre)).toEqual(['T-3 · Nueva', 'T-1 · Otra'])
+  })
+})
+
+describe('leer las citas de un mensaje enviado (Q-182)', () => {
+  it('separa las citas del principio de lo escrito, sin los >', () => {
+    const citas = [
+      citaHablar({ codigo: 'T-3', titulo: 'Una mía' }),
+      citaHablar({ codigo: 'T-1', titulo: 'Otra' }),
+    ]
+    expect(leerCitas(mensajeConCitas(citas, 'Hola\n\n> esto no es cita del principio'))).toEqual({
+      citas: ['Sobre la idea T-3 «Una mía»', 'Sobre la idea T-1 «Otra»'],
+      texto: 'Hola\n\n> esto no es cita del principio',
+    })
+    expect(leerCitas('> Revisá algo\n>\n> Con su descripción')).toEqual({
+      citas: ['Revisá algo\n\nCon su descripción'],
+      texto: '',
+    })
+  })
+
+  it('un mensaje sin citas queda tal cual', () => {
+    expect(leerCitas('Hola\n\nChau')).toEqual({ citas: [], texto: 'Hola\n\nChau' })
   })
 })

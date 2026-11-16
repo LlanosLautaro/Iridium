@@ -2834,3 +2834,20 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** el estado es el del trabajo (D-129) y la IA, el Mapa y el control lo leen sin nada nuevo; guardar la nota mientras se escribe no compite con la IA por `trabajo.md` ni lo alarga. Leer la página al pegar sería una conexión a un tercero que el usuario no pidió (P2).
 
 **Consecuencias:** el framework, el lector de `trabajo.md` y el control cambian juntos (D-086, D-092): reglas para `Idea:`, `Enlace:` y las notas sin su `T-n`. Detalle en `modulos/ideas/diseno-tecnico.md`.
+
+## D-131 — Revisar con la IA y Hablar de esta idea citan en la conversación, sin enviar
+- **Fecha:** 2026-11-16
+- **Ámbito:** Ideas (y el campo de la conversación)
+- **Hito o paso:** 10; frente Ideas, paso 7 (ID-I2)
+- **Estado:** vigente
+
+**Contexto:** en la prueba de ID-I2 (Q-182), Revisar con la IA mandaba el pedido directo, como una orden; con la conversación cargada eso puede salir caro, y el usuario no podía sumar lo que le interesa.
+
+**Decisión:**
+1. Revisar con la IA y Hablar de esta idea dejan una **cita** arriba del campo de la conversación de al lado: una etiqueta chica («Revisar T-7 · tldraw/tldraw», «Idea T-1 · …») con ✕ para sacarla. No se envía nada.
+2. Al enviar, cada cita va al principio del mensaje como cita de Markdown (el pedido de revisión con su enlace, su código y el proyecto; «Sobre la idea T-n «título»»), y después lo escrito. Sin nada escrito, salen solas. Citar lo mismo otra vez no la repite.
+3. En el hilo, lo citado se ve como cita (gris, con la línea a la izquierda), arriba de lo escrito.
+
+**Motivo:** el usuario decide cuándo y con qué contexto va el pedido, y la referencia le llega a la IA siempre igual de prolija.
+
+**Consecuencias:** cambian ID-4 e ID-6 de `modulos/ideas/ux.md`. Las citas viven mientras Iridium está abierto (no se guardan al cerrarlo, como sí lo escrito). Sirve para citar otras cosas más adelante (las ideas sueltas del inicio, ID-I4).

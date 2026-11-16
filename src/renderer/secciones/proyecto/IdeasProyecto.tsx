@@ -2,10 +2,12 @@
 // `docs/diseno/pantallas/ideas-proyecto-c.html`): las ideas y los enlaces para revisar, que son `T-n` de `trabajo.md`
 // con `Idea:`. Arriba se anota; cada idea se abre en su lugar (la Fila que se abre, PZ-13) y se aprueba o se rechaza.
 // Lo que no se pudo guardar no se pierde: queda escrito y copiado, con el Recuadro de error arriba (ID-11).
-// Revisar con la IA y Hablar de esta idea van a la conversación de al lado (ID-4, ID-6).
+// Revisar con la IA y Hablar de esta idea quedan citados en la conversación de al lado, sin enviar (ID-4, ID-6, Q-182).
 import { type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { diaCorto } from '../../../compartido/fechas'
 import {
+  citaHablar,
+  citaRevisar,
   contarPorFiltro,
   type EstadoDesdeIdeas,
   entraEnFiltro,
@@ -13,8 +15,6 @@ import {
   type FiltroIdeas,
   type IdeasDeProyecto,
   type IdeaVista,
-  pedidoRevisar,
-  textoHablar,
 } from '../../../compartido/ideas'
 import { tarjetaDe, usarEstado } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
@@ -109,10 +109,8 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   /** El texto de la idea abierta: el título en la primera línea y la nota debajo; null mientras se lee. */
   const [texto, setTexto] = useState<string | null>(null)
   const [menu, setMenu] = useState<{ codigo: string; en: Punto } | null>(null)
-  /** Los enlaces cuyo pedido de revisión se está mandando o ya se mandó (mientras la pantalla está abierta). */
-  const [pedidos, setPedidos] = useState<Record<string, 'enviando' | 'enviado'>>({})
   const nombre = usarEstado((s) => tarjetaDe(s.lista, ruta)?.nombre ?? 'este proyecto')
-  const escribirEnCampo = usarEstado((s) => s.escribirEnCampo)
+  const citar = usarEstado((s) => s.citar)
   const campo = useRef<HTMLTextAreaElement>(null)
   /** Lo último guardado de la idea abierta, para no volver a guardar lo mismo. */
   const guardado = useRef<string | null>(null)
@@ -223,25 +221,14 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   const rechazar = (i: IdeaVista) => cambiarEstado(i, i.estado === 'rechazada' ? 'nueva' : 'descartado')
   const revisado = (i: IdeaVista) => cambiarEstado(i, i.estado === 'hecha' ? 'nueva' : 'hecho')
 
-  // Revisar con la IA (ID-9): el pedido va a la conversación de al lado; si la IA trabaja, se suma a lo que hace.
-  const revisarConIa = async (i: IdeaVista) => {
-    if (!i.enlace || pedidos[i.codigo] === 'enviando') return
-    setPedidos((p) => ({ ...p, [i.codigo]: 'enviando' }))
-    try {
-      await window.iridium.seguir(ruta, { texto: pedidoRevisar(i, nombre) })
-      setPedidos((p) => ({ ...p, [i.codigo]: 'enviado' }))
-      setFallo(null)
-    } catch (e) {
-      setPedidos(({ [i.codigo]: _, ...resto }) => resto)
-      setFallo({
-        titulo: 'No se pudo pedir la revisión',
-        mensaje: e instanceof Error ? e.message : String(e),
-      })
-    }
+  // Revisar con la IA (ID-9, Q-182): el pedido queda citado arriba del campo de la conversación de al lado; sale con
+  // lo que escriba el usuario, o solo.
+  const revisarConIa = (i: IdeaVista) => {
+    if (i.enlace) citar(ruta, citaRevisar(i, nombre))
   }
 
-  // Hablar de esta idea (ID-6): queda escrito en la conversación, sin enviar. Lo que esperaba guardarse se guarda
-  // antes, para que la IA lea la nota como está.
+  // Hablar de esta idea (ID-6, Q-182): queda citada en la conversación, sin enviar. Lo que esperaba guardarse se
+  // guarda antes, para que la IA lea la nota como está.
   const hablar = async (i: IdeaVista) => {
     const primera = i.codigo === abierta && texto !== null ? texto.split(/\r?\n/)[0]?.trim() : ''
     if (primera && i.de === 'usuario' && texto !== null) {
@@ -249,7 +236,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
       if (!(await guardar(i.codigo, texto))) return
     }
     const titulo = primera || i.titulo
-    escribirEnCampo(ruta, textoHablar({ codigo: i.codigo, titulo }))
+    citar(ruta, citaHablar({ codigo: i.codigo, titulo }))
   }
 
   const anotar = async () => {
@@ -385,12 +372,11 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                 <button
                   type="button"
                   className="boton sin-fondo chico"
-                  disabled={pedidos[idea.codigo] === 'enviando'}
-                  title="Le pide a la IA, en la conversación de al lado, que lo lea y proponga qué sacar"
-                  onClick={() => void revisarConIa(idea)}
+                  title="Lo cita en la conversación de al lado: la IA lo lee y propone qué sacar cuando envíes"
+                  onClick={() => revisarConIa(idea)}
                 >
                   <Icono nombre="comentar" />
-                  {pedidos[idea.codigo] === 'enviado' ? 'Pedido a la IA' : 'Revisar con la IA'}
+                  Revisar con la IA
                 </button>
               )}
               <button
@@ -434,7 +420,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
         <button
           type="button"
           className="boton sin-fondo chico"
-          title="Lo deja escrito en la conversación de al lado, sin enviar"
+          title="La cita en la conversación de al lado, para que escribas sobre ella"
           onClick={() => void hablar(idea)}
         >
           <Icono nombre="comentar" />
@@ -568,7 +554,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                   role="menuitem"
                   onClick={() => {
                     setMenu(null)
-                    void revisarConIa(ideaDelMenu)
+                    revisarConIa(ideaDelMenu)
                   }}
                 >
                   <Icono nombre="comentar" />

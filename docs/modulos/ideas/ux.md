@@ -28,7 +28,7 @@
   - [ ] Los filtros de arriba (Todo, Para revisar, Sin evaluar, Aprobadas, Rechazadas, Hechas) muestran cuántas hay; «Todo» no muestra las hechas.
 - **ID-4 —** Como usuario quiero guardar un enlace para que la IA lo revise, para sacar ideas de un repo o un artículo sin hacerlo yo.
   - [ ] Pegado en el campo de arriba queda en «Para revisar» con su nombre (el repo, o el título de la página) y su sitio; si escribí algo además del enlace, va como su descripción.
-  - [ ] Revisar con la IA le pide a la conversación de al lado: «Revisá <enlace>: ¿qué podemos sacar de ahí para <proyecto>?», con la descripción. Si la IA está trabajando, queda en cola, como cualquier mensaje.
+  - [ ] Revisar con la IA lo cita arriba del campo de la conversación de al lado, sin enviar (D-131): al enviar, va «Revisá <enlace>: ¿qué podemos sacar de ahí para <proyecto>?», con la descripción, y después lo que escriba el usuario. Si la IA está trabajando, queda en cola, como cualquier mensaje.
   - [ ] La IA propone en el chat; lo que el usuario elige, la IA lo anota como idea (con el robot, sin evaluar) y marca el enlace como revisado.
   - [ ] El tilde del renglón lo marca como revisado a mano. Un enlace revisado pasa a Hechas.
   - [ ] Un clic en el renglón abre el enlace en el navegador.
@@ -36,7 +36,7 @@
   - [ ] Las ideas de la IA (los `T-n` que nacen como idea) llevan un robot en lugar de la lamparita y su código a la derecha.
   - [ ] Se aprueban y rechazan igual; su texto se lee al abrirlas, y para cambiarlo está Hablar de esta idea (no se borran: se rechazan).
 - **ID-6 —** Como usuario quiero hablar de una idea con la IA.
-  - [ ] Hablar de esta idea pone en el compositor de la conversación «Hablemos de la idea <título>» con su código o su nota, para completarlo antes de enviar.
+  - [ ] Hablar de esta idea la cita arriba del campo de la conversación, con su código y su título, para escribir sobre ella (D-131); la ✕ la saca.
 - **ID-7 —** Como usuario quiero anotar en el inicio lo que todavía no tiene proyecto y pasarlo a uno después (Q-177).
   - [ ] En Ideas del inicio, al lado del campo, el selector de proyecto dice «Sin proyecto»; con otro elegido, la idea va directo a ese proyecto (y se avisa «Anotada en Alfa · Ver»).
   - [ ] En una idea suelta abierta, Mover a un proyecto abre la lista de proyectos con framework; al elegir uno, la idea pasa con su nota y sus imágenes, sin evaluar, y se avisa «Movida a Alfa · Ver».
@@ -47,7 +47,7 @@
 ## Flujos
 **ID-9 — Revisar un enlace con la IA**
 1. El usuario pega un enlace en el campo de arriba → queda en «Para revisar».
-2. Revisar con la IA → el mensaje va a la conversación de al lado (o queda en cola).
+2. Revisar con la IA → queda citado en la conversación de al lado; el usuario suma lo que quiera y envía (o queda en cola) (D-131).
 3. La IA lo lee y propone qué sacar. Si no puede leerlo (pide iniciar sesión, no existe, no hay red), lo dice en el chat y el enlace sigue en «Para revisar».
 4. El usuario elige → la IA anota cada idea elegida (robot, sin evaluar, con el enlace en su origen) y marca el enlace como revisado. Si no elige nada, el usuario lo marca con el tilde.
 

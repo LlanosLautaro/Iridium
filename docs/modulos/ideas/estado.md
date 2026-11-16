@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-180) | `ux.md` |
 | 5. Diseño técnico | hecho (D-130) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (las tres piezas nuevas ya están dibujadas en las maquetas aprobadas; pasan a `piezas.css` al construir) | — |
-| 7. Construcción | en curso (ID-I1 probada; ID-I2 hecha, espera Q-182; sigue ID-I3) | este archivo |
+| 7. Construcción | en curso (ID-I1 probada; ID-I2 rehecha con citas tras Q-182, espera Q-183; sigue ID-I3) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`, y la nota del usuario va en `docs/ideas/T-n.md`. Construcción en cuatro iteraciones; ID-I1 (Ideas en un proyecto) está hecha y probada (Q-181); ID-I2 (Revisar con la IA y Hablar de esta idea) está hecha y espera la prueba del usuario (Q-182); sigue ID-I3.
+La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`, y la nota del usuario va en `docs/ideas/T-n.md`. Construcción en cuatro iteraciones; ID-I1 (Ideas en un proyecto) está hecha y probada (Q-181); ID-I2 (Revisar con la IA y Hablar de esta idea) se rehízo tras Q-182: ahora citan en la conversación, sin enviar (D-131), y espera la prueba del usuario (Q-183); sigue ID-I3.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -30,12 +30,13 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 | ID | Objetivo | Estado |
 |---|---|---|
 | ID-I1 | Ideas en un proyecto: el formato en el framework con su lector y su control, la lista con filtros, anotar, abrir, aprobar y rechazar | hecha y probada (Q-181) |
-| ID-I2 | Para revisar (enlaces, Revisar con la IA) y Hablar de esta idea | hecha; espera la prueba del usuario (Q-182) |
+| ID-I2 | Para revisar (enlaces, Revisar con la IA) y Hablar de esta idea | hecha; espera la prueba del usuario (Q-183) |
 | ID-I3 | La nota completa: enlaces e imágenes pegados, guardado solo, borrar | pendiente |
 | ID-I4 | El inicio: ideas sueltas, Mover a un proyecto; se saca el bloc | pendiente |
 
 ## Log de iteraciones
-### ID-I2 — Revisar con la IA y Hablar de esta idea (hecha; espera Q-182)
+### ID-I2 — Revisar con la IA y Hablar de esta idea (hecha; espera Q-183)
+- **2026-11-16, Q-182 (D-131):** Revisar con la IA funcionaba, pero mandaba el pedido directo, como una orden (caro con la conversación cargada, y sin poder sumarle nada). Ahora los dos botones **citan**: una etiqueta chica arriba del campo de la conversación («Revisar T-7 · tldraw/tldraw», «Idea T-1 · …») con ✕, sin enviar, y el cursor va al campo. Al enviar, las citas van al principio del mensaje como cita de Markdown y después lo escrito (sin nada escrito, salen solas); citar lo mismo otra vez no la repite; en el hilo lo citado se ve gris con la línea a la izquierda. Las reglas en `compartido/citas.ts` (sumar, armar y leer el mensaje) y `citaRevisar`/`citaHablar` en `compartido/ideas.ts`, con sus pruebas en `tests/id1-ideas.test.ts`; la prueba de Playwright cubre citar, no repetir, enviar con lo escrito y la ✕ (capturas `test-results/id2-revisar.png` e `id2-hablar.png`). Verificado: `pnpm test` (764 pasan), `pnpm typecheck`, `pnpm lint` y la prueba de Playwright (2 de 2).
 - **2026-11-16:** pegar un enlace y marcarlo revisado ya venían de ID-I1. **Revisar con la IA**, en cada enlace sin revisar (en el renglón y en el clic derecho), manda a la conversación de al lado «Revisá <dirección> (T-n): ¿qué podemos sacar de ahí para <proyecto>?» con la descripción debajo; si la IA trabaja, se suma a lo que hace, como cualquier mensaje; el botón pasa a «Pedido a la IA». El código del enlace va en el pedido para que la IA anote lo que salga con ese `Origen:` y lo pase a `hecho` (el framework ya lo enseña). **Hablar de esta idea**, en la idea abierta (también en las hechas) y en el clic derecho, deja escrito en la conversación «Hablemos de la idea T-n «título»: », sin enviar y con el cursor ahí; si la nota esperaba guardarse, se guarda antes, para que la IA la lea como está. El ícono `comentar` de las maquetas pasa a la app. Las reglas de los dos textos, en `compartido/ideas.ts`, con sus pruebas en `tests/id1-ideas.test.ts`; la prueba de Playwright de ID-I1 suma los dos botones (captura `test-results/id2-revisar.png`).
 - **Verificado:** `pnpm test` (760 pasan), `pnpm typecheck`, `pnpm lint`, el control del framework sin avisos y `tests/e2e/id1-ideas-proyecto.spec.ts` (2 de 2).
 ### ID-I1 — Ideas en un proyecto (hecha y probada)
@@ -46,5 +47,5 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 - **2026-11-16, parte 4 (la pantalla):** Ideas en la barra del proyecto, entre el Mapa y la Revisión (solo en los que siguen el framework). La lista con los filtros y sus cuentas, «Para revisar» arriba e «Ideas» debajo; el campo de arriba (Enter anota, Shift+Enter baja de renglón; queda a la vista al desplazar); la idea abierta en su lugar con su texto (la primera línea es el título; se guarda sola un momento después de escribir; sin título no se cierra); Aprobar y Rechazar abajo y en el clic derecho (el mismo otra vez vuelve a sin evaluar); el robot y el código en las de la IA, que se leen sin escribir en ellas; el tilde de un enlace lo marca revisado. Si algo no se guarda, el Recuadro de error arriba y lo escrito sigue ahí y queda copiado. La Fila que se abre pasó al sistema como PZ-13 (`piezas.css`, en las maquetas y en la app); la Etiqueta de enlace pasa en ID-I3, que es cuando se usa. Las reglas de los filtros y el nombre de un enlace pasaron a `compartido/ideas.ts` para que la pantalla las use. Prueba en `tests/e2e/id1-ideas-proyecto.spec.ts` (con capturas).
 
 ## Próximo paso
-ID-I3: la nota completa. Pegar una dirección en una idea abierta la vuelve una etiqueta con el nombre y el sitio (la Etiqueta de enlace pasa a `piezas.css`), pegar una imagen la guarda en `docs/ideas/T-n/`, el texto con formato se pega como texto, y Borrar una idea del usuario o un enlace con la confirmación en el lugar (ID-8). Si llega Q-182, se procesa primero.
+ID-I3: la nota completa. Pegar una dirección en una idea abierta la vuelve una etiqueta con el nombre y el sitio (la Etiqueta de enlace pasa a `piezas.css`), pegar una imagen la guarda en `docs/ideas/T-n/`, el texto con formato se pega como texto, y Borrar una idea del usuario o un enlace con la confirmación en el lugar (ID-8). Si llega Q-183, se procesa primero.
 **Leer antes:** `ux.md` › ID-2 y ID-8; `diseno-tecnico.md` › La nota y Cómo escribe Iridium; cómo pega el bloc (la hoja de `src/renderer/secciones/ideas/Ideas.tsx`, `compartido/notas.ts` y `pegarImagenEnHoja` en `app/notas.ts`), que se reusa en la idea abierta de `IdeasProyecto.tsx`; la Etiqueta de enlace en `docs/diseno/pantallas/ideas-proyecto-c.html`.

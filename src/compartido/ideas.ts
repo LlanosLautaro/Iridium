@@ -1,4 +1,5 @@
 // Las ideas de un proyecto con framework viejo (R-8), como las recibe la ventana.
+import type { Cita } from './citas'
 
 /** Una sección de ideas de un proyecto (R-8): `07-construccion.md` › Ideas nuevas o `00-idea.md` › Ideas para después. */
 export interface SeccionIdeasProyecto {
@@ -119,8 +120,8 @@ export function nombreDeEnlace(url: string): { nombre: string; sitio: string | n
 }
 
 /**
- * Revisar con la IA (ID-4, ID-9): el pedido que va a la conversación del proyecto, con el código del enlace para que la
- * IA anote lo que salga con ese `Origen:` y lo pase a `hecho`. La descripción, si hay, va debajo.
+ * Revisar con la IA (ID-4, ID-9): el pedido que queda citado en la conversación del proyecto (Q-182), con el código del
+ * enlace para que la IA anote lo que salga con ese `Origen:` y lo pase a `hecho`. La descripción, si hay, va debajo.
  */
 export function pedidoRevisar(
   idea: Pick<IdeaVista, 'codigo' | 'enlace' | 'texto'>,
@@ -131,7 +132,25 @@ export function pedidoRevisar(
   return descripcion ? `${pedido}\n\n${descripcion}` : pedido
 }
 
-/** Hablar de esta idea (ID-6): lo que queda en el campo de la conversación, sin enviar, para completarlo. */
-export function textoHablar(idea: Pick<IdeaVista, 'codigo' | 'titulo'>): string {
-  return `Hablemos de la idea ${idea.codigo} «${idea.titulo}»: `
+/** Revisar con la IA, como cita del campo de la conversación (Q-182): se envía junto con lo que escriba el usuario. */
+export function citaRevisar(
+  idea: Pick<IdeaVista, 'codigo' | 'enlace' | 'texto' | 'titulo'>,
+  proyecto: string,
+): Cita {
+  return {
+    clave: idea.codigo,
+    tipo: 'Revisar',
+    nombre: `${idea.codigo} · ${idea.titulo}`,
+    texto: pedidoRevisar(idea, proyecto),
+  }
+}
+
+/** Hablar de esta idea (ID-6, Q-182): la idea queda citada en el campo de la conversación, para escribir sobre ella. */
+export function citaHablar(idea: Pick<IdeaVista, 'codigo' | 'titulo'>): Cita {
+  return {
+    clave: idea.codigo,
+    tipo: 'Idea',
+    nombre: `${idea.codigo} · ${idea.titulo}`,
+    texto: `Sobre la idea ${idea.codigo} «${idea.titulo}»`,
+  }
 }

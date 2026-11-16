@@ -12,6 +12,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { type Cita, leerCitas, mensajeConCitas } from '../../../compartido/citas'
 import { leerMensaje } from '../../../compartido/mensaje-revision'
 import {
   CONTEXTO_ALTO,
@@ -40,7 +41,10 @@ function primerMensaje(entradas: readonly Entrada[]): string | null {
   const e = entradas.find((x) => x.tipo === 'usuario')
   if (e?.tipo !== 'usuario') return null
   const com = leerMensaje(e.texto)
-  const texto = com ? `${com.codigo}: ${com.texto}` : e.texto
+  const sinCitas = leerCitas(e.texto)
+  const texto = com
+    ? `${com.codigo}: ${com.texto}`
+    : sinCitas.texto.trim() || sinCitas.citas.join(' ') || e.texto
   return texto.replace(/\s+/g, ' ').trim().slice(0, 120) || null
 }
 
@@ -452,12 +456,27 @@ function Tramo({ entradas, ruta, enCurso }: { entradas: EntradaIa[]; ruta: strin
 function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; quien: string }) {
   const abrirComentario = usarEstado((s) => s.abrirComentario)
   const com = leerMensaje(texto)
-  if (!com)
+  if (!com) {
+    // Lo citado al enviar (Q-182) se ve como cita, arriba de lo escrito.
+    const { citas, texto: escrito } = leerCitas(texto)
+    if (!citas.length)
+      return (
+        <p className="mensaje-yo" title={quien}>
+          {texto}
+        </p>
+      )
     return (
-      <p className="mensaje-yo" title={quien}>
-        {texto}
-      </p>
+      <div className="mensaje-yo con-citas" title={quien}>
+        {citas.map((c, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
+          <p key={i} className="citado-en-mensaje">
+            {c}
+          </p>
+        ))}
+        {escrito.trim() && <p>{escrito}</p>}
+      </div>
     )
+  }
   return (
     <button
       type="button"
@@ -682,6 +701,9 @@ export interface Sobre {
   quitar: () => void
 }
 
+/** Sin citas: siempre el mismo arreglo, para que el estado no cambie de balde. */
+const SIN_CITAS: Cita[] = []
+
 /** Lo que va al principio del mensaje: `Sobre la skill X`. */
 function sobreQue(s: Sobre): string {
   return `Sobre la skill ${s.nombre}`
@@ -718,6 +740,8 @@ export function Conversacion({
   const [enviando, setEnviando] = useState(false)
   const paraElCampo = usarEstado((s) => s.paraElCampo[ruta])
   const soltarCampo = usarEstado((s) => s.soltarCampo)
+  const citas = usarEstado((s) => s.citas[ruta]) ?? SIN_CITAS
+  const quitarCita = usarEstado((s) => s.quitarCita)
   // El cuadro crece con lo que se escribe (hasta un tope, después se desplaza) y vuelve a una línea al enviar.
   const caja = useRef<HTMLTextAreaElement>(null)
   useAltoDelTexto(caja, texto, 0)
@@ -732,6 +756,15 @@ export function Conversacion({
     soltarCampo(ruta)
     requestAnimationFrame(() => caja.current?.focus())
   }, [paraElCampo, soltarCampo, escribir, ruta])
+
+  // Otra sección citó algo (Revisar con la IA, Hablar de esta idea; Q-182), aunque ya estuviera: el cursor va al campo
+  // para escribir. Al quitar una cita, no.
+  const antes = useRef(citas)
+  useEffect(() => {
+    if (citas !== antes.current && citas.length > 0 && citas.length >= antes.current.length)
+      requestAnimationFrame(() => caja.current?.focus())
+    antes.current = citas
+  }, [citas])
 
   // Cada vez que se abre el proyecto se mira si la conversación cambió afuera; no manda nada al modelo.
   useEffect(() => {
@@ -757,6 +790,7 @@ export function Conversacion({
     try {
       await window.iridium.seguir(ruta, enBlanco ? { ...pedido, nueva: true } : pedido)
       setTexto('')
+      quitarCita(ruta)
       if (enBlanco) cambiarVista(ruta, { enBlanco: false })
     } finally {
       setEnviando(false)
@@ -767,9 +801,12 @@ export function Conversacion({
     cambiarVista(ruta, { enBlanco: true })
     requestAnimationFrame(() => caja.current?.focus())
   }
+  // Las citas van al principio del mensaje (Q-182); sin nada escrito, salen solas.
+  const sinNada = texto.trim() === '' && citas.length === 0
+  const mensaje = () => mensajeConCitas(citas, sobre && texto.trim() ? `${sobreQue(sobre)}: ${texto}` : texto)
   const enviar = () => {
-    if (texto.trim() === '' || enviando) return
-    void seguir({ texto: sobre ? `${sobreQue(sobre)}: ${texto}` : texto })
+    if (sinNada || enviando) return
+    void seguir({ texto: mensaje() })
   }
   const alTeclado = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
@@ -896,7 +933,7 @@ export function Conversacion({
                   ? 'Retomar esta conversación: lee docs/estado.md y sigue el próximo paso'
                   : 'La IA lee docs/estado.md y hace el próximo paso'
             }
-            onClick={() => void seguir(texto.trim() ? { texto } : {})}
+            onClick={() => void seguir(sinNada ? {} : { texto: mensaje() })}
           >
             <Icono nombre="play" />
             Continuar
@@ -958,6 +995,26 @@ export function Conversacion({
             </button>
           </div>
         )}
+        {citas.length > 0 && (
+          <div className="citados">
+            {citas.map((c) => (
+              <div key={c.clave} className="citado" title={c.texto}>
+                <span>
+                  {c.tipo} <b>{c.nombre}</b>
+                </span>
+                <button
+                  type="button"
+                  className="quitar"
+                  aria-label={`Quitar la cita ${c.nombre}`}
+                  title="Que no vaya con el mensaje"
+                  onClick={() => quitarCita(ruta, c.clave)}
+                >
+                  <Icono nombre="x" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
         <textarea
           ref={caja}
           placeholder={trabajando ? 'Suma algo a lo que está haciendo…' : 'Escribe a la IA…'}
@@ -991,7 +1048,7 @@ export function Conversacion({
               className="boton solo-icono chico"
               title="Enviar (Enter; Shift+Enter, salto de línea)"
               aria-label="Enviar"
-              disabled={texto.trim() === '' || enviando}
+              disabled={sinNada || enviando}
               onClick={enviar}
             >
               <Icono nombre="flecha" />

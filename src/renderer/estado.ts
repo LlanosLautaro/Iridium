@@ -2,6 +2,7 @@
 // proyecto no recarga nada (D-020, H-6).
 import { create } from 'zustand'
 import { SIN_ANCHOS } from '../compartido/ancho-conversacion'
+import { type Cita, sumarCita } from '../compartido/citas'
 import {
   type AccesoVersiones,
   ANCHO_LISTA_IDEAS,
@@ -153,6 +154,12 @@ interface EstadoApp {
   borradores: Record<string, Borrador>
   /** Texto que otra sección dejó para el campo de la conversación de un proyecto, sin enviarlo (Pedírselo a la IA). */
   paraElCampo: Record<string, string>
+  /** Lo citado arriba del campo de la conversación de cada proyecto, sin enviar (Q-182): sale con el próximo mensaje. */
+  citas: Record<string, Cita[]>
+  /** Cita algo en la conversación del proyecto; lo mismo otra vez la reemplaza. */
+  citar(ruta: string, cita: Cita): void
+  /** Saca una cita (la ✕); sin clave, todas (al enviar). */
+  quitarCita(ruta: string, clave?: string): void
   /** Lo escrito en el cuadro de cada conversación y no enviado, por ruta (D-060): se guarda en disco. */
   escritos: Record<string, string>
   ponerEscritos(escritos: Record<string, string>): void
@@ -299,6 +306,15 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   pendientes: {},
   borradores: {},
   paraElCampo: {},
+  citas: {},
+  citar: (ruta, cita) =>
+    set((s) => ({ citas: { ...s.citas, [ruta]: sumarCita(s.citas[ruta] ?? [], cita) } })),
+  quitarCita: (ruta, clave) =>
+    set((s) => {
+      const quedan = clave === undefined ? [] : (s.citas[ruta] ?? []).filter((c) => c.clave !== clave)
+      const { [ruta]: _, ...resto } = s.citas
+      return { citas: quedan.length ? { ...resto, [ruta]: quedan } : resto }
+    }),
   escritos: {},
   ponerEscritos: (escritos) => set((s) => ({ escritos: { ...escritos, ...s.escritos } })),
   escribir: (ruta, texto) => {

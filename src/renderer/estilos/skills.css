@@ -397,8 +397,10 @@
   color: var(--ok);
 }
 
-/* «Sobre la skill …» arriba del cuadro de escribir: una etiqueta chica con ✕, como las de Archivos */
-.compositor .sobre-skill {
+/* «Sobre la skill …» y las citas (Q-182: Revisar, Idea) arriba del cuadro de escribir: una etiqueta chica con ✕,
+   como las de Archivos */
+.compositor .sobre-skill,
+.compositor .citado {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -412,17 +414,20 @@
   color: var(--texto-3);
   font-size: 12px;
 }
-.compositor .sobre-skill > span {
+.compositor .sobre-skill > span,
+.compositor .citado > span {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.compositor .sobre-skill b {
+.compositor .sobre-skill b,
+.compositor .citado b {
   font-weight: 600;
   color: var(--texto-2);
 }
-.compositor .sobre-skill .quitar {
+.compositor .sobre-skill .quitar,
+.compositor .citado .quitar {
   flex: none;
   width: 18px;
   height: 18px;
@@ -431,11 +436,23 @@
   border-radius: var(--radio-control);
   color: var(--texto-3);
 }
-.compositor .sobre-skill .quitar:hover {
+.compositor .sobre-skill .quitar:hover,
+.compositor .citado .quitar:hover {
   background: var(--hover);
   color: var(--texto);
 }
-.compositor .sobre-skill .quitar .ic {
+.compositor .sobre-skill .quitar .ic,
+.compositor .citado .quitar .ic {
   width: 11px;
   height: 11px;
+}
+.compositor .citadodos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 14px 0;
+}
+.compositor .citadodos .citado {
+  margin: 0;
+  max-width: 100%;
 }
