@@ -311,3 +311,8 @@ El nombre de la IA en la conversación («Claudio») llevaría una imagen de per
 ## T-73 — ckryptickunal/OpenDesigner
 Estado: nueva · Idea: enlace · Fecha: 2026-11-16 · Enlace: https://github.com/ckryptickunal/OpenDesigner
 una skill de diseño para ver si podemos copiar ideas
+
+## T-74 — Ver desde acá si la IA de la otra persona trabaja bien con Iridium
+Estado: nueva · Idea: usuario · Fecha: 2026-11-16 · Origen: pedido del usuario al hacer público el repo (D-132)
+Una forma de depurar la copia compartida: saber si su IA escribe los formatos que Iridium lee (lo que marca el control), si las sesiones fallan y con qué versión. Lo más simple y respetuoso: un botón en su Iridium, «Mandar un informe», que arma un resumen sin el contenido de sus proyectos (los avisos del control, los errores del registro y la versión) para que ella lo envíe; mandarlo solo, sin que lo pida, sería una conexión a un tercero que no eligió (P2) y necesita su permiso. Pensarlo en el chat antes de construir.
+

@@ -136,6 +136,9 @@
 | D-127 | 2026-11-16 | Ideas | 10, frente Ideas, paso 1 (T-69) | Las ideas de un proyecto se piensan como frente propio, con su UX y sus maquetas antes de construir | vigente |
 | D-128 | 2026-11-16 | Ideas | 10, frente Ideas, paso 1 (Q-175 a Q-177) | Ideas es una lista de ideas con estado y enlaces para revisar, igual en cada proyecto y en el inicio | vigente (reemplaza a D-112 y D-126 al construirse) |
 | D-129 | 2026-11-16 | Ideas | 10, frente Ideas, paso 2 (Q-179) | Aprobar una idea la pasa al trabajo de la IA como pendiente; rechazarla, a descartado | vigente |
+| D-130 | 2026-11-16 | Ideas | 10, frente Ideas, paso 5 | Cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`; la nota del usuario va aparte | vigente |
+| D-131 | 2026-11-16 | Ideas | 10, frente Ideas, paso 7 (ID-I2, Q-182) | Revisar con la IA y Hablar de esta idea citan en la conversación, sin enviar | vigente |
+| D-132 | 2026-11-16 | general (Compartir) | 10, a pedido del usuario | El repo de Iridium es público: las copias compartidas se actualizan desde GitHub sin invitación, y la del usuario sigue sin actualizarse desde ahí | vigente (precisa D-085) |
 
 ---
 
@@ -2045,7 +2048,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-04
 - **Ámbito:** general (frente Compartir; precisa D-070 punto 3 y D-074)
 - **Hito o paso:** 10, a pedido del usuario («compartir Iridium lo antes posible y asegurarnos de poder hacerle llegar actualizaciones bien a la otra persona»)
-- **Estado:** vigente (Q-123: A, el repo privado con la otra persona como colaboradora)
+- **Estado:** vigente (Q-123: A, el repo privado con la otra persona como colaboradora; desde D-132 el repo es público y la invitación no hace falta)
 
 **Contexto:** la copia que el usuario le pasó a otra persona (D-074) no se actualizaba: cada versión era otra carpeta para reemplazar a mano. D-070 ya había dejado pensado que, al repartir, las copias de otros se actualicen desde GitHub y la del usuario siga armándose en su PC.
 
@@ -2851,3 +2854,25 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** el usuario decide cuándo y con qué contexto va el pedido, y la referencia le llega a la IA siempre igual de prolija.
 
 **Consecuencias:** cambian ID-4 e ID-6 de `modulos/ideas/ux.md`. Las citas viven mientras Iridium está abierto (no se guardan al cerrarlo, como sí lo escrito). Sirve para citar otras cosas más adelante (las ideas sueltas del inicio, ID-I4).
+
+## D-132 — El repo de Iridium es público: las copias compartidas se actualizan desde GitHub sin invitación
+- **Fecha:** 2026-11-16
+- **Ámbito:** general (frente Compartir; precisa D-085 y deja sin efecto la parte privada de D-069, D-070 y Q-123)
+- **Hito o paso:** 10, a pedido del usuario
+- **Estado:** vigente
+
+**Contexto:** el usuario hizo público `LlanosLautaro/Iridium` para pasarle Iridium a otra persona sin invitarla (Q-126). Quiere que se actualice sola desde GitHub, seguir con `dev` y `main` separadas, y que la copia de quien desarrolla no reciba esas versiones; propuso una variable o una opción para apagarlas.
+
+**Decisión:**
+1. No hace falta nada nuevo: D-085 ya lo hace. La copia compartida pregunta primero sin clave, y con el repo público GitHub le contesta (comprobado el 2026-11-16: la API y la bajada del `.zip` responden sin sesión). El aviso «Iniciá sesión en GitHub» ya no aparece.
+2. **La copia del usuario no se actualiza desde GitHub**, sin variable nueva: solo se actualiza desde GitHub la copia que trae `resources/actualizaciones.json`, y ese archivo lo pone `pnpm publicar` únicamente en el `.zip` que sube (una copia aparte); la app que se arma en la PC nunca lo trae. Una variable sería algo más que recordar, y si faltara, la copia del usuario se reemplazaría por la publicada.
+3. Las ramas siguen igual (D-070): se trabaja en `dev`, `main` es la app de uso diario, y lo que se publica sale de `main` cuando el usuario corre Publicar.
+4. Q-126 (invitar a la otra persona) queda sin efecto.
+
+**Motivo:** la otra persona baja el `.zip` de la última versión, lo descomprime y listo; el resto ya está probado (CO-I7).
+
+**Consecuencias:**
+- El código y `docs/` (decisiones, respuestas, trabajo) se ven en GitHub. Revisado el 2026-11-16: sin claves ni datos de acceso; los otros proyectos no se nombran (D-082).
+- Una versión llega a la otra persona solo cuando el usuario publica; la última publicada es del 2026-11-04 (Q-185).
+- Ver si la IA de la otra persona trabaja bien con Iridium queda como idea (T-74).
+

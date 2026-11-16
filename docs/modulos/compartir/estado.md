@@ -2,7 +2,7 @@
 
 **Tipo:** sección
 **Última actualización:** 2026-11-16
-**Nivel de protección:** hereda P2; sigue «solo el usuario» mientras no se reparta (D-069).
+**Nivel de protección:** hereda P2; el repo es público desde el 2026-11-16 (D-132).
 
 ## Progreso
 | Paso | Estado | Documento |
@@ -22,7 +22,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 
 2026-11-04, a pedido del usuario: las copias compartidas se actualizan solas desde GitHub (D-085, CO-I7). Publicada la primera versión (`aca3668`) y probada de punta a punta con `tools/probar-compartida.ts`. Con Q-123 (A): repo privado y la otra persona como colaboradora; la copia avisa si falta iniciar sesión en GitHub. Publicada `c012989` y probada de nuevo.
 
-2026-11-16, a pedido del usuario: lo que falta para compartir Iridium por GitHub (invitar a la otra persona, Q-126) queda en pausa hasta que lo retome. El módulo sigue en uso.
+2026-11-16, a pedido del usuario: el repo pasó a público (D-132), así que la otra persona no necesita invitación (Q-126 sin efecto) y la copia del usuario sigue sin actualizarse desde GitHub. Falta publicar una versión al día y pasarle el `.zip` (Q-185).
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -36,7 +36,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I3 | GitHub privado con `dev` y `main` | hecho (2026-10-31, D-070) |
 | CO-I4 | Elegir la carpeta de proyectos en Ajustes | hecho, aprobada (Q-98, 2026-11-01) |
 | CO-I5 | La versión de Iridium y cuándo se armó, en Ajustes › Acerca de (Q-103) | hecho, aprobada (Q-102, 2026-11-01) |
-| CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085); con el repo privado, el aviso para iniciar sesión en GitHub (Q-123) | hecho, probada con GitHub (2026-11-04); falta invitar a la otra persona (Q-126) |
+| CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085); con el repo privado, el aviso para iniciar sesión en GitHub (Q-123) | hecho, probada con GitHub (2026-11-04); con el repo público (D-132) no hace falta invitar |
 | CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | hecho, aprobada (Q-102, 2026-11-01) |
 
 ## Log de iteraciones
