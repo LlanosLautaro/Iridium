@@ -8,7 +8,7 @@
   padding: 0 var(--esp-6) var(--esp-7);
 }
 .idp-col {
-  max-width: var(--ancho-centrado);
+  max-width: var(--ancho-lista);
   margin-inline: auto;
   display: flex;
   flex-direction: column;

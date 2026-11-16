@@ -292,6 +292,12 @@ Pasó a ser el frente Ideas (D-127): sumado a guardar enlaces de repos para revi
 
 ## T-70 — es posible un "session usage starter"? es decir, una pequeña herramienta que inicie con casi 0 tokens el periodo de 5hs de uso, de este modo se podría iniciar siempre cada 5hs independientemente de si y escribí algo o no, para aprovechar mejor los periodos de tiempo de 5hs, creo que esto es similar a los caché warmers que según entiendo anthropic los permite, quizás deberíamos echar un ojo antes de hacerlo
 Estado: nueva · Fecha: 2026-11-15
+Revisada con la IA el 2026-11-16 (espera Q-184):
+- **Cómo anda el límite:** en Pro y Max, el período de 5 horas empieza con el primer mensaje (en claude.ai o en Claude Code, que comparten el uso) y se renueva 5 horas después; aparte está el límite semanal, que no cambia con esto.
+- **Se puede:** una tarea programada de Windows que a la hora elegida corre `claude -p` con un mensaje mínimo (con Haiku: casi nada del límite semanal) abre el período aunque no estés. Es el Claude Code oficial, en su modo sin ventana, que Anthropic ofrece para automatizar; otros ya lo hacen («session warmer», «window primer»).
+- **Qué gana y qué no:** no da más uso, solo mueve cuándo se renueva. Sirve si se alinea con tu día: por ejemplo, abrirlo a las 7 si arrancás a las 9 hace que se renueve a las 12, en medio de la mañana, y tenés dos períodos en vez de uno. Mal elegida la hora, empeora: si se abre y no llegás, se renueva cuando estás en lo mejor.
+- **Lo de Anthropic:** las condiciones prohíben usar el servicio «por medios automáticos» salvo con clave de API o donde Anthropic lo permita; Claude Code sin ventana sí está pensado para eso, pero no hay nada escrito sobre arrancar el período a propósito. Riesgo bajo con un mensaje por día; no usar herramientas de terceros que imiten a Claude Code (eso sí lo cortaron). Los «cache warmers» son otra cosa: mantienen la caché de la API, que se paga por uso, y no aplican a la suscripción.
+- **Cómo sería en Iridium:** en Ajustes, «Abrir el período de Claude a las HH:MM» (una o más horas, días de semana), que crea o borra la tarea de Windows; anda con Iridium cerrada y la PC prendida, y si falló (sin red, sesión vencida) lo dice la próxima vez que abras Iridium. Chico: una o dos iteraciones, después del frente Ideas.
 
 ## T-71 — El Mapa como una red de pasos, uno por frente
 Estado: nueva · Fecha: 2026-11-15 · Origen: R-59, Q-171

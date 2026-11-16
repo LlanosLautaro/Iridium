@@ -48,11 +48,18 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 - **Q-183 — Probá las citas de Revisar con la IA y Hablar de esta idea**
   Tipo: prueba · Frente: Ideas
   Contexto: lo que pediste en Q-182 (D-131). La versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo). Es en Ideas de un proyecto con el framework; detalle en `modulos/ideas/estado.md` › ID-I2.
-  - [ ] En un enlace de «Para revisar», Revisar con la IA: arriba del campo de la conversación apareció «Revisar T-n · nombre» con su ✕, sin enviarse nada, y el cursor quedó en el campo
+  - [ ] En un enlace de «Enlaces», la flecha de enviar del renglón (al pasar el mouse): arriba del campo de la conversación apareció «Revisar T-n · nombre» con su ✕, sin enviarse nada, y el cursor quedó en el campo
   - [ ] Escribí lo que me interesa y envié: en la conversación se ve el pedido citado (gris, con la línea a la izquierda) y debajo lo mío; la etiqueta se fue
   - [ ] La IA propuso qué sacar; lo que elegí lo anotó como ideas con el robot y el enlace pasó a Hechas
   - [ ] Abrí una idea y toqué Hablar de esta idea: quedó citada «Idea T-n · título»; con la ✕ se va
+  - [ ] En una idea cerrada, la flecha de enviar del renglón la cita igual, sin abrirla
+  - [ ] La lista es más ancha que antes (R-74)
   - [ ] Con clic derecho en un renglón también están Revisar con la IA (en los enlaces) y Hablar de esta idea (en las ideas)
+
+- **Q-184 — ¿Hacemos el arranque del período de 5 horas (T-70)?**
+  Tipo: decisión
+  Contexto: `trabajo.md` › T-70. Se puede: un mensaje mínimo con Claude Code a la hora que elijas abre el período antes de que llegues, sin gastar casi nada. Mueve cuándo se renueva, no da más uso, y no hay permiso escrito de Anthropic (tampoco prohibición; los «cache warmers» son de la API y no aplican).
+  Opciones: A) En Iridium, en Ajustes: elegís la hora y Iridium deja la tarea programada en Windows, anda con Iridium cerrada (recomendada: se prende y apaga desde la app y avisa si falló) · B) Solo la tarea de Windows, sin pantalla en Iridium · C) No hacerlo por ahora
 
 - **Q-126 — Invitá a la otra persona al repo de Iridium**
   Tipo: tarea · en pausa · Frente: Compartir

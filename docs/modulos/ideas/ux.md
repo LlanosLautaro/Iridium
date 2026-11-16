@@ -15,7 +15,7 @@
 - **ID-1 —** Como usuario quiero anotar una idea sin salir del proyecto, para no perderla mientras hago otra cosa (T-69).
   - [ ] Escribir en el campo de arriba y Enter (o Anotar) la deja primera en «Ideas», sin evaluar, con la fecha de hoy; el campo queda vacío y con el foco.
   - [ ] Si lo escrito tiene varias líneas (Shift+Enter), la primera es el título y el resto, su nota.
-  - [ ] Si lo escrito es solo una dirección de internet, va a «Para revisar» (ID-4).
+  - [ ] Si lo escrito es solo una dirección de internet, va a «Enlaces» (ID-4).
 - **ID-2 —** Como usuario quiero abrir una idea y escribir en ella, para pensarla con más detalle.
   - [ ] Un clic en su renglón la abre en su lugar; otro clic, Esc o abrir otra la cierra. Una abierta a la vez.
   - [ ] La nota se escribe libre: pegar una dirección la vuelve una etiqueta con el nombre y el sitio (un clic la abre en el navegador); pegar una imagen la guarda con la idea; pegar texto con formato pega solo el texto.
@@ -27,8 +27,8 @@
   - [ ] Aprobada, la IA la ve en su trabajo como pendiente (D-129); al terminarla, la idea pasa a Hechas sola.
   - [ ] Los filtros de arriba (Todo, Para revisar, Sin evaluar, Aprobadas, Rechazadas, Hechas) muestran cuántas hay; «Todo» no muestra las hechas.
 - **ID-4 —** Como usuario quiero guardar un enlace para que la IA lo revise, para sacar ideas de un repo o un artículo sin hacerlo yo.
-  - [ ] Pegado en el campo de arriba queda en «Para revisar» con su nombre (el repo, o el título de la página) y su sitio; si escribí algo además del enlace, va como su descripción.
-  - [ ] Revisar con la IA lo cita arriba del campo de la conversación de al lado, sin enviar (D-131): al enviar, va «Revisá <enlace>: ¿qué podemos sacar de ahí para <proyecto>?», con la descripción, y después lo que escriba el usuario. Si la IA está trabajando, queda en cola, como cualquier mensaje.
+  - [ ] Pegado en el campo de arriba queda en «Enlaces» con su nombre (el repo, o el título de la página) y su sitio; si escribí algo además del enlace, va como su descripción.
+  - [ ] Revisar con la IA (en el renglón, el botón de enviar, el mismo que el de las ideas: R-77) lo cita arriba del campo de la conversación de al lado, sin enviar (D-131): al enviar, va «Revisá <enlace>: ¿qué podemos sacar de ahí para <proyecto>?», con la descripción, y después lo que escriba el usuario. Si la IA está trabajando, queda en cola, como cualquier mensaje.
   - [ ] La IA propone en el chat; lo que el usuario elige, la IA lo anota como idea (con el robot, sin evaluar) y marca el enlace como revisado.
   - [ ] El tilde del renglón lo marca como revisado a mano. Un enlace revisado pasa a Hechas.
   - [ ] Un clic en el renglón abre el enlace en el navegador.
@@ -46,7 +46,7 @@
 
 ## Flujos
 **ID-9 — Revisar un enlace con la IA**
-1. El usuario pega un enlace en el campo de arriba → queda en «Para revisar».
+1. El usuario pega un enlace en el campo de arriba → queda en «Enlaces».
 2. Revisar con la IA → queda citado en la conversación de al lado; el usuario suma lo que quiera y envía (o queda en cola) (D-131).
 3. La IA lo lee y propone qué sacar. Si no puede leerlo (pide iniciar sesión, no existe, no hay red), lo dice en el chat y el enlace sigue en «Para revisar».
 4. El usuario elige → la IA anota cada idea elegida (robot, sin evaluar, con el enlace en su origen) y marca el enlace como revisado. Si no elige nada, el usuario lo marca con el tilde.

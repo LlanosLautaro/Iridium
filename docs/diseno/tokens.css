@@ -116,6 +116,7 @@
   --ancho-pestanas-ventana: 200px; /* las pestañas a la izquierda de la ventana de Ajustes */
   --ancho-lectura: 760px; /* lo más ancho de un documento para leer de corrido */
   --ancho-centrado: 820px; /* lo más ancho del contenido centrado de una sección */
+  --ancho-lista: 1080px; /* lo más ancho de una lista de renglones largos: las ideas (R-74) */
   --ancho-proyecto: 220px; /* lo más ancho de un proyecto en la barra de arriba; el nombre largo se corta */
   --ancho-globo: 280px; /* lo más ancho del texto de la «i» */
 

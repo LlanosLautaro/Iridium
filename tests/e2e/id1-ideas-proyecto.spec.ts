@@ -111,18 +111,19 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     )
     await expect.poll(trabajo).toMatch(/## T-6 — Atajos para los filtros\nEstado: nueva · Idea: usuario/)
 
-    // Un enlace va a «Para revisar», con su nombre y su sitio; el tilde lo marca revisado y pasa a Hechas.
+    // Un enlace va a «Enlaces», con su nombre y su sitio; el tilde lo marca revisado y pasa a Hechas.
     await campo.fill('https://github.com/tldraw/tldraw\nCómo arma las flechas')
     await campo.press('Enter')
-    const revisar = ideas.locator('section[aria-label="Para revisar"]')
+    const revisar = ideas.locator('section[aria-label="Enlaces"]')
     await expect(revisar.locator('.idp-item')).toContainText('tldraw/tldraw')
     await expect(revisar.locator('.idp-item')).toContainText('github.com · Cómo arma las flechas')
-    // Revisar con la IA (ID-I2, Q-182): queda citado arriba del campo de la conversación, sin enviar; tocarlo otra vez
+    // Enviar a la conversación (ID-I2, Q-182, R-77): el pedido de revisarlo queda citado arriba del campo de la conversación, sin enviar; tocarlo otra vez
     // no lo repite. Al enviar, sale como cita con lo escrito, y la cita se va.
     const mensaje = win.getByRole('textbox', { name: 'Mensaje para la IA' })
     const citas = win.locator('.compositor .citado')
-    await revisar.getByRole('button', { name: 'Revisar con la IA' }).click()
-    await revisar.getByRole('button', { name: 'Revisar con la IA' }).click()
+    await expect(revisar.getByRole('button', { name: 'Revisar con la IA' })).toHaveCount(0)
+    await revisar.getByRole('button', { name: 'Enviar a la conversación' }).click()
+    await revisar.getByRole('button', { name: 'Enviar a la conversación' }).click()
     await expect(citas).toHaveCount(1)
     await expect(citas).toContainText('Revisar T-7 · tldraw/tldraw')
     await expect(mensaje).toBeFocused()
@@ -158,6 +159,15 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await expect(mensaje).toBeFocused()
     await win.screenshot({ path: 'test-results/id2-hablar.png' })
     await win.getByRole('button', { name: /Quitar la cita T-1/ }).click()
+    await expect(citas).toHaveCount(0)
+    // El botón de enviar de cada renglón (R-75) la cita igual, sin abrirla.
+    await fila('El Mapa como una red de pasos').hover()
+    await fila('El Mapa como una red de pasos')
+      .getByRole('button', { name: 'Enviar a la conversación' })
+      .click()
+    await expect(citas).toContainText(/Idea T-\d+ · El Mapa como una red de pasos/)
+    await win.screenshot({ path: 'test-results/r75-enviar.png' })
+    await win.getByRole('button', { name: /Quitar la cita/ }).click()
     await expect(citas).toHaveCount(0)
     await ideas.getByRole('textbox', { name: /Idea Un sonido/ }).click()
     await win.screenshot({ path: 'test-results/id1-ideas-abierta.png' })

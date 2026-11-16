@@ -2,7 +2,8 @@
 // `docs/diseno/pantallas/ideas-proyecto-c.html`): las ideas y los enlaces para revisar, que son `T-n` de `trabajo.md`
 // con `Idea:`. Arriba se anota; cada idea se abre en su lugar (la Fila que se abre, PZ-13) y se aprueba o se rechaza.
 // Lo que no se pudo guardar no se pierde: queda escrito y copiado, con el Recuadro de error arriba (ID-11).
-// Revisar con la IA y Hablar de esta idea quedan citados en la conversación de al lado, sin enviar (ID-4, ID-6, Q-182).
+// Revisar con la IA y Hablar de esta idea quedan citados en la conversación de al lado, sin enviar (ID-4, ID-6, Q-182);
+// en cada renglón, con el botón de enviar (R-75, R-77).
 import { type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { diaCorto } from '../../../compartido/fechas'
 import {
@@ -316,7 +317,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   const filtros = FILTROS_IDEAS.map((f) => ({ clave: f, nombre: NOMBRES[f], n: cuentas[f] }))
   const visibles = ideas.filter((i) => entraEnFiltro(i, filtro))
   const grupos = [
-    { titulo: 'Para revisar', ideas: visibles.filter((i) => i.de === 'enlace') },
+    { titulo: 'Enlaces', ideas: visibles.filter((i) => i.de === 'enlace') },
     { titulo: 'Ideas', ideas: visibles.filter((i) => i.de !== 'enlace') },
   ].filter((g) => g.ideas.length > 0)
   const hoy = new Date()
@@ -326,6 +327,20 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     e.preventDefault()
     setMenu({ codigo: idea.codigo, en: puntoDelMenu(e) })
   }
+
+  // Enviar a la conversación (R-75, R-77): el mismo botón en cada renglón, a la vista al pasar el mouse. Una idea
+  // queda citada como Hablar de esta idea; un enlace, con el pedido de revisarlo. Sale con el próximo mensaje.
+  const enviar = (idea: IdeaVista) => (
+    <button
+      type="button"
+      className="boton solo-icono chico"
+      aria-label="Enviar a la conversación"
+      title="La cita en la conversación de al lado: va con tu próximo mensaje"
+      onClick={() => (idea.de === 'enlace' ? revisarConIa(idea) : void hablar(idea))}
+    >
+      <Icono nombre="enviar" />
+    </button>
+  )
 
   const fila = (idea: IdeaVista) => {
     const enlace = idea.de === 'enlace'
@@ -365,20 +380,11 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
           </span>
           {!enlace && meta}
         </button>
+        {!enlace && <span className="acciones">{enviar(idea)}</span>}
         {enlace && (
           <>
             <span className="acciones">
-              {idea.estado !== 'hecha' && (
-                <button
-                  type="button"
-                  className="boton sin-fondo chico"
-                  title="Lo cita en la conversación de al lado: la IA lo lee y propone qué sacar cuando envíes"
-                  onClick={() => revisarConIa(idea)}
-                >
-                  <Icono nombre="comentar" />
-                  Revisar con la IA
-                </button>
-              )}
+              {enviar(idea)}
               <button
                 type="button"
                 className="boton solo-icono chico"
