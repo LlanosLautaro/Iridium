@@ -2815,3 +2815,22 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** aprobar ya dice «hacela»; y con los estados de siempre, el control y el Mapa no necesitan nada nuevo.
 
 **Consecuencias:** al rechazar, el motivo es opcional (el framework pide uno en `descartado`: si no se escribe, queda «rechazada por el usuario»). La IA, al arrancar algo nuevo, mira los `pendiente` como hasta ahora.
+
+
+## D-130 — Cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`; la nota del usuario va aparte
+- **Fecha:** 2026-11-16
+- **Ámbito:** Ideas
+- **Hito o paso:** 10; frente Ideas, paso 5
+- **Estado:** vigente
+
+**Contexto:** la definición del frente dejó para el diseño técnico dónde se guarda una idea con su nota y sus imágenes, y qué pasa con el bloc (`notas.md`). Q-180 aprobó la UX.
+
+**Decisión:**
+1. El renglón de una idea es un `T-n` de `docs/trabajo.md` con un campo nuevo en su línea de datos, `Idea:` (`usuario`, `IA` o `enlace`; un enlace lleva además `Enlace:` con la dirección). Un `T-n` `nueva` sin `Idea:` se lee como `Idea: IA`.
+2. La nota que el usuario escribe en una idea va en `docs/ideas/T-n.md`, con sus imágenes en `docs/ideas/T-n/`; el título queda en `trabajo.md`.
+3. Las ideas sueltas van en `sueltas.md` de la carpeta Ideas, con el mismo formato (las notas, en `sueltas/`). `notas.md` (el bloc) e `ideas.md` (de la IA del chat general) quedan como están; la IA los pasa a sueltas si el usuario lo pide.
+4. El nombre de un enlace sale de su dirección (en GitHub, `dueño/repo`), sin que Iridium lea la página.
+
+**Motivo:** el estado es el del trabajo (D-129) y la IA, el Mapa y el control lo leen sin nada nuevo; guardar la nota mientras se escribe no compite con la IA por `trabajo.md` ni lo alarga. Leer la página al pegar sería una conexión a un tercero que el usuario no pidió (P2).
+
+**Consecuencias:** el framework, el lector de `trabajo.md` y el control cambian juntos (D-086, D-092): reglas para `Idea:`, `Enlace:` y las notas sin su `T-n`. Detalle en `modulos/ideas/diseno-tecnico.md`.

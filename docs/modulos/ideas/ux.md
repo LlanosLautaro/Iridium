@@ -1,6 +1,7 @@
 # UX del módulo: Ideas
 
 **Fecha:** 2026-11-16
+**Estado:** aprobada en Q-180
 **Base:** `definicion.md`, D-128 (la forma C, el inicio igual), D-129 (aprobar es pasar al trabajo de la IA). Las maquetas: `docs/diseno/pantallas/ideas-proyecto-c.html` e `ideas-inicio-c.html`.
 > Usa los principios de interacción y las piezas generales (`04-ux.md`, `modulos/diseno/ux.md` › Las piezas).
 

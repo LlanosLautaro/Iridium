@@ -1,7 +1,7 @@
 # Diseño técnico del módulo: Ideas
 
 **Fecha:** 2026-11-16
-**Estado:** borrador, escrito mientras espera Q-180 (la UX). Lo que Q-180 cambie se ajusta acá antes de construir.
+**Estado:** cerrado (la UX, aprobada en Q-180; las decisiones, en D-130)
 **Base:** `definicion.md`, `ux.md`, D-128, D-129; `modulos/orden/diseno-tecnico.md` › `trabajo.md` (el formato y cómo escribe Iridium sin pisar a la IA); el bloc de D-126 (`src/compartido/notas.ts`, `src/main/app/notas.ts`).
 
 ## Las decisiones de este paso
@@ -93,5 +93,10 @@ Se reusan el lector de la nota y la etiqueta de enlace del bloc (`compartido/not
 - **Disco (Vitest):** anotar mientras otra escritura cambia `trabajo.md` (vuelve a leer; no pisa); guardar la nota y pegar imágenes; borrar; mover con una falla a mitad de camino (la idea no se pierde).
 - **La app (Playwright, motor falso):** anotar, abrir y escribir, aprobar, rechazar, pegar un enlace y Revisar con la IA (el mensaje llega al compositor), en un proyecto y en el inicio.
 
-## Lo que falta decidir
-Nada técnico. Si Q-180 cambia algo de cómo se usa, se ajusta acá.
+## Iteraciones
+| ID | Qué entra |
+|---|---|
+| ID-I1 | Ideas en un proyecto: el formato en el framework con su lector y su control; la lista con los filtros; anotar, abrir (el texto, sin pegar imágenes todavía), aprobar y rechazar; el robot en las de la IA |
+| ID-I2 | Para revisar: pegar un enlace, Revisar con la IA, marcar revisado; Hablar de esta idea |
+| ID-I3 | La nota completa: pegar enlaces e imágenes, guardarse sola, borrar |
+| ID-I4 | El inicio: ideas sueltas, el selector de proyecto, Mover a un proyecto; se saca el bloc |
