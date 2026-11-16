@@ -1,5 +1,6 @@
 // OR-I4 con la app abierta y el motor falso: Pasar al framework desde la tarjeta y desde una carpeta simple (OR-8,
-// W-3), los avisos de la tarjeta que llevan a su lista en Skills › Framework (T-48) e Ideas con Ver en Framework (T-51).
+// W-3) y los avisos de la tarjeta que llevan a su lista en Skills › Framework (T-48). Ideas ya no lleva a Framework: es
+// un bloc de notas (D-112).
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -98,12 +99,6 @@ test('los avisos de la tarjeta llevan a su lista en Framework; Ideas lleva a Fra
   ])
   await win.screenshot({ path: 'test-results/or4-framework.png' })
 
-  // Ideas: la línea de los que no pasaron lleva a Framework.
-  await win.keyboard.press('Control+1')
-  await win.keyboard.press('Control+3')
-  await expect(win.locator('.id-viejos')).toContainText('Las ideas de Gamma no aparecen')
-  await win.locator('.id-viejos').getByRole('button', { name: 'Ver en Framework' }).click()
-  await expect(framework).toBeVisible()
   await app.close()
 })
 

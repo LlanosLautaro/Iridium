@@ -95,7 +95,7 @@ Hecho en D-089, «Ideas del proyecto». Con el frente Orden pasa a leer `trabajo
 
 ## T-23 — Compartir Iridium con conocidos, con actualizaciones
 Estado: hecho · Fecha: 2026-10-29 · Origen: Q-72, D-054
-El frente Compartir (D-069, D-070) y las versiones publicadas en GitHub (D-084, D-085). Falta solo invitar a la otra persona (Q-126). Lo que se anotó al principio:
+El frente Compartir (D-069, D-070) y las versiones publicadas en GitHub (D-084, D-085). Falta solo invitar a la otra persona (Q-126), en pausa desde el 2026-11-16 a pedido del usuario. Lo que se anotó al principio:
 - **GitHub:** el repo era solo local. Si el código es privado, los conocidos no pueden bajar las actualizaciones sin una clave; la salida habitual es un repo público solo con los instaladores, o hacer público el código.
 - **Carpeta de proyectos:** estaba fija; hay que dejar elegirla al primer arranque.
 - **La forma de trabajar:** sin la guía instalada, los proyectos de otros se ven casi vacíos: repartirla con Iridium o que Iridium la instale.
@@ -213,7 +213,7 @@ Con `referencias/pasar-al-framework.md`, hasta que el control dio cero (`modulos
 
 ## T-51 — «Ver en Framework» en Ideas
 Estado: hecho · Frente: Orden · Fecha: 2026-11-07 · Origen: W-10
-La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Hecho en OR-I4 (2026-11-07).
+La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Hecho en OR-I4 (2026-11-07). Se fue con Ideas como bloc de notas (D-126, 2026-11-16).
 
 ## T-52 — Un sonido para cuando el agente termine de trabajar (cuidado de que no suene cuando el aente simplemente está esperando mientras hace pruebas)
 Estado: nueva · Fecha: 2026-11-07
@@ -241,7 +241,7 @@ Un atajo y se habla: el texto entra al mensaje para la IA. Para dirigir con idea
 
 ## T-58 — Lo que DI-I3 cambia en la app además de pasar las piezas
 Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-28, R-29, R-38, D-108 a D-111
-Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3), la sección Trabajo de un proyecto, Ideas como bloc de notas (D-112) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas. La barra de abajo quedó hecha en la tanda 3 (2026-11-14); la Bandeja de todos y Trabajo salieron en la tanda 4 (2026-11-14). «Guardar a medias» y «Se guarda en respuestas/…» salieron con la Bandeja en la tanda 6 (2026-11-15). Quedan Ideas como bloc de notas y el español neutro, con la tanda de cada sección.
+Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3), la sección Trabajo de un proyecto, Ideas como bloc de notas (D-112) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas. La barra de abajo quedó hecha en la tanda 3 (2026-11-14); la Bandeja de todos y Trabajo salieron en la tanda 4 (2026-11-14). «Guardar a medias» y «Se guarda en respuestas/…» salieron con la Bandeja en la tanda 6 (2026-11-15). Ideas como bloc de notas quedó en la tanda 8 (2026-11-16, D-126). Queda el español neutro, con la tanda de cada sección.
 
 ## T-59 — Rehacer Trabajo e Ideas
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155

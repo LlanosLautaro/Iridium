@@ -8,7 +8,7 @@ import {
 } from '../src/main/core/control'
 import { leerEstado, leerEstadoViejo } from '../src/main/core/estados'
 import { contarPendientes, leerTipo } from '../src/main/core/pendientes'
-import { leerTrabajo, siguienteCodigo, textoDeIdea } from '../src/main/core/trabajo'
+import { leerTrabajo } from '../src/main/core/trabajo'
 
 const ESTADO_BIEN = `# Estado del proyecto
 
@@ -118,16 +118,6 @@ describe('trabajo.md (D-094)', () => {
       texto: 'Con filtros arriba.',
     })
     expect(items[1]).toMatchObject({ codigo: 'T-2', estado: 'nueva', frente: null, texto: '' })
-    expect(siguienteCodigo(items)).toBe('T-3')
-  })
-  it('arma el texto de una idea nueva', () => {
-    expect(textoDeIdea('T-3', '  Una  idea ', '2026-11-06', 'Orden')).toBe(
-      '## T-3 — Una idea\nEstado: nueva · Frente: Orden · Fecha: 2026-11-06\n',
-    )
-    expect(leerTrabajo(textoDeIdea('T-3', 'Suelta', '2026-11-06', null)).items[0]).toMatchObject({
-      estado: 'nueva',
-      frente: null,
-    })
   })
 })
 

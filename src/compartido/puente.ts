@@ -3,11 +3,11 @@
 
 import type { AnchosConversacion } from './ancho-conversacion'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
-import type { ListaIdeas } from './ideas'
+import type { HojaNotas, ImagenPegada, ResultadoNotas } from './notas'
 import type { Borrador } from './respuestas'
 import type { ListaSkills, ProyectoFramework, SkillProyecto } from './skills'
 import type { Estado, PlanEliminacion } from './tipos'
-import type { IdeasDelInicio, ResultadoAnotar, TrabajoProyecto } from './trabajo'
+import type { TrabajoProyecto } from './trabajo'
 import type { ContenidoDocumento, OpcionPregunta, ScriptVista } from './visor'
 
 /** Lo que la tarjeta de un proyecto necesita para dibujarse (04-ux.md › W-2). La ventana no decide nada. */
@@ -812,7 +812,9 @@ export const CANALES = {
   carpetaSkill: 'skills:carpeta',
   archivoSkill: 'skills:archivo',
   skillsCambiaron: 'skills:cambiaron',
-  ideas: 'ideas:lista',
+  notas: 'ideas:notas',
+  guardarNotas: 'ideas:guardar-notas',
+  pegarImagenNotas: 'ideas:pegar-imagen',
   estadoProyecto: 'proyectos:estado',
   archivarProyecto: 'proyectos:archivar',
   iconoProyecto: 'proyectos:icono',
@@ -822,9 +824,6 @@ export const CANALES = {
   planEliminarProyecto: 'proyectos:plan-eliminar',
   eliminarProyecto: 'proyectos:eliminar',
   trabajoProyecto: 'proyecto:trabajo',
-  anotarTrabajo: 'proyecto:anotar',
-  anotarSuelta: 'ideas:anotar',
-  ideasNuevas: 'ideas:nuevas',
   skillsProyecto: 'proyecto:skills',
   abrirDiseno: 'diseno:abrir',
   marcarVista: 'diseno:marcar-vista',
@@ -982,8 +981,12 @@ export interface ApiIridium {
   archivoSkill(id: string, archivo: string): Promise<ContenidoArchivo>
   /** Avisa cuando cambia una skill propia o el formato de un proyecto (`docs/README.md`, `CLAUDE.md`). */
   alCambiarSkills(escuchar: () => void): () => void
-  /** Las ideas de `Ideas/ideas.md` por sección (IN-1); se releen con `alCambiarDocs` de la carpeta Ideas. */
-  ideas(): Promise<ListaIdeas>
+  /** El bloc de notas de Ideas (D-112, D-126): `notas.md` de la carpeta Ideas; se relee con `alCambiarDocs`. */
+  notas(): Promise<HojaNotas>
+  /** Guarda la hoja entera. */
+  guardarNotas(texto: string): Promise<ResultadoNotas>
+  /** Guarda una imagen pegada en `notas/` y la devuelve como `data:`. */
+  pegarImagenNotas(mime: string, base64: string): Promise<ImagenPegada>
   /** El menú de la tarjeta (R-7, D-089): cambia el estado de la ficha (sin ficha, la crea). */
   estadoProyecto(ruta: string, estado: Estado): Promise<ResultadoFicha>
   /** Archivar (true) o desarchivar (false): la carpeta no se mueve. */
@@ -1003,12 +1006,6 @@ export interface ApiIridium {
   eliminarProyecto(ruta: string): Promise<ResultadoFicha>
   /** El trabajo del proyecto (W-11): los `T-n` de `docs/trabajo.md` o, con framework viejo, sus ideas (R-8). */
   trabajoProyecto(ruta: string): Promise<TrabajoProyecto>
-  /** Anota una idea como `T-n` `nueva` en `docs/trabajo.md`, sin la IA (H-18). */
-  anotarTrabajo(ruta: string, texto: string): Promise<ResultadoAnotar>
-  /** Anota una idea suelta en `ideas.md` de la carpeta Ideas, sin la IA (W-10). */
-  anotarSuelta(texto: string): Promise<ResultadoAnotar>
-  /** Las ideas `nueva` de los proyectos con framework y los que todavía no pasaron (W-10). */
-  ideasNuevas(): Promise<IdeasDelInicio>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */
   skillsProyecto(ruta: string): Promise<SkillProyecto[]>
   /** La sección Diseño (DS-11 a DS-13): los grupos de maquetas, el sistema y la base `maqueta://` de las miniaturas. */

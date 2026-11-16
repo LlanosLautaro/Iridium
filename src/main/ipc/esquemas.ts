@@ -38,8 +38,14 @@ export const Ruta = z.string().min(1).max(1024)
 /** Lo escrito en el cuadro de una conversación (como un mensaje: hasta 100 000 caracteres). */
 export const Escrito = z.string().max(100_000)
 
-/** Una idea anotada sin la IA (H-18): el título, en una línea. */
-export const TextoIdea = z.string().min(1).max(500)
+/** La hoja de Ideas entera (D-126): como mucho lo que lee Docs, 2 MB. */
+export const TextoNotas = z.string().max(2 * 1024 * 1024)
+
+/** El tipo de una imagen pegada (`image/png`). */
+export const Mime = z.string().max(64)
+
+/** Una imagen pegada, en base64: como mucho 20 MB. */
+export const ImagenBase64 = z.string().max(Math.ceil((20 * 1024 * 1024 * 4) / 3) + 4)
 
 export const Tengo = z.number().int().min(0)
 

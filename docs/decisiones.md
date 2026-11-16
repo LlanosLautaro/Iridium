@@ -132,6 +132,7 @@
 | D-123 | 2026-11-15 | proceso | 10, operación (T-68) | Chat nuevo por tamaño y tiempo, y arranque liviano | vigente |
 | D-124 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (Q-171, R-56 a R-58) | Vuelve el color donde informa: medidores en verde, ámbar y rojo, enlaces azules, el código con colores y Ejecutar en verde | vigente (ajusta D-103 y D-108) |
 | D-125 | 2026-11-15 | Diseño | 10, frente Diseño, paso 7 (R-62, R-65 a R-68, R-70) | La Bandeja del proyecto es solo bandeja (los scripts, en su sección); el proyecto sin cabecera propia ni el hito repetido; el inicio lleva siempre a Proyectos | vigente (ajusta D-044) |
+| D-126 | 2026-11-16 | Diseño | 10, frente Diseño, paso 7 (DI-I3, tanda 8) | La hoja de Ideas es `notas.md` de la carpeta Ideas, con las imágenes en `notas/`; fuera anotar sin la IA | vigente (ajusta W-10 y H-18) |
 
 ---
 
@@ -2747,3 +2748,21 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** «sin ruido» (D-108): cada cosa se dice en un solo lugar.
 
 **Consecuencias:** las secciones del proyecto ganan los 40 px de la cabecera. `04-ux.md` › W-3 y D-044 quedan ajustados por esta.
+
+## D-126 — La hoja de Ideas es `notas.md` de la carpeta Ideas; fuera anotar sin la IA
+- **Fecha:** 2026-11-16
+- **Ámbito:** Diseño
+- **Hito o paso:** 10; frente Diseño, paso 7 (DI-I3, tanda 8)
+- **Estado:** vigente (ajusta `04-ux.md` › W-10 y H-18)
+
+**Contexto:** D-112 hizo de Ideas un bloc de notas: una sola hoja libre, sin estados ni destinos. Faltaba decidir dónde se guarda y qué pasa con lo que Ideas mostraba hasta ahora: anotar una idea en el `trabajo.md` de un proyecto o suelta en `ideas.md`, y la lista de las ideas nuevas de todos los proyectos.
+
+**Decisión:**
+1. La hoja es `notas.md` en la carpeta Ideas (la del chat general, D-083), un markdown que se lee solo: lo de cada día debajo de su fecha (`## AAAA-MM-DD`), el día más nuevo arriba; los enlaces como `[texto](url)` o la dirección suelta; las imágenes pegadas, en `notas/AAAA-MM-DD-n.png` y en la hoja como `![](notas/…)`. Se guarda sola un momento después de escribir. Al abrirla, arriba está «Hoy» para escribir; si no se escribe nada, no se guarda.
+2. Pegar una dirección la vuelve un enlace (una etiqueta con el nombre y el sitio, que se abre con un clic en el navegador); pegar texto con formato pega solo el texto; pegar o soltar una imagen la guarda en `notas/`.
+3. Fuera de Ideas: anotar sin la IA (con el selector de proyecto), la lista de las ideas `nueva` de todos los proyectos, las sueltas de `ideas.md` con Hablar de esta idea y la línea de los proyectos que no pasaron al framework («Ver en Framework», T-51). Las ideas de un proyecto siguen en su `trabajo.md` (Docs) y lo que está en curso, en el Mapa; `ideas.md` sigue siendo el archivo de la IA del chat general (se ve con Abrir como proyecto).
+4. La IA del chat general lee `notas.md` cuando el usuario le habla de sus ideas y no la reescribe sin que lo pida (lo dice el `CLAUDE.md` que Iridium deja en la carpeta Ideas al crearla).
+
+**Motivo:** un archivo de texto que se puede abrir en cualquier lado y que la IA lee sin nada especial; separado de `ideas.md` porque ese archivo tiene el formato de la IA y la hoja es del usuario.
+
+**Consecuencias:** si la IA cambia `notas.md` mientras el usuario escribe, gana lo último guardado (la hoja se actualiza sola cuando no se está escribiendo). Las sueltas que ya había en `ideas.md` no pasan a la hoja: siguen en ese archivo. Sale el código de anotar sin la IA (`Anotar`, los canales `anotarTrabajo`, `anotarSuelta`, `ideasNuevas` e `ideas`) y sus pruebas.

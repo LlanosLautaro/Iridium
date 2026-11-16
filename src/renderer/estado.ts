@@ -133,16 +133,6 @@ export interface VistaSkills {
   archivos: Record<string, { archivo: string | null; carpetas: string[] }>
 }
 
-/** Lo que recuerda la sección Ideas mientras Iridium está abierto (H-6). */
-export interface VistaIdeas {
-  /** A dónde va lo que se anota (W-10): la ruta de un proyecto o `suelta`; null = el primero de la lista. */
-  destino: string | null
-  /** Las sueltas desplegadas, por título. */
-  abiertas: string[]
-  /** La suelta de la que habla el chat general («Sobre la idea …», con Hablar de esta idea); null = ninguna. */
-  sobre: string | null
-}
-
 interface EstadoApp {
   seccion: Seccion
   /** Ruta del proyecto que se ve en la vista del proyecto. */
@@ -179,8 +169,6 @@ interface EstadoApp {
   cambiarSkills(cambio: Partial<VistaSkills>): void
   /** Lleva a Skills › Framework; con un proyecto, con su lista de avisos abierta (W-13, T-48, T-51). */
   verFramework(ruta?: string): void
-  ideas: VistaIdeas
-  cambiarIdeas(cambio: Partial<VistaIdeas>): void
   /** La ventana de Ajustes (AJ-W1): si está abierta y en qué sección (la última, mientras Iridium está abierto). */
   ajustes: { abierta: boolean; seccion: SeccionAjustes }
   abrirAjustes(seccion?: SeccionAjustes): void
@@ -286,8 +274,6 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     get().cambiarSkills({ elegida: 'framework', avisosDe: ruta ?? null })
     get().irA('skills')
   },
-  ideas: { destino: null, abiertas: [], sobre: null },
-  cambiarIdeas: (cambio) => set((s) => ({ ideas: { ...s.ideas, ...cambio } })),
   ajustes: { abierta: false, seccion: 'perfil' },
   abrirAjustes: (seccion) =>
     set((s) => ({ ajustes: { abierta: true, seccion: seccion ?? s.ajustes.seccion } })),

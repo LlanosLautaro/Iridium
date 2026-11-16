@@ -7,6 +7,7 @@ import { actualizarSolo } from '../../compartido/actualizar'
 import {
   type AccesoVersiones,
   CANALES,
+  CARPETA_GENERAL,
   CARPETA_IRIDIUM,
   type EstadoMotor,
   type EstilosRespuesta,
@@ -29,13 +30,13 @@ import { marcarVista, vistaDiseno } from '../app/diseno'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
 import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
-import { leerSeccionIdeas } from '../app/ideas'
 import { mapaDe } from '../app/mapa'
+import { guardarHoja, leerHoja, pegarImagenEnHoja } from '../app/notas'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
 import { leerSeccionSkills, proyectosConFramework, skillsDelProyecto } from '../app/skills'
-import { anotarEnProyecto, anotarSuelta, ideasDelInicio, trabajoDelProyecto } from '../app/trabajo'
+import { trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
@@ -80,6 +81,8 @@ import {
   HashCommit,
   IdConversacion,
   IdScript,
+  ImagenBase64,
+  Mime,
   NombreProyecto,
   NotaReabrir,
   Pedido,
@@ -89,7 +92,7 @@ import {
   Ruta,
   RutaArchivo,
   Tengo,
-  TextoIdea,
+  TextoNotas,
 } from './esquemas'
 
 export interface Servicios {
@@ -582,36 +585,21 @@ export function registrarPuente(s: Servicios): Puente {
     await conversaciones.seguir(ruta, { texto: MENSAJE_PASAR_AL_FRAMEWORK })
   })
 
-  // Ideas (modulos/inicio/): la ruta de `ideas.md` la arma este lado; la ventana no manda nada.
-  ipcMain.handle(CANALES.ideas, async () => {
-    const lista = await listar()
-    const carpeta = enDisco.rutas.ideas ?? join(lista.iridium.carpeta, 'Ideas')
-    return leerSeccionIdeas({
-      carpeta,
-      proyectos: lista.tipo === 'lista' ? lista.proyectos : [],
-      html: async (texto) => (await docs.de(carpeta)).html(texto, 'ideas.md'),
-    })
-  })
+  // El bloc de notas de Ideas (D-112, D-126): la carpeta la arma este lado; la ventana manda solo el texto o la imagen.
+  const carpetaIdeas = async () =>
+    enDisco.rutas.ideas ?? join((await listar()).iridium.carpeta, CARPETA_GENERAL)
+  ipcMain.handle(CANALES.notas, async () => leerHoja(await carpetaIdeas()))
+  ipcMain.handle(CANALES.guardarNotas, async (_, texto: unknown) =>
+    guardarHoja(await carpetaIdeas(), TextoNotas.parse(texto)),
+  )
+  ipcMain.handle(CANALES.pegarImagenNotas, async (_, mime: unknown, datos: unknown) =>
+    pegarImagenEnHoja(await carpetaIdeas(), Mime.parse(mime), ImagenBase64.parse(datos)),
+  )
 
   // El trabajo de un proyecto (W-11) y las skills (R-8): solo leen.
   ipcMain.handle(CANALES.trabajoProyecto, async (_, ruta: unknown) =>
     trabajoDelProyecto(await docs.de(await proyecto(ruta))),
   )
-  // Anotar una idea sin la IA (H-18, W-10): en el `trabajo.md` de un proyecto o, suelta, en `ideas.md` de Ideas.
-  ipcMain.handle(CANALES.anotarTrabajo, async (_, ruta: unknown, texto: unknown) =>
-    anotarEnProyecto(await proyecto(ruta), TextoIdea.parse(texto)),
-  )
-  ipcMain.handle(CANALES.anotarSuelta, async (_, texto: unknown) => {
-    const lista = await listar()
-    return anotarSuelta(enDisco.rutas.ideas ?? join(lista.iridium.carpeta, 'Ideas'), TextoIdea.parse(texto))
-  })
-  // Ideas del inicio (W-10): las `nueva` de cada proyecto con framework, de los documentos ya cargados.
-  ipcMain.handle(CANALES.ideasNuevas, async () => {
-    const lista = await listar()
-    return ideasDelInicio(lista.tipo === 'lista' ? lista.proyectos : [], async (r) =>
-      trabajoDelProyecto(await docs.de(r)),
-    )
-  })
   ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
 
   // Diseño (frente Diseño, DS-11 a DS-13): abrirlo da de alta el proyecto para el protocolo `maqueta:` y la grande.

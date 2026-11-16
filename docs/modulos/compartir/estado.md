@@ -1,7 +1,7 @@
 # Estado del módulo: Compartir
 
 **Tipo:** sección
-**Última actualización:** 2026-11-04
+**Última actualización:** 2026-11-16
 **Nivel de protección:** hereda P2; sigue «solo el usuario» mientras no se reparta (D-069).
 
 ## Progreso
@@ -21,6 +21,8 @@
 La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). Con Q-103, la versión de Iridium pasó a su propia sección, Ajustes › Acerca de, al final.
 
 2026-11-04, a pedido del usuario: las copias compartidas se actualizan solas desde GitHub (D-085, CO-I7). Publicada la primera versión (`aca3668`) y probada de punta a punta con `tools/probar-compartida.ts`. Con Q-123 (A): repo privado y la otra persona como colaboradora; la copia avisa si falta iniciar sesión en GitHub. Publicada `c012989` y probada de nuevo.
+
+2026-11-16, a pedido del usuario: lo que falta para compartir Iridium por GitHub (invitar a la otra persona, Q-126) queda en pausa hasta que lo retome. El módulo sigue en uso.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

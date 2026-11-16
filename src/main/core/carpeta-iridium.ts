@@ -28,6 +28,9 @@ Esta carpeta no es una app: es el lugar para hablar de los proyectos en general 
 - Si el nombre es ambiguo, preguntá a cuál se refiere antes de leer de más.
 - Desde acá no se modifica ningún proyecto sin que el usuario lo pida.
 
+## El bloc de notas del usuario
+\`notas.md\` es la hoja que el usuario escribe en Iridium › Ideas (las imágenes que pega, en \`notas/\`): lo de cada día debajo de su fecha (\`## AAAA-MM-DD\`), el día más nuevo arriba. Leela cuando te hable de sus ideas; no la reescribas ni la ordenes sin que lo pida.
+
 ## Cómo se anotan las ideas
 - Todas van en \`ideas.md\`, la más nueva arriba dentro de su sección.
 - Cada idea: \`### Título — AAAA-MM-DD\`, dos o tres líneas de qué es y, si toca a otros proyectos, una línea \`Toca a:\` con el nombre exacto de sus carpetas entre comillas invertidas.

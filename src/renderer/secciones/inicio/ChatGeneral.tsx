@@ -1,11 +1,11 @@
 // El chat general (D-060): la conversación de la carpeta Ideas. Es el mismo al lado de la grilla y en la sección Ideas
-// (modulos/inicio/, Q-113); en Ideas, con «Sobre la idea …».
+// (modulos/inicio/, Q-113).
 import { CARPETA_GENERAL } from '../../../compartido/puente'
 import { rutaGeneral, tarjetaDe, usarEstado } from '../../estado'
-import { Conversacion, type Sobre } from '../proyecto/Conversacion'
+import { Conversacion } from '../proyecto/Conversacion'
 
 /** Si no está la carpeta Ideas, dice cómo tenerlo. */
-export function ChatGeneral({ sobre = null }: { sobre?: Sobre | null }) {
+export function ChatGeneral() {
   const lista = usarEstado((s) => s.lista)
   const p = tarjetaDe(lista, rutaGeneral(lista))
   if (!p)
@@ -19,5 +19,5 @@ export function ChatGeneral({ sobre = null }: { sobre?: Sobre | null }) {
         </p>
       </div>
     )
-  return <Conversacion key={p.ruta} p={p} chat="ideas" sobre={sobre} />
+  return <Conversacion key={p.ruta} p={p} chat="ideas" />
 }

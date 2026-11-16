@@ -641,16 +641,15 @@ function Anteriores({
   )
 }
 
-/** De qué se habla en el chat (SK-3, IN-2): una skill (lo de siempre) o una idea. */
+/** De qué se habla en el chat (SK-3): una skill. */
 export interface Sobre {
   nombre: string
-  que?: 'skill' | 'idea'
   quitar: () => void
 }
 
-/** Lo que va al principio del mensaje: `Sobre la skill X` o `Sobre la idea «X»`. */
+/** Lo que va al principio del mensaje: `Sobre la skill X`. */
 function sobreQue(s: Sobre): string {
-  return s.que === 'idea' ? `Sobre la idea «${s.nombre}»` : `Sobre la skill ${s.nombre}`
+  return `Sobre la skill ${s.nombre}`
 }
 
 /**
@@ -911,21 +910,13 @@ export function Conversacion({
         {sobre && (
           <div className="sobre-skill">
             <span title={`El mensaje sale con «${sobreQue(sobre)}:» al principio`}>
-              {sobre.que === 'idea' ? (
-                <>
-                  Sobre la idea <b>«{sobre.nombre}»</b>
-                </>
-              ) : (
-                <>
-                  Sobre la skill <b>{sobre.nombre}</b>
-                </>
-              )}
+              Sobre la skill <b>{sobre.nombre}</b>
             </span>
             <button
               type="button"
               className="quitar"
-              aria-label={`Que el mensaje no sea sobre esa ${sobre.que ?? 'skill'}`}
-              title={`Que el mensaje no sea sobre esa ${sobre.que ?? 'skill'}`}
+              aria-label="Que el mensaje no sea sobre esa skill"
+              title="Que el mensaje no sea sobre esa skill"
               onClick={sobre.quitar}
             >
               <Icono nombre="x" />

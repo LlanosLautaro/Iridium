@@ -173,8 +173,8 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
   'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
   'git.css': ['commit', 'arch', 'fila-git', 'remoto', 'plegable', 'aviso-git', 'arbol-lista', 'git-cuenta'],
-  // DI-I3, tanda 4: las filas y los grupos de Trabajo pasaron de trabajo.css (sin la sección, D-112) a Ideas, que los usa
-  'ideas.css': ['tb-fila', 'columna', 'plegable', 'anotar', 'menu-boton', 'menu-lista'],
+  // DI-I3, tanda 8: Ideas es el bloc de notas (D-112); queda Abrir como proyecto en la columna de Skills
+  'ideas.css': ['columna'],
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
   // DI-I3, tanda 6: la Bandeja pasó a las piezas; quedan el texto de los documentos y la columna de Skills
   'pendientes.css': ['columna', 'aviso-doc', 'gp-casilla', 'doc-texto'],
@@ -220,10 +220,10 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--lateral': 3,
   '--barra': 1,
-  '--caja': 23,
+  '--caja': 21,
   '--medidor-fondo': 5,
-  '--primario': 25,
-  '--primario-texto': 8,
+  '--primario': 21,
+  '--primario-texto': 7,
   '--ok': 13,
   '--esp-sm': 4,
   '--esp-md': 3,

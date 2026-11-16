@@ -76,28 +76,3 @@ function leerDatos(linea: string): Map<string, string> {
   }
   return r
 }
-
-/** El próximo código: el más alto + 1. */
-export function siguienteCodigo(items: readonly ItemTrabajo[]): string {
-  return `T-${Math.max(0, ...items.map((i) => Number(i.codigo.slice(2)))) + 1}`
-}
-
-/** El texto de una idea nueva anotada desde Iridium (W-10), para agregar al final del archivo. */
-export function textoDeIdea(codigo: string, titulo: string, fecha: string, frente: string | null): string {
-  const datos = ['Estado: nueva', ...(frente ? [`Frente: ${frente}`] : []), `Fecha: ${fecha}`]
-  return `## ${codigo} — ${titulo.trim().replace(/\s+/g, ' ')}\n${datos.join(' · ')}\n`
-}
-
-/**
- * `trabajo.md` con una idea nueva al final (W-10, W-11): `T-n` es el más alto + 1. Sin archivo, lo crea con su título.
- */
-export function conIdeaNueva(
-  texto: string | null,
-  titulo: string,
-  fecha: string,
-): { texto: string; codigo: string } {
-  const base = texto ?? '# Trabajo\n'
-  const codigo = siguienteCodigo(leerTrabajo(base).items)
-  const fin = base.replace(/\s*$/, '')
-  return { texto: `${fin}\n\n${textoDeIdea(codigo, titulo, fecha, null)}`, codigo }
-}

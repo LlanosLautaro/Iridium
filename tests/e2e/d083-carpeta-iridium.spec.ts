@@ -58,6 +58,7 @@ test.beforeEach(async () => {
     join(raiz, 'Ideas', 'ideas.md'),
     '# Ideas\n\n## Sueltas\n\n### Una idea vieja — 2026-10-01\nQué es.\n',
   )
+  await archivo(join(raiz, 'Ideas', 'notas.md'), '## 2026-10-01\n\nUna nota vieja.\n')
   await archivo(join(raiz, 'Ideas', '.git', 'HEAD'), 'ref: refs/heads/main\n')
   await archivo(join(raiz, 'Skills y Claude', 'CLAUDE.md'), '# Skills\n')
   await archivo(
@@ -90,7 +91,9 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   await expect(aviso).toContainText('Ideas y Skills y Claude siguen donde estaban antes')
   await expect(aviso).toContainText(join(raiz, '.iridium'))
   await win.keyboard.press('Control+3')
-  await expect(win.getByRole('region', { name: 'Ideas' }).getByTitle('Una idea vieja')).toBeVisible()
+  await expect(win.getByRole('region', { name: 'Ideas' }).getByRole('textbox')).toContainText(
+    'Una nota vieja.',
+  )
   // Una conversación en el chat general antes de mover.
   const chat = win.getByRole('complementary', { name: 'Chat general' })
   await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('Hola')
@@ -115,14 +118,21 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   await win.screenshot({ path: 'test-results/d083-movidas.png' })
   expect((await readdir(raiz)).sort()).toEqual(['.iridium', 'Alfa'])
   const iridium = join(raiz, '.iridium')
-  expect((await readdir(join(iridium, 'Ideas'))).sort()).toEqual(['.git', 'CLAUDE.md', 'ideas.md'])
+  expect((await readdir(join(iridium, 'Ideas'))).sort()).toEqual([
+    '.git',
+    'CLAUDE.md',
+    'ideas.md',
+    'notas.md',
+  ])
   expect(await readlink(join(claude, 'skills', 'guia'))).toMatch(
     /\.iridium[\\/]Skills[\\/]skills[\\/]guia[\\/]?$/,
   )
 
   // Ideas sigue, con la misma conversación.
   await win.keyboard.press('Control+3')
-  await expect(win.getByRole('region', { name: 'Ideas' }).getByTitle('Una idea vieja')).toBeVisible()
+  await expect(win.getByRole('region', { name: 'Ideas' }).getByRole('textbox')).toContainText(
+    'Una nota vieja.',
+  )
   await expect(chat.locator('.hilo')).toContainText('Hola')
   // Skills reconoce la propia en su lugar nuevo.
   await win.keyboard.press('Control+2')

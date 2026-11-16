@@ -131,7 +131,7 @@ function BarraActividad() {
 export function SenalSesion({ ficha }: { ficha: FichaSesion }) {
   if (ficha.estado === 'trabajando')
     return (
-      <span className="senal">
+      <span className="senal verde">
         <Icono nombre="sync" gira />
         Trabajando
       </span>
