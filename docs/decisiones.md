@@ -2731,4 +2731,4 @@ evision-cola-electron.json` y sale cuando Iridium está.
 
 **Motivo:** el color que distingue (cuánto queda, qué se puede tocar, qué es cada cosa en el código) ayuda a leer; el que decora sigue fuera.
 
-**Consecuencias:** `tokens.css` suma `--bien`, `--enlace` y `--cod-numero`, y cambia los tres colores del código. Los enlaces de las maquetas se ven azules dentro del Texto de documento (PZ-12).
+**Consecuencias:** `tokens.css` suma `--bien`, `--enlace` y `--cod-numero`, y cambia los tres colores del código. Los enlaces de las maquetas se ven azules dentro del Texto de documento (PZ-12). Con R-60 (2026-11-15) también lo prendido: `--marcado` pasa del blanco al verde de los medidores, así que las casillas marcadas, las opciones elegidas y los interruptores prendidos son verdes; los usos de antes de `--primario` (los focos y lo elegido) siguen en blanco.

@@ -199,7 +199,7 @@
   outline-offset: 2px;
 }
 .tono input {
-  accent-color: var(--primario);
+  accent-color: var(--marcado);
   margin: 0;
 }
 .tono .n {

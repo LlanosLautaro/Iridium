@@ -223,7 +223,7 @@ const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--barra': 1,
   '--caja': 23,
   '--medidor-fondo': 5,
-  '--primario': 30,
+  '--primario': 25,
   '--primario-texto': 8,
   '--ok': 13,
   '--esp-sm': 4,

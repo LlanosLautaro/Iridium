@@ -1,7 +1,7 @@
 # Estado del módulo: Orden
 
 **Tipo:** sección (atraviesa la app y la forma de trabajar; D-091)
-**Última actualización:** 2026-11-07
+**Última actualización:** 2026-11-15
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,12 +13,12 @@
 | 4. UX | hecho (2026-11-06; Q-136 a Q-139 → D-097 a D-099): `04-ux.md` reescrito sin capas | `ux.md` (historia) y `04-ux.md` |
 | 5. Diseño técnico | hecho (2026-11-06): el control, `trabajo.md`, el vocabulario, los frentes del Mapa, Actualizar y cuatro iteraciones | `diseno-tecnico.md` |
 | 6. UI | hecho (2026-11-06; Q-140 → D-100) | `06-ui.md` › Frente Orden y `ui/vista-orden.html` |
-| 7. Construcción | en curso (2026-11-06): OR-I1 hecha (Q-141); OR-I2 hecha (Q-144); OR-I3 hecha (Q-145); OR-I4 construida, espera la prueba (Q-146) | este archivo |
-| 8. Calidad | pendiente | este archivo |
+| 7. Construcción | hecho (2026-11-15): OR-I1 (Q-141), OR-I2 (Q-144), OR-I3 (Q-145) y OR-I4 (Q-146; el Mapa pasa a T-71) | este archivo |
+| 8. Calidad | en pausa: espera el rediseño (D-102) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y probada (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). OR-I2 también (Q-144): la Bandeja de entrada, el esqueleto, la cabecera común, la tarjeta con su frente, la conversación de 360 px y Actualizar. OR-I3 también (Q-145): Trabajo de cada proyecto, anotar sin la IA e Ideas del inicio con las nuevas de todos. OR-I4 está construida y espera la prueba (Q-146): el Mapa con el bloque de frentes, Skills › Framework con Pasar al framework (también desde la tarjeta y la carpeta simple), la carpeta simple, el ⚠ de Skills en gris y las tablas de Docs. Con ella se terminan las iteraciones del frente (T-47 a T-49 y T-51, hechos). Desde el 2026-11-07 el frente activo es Diseño (D-102): Orden cierra OR-I4 con Q-146, y sus pasos 8 y 9 se hacen después del rediseño negro, para no medir una interfaz que va a cambiar entera.
+Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y probada (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). OR-I2 también (Q-144): la Bandeja de entrada, el esqueleto, la cabecera común, la tarjeta con su frente, la conversación de 360 px y Actualizar. OR-I3 también (Q-145): Trabajo de cada proyecto, anotar sin la IA e Ideas del inicio con las nuevas de todos. OR-I4 está construida y espera la prueba (Q-146): el Mapa con el bloque de frentes, Skills › Framework con Pasar al framework (también desde la tarjeta y la carpeta simple), la carpeta simple, el ⚠ de Skills en gris y las tablas de Docs. Con ella se terminan las iteraciones del frente (T-47 a T-49 y T-51, hechos). Desde el 2026-11-07 el frente activo es Diseño (D-102): Orden cierra OR-I4 con Q-146, y sus pasos 8 y 9 se hacen después del rediseño negro, para no medir una interfaz que va a cambiar entera. **OR-I4 quedó probada en Q-146 (2026-11-15)** y con ella el paso 7: lo del Mapa no se probó porque se rehace como frente propio (T-71).
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -36,7 +36,7 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 | OR-I1 | El modelo y el control | hecho (Q-141, 2026-11-06) |
 | OR-I2 | El esqueleto y la Bandeja de entrada, con Actualizar | hecho (Q-144, 2026-11-07) |
 | OR-I3 | Trabajo e Ideas, anotar sin la IA | hecho (Q-145, 2026-11-07) |
-| OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | en curso: construida, espera la prueba (Q-146) |
+| OR-I4 | El Mapa con frentes, Skills › Framework, Pasar al framework | hecho (Q-146, 2026-11-15; el Mapa sigue en T-71) |
 
 ## Log de iteraciones
 ### OR-I1 — El modelo y el control (2026-11-06, hecha)
@@ -110,7 +110,9 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 
 **Prueba del usuario:** Q-145, las seis casillas bien (2026-11-07).
 
-### OR-I4 — El Mapa con frentes, Skills › Framework y Pasar al framework (en curso desde 2026-11-07)
+### OR-I4 — El Mapa con frentes, Skills › Framework y Pasar al framework (2026-11-07, hecha)
+**Probada en Q-146 (2026-11-15):** el detalle de un hito con Volver, Skills › Framework, los avisos y el menú de la tarjeta, la carpeta simple y las tablas de Docs andan. El bloque de frentes del Mapa no se probó: el usuario lo deja en pausa porque el Mapa se rehace como una red de pasos por frente (T-71).
+
 **Hecho:**
 - **El Mapa con frentes** (W-7, A-5, H-7, 2026-11-07): arriba, la fila de hitos (un casillero por hito, «Hitos» a la izquierda y «N de M hechos» a la derecha; tocar uno muestra su detalle en lugar del bloque y **Volver** lo saca); en la cabecera, **Abrir** el documento del hito actual. Con un frente `en curso` manda el bloque de frentes: el activo con su paso, su Próximo paso, sus `T-n` `en curso` (cada uno abre Trabajo en ese ítem) y sus preguntas («En tu bandeja», con el «!» ámbar en la que frena); debajo, una línea por estado (También en curso, En espera, En pausa, En operación, Sin estado), cada nombre a su `estado.md`, y «Sin frente» con las preguntas del núcleo. Sin frente en curso, el detalle del hito actual, con las líneas debajo si hay frentes. Al pie, «Lo último de la IA» en una línea con **Ver** (lleva al final de la conversación). Se fueron las pestañas de frentes de D-063 y la leyenda de la línea de hitos; las palabras del Mapa son las del vocabulario («hecho», «descartado»).
 - Los frentes salen de la tabla «Módulos» de `estado.md` (`leerFrentes` en `core/mapa.ts`, que también usa la tarjeta), en su orden, cada uno con su carpeta si la fila la cita o si un módulo se llama igual; los módulos con carpeta que la tabla no nombra van al final con el estado de sus pasos (los proyectos de antes). Un frente sin carpeta (Diseño, Capacidades) también recibe sus preguntas por `Frente:`. En `docs/estado.md` de Iridium, Diseño y Capacidades pasan a ser filas `pendiente` de la tabla (antes eran una línea suelta).
@@ -130,5 +132,5 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 **Pruebas de Framework, la carpeta simple y las tablas:** `tests/sk1-skills.test.ts` (cómo está un proyecto: al día, con avisos, viejo, carpeta, los que no cuentan, y el orden con proyectos de disco), `tests/or4-mapa.test.ts` suma el control con los frentes de la tabla (6), `core-grilla` (README y trabajo cambian la tarjeta). Playwright: `sk1-skills.spec.ts` al día (Framework con los filtros, las rutas que se rechazan, Pasar al framework hasta que queda al día), `tests/e2e/or4-framework.spec.ts` (3: los avisos de la tarjeta a su lista y Ideas a Framework; la carpeta simple sin Mapa, Docs ni Seguí, con el recuadro y Pasar al framework; el menú de la tarjeta) y `or4-mapa.spec.ts` suma la tabla ancha de Docs.
 
 ## Próximo paso
-OR-I4: procesar la prueba del usuario (Q-146). Si algo falla, arreglarlo; si anda, cerrar OR-I4 y pasar el frente al paso 8, Calidad (con `referencias/08-calidad.md` del framework y `08-calidad.md` del proyecto como modelo: la corrida completa, el recorrido con los proyectos reales, la accesibilidad de las pantallas nuevas y los tiempos).
-**Leer antes:** `respuestas/Q-146.md`.
+En pausa hasta cerrar DI-I3 (D-102). Después, el paso 8, Calidad (con `referencias/08-calidad.md` del framework y `08-calidad.md` del proyecto como modelo: la corrida completa, el recorrido con los proyectos reales, la accesibilidad de las pantallas nuevas y los tiempos), sobre la interfaz negra.
+**Leer antes:** `referencias/08-calidad.md` del framework y `08-calidad.md`.

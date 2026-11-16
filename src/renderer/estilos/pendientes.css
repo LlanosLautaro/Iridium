@@ -91,8 +91,8 @@
   border-radius: var(--radio-medidor);
 }
 .doc-texto .gp-casilla--hecha .gp-casilla-caja {
-  background: var(--primario);
-  border-color: var(--primario);
+  background: var(--marcado);
+  border-color: var(--marcado);
 }
 .doc-texto .marcada {
   margin-left: -8px;

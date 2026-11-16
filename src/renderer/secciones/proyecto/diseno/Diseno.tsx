@@ -165,7 +165,7 @@ export function Diseno({ ruta }: { ruta: string }) {
   const alTeclado = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) return
     const lista = enLienzo.map((m) => botones.current.get(m.archivo)).filter((b) => b !== undefined)
-    const i = lista.findIndex((b) => b === document.activeElement)
+    const i = lista.indexOf(document.activeElement as HTMLButtonElement)
     if (i < 0) return
     e.preventDefault()
     const paso = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1
