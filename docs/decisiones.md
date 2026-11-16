@@ -139,6 +139,7 @@
 | D-130 | 2026-11-16 | Ideas | 10, frente Ideas, paso 5 | Cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`; la nota del usuario va aparte | vigente |
 | D-131 | 2026-11-16 | Ideas | 10, frente Ideas, paso 7 (ID-I2, Q-182) | Revisar con la IA y Hablar de esta idea citan en la conversación, sin enviar | vigente |
 | D-132 | 2026-11-16 | general (Compartir) | 10, a pedido del usuario | El repo de Iridium es público: las copias compartidas se actualizan desde GitHub sin invitación, y la del usuario sigue sin actualizarse desde ahí | vigente (precisa D-085) |
+| D-133 | 2026-11-16 | Orden (Skills › Framework) | 10, a pedido del usuario | Actualizar al framework va siempre en una conversación nueva del proyecto, y el botón se llama Actualizar | vigente (precisa F-9) |
 
 ---
 
@@ -2876,3 +2877,18 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - Una versión llega a la otra persona solo cuando el usuario publica; la última publicada es del 2026-11-04 (Q-185).
 - Ver si la IA de la otra persona trabaja bien con Iridium queda como idea (T-74).
 
+## D-133 — Actualizar al framework va siempre en una conversación nueva
+- **Fecha:** 2026-11-16
+- **Ámbito:** Orden y Skills › Framework (precisa F-9 de `04-ux.md`)
+- **Hito o paso:** 10, a pedido del usuario
+- **Estado:** vigente
+
+**Contexto:** el botón «Pasar al framework» (Skills › Framework, el menú de la tarjeta y el recuadro de una carpeta simple) mandaba el pedido a la última conversación del proyecto. Retomarla hace que la IA relea todo ese historial, que no sirve para pasar al framework: gasta uso en vano.
+
+**Decisión:**
+1. El pedido va siempre a una conversación nueva del proyecto, como Nueva en la conversación. La anterior queda guardada y se puede volver a ella.
+2. El botón se llama **Actualizar** (en el menú de la tarjeta, **Actualizar al framework**, porque ahí no hay contexto); mientras trabaja, «Actualizando…».
+
+**Motivo:** pedido del usuario; el pedido trae todo lo que la IA necesita (la referencia `pasar-al-framework.md`), así que la charla anterior no aporta.
+
+**Consecuencias:** sin Claude disponible, el pedido sigue quedando escrito en el cuadro de su conversación, sin abrir una nueva. Lo prueba `tests/e2e/or4-framework.spec.ts` (una charla previa no aparece en la conversación del pedido).

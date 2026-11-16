@@ -1,4 +1,4 @@
-// OR-I4 con la app abierta y el motor falso: Pasar al framework desde la tarjeta y desde una carpeta simple (OR-8,
+// OR-I4 con la app abierta y el motor falso: Actualizar al framework desde la tarjeta y desde una carpeta simple (OR-8,
 // W-3) y los avisos de la tarjeta que llevan a su lista en Skills › Framework (T-48). Ideas ya no lleva a Framework: es
 // un bloc de notas (D-112).
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
@@ -102,7 +102,7 @@ test('los avisos de la tarjeta llevan a su lista en Framework; Ideas lleva a Fra
   await app.close()
 })
 
-test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Pasar al framework (W-3, OR-8)', async () => {
+test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar en una conversación nueva (W-3, OR-8)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
@@ -116,29 +116,38 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Pasar al f
   await expect(recuadro).toContainText('Esta carpeta no sigue el framework')
   await win.screenshot({ path: 'test-results/or4-carpeta-simple.png' })
 
+  // Una charla previa: Actualizar no la retoma (releerla gasta uso en vano), abre una conversación nueva.
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo.fill('Charla vieja')
+  await campo.press('Enter')
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Beta' })).toContainText('Terminada')
+  await expect(win.locator('.turno').first()).toContainText('Charla vieja')
+
   // La IA falsa le arma el estado.md y la línea del framework: deja de ser una carpeta simple.
-  await recuadro.getByRole('button', { name: 'Pasar al framework' }).click()
+  await recuadro.getByRole('button', { name: 'Actualizar' }).click()
   await expect(recuadro).toHaveCount(0, { timeout: 15_000 })
+  await expect(win.locator('.turno').first()).toContainText('pasar-al-framework.md')
+  await expect(win.locator('.turno', { hasText: 'Charla vieja' })).toHaveCount(0)
   await expect(barra.getByRole('button', { name: 'Mapa' })).toBeVisible()
   await expect(win.getByRole('button', { name: 'Continuar' })).toBeVisible()
   await app.close()
 })
 
-test('Pasar al framework desde el menú de la tarjeta (OR-8)', async () => {
+test('Actualizar al framework desde el menú de la tarjeta (OR-8)', async () => {
   const { app, win } = await abrir()
   const gamma = win.locator('.tarjeta', { hasText: 'Gamma' })
   await expect(gamma).toContainText('framework viejo')
   await gamma.click({ button: 'right' })
   const menu = win.getByRole('menu', { name: 'Acciones de Gamma' })
   await expect(menu.getByRole('menuitem', { name: 'Ver los avisos del framework' })).toHaveCount(0)
-  await menu.getByRole('menuitem', { name: 'Pasar al framework' }).click()
-  await expect(win.getByText('La IA de «Gamma» lo está pasando al framework.')).toBeVisible()
+  await menu.getByRole('menuitem', { name: 'Actualizar al framework' }).click()
+  await expect(win.getByText('La IA de «Gamma» lo está actualizando al framework.')).toBeVisible()
   await expect(gamma).not.toContainText('framework viejo', { timeout: 15_000 })
 
   // Una con avisos ofrece verlos; una que ya sigue el framework no ofrece pasarla.
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click({ button: 'right' })
   const menuAlfa = win.getByRole('menu', { name: 'Acciones de Alfa' })
-  await expect(menuAlfa.getByRole('menuitem', { name: 'Pasar al framework' })).toHaveCount(0)
+  await expect(menuAlfa.getByRole('menuitem', { name: 'Actualizar al framework' })).toHaveCount(0)
   await menuAlfa.getByRole('menuitem', { name: 'Ver los avisos del framework' }).click()
   await expect(win.getByRole('region', { name: 'Framework' })).toBeVisible()
   await app.close()

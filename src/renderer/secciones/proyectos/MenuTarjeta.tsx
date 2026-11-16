@@ -38,7 +38,7 @@ export function MenuTarjeta({
   const cambiarSkills = usarEstado((s) => s.cambiarSkills)
   const enviados = usarEstado((s) => s.skills.enviados)
   const danada = p.problema !== null
-  // Pasar al framework (OR-8): de framework viejo o una carpeta simple; la ventana del proceso principal lo vuelve a
+  // Actualizar al framework (OR-8): de framework viejo o una carpeta simple; la ventana del proceso principal lo vuelve a
   // comprobar (archivados y reemplazados no cuentan).
   const pasable = !danada && !p.archivado && (p.framework === 'viejo' || p.framework === null)
   const conAvisos = p.framework !== null && p.framework !== 'viejo' && p.framework.avisos.length > 0
@@ -101,15 +101,15 @@ export function MenuTarjeta({
         <button
           type="button"
           role="menuitem"
-          title="Le manda el pedido a la IA de este proyecto: gasta uso"
+          title="Le manda el pedido a la IA de este proyecto, en una conversación nueva: gasta uso"
           onClick={hacer(async () => {
             await window.iridium.pasarAlFramework(p.ruta)
             cambiarSkills({ enviados: [...enviados.filter((r) => r !== p.ruta), p.ruta] })
-            avisar({ texto: `La IA de «${p.nombre}» lo está pasando al framework.`, error: false })
+            avisar({ texto: `La IA de «${p.nombre}» lo está actualizando al framework.`, error: false })
           })}
         >
           <Icono nombre="marca" />
-          Pasar al framework
+          Actualizar al framework
         </button>
       )}
       {conAvisos && (

@@ -1,7 +1,7 @@
 // Skills › Framework (04-ux.md › W-13, H-20): qué proyectos siguen el framework. Los de afuera primero (framework
 // viejo o con avisos del control), después las carpetas simples y al final los que están al día. Cada uno de afuera
-// (y cada carpeta) con **Pasar al framework** (F-9, OR-8), que manda el pedido a su conversación sin salir de acá;
-// mientras trabaja, «Pasando al framework…» y Ver la conversación. Los avisos de uno se despliegan en su fila (T-48).
+// (y cada carpeta) con **Actualizar** (F-9, OR-8), que manda el pedido a una conversación nueva del proyecto sin salir
+// de acá; mientras trabaja, «Actualizando…» y Ver la conversación. Los avisos de uno se despliegan en su fila (T-48).
 import { type ReactNode, useState } from 'react'
 import {
   type EstadoFramework,
@@ -73,7 +73,7 @@ function Fila({ p }: { p: ProyectoFramework }) {
       <>
         <span className="senal">
           <Icono nombre="sync" gira />
-          Pasando al framework…
+          Actualizando…
         </span>
         <button type="button" className="boton secundario chico" onClick={() => abrirProyecto(p.ruta)}>
           Ver la conversación
@@ -83,7 +83,7 @@ function Fila({ p }: { p: ProyectoFramework }) {
   else if (trabajando)
     accion = (
       <button type="button" className="boton secundario chico" disabled title="Su IA está trabajando">
-        Pasar al framework
+        Actualizar
       </button>
     )
   else
@@ -99,10 +99,10 @@ function Fila({ p }: { p: ProyectoFramework }) {
           type="button"
           className="boton secundario chico"
           disabled={mandando}
-          title="Le manda el pedido a la IA de este proyecto: gasta uso"
+          title="Le manda el pedido a la IA de este proyecto, en una conversación nueva: gasta uso"
           onClick={() => void pasar()}
         >
-          Pasar al framework
+          Actualizar
         </button>
       </>
     )
@@ -193,7 +193,7 @@ export function Framework({ proyectos }: { proyectos: ProyectoFramework[] | null
               ))}
             </ul>
             <p className="sk-nota">
-              Pasar al framework manda el pedido a la conversación de cada proyecto; seguís acá. Las carpetas
+              Actualizar manda el pedido a una conversación nueva de cada proyecto; seguís acá. Las carpetas
               simples no cuentan como fuera: se ven y se conversan igual.
             </p>
           </>

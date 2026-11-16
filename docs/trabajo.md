@@ -316,3 +316,5 @@ una skill de diseño para ver si podemos copiar ideas
 Estado: nueva · Idea: usuario · Fecha: 2026-11-16 · Origen: pedido del usuario al hacer público el repo (D-132)
 Una forma de depurar la copia compartida: saber si su IA escribe los formatos que Iridium lee (lo que marca el control), si las sesiones fallan y con qué versión. Lo más simple y respetuoso: un botón en su Iridium, «Mandar un informe», que arma un resumen sin el contenido de sus proyectos (los avisos del control, los errores del registro y la versión) para que ella lo envíe; mandarlo solo, sin que lo pida, sería una conexión a un tercero que no eligió (P2) y necesita su permiso. Pensarlo en el chat antes de construir.
 
+## T-75 — La opcion de poder hacer theming local, independiente de las actualizaciones. Supongo que en esa opcion habría que dejar una pequea referencia para que la IA vaya a buscar la guia de como hacerlo a github, donde está el codigo fuente y puede hacer las ediciones sin equivocarse
+Estado: nueva · Idea: usuario · Fecha: 2026-11-16

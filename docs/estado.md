@@ -42,6 +42,7 @@
 **Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones: ID-I1 (Ideas en un proyecto) está hecha y probada (Q-181); ID-I2 (Revisar con la IA y Hablar de esta idea) se rehízo tras Q-182: ahora citan en la conversación, sin enviar (D-131), y espera la prueba del usuario (Q-183); sigue ID-I3 (la nota completa: pegar enlaces e imágenes, borrar). El bloc de notas sigue en la app hasta ID-I4.
 Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) no se prueba: el usuario la dio por descontinuada (Q-174) y la reemplaza Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir: el repo es público (D-132): la otra persona baja el `.zip` de la última versión y se actualiza sola, sin invitación; tu copia sigue armándose en tu PC. Falta publicar una versión al día (Q-185). Ver la IA de la otra persona desde acá queda como idea (T-74).
+Actualizar al framework (antes «Pasar al framework») abre siempre una conversación nueva del proyecto, para no releer la anterior en vano (D-133); espera Q-186 junto con el verde de Ejecutar (R-78).
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
@@ -68,10 +69,17 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridiumwin-unpackedIridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
+- **Q-186 — Probá Actualizar al framework y el verde de Ejecutar**
+  Tipo: prueba · Frente: Orden
+  Contexto: D-133 y R-78. La versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo).
+  - [ ] En Scripts de un proyecto, el botón Ejecutar se ve en verde (R-78)
+  - [ ] En Skills › Framework, el botón de cada proyecto de afuera dice **Actualizar**; en el menú de la tarjeta, **Actualizar al framework**
+  - [ ] Lo toqué en un proyecto que ya tenía una conversación: el pedido salió en una conversación nueva, y la anterior sigue en el historial (el reloj de arriba)
+
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Ideas, ID-I3: la nota completa en la idea abierta (pegar una dirección la vuelve una etiqueta, pegar una imagen la guarda con la idea) y Borrar (ID-8). ID-I2 está hecha y espera Q-183: si llega, se procesa primero.
+Ideas, ID-I3: la nota completa en la idea abierta (pegar una dirección la vuelve una etiqueta, pegar una imagen la guarda con la idea) y Borrar (ID-8). ID-I2 está hecha y espera Q-183, y Q-186 espera la prueba de D-133 y R-78: si llegan, se procesan primero.
 **Leer antes:** `modulos/ideas/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

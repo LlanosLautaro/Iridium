@@ -1,5 +1,5 @@
 // SK-I1 con la app abierta y el motor falso (modulos/skills/diseno-tecnico.md › Pruebas): Ctrl+2, los grupos y la
-// doble, el chat de Skills con «Sobre la skill …», Skills › Framework con Pasar al framework (W-13) y la falta de la
+// doble, el chat de Skills con «Sobre la skill …», Skills › Framework con Actualizar (W-13) y la falta de la
 // carpeta Skills (D-083).
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -85,7 +85,7 @@ test.afterEach(async () => {
   await rm(base, { recursive: true, force: true, maxRetries: 5 })
 })
 
-test('Ctrl+2: la lista por origen, la doble y Framework con Pasar al framework (SK-1, SK-2, W-13)', async () => {
+test('Ctrl+2: la lista por origen, la doble y Framework con Actualizar (SK-1, SK-2, W-13)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByText('Gamma').first()).toBeVisible()
   await win.keyboard.press('Control+2')
@@ -107,7 +107,7 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Pasar al framework (
   const alfa = detalle.locator('.sk-proy[data-proyecto="Alfa"]')
   await expect(gamma).toContainText('framework viejo · 2026-10-16')
   await expect(alfa).toContainText('al día · 2026-11-06')
-  await expect(alfa.getByRole('button', { name: 'Pasar al framework' })).toHaveCount(0)
+  await expect(alfa.getByRole('button', { name: 'Actualizar' })).toHaveCount(0)
   await expect(detalle.locator('.sk-proy')).toHaveText([/Gamma/, /Alfa/])
   await detalle.getByRole('button', { name: /Fuera del framework/ }).click()
   await expect(detalle.locator('.sk-proy')).toHaveText([/Gamma/])
@@ -129,8 +129,8 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Pasar al framework (
   })
   expect(rechazos).toEqual({ ajena: 'rechazó', yaSigue: 'rechazó' })
 
-  await gamma.getByRole('button', { name: 'Pasar al framework' }).click()
-  await expect(gamma.getByText('Pasando al framework…')).toBeVisible()
+  await gamma.getByRole('button', { name: 'Actualizar' }).click()
+  await expect(gamma.getByText('Actualizando…')).toBeVisible()
   await expect(gamma.getByRole('button', { name: 'Ver la conversación' })).toBeVisible()
   await win.screenshot({ path: 'test-results/sk1-pasando.png' })
   // La IA falsa le pone la línea del framework: Gamma queda al día y no hay ninguno fuera.

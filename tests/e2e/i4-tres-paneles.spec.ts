@@ -239,6 +239,23 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
   await expect(scripts.locator('.script h4')).toHaveText(['Dejar una marca', 'Instalar'])
   await expect(scripts.locator('.script', { hasText: 'Instalar' })).toContainText('No se encuentra')
   await expect(scripts.locator('.script', { hasText: 'Instalar' }).getByRole('button')).toBeDisabled()
+  // Ejecutar va en verde (R-58, R-78): el color de lo que funciona, no el del texto.
+  const ejecutar = scripts.locator('.script', { hasText: 'Dejar una marca' }).getByRole('button')
+  const verde = await win.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--bien').trim(),
+  )
+  expect(verde).not.toBe('')
+  await expect(ejecutar).toHaveCSS(
+    'color',
+    await win.evaluate((v) => {
+      const s = document.createElement('span')
+      s.style.color = v
+      document.body.append(s)
+      const c = getComputedStyle(s).color
+      s.remove()
+      return c
+    }, verde),
+  )
   await scripts.locator('.script', { hasText: 'Dejar una marca' }).getByRole('button').click()
   await expect(scripts.locator('.script-msg.ok')).toContainText('consola')
   await expect

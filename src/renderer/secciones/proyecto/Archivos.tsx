@@ -273,7 +273,9 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
   return (
     <div className="recuadro-simple" role="note">
       <b>Esta carpeta no sigue el framework</b>
-      <p>{pasando ? 'La IA la está pasando al framework…' : 'Se ve y se conversa, sin Mapa ni preguntas.'}</p>
+      <p>
+        {pasando ? 'La IA la está actualizando al framework…' : 'Se ve y se conversa, sin Mapa ni preguntas.'}
+      </p>
       {error && (
         <p className="error" role="alert">
           {error}
@@ -283,10 +285,14 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
         type="button"
         className="boton secundario chico"
         disabled={trabajando}
-        title={trabajando ? 'Su IA está trabajando' : 'Le manda el pedido a la IA de esta carpeta: gasta uso'}
+        title={
+          trabajando
+            ? 'Su IA está trabajando'
+            : 'Le manda el pedido a la IA de esta carpeta, en una conversación nueva: gasta uso'
+        }
         onClick={pasar}
       >
-        Pasar al framework
+        Actualizar
       </button>
     </div>
   )

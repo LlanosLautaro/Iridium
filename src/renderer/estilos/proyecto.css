@@ -626,6 +626,14 @@
 .script-msg.error {
   color: var(--error);
 }
+/* Ejecutar en verde (R-58, R-78): es lo que se viene a hacer */
+.script .correr {
+  color: var(--bien);
+}
+.script .correr:hover {
+  color: var(--bien);
+  border-color: var(--bien);
+}
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
 .menu-lista > button.conv {
