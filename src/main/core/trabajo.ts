@@ -18,6 +18,12 @@ export interface ItemTrabajo {
   frente: string | null
   fecha: string | null
   origen: string | null
+  /** De quién es la idea (`Idea:`, frente Ideas, D-130); null si no tiene o no se entiende (el control lo marca). */
+  idea: TipoIdea | null
+  /** `Idea:` tal como está escrito; null si no tiene. */
+  ideaTexto: string | null
+  /** La dirección de `Enlace:` (un enlace para revisar); null si no tiene. */
+  enlace: string | null
   texto: string
   /** Línea del título (desde 0). */
   linea: number
@@ -27,6 +33,14 @@ export interface TrabajoLeido {
   items: ItemTrabajo[]
   /** Lo que no se pudo leer: la línea (desde 0) y qué le falta, para el control. */
   problemas: { linea: number; texto: string }[]
+}
+
+/** `Idea:` (D-130): la anotó el usuario, la IA, o es un enlace para revisar. */
+export type TipoIdea = 'usuario' | 'IA' | 'enlace'
+
+function leerIdea(texto: string): TipoIdea | null {
+  const t = texto.trim().toLowerCase()
+  return t === 'usuario' ? 'usuario' : t === 'ia' ? 'IA' : t === 'enlace' ? 'enlace' : null
 }
 
 const CABEZA = /^T-0*(\d{1,4})\s*(?:—|–|-|:)\s*(.+)$/
@@ -59,6 +73,9 @@ export function leerTrabajo(texto: string): TrabajoLeido {
       frente: datos.get('frente') || null,
       fecha: datos.get('fecha') || null,
       origen: datos.get('origen') || null,
+      idea: leerIdea(datos.get('idea') ?? ''),
+      ideaTexto: datos.get('idea') || null,
+      enlace: datos.get('enlace')?.replace(/^<(.*)>$/, '$1') || null,
       texto: (datos.size ? cuerpo.slice(iDatos + 1) : cuerpo).join('\n').trim(),
       linea: t.n,
     })
@@ -72,7 +89,10 @@ function leerDatos(linea: string): Map<string, string> {
   if (!/^\s*[\p{L}]+:/u.test(linea)) return r
   for (const parte of linea.split(/\s*·\s*/)) {
     const m = /^\s*([\p{L}]+):\s*(.*?)\s*$/u.exec(parte.replace(/[*_]/g, ''))
-    if (m?.[1]) r.set(m[1].normalize('NFD').replace(/\p{M}/gu, '').toLowerCase(), m[2] ?? '')
+    if (!m?.[1]) continue
+    const clave = m[1].normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+    // Una dirección se lee tal cual: puede llevar `_`.
+    r.set(clave, clave === 'enlace' ? parte.slice(parte.indexOf(':') + 1).trim() : (m[2] ?? ''))
   }
   return r
 }

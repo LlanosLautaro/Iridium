@@ -119,6 +119,32 @@ describe('trabajo.md (D-094)', () => {
     })
     expect(items[1]).toMatchObject({ codigo: 'T-2', estado: 'nueva', frente: null, texto: '' })
   })
+
+  it('lee de quién es la idea y la dirección de un enlace, con sus `_` (D-130)', () => {
+    const { items } = leerTrabajo(`# Trabajo
+
+## T-1 — Mía
+Estado: nueva · Idea: usuario · Fecha: 2026-11-16
+
+## T-2 — mi_org/mi_repo
+Estado: hecho · **Idea:** enlace · Enlace: <https://github.com/mi_org/mi_repo>
+Mirar los hooks.
+
+## T-3 — De la IA
+Estado: pendiente · Idea: ia
+
+## T-4 — Sin idea
+Estado: nueva
+`)
+    expect(items.map((i) => [i.idea, i.enlace])).toEqual([
+      ['usuario', null],
+      ['enlace', 'https://github.com/mi_org/mi_repo'],
+      ['IA', null],
+      [null, null],
+    ])
+    expect(items[1]?.texto).toBe('Mirar los hooks.')
+    expect(items[3]?.ideaTexto).toBeNull()
+  })
 })
 
 describe('el control (OR-2)', () => {
@@ -199,6 +225,32 @@ describe('el control (OR-2)', () => {
     expect(r).toContainEqual(expect.stringContaining('«terminado» no es un estado'))
     expect(r).toContain('trabajo: T-2: el frente «Diseño» no existe')
     expect(r).toContain('trabajo: el título no empieza con `T-n — `')
+  })
+
+  it('trabajo.md: las ideas con `Idea:` desconocido, un enlace sin dirección y una nota sin su T-n (D-130)', () => {
+    const trabajo = `${TRABAJO_BIEN}
+## T-3 — Rara
+Estado: nueva · Idea: alguien
+
+## T-4 — Un enlace
+Estado: nueva · Idea: enlace
+
+## T-5 — Otro enlace
+Estado: nueva · Idea: enlace · Enlace: github.com/x
+
+## T-6 — Bien
+Estado: nueva · Idea: enlace · Enlace: https://github.com/x/y
+`
+    const nota = (ruta: string) => ({ ruta, texto: '```\n┌─ ⚙ ─┐\n```\n' })
+    const r = reglas(
+      archivos({ trabajo, documentos: [nota('docs/ideas/T-6.md'), nota('docs/ideas/T-9.md')] }),
+    )
+    expect(r).toEqual([
+      'trabajo: T-3: «Idea: alguien» no se entiende (usuario, IA o enlace)',
+      'trabajo: T-4: un enlace para revisar lleva «Enlace: https://…» en su línea de datos',
+      'trabajo: T-5: un enlace para revisar lleva «Enlace: https://…» en su línea de datos',
+      'trabajo: la nota no tiene su T-9 en `docs/trabajo.md`: si lo renumeraste, renombrá la nota y su carpeta de imágenes',
+    ])
   })
 
   it('un estado fuera del vocabulario en una tabla y los campos que faltan', () => {

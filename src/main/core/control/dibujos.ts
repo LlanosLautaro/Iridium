@@ -17,6 +17,8 @@ const PERMITIDO = new RegExp(`^[\u0020-\u007e\u00a0-\u00ff\u2500-\u259f${FIGURAS
 export const reglaDibujos: Regla = (a) => {
   const avisos: Aviso[] = []
   for (const d of a.documentos) {
+    // Las notas de las ideas son texto libre del usuario (D-130).
+    if (d.ruta.startsWith('docs/ideas/')) continue
     const lineas = partirLineas(d.texto)
     let inicio = -1
     for (const [n, l] of lineas.entries()) {
