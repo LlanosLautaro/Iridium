@@ -35,8 +35,10 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 | ID-I4 | El inicio: ideas sueltas, Mover a un proyecto; se saca el bloc | pendiente |
 
 ## Log de iteraciones
-(todavía ninguna)
+### ID-I1 — Ideas en un proyecto (en curso)
+- **2026-11-16, parte 1 (el formato):** `Idea:` (`usuario`, `IA`, `enlace`) y `Enlace:` en el lector de `trabajo.md` (una dirección se lee tal cual, con sus `_`); el control marca un `Idea:` desconocido, un enlace sin dirección y una nota de `docs/ideas/` sin su `T-n`, y la regla de los dibujos no mira las notas; el framework (`SKILL.md` › El trabajo y la plantilla) enseña el campo, la nota y Revisar un enlace. Pruebas en `tests/or1-control.test.ts`.
+- **2026-11-16, parte 2 (las reglas de la lista):** `core/ideas.ts` y los tipos en `compartido/ideas.ts`: de los `T-n` a la lista (los `nueva` sin `Idea:` como de la IA), los filtros con sus cuentas, leer lo escrito en el campo (idea o enlace), el nombre de un enlace, agregar una idea, cambiar el estado (con «Rechazada por el usuario.» al rechazar sin motivo), el título y sacar una idea, sin tocar el resto del archivo ni sus fines de línea. Pruebas en `tests/id1-ideas.test.ts`.
 
 ## Próximo paso
-ID-I1, por partes: (1) el formato: `Idea:` y `Enlace:` en el lector (`core/trabajo.ts`), las reglas del control y el framework (`SKILL.md` › El trabajo, la plantilla), con sus pruebas; (2) las reglas puras de la lista (`core/ideas.ts`: de los `T-n` a las ideas, filtros, armar un `T-n`, cambiar estado y título) con sus pruebas; (3) la escritura cuidada y el puente; (4) la pantalla en la barra del proyecto, con la maqueta C.
-**Leer antes:** `diseno-tecnico.md`; `src/main/core/trabajo.ts` y `src/main/core/control/trabajo.ts`; `recursos/plugins/iridium/skills/iridium/SKILL.md` › El trabajo.
+ID-I1, parte 3: la escritura cuidada y el puente (`app/ideas.ts`, que hoy lee las ideas de framework viejo): leer las ideas de un proyecto; anotar, aprobar, rechazar, cambiar el título y guardar la nota (`docs/ideas/T-n.md`), cada cambio en `trabajo.md` solo si no cambió desde que se leyó (hasta tres intentos), con pruebas de disco. Después, la parte 4: la pantalla en la barra del proyecto con la maqueta C, y la prueba del usuario (Q-n con casillas).
+**Leer antes:** `diseno-tecnico.md` › Cómo escribe Iridium; `src/main/core/ideas.ts`; `src/main/app/ideas.ts` y `src/main/app/notas.ts`; `src/main/infra/escritura.ts`; cómo cruza el puente (`src/compartido/puente.ts`).

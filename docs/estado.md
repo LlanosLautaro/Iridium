@@ -64,7 +64,7 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Ideas, ID-I1: empezar por el formato (`Idea:` y `Enlace:` en el lector, el control y el framework, con sus pruebas) y seguir con las reglas de la lista. Si llega Q-174, se procesa (del bloc solo se arregla lo que rompa el uso).
+Ideas, ID-I1, parte 3: la escritura cuidada en `trabajo.md` y en las notas, y el puente (las partes 1, el formato, y 2, las reglas de la lista, están hechas). Si llega Q-174, se procesa (del bloc solo se arregla lo que rompa el uso).
 **Leer antes:** `modulos/ideas/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
