@@ -50,7 +50,7 @@ Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Vibe 
 Conectadas a las iteraciones del framework.
 
 ## T-12 — Un mod de Claude Code con el estado del proyecto al lado del chat
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Estado: descartado · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
 Aunque la app principal sea propia.
 
 ## T-13 — Mandar tareas desde el celular con Dispatch
@@ -216,7 +216,7 @@ Estado: hecho · Frente: Orden · Fecha: 2026-11-07 · Origen: W-10
 La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Hecho en OR-I4 (2026-11-07). Se fue con Ideas como bloc de notas (D-126, 2026-11-16).
 
 ## T-52 — Un sonido para cuando el agente termine de trabajar (cuidado de que no suene cuando el aente simplemente está esperando mientras hace pruebas)
-Estado: nueva · Fecha: 2026-11-07
+Estado: pendiente · Idea: IA · Fecha: 2026-11-07
 
 ## T-53 — La captura del detalle de Ideas no sale en auditoria-ux.ts
 Estado: pendiente · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
@@ -299,5 +299,9 @@ El usuario quiere rehacer el Mapa como un frente propio: arriba, un mapa por fre
 
 
 ## T-72 — La imagen y el color de cada IA en la conversación
-Estado: nueva · Fecha: 2026-11-15 · Origen: R-64
+Estado: nueva · Idea: IA · Fecha: 2026-11-15 · Origen: R-64
 El nombre de la IA en la conversación («Claudio») llevaría una imagen de perfil por fuente de IA (Claude, en este caso), elegida por el usuario, y un color también a elección. Va con Ajustes › Perfil (AJ-2, donde ya se elige el nombre) y con el color donde informa (D-124): hay que decidir si el color es libre o de una lista acotada para que no choque con el verde, el ámbar y el rojo, que ya dicen algo. Es una función nueva, no un arreglo: después de DI-I3.
+
+## T-73 — ckryptickunal/OpenDesigner
+Estado: nueva · Idea: enlace · Fecha: 2026-11-16 · Enlace: https://github.com/ckryptickunal/OpenDesigner
+una skill de diseño para ver si podemos copiar ideas
