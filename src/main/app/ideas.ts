@@ -11,7 +11,8 @@ import type {
   NotaIdea,
   ResultadoIdea,
 } from '../../compartido/ideas'
-import { diaDe, type ImagenPegada } from '../../compartido/notas'
+import { diaDe, escribirNotas, type ImagenPegada } from '../../compartido/notas'
+import { TIPOS_IMAGEN } from '../../compartido/visor'
 import { tieneFramework } from '../core/control'
 import {
   agregarIdea,
@@ -147,19 +148,42 @@ async function escribirNota(l: LugarIdeas, codigo: string, cuerpo: string): Prom
   await escribirAtomico(destino, `${cuerpo.trim()}\n`)
 }
 
+/** Una imagen pegada en el campo de arriba, antes de anotar (R-87). */
+export interface ImagenAlAnotar {
+  mime: string
+  base64: string
+}
+
+/** El título de una idea que es solo imágenes, sin nada escrito (R-87). */
+export const TITULO_SOLO_IMAGEN = 'Imagen pegada'
+
 /**
  * Anotar (ID-1, ID-4) lo escrito en el campo de arriba. Una idea va al archivo con `Idea: usuario` y, si tiene más
- * líneas, su nota; un enlace solo, con `Idea: enlace`, su dirección y lo demás como descripción.
+ * líneas, su nota; un enlace solo, con `Idea: enlace`, su dirección y lo demás como descripción. Las imágenes pegadas
+ * en el campo (R-87) van al final de la nota; sin nada escrito, la idea se llama «Imagen pegada». Un enlace no lleva
+ * imágenes: se dice antes de anotar nada.
  */
 export async function anotarIdea(
   lugar: string | LugarIdeas,
   escrito: string,
   hoy = new Date(),
+  imagenes: readonly ImagenAlAnotar[] = [],
 ): Promise<ResultadoIdea> {
   const l = lugarDe(lugar)
-  const a = leerAnotado(escrito)
+  const a = leerAnotado(escrito) ?? (imagenes.length ? leerAnotado(TITULO_SOLO_IMAGEN) : null)
   if (!a) return { tipo: 'error', mensaje: 'no hay nada escrito' }
   if (a.tipo === 'idea' && !a.titulo) return { tipo: 'error', mensaje: 'la idea necesita un título' }
+  if (a.tipo === 'enlace' && imagenes.length)
+    return {
+      tipo: 'error',
+      mensaje: 'un enlace no lleva imágenes: anotá el enlace solo y la imagen en una idea',
+    }
+  const mala = imagenes.find((i) => !TIPOS_IMAGEN[i.mime])
+  if (mala)
+    return {
+      tipo: 'error',
+      mensaje: `por ahora solo se pueden pegar imágenes (llegó ${mala.mime || 'algo sin tipo'})`,
+    }
   const fecha = diaDe(hoy)
   const nueva: IdeaNueva =
     a.tipo === 'enlace'
@@ -173,7 +197,21 @@ export async function anotarIdea(
       return { texto: nuevo, dato: codigo }
     })
     if (r.tipo === 'error') return r
-    if (a.tipo === 'idea' && a.nota) await escribirNota(l, r.dato, a.nota)
+    if (a.tipo !== 'idea') return { tipo: 'ok', codigo: r.dato }
+    // Las imágenes, en su carpeta; las que no se pudieron guardar se dicen, con la idea ya anotada.
+    const rutas: string[] = []
+    const fallas: string[] = []
+    for (const i of imagenes) {
+      const g = await guardarImagenPegada(notasEn(l), r.dato, i.mime, i.base64, hoy)
+      if (g.tipo === 'ok') rutas.push(g.ruta)
+      else fallas.push(g.mensaje)
+    }
+    const nota = [a.nota, ...rutas.map((ruta) => escribirNotas([{ tipo: 'imagen', ruta }]).trim())]
+      .filter(Boolean)
+      .join('\n\n')
+    if (nota) await escribirNota(l, r.dato, nota)
+    if (fallas.length)
+      return { tipo: 'error', mensaje: `se anotó «${a.titulo}», pero sin una imagen: ${fallas.join('; ')}` }
     return { tipo: 'ok', codigo: r.dato }
   } catch (e) {
     return { tipo: 'error', mensaje: motivo(e) }

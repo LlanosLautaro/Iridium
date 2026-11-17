@@ -32,8 +32,41 @@
   flex: none;
   width: var(--ancho-proyecto);
 }
-.idp-campo {
+.idp-escribir {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+/* Las imágenes pegadas en el campo antes de anotar (R-87): chicas, cada una con su ✕ */
+.idp-pegadas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.idp-pegada {
+  position: relative;
+  display: flex;
+}
+.idp-pegada img {
+  height: 64px;
+  max-width: 160px;
+  object-fit: cover;
+  border: 1px solid var(--borde-control);
+  border-radius: var(--radio-control);
+}
+.idp-sacar {
+  position: absolute;
+  top: var(--esp-1);
+  right: var(--esp-1);
+  background: var(--fondo);
+}
+.idp-campo {
+  width: 100%;
   height: auto;
   min-height: var(--alto-campo);
   max-height: 40vh;

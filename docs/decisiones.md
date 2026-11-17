@@ -2983,3 +2983,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción A de Q-195. El `estado.md` de cada frente lleva una sección «Ruta»: un paso concreto por línea, en orden, con su marca de hecho; las ramas, con sangría bajo el paso del que salen. La IA la escribe al abrir el frente y la pone al día al cerrar cada iteración (ya toca ese archivo); al aprobar una idea, la ubica con una línea en la ruta de su frente, o en «Por empezar» si no tiene frente. Iridium la lee y dibuja el Mapa.
 **Motivo:** cuesta unas líneas por iteración, queda escrita (no se rearma cada vez) y vale para todos los proyectos porque va en el framework. Una skill se carga entera cada vez y no siempre se dispara cuando debe; armarla a pedido es lo más caro y no queda escrita.
 **Consecuencias:** el formato de «Ruta» entra al framework en el mismo cambio que su lector en Iridium, el control y sus pruebas (D-086, D-092), con la construcción del Mapa (T-71), después de Ideas. Los frentes que ya existen reciben su ruta la primera vez que se tocan después de ese cambio; la de los frentes de Iridium la escribe la IA al construirlo, desde la maqueta `diseno/pantallas/mapa-b.html`.
+
+## D-140 — Después de Ideas se construye el Mapa
+- **Fecha:** 2026-11-17
+- **Ámbito:** el orden de los frentes
+- **Hito o paso:** 10, Q-197
+- **Estado:** vigente
+
+**Contexto:** tres frentes esperaban «después de Ideas»: el Mapa (T-71, D-138, D-139), el arranque del período de 5 horas (T-70, D-135) y el tema propio (T-75, D-134).
+**Decisión:** opción A de Q-197: cuando Ideas cierre sus pasos 8 y 9, sigue el Mapa.
+**Motivo:** ataca lo que más le cuesta hoy al usuario, perder el foco entre tantas cosas abiertas, y su diseño está fresco.
+**Consecuencias:** el arranque del período de 5 horas y el tema propio quedan después del Mapa, sin orden entre ellos todavía.

@@ -7,7 +7,9 @@
 // enlaces e imágenes (`NotaDeIdea`, ID-I3); Borrar pide confirmar en el cuadro del centro (ID-8, PZ-8; Q-189).
 // En el inicio (ID-I4, ID-7; la maqueta `ideas-inicio-c.html`) es la misma lista con las ideas sueltas de la carpeta
 // Ideas: al lado del campo se elige en qué proyecto anotar, y cada idea suelta se puede Mover a un proyecto.
+// Una imagen pegada en el campo de arriba (R-87, R-88) queda debajo, chica y con ✕, y va al final de la nota al anotar.
 import {
+  type ClipboardEvent,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
@@ -35,6 +37,7 @@ import type { ListaProyectos, TarjetaProyecto } from '../../../compartido/puente
 import { tarjetaDe, usarEstado } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { guardarLuego, noGuardar } from '../../ui/guardarLuego'
+import { base64De, imagenesDelPegado } from '../../ui/hoja'
 import { Icono } from '../../ui/Icono'
 import { MenuContextual, type Punto, puntoDelMenu } from '../../ui/MenuContextual'
 import { useDocsCambian } from './enlaces'
@@ -78,6 +81,12 @@ function destinosDe(lista: ListaProyectos | null): TarjetaProyecto[] {
   return lista.proyectos
     .filter((p) => !p.archivado && p.framework !== null && p.framework !== 'viejo')
     .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
+}
+
+/** Una imagen pegada en el campo de arriba, antes de anotar (R-87). */
+interface Pegada {
+  mime: string
+  base64: string
 }
 
 /** Lo que espera para guardarse de una idea abierta (`guardarLuego`). */
@@ -144,6 +153,7 @@ export function IdeasProyecto({
   const [datos, setDatos] = useState<IdeasDeProyecto | null>(null)
   const [filtro, setFiltro] = useState<FiltroIdeas>('todo')
   const [escrito, setEscrito] = useState('')
+  const [pegadas, setPegadas] = useState<Pegada[]>([])
   const [anotando, setAnotando] = useState(false)
   const [fallo, setFallo] = useState<Fallo | null>(null)
   const [abierta, setAbierta] = useState<string | null>(null)
@@ -335,23 +345,35 @@ export function IdeasProyecto({
   }
   const sePuedeMover = (i: IdeaVista) => inicio && i.de !== 'IA'
 
+  const hayQueAnotar = Boolean(escrito.trim()) || pegadas.length > 0
   const anotar = async () => {
-    if (!escrito.trim() || anotando) return
+    if (!hayQueAnotar || anotando) return
     setAnotando(true)
     const en = destino ?? ruta
-    const r = await window.iridium.anotarIdea(en, escrito)
+    const r = await window.iridium.anotarIdea(en, escrito, pegadas)
     setAnotando(false)
     campo.current?.focus()
     if (r.tipo === 'error') {
-      const copiado = await navigator.clipboard.writeText(escrito).then(
-        () => true,
-        () => false,
-      )
+      // Si la idea quedó anotada y solo faltó una imagen, lo escrito ya no hace falta (anotarlo otra vez la repite).
+      if (r.mensaje.startsWith('se anotó')) {
+        setEscrito('')
+        setPegadas([])
+        setFallo({ titulo: 'Faltó una imagen', mensaje: r.mensaje })
+        await leer()
+        return
+      }
+      const copiado =
+        escrito.trim() !== '' &&
+        (await navigator.clipboard.writeText(escrito).then(
+          () => true,
+          () => false,
+        ))
       setFallo({ titulo: 'No se pudo anotar', mensaje: r.mensaje, copiado })
       return
     }
     setFallo(null)
     setEscrito('')
+    setPegadas([])
     // Anotada en otro proyecto (ID-7): no está en esta lista; se avisa con Ver.
     if (en !== ruta) {
       setHecho({ texto: `Anotada en ${tarjetaDe(lista, en)?.nombre ?? 'el proyecto'}`, ruta: en })
@@ -362,6 +384,43 @@ export function IdeasProyecto({
     // Si el filtro elegido no la muestra, se vuelve a Todo para verla primera.
     const nueva = l.tipo === 'ok' ? l.ideas.find((i) => i.codigo === r.codigo) : undefined
     if (nueva && !entraEnFiltro(nueva, filtro)) setFiltro('todo')
+  }
+
+  // Pegar una imagen en el campo (R-87, R-88): queda debajo hasta anotar. Si el pegado no trae ni texto ni la imagen
+  // a la ventana, se busca en el portapapeles de Windows, como en la nota (Q-189).
+  const alPegarCampo = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    const archivos = imagenesDelPegado(e.clipboardData)
+    if (archivos.length) {
+      e.preventDefault()
+      void Promise.all(archivos.map(async (a) => ({ mime: a.type, base64: await base64De(a) }))).then(
+        (nuevas) => setPegadas((p) => [...p, ...nuevas]),
+        (err: unknown) =>
+          setFallo({
+            titulo: 'No se pegó la imagen',
+            mensaje: err instanceof Error ? err.message : String(err),
+          }),
+      )
+      return
+    }
+    if (e.clipboardData.getData('text/plain')) return
+    e.preventDefault()
+    void window.iridium.imagenDelPortapapeles().then(
+      (r) => {
+        if (r.tipo === 'imagen') setPegadas((p) => [...p, { mime: r.mime, base64: r.base64 }])
+        else
+          setFallo({
+            titulo: 'No se pegó la imagen',
+            mensaje: r.formatos.length
+              ? `Lo copiado no trae una imagen que Iridium pueda pegar (trae: ${r.formatos.join(', ')}).`
+              : 'El portapapeles está vacío.',
+          })
+      },
+      (err: unknown) =>
+        setFallo({
+          titulo: 'No se pegó la imagen',
+          mensaje: err instanceof Error ? err.message : String(err),
+        }),
+    )
   }
 
   const alTeclaCampo = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -635,16 +694,38 @@ export function IdeasProyecto({
       <div className="idp-cuerpo">
         <div className="idp-col">
           <div className="idp-anotar">
-            <textarea
-              ref={campo}
-              className="campo idp-campo"
-              rows={1}
-              placeholder="Una idea, o pegá un enlace para revisar…"
-              aria-label="Anotar una idea o un enlace"
-              value={escrito}
-              onChange={(e) => setEscrito(e.target.value)}
-              onKeyDown={alTeclaCampo}
-            />
+            <div className="idp-escribir">
+              <textarea
+                ref={campo}
+                className="campo idp-campo"
+                rows={1}
+                placeholder="Una idea, o pegá un enlace o una imagen…"
+                aria-label="Anotar una idea o un enlace"
+                value={escrito}
+                onChange={(e) => setEscrito(e.target.value)}
+                onKeyDown={alTeclaCampo}
+                onPaste={alPegarCampo}
+              />
+              {pegadas.length > 0 && (
+                <ul className="idp-pegadas" aria-label="Imágenes para la idea">
+                  {pegadas.map((p, n) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: las pegadas no cambian de orden; solo se sacan.
+                    <li key={n} className="idp-pegada">
+                      <img src={`data:${p.mime};base64,${p.base64}`} alt={`Imagen ${n + 1}`} />
+                      <button
+                        type="button"
+                        className="boton solo-icono chico idp-sacar"
+                        aria-label={`Sacar la imagen ${n + 1}`}
+                        title="Sacar la imagen"
+                        onClick={() => setPegadas((ps) => ps.filter((_, m) => m !== n))}
+                      >
+                        <Icono nombre="x" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             {inicio && (
               <select
                 className="selector idp-destino"
@@ -663,7 +744,7 @@ export function IdeasProyecto({
             <button
               type="button"
               className="boton secundario"
-              disabled={!escrito.trim() || anotando}
+              disabled={!hayQueAnotar || anotando}
               onClick={() => void anotar()}
             >
               Anotar

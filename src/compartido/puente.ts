@@ -1022,7 +1022,12 @@ export interface ApiIridium {
    */
   ideasProyecto(ruta: string): Promise<IdeasDeProyecto>
   /** Anota lo escrito en el campo de arriba (ID-1, ID-4): una idea con su nota, o un enlace para revisar. */
-  anotarIdea(ruta: string, escrito: string): Promise<ResultadoIdea>
+  /** Con las imágenes pegadas en el campo (R-87), que van al final de la nota. */
+  anotarIdea(
+    ruta: string,
+    escrito: string,
+    imagenes?: { mime: string; base64: string }[],
+  ): Promise<ResultadoIdea>
   /** Aprobar (`pendiente`), rechazar (`descartado`), volver a sin evaluar (`nueva`) o marcar revisado (`hecho`). */
   estadoIdea(ruta: string, codigo: string, estado: EstadoDesdeIdeas): Promise<ResultadoIdea>
   /** La nota de una idea del usuario, sin el título (`docs/ideas/T-n.md`). */

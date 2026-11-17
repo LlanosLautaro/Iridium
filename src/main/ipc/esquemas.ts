@@ -48,6 +48,9 @@ export const Mime = z.string().max(64)
 /** Una imagen pegada, en base64: como mucho 20 MB. */
 export const ImagenBase64 = z.string().max(Math.ceil((20 * 1024 * 1024 * 4) / 3) + 4)
 
+/** Las imágenes pegadas en el campo de Ideas antes de anotar (R-87): hasta 10. */
+export const ImagenesAlAnotar = z.array(z.object({ mime: Mime, base64: ImagenBase64 }).strict()).max(10)
+
 export const Tengo = z.number().int().min(0)
 
 export const Pedido = z

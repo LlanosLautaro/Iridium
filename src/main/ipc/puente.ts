@@ -95,6 +95,7 @@ import {
   IdConversacion,
   IdScript,
   ImagenBase64,
+  ImagenesAlAnotar,
   Mime,
   NombreProyecto,
   NotaReabrir,
@@ -610,8 +611,8 @@ export function registrarPuente(s: Servicios): Puente {
     return ruta === enDisco.rutas.ideas ? lugarDeSueltas(ruta) : ruta
   }
   ipcMain.handle(CANALES.ideasProyecto, async (_, ruta: unknown) => ideasDeProyecto(await lugar(ruta)))
-  ipcMain.handle(CANALES.anotarIdea, async (_, ruta: unknown, escrito: unknown) =>
-    anotarIdea(await lugar(ruta), Escrito.parse(escrito)),
+  ipcMain.handle(CANALES.anotarIdea, async (_, ruta: unknown, escrito: unknown, imagenes: unknown) =>
+    anotarIdea(await lugar(ruta), Escrito.parse(escrito), undefined, ImagenesAlAnotar.parse(imagenes ?? [])),
   )
   ipcMain.handle(CANALES.estadoIdea, async (_, ruta: unknown, codigo: unknown, estado: unknown) =>
     cambiarEstadoIdea(await lugar(ruta), CodigoIdea.parse(codigo), EstadoIdeaEsquema.parse(estado)),

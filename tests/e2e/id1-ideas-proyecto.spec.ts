@@ -312,3 +312,61 @@ test('Ideas vacía: la línea de para qué es, sin grupos', async () => {
     await app.close()
   }
 })
+
+test('Pegar una imagen en el campo de arriba (R-87, R-88): queda debajo, se saca con ✕ y va a la nota al anotar', async () => {
+  const { app, win } = await abrir()
+  try {
+    await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+    await win
+      .getByRole('navigation', { name: 'Secciones del proyecto' })
+      .getByRole('button', { name: 'Ideas' })
+      .click()
+    const ideas = win.locator('[data-seccion="ideas"]')
+    const campo = ideas.getByRole('textbox', { name: 'Anotar una idea o un enlace' })
+    const pegadas = ideas.getByRole('list', { name: 'Imágenes para la idea' }).locator('img')
+    const copiarImagen = () =>
+      app.evaluate(({ clipboard, ClipboardItem, nativeImage }) => {
+        const gris = nativeImage.createFromBitmap(Buffer.alloc(320 * 180 * 4, 0x40), {
+          width: 320,
+          height: 180,
+        })
+        const blob = new Blob([new Uint8Array(gris.toPNG())], { type: 'image/png' })
+        return clipboard.write([new ClipboardItem({ 'image/png': blob })])
+      })
+
+    // Escribir, pegar dos capturas con Ctrl+V y sacar una con ✕.
+    await campo.fill('Un botón como este\nEl de la captura')
+    await copiarImagen()
+    await campo.press('Control+V')
+    await expect(pegadas).toHaveCount(1)
+    await campo.press('Control+V')
+    await expect(pegadas).toHaveCount(2)
+    await expect(campo).toHaveValue('Un botón como este\nEl de la captura')
+    await win.screenshot({ path: 'test-results/r87-campo-con-imagen.png' })
+    await ideas.getByRole('button', { name: 'Sacar la imagen 2' }).click()
+    await expect(pegadas).toHaveCount(1)
+
+    // Enter anota: la idea con su nota y la imagen; el campo y las imágenes quedan vacíos.
+    await campo.press('Enter')
+    await expect(campo).toHaveValue('')
+    await expect(pegadas).toHaveCount(0)
+    await expect.poll(trabajo).toMatch(/## T-6 — Un botón como este\nEstado: nueva · Idea: usuario/)
+    await expect
+      .poll(() => readFile(join(raiz, 'Alfa/docs/ideas/T-6.md'), 'utf8').catch(() => ''))
+      .toMatch(/^El de la captura\n\n!\[\]\(T-6\/\d{4}-\d{2}-\d{2}-1\.png\)\n$/)
+    // Abierta, la imagen está en su renglón.
+    await ideas.locator('.idp-item', { hasText: 'Un botón como este' }).getByRole('button').first().click()
+    await expect(ideas.locator('.idp-nota .nota-imagen img')).toBeVisible()
+    await win.screenshot({ path: 'test-results/r87-anotada.png' })
+    await win.keyboard.press('Escape')
+
+    // Solo la imagen, sin nada escrito: se anota como «Imagen pegada».
+    await campo.press('Control+V')
+    await expect(pegadas).toHaveCount(1)
+    await expect(ideas.getByRole('button', { name: 'Anotar', exact: true })).toBeEnabled()
+    await campo.press('Enter')
+    await expect.poll(trabajo).toMatch(/## T-7 — Imagen pegada/)
+  } finally {
+    await app.close()
+  }
+})
