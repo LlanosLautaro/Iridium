@@ -58,7 +58,10 @@ test.beforeEach(async () => {
     join(raiz, 'Ideas', 'ideas.md'),
     '# Ideas\n\n## Sueltas\n\n### Una idea vieja — 2026-10-01\nQué es.\n',
   )
-  await archivo(join(raiz, 'Ideas', 'notas.md'), '## 2026-10-01\n\nUna nota vieja.\n')
+  await archivo(
+    join(raiz, 'Ideas', 'sueltas.md'),
+    '# Ideas sueltas\n\n## T-1 — Una idea vieja\nEstado: nueva · Idea: usuario · Fecha: 2026-10-01\n',
+  )
   await archivo(join(raiz, 'Ideas', '.git', 'HEAD'), 'ref: refs/heads/main\n')
   await archivo(join(raiz, 'Skills y Claude', 'CLAUDE.md'), '# Skills\n')
   await archivo(
@@ -91,8 +94,8 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   await expect(aviso).toContainText('Ideas y Skills y Claude siguen donde estaban antes')
   await expect(aviso).toContainText(join(raiz, '.iridium'))
   await win.keyboard.press('Control+3')
-  await expect(win.getByRole('region', { name: 'Ideas' }).getByRole('textbox')).toContainText(
-    'Una nota vieja.',
+  await expect(win.getByRole('region', { name: 'Ideas' }).locator('.idp-item')).toContainText(
+    'Una idea vieja',
   )
   // Una conversación en el chat general antes de mover.
   const chat = win.getByRole('complementary', { name: 'Chat general' })
@@ -122,7 +125,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
     '.git',
     'CLAUDE.md',
     'ideas.md',
-    'notas.md',
+    'sueltas.md',
   ])
   expect(await readlink(join(claude, 'skills', 'guia'))).toMatch(
     /\.iridium[\\/]Skills[\\/]skills[\\/]guia[\\/]?$/,
@@ -130,8 +133,8 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
 
   // Ideas sigue, con la misma conversación.
   await win.keyboard.press('Control+3')
-  await expect(win.getByRole('region', { name: 'Ideas' }).getByRole('textbox')).toContainText(
-    'Una nota vieja.',
+  await expect(win.getByRole('region', { name: 'Ideas' }).locator('.idp-item')).toContainText(
+    'Una idea vieja',
   )
   await expect(chat.locator('.hilo')).toContainText('Hola')
   // Skills reconoce la propia en su lugar nuevo.

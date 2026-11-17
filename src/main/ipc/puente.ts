@@ -7,7 +7,6 @@ import { actualizarSolo } from '../../compartido/actualizar'
 import {
   type AccesoVersiones,
   CANALES,
-  CARPETA_GENERAL,
   CARPETA_IRIDIUM,
   type EstadoMotor,
   type EstilosRespuesta,
@@ -36,11 +35,13 @@ import {
   cambiarEstadoIdea,
   guardarIdea,
   ideasDeProyecto,
+  type LugarIdeas,
   leerNotaIdea,
+  lugarDeSueltas,
+  moverIdea,
   pegarImagenIdea,
 } from '../app/ideas'
 import { mapaDe } from '../app/mapa'
-import { guardarHoja, leerHoja, pegarImagenEnHoja } from '../app/notas'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
@@ -598,40 +599,34 @@ export function registrarPuente(s: Servicios): Puente {
     await conversaciones.seguir(ruta, { texto: MENSAJE_PASAR_AL_FRAMEWORK, nueva: true })
   })
 
-  // El bloc de notas de Ideas (D-112, D-126): la carpeta la arma este lado; la ventana manda solo el texto o la imagen.
-  const carpetaIdeas = async () =>
-    enDisco.rutas.ideas ?? join((await listar()).iridium.carpeta, CARPETA_GENERAL)
-  ipcMain.handle(CANALES.notas, async () => leerHoja(await carpetaIdeas()))
-  ipcMain.handle(CANALES.guardarNotas, async (_, texto: unknown) =>
-    guardarHoja(await carpetaIdeas(), TextoNotas.parse(texto)),
-  )
-  ipcMain.handle(CANALES.pegarImagenNotas, async (_, mime: unknown, datos: unknown) =>
-    pegarImagenEnHoja(await carpetaIdeas(), Mime.parse(mime), ImagenBase64.parse(datos)),
-  )
-
   // El trabajo de un proyecto (W-11) y las skills (R-8): solo leen.
   ipcMain.handle(CANALES.trabajoProyecto, async (_, ruta: unknown) =>
     trabajoDelProyecto(await docs.de(await proyecto(ruta))),
   )
-  // La sección Ideas (D-130): la ventana manda lo escrito; este lado arma el `T-n` y escribe sin pisar a la IA.
-  ipcMain.handle(CANALES.ideasProyecto, async (_, ruta: unknown) => ideasDeProyecto(await proyecto(ruta)))
+  // La sección Ideas (D-130): la ventana manda lo escrito; este lado arma el `T-n` y escribe sin pisar a la IA. La
+  // carpeta Ideas es el lugar de las ideas sueltas del inicio (ID-I4): `sueltas.md`, no `trabajo.md`.
+  const lugar = async (dato: unknown): Promise<string | LugarIdeas> => {
+    const ruta = await proyecto(dato)
+    return ruta === enDisco.rutas.ideas ? lugarDeSueltas(ruta) : ruta
+  }
+  ipcMain.handle(CANALES.ideasProyecto, async (_, ruta: unknown) => ideasDeProyecto(await lugar(ruta)))
   ipcMain.handle(CANALES.anotarIdea, async (_, ruta: unknown, escrito: unknown) =>
-    anotarIdea(await proyecto(ruta), Escrito.parse(escrito)),
+    anotarIdea(await lugar(ruta), Escrito.parse(escrito)),
   )
   ipcMain.handle(CANALES.estadoIdea, async (_, ruta: unknown, codigo: unknown, estado: unknown) =>
-    cambiarEstadoIdea(await proyecto(ruta), CodigoIdea.parse(codigo), EstadoIdeaEsquema.parse(estado)),
+    cambiarEstadoIdea(await lugar(ruta), CodigoIdea.parse(codigo), EstadoIdeaEsquema.parse(estado)),
   )
   ipcMain.handle(CANALES.notaIdea, async (_, ruta: unknown, codigo: unknown) =>
-    leerNotaIdea(await proyecto(ruta), CodigoIdea.parse(codigo)),
+    leerNotaIdea(await lugar(ruta), CodigoIdea.parse(codigo)),
   )
   ipcMain.handle(CANALES.guardarIdea, async (_, ruta: unknown, codigo: unknown, escrito: unknown) =>
-    guardarIdea(await proyecto(ruta), CodigoIdea.parse(codigo), TextoNotas.parse(escrito)),
+    guardarIdea(await lugar(ruta), CodigoIdea.parse(codigo), TextoNotas.parse(escrito)),
   )
   ipcMain.handle(
     CANALES.pegarImagenIdea,
     async (_, ruta: unknown, codigo: unknown, mime: unknown, datos: unknown) =>
       pegarImagenIdea(
-        await proyecto(ruta),
+        await lugar(ruta),
         CodigoIdea.parse(codigo),
         Mime.parse(mime),
         ImagenBase64.parse(datos),
@@ -639,8 +634,15 @@ export function registrarPuente(s: Servicios): Puente {
   )
   ipcMain.handle(CANALES.imagenDelPortapapeles, () => leerImagenDelPortapapeles())
   ipcMain.handle(CANALES.borrarIdea, async (_, ruta: unknown, codigo: unknown) =>
-    borrarIdea(await proyecto(ruta), CodigoIdea.parse(codigo)),
+    borrarIdea(await lugar(ruta), CodigoIdea.parse(codigo)),
   )
+  // Mover solo va a un proyecto de la carpeta de proyectos (no a Ideas ni a Skills).
+  ipcMain.handle(CANALES.moverIdea, async (_, desde: unknown, codigo: unknown, hacia: unknown) => {
+    const a = await proyecto(hacia)
+    if (a === enDisco.rutas.ideas || a === enDisco.rutas.skills)
+      throw new Error('Una idea solo se mueve a un proyecto')
+    return moverIdea(await lugar(desde), CodigoIdea.parse(codigo), a)
+  })
   ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
 
   // Diseño (frente Diseño, DS-11 a DS-13): abrirlo da de alta el proyecto para el protocolo `maqueta:` y la grande.

@@ -1,38 +1,5 @@
-/* Ideas del inicio como bloc de notas (D-112, D-126; `docs/diseno/pantallas/ideas.html`): una sola hoja libre con
-   el Texto de documento (PZ-12), las fechas en gris, los enlaces como una etiqueta con el sitio y las imágenes pegadas. */
-
-.id-cuerpo {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--esp-4) var(--esp-6) var(--esp-7);
-}
-.id-col {
-  max-width: var(--ancho-lectura);
-  margin: 0 auto;
-  display: grid;
-  gap: var(--esp-3);
-  min-height: 100%;
-  align-content: start;
-}
-
-.hoja-notas {
-  outline: none;
-  min-height: 60vh;
-  caret-color: var(--texto);
-  overflow-wrap: anywhere;
-}
-.hoja-notas p {
-  margin: 0 0 var(--esp-2);
-}
-.hoja-notas .fecha {
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-  margin: var(--esp-5) 0 var(--esp-2);
-  user-select: none;
-}
-.hoja-notas .fecha:first-child {
-  margin-top: 0;
-}
+/* Lo que quedó del bloc de notas de Ideas (D-112, D-126; ID-I4 lo reemplazó por la lista): las imágenes pegadas en la
+   nota de una idea y Abrir como proyecto. Ideas del inicio usa la lista de ideas-proyecto.css. */
 
 /* Los enlaces son la Etiqueta de enlace (PZ-14). */
 

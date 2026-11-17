@@ -832,8 +832,8 @@ export function Conversacion({
       ) : (
         <p className="texto-doc conversacion">
           Cuéntame una idea que todavía no sabes dónde va, pídeme que cree un proyecto o pregúntame por varios
-          a la vez. Las ideas quedan anotadas en <code>{p.nombre}/ideas.md</code> hasta que decidamos dónde
-          van.
+          a la vez. Las ideas sueltas quedan en Ideas (<code>{p.nombre}/sueltas.md</code>) hasta que decidamos
+          dónde van.
         </p>
       )}
       {enBlanco && (

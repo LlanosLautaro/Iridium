@@ -17,7 +17,9 @@ export const INSTRUCCION_GENERAL =
   'Trabajás desde Iridium, la app del usuario para dirigir sus proyectos, en el chat de la vista general: el usuario ' +
   'te escribe para ordenar ideas sueltas, crear proyectos o hablar de varios a la vez; las reglas están en el ' +
   'CLAUDE.md de esta carpeta. Nadie mira la sesión en vivo: el usuario lee tu respuesta cuando vuelve. Respondé en ' +
-  'el chat y, si necesitás algo de él, preguntalo ahí, al final y en pocas palabras.'
+  'el chat y, si necesitás algo de él, preguntalo ahí, al final y en pocas palabras. Las ideas sueltas están en ' +
+  'sueltas.md, con el formato de trabajo.md (cada una un T-n con Idea:), y la nota de cada una en sueltas/T-n.md; ' +
+  'ideas.md y notas.md son de antes y ya no se escriben.'
 
 /** La del chat general con la carpeta de proyectos, que ya no es la de arriba de esta (D-083). */
 export function instruccionGeneral(raiz: string): string {

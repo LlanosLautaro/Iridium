@@ -106,8 +106,15 @@ function finDeLinea(texto: string): string {
   return texto.includes('\r\n') ? '\r\n' : '\n'
 }
 
-/** Agrega la idea al final de `trabajo.md` (o crea su título) y devuelve el texto nuevo con su código. */
-export function agregarIdea(texto: string, idea: IdeaNueva): { texto: string; codigo: string } {
+/**
+ * Agrega la idea al final de `trabajo.md` (o crea su título, `encabezado`: el de `sueltas.md` es otro) y devuelve el
+ * texto nuevo con su código.
+ */
+export function agregarIdea(
+  texto: string,
+  idea: IdeaNueva,
+  encabezado = '# Trabajo',
+): { texto: string; codigo: string } {
   const eol = finDeLinea(texto)
   const codigo = siguienteCodigo(texto)
   const datos = [
@@ -118,7 +125,7 @@ export function agregarIdea(texto: string, idea: IdeaNueva): { texto: string; co
   ].join(' · ')
   const cuerpo = idea.texto?.trim() ? partirLineas(idea.texto.trim()) : []
   const bloque = [`## ${codigo} — ${limpiarTitulo(idea.titulo)}`, datos, ...cuerpo]
-  const base = texto.trim() ? texto.replace(/\s+$/, '') : '# Trabajo'
+  const base = texto.trim() ? texto.replace(/\s+$/, '') : encabezado
   return { texto: `${base}${eol}${eol}${bloque.join(eol)}${eol}`, codigo }
 }
 
@@ -188,4 +195,16 @@ export function quitarIdea(texto: string, codigo: string): string | null {
   lineas.splice(u.item.linea, fin - u.item.linea)
   while (lineas.length > 1 && !lineas.at(-1)?.trim() && !lineas.at(-2)?.trim()) lineas.pop()
   return lineas.join(finDeLinea(texto))
+}
+
+/**
+ * La nota de una idea que pasa de `de` a `a` (Mover a un proyecto, ID-7): sus imágenes están en la carpeta con el
+ * código (`T-3/AAAA-MM-DD-n.png`), así que cada línea de imagen que apunta ahí pasa a la carpeta del código nuevo. El
+ * resto del texto no se toca.
+ */
+export function notaConOtroCodigo(nota: string, de: string, a: string): string {
+  return nota.replace(
+    new RegExp(`^(\\s*!\\[[^\\]]*\\]\\(<?)${de}/`, 'gm'),
+    (_, inicio: string) => `${inicio}${a}/`,
+  )
 }

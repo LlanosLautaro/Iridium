@@ -1,11 +1,7 @@
-// El bloc de notas de Ideas (D-112, D-126): una sola hoja, `notas.md` en la carpeta Ideas. Lo de cada día va debajo de
-// su fecha (`## AAAA-MM-DD`), el día más nuevo arriba; cada párrafo, separado por una línea en blanco. Los enlaces son
-// `[texto](url)` o la dirección suelta; las imágenes pegadas, `![](notas/archivo.png)` en su propio párrafo. Lo mismo
-// lee y escribe la ventana y lo lee la IA del chat general.
-
-export const ARCHIVO_NOTAS = 'notas.md'
-/** La carpeta de las imágenes pegadas, al lado de `notas.md`. */
-export const CARPETA_IMAGENES_NOTAS = 'notas'
+// El formato de una nota (nació con el bloc de notas de Ideas, D-112, D-126, que ID-I4 sacó; hoy es el de la nota de
+// cada idea, D-130): cada párrafo, separado por una línea en blanco; una línea `## AAAA-MM-DD` es una fecha. Los
+// enlaces son `[texto](url)` o la dirección suelta; las imágenes pegadas, `![](T-n/archivo.png)` en su propio párrafo.
+// Lo mismo lee y escribe la ventana y lo lee la IA.
 
 export type Parte =
   | { tipo: 'texto'; texto: string }
@@ -18,15 +14,6 @@ export type Bloque =
   /** Relativa a la carpeta Ideas, con `/`. */
   | { tipo: 'imagen'; ruta: string }
 
-/** Lo que la ventana recibe para armar la hoja. */
-export type HojaNotas =
-  /** `imagenes`: por ruta, la imagen como `data:` (la ventana no lee el disco); falta la que no está o no se pudo leer. */
-  | { tipo: 'ok'; texto: string; imagenes: Record<string, string> }
-  | { tipo: 'sin-carpeta' }
-  | { tipo: 'grande'; bytes: number }
-  | { tipo: 'error'; mensaje: string }
-
-export type ResultadoNotas = { tipo: 'ok' } | { tipo: 'error'; mensaje: string }
 export type ImagenPegada = { tipo: 'ok'; ruta: string; url: string } | { tipo: 'error'; mensaje: string }
 /** Una imagen leída del portapapeles de Windows (Q-189); sin ninguna, los nombres de lo que trae. */
 export type ImagenDelPortapapeles =
@@ -128,16 +115,6 @@ export function nombreDelDia(fecha: string, hoy: Date): string {
   const ayer = new Date(hoy)
   ayer.setDate(hoy.getDate() - 1)
   return fecha === diaDe(ayer) ? 'Ayer' : fecha
-}
-
-/**
- * La hoja como se abre: si arriba no está el día de hoy, se suma su fecha con un párrafo vacío para escribir (se
- * guarda recién cuando tiene algo). Lo que no tiene fecha arriba de todo queda debajo de hoy.
- */
-export function conHoy(bloques: readonly Bloque[], hoy: Date): Bloque[] {
-  const primero = bloques[0]
-  if (primero?.tipo === 'fecha' && primero.fecha === diaDe(hoy)) return [...bloques]
-  return [{ tipo: 'fecha', fecha: diaDe(hoy) }, { tipo: 'parrafo', partes: [] }, ...bloques]
 }
 
 /** Lo que se ve de un enlace: su texto o, de una dirección suelta, el último tramo; y el sitio. */

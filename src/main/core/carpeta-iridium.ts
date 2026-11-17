@@ -28,33 +28,22 @@ Esta carpeta no es una app: es el lugar para hablar de los proyectos en general 
 - Si el nombre es ambiguo, preguntá a cuál se refiere antes de leer de más.
 - Desde acá no se modifica ningún proyecto sin que el usuario lo pida.
 
-## El bloc de notas del usuario
-\`notas.md\` es la hoja que el usuario escribe en Iridium › Ideas (las imágenes que pega, en \`notas/\`): lo de cada día debajo de su fecha (\`## AAAA-MM-DD\`), el día más nuevo arriba. Leela cuando te hable de sus ideas; no la reescribas ni la ordenes sin que lo pida.
-
-## Cómo se anotan las ideas
-- Todas van en \`ideas.md\`, la más nueva arriba dentro de su sección.
-- Cada idea: \`### Título — AAAA-MM-DD\`, dos o tres líneas de qué es y, si toca a otros proyectos, una línea \`Toca a:\` con el nombre exacto de sus carpetas entre comillas invertidas.
+## Las ideas sueltas
+- Van en \`sueltas.md\`, con el formato del \`trabajo.md\` de un proyecto: cada una un \`## T-n — Título\` con la línea \`Estado: nueva · Idea: usuario · Fecha: AAAA-MM-DD\` (\`Idea: IA\` si la anotás vos; \`Idea: enlace\` y \`Enlace: <dirección>\` para un enlace a revisar). El usuario las ve y las anota en Iridium › Ideas.
+- La nota de una idea del usuario está en \`sueltas/T-n.md\` y sus imágenes en \`sueltas/T-n/\`: leela antes de hablar de ella.
 - Anotá la idea como la dice el usuario; si falta algo para entenderla después, preguntá una cosa, no un cuestionario.
+- \`ideas.md\` y \`notas.md\` son de antes: se leen, pero ya no se escriben.
 
 ## Cuando una idea madura
 Proponé dónde integrarla y decidilo con el usuario:
 - **Es parte de un proyecto con framework:** va a su \`docs/trabajo.md\` como un \`T-n\` \`nueva\` con \`Origen: Ideas\`.
 - **Es parte de un proyecto con framework viejo o de una carpeta simple:** se anota en su \`README.md\` y se propone pasarlo al framework.
 - **Es un proyecto nuevo:** el usuario lo crea con **Nuevo proyecto** de Iridium (la carpeta con la plantilla básica) y le cuenta la idea a su IA en la primera conversación; podés darle el texto para pegar.
-- Después, la idea pasa a la sección "Integradas" de \`ideas.md\` con una línea \`→ AAAA-MM-DD: <carpeta>, T-n\` de a dónde fue. No se borra.
+- Para pasar una idea suelta a un proyecto con framework, el usuario usa **Mover a un proyecto** en Iridium › Ideas, que la lleva con su nota y sus imágenes.
 `,
-    'ideas.md': `# Ideas
+    'sueltas.md': `# Ideas sueltas
 
-> Cómo se usa este archivo: ver \`CLAUDE.md\`.
-
-## Sueltas
-Ideas que todavía no tienen proyecto.
-
-## Para proyectos existentes
-Ideas que tocan a uno o varios proyectos, pendientes de pasarles.
-
-## Integradas
-Ideas que ya pasaron a un proyecto: una línea con a dónde fueron.
+> Las ideas que todavía no tienen proyecto, con el formato de \`trabajo.md\`: ver \`CLAUDE.md\`.
 `,
   },
   skills: {

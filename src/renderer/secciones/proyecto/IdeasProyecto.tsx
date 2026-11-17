@@ -5,7 +5,18 @@
 // Revisar con la IA y Hablar de esta idea quedan citados en la conversación de al lado, sin enviar (ID-4, ID-6, Q-182);
 // en cada renglón, con el botón de enviar (R-75, R-77). La nota de una idea abierta es una hoja como la del bloc, con
 // enlaces e imágenes (`NotaDeIdea`, ID-I3); Borrar pide confirmar en el cuadro del centro (ID-8, PZ-8; Q-189).
-import { type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
+// En el inicio (ID-I4, ID-7; la maqueta `ideas-inicio-c.html`) es la misma lista con las ideas sueltas de la carpeta
+// Ideas: al lado del campo se elige en qué proyecto anotar, y cada idea suelta se puede Mover a un proyecto.
+import {
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { diaCorto } from '../../../compartido/fechas'
 import {
   bloquesDeIdea,
@@ -20,6 +31,7 @@ import {
   type IdeasDeProyecto,
   type IdeaVista,
 } from '../../../compartido/ideas'
+import type { ListaProyectos, TarjetaProyecto } from '../../../compartido/puente'
 import { tarjetaDe, usarEstado } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { guardarLuego, noGuardar } from '../../ui/guardarLuego'
@@ -52,6 +64,20 @@ interface Fallo {
   mensaje: string
   /** Lo escrito que no se guardó: queda en su lugar y, además, copiado. */
   copiado?: boolean
+}
+
+/** Lo que quedó hecho en otro proyecto (ID-7): «Anotada en Alfa · Ver». */
+interface Hecho {
+  texto: string
+  ruta: string
+}
+
+/** Adónde se puede anotar o mover una idea suelta: los proyectos con framework, sin archivar, por nombre (ID-7). */
+function destinosDe(lista: ListaProyectos | null): TarjetaProyecto[] {
+  if (lista?.tipo !== 'lista') return []
+  return lista.proyectos
+    .filter((p) => !p.archivado && p.framework !== null && p.framework !== 'viejo')
+    .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
 }
 
 /** Lo que espera para guardarse de una idea abierta (`guardarLuego`). */
@@ -104,7 +130,17 @@ function IconoIdea({ idea }: { idea: IdeaVista }) {
   )
 }
 
-export function IdeasProyecto({ ruta }: { ruta: string }) {
+export function IdeasProyecto({
+  ruta,
+  inicio = false,
+  acciones,
+}: {
+  ruta: string
+  /** Las ideas sueltas del inicio (ID-I4): `ruta` es la carpeta Ideas. */
+  inicio?: boolean
+  /** Lo que va a la derecha del título (Abrir como proyecto, en el inicio). */
+  acciones?: ReactNode
+}) {
   const [datos, setDatos] = useState<IdeasDeProyecto | null>(null)
   const [filtro, setFiltro] = useState<FiltroIdeas>('todo')
   const [escrito, setEscrito] = useState('')
@@ -118,8 +154,22 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   /** La idea o el enlace que pide confirmar Borrar (ID-8). */
   const [borrando, setBorrando] = useState<string | null>(null)
   const [menu, setMenu] = useState<{ codigo: string; en: Punto } | null>(null)
-  const nombre = usarEstado((s) => tarjetaDe(s.lista, ruta)?.nombre ?? 'este proyecto')
+  const nombre = usarEstado((s) =>
+    inicio ? 'mis proyectos' : (tarjetaDe(s.lista, ruta)?.nombre ?? 'este proyecto'),
+  )
   const citar = usarEstado((s) => s.citar)
+  const lista = usarEstado((s) => s.lista)
+  const abrirProyecto = usarEstado((s) => s.abrirProyecto)
+  const destinos = useMemo(() => (inicio ? destinosDe(lista) : []), [inicio, lista])
+  /** En el inicio, el proyecto donde se anota; null es «Sin proyecto» (las sueltas). */
+  const [destino, setDestino] = useState<string | null>(null)
+  const [hecho, setHecho] = useState<Hecho | null>(null)
+  /** La idea que se está por mover, con dónde abrir la lista de proyectos. */
+  const [moviendo, setMoviendo] = useState<{ codigo: string; en: Punto } | null>(null)
+  // Si el proyecto elegido deja de estar (se archivó, se fue), se vuelve a «Sin proyecto».
+  useEffect(() => {
+    if (destino && !destinos.some((d) => d.ruta === destino)) setDestino(null)
+  }, [destino, destinos])
   const campo = useRef<HTMLTextAreaElement>(null)
   /** Lo último guardado de la idea abierta, para no volver a guardar lo mismo. */
   const guardado = useRef<string | null>(null)
@@ -269,10 +319,27 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     citar(ruta, citaHablar({ codigo: i.codigo, titulo }))
   }
 
+  // Mover a un proyecto (ID-7): lo que esperaba guardarse se guarda antes, para que pase la nota como está.
+  const mover = async (i: IdeaVista, hacia: string) => {
+    setMoviendo(null)
+    if (abierta === i.codigo && !(await cerrar())) return
+    const r = await window.iridium.moverIdea(ruta, i.codigo, hacia)
+    if (r.tipo === 'error') {
+      setFallo({ titulo: 'No se pudo mover', mensaje: r.mensaje })
+      setHecho(null)
+    } else {
+      setFallo(null)
+      setHecho({ texto: `Movida a ${tarjetaDe(lista, hacia)?.nombre ?? 'el proyecto'}`, ruta: hacia })
+    }
+    await leer()
+  }
+  const sePuedeMover = (i: IdeaVista) => inicio && i.de !== 'IA'
+
   const anotar = async () => {
     if (!escrito.trim() || anotando) return
     setAnotando(true)
-    const r = await window.iridium.anotarIdea(ruta, escrito)
+    const en = destino ?? ruta
+    const r = await window.iridium.anotarIdea(en, escrito)
     setAnotando(false)
     campo.current?.focus()
     if (r.tipo === 'error') {
@@ -285,6 +352,12 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     }
     setFallo(null)
     setEscrito('')
+    // Anotada en otro proyecto (ID-7): no está en esta lista; se avisa con Ver.
+    if (en !== ruta) {
+      setHecho({ texto: `Anotada en ${tarjetaDe(lista, en)?.nombre ?? 'el proyecto'}`, ruta: en })
+      return
+    }
+    setHecho(null)
     const l = await leer()
     // Si el filtro elegido no la muestra, se vuelve a Todo para verla primera.
     const nueva = l.tipo === 'ok' ? l.ideas.find((i) => i.codigo === r.codigo) : undefined
@@ -300,7 +373,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
 
   // Esc cierra la idea abierta (ID-2), si no hay un menú abierto (que se cierra con su propio Esc).
   useEffect(() => {
-    if (!abierta || menu) return
+    if (!abierta || menu || moviendo) return
     const tecla = (e: globalThis.KeyboardEvent) => {
       if (e.key !== 'Escape') return
       if (borrando) setBorrando(null)
@@ -308,9 +381,9 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     }
     window.addEventListener('keydown', tecla)
     return () => window.removeEventListener('keydown', tecla)
-  }, [abierta, menu, cerrar, borrando])
+  }, [abierta, menu, moviendo, cerrar, borrando])
 
-  const cabecera = { titulo: 'Ideas' }
+  const cabecera = { titulo: 'Ideas', nivel: inicio ? (1 as const) : (2 as const), acciones }
 
   if (!datos) return <Cabecera {...cabecera} />
   if (datos.tipo === 'sin-framework')
@@ -354,6 +427,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   const hoy = new Date()
   const ideaDelMenu = menu ? ideas.find((i) => i.codigo === menu.codigo) : undefined
   const ideaBorrando = borrando ? ideas.find((i) => i.codigo === borrando) : undefined
+  const ideaMoviendo = moviendo ? ideas.find((i) => i.codigo === moviendo.codigo) : undefined
 
   // Borrar desde el menú o desde la idea abierta: la confirmación es el cuadro del centro (Q-189).
   const borrarDelMenu = ideaDelMenu && (
@@ -367,6 +441,20 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     >
       <Icono nombre="eliminar" />
       Borrar
+    </button>
+  )
+
+  const moverDelMenu = ideaDelMenu && sePuedeMover(ideaDelMenu) && (
+    <button
+      type="button"
+      role="menuitem"
+      onClick={() => {
+        if (menu) setMoviendo({ codigo: ideaDelMenu.codigo, en: menu.en })
+        setMenu(null)
+      }}
+    >
+      <Icono nombre="chev" />
+      Mover a un proyecto
     </button>
   )
 
@@ -510,6 +598,17 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
             </button>
           </>
         )}
+        {sePuedeMover(idea) && (
+          <button
+            type="button"
+            className="boton sin-fondo chico"
+            aria-haspopup="menu"
+            onClick={(e) => setMoviendo({ codigo: idea.codigo, en: puntoDelMenu(e) })}
+          >
+            <Icono nombre="chev" />
+            Mover a un proyecto
+          </button>
+        )}
         {sePuedeBorrar(idea) && (
           <button type="button" className="boton sin-fondo chico" onClick={() => setBorrando(idea.codigo)}>
             <Icono nombre="eliminar" />
@@ -546,6 +645,21 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
               onChange={(e) => setEscrito(e.target.value)}
               onKeyDown={alTeclaCampo}
             />
+            {inicio && (
+              <select
+                className="selector idp-destino"
+                aria-label="En qué proyecto"
+                value={destino ?? ''}
+                onChange={(e) => setDestino(e.target.value || null)}
+              >
+                <option value="">Sin proyecto</option>
+                {destinos.map((d) => (
+                  <option key={d.ruta} value={d.ruta}>
+                    {d.nombre}
+                  </option>
+                ))}
+              </select>
+            )}
             <button
               type="button"
               className="boton secundario"
@@ -555,6 +669,22 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
               Anotar
             </button>
           </div>
+
+          {hecho && (
+            <div className="recuadro idp-hecho" role="status">
+              <Icono nombre="check" />
+              <div className="cuerpo-recuadro">
+                <span>{hecho.texto}</span>
+              </div>
+              <button
+                type="button"
+                className="boton sin-fondo chico"
+                onClick={() => abrirProyecto(hecho.ruta, 'ideas')}
+              >
+                Ver
+              </button>
+            </div>
+          )}
 
           {fallo && (
             <div className="recuadro error" role="alert">
@@ -632,6 +762,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                 <Icono nombre="check" />
                 {ideaDelMenu.estado === 'hecha' ? 'Volver a para revisar' : 'Marcar como revisado'}
               </button>
+              {moverDelMenu}
               {borrarDelMenu}
             </>
           ) : (
@@ -675,8 +806,27 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                   </button>
                 </>
               )}
+              {moverDelMenu}
               {sePuedeBorrar(ideaDelMenu) && borrarDelMenu}
             </>
+          )}
+        </MenuContextual>
+      )}
+      {moviendo && ideaMoviendo && (
+        <MenuContextual en={moviendo.en} etiqueta="Mover a un proyecto" cerrar={() => setMoviendo(null)}>
+          {destinos.length === 0 ? (
+            <p className="titulo-menu">Ningún proyecto sigue el framework</p>
+          ) : (
+            destinos.map((d) => (
+              <button
+                key={d.ruta}
+                type="button"
+                role="menuitem"
+                onClick={() => void mover(ideaMoviendo, d.ruta)}
+              >
+                {d.nombre}
+              </button>
+            ))
           )}
         </MenuContextual>
       )}

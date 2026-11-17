@@ -27,6 +27,11 @@
   padding-bottom: var(--esp-2);
   background: var(--fondo);
 }
+/* En el inicio, el proyecto donde se anota (ID-7), al lado del campo */
+.idp-destino {
+  flex: none;
+  width: var(--ancho-proyecto);
+}
 .idp-campo {
   flex: 1;
   height: auto;

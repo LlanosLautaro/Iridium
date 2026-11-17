@@ -1,19 +1,10 @@
-// El bloc de notas de Ideas (D-112, D-126): `notas.md` y sus imágenes en `notas/`, dentro de la carpeta Ideas. La
-// ventana manda el texto entero cada vez que se guarda; las imágenes llegan como `data:` (la ventana no lee el disco).
+// Las imágenes de las notas de las ideas (D-130; nacieron con el bloc de notas de Ideas, D-112, que ID-I4 sacó): se
+// guardan al pegarlas y se leen como `data:` (la ventana no lee el disco).
 import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import {
-  ARCHIVO_NOTAS,
-  CARPETA_IMAGENES_NOTAS,
-  diaDe,
-  type HojaNotas,
-  type ImagenPegada,
-  leerNotas,
-  type ResultadoNotas,
-} from '../../compartido/notas'
+import { diaDe, type ImagenPegada, leerNotas } from '../../compartido/notas'
 import { LIMITE_IMAGEN_BYTES, TIPOS_IMAGEN } from '../../compartido/visor'
-import { escribirAtomico } from '../infra/escritura'
-import { LIMITE_DOCUMENTO_BYTES, motivo } from './visor'
+import { motivo } from './visor'
 
 const MIME_DE: Record<string, string> = Object.fromEntries(
   Object.entries(TIPOS_IMAGEN).map(([mime, ext]) => [ext, mime]),
@@ -26,33 +17,6 @@ export function esImagenEn(sub: string, ruta: string): boolean {
   return (
     new RegExp(`^[^/\\\\:]+\\.(${Object.keys(MIME_DE).join('|')})$`, 'i').test(resto) && !resto.includes('..')
   )
-}
-
-/** Una imagen de la hoja: solo `notas/<archivo>` con una extensión de imagen, sin salir de la carpeta. */
-export function esImagenDeNotas(ruta: string): boolean {
-  return esImagenEn(CARPETA_IMAGENES_NOTAS, ruta)
-}
-
-async function existe(carpeta: string): Promise<boolean> {
-  try {
-    return (await stat(carpeta)).isDirectory()
-  } catch {
-    return false
-  }
-}
-
-export async function leerHoja(carpeta: string): Promise<HojaNotas> {
-  if (!(await existe(carpeta))) return { tipo: 'sin-carpeta' }
-  const archivo = join(carpeta, ARCHIVO_NOTAS)
-  let texto = ''
-  try {
-    const s = await stat(archivo)
-    if (s.size > LIMITE_DOCUMENTO_BYTES) return { tipo: 'grande', bytes: s.size }
-    texto = await readFile(archivo, 'utf8')
-  } catch (e) {
-    if ((e as NodeJS.ErrnoException).code !== 'ENOENT') return { tipo: 'error', mensaje: motivo(e) }
-  }
-  return { tipo: 'ok', texto, imagenes: await imagenesDe(carpeta, texto, esImagenDeNotas) }
 }
 
 /**
@@ -77,27 +41,6 @@ export async function imagenesDe(
     }
   }
   return imagenes
-}
-
-export async function guardarHoja(carpeta: string, texto: string): Promise<ResultadoNotas> {
-  if (!(await existe(carpeta))) return { tipo: 'error', mensaje: 'no está la carpeta Ideas' }
-  try {
-    await escribirAtomico(join(carpeta, ARCHIVO_NOTAS), texto)
-    return { tipo: 'ok' }
-  } catch (e) {
-    return { tipo: 'error', mensaje: motivo(e) }
-  }
-}
-
-/** Guarda una imagen pegada como `notas/AAAA-MM-DD-n.<ext>`, sin pisar ninguna. */
-export async function pegarImagenEnHoja(
-  carpeta: string,
-  mime: string,
-  base64: string,
-  hoy = new Date(),
-): Promise<ImagenPegada> {
-  if (!(await existe(carpeta))) return { tipo: 'error', mensaje: 'no está la carpeta Ideas' }
-  return guardarImagenPegada(carpeta, CARPETA_IMAGENES_NOTAS, mime, base64, hoy)
 }
 
 /**

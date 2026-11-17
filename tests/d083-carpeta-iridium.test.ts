@@ -42,9 +42,9 @@ describe('prepararCarpetaIridium', () => {
       rutas: { ideas: join(iridium, 'Ideas'), skills: join(iridium, 'Skills') },
       mudanza: null,
     })
-    expect((await readdir(join(iridium, 'Ideas'))).sort()).toEqual(['CLAUDE.md', 'ideas.md'])
+    expect((await readdir(join(iridium, 'Ideas'))).sort()).toEqual(['CLAUDE.md', 'sueltas.md'])
     expect((await readdir(join(iridium, 'Skills'))).sort()).toEqual(['CLAUDE.md', 'skills'])
-    expect(await readFile(join(iridium, 'Ideas', 'ideas.md'), 'utf8')).toContain('## Integradas')
+    expect(await readFile(join(iridium, 'Ideas', 'sueltas.md'), 'utf8')).toContain('# Ideas sueltas')
   })
 
   it('no pisa lo que ya está', async () => {

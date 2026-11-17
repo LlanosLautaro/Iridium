@@ -123,7 +123,7 @@ test('el chat de la vista de Proyectos conversa en la carpeta Ideas, sin Seguí 
   const { app, win } = await abrir()
   const chat = win.locator('aside.chat')
   await expect(chat.locator('.cab-conv')).toContainText('Ideas y proyectos')
-  await expect(chat).toContainText('ideas.md')
+  await expect(chat).toContainText('sueltas.md')
   await expect(chat.getByRole('button', { name: 'Continuar' })).toHaveCount(0)
   await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).fill('Una idea: un lanzador de juegos')
   await chat.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
