@@ -217,6 +217,8 @@ export interface FrenteLeido {
   /** Del vocabulario; con framework viejo, las palabras de antes traducidas («reabierto» → en curso). */
   estado: Estado | null
   estadoTexto: string
+  /** Los `T-n` que nombra la celda del frente («Capacidades (T-28)»): el trabajo que es el frente mismo (D-145). */
+  trabajo: string[]
 }
 
 /**
@@ -248,6 +250,7 @@ export function leerFrentes(estado: string, framework = false): FrenteLeido[] {
       paso: paso && paso !== '—' && paso !== '-' ? paso : null,
       estado: vocabulario(estadoTexto, framework),
       estadoTexto,
+      trabajo: textoPlano(f[iNombre] ?? '').match(/\bT-\d+\b/g) ?? [],
     })
   }
   return r

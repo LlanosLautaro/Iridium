@@ -252,7 +252,7 @@ describe('las fichas de las piezas (T-62)', () => {
   it('las piezas de Iridium tienen su ficha, con grupo y para qué', async () => {
     const f = leerFichas(await readFile(join(__dirname, '..', 'docs/diseno/piezas.css'), 'utf8'))
     expect(f.filter((x) => x.codigo).map((x) => x.codigo)).toEqual(
-      Array.from({ length: 14 }, (_, i) => `PZ-${i + 1}`),
+      Array.from({ length: 15 }, (_, i) => `PZ-${i + 1}`),
     )
     expect(f.filter((x) => !x.grupo || !x.paraQue || x.tokens.length === 0)).toEqual([])
   })

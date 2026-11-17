@@ -1,4 +1,4 @@
-/* Las piezas de Iridium (PZ-1 a PZ-12, modulos/diseno/ux.md › Las piezas), pasadas al código en DI-I3: los bloques de
+/* Las piezas de Iridium (PZ-1 a PZ-15, modulos/diseno/ux.md › Las piezas), pasadas al código en DI-I3: los bloques de
    cada pieza son los de docs/diseno/piezas.css, tal cual (el control de estilos, tests/estilos.test.ts, los compara).
    Cambiar una pieza es cambiarla en la maqueta y acá en el mismo cambio. El marco y la conversación de esa hoja no
    están: son de la app (marco.css, conversacion.css). Solo usa var(--…): ningún color escrito.
@@ -296,6 +296,39 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .nota-enlace:hover { border-color: var(--borde-control); }
 .nota-enlace .ic { width: 14px; height: 14px; flex: none; color: var(--texto-3); }
 .nota-enlace .sitio { color: var(--texto-3); }
+
+/* ───────── PZ-15 · Camino ─────────
+   Grupo: Contenido
+   Para qué: una secuencia de pasos en orden, con sus ramas (el Mapa): un carril con un punto por paso, las ramas con
+   su codo y la línea de plegados que despliega lo hecho antes. El nombre baja de renglón; la señal va a la derecha.
+   Estados: hecho, el que sigue, te espera, en pausa, descartado, lo que viene, sin entender, rama, plegado. */
+.camino { display: grid; grid-template-columns: 24px 24px minmax(0, 1fr); }
+.camino .tramo { display: contents; }
+.camino .carril { position: relative; min-height: 40px; }
+.camino .texto-tramo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-1) var(--esp-3); min-width: 0; padding: var(--esp-2) 0 var(--esp-2) var(--esp-2); color: var(--texto-3); font: var(--estilo-cuerpo); }
+.camino .texto-tramo > .senal { margin-left: auto; }
+.camino .tramo.principal .texto-tramo { grid-column: 2 / 4; }
+.camino .nombre-tramo { min-width: 0; padding: 0; background: none; border: 0; color: inherit; font: inherit; text-align: left; overflow-wrap: anywhere; }
+.camino button.nombre-tramo { cursor: pointer; }
+.camino button.nombre-tramo:hover { color: var(--texto); text-decoration: underline; text-decoration-color: var(--texto-3); text-underline-offset: 3px; }
+.camino .carril.arriba::before, .camino .carril.abajo::after, .camino .carril.sigue::before { content: ""; position: absolute; left: 11px; width: 2px; background: var(--borde-fuerte); }
+.camino .carril.arriba::before { top: 0; height: 20px; }
+.camino .carril.abajo::after { top: 20px; bottom: 0; }
+.camino .carril.sigue::before { top: 0; bottom: 0; }
+.camino .carril.codo::before { content: ""; position: absolute; left: -13px; top: 0; width: 24px; height: 20px; border-left: 2px solid var(--borde-fuerte); border-bottom: 2px solid var(--borde-fuerte); border-bottom-left-radius: var(--radio-control); }
+.camino .punto-camino { position: absolute; left: 6px; top: 20px; width: 12px; height: 12px; margin-top: -6px; border-radius: var(--radio-pildora); border: 2px solid var(--borde-control); background: var(--fondo); z-index: 1; }
+.camino .hecho .punto-camino { background: var(--bien); border-color: var(--bien); }
+.camino .foco .punto-camino { left: 4px; width: 16px; height: 16px; margin-top: -8px; border-color: var(--texto); box-shadow: 0 0 0 4px var(--sel-fondo); }
+.camino .espera .punto-camino, .camino .pausa .punto-camino { border-color: var(--espera); }
+.camino .descartado .punto-camino, .camino .otro .punto-camino { border-color: var(--texto-apagado); }
+.camino .hecho .texto-tramo { color: var(--texto-2); }
+.camino .foco .texto-tramo, .camino .espera .texto-tramo, .camino .pausa .texto-tramo { color: var(--texto); }
+.camino .foco .nombre-tramo { font-weight: 600; }
+.camino .descartado .nombre-tramo { color: var(--texto-apagado); text-decoration: line-through; }
+.camino .otro .nombre-tramo { color: var(--texto-3); font-family: var(--mono); font-size: var(--tam-chico); }
+.camino .plegado .punto-camino { left: 3px; width: 18px; height: 14px; margin-top: -7px; border: 0; background: var(--sel-fondo); color: var(--texto-2); font: var(--estilo-codigo); line-height: 14px; text-align: center; }
+.camino .plegado .nombre-tramo { color: var(--texto-3); }
+.camino .plegado .nombre-tramo:hover { color: var(--texto); text-decoration: none; }
 
 /* ───────── Información a pedido ─────────
    Grupo: Avisos

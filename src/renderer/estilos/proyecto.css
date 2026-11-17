@@ -123,9 +123,8 @@
   color: var(--texto-3);
 }
 
-/* Mapa (W-7, D-035): dónde está el proyecto y qué sigue. Con las piezas desde DI-I3, tanda 7
-   (docs/diseno/pantallas/mapa.html): los hitos son Pestañas de números, los grupos Bloques, lo de cada uno Filas y los
-   estados Señales; aquí solo va cómo se acomodan. */
+/* Mapa (D-141, D-144; modulos/mapa/ux.md › W-7): la barra de frentes (Pestañas) y el camino del elegido (la pieza
+   Camino, PZ-15); «Aprobado, sin lugar» y «Por empezar», Bloques con Filas. Aquí solo va cómo se acomodan. */
 .mapa {
   flex: 1;
   overflow-y: auto;
@@ -137,140 +136,60 @@
   display: flex;
   flex-direction: column;
 }
-/* La fila de hitos: el rótulo, un número por hito y la cuenta de hechos a la derecha */
-.hitos {
-  display: flex;
-  align-items: center;
-  gap: var(--esp-3);
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
+/* Con muchos frentes la barra se desplaza de costado; «Por empezar», al final a la derecha */
+.barra-frentes {
+  margin-bottom: var(--esp-5);
+  overflow-x: auto;
+  flex: none;
 }
-.numeros-hitos {
-  flex-wrap: wrap;
-  min-width: 0;
-}
-.hitos .total-hitos {
-  margin-left: auto;
+.barra-frentes > * {
+  flex: none;
   white-space: nowrap;
 }
-.hitos .numeros-hitos > .h-reabierto {
-  color: var(--espera);
+.barra-frentes .por-empezar {
+  margin-left: auto;
 }
-.hitos .numeros-hitos > .h-bloqueado {
-  color: var(--error);
-}
-.hitos .numeros-hitos > .h-saltado {
-  text-decoration: line-through;
-}
-
-/* El hito que se mira o el frente activo: el rótulo, el nombre grande, su paso o su estado y sus acciones a la derecha */
-.parte-mapa {
-  display: flex;
-  flex-direction: column;
-  gap: var(--esp-4);
-  padding: var(--esp-5) 0 var(--esp-6);
-  border-bottom: 1px solid var(--borde);
-}
-.cab-parte {
+.cab-frente {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: var(--esp-3);
+  margin-bottom: var(--esp-4);
 }
-.cab-parte h3 {
+.cab-frente h3 {
   margin: 0;
-  font: var(--estilo-documento);
+  font: var(--estilo-titulo);
 }
-.cab-parte .paso-frente {
-  color: var(--texto-2);
-}
-.cab-parte .acciones-parte {
-  margin-left: auto;
-  display: flex;
-  gap: var(--esp-2);
-  align-self: center;
-}
-.proximo-paso {
-  max-width: none;
-}
-.proximo-paso > :last-child {
-  margin-bottom: 0;
-}
-.dos-mapa {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--esp-5);
-}
-@container (min-width: 700px) {
-  .dos-mapa {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--esp-5) var(--esp-6);
-  }
-}
-/* Los dos Bloques lado a lado empiezan a la misma altura (le gana a «Bloque + Bloque» de la pieza) */
-.dos-mapa > :nth-child(2) {
-  margin-top: 0;
-}
-.nada-mapa {
-  margin: 0;
-  font: var(--estilo-meta);
-  color: var(--texto-3);
-}
-.mapa .ver-mas {
-  align-self: flex-start;
-}
-
-/* Los demás frentes, una línea por estado, cada nombre a su estado.md */
-.lineas-frentes {
-  display: grid;
-  grid-template-columns: 140px minmax(0, 1fr);
-  gap: var(--esp-2) var(--esp-3);
-  margin: 0;
-  padding-top: var(--esp-5);
-}
-.lineas-frentes:empty {
-  display: none;
-}
-.lineas-frentes dt {
-  color: var(--texto-3);
-}
-.lineas-frentes dd {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--esp-1) var(--esp-3);
-  margin: 0;
-}
-.enlace-frente {
+.nombre-frente {
   padding: 0;
-  color: var(--texto);
+  cursor: pointer;
 }
-.enlace-frente:hover {
+.nombre-frente:hover {
   text-decoration: underline;
+  text-decoration-color: var(--texto-3);
   text-underline-offset: 3px;
 }
-
-/* Lo último de la IA (D-035): una línea al pie */
-.ultimo-ia {
-  display: flex;
-  align-items: center;
-  gap: var(--esp-2);
-  min-width: 0;
-  padding-top: var(--esp-5);
-  font: var(--estilo-meta);
+.estado-frente {
   color: var(--texto-3);
 }
-.ultimo-ia q {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--texto-2);
+.estado-frente.fuera {
+  font-family: var(--mono);
+  font-size: var(--tam-chico);
 }
-.ultimo-ia .rotulo-ultimo {
-  flex: none;
+.gris-mapa {
+  margin: 0 0 var(--esp-3);
+  color: var(--texto-3);
+  font: var(--estilo-cuerpo);
+}
+.gris-mapa.al-pie {
+  margin: var(--esp-3) 0 0 var(--esp-6);
+}
+.aparte-mapa {
+  margin-top: var(--esp-6);
+}
+/* Los títulos de trabajo.md, tal cual: los largos bajan de renglón (D-143) */
+.lista-mapa .titulo-fila {
+  white-space: normal;
 }
 
 /* Sin framework: el Recuadro punteado y debajo sus documentos */
@@ -647,10 +566,6 @@
 }
 .menu-lista > button.conv.actual {
   background: var(--sel-fondo);
-}
-
-.mapa .espera-fila .ic {
-  color: var(--texto-3);
 }
 
 .barra-doc .menu-boton .ic {

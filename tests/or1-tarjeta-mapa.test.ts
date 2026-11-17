@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { Documentos } from '../src/main/app/documentos'
 import { mapaDe } from '../src/main/app/mapa'
-import { leerPreguntasAbiertas, listarProyectos } from '../src/main/app/proyectos'
+import { listarProyectos } from '../src/main/app/proyectos'
 import { clasificarHito, clasificarIteracion } from '../src/main/core/mapa'
 
 let raiz: string
@@ -100,13 +100,14 @@ describe('El Mapa con el vocabulario único', () => {
     expect(clasificarIteracion('en curso', true)).toBe('en-curso')
   })
 
-  it('el paso del frente es el que está en curso, no el primero sin hacer (A-5)', async () => {
+  it('en operación con un frente, el Mapa son los frentes: sin ruta, los pasos del método (D-142, MA-9)', async () => {
     await escribir('Alfa', 'docs/estado.md', ESTADO('(ninguna)'))
     await escribir('Alfa', 'docs/modulos/orden/estado.md', MODULO)
     const m = mapaDe(await new Documentos().de(join(raiz, 'Alfa')), [])
     if (m.tipo !== 'mapa') throw new Error('sin mapa')
-    expect(m.frentes[0]?.paso).toBe('3. UX')
-    expect(m.hitos.map((h) => h.estado)).toEqual(['completo', 'completo', 'en-curso'])
+    expect(m.hitos).toBeNull()
+    expect(m.frentes[0]?.sinRuta).toBe(true)
+    expect(m.frentes[0]?.pasos.map((p) => p.marca)).toEqual(['hecho', 'viene', 'viene'])
   })
 
   it('con framework, «completo» en la tabla de hitos ya no es un estado', async () => {
@@ -114,28 +115,7 @@ describe('El Mapa con el vocabulario único', () => {
     await escribir('Alfa', 'docs/README.md', '# Docs\n\n**Framework:** 2026-11-06\n')
     const m = mapaDe(await new Documentos().de(join(raiz, 'Alfa')), [])
     if (m.tipo !== 'mapa') throw new Error('sin mapa')
-    expect(m.hitos.map((h) => h.estado)).toEqual(['completo', 'otro', 'en-curso'])
-  })
-
-  it('una pregunta va al frente de su línea «Frente:», aunque esté escrita en el estado.md general (OR-3)', async () => {
-    await escribir(
-      'Alfa',
-      'docs/estado.md',
-      ESTADO(
-        `- **Q-1 — Del núcleo**
-  Tipo: consulta
-- **Q-2 — De Orden**
-  Tipo: tarea · Frente: Orden
-- **Q-3 — De otro**
-  Tipo: consulta · Frente: Nadie`,
-      ),
-    )
-    await escribir('Alfa', 'docs/modulos/orden/estado.md', MODULO)
-    const carpeta = join(raiz, 'Alfa')
-    const m = mapaDe(await new Documentos().de(carpeta), await leerPreguntasAbiertas(carpeta))
-    if (m.tipo !== 'mapa') throw new Error('sin mapa')
-    expect(m.frentes[0]?.preguntas.map((q) => q.codigo)).toEqual(['Q-2'])
-    // Un frente que no existe queda en el núcleo, a la vista.
-    expect(m.preguntas.map((q) => q.codigo)).toEqual(['Q-1', 'Q-3'])
+    // Sin frentes, el camino son los hitos; lo que no se entiende se muestra tal cual.
+    expect(m.hitos?.map((h) => h.marca)).toEqual(['hecho', 'otro', 'viene'])
   })
 })

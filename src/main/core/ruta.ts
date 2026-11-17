@@ -42,7 +42,7 @@ export function textoSinCodigos(texto: string): string {
     .replace(/\(\s*[,;·]\s*/g, '(')
     .replace(/\s*[,;·]\s*\)/g, ')')
     .replace(/\s{2,}/g, ' ')
-    .replace(/\s+([,.;:)])/g, '$1')
+    .replace(/\s+([,.;:)])(?!\w)/g, '$1')
     .trim()
 }
 
@@ -111,4 +111,74 @@ export function trabajoDeRuta(ruta: RutaLeida | null): Set<string> {
   }
   if (ruta) juntar(ruta.pasos)
   return r
+}
+
+// Las listas del Mapa que salen de `trabajo.md` al leer (D-143, D-145): «Aprobado, sin lugar en la ruta» de cada
+// frente y «Por empezar». Cuenta el trabajo abierto (`pendiente` o `en curso`); lo `nueva` sigue solo en Ideas.
+
+export interface TrabajoDelMapa {
+  codigo: string
+  titulo: string
+}
+
+/** Un frente con carpeta: los nombres con que lo nombra `Frente:`, su ruta y el trabajo que lo originó. */
+export interface FrenteConRuta {
+  nombres: string[]
+  ruta: RutaLeida | null
+  origen: string[]
+}
+
+/** Una fila de la tabla «Módulos» que espera sin carpeta, con el trabajo que es el frente mismo (`Capacidades (T-28)`). */
+export interface FrenteQueEspera {
+  nombre: string
+  trabajo: string[]
+}
+
+export interface ListasDelMapa {
+  /** Una por frente con carpeta, en el mismo orden. */
+  sinLugar: TrabajoDelMapa[][]
+  porEmpezar: {
+    frentes: { nombre: string; pasos: TrabajoDelMapa[] }[]
+    sinFrente: (TrabajoDelMapa & { enCurso: boolean })[]
+  }
+}
+
+const mismo = (a: string, b: string) => a.localeCompare(b, 'es', { sensitivity: 'base' }) === 0
+
+export function listasDelMapa(
+  conCarpeta: readonly FrenteConRuta[],
+  esperan: readonly FrenteQueEspera[],
+  trabajo: readonly ItemDelMapa[],
+): ListasDelMapa {
+  const abiertos = trabajo.filter((i) => i.estado === 'pendiente' || i.estado === 'en curso')
+  const enRutas = new Set(conCarpeta.flatMap((f) => [...trabajoDeRuta(f.ruta)]))
+  const sonFrentes = new Set([...conCarpeta.flatMap((f) => f.origen), ...esperan.flatMap((f) => f.trabajo)])
+  const corto = (i: ItemDelMapa) => ({ codigo: i.codigo, titulo: i.titulo })
+  const de = (i: ItemDelMapa, nombres: readonly string[]) =>
+    i.frente !== null && nombres.some((n) => mismo(n, i.frente ?? ''))
+  const sinLugar = conCarpeta.map((f) => {
+    const nombrados = trabajoDeRuta(f.ruta)
+    return abiertos
+      .filter((i) => de(i, f.nombres) && !nombrados.has(i.codigo) && !f.origen.includes(i.codigo))
+      .map(corto)
+  })
+  const frentes = esperan.map((f) => ({
+    nombre: f.nombre,
+    pasos: abiertos.filter((i) => de(i, [f.nombre]) && !f.trabajo.includes(i.codigo)).map(corto),
+  }))
+  const conocido = (i: ItemDelMapa) =>
+    conCarpeta.some((f) => de(i, f.nombres)) || esperan.some((f) => de(i, [f.nombre]))
+  const sinFrente = abiertos
+    .filter((i) => !conocido(i) && !enRutas.has(i.codigo) && !sonFrentes.has(i.codigo))
+    .map((i) => ({ ...corto(i), enCurso: i.estado === 'en curso' }))
+    .sort((a, b) => Number(b.enCurso) - Number(a.enCurso))
+  return { sinLugar, porEmpezar: { frentes, sinFrente } }
+}
+
+/** Lo que las listas usan de un ítem de `trabajo.md`. */
+export interface ItemDelMapa {
+  codigo: string
+  titulo: string
+  estado: string | null
+  frente: string | null
 }

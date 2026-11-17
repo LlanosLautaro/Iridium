@@ -74,6 +74,8 @@ describe('textoSinCodigos', () => {
     expect(textoSinCodigos('Medir Orden (OR-I4 y Q-146)')).toBe('Medir Orden')
     expect(textoSinCodigos('Definir (D-141; antes del hito 10)')).toBe('Definir (antes del hito 10)')
     expect(textoSinCodigos('Copiar `T-5` de **Beta**')).toBe('Copiar de Beta')
+    // Un punto que empieza una palabra no es puntuación: «el .zip» queda como está.
+    expect(textoSinCodigos('Achicar el .zip de cada versión (T-9)')).toBe('Achicar el .zip de cada versión')
   })
 })
 

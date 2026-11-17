@@ -105,7 +105,7 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
 })
 
-test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y de vuelta (H-7, F-4)', async () => {
+test('el Mapa antes del hito 10: los hitos como camino y de un paso a su sección y de vuelta (MA-5, F-4)', async () => {
   const { app, win } = await abrir()
   await expect(win.getByRole('button', { name: /^Inicio/ })).toHaveAttribute(
     'aria-label',
@@ -118,33 +118,45 @@ test('el Mapa: la línea de hitos, el hito actual y de un paso a su sección y d
     .click()
 
   const mapa = win.locator('[data-seccion="mapa"]')
-  await expect(mapa.locator('.hitos .pestana')).toHaveText(['0', '4', '7', '8'])
-  await expect(mapa.locator('.hitos .total-hitos')).toHaveText('2 de 4 hechos')
-  const tarjeta = mapa.locator('.hito-mapa')
-  await expect(tarjeta.locator('h3')).toHaveText('Construcción')
-  await expect(tarjeta.locator('.proximo-paso')).toContainText('Terminar I-2 según D-12')
-  await expect(tarjeta.locator('.fila', { hasText: 'I-1 — Importar' })).toContainText('hecho')
-  await expect(tarjeta.locator('.fila', { hasText: 'I-2 — Galería' })).toContainText('en curso')
-  await expect(tarjeta.locator('.pregunta-mapa')).toContainText('Q-3')
+  await expect(mapa.locator('.cab-seccion')).toContainText('Hito 7 · Construcción')
+  // Sin frentes no hay barra: el camino son los hitos, lo hecho antes del último, plegado (D-142).
+  await expect(mapa.getByRole('tablist')).toHaveCount(0)
+  const camino = mapa.locator('.camino')
+  await expect(camino.locator('.tramo .nombre-tramo')).toHaveText([
+    '1 hecho antes',
+    'UX',
+    'Construcción',
+    'Importar',
+    'Galería',
+    'Etiquetas',
+    'Pruebas y calidad',
+  ])
+  // El que sigue es el hito en curso; sus iteraciones, ramas.
+  await expect(camino.locator('.tramo.foco')).toHaveText('Construcción')
+  await expect(camino.locator('.tramo.rama.hecho')).toHaveText('Importar')
   await win.screenshot({ path: 'test-results/i4-mapa.png' })
 
-  // Otro hito: su portón.
-  await mapa.locator('.hitos .pestana', { hasText: '4' }).click()
-  await expect(tarjeta.locator('h3')).toHaveText('UX')
-  await expect(tarjeta.locator('.fila')).toHaveText([/Historias\..*hecho/, /Flujos\..*pendiente/])
-  await tarjeta.getByRole('button', { name: 'Volver' }).click()
+  // Los hechos de antes se despliegan y se pliegan.
+  await camino.getByRole('button', { name: '1 hecho antes' }).click()
+  await expect(camino.locator('.tramo.principal.hecho .nombre-tramo')).toHaveText([
+    'Plegar los hechos de antes',
+    'Idea cruda',
+    'UX',
+  ])
+  await camino.getByRole('button', { name: 'Plegar los hechos de antes' }).click()
+  await expect(camino.getByRole('button', { name: '1 hecho antes' })).toBeVisible()
 
   // Un paso abre su sección en Docs; Atrás vuelve al Mapa.
-  await tarjeta.locator('.fila', { hasText: 'I-2 — Galería' }).click()
+  await camino.getByRole('button', { name: 'Galería' }).click()
   const docs = win.locator('[data-seccion="docs"]')
   await expect(docs.locator('.barra-doc .nom')).toHaveText('07-construccion.md')
   await expect(docs.locator('.marcada')).toHaveText('I-2 — Galería')
   await docs.getByRole('button', { name: 'Atrás' }).click()
   await expect(mapa).toBeVisible()
 
-  // Un código del próximo paso también.
-  await tarjeta.locator('.proximo-paso a', { hasText: 'D-12' }).click()
-  await expect(docs.locator('.marcada')).toHaveText('D-12 — Grilla de cuatro columnas')
+  // El documento del hito, desde la cabecera.
+  await mapa.getByRole('button', { name: 'Abrir 07-construccion.md' }).click()
+  await expect(docs.locator('.barra-doc .nom')).toHaveText('07-construccion.md')
   await app.close()
 })
 

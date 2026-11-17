@@ -1,9 +1,18 @@
-// El Mapa de un proyecto (H-7, D-035, 04-ux.md › W-7): la línea de hitos de `estado.md` y, para cada hito, sus
-// pasos con su sección; para el actual, además, el Próximo paso y lo que espera del usuario.
-import type { FrenteMapa, HitoMapa, MapaProyecto, PasoMapa, PreguntaNueva } from '../../compartido/puente'
+// El Mapa de un proyecto (D-141, D-144, D-145; `modulos/mapa/`): en operación, el camino de pasos de cada frente (su
+// ruta o, sin ella, los pasos del método), con lo aprobado sin lugar en la ruta y «Por empezar», que salen de
+// `trabajo.md` al leer. Antes del hito 10 o sin frentes, los hitos como camino, con los pasos del actual (D-142).
+import type {
+  EstadoHito,
+  EstadoPaso,
+  FrenteMapa,
+  MapaProyecto,
+  PasoCamino,
+  PreguntaNueva,
+} from '../../compartido/puente'
 import { tieneFramework } from '../core/control'
 import { leerGuia } from '../core/guia'
 import {
+  type FrenteLeido,
   frenteDeEstado,
   type HitoLeido,
   leerFrentes,
@@ -13,15 +22,24 @@ import {
   leerPorton,
   nombreDeModulo,
   type PasoLeido,
-  proximoPaso,
-  seccionDeTitulo,
 } from '../core/mapa'
+import { leerRuta, listasDelMapa, type PasoRuta, textoSinCodigos } from '../core/ruta'
 import { leerTrabajo } from '../core/trabajo'
+import { textoPlano } from '../core/visor/lineas'
 import { ordenDeDocumentos } from './documentos'
 import { TRABAJO } from './trabajo'
 import type { DocumentosProyecto } from './visor'
 
 const ESTADO = 'docs/estado.md'
+/** Desde este hito el Mapa son los frentes (D-142). */
+const OPERACION = 10
+
+const igual = (a: string, b: string) => a.localeCompare(b, 'es', { sensitivity: 'base' }) === 0
+
+/** La primera pregunta sin responder que nombra un texto: el paso «Te espera» (MA-2). */
+function esperaDe(texto: string, abiertas: ReadonlySet<string>): string | null {
+  return [...texto.matchAll(/\bQ-\d+\b/g)].map((m) => m[0]).find((q) => abiertas.has(q)) ?? null
+}
 
 /** El documento de un hito tal como lo nombra la tabla, si existe: `04-ux.md` → `docs/04-ux.md`. */
 function documentoDe(d: DocumentosProyecto, nombre: string | null): string | null {
@@ -30,27 +48,15 @@ function documentoDe(d: DocumentosProyecto, nombre: string | null): string | nul
   return null
 }
 
-function pasosDe(
-  d: DocumentosProyecto,
-  documento: string | null,
-  detalleActual: string | null,
-  framework: boolean,
-): PasoMapa[] {
-  const texto = documento ? d.texto(documento) : null
-  if (!documento || !texto) return []
-  const iteraciones = leerIteraciones(texto, detalleActual, framework)
-  const leidos: PasoLeido[] = iteraciones.length > 0 ? iteraciones : leerPorton(texto)
-  const porton = d.anclaDeTitulo(documento, 'Portón')
-  return leidos.map((p) => {
-    const nace = p.codigo ? d.dondeNace(p.codigo, documento) : null
-    const ancla = nace?.ancla ?? (p.codigo ? null : porton)
-    return {
-      texto: p.texto,
-      estado: p.estado,
-      estadoTexto: p.estadoTexto,
-      destino: nace ? { documento: nace.ruta, ancla: nace.ancla } : ancla ? { documento, ancla } : null,
-    }
-  })
+const MARCA_HITO: Partial<Record<EstadoHito, PasoCamino['marca']>> = {
+  completo: 'hecho',
+  saltado: 'descartado',
+  otro: 'otro',
+}
+const MARCA_PASO: Partial<Record<EstadoPaso, PasoCamino['marca']>> = {
+  hecho: 'hecho',
+  saltado: 'descartado',
+  otro: 'otro',
 }
 
 export function mapaDe(d: DocumentosProyecto, preguntas: PreguntaNueva[]): MapaProyecto {
@@ -60,64 +66,123 @@ export function mapaDe(d: DocumentosProyecto, preguntas: PreguntaNueva[]): MapaP
   }
   // Con framework, solo el vocabulario único; con el viejo, las palabras de antes se traducen (core/estados.ts).
   const framework = tieneFramework(d.texto('docs/README.md'))
+  const abiertas = new Set(preguntas.map((q) => q.codigo))
   const guia = leerGuia(estado)
-  const actual = guia?.hito ?? null
-  const detalleActual = [guia?.nombreHito, guia?.estadoHito].filter(Boolean).join(' — ') || null
   const leidos: HitoLeido[] = leerHitos(estado, framework)
-  // Sin la tabla (o sin el hito actual en ella), el hito actual igual tiene su tarjeta.
-  if (actual !== null && !leidos.some((h) => h.numero === actual))
-    leidos.push({
+  const actual = guia?.hito ?? null
+  const delActual = leidos.find((h) => h.numero === actual)
+  const documento = documentoDe(d, delActual?.documento ?? null)
+  const { frentes, porEmpezar } = frentesDe(d, estado, abiertas, framework)
+  const conHitos = actual === null || actual < OPERACION || frentes.length === 0
+  return {
+    tipo: 'mapa',
+    hito: actual === null ? null : { numero: actual, nombre: guia?.nombreHito ?? delActual?.nombre ?? '' },
+    documento,
+    hitos: conHitos ? caminoDeHitos(d, leidos, guia, abiertas, framework) : null,
+    frentes,
+    porEmpezar,
+  }
+}
+
+/** Los hitos como camino (D-142, MA-5): el actual con sus pasos (el portón o sus iteraciones) como ramas. */
+function caminoDeHitos(
+  d: DocumentosProyecto,
+  leidos: HitoLeido[],
+  guia: ReturnType<typeof leerGuia>,
+  abiertas: ReadonlySet<string>,
+  framework: boolean,
+): PasoCamino[] {
+  const actual = guia?.hito ?? null
+  const detalle = [guia?.nombreHito, guia?.estadoHito].filter(Boolean).join(' — ') || null
+  const hitos = [...leidos]
+  // Sin la tabla (o sin el hito actual en ella), el hito actual igual está en el camino.
+  if (actual !== null && !hitos.some((h) => h.numero === actual))
+    hitos.push({
       numero: actual,
       nombre: guia?.nombreHito ?? `Hito ${actual}`,
       estadoTexto: 'en curso',
       estado: 'en-curso',
       documento: null,
     })
-  const hitos: HitoMapa[] = leidos.map((h) => {
+  return hitos.map((h) => {
     const documento = documentoDe(d, h.documento)
     return {
-      numero: h.numero,
-      nombre: h.nombre,
-      estado: h.estado,
-      estadoTexto: h.estadoTexto,
-      documento,
-      pasos: pasosDe(d, documento, h.numero === actual ? detalleActual : null, framework),
+      texto: h.nombre,
+      marca: MARCA_HITO[h.estado] ?? 'viene',
+      espera: null,
+      destino: documento ? { documento, ancla: '' } : null,
+      ramas: h.numero === actual ? pasosDelHito(d, documento, detalle, abiertas, framework) : [],
     }
   })
-  const frentes = frentesDe(d, estado, preguntas, framework)
-  const deFrente = new Set(frentes.flatMap((f) => f.preguntas.map((q) => q.codigo)))
+}
+
+function pasosDelHito(
+  d: DocumentosProyecto,
+  documento: string | null,
+  detalle: string | null,
+  abiertas: ReadonlySet<string>,
+  framework: boolean,
+): PasoCamino[] {
+  const texto = documento ? d.texto(documento) : null
+  if (!documento || !texto) return []
+  const iteraciones = leerIteraciones(texto, detalle, framework)
+  const leidos: PasoLeido[] = iteraciones.length > 0 ? iteraciones : leerPorton(texto)
+  const porton = d.anclaDeTitulo(documento, 'Portón')
+  return leidos.map((p) => {
+    const nace = p.codigo ? d.dondeNace(p.codigo, documento) : null
+    const ancla = nace?.ancla ?? (p.codigo ? null : porton)
+    const objetivo = p.codigo ? p.texto.slice(p.codigo.length).replace(/^\s*—\s*/, '') : p.texto
+    return {
+      texto: textoSinCodigos(objetivo) || objetivo,
+      marca: MARCA_PASO[p.estado] ?? 'viene',
+      espera: esperaDe(`${p.texto} ${p.estadoTexto}`, abiertas),
+      destino: nace ? { documento: nace.ruta, ancla: nace.ancla } : ancla ? { documento, ancla } : null,
+      ramas: [],
+    }
+  })
+}
+
+/** El estado de un frente en palabras (MA-1): el de su fila de la tabla o, si la tabla no lo nombra, el de sus pasos. */
+function estadoDe(fila: FrenteLeido | null, pasos: PasoCamino[]): Pick<FrenteMapa, 'estado' | 'estadoTexto'> {
+  if (!fila) {
+    const hechos = pasos.length > 0 && pasos.every((p) => p.marca !== 'viene')
+    return { estado: hechos ? 'en uso' : 'en curso', estadoTexto: '' }
+  }
+  const e = fila.estado
   return {
-    tipo: 'mapa',
-    hitos,
-    actual,
-    detalleActual,
-    proximoHtml: d.html(proximoPaso(estado), ESTADO),
-    preguntas: preguntas.filter((q) => !deFrente.has(q.codigo)),
-    frentes,
+    estado:
+      e === 'en curso'
+        ? 'en curso'
+        : e === 'hecho'
+          ? 'en uso'
+          : e === 'en pausa'
+            ? 'en pausa'
+            : e === 'pendiente' || e === 'nueva'
+              ? 'sin empezar'
+              : 'otro',
+    estadoTexto: fila.estadoTexto,
   }
 }
 
-const igual = (a: string, b: string) => a.localeCompare(b, 'es', { sensitivity: 'base' }) === 0
-
 /**
- * Los frentes (A-5): las filas de la tabla «Módulos», cada una con su carpeta si la cita o si un módulo se llama igual,
- * y después los módulos con carpeta que la tabla no nombra, con el estado que dicen sus pasos. Cada pregunta va al
- * frente de su línea `Frente:` (OR-3) o, sin ella, al de su `estado.md` (D-063); las que no son de ninguno quedan en el
- * núcleo.
+ * Los frentes con carpeta: las filas de la tabla «Módulos» que la tienen (la cita la fila o un módulo se llama igual)
+ * y después los módulos que la tabla no nombra; el activo (el primero en curso) va primero. Las filas sin carpeta
+ * que esperan van a «Por empezar».
  */
 function frentesDe(
   d: DocumentosProyecto,
   estado: string,
-  preguntas: PreguntaNueva[],
+  abiertas: ReadonlySet<string>,
   framework: boolean,
-): FrenteMapa[] {
+): { frentes: FrenteMapa[]; porEmpezar: Extract<MapaProyecto, { tipo: 'mapa' }>['porEmpezar'] } {
   const modulos = d
     .rutas()
     .filter((r) => frenteDeEstado(r) !== null)
     .sort()
     .map((r) => {
       const carpeta = frenteDeEstado(r) ?? r
-      return { ruta: r, carpeta, nombre: nombreDeModulo(d.texto(r) ?? '', carpeta) }
+      const texto = d.texto(r) ?? ''
+      return { ruta: r, carpeta, texto, nombre: nombreDeModulo(texto, carpeta) }
     })
   const usados = new Set<string>()
   const filas = leerFrentes(estado, framework).map((f) => {
@@ -129,98 +194,85 @@ function frentesDe(
     if (m) usados.add(m.carpeta)
     return { fila: f, modulo: m ?? null }
   })
-  const sueltos = modulos.filter((m) => !usados.has(m.carpeta)).map((m) => ({ fila: null, modulo: m }))
-  const trabajo = leerTrabajo(d.texto(TRABAJO) ?? '').items.filter((i) => i.estado === 'en curso')
-  const deCarpeta = new Map(d.preguntasLeidas().map((x) => [x.pregunta.codigo, frenteDeEstado(x.documento)]))
-  const todos = [...filas, ...sueltos]
-  const es = (nombre: string, t: (typeof todos)[number]) =>
-    igual(nombre, t.fila?.nombre ?? t.modulo?.nombre ?? '') ||
-    (t.modulo !== null && (igual(nombre, t.modulo.nombre) || igual(nombre, t.modulo.carpeta)))
-  const deQuien = (q: PreguntaNueva) =>
-    q.frente !== null
-      ? todos.find((t) => es(q.frente ?? '', t))
-      : todos.find((t) => t.modulo !== null && t.modulo.carpeta === deCarpeta.get(q.codigo))
-  return todos.map((t) => {
-    const propias = preguntas.filter((q) => deQuien(q) === t)
-    const enCurso = trabajo
-      .filter((i) => i.frente !== null && es(i.frente, t))
-      .map((i) => ({ codigo: i.codigo, titulo: i.titulo }))
-    const base = t.modulo
-      ? frenteDe(d, t.modulo.ruta, framework)
-      : {
-          clave: t.fila?.nombre ?? '',
-          carpeta: null,
-          nombre: t.fila?.nombre ?? '',
-          documento: null,
-          paso: null,
-          pasos: [],
-          iteraciones: [],
-          enQueHtml: '',
-          proximoHtml: '',
-        }
-    const f = t.fila
+  const conCarpeta = [
+    ...filas.flatMap((x) => (x.modulo ? [{ fila: x.fila as FrenteLeido | null, modulo: x.modulo }] : [])),
+    ...modulos.filter((m) => !usados.has(m.carpeta)).map((m) => ({ fila: null, modulo: m })),
+  ]
+  const esperan = filas
+    .filter((x) => !x.modulo && (x.fila.estado === 'pendiente' || x.fila.estado === 'nueva'))
+    .map((x) => ({ nombre: x.fila.nombre, trabajo: x.fila.trabajo }))
+  const rutas = conCarpeta.map((x) => leerRuta(x.modulo.texto))
+  const listas = listasDelMapa(
+    conCarpeta.map((x, i) => ({
+      nombres: [x.modulo.nombre, x.modulo.carpeta, ...(x.fila ? [x.fila.nombre] : [])],
+      ruta: rutas[i] ?? null,
+      origen: [...(x.fila?.trabajo ?? []), ...origenDe(x.modulo.texto)],
+    })),
+    esperan,
+    leerTrabajo(d.texto(TRABAJO) ?? '').items,
+  )
+  const frentes: FrenteMapa[] = conCarpeta.map((x, i) => {
+    const ruta = rutas[i] ?? null
+    const pasos = ruta
+      ? ruta.pasos.map((p) => pasoDeRuta(d, p, x.modulo.ruta, abiertas))
+      : pasosDelMetodo(d, x.modulo.texto, x.modulo.carpeta, framework)
     return {
-      ...base,
-      nombre: f?.nombre ?? base.nombre,
-      paso: base.paso ?? f?.paso ?? null,
-      estado: f ? f.estado : estadoDePasos(base.pasos),
-      estadoTexto: f?.estadoTexto ?? '',
-      trabajo: enCurso,
-      preguntas: propias,
+      clave: x.modulo.carpeta,
+      nombre: x.fila?.nombre ?? x.modulo.nombre,
+      ...estadoDe(x.fila, pasos),
+      documento: x.modulo.ruta,
+      sinRuta: ruta === null,
+      pasos,
+      sinLugar: listas.sinLugar[i] ?? [],
     }
   })
+  const activo = frentes.findIndex((f) => f.estado === 'en curso')
+  if (activo > 0) frentes.unshift(...frentes.splice(activo, 1))
+  return { frentes, porEmpezar: listas.porEmpezar }
 }
 
-/** El estado de un módulo que la tabla no nombra, por sus pasos: todos hechos, alguno en curso o sin empezar. */
-function estadoDePasos(pasos: PasoMapa[]): FrenteMapa['estado'] {
-  if (pasos.length === 0) return null
-  if (pasos.every((p) => p.estado === 'hecho' || p.estado === 'saltado')) return 'hecho'
-  if (pasos.some((p) => p.estado !== 'pendiente')) return 'en curso'
-  return 'pendiente'
+/** El trabajo que originó un frente: los `T-n` de la línea `**Tipo:**` de su `estado.md` (D-145). */
+function origenDe(texto: string): string[] {
+  const tipo = texto.split(/\r?\n/).find((l) => /^\*\*Tipo:\*\*/.test(l.trim()))
+  return tipo?.match(/\bT-\d+\b/g) ?? []
 }
 
-/** Un módulo con carpeta: los pasos de su tabla Progreso (cada uno a su documento), sus iteraciones y en qué está. */
-function frenteDe(
+function pasoDeRuta(
   d: DocumentosProyecto,
+  p: PasoRuta,
   documento: string,
+  abiertas: ReadonlySet<string>,
+): PasoCamino {
+  // Los códigos de iteración de un frente (`MA-I1`) no están en el índice: su sección es el título que empieza con él.
+  const nace = p.iteracion ? d.dondeNace(p.iteracion, documento) : null
+  const ancla = p.iteracion && !nace ? d.anclaDeCodigo(documento, p.iteracion) : null
+  return {
+    texto: p.texto,
+    marca: p.marca,
+    espera: p.preguntas.find((q) => abiertas.has(q)) ?? null,
+    destino: nace ? { documento: nace.ruta, ancla: nace.ancla } : ancla ? { documento, ancla } : null,
+    ramas: p.ramas.map((r) => pasoDeRuta(d, r, documento, abiertas)),
+  }
+}
+
+/** Un frente sin ruta (MA-9): los pasos del método de su tabla «Progreso», cada uno a su documento. */
+function pasosDelMetodo(
+  d: DocumentosProyecto,
+  texto: string,
+  carpeta: string,
   framework: boolean,
-): Omit<FrenteMapa, 'estado' | 'estadoTexto' | 'trabajo' | 'preguntas'> {
-  const carpeta = frenteDeEstado(documento) ?? documento
-  const texto = d.texto(documento) ?? ''
+): PasoCamino[] {
   const base = `docs/modulos/${carpeta}`
-  const pasos: PasoMapa[] = leerPasosDeModulo(texto, framework).map((p) => {
+  return leerPasosDeModulo(texto, framework).map((p) => {
     const propio = p.documento
       ? [`${base}/${p.documento}`, `docs/${p.documento}`].find((x) => d.existe(x))
       : null
     return {
-      texto: p.texto,
-      estado: p.estado,
-      estadoTexto: p.estadoTexto,
+      texto: textoPlano(p.texto),
+      marca: MARCA_PASO[p.estado] ?? 'viene',
+      espera: null,
       destino: propio ? { documento: propio, ancla: '' } : null,
+      ramas: [],
     }
   })
-  const iteraciones: PasoMapa[] = leerIteraciones(texto, null, framework).map((p) => {
-    const nace = p.codigo ? d.dondeNace(p.codigo, documento) : null
-    return {
-      texto: p.texto,
-      estado: p.estado,
-      estadoTexto: p.estadoTexto,
-      destino: nace ? { documento: nace.ruta, ancla: nace.ancla } : null,
-    }
-  })
-  // El que está en curso; si ninguno lo dice, el primero sin hacer (A-5).
-  const actual =
-    pasos.find((p) => p.estado === 'en-curso') ??
-    pasos.find((p) => p.estado !== 'hecho' && p.estado !== 'saltado')
-  return {
-    clave: carpeta,
-    carpeta,
-    nombre: nombreDeModulo(texto, carpeta),
-    documento,
-    paso: actual?.texto ?? null,
-    pasos,
-    iteraciones,
-    enQueHtml: d.html(seccionDeTitulo(texto, 'En qué estamos ahora').join('\n').trim(), documento),
-    proximoHtml: d.html(proximoPaso(texto), documento),
-  }
 }

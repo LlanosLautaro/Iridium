@@ -234,6 +234,15 @@ export class DocumentosProyecto {
     return this.indiceActual.encabezados.get(ruta)?.find((e) => e.texto.toLowerCase() === t)?.ancla ?? null
   }
 
+  /** El ancla del título que empieza con un código que el índice no lleva (`### MA-I1 — La ruta`), o null. */
+  anclaDeCodigo(ruta: string, codigo: string): string | null {
+    const empieza = (texto: string) => texto === codigo || /^[\s—–:-]/.test(texto.slice(codigo.length))
+    return (
+      this.indiceActual.encabezados.get(ruta)?.find((e) => e.texto.startsWith(codigo) && empieza(e.texto))
+        ?.ancla ?? null
+    )
+  }
+
   /** Un tramo de Markdown (el Próximo paso, un mensaje de la IA) con los códigos y las citas como enlaces. */
   html(texto: string, documento: string): string {
     return texto.trim() === '' ? '' : renderizar(texto, this.entorno(documento, false))

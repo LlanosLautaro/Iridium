@@ -511,71 +511,62 @@ export type EstadoPaso =
   | 'en-pausa'
   | 'otro'
 
-export interface PasoMapa {
-  texto: string
-  estado: EstadoPaso
-  /** Como está escrito en el documento (vacío en el portón). */
-  estadoTexto: string
-  /** Su sección; null si no se encuentra. */
-  destino: Destino | null
-}
-
-export interface HitoMapa {
-  numero: number
-  nombre: string
-  estado: EstadoHito
-  estadoTexto: string
-  /** Su documento si existe (`docs/04-ux.md`); null si no. */
-  documento: string | null
-  pasos: PasoMapa[]
-}
-
 /**
- * Un frente del proyecto (D-063, frente Orden › A-5): una fila de la tabla «Módulos» de `estado.md` o un módulo con su
- * carpeta, con su estado del vocabulario, su paso, su Próximo paso, su trabajo en curso y lo que espera del usuario.
+ * Un paso del camino del Mapa (D-144, D-145): un paso de la ruta de un frente, un paso del método (un frente sin ruta)
+ * o un hito con los pasos del actual. El que sigue no viene marcado: es el primero que `viene` del camino principal.
  */
+export interface PasoCamino {
+  /** Sin los códigos (D-145). */
+  texto: string
+  /** `otro`: una línea que Iridium no entiende, que se muestra tal cual, en gris. */
+  marca: 'hecho' | 'viene' | 'descartado' | 'otro'
+  /** La primera pregunta sin responder que nombra (`Q-202`): el paso lleva «Te espera»; null si ninguna. */
+  espera: string | null
+  /** Su sección (la de su iteración, su documento); null si no tiene. */
+  destino: Destino | null
+  ramas: PasoCamino[]
+}
+
+/** Un ítem de `trabajo.md` en las listas del Mapa. */
+export interface TrabajoMapa {
+  codigo: string
+  titulo: string
+}
+
+/** Un frente con carpeta (`docs/modulos/<carpeta>/`), con su camino (MA-1 a MA-4, MA-8, MA-9). */
 export interface FrenteMapa {
-  /** Lo identifica: la carpeta del módulo (`revision`) o, si no tiene, su nombre. */
+  /** Su carpeta. */
   clave: string
-  /** La carpeta del módulo; null si el frente está solo en la tabla (todavía sin `docs/modulos/<nombre>/`). */
-  carpeta: string | null
   nombre: string
-  /** Su `estado.md`; null si no tiene carpeta. */
-  documento: string | null
-  /** Del vocabulario (`en curso` es el activo); null si no se entiende. */
-  estado: 'pendiente' | 'en curso' | 'en pausa' | 'hecho' | 'descartado' | 'nueva' | null
+  /** En palabras (MA-1); `otro`: la palabra de la tabla no es del vocabulario y se muestra tal cual. */
+  estado: 'en curso' | 'en uso' | 'en pausa' | 'sin empezar' | 'otro'
+  /** La palabra de la tabla «Módulos», tal cual. */
   estadoTexto: string
-  /** El paso en que está: el `en curso` y, si ninguno lo está, el primero sin hacer (A-5); null si los hizo todos. */
-  paso: string | null
-  pasos: PasoMapa[]
-  /** Su plan de iteraciones (`R-I1`…), si tiene. */
-  iteraciones: PasoMapa[]
-  /** «En qué estamos ahora» y el Próximo paso, en HTML seguro. */
-  enQueHtml: string
-  proximoHtml: string
-  /** Sus `T-n` `en curso` de `trabajo.md`. */
-  trabajo: { codigo: string; titulo: string }[]
-  /** Sus `Q-n` sin responder. */
-  preguntas: PreguntaNueva[]
+  /** Su `estado.md`. */
+  documento: string
+  /** Sin `## Ruta`: el camino son los pasos del método (MA-9). */
+  sinRuta: boolean
+  pasos: PasoCamino[]
+  /** Su trabajo aprobado que la ruta todavía no nombra (MA-8). */
+  sinLugar: TrabajoMapa[]
 }
 
 export type MapaProyecto =
   | {
       tipo: 'mapa'
-      hitos: HitoMapa[]
-      /** El número del hito actual; null si `estado.md` no lo dice. */
-      actual: number | null
-      /** La línea de «Hito actual» tal cual (lo que sigue al nombre del hito). */
-      detalleActual: string | null
-      /** El Próximo paso en HTML seguro, con los códigos y las citas como enlaces. */
-      proximoHtml: string
-      /** Lo que espera del usuario y no es de ningún frente: las `Q-n` sin responder del núcleo. */
-      preguntas: PreguntaNueva[]
-      /**
-       * Los frentes (D-063, A-5): los de la tabla «Módulos» de `estado.md`, en su orden, y después los módulos con
-       * carpeta que la tabla no nombra. El activo es el primero `en curso`.
-       */
+      /** El hito actual, para la cabecera («Hito 10 · Operación»); null si `estado.md` no lo dice. */
+      hito: { numero: number; nombre: string } | null
+      /** El documento del hito actual (`docs/10-operacion.md`), si existe. */
+      documento: string | null
+      /** Antes del hito 10 o sin frentes (D-142): los hitos como camino, con los pasos del actual como ramas. */
+      hitos: PasoCamino[] | null
+      /** Los frentes con carpeta: el activo primero, después en el orden de la tabla «Módulos». */
       frentes: FrenteMapa[]
+      /** Lo aprobado que todavía no empezó (MA-6, D-143). */
+      porEmpezar: {
+        frentes: { nombre: string; pasos: TrabajoMapa[] }[]
+        sinFrente: (TrabajoMapa & { enCurso: boolean })[]
+      }
     }
   /** Sin `docs/estado.md` (W-7: «no sigue la guía todavía»): sus documentos, si tiene. */
   | { tipo: 'sin-guia'; documentos: string[] }

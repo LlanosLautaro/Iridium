@@ -1,6 +1,6 @@
 # Estado del módulo: Diseño
 
-**Tipo:** sección (un «Claude Design» local dentro de Iridium; D-102)
+**Tipo:** sección (un «Claude Design» local dentro de Iridium; T-5, D-102)
 **Última actualización:** 2026-11-16
 **Nivel de protección:** hereda P2.
 

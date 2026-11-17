@@ -1,5 +1,5 @@
-// OR-I4: el Mapa con frentes (W-7, A-5). Los frentes salen de la tabla «Módulos» de `estado.md` (con o sin carpeta
-// propia) y de los módulos con carpeta que la tabla no nombra; el activo lleva su trabajo en curso y sus preguntas.
+// OR-I4: el Mapa con frentes (W-7, A-5), al día con MA-I2 (D-145). Los frentes salen de la tabla «Módulos» de
+// `estado.md` y de los módulos con carpeta que la tabla no nombra; los que esperan sin carpeta van a «Por empezar».
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -7,7 +7,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { controlarProyecto } from '../src/main/app/control'
 import { Documentos } from '../src/main/app/documentos'
 import { mapaDe } from '../src/main/app/mapa'
-import { leerPreguntasAbiertas } from '../src/main/app/proyectos'
 import { leerFrentes } from '../src/main/core/mapa'
 
 let raiz: string
@@ -90,10 +89,39 @@ afterEach(async () => {
 describe('La tabla de frentes (A-5)', () => {
   it('cada fila con su nombre corto, su carpeta si la cita, su paso y su estado', () => {
     expect(leerFrentes(ESTADO(TABLA), true)).toEqual([
-      { nombre: 'Pagos', carpeta: 'pagos', paso: '4. UX', estado: 'en curso', estadoTexto: 'en curso' },
-      { nombre: 'Diseño', carpeta: null, paso: null, estado: 'pendiente', estadoTexto: 'pendiente' },
-      { nombre: 'Skills', carpeta: null, paso: 'en operación', estado: 'hecho', estadoTexto: 'hecho' },
-      { nombre: 'Avisos', carpeta: null, paso: '2. Definición', estado: 'en pausa', estadoTexto: 'en pausa' },
+      {
+        nombre: 'Pagos',
+        carpeta: 'pagos',
+        paso: '4. UX',
+        estado: 'en curso',
+        estadoTexto: 'en curso',
+        trabajo: [],
+      },
+      // El trabajo que nombra la fila es el frente mismo (D-145).
+      {
+        nombre: 'Diseño',
+        carpeta: null,
+        paso: null,
+        estado: 'pendiente',
+        estadoTexto: 'pendiente',
+        trabajo: ['T-5'],
+      },
+      {
+        nombre: 'Skills',
+        carpeta: null,
+        paso: 'en operación',
+        estado: 'hecho',
+        estadoTexto: 'hecho',
+        trabajo: [],
+      },
+      {
+        nombre: 'Avisos',
+        carpeta: null,
+        paso: '2. Definición',
+        estado: 'en pausa',
+        estadoTexto: 'en pausa',
+        trabajo: [],
+      },
     ])
   })
 
@@ -115,59 +143,63 @@ describe('La tabla de frentes (A-5)', () => {
   })
 })
 
-describe('Los frentes del Mapa (W-7)', () => {
-  it('las filas en su orden, cada una con su carpeta si tiene; el activo con su trabajo en curso y sus preguntas', async () => {
-    await escribir(
-      'docs/estado.md',
-      ESTADO(
-        TABLA,
-        `- **Q-1 — Del núcleo**
-  Tipo: consulta
-- **Q-2 — ¿Cobro así?**
-  Tipo: decisión · frena · Frente: Pagos
-  Opciones: A) Sí · B) No
-- **Q-3 — Del diseño**
-  Tipo: consulta · Frente: Diseño`,
-      ),
-    )
+describe('Los frentes del Mapa (W-7, D-145)', () => {
+  it('los que tienen carpeta, el activo primero; los que esperan sin carpeta y lo de nadie, en «Por empezar»', async () => {
+    await escribir('docs/estado.md', ESTADO(TABLA))
     await escribir('docs/README.md', '# Docs\n\n**Framework:** 2026-11-06\n')
-    await escribir('docs/trabajo.md', TRABAJO)
-    await escribir('docs/modulos/pagos/estado.md', PAGOS)
+    await escribir(
+      'docs/trabajo.md',
+      `${TRABAJO}
+## T-5 — El diseño entero
+Estado: pendiente · Fecha: 2026-11-06
+
+## T-6 — Paleta nueva
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-06
+
+## T-7 — Una idea sin evaluar
+Estado: nueva · Fecha: 2026-11-06
+
+## T-8 — Ya hecho
+Estado: hecho · Fecha: 2026-11-06
+
+## T-9 — De un frente que no existe
+Estado: pendiente · Frente: Nadie · Fecha: 2026-11-06
+`,
+    )
     await escribir('docs/modulos/skills/estado.md', SKILLS)
-    const m = mapaDe(await new Documentos().de(raiz), await leerPreguntasAbiertas(raiz))
+    await escribir('docs/modulos/pagos/estado.md', PAGOS)
+    const m = mapaDe(await new Documentos().de(raiz), [])
     if (m.tipo !== 'mapa') throw new Error('sin mapa')
-    expect(m.frentes.map((f) => [f.nombre, f.estado, f.documento])).toEqual([
-      ['Pagos', 'en curso', 'docs/modulos/pagos/estado.md'],
-      ['Diseño', 'pendiente', null],
+    // En operación, con frentes: no hay hitos (D-142).
+    expect(m.hitos).toBeNull()
+    expect(m.hito).toEqual({ numero: 10, nombre: 'Operación' })
+    expect(m.frentes.map((f) => [f.clave, f.nombre, f.estado, f.documento])).toEqual([
+      ['pagos', 'Pagos', 'en curso', 'docs/modulos/pagos/estado.md'],
       // Skills no cita su carpeta en la tabla, pero un módulo se llama igual.
-      ['Skills', 'hecho', 'docs/modulos/skills/estado.md'],
-      ['Avisos', 'en pausa', null],
+      ['skills', 'Skills', 'en uso', 'docs/modulos/skills/estado.md'],
     ])
-    const pagos = m.frentes[0]
-    expect(pagos?.paso).toBe('4. UX')
-    expect(pagos?.proximoHtml).toContain('Dibujar la pantalla de cobro')
-    // El trabajo en curso de su frente (el nombre sin importar mayúsculas), no el pendiente ni el del núcleo.
-    expect(pagos?.trabajo).toEqual([
-      { codigo: 'T-1', titulo: 'Cobro con tarjeta' },
-      { codigo: 'T-4', titulo: 'Otra cosa de pagos' },
+    // Sin ruta, todo su trabajo abierto (el nombre sin importar mayúsculas) está sin lugar.
+    expect(m.frentes[0]?.sinLugar.map((t) => t.codigo)).toEqual(['T-1', 'T-2', 'T-4'])
+    // Diseño espera sin carpeta: T-5 es el frente mismo; T-6, su paso. Avisos (en pausa, sin carpeta) no espera.
+    expect(m.porEmpezar.frentes).toEqual([
+      { nombre: 'Diseño', pasos: [{ codigo: 'T-6', titulo: 'Paleta nueva' }] },
     ])
-    expect(pagos?.preguntas.map((q) => q.codigo)).toEqual(['Q-2'])
-    // Un frente sin carpeta también recibe sus preguntas; lo que no es de ninguno queda en el núcleo.
-    expect(m.frentes[1]?.preguntas.map((q) => q.codigo)).toEqual(['Q-3'])
-    expect(m.preguntas.map((q) => q.codigo)).toEqual(['Q-1'])
-    // Sin carpeta, el paso es el de la tabla.
-    expect(m.frentes[3]?.paso).toBe('2. Definición')
+    // Sin frente: lo abierto de nadie (o de un frente que no está), lo en curso primero; ni lo nuevo ni lo hecho.
+    expect(m.porEmpezar.sinFrente).toEqual([
+      { codigo: 'T-3', titulo: 'Del núcleo', enCurso: true },
+      { codigo: 'T-9', titulo: 'De un frente que no existe', enCurso: false },
+    ])
   })
 
   it('un módulo con carpeta que la tabla no nombra va al final, con el estado de sus pasos', async () => {
     await escribir('docs/estado.md', ESTADO('(ninguno)'))
-    await escribir('docs/modulos/pagos/estado.md', PAGOS)
     await escribir('docs/modulos/skills/estado.md', SKILLS)
+    await escribir('docs/modulos/pagos/estado.md', PAGOS)
     const m = mapaDe(await new Documentos().de(raiz), [])
     if (m.tipo !== 'mapa') throw new Error('sin mapa')
-    expect(m.frentes.map((f) => [f.carpeta, f.estado, f.paso])).toEqual([
-      ['pagos', 'en curso', '4. UX'],
-      ['skills', 'hecho', null],
+    expect(m.frentes.map((f) => [f.clave, f.estado])).toEqual([
+      ['pagos', 'en curso'],
+      ['skills', 'en uso'],
     ])
   })
 })

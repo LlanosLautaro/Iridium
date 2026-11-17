@@ -99,7 +99,7 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
 })
 
-test('el Mapa: manda el frente activo con su paso, su Próximo paso y sus preguntas; un hito muestra su detalle (W-7)', async () => {
+test('el Mapa antes del hito 10 con un frente abierto: «Hitos» primero y el frente después (MA-5, MA-9)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
@@ -107,30 +107,40 @@ test('el Mapa: manda el frente activo con su paso, su Próximo paso y sus pregun
     .getByRole('button', { name: 'Mapa' })
     .click()
   const mapa = win.locator('[data-seccion="mapa"]')
-  // Skills no está en ninguna tabla, pero tiene un paso en curso: es el frente activo.
-  const bloque = mapa.getByRole('region', { name: 'Frentes' })
-  await expect(bloque.locator('.frente-activo h3')).toHaveText('Skills')
-  await expect(bloque.locator('.paso-frente')).toHaveText('2. Definición')
-  await expect(bloque.locator('.proximo-paso')).toContainText('Cerrar la definición con Q-4.')
-  await expect(bloque.locator('.pregunta-mapa')).toHaveText([/Q-4.*Frena/])
-  // La pregunta del núcleo no se pierde: «Sin frente».
-  await expect(bloque.locator('.lineas-frentes')).toContainText('Sin frenteQ-3 en tu bandeja')
-  await expect(mapa.locator('.hito-mapa')).toHaveCount(0)
+  const barra = mapa.getByRole('tablist', { name: 'Frentes' })
+  // Skills no está en ninguna tabla, pero tiene su carpeta: es un frente.
+  await expect(barra.getByRole('tab')).toHaveText(['Hitos', 'Skills'])
+  await expect(barra.getByRole('tab', { name: 'Hitos' })).toHaveAttribute('aria-selected', 'true')
+  await expect(mapa.locator('.camino .tramo.foco')).toHaveText('Construcción')
+  await expect(mapa.locator('.camino .tramo.rama')).toHaveText(['Frentes'])
+
+  // El frente, sin ruta: los pasos del método con la línea gris (MA-9).
+  await barra.getByRole('tab', { name: 'Skills' }).click()
+  const frente = mapa.getByRole('region', { name: 'Skills' })
+  await expect(frente.locator('.estado-frente')).toHaveText('En curso')
+  await expect(frente).toContainText(
+    'Todavía sin ruta: la IA la escribe la próxima vez que trabaje en este frente.',
+  )
+  await expect(frente.locator('.camino .nombre-tramo')).toHaveText(['1. Propuesta', '2. Definición', '3. UX'])
+  await expect(frente.locator('.camino .tramo.foco')).toHaveText('2. Definición')
   await win.screenshot({ path: 'test-results/i8-mapa-frente.png' })
 
-  // Un hito muestra su detalle en lugar del bloque; Volver lo saca.
-  await mapa.locator('.hitos .pestana', { hasText: '7' }).click()
-  const tarjeta = mapa.locator('.hito-mapa')
-  await expect(tarjeta.locator('h3')).toHaveText('Construcción')
-  await expect(tarjeta.locator('.pregunta-mapa')).toHaveText([/Q-3/])
-  await expect(bloque).toHaveCount(0)
-  await tarjeta.getByRole('button', { name: 'Volver' }).click()
-  await expect(bloque).toBeVisible()
+  // Con el foco en la barra, las flechas pasan de una pestaña a otra.
+  await barra.getByRole('tab', { name: 'Skills' }).press('ArrowLeft')
+  await expect(barra.getByRole('tab', { name: 'Hitos' })).toHaveAttribute('aria-selected', 'true')
+  await expect(barra.getByRole('tab', { name: 'Hitos' })).toBeFocused()
+  await barra.getByRole('tab', { name: 'Hitos' }).press('ArrowRight')
 
-  // Abrir estado.md lleva a su estado en Docs.
-  await bloque.getByRole('button', { name: 'Abrir estado.md' }).click()
-  await expect(win.locator('[data-seccion="docs"] .barra-doc .nom')).toHaveText('modulos/skills/estado.md')
-  await expect(win.locator('[data-seccion="docs"]')).toContainText('Definiendo qué se ve de cada skill.')
+  // El nombre del frente lleva a su estado.md en Docs; un paso, a su documento.
+  await frente.getByRole('button', { name: 'Skills' }).click()
+  const docs = win.locator('[data-seccion="docs"]')
+  await expect(docs.locator('.barra-doc .nom')).toHaveText('modulos/skills/estado.md')
+  await expect(docs).toContainText('Definiendo qué se ve de cada skill.')
+  await docs.getByRole('button', { name: 'Atrás' }).click()
+  // Al volver, el Mapa sigue en la pestaña que se dejó (D-145).
+  await expect(barra.getByRole('tab', { name: 'Skills' })).toHaveAttribute('aria-selected', 'true')
+  await frente.getByRole('button', { name: '1. Propuesta' }).click()
+  await expect(docs.locator('.barra-doc .nom')).toHaveText('modulos/skills/propuesta.md')
   await app.close()
 })
 

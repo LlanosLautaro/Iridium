@@ -1,6 +1,5 @@
-// OR-I4 con la app abierta y el motor falso: el Mapa de un proyecto en operación con frentes (W-7, A-5). Manda el
-// frente activo (su paso, su Próximo paso, su trabajo en curso y sus preguntas); debajo, los que esperan y los que
-// están en operación, cada uno a su `estado.md`; un T-n lleva a Trabajo.
+// OR-I4 con la app abierta y el motor falso: Docs con una tabla ancha (A-10), abierta desde el Mapa de un proyecto en
+// operación. El Mapa en operación se prueba en ma2-mapa.spec.ts (MA-I2).
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -129,53 +128,6 @@ test.beforeEach(async () => {
 test.afterEach(async () => {
   await rm(raiz, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
-})
-
-test('el Mapa en operación: el frente activo, los que esperan y los que están en operación (W-7)', async () => {
-  const { app, win } = await abrir()
-  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  await win
-    .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
-    .click()
-  const mapa = win.locator('[data-seccion="mapa"]')
-  await expect(mapa.locator('.hitos .total-hitos')).toHaveText('2 de 3 hechos')
-  await expect(mapa.getByRole('button', { name: 'Abrir 10-operacion.md' })).toBeVisible()
-
-  const bloque = mapa.getByRole('region', { name: 'Frentes' })
-  await expect(bloque.locator('.frente-activo h3')).toHaveText('Orden')
-  await expect(bloque.locator('.paso-frente')).toHaveText('4. UX')
-  await expect(bloque.locator('.proximo-paso')).toContainText('reescribir 04-ux.md sin capas')
-  await expect(bloque.locator('button.fila', { hasText: 'T-12' })).toContainText(
-    'Bandeja agrupada por frente',
-  )
-  await expect(bloque.locator('.pregunta-mapa')).toHaveText([/Q-139.*¿Las pantallas van así\?.*Frena/])
-  const otros = bloque.locator('.lineas-frentes')
-  await expect(otros.locator('dt')).toHaveText(['En espera', 'En operación'])
-  await expect(otros).toContainText('En esperaDiseñoCapacidades')
-  await expect(otros).toContainText('En operaciónRevisión')
-  await win.screenshot({ path: 'test-results/or4-mapa.png' })
-
-  // Un frente en operación abre su estado.md; Atrás vuelve.
-  await otros.getByRole('button', { name: 'Revisión' }).click()
-  const docs = win.locator('[data-seccion="docs"]')
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('modulos/revision/estado.md')
-  await docs.getByRole('button', { name: 'Atrás' }).click()
-
-  // Un T-n en curso abre trabajo.md en Docs, en ese ítem (sin la sección Trabajo, D-112); Atrás vuelve al Mapa.
-  await bloque.locator('button.fila', { hasText: 'T-12' }).click()
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('trabajo.md')
-  await expect(docs.locator('[id="t-12"]')).toBeInViewport()
-  await docs.getByRole('button', { name: 'Atrás' }).click()
-
-  // Una pregunta lleva a la Bandeja de entrada.
-  await win
-    .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
-    .click()
-  await bloque.locator('.pregunta-mapa').click()
-  await expect(win.locator('[data-seccion="pendientes"]')).toBeVisible()
-  await app.close()
 })
 
 test('Docs: una tabla usa el ancho de la sección y se desplaza dentro de su recuadro (A-10)', async () => {

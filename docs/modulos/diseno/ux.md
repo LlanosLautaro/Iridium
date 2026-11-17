@@ -38,6 +38,7 @@ El juego del rediseño, con lo que reemplaza de hoy. La regla general: **se sepa
 | PZ-12 — Texto de documento | lectura (Docs, Bandeja) y conversación; tablas con línea solo entre filas, citas, código | `.md` (conversación) y `.doc-texto` (Docs, Bandeja, panel de documento) | Docs, Bandeja, conversación, Mapa |
 | PZ-13 — Fila que se abre | cerrada (una Fila), abierta (su contenido y sus botones debajo, con el fondo de selección) | — (nueva, frente Ideas, ID-I1) | Ideas |
 | PZ-14 — Etiqueta de enlace | normal, al pasar | `.nota-enlace` del bloc (nueva como pieza, frente Ideas, ID-I3) | Ideas (la nota de una idea y el bloc) |
+| PZ-15 — Camino | hecho, el que sigue, te espera, en pausa, descartado, lo que viene, sin entender, rama, plegado | — (nueva, frente Mapa, MA-I2; sale de la maqueta `mapa-b.html`) | Mapa |
 
 PZ-11 y PZ-12 no estaban en la tabla de `definicion.md`: aparecieron al mirar las pantallas (el árbol se arma tres veces y el markdown, dos) y se suman ahí.
 

@@ -89,58 +89,51 @@ afterEach(async () => {
 })
 
 describe('Mapa (H-7)', () => {
-  it('la línea de hitos, los pasos con su sección, el próximo paso con enlaces y lo que espera', async () => {
+  it('antes del hito 10, los hitos como camino; el actual con sus iteraciones como ramas; el frente con su camino', async () => {
     const d = await new Documentos().de(carpeta)
     const m = mapaDe(d, await leerPreguntasAbiertas(carpeta))
     if (m.tipo !== 'mapa') throw new Error(m.tipo)
-    expect(m.actual).toBe(7)
-    expect(m.detalleActual).toBe('Construcción — I-2 (conversar), en curso')
-    expect(m.hitos.map((h) => [h.numero, h.estado, h.documento])).toEqual([
-      [4, 'completo', 'docs/04-ux.md'],
-      [6, 'en-curso', null],
-      [7, 'en-curso', 'docs/07-construccion.md'],
+    expect(m.hito).toEqual({ numero: 7, nombre: 'Construcción' })
+    expect(m.documento).toBe('docs/07-construccion.md')
+    expect(m.hitos?.map((h) => [h.texto, h.marca, h.destino?.documento ?? null])).toEqual([
+      ['UX', 'hecho', 'docs/04-ux.md'],
+      ['UI', 'viene', null],
+      ['Construcción', 'viene', 'docs/07-construccion.md'],
     ])
-    // Hito 7: las iteraciones, cada una a su sección; la que nombra «Hito actual» va en curso.
-    expect(m.hitos[2]?.pasos).toEqual([
+    // Hito 7: las iteraciones como ramas, sin el código, cada una a su sección (D-142, MA-5).
+    expect(m.hitos?.[2]?.ramas).toEqual([
       {
-        texto: 'I-1 — Esqueleto',
-        estado: 'hecho',
-        estadoTexto: 'aprobada',
+        texto: 'Esqueleto',
+        marca: 'hecho',
+        espera: null,
         destino: { documento: 'docs/07-construccion.md', ancla: 'i-1' },
+        ramas: [],
       },
       {
-        texto: 'I-2 — Conversar',
-        estado: 'en-curso',
-        estadoTexto: 'pendiente',
+        texto: 'Conversar',
+        marca: 'viene',
+        espera: null,
         destino: { documento: 'docs/07-construccion.md', ancla: 'i-2' },
+        ramas: [],
       },
     ])
-    // Hito 4: su portón, que lleva a la sección Portón.
-    expect(m.hitos[0]?.pasos.map((p) => [p.texto, p.estado, p.destino?.ancla])).toEqual([
-      ['Historias.', 'hecho', 'portón'],
-      ['Flujos.', 'pendiente', 'portón'],
-    ])
-    expect(m.proximoHtml).toContain('data-codigo="D-5"')
-    expect(m.proximoHtml).toContain('data-doc="docs/04-ux.md" data-ancla="h-1"')
-    // El núcleo muestra solo sus preguntas; las del módulo van en su frente (D-063).
-    expect(m.preguntas).toMatchObject([{ codigo: 'Q-3', tipo: 'prueba', frena: true }])
+    // Los otros hitos no despliegan sus pasos.
+    expect(m.hitos?.[0]?.ramas).toEqual([])
+    // El frente, sin ruta: los pasos del método, cada uno a su documento (MA-9).
     expect(m.frentes).toHaveLength(1)
     const f = m.frentes[0]
     expect(f).toMatchObject({
-      carpeta: 'diseno',
+      clave: 'diseno',
       nombre: 'Diseño de la app',
       documento: 'docs/modulos/diseno/estado.md',
-      paso: '2. Definición',
-      preguntas: [{ codigo: 'Q-4', tipo: 'decisión', frena: false }],
+      sinRuta: true,
+      estado: 'en curso',
     })
-    expect(f?.pasos.map((p) => [p.texto, p.estado, p.destino?.documento ?? null])).toEqual([
+    expect(f?.pasos.map((p) => [p.texto, p.marca, p.destino?.documento ?? null])).toEqual([
       ['1. Propuesta', 'hecho', 'docs/modulos/diseno/propuesta.md'],
-      ['2. Definición', 'en-curso', null],
-      ['3. Investigación', 'pendiente', null],
+      ['2. Definición', 'viene', null],
+      ['3. Investigación', 'viene', null],
     ])
-    expect(f?.iteraciones.map((p) => [p.texto, p.estado])).toEqual([['D-I1 — Biblioteca', 'pendiente']])
-    expect(f?.enQueHtml).toContain('Definiendo el alcance.')
-    expect(f?.proximoHtml).toContain('Cerrar la definición.')
   })
 
   it('sin estado.md: «no sigue la guía» con sus documentos', async () => {
@@ -160,13 +153,17 @@ describe('Mapa (H-7)', () => {
     })
   })
 
-  it('sin la tabla de hitos, el hito actual igual tiene su tarjeta', async () => {
+  it('sin la tabla de hitos, el hito actual igual está en el camino', async () => {
     await escribir(
       'docs/estado.md',
       '# Estado\n\n## Hito actual\n3 — Investigación\n\n## Próximo paso\nLeer.\n',
     )
     const m = mapaDe(await new Documentos().de(carpeta), [])
-    expect(m).toMatchObject({ tipo: 'mapa', actual: 3, hitos: [{ numero: 3, nombre: 'Investigación' }] })
+    expect(m).toMatchObject({
+      tipo: 'mapa',
+      hito: { numero: 3, nombre: 'Investigación' },
+      hitos: [{ texto: 'Investigación', marca: 'viene' }],
+    })
   })
 })
 

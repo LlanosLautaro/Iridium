@@ -83,6 +83,8 @@ export interface VistaProyecto {
   enBlanco: boolean
   /** La maqueta que Diseño abre grande al entrar (desde un comentario de la Revisión); null = el lienzo. */
   maqueta: string | null
+  /** La pestaña elegida del Mapa (la clave de un frente, `hitos` o `por-empezar`); null = el frente activo (D-145). */
+  pestanaMapa: string | null
 }
 
 const VISTA_INICIAL: VistaProyecto = {
@@ -98,6 +100,7 @@ const VISTA_INICIAL: VistaProyecto = {
   gitPlegadas: [],
   enBlanco: false,
   maqueta: null,
+  pestanaMapa: null,
 }
 
 /** Hasta dónde se recuerda para volver. */
