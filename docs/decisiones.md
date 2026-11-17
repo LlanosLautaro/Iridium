@@ -2946,3 +2946,16 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** lo que se está tocando queda siempre arriba, que es lo que se pidió; con los estados, un proyecto en uso que se toca quedaría debajo de todos los en desarrollo. Un selector suma un control para algo que no se va a alternar.
 
 **Consecuencias:** H-1 (`04-ux.md`) cambia su primer criterio; el orden de la grilla cambia solo cuando la IA trabaja en un proyecto.
+
+## D-137 — El Mapa se elige entre una hoja de ruta y un camino de pasos por frente, sin kanban
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71)
+- **Hito o paso:** 10; frente Mapa, paso 1 (Propuesta), Q-193
+- **Estado:** vigente
+
+**Contexto:** el Mapa de hoy muestra dónde se está, pero no qué viene después de Pendientes; con 45 cosas abiertas y sin orden, el usuario pierde el foco. Se pensaron tres formas: una hoja de ruta Ahora / Después / Más adelante (A), una red de pasos por frente (B) y un kanban por estado (C).
+**Decisión:** el kanban queda descartado. A y B siguen y se comparan en maquetas (`diseno/pantallas/mapa-a.html` y `mapa-b.html`). B, como la pidió el usuario: un camino por frente, un paso después del otro, con ramas cuando las hay, y el foco siempre cerca del último hecho (los hechos de antes, plegados).
+
+**Motivo:** el usuario quiere ver una secuencia (el paso 1, después el 2, después el 3), no cosas juntadas en un estado, y no busca mover tarjetas a mano.
+
+**Consecuencias:** las dos maquetas usan los datos reales de Iridium; se elige con Q-194. El color por frente (R-59) no está en las maquetas: pediría tokens nuevos.

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mapa · A · Hoja de ruta</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .ruta-grilla { display: grid; grid-template-columns: 168px repeat(3, 1fr); }
+  .ruta-grilla > * { padding: var(--esp-3) var(--esp-3); border-bottom: 1px solid var(--borde-suave); min-width: 0; }
+  .ruta-grilla .col { font: var(--estilo-rotulo); color: var(--texto-3); border-bottom-color: var(--borde); padding-bottom: var(--esp-2); }
+  .ruta-grilla .col.ahora { color: var(--texto); }
+  .frente { display: flex; flex-direction: column; gap: 2px; }
+  .frente b { font-weight: 600; color: var(--texto); }
+  .frente .gris-3 { font-size: var(--tam-chico); }
+  .celda { display: flex; flex-direction: column; gap: 2px; }
+  .celda.ahora { background: var(--elevado); }
+  .cosa { display: flex; align-items: baseline; gap: var(--esp-2); padding: 3px var(--esp-2); margin-inline: calc(-1 * var(--esp-2)); border-radius: var(--radio-fila); color: var(--texto-2); text-decoration: none; white-space: nowrap; overflow: hidden; }
+  .cosa:hover { background: var(--hover); color: var(--texto); }
+  .cosa .t { overflow: hidden; text-overflow: ellipsis; }
+  .cosa .codigo { font: var(--estilo-codigo); color: var(--texto-3); flex: none; }
+  .celda.ahora .cosa { color: var(--texto); }
+  .cosa .senal { margin-left: auto; flex: none; }
+  .mas { font-size: var(--tam-chico); color: var(--texto-3); padding: 3px 0; cursor: pointer; }
+  .mas:hover { color: var(--texto-2); }
+  .ocultas { display: none; }
+  .abierta .ocultas { display: flex; }
+  .abierta .mas { display: none; }
+  .sin-ubicar { margin-top: var(--esp-6); }
+  .sin-ubicar .filas-ub { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: var(--esp-5); }
+  .empezar { margin-top: var(--esp-1); align-self: flex-start; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="mapa">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Mapa</h1><span class="ruta">Hito 10 · Operación</span>
+      <span class="acciones-cab"><a class="boton sin-fondo" href="mapa-b.html"><i data-ic="mapa"></i>Ver por frente</a></span></div>
+  </header>
+  <div class="contenido">
+    <div class="ruta-grilla">
+      <div class="col"></div>
+      <div class="col ahora">Ahora</div>
+      <div class="col">Después</div>
+      <div class="col">Más adelante</div>
+
+      <div class="frente"><b>Ideas</b><span class="gris-3">7. Construcción</span></div>
+      <div class="celda ahora">
+        <a class="cosa" href="docs.html" title="Las ideas sueltas del inicio, anotar con un proyecto y Mover a un proyecto; se saca el bloc"><span class="codigo">ID-I4</span><span class="t">Las ideas sueltas del inicio</span></a>
+      </div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="t">Calidad y lanzamiento de Ideas</span></a>
+      </div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">T-76</span><span class="t">La miniatura del sitio en un enlace pegado</span></a>
+      </div>
+
+      <div class="frente"><b>Mapa</b><span class="gris-3">1. Propuesta</span></div>
+      <div class="celda ahora">
+        <a class="cosa" href="bandeja.html"><span class="codigo">Q-194</span><span class="t">Mirá las maquetas del Mapa</span><span class="senal ambar">Tuya</span></a>
+      </div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="t">Definición, UX y construcción del Mapa</span></a>
+      </div>
+      <div class="celda"></div>
+
+      <div class="frente"><b>Apariencia y ajustes</b><span class="gris-3">En operación</span></div>
+      <div class="celda ahora"></div>
+      <div class="celda">
+        <a class="cosa" href="docs.html" title="Solo con tokens, editado con la IA desde Ajustes (D-134)"><span class="codigo">T-75</span><span class="t">Un tema propio, con tokens</span></a>
+        <a class="cosa" href="docs.html" title="Con trabajo real de una bandeja lista (D-135)"><span class="codigo">T-70</span><span class="t">Arrancar el período de 5 horas</span></a>
+      </div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">T-72</span><span class="t">La imagen y el color de cada IA en la conversación</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-52</span><span class="t">Un sonido cuando el agente termina</span></a>
+      </div>
+
+      <div class="frente"><b>Compartir</b><span class="gris-3">En operación</span></div>
+      <div class="celda ahora">
+        <a class="cosa" href="bandeja.html"><span class="codigo">Q-185</span><span class="t">Publicar una versión al día</span><span class="senal ambar">Tuya</span></a>
+      </div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">T-37</span><span class="t">El .zip para publicar, más chico</span></a>
+      </div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">T-74</span><span class="t">Ver si la IA de la otra persona trabaja bien</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-38</span><span class="t">Número de versión y CHANGELOG</span></a>
+      </div>
+
+      <div class="frente"><b>Diseño</b><span class="gris-3">En pausa</span></div>
+      <div class="celda ahora"></div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">DI-I3</span><span class="t">Tanda 9: Skills en la maqueta</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-58</span><span class="t">Lo que DI-I3 cambia además de las piezas</span></a>
+      </div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">DI-I4</span><span class="t">Otra versión y Probar una dirección</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-73</span><span class="t">Ideas de OpenDesigner</span></a>
+      </div>
+
+      <div class="frente"><b>Orden</b><span class="gris-3">En pausa</span></div>
+      <div class="celda ahora"></div>
+      <div class="celda"></div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="t">Calidad de Orden</span><span class="senal ambar">Espera a Diseño</span></a>
+      </div>
+
+      <div class="frente"><b>Skills</b><span class="gris-3">En operación</span></div>
+      <div class="celda ahora"></div>
+      <div class="celda"></div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">T-43</span><span class="t">El framework reemplaza a la guía</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-44</span><span class="t">Traer las skills que la licencia permite</span></a>
+        <a class="cosa ocultas" href="docs.html"><span class="codigo">T-18</span><span class="t">Avisar cuando hay dos copias de una skill</span></a>
+        <span class="mas">1 más</span>
+      </div>
+
+      <div class="frente"><b>Capacidades</b><span class="gris-3">Sin empezar</span></div>
+      <div class="celda ahora"></div>
+      <div class="celda"></div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">T-28</span><span class="t">Más capacidades de Claude</span></a>
+      </div>
+
+      <div class="frente"><b>Puente PC–celular</b><span class="gris-3">Sin empezar</span>
+        <button class="boton sin-fondo chico empezar"><i data-ic="claude"></i>Empezar este frente</button></div>
+      <div class="celda ahora"></div>
+      <div class="celda"></div>
+      <div class="celda">
+        <a class="cosa" href="docs.html"><span class="codigo">T-8</span><span class="t">Puente PC–celular</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-14</span><span class="t">Avisos y descargas de APK</span></a>
+        <a class="cosa ocultas" href="docs.html"><span class="codigo">T-15</span><span class="t">«Recibir por enlace» de LocalSend</span></a>
+        <a class="cosa ocultas" href="docs.html"><span class="codigo">T-13</span><span class="t">Mandar tareas desde el celular</span></a>
+        <span class="mas">2 más</span>
+      </div>
+    </div>
+
+    <section class="bloque sin-ubicar">
+      <h3 class="bloque-titulo">Sin ubicar <span class="cuenta">8</span></h3>
+      <div class="filas-ub">
+        <a class="cosa" href="docs.html"><span class="codigo">T-2</span><span class="t">Un canvas para pensar una idea con la IA</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-55</span><span class="t">Diagramas que dibuja la IA, paso a paso</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-57</span><span class="t">Dictado</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-16</span><span class="t">Comentar un documento párrafo por párrafo</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-1</span><span class="t">La guía según el tipo de proyecto</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-9</span><span class="t">Iridium para Linux o el celular</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-17</span><span class="t">Revisión para las apps Android</span></a>
+        <a class="cosa" href="docs.html"><span class="codigo">T-11</span><span class="t">Tareas como tarjetas que un agente toma</span></a>
+      </div>
+    </section>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+<script>
+  for (const m of document.querySelectorAll('.mas')) m.addEventListener('click', () => m.parentElement.classList.add('abierta'))
+</script>
+</body>
+</html>
