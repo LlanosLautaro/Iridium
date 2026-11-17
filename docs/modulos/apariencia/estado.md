@@ -20,6 +20,12 @@
 ## En qué estamos ahora
 AP-I1 está aprobada (Q-88): la ventana de Ajustes, los dos temas, los nombres y el tono funcionan, y las descripciones de Conciso y Proactivo quedaron bien. La construcción terminó y la calidad pasó con el hito 8 (los dos temas revisados, Q-108). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10).
 
+## Ruta
+- [x] Elegir el tamaño de la letra y el zoom
+- [x] Poner tu nombre y el de la IA
+- [x] Pasar Iridium al negro, como único tema
+- [ ] Hacer tu propio tema con tokens, desde Ajustes (T-75)
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

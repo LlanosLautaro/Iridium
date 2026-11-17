@@ -3027,3 +3027,25 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción A de Q-201: «Por empezar» lo arma Iridium con `trabajo.md`: cada frente que espera (`pendiente` en la tabla `## Módulos`, sin carpeta), con sus `T-n` abiertos como pasos, y «Sin frente», los `T-n` `pendiente` o `en curso` que no tienen frente, con su título (los largos bajan de renglón). Las ideas sin evaluar (`nueva`) siguen solo en Ideas.
 **Motivo:** no gasta uso y nunca queda vieja.
 **Consecuencias:** los títulos de `trabajo.md` se leen tal cual; repasar esas cosas para darles frente queda fuera del Mapa (`definicion.md` › Fuera de alcance).
+
+## D-144 — La UX del Mapa queda como se escribió, sin color por frente
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71)
+- **Hito o paso:** 10; frente Mapa, paso 4 (UX), Q-202
+- **Estado:** vigente
+
+**Contexto:** `modulos/mapa/ux.md` (MA-1 a MA-12) y las maquetas `mapa-b.html` y `mapa-hitos.html`. Quedaban dos variantes: un color por frente (R-59) y mandar lo aprobado sin lugar en la ruta solo a «Por empezar».
+**Decisión:** opción A de Q-202: la UX va así. Sin color por frente; lo aprobado con frente que la IA todavía no ubicó queda debajo del camino de ese frente, en «Aprobado, sin lugar en la ruta».
+**Motivo:** cumple la definición sin ruido de más; con un frente a la vez, el nombre de arriba ya dice cuál es.
+**Consecuencias:** H-7 y W-7 de `04-ux.md` remiten a `modulos/mapa/ux.md`. Sigue el diseño técnico.
+
+## D-145 — La ruta: casillas con tres marcas, los códigos escondidos y «Por empezar» calculado al leer
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71) y el framework (el `estado.md` de un frente)
+- **Hito o paso:** 10; frente Mapa, paso 5 (Diseño técnico)
+- **Estado:** vigente
+
+**Contexto:** D-139 dejó la ruta en el `estado.md` de cada frente y su formato exacto para el diseño técnico.
+**Decisión:** `## Ruta` es una lista de casillas: `[x]` hecho, `[ ]` lo que viene, `[-]` descartado; una rama, un nivel de sangría. El que sigue y la pausa los calcula Iridium (el primer `[ ]`; el estado del frente). Los códigos van en la línea y no se muestran: una `Q-n` sin responder hace «Te espera», un `T-n` dice qué trabajo es y una iteración da el destino en Docs. «Por empezar», «Sin frente» y «Aprobado, sin lugar en la ruta» se calculan con `trabajo.md` al leer. La pestaña elegida se recuerda en memoria. El control avisa de una marca o una línea que no entiende, una rama sin paso, un código que no existe y un frente `en curso` sin ruta. Se construye en tres iteraciones (MA-I1 a MA-I3). Detalle: `modulos/mapa/diseno-tecnico.md`.
+**Motivo:** es lo más corto de escribir para la IA (una línea por paso, sin mover marcas) y lo que no se escribe no se desactualiza.
+**Consecuencias:** la plantilla del `estado.md` de un frente, `SKILL.md`, `referencias/modulos.md` y `referencias/10-operacion.md` cambian en MA-I1 junto con el lector y el control.

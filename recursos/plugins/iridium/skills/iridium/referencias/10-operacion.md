@@ -15,7 +15,7 @@
 
 **2. Mantenimiento.** Actualizar dependencias, revisar vulnerabilidades, adaptarse a cambios del ecosistema (si cambia un formato, se vuelve al hito 3 para esa área).
 
-**3. Trabajo.** Lo que podría hacerse (defectos, mejoras, ideas nuevas, deuda técnica) está en `trabajo.md`, un `T-n` por cosa, no en un Backlog aparte. Se prioriza con el mismo criterio MoSCoW del hito 2, escrito en el texto de cada `T-n`. Los errores que reporta el usuario los clasifica la IA (resolver ahora o un `T-n` `pendiente`) con el criterio de `SKILL.md`, sin preguntarle.
+**3. Trabajo.** Lo que podría hacerse (defectos, mejoras, ideas nuevas, deuda técnica) está en `trabajo.md`, un `T-n` por cosa, no en un Backlog aparte. Se prioriza con el mismo criterio MoSCoW del hito 2, escrito en el texto de cada `T-n`. Los errores que reporta el usuario los clasifica la IA (resolver ahora o un `T-n` `pendiente`) con el criterio de `SKILL.md`, sin preguntarle. Cuando el usuario aprueba una idea que es de un frente, al trabajar en ese frente ubicala con una línea en su `## Ruta` (con su `T-n`); si no es de ningún frente, queda en «Por empezar» del Mapa hasta que se le dé uno.
 
 **4. Planificar la siguiente versión.** Elegir qué entra, y según el tamaño del cambio, decidir por qué hitos pasa:
 - **Corrección o ajuste menor:** directo al hito 7 → 8 → 9.

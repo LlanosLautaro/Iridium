@@ -36,10 +36,10 @@
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
-| Mapa (`modulos/mapa/estado.md`) | sección | 4. UX (espera Q-202) | en curso |
+| Mapa (`modulos/mapa/estado.md`) | sección | 7. Construcción (MA-I1 hecha; sigue MA-I2) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Mapa** (D-140, T-71). La definición quedó aprobada (D-141 a D-143: antes del hito 10 el camino son los hitos; «Por empezar» sale de `trabajo.md`). La UX está escrita (`modulos/mapa/ux.md`) con las maquetas al día; espera Q-202 (si va así).
+**Frente activo: Mapa** (D-140, T-71). La UX quedó aprobada (Q-202 → D-144) y el diseño técnico, cerrado (D-145: la ruta es una lista de casillas con tres marcas, y lo que está por empezar se calcula con `trabajo.md`). MA-I1 hecha: la ruta entró al framework con su lector y su control, y cada frente de Iridium tiene la suya. Todavía no cambia nada que se vea: eso es MA-I2.
 Ideas terminó (2026-11-17): probada y con su calidad hecha; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar. Los avisos de `pnpm audit`, en T-79.
 En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185). Después del Mapa, sin orden entre ellos: el tema propio (T-75, D-134) y el arranque del período de 5 horas (T-70, D-135).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -52,16 +52,11 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
-- **Q-202 — ¿El Mapa se usa así?**
-  Tipo: decisión · frena · Frente: Mapa
-  Contexto: `modulos/mapa/ux.md` › Historias y W-7; mirá en Diseño las maquetas «Un camino por frente» (tocá las pestañas: Diseño tiene algo aprobado sin lugar en la ruta, Revisión de la app es un frente sin ruta, «Por empezar» sale tal cual de `trabajo.md`) y «Antes del hito 10». Lo aprobado con frente que la IA todavía no ubicó queda debajo del camino, en «Aprobado, sin lugar en la ruta», hasta su próxima iteración ahí. Sin color por frente (R-59): con un frente a la vez, el nombre de arriba ya dice cuál es.
-  Opciones: A) Sí, va así (recomendada: cumple lo definido, sin ruido de más) · B) Sí, y cada frente con su color en la pestaña y en el camino (pide tokens nuevos) · C) Sí, pero lo aprobado sin lugar va solo a «Por empezar», no debajo del camino
-
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Frente **Mapa**: con Q-202 respondida, pasar H-7 y W-7 de `04-ux.md` a `modulos/mapa/ux.md` y hacer el paso 5, diseño técnico (el formato de `## Ruta`, su lector, el control y «Por empezar»).
-**Leer antes:** `modulos/mapa/estado.md` › Próximo paso; `modulos/mapa/ux.md`; la respuesta Q-202.
+Frente **Mapa**, MA-I2: el Mapa nuevo en operación (la barra de frentes, el camino con sus marcas y ramas, «Por empezar»), con sus pruebas y la prueba del usuario como `Q-n`.
+**Leer antes:** `modulos/mapa/estado.md` › Próximo paso (dice qué leer).
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

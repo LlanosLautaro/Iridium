@@ -20,6 +20,10 @@
 ## En qué estamos ahora
 Construcción y calidad completas: R-I2 quedó validada con tu recorrido (Q-108) y la prueba intermitente de Electron era un caso real, arreglado (Defecto 7: con la PC ocupada un comentario podía salir sin archivo ni línea). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). 2026-11-05: tercer estado «anotado» para lo que queda en un plan sin hacer (R-9, D-088).
 
+## Ruta
+- [x] Comentar la app con F8 y recibirlo en Iridium
+- [ ] Guardar la página del comentario con su ruta corta (T-34)
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

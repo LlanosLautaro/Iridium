@@ -24,6 +24,13 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 
 2026-11-16, a pedido del usuario: el repo pasó a público (D-132), así que la otra persona no necesita invitación (Q-126 sin efecto) y la copia del usuario sigue sin actualizarse desde GitHub. Falta publicar una versión al día y pasarle el `.zip` (Q-185).
 
+## Ruta
+- [x] Armar una copia de Iridium para otra persona
+- [x] Hacer público el repo para que se actualice sola
+- [ ] Publicar una versión al día (Q-185)
+- [ ] Achicar el .zip de cada versión (T-37)
+- [ ] Numerar las versiones con su lista de cambios (T-38)
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

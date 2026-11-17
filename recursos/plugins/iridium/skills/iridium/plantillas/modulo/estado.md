@@ -20,6 +20,10 @@
 ## En qué estamos ahora
 [Una o dos frases]
 
+## Ruta
+- [ ] [El primer paso concreto, en palabras del usuario]
+- [ ] [El siguiente]
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

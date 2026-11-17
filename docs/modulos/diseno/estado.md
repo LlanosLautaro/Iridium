@@ -20,6 +20,17 @@
 ## En qué estamos ahora
 Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de Orden. La dirección es **negro sin acento**, único tema (D-103, D-104). Las pantallas son **maquetas HTML** que escribe la IA en `docs/diseno/`, se miran vivas en Iridium, se comentan con `F8` y lo aprobado se pasa al código (D-105). Pasos 1 a 5 hechos: el orden es la sección (DI-I1), el rediseño de Iridium en maquetas (DI-I2), pasarlo al código (DI-I3) y Otra versión y Probar una dirección (DI-I4) (D-106). **DI-I1 está hecha**: el usuario la probó en Q-152 sobre las maquetas de Iridium (D-107). **DI-I2 sigue**: la dirección de la tanda 1 está aprobada y sus comentarios (R-15 a R-24) están corregidos, con la regla «sin ruido» (D-108); la tanda 2 está aprobada (Q-157) y **DI-I2 queda hecha**. Con Q-159 (D-114) el sistema suma ideas de claude.ai: cada token ya lleva su uso, los estilos de texto tienen nombre (T-61, D-116), cada pieza tiene su ficha (T-62, D-117) y las medidas fijas son tokens (T-63, D-119). El sistema está completo y **DI-I3** (pasarlo al código) empezó: con la tanda 1 la app ya es negra, con un solo tema y un solo `tokens.css` para la app y las maquetas (D-121); con la tanda 2 `piezas.css` entra a la app y todos los botones son la pieza Botón (probada en Q-163); con la tanda 3 la barra de abajo queda sin ruido, los estados son la Señal (PZ-7) y se ve cuando la IA espera algo de fondo (T-65); con la tanda 4 se van la Bandeja de todos y Trabajo (D-111, D-112) y el marco es el de la maqueta (las tandas 3 y 4, probadas en Q-164 y Q-165); con la tanda 5 la conversación es la de la maqueta, en español neutro y con «Continuar» (probada en Q-166); con la tanda 6 la Bandeja es la de la maqueta, con las preguntas plegables y sin «Guardar a medias» (probada en Q-170); con la tanda 7 el Mapa es el de la maqueta (probada en Q-171; el Mapa se rehará como frente propio, T-71); con D-124 vuelve el color donde informa (medidores, enlaces, código, probado en Q-172) y lo prendido es verde (R-60); con la tanda 8 Ideas es un bloc de notas (D-112, D-126), sin probar: lo reemplaza el frente Ideas (D-128, Q-174); las secciones pasan a las piezas en las tandas que siguen.
 
+## Ruta
+- [x] Ver y comentar las maquetas dentro de Iridium (DI-I1)
+- [x] Rediseñar Iridium en negro, en maquetas (DI-I2)
+  - [-] Pasar el bloc de Ideas (lo reemplazó el frente Ideas)
+- [x] Pasar al código la barra, la conversación, la Bandeja y el Mapa
+- [ ] Pasar Skills a la maqueta (DI-I3)
+- [ ] Pasar el resto de las secciones a las piezas
+  - [ ] Lo que el rediseño cambia en la app además de las piezas (T-58)
+- [ ] Que la captura del detalle de Ideas salga en la auditoría (T-53)
+- [ ] Comparar dos versiones de una pantalla lado a lado (DI-I4)
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

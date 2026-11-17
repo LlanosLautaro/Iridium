@@ -129,7 +129,25 @@ Cada formato está escrito acá una sola vez. Iridium los lee con estos títulos
 - `## Próximo paso`: la primera línea va a la tarjeta, una acción concreta; debajo, `**Leer antes:**` con las secciones necesarias (`archivo.md` › Título), no la carpeta entera.
 - **Cabe en una pantalla.** No lleva lista de pendientes: eso es `trabajo.md`. Lo hecho va al documento del hito (el log de `07-construccion.md`, `10-operacion.md` o el del frente).
 
-El `estado.md` de un frente (`plantillas/modulo/estado.md`) tiene `## Progreso` con sus pasos, `## Iteraciones` (`| ID | Objetivo | Estado |`), su log y su `## Próximo paso`; no lleva preguntas.
+El `estado.md` de un frente (`plantillas/modulo/estado.md`) tiene `## Progreso` con sus pasos, `## Ruta`, `## Iteraciones` (`| ID | Objetivo | Estado |`), su log y su `## Próximo paso`; no lleva preguntas.
+
+### La ruta de un frente: `## Ruta`
+Lo que se va a hacer en el frente, en orden: es lo que el Mapa dibuja como su camino. Un paso por línea, una casilla, con una acción concreta en palabras del usuario («Pegar imágenes en una idea», «Sonar cuando Iridium termina una tarea»), nunca un paso del método («Construcción»).
+
+```markdown
+## Ruta
+- [x] Anotar y aprobar las ideas de un proyecto (ID-I1)
+- [ ] Pegar imágenes en una idea (Q-190)
+  - [ ] Mostrar la miniatura de un enlace (T-76)
+- [-] Un bloc aparte para las ideas sueltas
+```
+
+- `[x]` hecho, `[ ]` lo que viene, `[-]` descartado; nada más. El que sigue lo calcula Iridium (el primer `[ ]`) y la pausa sale del estado del frente: no se marcan.
+- Una **rama** (algo que sale de un paso y no está en la línea principal) va con dos espacios de sangría debajo de ese paso. Un solo nivel.
+- Los **códigos** van en la línea, al final entre paréntesis, y no se muestran: una `Q-n` sin responder marca el paso «Te espera»; un `T-n` dice qué trabajo es; una iteración (`ID-I1`) lleva a su sección.
+- **Cuándo se escribe:** al abrir el frente, con lo que se sabe; al cerrar cada iteración, al día (lo hecho, lo nuevo en su lugar, la `Q-n` que espera); y cuando el usuario aprueba una idea de ese frente, una línea con su `T-n` donde le toca. Es corta: no copies el log ni el detalle.
+- Lo aprobado de un frente que la ruta no nombra el Mapa lo muestra aparte («Aprobado, sin lugar en la ruta») hasta que lo ubiques; lo aprobado sin frente, en «Por empezar».
+
 
 ### Las preguntas: `Q-n`
 Todo lo que esperás del usuario es una `Q-n`: una decisión, una prueba, un material, una tarea a mano. Lo que no es `Q-n`, el usuario no lo ve como algo suyo: nada de secciones «Verificación manual» ni «Pruebas pendientes».
@@ -225,7 +243,7 @@ La interfaz se diseña en maquetas HTML que Iridium muestra vivas en su sección
 Los wireframes en un bloque ``` se ven en Docs con una letra de ancho fijo que tiene las líneas de cuadro (`─│┌┐└┘├┤┬┴┼`), las figuras (`■□▪▫◆◇◈●○◉▲▼▶◀`), las flechas (`←→↑↓↔`), `✓✕✗✶…·›` y el texto latino. Cualquier otro símbolo (emojis, `⚙ ✉ ⌂ ▦ ↻ ☰ ⚠`) sale de otra letra con otro ancho y desarma el cuadro: para un ícono, una figura de esa lista o una palabra entre corchetes (`[Ajustes]`).
 
 ### El Mapa
-Sale de la tabla de hitos de `estado.md`, del `## Portón` de cada documento de hito, de la tabla de iteraciones (columna ID con `I-n`) y del `estado.md` de cada frente. No cambies los títulos ni las columnas de las plantillas.
+En operación, un frente a la vez: su camino es su `## Ruta` (sin ruta, los pasos de su `## Progreso`); «Por empezar» son los frentes `pendiente` de la tabla `## Módulos` sin carpeta, con sus `T-n` abiertos, y los `T-n` abiertos sin frente. Antes del hito 10, el camino son los hitos de `estado.md` y, debajo del actual, su `## Portón` o, en la construcción, su tabla de iteraciones (columna ID con `I-n`). No cambies los títulos ni las columnas de las plantillas.
 
 ### Los comentarios de la Revisión: `docs/revision/R-n.md`
 El usuario comenta la interfaz de una app con F8 y llega `R-n.md` (con su captura `R-n.png`, el archivo y la línea). Si trae `**Maqueta:**`, se hizo sobre una maqueta de `docs/diseno/`: corregí la maqueta, no el código. Leelos al empezar, resolvelos y cerralos: `**Estado:** abierto` pasa a `**Estado:** cerrado` y se agrega al final de `## Historia`:
@@ -259,7 +277,7 @@ La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, d
 
 ## El control
 
-Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos, `Idea:` y `Enlace:`, notas de `docs/ideas/` sin su `T-n`), las tablas de estados y los campos de `estado.md`, los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho), los dibujos en texto y las maquetas de `docs/diseno/`. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
+Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos, `Idea:` y `Enlace:`, notas de `docs/ideas/` sin su `T-n`), las tablas de estados y los campos de `estado.md`, la `## Ruta` de cada frente (las marcas, las ramas, sus códigos y que el frente en curso la tenga), los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho), los dibujos en texto y las maquetas de `docs/diseno/`. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
 
 ## Reglas para la IA
 

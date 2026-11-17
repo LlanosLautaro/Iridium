@@ -1,7 +1,7 @@
 # UX del módulo: Mapa
 
 **Fecha:** 2026-11-17
-**Estado:** propuesta, espera Q-202
+**Estado:** aprobada en Q-202 (D-144)
 **Base:** `definicion.md` (D-141), D-142 (antes del hito 10, los hitos), D-143 («Por empezar» sale de `trabajo.md`). Las maquetas: `docs/diseno/pantallas/mapa-b.html` (en operación) y `mapa-hitos.html` (antes del hito 10).
 > Usa los principios de interacción y las piezas generales (`04-ux.md`, `modulos/diseno/ux.md` › Las piezas). Reemplaza H-7 y W-7 de `04-ux.md` al aprobarse.
 

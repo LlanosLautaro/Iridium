@@ -20,6 +20,14 @@
 ## En qué estamos ahora
 Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas esperan. Hechas la auditoría (A-1 a A-23), la definición (D-094 a D-096) y la UX: `04-ux.md` está reescrito entero, sin capas, con las pantallas aprobadas en Q-139 (W-1 a W-17) y el nombre «framework» en lugar de «marco» (D-099). El diseño técnico está escrito (`diseno-tecnico.md`): el control corre al terminar cada turno con los lectores de la pantalla y le devuelve a la IA lo mal escrito una vez por turno; `trabajo.md` se anota desde Iridium sin pisar a la sesión; un vocabulario de estados con una tabla de transición para los proyectos con framework viejo; Actualizar junta Armar y Reiniciar. Cuatro iteraciones, por riesgo: OR-I1 el modelo y el control, OR-I2 el esqueleto y la Bandeja (con Actualizar), OR-I3 Trabajo e Ideas, OR-I4 Mapa, Skills › Framework y Pasar al framework. R-13 (los dibujos en texto desalineados) se arregló con la letra completa. El paso 6 cerró con Q-140 (D-100: el ámbar solo para lo que frena, el botón principal claro). OR-I1 está hecha y probada (Q-141): las reglas, la devolución, los avisos en la tarjeta, el Mapa con el vocabulario y el framework reordenado andan, e Iridium ya pasó al framework (el control da cero). OR-I2 también (Q-144): la Bandeja de entrada, el esqueleto, la cabecera común, la tarjeta con su frente, la conversación de 360 px y Actualizar. OR-I3 también (Q-145): Trabajo de cada proyecto, anotar sin la IA e Ideas del inicio con las nuevas de todos. OR-I4 está construida y espera la prueba (Q-146): el Mapa con el bloque de frentes, Skills › Framework con Pasar al framework (también desde la tarjeta y la carpeta simple), la carpeta simple, el ⚠ de Skills en gris y las tablas de Docs. Con ella se terminan las iteraciones del frente (T-47 a T-49 y T-51, hechos). Desde el 2026-11-07 el frente activo es Diseño (D-102): Orden cierra OR-I4 con Q-146, y sus pasos 8 y 9 se hacen después del rediseño negro, para no medir una interfaz que va a cambiar entera. **OR-I4 quedó probada en Q-146 (2026-11-15)** y con ella el paso 7: lo del Mapa no se probó porque se rehace como frente propio (T-71).
 
+## Ruta
+- [x] Controlar el formato que escribe la IA (OR-I1)
+- [x] Armar la Bandeja de entrada (OR-I2)
+- [x] Anotar trabajo e ideas sin la IA (OR-I3)
+- [x] Pasar un proyecto viejo al framework (OR-I4)
+- [ ] Medir Orden con el diseño nuevo
+- [ ] Que un proyecto sepa cuándo el framework le pide algo (T-64)
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

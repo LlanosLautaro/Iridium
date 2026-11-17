@@ -22,6 +22,11 @@ Módulo completo (2026-11-04). Con Q-115 probaste IN-I1: todo bien menos **Pedir
 
 Verificado: `pnpm test` (564), `pnpm e2e` (81), typecheck y lint.
 
+## Ruta
+- [x] Ver todos los proyectos en una grilla
+- [x] Ordenar la grilla por el último cambio
+- [x] Marcar en la tarjeta si respondiste todo
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

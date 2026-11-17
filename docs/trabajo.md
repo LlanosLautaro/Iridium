@@ -144,7 +144,7 @@ Estado: pendiente · Origen: `02-definicion.md` › Funcionalidades
 Could. C-17, C-20, C-27, C-34, C-43, C-46 a C-48 (entre ellas, elegir las skills de cada proyecto y adaptar las públicas, D-064).
 
 ## T-34 — Revisión: la línea «Página» con la ruta relativa
-Estado: pendiente · Origen: D-082
+Estado: pendiente · Frente: Revisión de la app · Origen: D-082
 Should. La línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto.
 
 ## T-35 — Seguir a la IA, el cierre con comprobación y los avisos de Windows
@@ -156,11 +156,11 @@ Estado: pendiente · Origen: C-24 a C-26, C-28
 Should. Adjuntos, formulario de arranque, respuestas que la IA toma sola, preguntas del chat que pasan a `Q-n`.
 
 ## T-37 — El `.zip` de `pnpm publicar`, más chico
-Estado: pendiente · Origen: D-085
+Estado: pendiente · Frente: Compartir · Origen: D-085
 Could. Pesa unos 280 MB: probar a comprimirlo más.
 
 ## T-38 — Número de versión y `CHANGELOG.md`
-Estado: pendiente · Origen: D-077, Q-109
+Estado: pendiente · Frente: Compartir · Origen: D-077, Q-109
 Could. La opción A de Q-109, cuando quieras.
 
 ## T-39 — Defecto 1: una prueba que falla a veces en la tanda completa
@@ -180,11 +180,11 @@ Estado: pendiente · Origen: D-082, Q-127
 Q-127 ya dio bien la mudanza.
 
 ## T-43 — Chat de Skills: el framework reemplaza a la guía y a `gestor-proyectos`
-Estado: pendiente · Origen: D-092, D-095
+Estado: pendiente · Frente: Skills · Origen: D-092, D-095
 En el chat de Skills, no acá: lo pendiente de las dos (D-062, D-063, D-068, Defectos 13 y 14, Q-115) pasa al framework y se eliminan cuando funcione; la regla global «todo proyecto sigue la guía» pasa a la de D-095; cuando el control funcione, se saca el hook `comprobar-preguntas.mjs` de la configuración global (D-092.4).
 
 ## T-44 — Chat de Skills: traer las skills que la licencia permite
-Estado: pendiente · Origen: D-014
+Estado: pendiente · Frente: Skills · Origen: D-014
 Traer a la carpeta Skills las skills que la licencia permite y sacar las copias dobles.
 
 ## T-45 — Las rutas que nombran la carpeta vieja, después de Mover

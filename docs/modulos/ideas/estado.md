@@ -20,6 +20,16 @@
 ## En qué estamos ahora
 La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`, y la nota del usuario va en `docs/ideas/T-n.md`. Construcción en cuatro iteraciones; ID-I1 (Ideas en un proyecto) está hecha y probada (Q-181); ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación sin enviar, D-131) está hecha y probada (Q-183); ID-I3 (la nota completa y Borrar) está probada (Q-189, Q-190). ID-I4 (las ideas sueltas del inicio, que reemplazan al bloc) está hecha y probada (Q-196, Q-198), con pegar imágenes también en el campo de arriba (R-87, R-88). **Módulo completo (2026-11-17):** la calidad está en la sección Calidad; el frente que sigue es el Mapa (D-140). La miniatura del sitio en un enlace pegado queda como T-76 y el estado «implementada» que anotaste, como T-78.
 
+## Ruta
+- [x] Pensar las ideas como trabajo del proyecto
+- [x] Definir que aprobar una idea es pasarla al trabajo
+- [x] Diseñar cómo se guarda cada idea y su nota
+- [x] Anotar, filtrar y aprobar las ideas de un proyecto (ID-I1)
+- [x] Revisar un enlace con la IA y hablar de una idea (ID-I2)
+- [x] Pegar enlaces e imágenes en la nota de una idea (ID-I3)
+- [x] Ideas del inicio como las de un proyecto, y moverlas a uno (ID-I4)
+- [x] Probar Ideas con sus historias, una por una
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

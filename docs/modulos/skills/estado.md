@@ -20,6 +20,11 @@
 ## En qué estamos ahora
 La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivos de cada skill probados (Q-96, sin cambios). Con tu comentario R-6, la lista de skills cambia de ancho arrastrando su borde derecho, y lo recuerda. La calidad pasó con el hito 8 (Q-108). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10).
 
+## Ruta
+- [x] Ver y poner al día las skills
+- [ ] Que el framework reemplace a la guía vieja y a gestor-proyectos (T-43)
+- [ ] Traer las skills que la licencia permite (T-44)
+
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|

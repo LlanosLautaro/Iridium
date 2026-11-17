@@ -6,6 +6,7 @@ import { reglaEstados } from './estado'
 import { reglaPreguntas } from './preguntas'
 import { reglaRespuestas } from './respuestas'
 import { reglaRevision } from './revision'
+import { reglaRuta } from './ruta'
 import type { ArchivosControl, Aviso, Regla } from './tipos'
 import { reglaTrabajo } from './trabajo'
 
@@ -19,6 +20,7 @@ export const REGLAS: readonly Regla[] = [
   reglaEstados,
   reglaDibujos,
   reglaDiseno,
+  reglaRuta,
 ]
 
 export function correrControl(archivos: ArchivosControl): Aviso[] {
