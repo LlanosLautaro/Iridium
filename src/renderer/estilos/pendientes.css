@@ -369,7 +369,7 @@
 .opcion-q:has(input:checked) {
   background: var(--sel-fondo);
 }
-.opcion-q .letra {
+.opcion-q .letra-q {
   flex: none;
   min-width: 2.5ch;
   font: var(--estilo-codigo);
@@ -382,6 +382,11 @@
 }
 .opcion-q .recomendada {
   align-self: center;
+}
+/* La estrella de la recomendada, en amarillo (R-85); el texto sigue en el gris de apoyo */
+.recomendada > .ic {
+  color: var(--recomendada);
+  fill: currentColor;
 }
 .campo-otro {
   flex: 1;

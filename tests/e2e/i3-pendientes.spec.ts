@@ -108,6 +108,17 @@ test('los pendientes del proyecto con lo que citan y «Ver entero» en Docs (H-9
   await expect(q7.locator('.cita').first()).toContainText('Las miniaturas se generan al importar')
   await expect(q7.locator('.cita').nth(1)).toContainText('Grilla de cuatro columnas')
   await expect(q7.locator('.opcion-q').first()).toContainText('recomendada')
+  // La estrella de la recomendada va en amarillo (R-85).
+  await expect(q7.locator('.recomendada .ic')).toHaveCSS('color', 'rgb(242, 201, 76)')
+  // «Otro» entra entero antes de su campo, sin pisarlo (R-86).
+  const otro = q7.locator('.opcion-q.otro')
+  const rotulo = await otro.locator('.letra-q').evaluate((e) => {
+    const r = e.getBoundingClientRect()
+    return { derecha: r.right, entra: e.scrollWidth <= e.clientWidth }
+  })
+  const campo = await otro.locator('textarea').evaluate((e) => e.getBoundingClientRect().left)
+  expect(rotulo.entra).toBe(true)
+  expect(rotulo.derecha).toBeLessThanOrEqual(campo)
   await expect(win.locator('.grupo-q .bloque-titulo')).toHaveText([/^Frenan el proyecto/, /^Sin responder/])
   await win.screenshot({ path: 'test-results/i3-pendientes.png' })
 

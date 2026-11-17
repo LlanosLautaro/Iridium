@@ -183,7 +183,7 @@ function Formulario({
                 onChange={() => cambiar({ opcion: o.letra })}
               />
             </span>
-            <span className="letra">{o.letra})</span>
+            <span className="letra-q">{o.letra})</span>
             <span className="texto-opcion">{o.texto}</span>
             {o.recomendada && (
               <span className="senal recomendada">
@@ -203,7 +203,7 @@ function Formulario({
               onChange={() => cambiar({ opcion: OTRO })}
             />
           </span>
-          <span className="letra">Otro</span>
+          <span className="letra-q">Otro</span>
           <CampoCrece
             clase="campo-otro"
             valor={b.otro}

@@ -44,6 +44,7 @@
   --error-borde: #3d1a1c; /* el borde de un aviso de error */
   --seleccion: #ffffff2e; /* el texto seleccionado con el mouse */
   --bien: #4cc38a; /* lo que tiene margen en un medidor (el uso de la suscripción, el contexto; se pone ámbar y rojo al llenarse, R-56), la ruedita y la señal de Trabajando (R-63, R-71) y el tilde de lo que funciona (R-69) */
+  --recomendada: #f2c94c; /* la estrella de la opción recomendada en una pregunta (R-85); no es el ámbar de lo que espera */
   --enlace: #6cb6ff; /* un enlace dentro de un texto: los documentos, el Próximo paso, la Bandeja, la conversación (Q-171) */
 
   /* Código */
