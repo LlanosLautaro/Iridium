@@ -76,6 +76,11 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
   - [ ] En Skills › Framework, el botón de cada proyecto de afuera dice **Actualizar**; en el menú de la tarjeta, **Actualizar al framework**
   - [ ] Lo toqué en un proyecto que ya tenía una conversación: el pedido salió en una conversación nueva, y la anterior sigue en el historial (el reloj de arriba)
 
+- **Q-187 — ¿Cómo hacemos el tema propio (T-75)?**
+  Tipo: decisión · Frente: Apariencia y ajustes
+  Contexto: `trabajo.md` › T-75. Se puede sin tocar el código: un archivo con los colores que cambiás, guardado fuera de la app, que las actualizaciones no pisan. Lo que cambia entre las opciones es cuánto puede tocar la IA y dónde busca la guía.
+  Opciones: A) Solo los tokens (colores, líneas, letras), con la guía dentro de la app y el enlace a GitHub de referencia, editado con la IA desde Ajustes (recomendada: no se rompe con las versiones nuevas y anda sin internet) · B) Igual que A, pero la guía solo en GitHub, como lo pensaste (más simple, necesita internet y puede no coincidir con tu versión) · C) CSS libre: la IA puede cambiar cualquier pieza (más poder, pero una versión nueva puede romperlo sin aviso) · D) Dejarlo como idea por ahora
+
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
