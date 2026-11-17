@@ -1,5 +1,6 @@
 // Las ideas de un proyecto con framework viejo (R-8), como las recibe la ventana.
 import type { Cita } from './citas'
+import { type Bloque, escribirNotas, leerNotas } from './notas'
 
 /** Una sección de ideas de un proyecto (R-8): `07-construccion.md` › Ideas nuevas o `00-idea.md` › Ideas para después. */
 export interface SeccionIdeasProyecto {
@@ -60,8 +61,13 @@ export type IdeasDeProyecto =
 /** Lo que devuelve un cambio: el código de la idea, o por qué no se pudo (la pantalla no pierde lo escrito, ID-11). */
 export type ResultadoIdea = { tipo: 'ok'; codigo: string } | { tipo: 'error'; mensaje: string }
 
-/** La nota de una idea, sin el título; '' si no tiene. */
-export type NotaIdea = { tipo: 'ok'; texto: string } | { tipo: 'error'; mensaje: string }
+/**
+ * La nota de una idea, sin el título; '' si no tiene. `imagenes`: por ruta (`T-n/archivo`, relativa a `docs/ideas/`),
+ * la imagen como `data:`; falta la que no está.
+ */
+export type NotaIdea =
+  | { tipo: 'ok'; texto: string; imagenes: Record<string, string> }
+  | { tipo: 'error'; mensaje: string }
 
 /** Los estados a los que la pasa Iridium (ID-3): aprobar, rechazar, volver a sin evaluar y marcar revisado. */
 export const ESTADOS_DESDE_IDEAS = ['nueva', 'pendiente', 'descartado', 'hecho'] as const
@@ -156,4 +162,32 @@ export function citaHablar(idea: Pick<IdeaVista, 'codigo' | 'titulo'>): Cita {
     nombre: idea.titulo,
     texto: `Sobre la idea ${idea.codigo} «${idea.titulo}»`,
   }
+}
+
+// La nota de una idea abierta (ID-2, ID-I3): una hoja como la del bloc, con el título en el primer párrafo y debajo la
+// nota con su formato (párrafos, enlaces e imágenes; `compartido/notas.ts`, sin fechas).
+
+/** Los bloques de la hoja de una idea: el título, y la nota debajo. */
+export function bloquesDeIdea(titulo: string, nota: string): Bloque[] {
+  return [
+    { tipo: 'parrafo', partes: [{ tipo: 'texto', texto: titulo }] },
+    ...leerNotas(nota).filter((b) => b.tipo !== 'fecha'),
+  ]
+}
+
+/**
+ * Lo escrito en la hoja de una idea, como lo guarda Iridium: el título en la primera línea y la nota debajo. Si el
+ * primer párrafo tiene más de un renglón, los demás pasan a la nota; si arriba quedó una imagen, no hay título.
+ */
+export function escritoDeIdea(bloques: readonly Bloque[]): string {
+  const [primero, ...resto] = bloques
+  let titulo = ''
+  const nota: Bloque[] = [...resto]
+  if (primero?.tipo === 'parrafo') {
+    const [linea = '', ...mas] = escribirNotas([primero]).trimEnd().split('\n')
+    titulo = linea.trim()
+    if (mas.length) nota.unshift(...leerNotas(mas.join('\n')))
+  } else if (primero) nota.unshift(primero)
+  const cuerpo = escribirNotas(nota.filter((b) => b.tipo !== 'fecha')).trimEnd()
+  return cuerpo ? `${titulo}\n${cuerpo}` : titulo
 }

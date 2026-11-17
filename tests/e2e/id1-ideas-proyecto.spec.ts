@@ -187,15 +187,17 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await win.keyboard.press('Escape')
     await expect(abierta).toHaveCount(0)
     await fila('Un sonido cuando la IA termina').getByRole('button').first().click()
-    await expect(ideas.getByRole('textbox', { name: /Idea Un sonido/ })).toHaveValue(
-      'Un sonido cuando la IA termina (bajito)\nQue no suene si estoy mirando la ventana.',
-    )
+    await expect(ideas.getByRole('textbox', { name: /Idea Un sonido/ }).locator('p')).toHaveText([
+      'Un sonido cuando la IA termina (bajito)',
+      'Que no suene si estoy mirando la ventana.',
+    ])
     await win.keyboard.press('Escape')
 
     // La de la IA se lee al abrirla, sin escribir en ella; se rechaza con el clic derecho.
     await fila('El Mapa como una red de pasos').getByRole('button').first().click()
     await expect(ideas.locator('.cuerpo-fila')).toContainText('Un paso por frente, con flechas entre ellos.')
-    await expect(ideas.locator('.cuerpo-fila textarea')).toHaveCount(0)
+    await expect(ideas.locator('.cuerpo-fila [contenteditable]')).toHaveCount(0)
+    await expect(ideas.locator('.cuerpo-fila').getByRole('button', { name: 'Borrar' })).toHaveCount(0)
     await win.keyboard.press('Escape')
     await fila('El Mapa como una red de pasos').getByRole('button').first().click({ button: 'right' })
     await win.getByRole('menu').getByRole('menuitemcheckbox', { name: 'Rechazar' }).click()
@@ -208,6 +210,58 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await filtros.getByRole('button', { name: /^Aprobadas/ }).click()
     await expect(ideas.locator('.idp-item')).toHaveCount(1)
     await expect(ideas.locator('.idp-item')).toContainText('Dictado')
+
+    // ID-I3: la nota completa. Pegar una dirección la vuelve una Etiqueta de enlace; una imagen, se guarda con la idea.
+    await filtros.getByRole('button', { name: /^Todo/ }).click()
+    await fila('Un sonido cuando la IA termina').getByRole('button').first().click()
+    const hoja = ideas.getByRole('textbox', { name: /Idea Un sonido/ })
+    await hoja.locator('p').nth(1).click()
+    await win.keyboard.press('End')
+    await win.keyboard.press('Enter')
+    await app.evaluate(({ clipboard }) => clipboard.writeText('https://github.com/alfa/sonidos'))
+    await win.keyboard.press('Control+V')
+    await expect(hoja.locator('.nota-enlace')).toHaveText('sonidosgithub.com')
+    await app.evaluate(({ clipboard, ClipboardItem, nativeImage }) => {
+      const gris = nativeImage.createFromBitmap(Buffer.alloc(320 * 180 * 4, 0x40), {
+        width: 320,
+        height: 180,
+      })
+      const blob = new Blob([new Uint8Array(gris.toPNG())], { type: 'image/png' })
+      return clipboard.write([new ClipboardItem({ 'image/png': blob })])
+    })
+    await win.keyboard.press('Control+V')
+    await expect(hoja.locator('.nota-imagen img')).toBeVisible()
+    const notaT1 = () => readFile(join(raiz, 'Alfa/docs/ideas/T-1.md'), 'utf8').catch(() => '')
+    await expect
+      .poll(notaT1)
+      .toMatch(/ventana\.\n\nhttps:\/\/github\.com\/alfa\/sonidos\n\n!\[\]\(T-1\/\d{4}-\d{2}-\d{2}-1\.png\)/)
+    await win.screenshot({ path: 'test-results/id3-nota.png' })
+    // Al cerrarla y volver a abrirla, la etiqueta y la imagen siguen ahí.
+    await win.keyboard.press('Escape')
+    await fila('Un sonido cuando la IA termina').getByRole('button').first().click()
+    await expect(hoja.locator('.nota-enlace')).toHaveText('sonidosgithub.com')
+    await expect(hoja.locator('.nota-imagen img')).toBeVisible()
+
+    // Borrar (ID-8) pide confirmar en el mismo lugar: No la deja; Sí la saca con su nota y su imagen.
+    const abiertaAhora = ideas.locator('.cuerpo-fila')
+    await abiertaAhora.getByRole('button', { name: 'Borrar' }).click()
+    await expect(abiertaAhora).toContainText('¿Borrar esta idea?')
+    await win.screenshot({ path: 'test-results/id3-borrar.png' })
+    await abiertaAhora.getByRole('button', { name: 'No' }).click()
+    await expect(abiertaAhora.getByRole('button', { name: 'Aprobar' })).toBeVisible()
+    await abiertaAhora.getByRole('button', { name: 'Borrar' }).click()
+    await abiertaAhora.getByRole('button', { name: 'Sí' }).click()
+    await expect(fila('Un sonido cuando la IA termina')).toHaveCount(0)
+    await expect.poll(trabajo).not.toContain('## T-1 —')
+    await expect.poll(notaT1).toBe('')
+    // Un enlace se borra desde el clic derecho, con la confirmación en su renglón.
+    await filtros.getByRole('button', { name: /^Hechas/ }).click()
+    await fila('tldraw/tldraw').getByRole('button').first().click({ button: 'right' })
+    await win.getByRole('menu').getByRole('menuitem', { name: 'Borrar' }).click()
+    await expect(fila('tldraw/tldraw')).toContainText('¿Borrar este enlace?')
+    await fila('tldraw/tldraw').getByRole('button', { name: 'Sí' }).click()
+    await expect(fila('tldraw/tldraw')).toHaveCount(0)
+    await expect.poll(trabajo).not.toContain('tldraw')
   } finally {
     await app.close()
   }

@@ -833,6 +833,8 @@ export const CANALES = {
   estadoIdea: 'proyecto:estado-idea',
   notaIdea: 'proyecto:nota-idea',
   guardarIdea: 'proyecto:guardar-idea',
+  pegarImagenIdea: 'proyecto:pegar-imagen-idea',
+  borrarIdea: 'proyecto:borrar-idea',
   skillsProyecto: 'proyecto:skills',
   abrirDiseno: 'diseno:abrir',
   marcarVista: 'diseno:marcar-vista',
@@ -1025,6 +1027,10 @@ export interface ApiIridium {
   notaIdea(ruta: string, codigo: string): Promise<NotaIdea>
   /** Guarda una idea abierta: la primera línea es el título y el resto, la nota (ID-2). */
   guardarIdea(ruta: string, codigo: string, escrito: string): Promise<ResultadoIdea>
+  /** Una imagen pegada en una idea abierta: `docs/ideas/T-n/AAAA-MM-DD-n.<ext>` (ID-2). */
+  pegarImagenIdea(ruta: string, codigo: string, mime: string, base64: string): Promise<ImagenPegada>
+  /** Borra una idea del usuario o un enlace, con su nota y sus imágenes (ID-8). */
+  borrarIdea(ruta: string, codigo: string): Promise<ResultadoIdea>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */
   skillsProyecto(ruta: string): Promise<SkillProyecto[]>
   /** La sección Diseño (DS-11 a DS-13): los grupos de maquetas, el sistema y la base `maqueta://` de las miniaturas. */

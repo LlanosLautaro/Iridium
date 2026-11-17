@@ -10,7 +10,7 @@ import type {
   NotaIdea,
   ResultadoIdea,
 } from '../../compartido/ideas'
-import { diaDe } from '../../compartido/notas'
+import { diaDe, type ImagenPegada } from '../../compartido/notas'
 import { tieneFramework } from '../core/control'
 import {
   agregarIdea,
@@ -21,6 +21,7 @@ import {
   leerAnotado,
   limpiarTitulo,
   nombreDeEnlace,
+  quitarIdea,
 } from '../core/ideas'
 import { SECCIONES_IDEAS, seccionDeIdeas } from '../core/ideas-proyecto'
 import { leerTrabajo } from '../core/trabajo'
@@ -28,6 +29,7 @@ import { partirLineas } from '../core/visor/lineas'
 import { leerSiExiste } from '../infra/documentos'
 import { escribirAtomico } from '../infra/escritura'
 import { cambiarConCuidado } from '../infra/trabajo'
+import { esImagenEn, guardarImagenPegada, imagenesDe } from './notas'
 import { type DocumentosProyecto, motivo } from './visor'
 
 /** Las ideas sueltas de un proyecto (R-8): las secciones de la guía, pintadas como en Docs. Solo lee. */
@@ -57,6 +59,9 @@ const ARCHIVO_TRABAJO = 'docs/trabajo.md'
 const README = 'docs/README.md'
 export const CARPETA_NOTAS_IDEAS = 'docs/ideas'
 
+/** La carpeta de las notas, en el disco. */
+const notasEn = (carpeta: string) => join(carpeta, ...CARPETA_NOTAS_IDEAS.split('/'))
+
 function rutaNota(codigo: string): string {
   return `${CARPETA_NOTAS_IDEAS}/${codigo}.md`
 }
@@ -72,9 +77,7 @@ export async function ideasDeProyecto(carpeta: string): Promise<IdeasDeProyecto>
   try {
     if (await sinFramework(carpeta)) return { tipo: 'sin-framework' }
     const texto = (await leerSiExiste(carpeta, ARCHIVO_TRABAJO))?.texto ?? ''
-    const nombres = await readdir(join(carpeta, ...CARPETA_NOTAS_IDEAS.split('/'))).catch(
-      () => [] as string[],
-    )
+    const nombres = await readdir(notasEn(carpeta)).catch(() => [] as string[])
     const conNota = new Set(nombres.flatMap((n) => /^(T-\d+)\.md$/.exec(n)?.[1] ?? []))
     return { tipo: 'ok', ideas: ideasDe(leerTrabajo(texto).items, conNota) }
   } catch (e) {
@@ -152,10 +155,57 @@ export async function cambiarEstadoIdea(
   }
 }
 
-/** La nota de una idea, sin el título (ID-2); '' si no tiene. */
+/** La nota de una idea, sin el título (ID-2); '' si no tiene. Con sus imágenes, las de `docs/ideas/T-n/`. */
 export async function leerNotaIdea(carpeta: string, codigo: string): Promise<NotaIdea> {
   try {
-    return { tipo: 'ok', texto: ((await leerSiExiste(carpeta, rutaNota(codigo)))?.texto ?? '').trimEnd() }
+    const texto = ((await leerSiExiste(carpeta, rutaNota(codigo)))?.texto ?? '').trimEnd()
+    const imagenes = await imagenesDe(notasEn(carpeta), texto, (r) => esImagenEn(codigo, r))
+    return { tipo: 'ok', texto, imagenes }
+  } catch (e) {
+    return { tipo: 'error', mensaje: motivo(e) }
+  }
+}
+
+/** Una imagen pegada en una idea abierta (ID-2): `docs/ideas/T-n/AAAA-MM-DD-n.<ext>`, sin pisar ninguna. */
+export async function pegarImagenIdea(
+  carpeta: string,
+  codigo: string,
+  mime: string,
+  base64: string,
+  hoy = new Date(),
+): Promise<ImagenPegada> {
+  try {
+    const sin = await sinFramework(carpeta)
+    if (sin) return { tipo: 'error', mensaje: sin }
+    const i = buscarIdea((await leerSiExiste(carpeta, ARCHIVO_TRABAJO))?.texto ?? '', codigo)
+    if (typeof i === 'string') return { tipo: 'error', mensaje: i }
+    if (i.de !== 'usuario')
+      return { tipo: 'error', mensaje: 'solo las ideas del usuario se escriben desde Ideas' }
+    return await guardarImagenPegada(notasEn(carpeta), codigo, mime, base64, hoy)
+  } catch (e) {
+    return { tipo: 'error', mensaje: motivo(e) }
+  }
+}
+
+/**
+ * Borrar (ID-8) una idea del usuario o un enlace: primero sale de `trabajo.md`, después su nota y sus imágenes. Las de
+ * la IA no se borran desde Ideas (se rechazan).
+ */
+export async function borrarIdea(carpeta: string, codigo: string): Promise<ResultadoIdea> {
+  try {
+    const sin = await sinFramework(carpeta)
+    if (sin) return { tipo: 'error', mensaje: sin }
+    const r = await cambiarConCuidado(carpeta, ARCHIVO_TRABAJO, (texto) => {
+      const i = buscarIdea(texto, codigo)
+      if (typeof i === 'string') return { error: i }
+      if (i.de === 'IA') return { error: 'las ideas de la IA no se borran: se rechazan' }
+      const nuevo = quitarIdea(texto, codigo)
+      return nuevo === null ? { error: `${codigo} ya no está en trabajo.md` } : { texto: nuevo, dato: codigo }
+    })
+    if (r.tipo === 'error') return r
+    await rm(join(carpeta, ...rutaNota(codigo).split('/')), { force: true })
+    await rm(join(notasEn(carpeta), codigo), { recursive: true, force: true })
+    return { tipo: 'ok', codigo }
   } catch (e) {
     return { tipo: 'error', mensaje: motivo(e) }
   }

@@ -34,40 +34,7 @@
   margin-top: 0;
 }
 
-/* Un enlace: el ícono, el nombre y el sitio en gris, con borde; se abre con un clic */
-.nota-enlace {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--esp-2);
-  padding: 2px var(--esp-2);
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-control);
-  color: var(--texto);
-  text-decoration: none;
-  font-size: var(--tam-base);
-  vertical-align: baseline;
-  cursor: pointer;
-  white-space: nowrap;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.hoja-notas .nota-enlace {
-  color: var(--texto);
-  text-decoration: none;
-}
-.nota-enlace:hover {
-  border-color: var(--borde-control);
-}
-.nota-enlace .ic {
-  width: 14px;
-  height: 14px;
-  color: var(--texto-3);
-  flex: none;
-}
-.nota-enlace .sitio {
-  color: var(--texto-3);
-}
+/* Los enlaces son la Etiqueta de enlace (PZ-14). */
 
 /* Una imagen pegada, en su renglón */
 .nota-imagen {

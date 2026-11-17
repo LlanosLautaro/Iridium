@@ -236,3 +236,40 @@ test('el proyecto muestra sus skills, si tiene (R-8); sus ideas ya no tienen sec
   await expect(win.locator('[data-seccion="archivos"]')).toContainText('SKILL.md')
   await app.close()
 })
+
+test('una descripción larga no se sale de su tarjeta (R-79)', async () => {
+  // Archivada, con el framework viejo y en qué anda largo: todo lo que suma cosas en una línea.
+  await escribir(
+    'Beta/.proyecto.json',
+    JSON.stringify({
+      version: 1,
+      descripcion:
+        'Extensión de VS Code que muestra mis proyectos como tarjetas con su estado, para abrirlos, clasificarlos y archivarlos.',
+      estado: 'descontinuado',
+      etiquetas: [],
+      icono: null,
+      archivado: true,
+      reemplazadoPor: 'Alfa con un nombre bastante largo',
+    }),
+  )
+  await escribir(
+    'Beta/docs/estado.md',
+    '# Estado\n\n## Hito actual\n7 — Construcción y pruebas de todo lo que falta — en curso\n\n## Próximo paso\nTerminar la pantalla de ajustes con todas sus secciones, las pruebas de punta a punta y la documentación.\n',
+  )
+  const { app, win } = await abrir()
+  await win.getByRole('switch', { name: /Archivados/ }).click()
+  const beta = win.locator('.tarjeta', { hasText: 'Beta' })
+  await expect(beta).toBeVisible()
+  for (const ancho of [1440, 1180, 1000, 760]) {
+    await win.setViewportSize({ width: ancho, height: 900 })
+    const fuera = await beta.evaluate((t) => {
+      const a = t.getBoundingClientRect()
+      return [...t.querySelectorAll('*')]
+        .filter((h) => h.getBoundingClientRect().right > a.right + 0.5)
+        .map((h) => h.className || h.tagName)
+    })
+    expect(fuera, `a ${ancho} px`).toEqual([])
+  }
+  await win.screenshot({ path: 'test-results/r79.png' })
+  await app.close()
+})

@@ -19,13 +19,18 @@ const MIME_DE: Record<string, string> = Object.fromEntries(
   Object.entries(TIPOS_IMAGEN).map(([mime, ext]) => [ext, mime]),
 )
 
+/** Una imagen en una subcarpeta: `<sub>/<archivo>` con una extensión de imagen, sin salir de ella. */
+export function esImagenEn(sub: string, ruta: string): boolean {
+  if (!ruta.startsWith(`${sub}/`)) return false
+  const resto = ruta.slice(sub.length + 1)
+  return (
+    new RegExp(`^[^/\\\\:]+\\.(${Object.keys(MIME_DE).join('|')})$`, 'i').test(resto) && !resto.includes('..')
+  )
+}
+
 /** Una imagen de la hoja: solo `notas/<archivo>` con una extensión de imagen, sin salir de la carpeta. */
 export function esImagenDeNotas(ruta: string): boolean {
-  return (
-    new RegExp(`^${CARPETA_IMAGENES_NOTAS}/[^/\\\\:]+\\.(${Object.keys(MIME_DE).join('|')})$`, 'i').test(
-      ruta,
-    ) && !ruta.includes('..')
-  )
+  return esImagenEn(CARPETA_IMAGENES_NOTAS, ruta)
 }
 
 async function existe(carpeta: string): Promise<boolean> {
@@ -47,9 +52,21 @@ export async function leerHoja(carpeta: string): Promise<HojaNotas> {
   } catch (e) {
     if ((e as NodeJS.ErrnoException).code !== 'ENOENT') return { tipo: 'error', mensaje: motivo(e) }
   }
+  return { tipo: 'ok', texto, imagenes: await imagenesDe(carpeta, texto, esImagenDeNotas) }
+}
+
+/**
+ * Las imágenes de un texto con el formato del bloc, como `data:` (la ventana no lee el disco), relativas a `carpeta`.
+ * Solo las que acepta `valida`; la que no está, pesa demasiado o no se lee, falta (se muestra como faltante).
+ */
+export async function imagenesDe(
+  carpeta: string,
+  texto: string,
+  valida: (ruta: string) => boolean,
+): Promise<Record<string, string>> {
   const imagenes: Record<string, string> = {}
   for (const b of leerNotas(texto)) {
-    if (b.tipo !== 'imagen' || !esImagenDeNotas(b.ruta) || imagenes[b.ruta]) continue
+    if (b.tipo !== 'imagen' || !valida(b.ruta) || imagenes[b.ruta]) continue
     try {
       const ruta = join(carpeta, ...b.ruta.split('/'))
       if ((await stat(ruta)).size > LIMITE_IMAGEN_BYTES) continue
@@ -59,7 +76,7 @@ export async function leerHoja(carpeta: string): Promise<HojaNotas> {
       // La que no está o no se lee se muestra como faltante.
     }
   }
-  return { tipo: 'ok', texto, imagenes }
+  return imagenes
 }
 
 export async function guardarHoja(carpeta: string, texto: string): Promise<ResultadoNotas> {
@@ -79,14 +96,28 @@ export async function pegarImagenEnHoja(
   base64: string,
   hoy = new Date(),
 ): Promise<ImagenPegada> {
+  if (!(await existe(carpeta))) return { tipo: 'error', mensaje: 'no está la carpeta Ideas' }
+  return guardarImagenPegada(carpeta, CARPETA_IMAGENES_NOTAS, mime, base64, hoy)
+}
+
+/**
+ * Guarda una imagen pegada en `<carpeta>/<sub>/AAAA-MM-DD-n.<ext>`, sin pisar ninguna, y devuelve su ruta relativa a
+ * `carpeta` (`<sub>/archivo`, como va en el texto). La subcarpeta se crea si falta.
+ */
+export async function guardarImagenPegada(
+  carpeta: string,
+  sub: string,
+  mime: string,
+  base64: string,
+  hoy = new Date(),
+): Promise<ImagenPegada> {
   const extension = TIPOS_IMAGEN[mime]
   if (!extension) return { tipo: 'error', mensaje: 'por ahora solo se pueden pegar imágenes' }
   const datos = Buffer.from(base64, 'base64')
   if (datos.length === 0) return { tipo: 'error', mensaje: 'la imagen está vacía' }
   if (datos.length > LIMITE_IMAGEN_BYTES) return { tipo: 'error', mensaje: 'la imagen pesa más de 20 MB' }
-  if (!(await existe(carpeta))) return { tipo: 'error', mensaje: 'no está la carpeta Ideas' }
   try {
-    const dir = join(carpeta, CARPETA_IMAGENES_NOTAS)
+    const dir = join(carpeta, ...sub.split('/'))
     await mkdir(dir, { recursive: true })
     const usados = new Set((await readdir(dir)).map((n) => n.toLowerCase()))
     const dia = diaDe(hoy)
@@ -99,7 +130,7 @@ export async function pegarImagenEnHoja(
         if ((e as NodeJS.ErrnoException).code === 'EEXIST') continue
         throw e
       }
-      return { tipo: 'ok', ruta: `${CARPETA_IMAGENES_NOTAS}/${nombre}`, url: `data:${mime};base64,${base64}` }
+      return { tipo: 'ok', ruta: `${sub}/${nombre}`, url: `data:${mime};base64,${base64}` }
     }
     return { tipo: 'error', mensaje: 'no se encontró un nombre libre para la imagen' }
   } catch (e) {

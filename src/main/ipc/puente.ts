@@ -30,7 +30,15 @@ import { marcarVista, vistaDiseno } from '../app/diseno'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
 import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
-import { anotarIdea, cambiarEstadoIdea, guardarIdea, ideasDeProyecto, leerNotaIdea } from '../app/ideas'
+import {
+  anotarIdea,
+  borrarIdea,
+  cambiarEstadoIdea,
+  guardarIdea,
+  ideasDeProyecto,
+  leerNotaIdea,
+  pegarImagenIdea,
+} from '../app/ideas'
 import { mapaDe } from '../app/mapa'
 import { guardarHoja, leerHoja, pegarImagenEnHoja } from '../app/notas'
 import { Pendientes } from '../app/pendientes'
@@ -617,6 +625,19 @@ export function registrarPuente(s: Servicios): Puente {
   )
   ipcMain.handle(CANALES.guardarIdea, async (_, ruta: unknown, codigo: unknown, escrito: unknown) =>
     guardarIdea(await proyecto(ruta), CodigoIdea.parse(codigo), TextoNotas.parse(escrito)),
+  )
+  ipcMain.handle(
+    CANALES.pegarImagenIdea,
+    async (_, ruta: unknown, codigo: unknown, mime: unknown, datos: unknown) =>
+      pegarImagenIdea(
+        await proyecto(ruta),
+        CodigoIdea.parse(codigo),
+        Mime.parse(mime),
+        ImagenBase64.parse(datos),
+      ),
+  )
+  ipcMain.handle(CANALES.borrarIdea, async (_, ruta: unknown, codigo: unknown) =>
+    borrarIdea(await proyecto(ruta), CodigoIdea.parse(codigo)),
   )
   ipcMain.handle(CANALES.skillsProyecto, async (_, ruta: unknown) => skillsDelProyecto(await proyecto(ruta)))
 

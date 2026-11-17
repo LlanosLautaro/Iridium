@@ -73,6 +73,7 @@ const PIEZAS = [
   'texto-doc',
   'cuerpo-fila',
   'info',
+  'nota-enlace',
 ]
 
 /** Las variantes del Botón (PZ-1), que van solas en el HTML junto a `.boton`: una sección no las usa para otra cosa. */
@@ -272,7 +273,7 @@ describe('el control de estilos (DI-I3)', () => {
     const app = bloquesDePiezas(leer('src/renderer/estilos/piezas.css'))
     expect([...app.keys()]).toEqual([...maquetas.keys()])
     for (const [titulo, bloque] of maquetas) expect(app.get(titulo), titulo).toBe(bloque)
-    expect(maquetas.size).toBe(14)
+    expect(maquetas.size).toBe(15)
   })
 
   it('cada var(--…) de la app existe en los tokens o la define la app', () => {

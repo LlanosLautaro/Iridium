@@ -3,15 +3,18 @@
 // con `Idea:`. Arriba se anota; cada idea se abre en su lugar (la Fila que se abre, PZ-13) y se aprueba o se rechaza.
 // Lo que no se pudo guardar no se pierde: queda escrito y copiado, con el Recuadro de error arriba (ID-11).
 // Revisar con la IA y Hablar de esta idea quedan citados en la conversación de al lado, sin enviar (ID-4, ID-6, Q-182);
-// en cada renglón, con el botón de enviar (R-75, R-77).
+// en cada renglón, con el botón de enviar (R-75, R-77). La nota de una idea abierta es una hoja como la del bloc, con
+// enlaces e imágenes (`NotaDeIdea`, ID-I3); Borrar pide confirmar en el mismo lugar (ID-8).
 import { type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { diaCorto } from '../../../compartido/fechas'
 import {
+  bloquesDeIdea,
   citaHablar,
   citaRevisar,
   contarPorFiltro,
   type EstadoDesdeIdeas,
   entraEnFiltro,
+  escritoDeIdea,
   FILTROS_IDEAS,
   type FiltroIdeas,
   type IdeasDeProyecto,
@@ -23,6 +26,7 @@ import { guardarLuego, noGuardar } from '../../ui/guardarLuego'
 import { Icono } from '../../ui/Icono'
 import { MenuContextual, type Punto, puntoDelMenu } from '../../ui/MenuContextual'
 import { useDocsCambian } from './enlaces'
+import { NotaDeIdea } from './NotaDeIdea'
 
 const NOMBRES: Record<FiltroIdeas, string> = {
   todo: 'Todo',
@@ -109,6 +113,10 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   const [abierta, setAbierta] = useState<string | null>(null)
   /** El texto de la idea abierta: el título en la primera línea y la nota debajo; null mientras se lee. */
   const [texto, setTexto] = useState<string | null>(null)
+  /** La nota de la idea abierta como se leyó, para pintar su hoja al abrirla. */
+  const [leida, setLeida] = useState<{ nota: string; imagenes: Record<string, string> } | null>(null)
+  /** La idea o el enlace que pide confirmar Borrar (ID-8). */
+  const [borrando, setBorrando] = useState<string | null>(null)
   const [menu, setMenu] = useState<{ codigo: string; en: Punto } | null>(null)
   const nombre = usarEstado((s) => tarjetaDe(s.lista, ruta)?.nombre ?? 'este proyecto')
   const citar = usarEstado((s) => s.citar)
@@ -176,6 +184,8 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     }
     setAbierta(null)
     setTexto(null)
+    setLeida(null)
+    setBorrando(null)
     guardado.current = null
     return true
   }, [ruta, abierta, texto, ideaAbierta, guardar])
@@ -199,8 +209,10 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
       setAbierta(null)
       return
     }
-    const t = r.texto ? `${idea.titulo}\n${r.texto}` : idea.titulo
+    // Lo guardado, con la forma en que la hoja lo devuelve: abrir sin escribir no vuelve a guardar.
+    const t = escritoDeIdea(bloquesDeIdea(idea.titulo, r.texto))
     guardado.current = t
+    setLeida({ nota: r.texto, imagenes: r.imagenes })
     setTexto(t)
   }
 
@@ -210,6 +222,36 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     if (!codigo || !t.split(/\r?\n/)[0]?.trim()) return
     guardarLuego(claveGuardar(ruta, codigo), () => void guardar(codigo, t))
   }
+
+  // Borrar (ID-8): solo las del usuario y los enlaces, después de confirmar. Lo que esperaba guardarse ya no se guarda.
+  const borrar = async (i: IdeaVista) => {
+    setBorrando(null)
+    if (abierta === i.codigo) {
+      noGuardar(claveGuardar(ruta, i.codigo))
+      setAbierta(null)
+      setTexto(null)
+      setLeida(null)
+      guardado.current = null
+    }
+    const r = await window.iridium.borrarIdea(ruta, i.codigo)
+    if (r.tipo === 'error') setFallo({ titulo: 'No se pudo borrar', mensaje: r.mensaje })
+    else setFallo(null)
+    await leer()
+  }
+  const sePuedeBorrar = (i: IdeaVista) => i.de !== 'IA'
+
+  /** «¿Borrar esta idea? Sí · No», en el lugar del botón (ID-8). */
+  const confirmarBorrar = (i: IdeaVista) => (
+    <span className="idp-confirmar">
+      {i.de === 'enlace' ? '¿Borrar este enlace?' : '¿Borrar esta idea?'}
+      <button type="button" className="boton peligroso chico" onClick={() => void borrar(i)}>
+        Sí
+      </button>
+      <button type="button" className="boton sin-fondo chico" onClick={() => setBorrando(null)}>
+        No
+      </button>
+    </span>
+  )
 
   const cambiarEstado = async (idea: IdeaVista, estado: EstadoDesdeIdeas) => {
     const r = await window.iridium.estadoIdea(ruta, idea.codigo, estado)
@@ -273,11 +315,13 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   useEffect(() => {
     if (!abierta || menu) return
     const tecla = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape') void cerrar()
+      if (e.key !== 'Escape') return
+      if (borrando) setBorrando(null)
+      else void cerrar()
     }
     window.addEventListener('keydown', tecla)
     return () => window.removeEventListener('keydown', tecla)
-  }, [abierta, menu, cerrar])
+  }, [abierta, menu, cerrar, borrando])
 
   const cabecera = { titulo: 'Ideas' }
 
@@ -322,6 +366,21 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   ].filter((g) => g.ideas.length > 0)
   const hoy = new Date()
   const ideaDelMenu = menu ? ideas.find((i) => i.codigo === menu.codigo) : undefined
+
+  // Borrar desde el menú: la confirmación aparece en el renglón (o abajo, si la idea está abierta).
+  const borrarDelMenu = ideaDelMenu && (
+    <button
+      type="button"
+      role="menuitem"
+      onClick={() => {
+        setMenu(null)
+        setBorrando(ideaDelMenu.codigo)
+      }}
+    >
+      <Icono nombre="eliminar" />
+      Borrar
+    </button>
+  )
 
   const alMenu = (e: MouseEvent<HTMLElement>, idea: IdeaVista) => {
     e.preventDefault()
@@ -380,10 +439,14 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
           </span>
           {!enlace && meta}
         </button>
-        {!enlace && <span className="acciones">{enviar(idea)}</span>}
+        {borrando === idea.codigo && idea.codigo !== abierta ? (
+          <span className="acciones siempre">{confirmarBorrar(idea)}</span>
+        ) : (
+          !enlace && <span className="acciones">{enviar(idea)}</span>
+        )}
         {enlace && (
           <>
-            <span className="acciones">
+            <span className="acciones" hidden={borrando === idea.codigo}>
               {enviar(idea)}
               <button
                 type="button"
@@ -409,57 +472,74 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
         texto === null ? (
           <p className="idp-leyendo">Leyendo…</p>
         ) : (
-          <textarea
-            className="area idp-nota"
-            aria-label={`Idea ${idea.titulo}: la primera línea es el título`}
-            value={texto}
-            spellCheck={false}
-            // biome-ignore lint/a11y/noAutofocus: se abre para escribir en ella (ID-2).
-            autoFocus
-            onChange={(e) => escribir(e.target.value)}
+          <NotaDeIdea
+            key={idea.codigo}
+            ruta={ruta}
+            codigo={idea.codigo}
+            titulo={idea.titulo}
+            nota={leida?.nota ?? ''}
+            imagenes={leida?.imagenes ?? {}}
+            alCambiar={escribir}
+            alFallo={(mensaje) => setFallo({ titulo: 'No se pegó la imagen', mensaje })}
           />
         )
       ) : (
         <div className="texto-doc idp-texto-ia">{idea.texto.trim() || 'Sin más texto que el título.'}</div>
       )}
       <div className="pie-fila">
-        <button
-          type="button"
-          className="boton sin-fondo chico"
-          title="La cita en la conversación de al lado, para que escribas sobre ella"
-          onClick={() => void hablar(idea)}
-        >
-          <Icono nombre="comentar" />
-          Hablar de esta idea
-        </button>
-        {idea.estado !== 'hecha' && (
+        {borrando === idea.codigo ? (
+          confirmarBorrar(idea)
+        ) : (
           <>
             <button
               type="button"
-              className={
-                idea.estado === 'aprobada'
-                  ? 'boton sin-fondo chico idp-elegido-bien'
-                  : 'boton sin-fondo chico'
-              }
-              aria-pressed={idea.estado === 'aprobada'}
-              onClick={() => void aprobar(idea)}
+              className="boton sin-fondo chico"
+              title="La cita en la conversación de al lado, para que escribas sobre ella"
+              onClick={() => void hablar(idea)}
             >
-              <Icono nombre="check" />
-              Aprobar
+              <Icono nombre="comentar" />
+              Hablar de esta idea
             </button>
-            <button
-              type="button"
-              className={
-                idea.estado === 'rechazada'
-                  ? 'boton sin-fondo chico idp-elegido-mal'
-                  : 'boton sin-fondo chico'
-              }
-              aria-pressed={idea.estado === 'rechazada'}
-              onClick={() => void rechazar(idea)}
-            >
-              <Icono nombre="x" />
-              Rechazar
-            </button>
+            {idea.estado !== 'hecha' && (
+              <>
+                <button
+                  type="button"
+                  className={
+                    idea.estado === 'aprobada'
+                      ? 'boton sin-fondo chico idp-elegido-bien'
+                      : 'boton sin-fondo chico'
+                  }
+                  aria-pressed={idea.estado === 'aprobada'}
+                  onClick={() => void aprobar(idea)}
+                >
+                  <Icono nombre="check" />
+                  Aprobar
+                </button>
+                <button
+                  type="button"
+                  className={
+                    idea.estado === 'rechazada'
+                      ? 'boton sin-fondo chico idp-elegido-mal'
+                      : 'boton sin-fondo chico'
+                  }
+                  aria-pressed={idea.estado === 'rechazada'}
+                  onClick={() => void rechazar(idea)}
+                >
+                  <Icono nombre="x" />
+                  Rechazar
+                </button>
+              </>
+            )}
+            {sePuedeBorrar(idea) && (
+              <button
+                type="button"
+                className="boton sin-fondo chico"
+                onClick={() => setBorrando(idea.codigo)}
+              >
+                <Icono nombre="eliminar" />
+                Borrar
+              </button>
+            )}
           </>
         )}
       </div>
@@ -578,6 +658,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                 <Icono nombre="check" />
                 {ideaDelMenu.estado === 'hecha' ? 'Volver a para revisar' : 'Marcar como revisado'}
               </button>
+              {borrarDelMenu}
             </>
           ) : (
             <>
@@ -620,6 +701,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
                   </button>
                 </>
               )}
+              {sePuedeBorrar(ideaDelMenu) && borrarDelMenu}
             </>
           )}
         </MenuContextual>

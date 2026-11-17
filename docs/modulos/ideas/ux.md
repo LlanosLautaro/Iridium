@@ -77,6 +77,6 @@
 ## Piezas de UI nuevas
 | Pieza | Por qué hace falta | Agregada al sistema |
 |---|---|---|
-| Etiqueta de enlace (el nombre, el sitio y el ícono de abrir, dentro del texto) | se usa en la nota de cada idea; hoy existe solo en el bloc | no (en ID-I3, con la nota completa: pasa a `piezas.css`) |
+| Etiqueta de enlace (el nombre, el sitio y el ícono de abrir, dentro del texto) | se usa en la nota de cada idea; hoy existe solo en el bloc | sí: PZ-14 (ID-I3, 2026-11-16) |
 | Fila que se abre en su lugar (la idea abierta, con su nota y sus botones abajo) | ninguna pieza abre una fila sin salir de la lista | sí: PZ-13 (ID-I1, 2026-11-16) |
 | Ícono robot | marca lo que anotó la IA | sí: en las maquetas (`piezas.js`) y en la app (ID-I1) |

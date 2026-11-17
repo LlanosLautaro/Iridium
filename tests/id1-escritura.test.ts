@@ -7,10 +7,12 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   anotarIdea,
+  borrarIdea,
   cambiarEstadoIdea,
   guardarIdea,
   ideasDeProyecto,
   leerNotaIdea,
+  pegarImagenIdea,
 } from '../src/main/app/ideas'
 import { cambiarConCuidado, INTENTOS_TRABAJO } from '../src/main/infra/trabajo'
 
@@ -194,6 +196,7 @@ describe('escribir en una idea abierta', () => {
     expect(await leerNotaIdea(carpeta, 'T-1')).toEqual({
       tipo: 'ok',
       texto: 'Esconder todo menos la conversación.\n\nCon F11.',
+      imagenes: {},
     })
   })
 
@@ -208,7 +211,7 @@ describe('escribir en una idea abierta', () => {
     await guardarIdea(carpeta, 'T-1', 'Un modo foco\nAlgo.')
     await guardarIdea(carpeta, 'T-1', 'Un modo foco\n\n')
     expect(await existe('docs/ideas/T-1.md')).toBe(false)
-    expect(await leerNotaIdea(carpeta, 'T-1')).toEqual({ tipo: 'ok', texto: '' })
+    expect(await leerNotaIdea(carpeta, 'T-1')).toEqual({ tipo: 'ok', texto: '', imagenes: {} })
   })
 
   it('no escribe una idea de la IA ni un título vacío', async () => {
@@ -216,5 +219,66 @@ describe('escribir en una idea abierta', () => {
     expect((await guardarIdea(carpeta, 'T-1', '   \nNota sin título')).tipo).toBe('error')
     expect(await leer('docs/trabajo.md')).toBe(TRABAJO)
     expect(await existe('docs/ideas')).toBe(false)
+  })
+})
+
+// ID-I3: la nota completa (imágenes pegadas) y Borrar (ID-8).
+const PNG = Buffer.from('iVBORw0KGgo=', 'base64').toString('base64')
+
+describe('imágenes en una idea abierta', () => {
+  it('se guardan en docs/ideas/T-n/ sin pisar ninguna, y la nota las lee como data:', async () => {
+    const a = await pegarImagenIdea(carpeta, 'T-1', 'image/png', PNG, HOY)
+    const b = await pegarImagenIdea(carpeta, 'T-1', 'image/png', PNG, HOY)
+    expect(a).toMatchObject({ tipo: 'ok', ruta: 'T-1/2026-11-16-1.png' })
+    expect(b).toMatchObject({ tipo: 'ok', ruta: 'T-1/2026-11-16-2.png' })
+    expect(await existe('docs/ideas/T-1/2026-11-16-2.png')).toBe(true)
+    expect((await guardarIdea(carpeta, 'T-1', 'Un modo foco\nMirá:\n\n![](T-1/2026-11-16-1.png)')).tipo).toBe(
+      'ok',
+    )
+    const n = await leerNotaIdea(carpeta, 'T-1')
+    expect(n.tipo === 'ok' && Object.keys(n.imagenes)).toEqual(['T-1/2026-11-16-1.png'])
+    expect(n.tipo === 'ok' && n.imagenes['T-1/2026-11-16-1.png']).toMatch(/^data:image\/png;base64,/)
+  })
+
+  it('no lee imágenes de otra idea ni de fuera de su carpeta', async () => {
+    await mkdir(archivo('docs/ideas/T-2'), { recursive: true })
+    await writeFile(archivo('docs/ideas/T-2/a.png'), Buffer.from(PNG, 'base64'))
+    await writeFile(archivo('docs/ideas/T-1.md'), '![](T-2/a.png)\n\n![](T-1/../T-2/a.png)\n')
+    const n = await leerNotaIdea(carpeta, 'T-1')
+    expect(n.tipo === 'ok' && n.imagenes).toEqual({})
+  })
+
+  it('solo en las ideas del usuario, y solo imágenes', async () => {
+    expect((await pegarImagenIdea(carpeta, 'T-2', 'image/png', PNG, HOY)).tipo).toBe('error')
+    expect((await pegarImagenIdea(carpeta, 'T-1', 'text/plain', PNG, HOY)).tipo).toBe('error')
+    expect(await existe('docs/ideas')).toBe(false)
+  })
+})
+
+describe('borrar (ID-8)', () => {
+  it('saca la idea del usuario de trabajo.md, con su nota y sus imágenes', async () => {
+    await guardarIdea(carpeta, 'T-1', 'Un modo foco\nCon F11.')
+    await pegarImagenIdea(carpeta, 'T-1', 'image/png', PNG, HOY)
+    expect(await borrarIdea(carpeta, 'T-1')).toEqual({ tipo: 'ok', codigo: 'T-1' })
+    const t = await leer('docs/trabajo.md')
+    expect(t).not.toContain('T-1')
+    expect(t).toContain('## T-2 — Exportar a PDF')
+    expect(await existe('docs/ideas/T-1.md')).toBe(false)
+    expect(await existe('docs/ideas/T-1')).toBe(false)
+  })
+
+  it('borra un enlace', async () => {
+    const r = await anotarIdea(carpeta, 'https://github.com/tldraw/tldraw', HOY)
+    expect(r.tipo).toBe('ok')
+    if (r.tipo !== 'ok') return
+    expect((await borrarIdea(carpeta, r.codigo)).tipo).toBe('ok')
+    expect(await leer('docs/trabajo.md')).not.toContain('tldraw')
+  })
+
+  it('no borra las de la IA ni lo que no es una idea', async () => {
+    expect((await borrarIdea(carpeta, 'T-2')).tipo).toBe('error')
+    expect((await borrarIdea(carpeta, 'T-3')).tipo).toBe('error')
+    expect((await borrarIdea(carpeta, 'T-9')).tipo).toBe('error')
+    expect(await leer('docs/trabajo.md')).toBe(TRABAJO)
   })
 })

@@ -1,7 +1,7 @@
 // ID-I1: de los `T-n` de `trabajo.md` a la lista de Ideas, y los cambios que hace Iridium en el texto (D-128 a D-130).
 import { describe, expect, it } from 'vitest'
 import { leerCitas, mensajeConCitas, sumarCita } from '../src/compartido/citas'
-import { citaHablar, citaRevisar, pedidoRevisar } from '../src/compartido/ideas'
+import { bloquesDeIdea, citaHablar, citaRevisar, escritoDeIdea, pedidoRevisar } from '../src/compartido/ideas'
 import {
   agregarIdea,
   cambiarEstado,
@@ -261,5 +261,33 @@ describe('leer las citas de un mensaje enviado (Q-182)', () => {
 
   it('un mensaje sin citas queda tal cual', () => {
     expect(leerCitas('Hola\n\nChau')).toEqual({ citas: [], texto: 'Hola\n\nChau' })
+  })
+})
+
+describe('la nota de una idea abierta (ID-2, ID-I3)', () => {
+  it('se abre con el título arriba y la nota con sus enlaces e imágenes, y vuelve igual', () => {
+    const nota =
+      'Mirar cómo arma las flechas: https://github.com/tldraw/tldraw\n\n![](T-1/2026-11-16-1.png)\n\nY nada más.'
+    const bloques = bloquesDeIdea('Un modo foco', nota)
+    expect(bloques[0]).toEqual({ tipo: 'parrafo', partes: [{ tipo: 'texto', texto: 'Un modo foco' }] })
+    expect(bloques[2]).toEqual({ tipo: 'imagen', ruta: 'T-1/2026-11-16-1.png' })
+    expect(escritoDeIdea(bloques)).toBe(`Un modo foco\n${nota}`)
+  })
+
+  it('sin nota, es solo el título', () => {
+    expect(escritoDeIdea(bloquesDeIdea('Solo título', ''))).toBe('Solo título')
+  })
+
+  it('un salto dentro del primer párrafo: lo de abajo pasa a la nota', () => {
+    const bloques = [
+      { tipo: 'parrafo' as const, partes: [{ tipo: 'texto' as const, texto: 'Título\nPrimera línea' }] },
+      { tipo: 'parrafo' as const, partes: [{ tipo: 'texto' as const, texto: 'Otra' }] },
+    ]
+    expect(escritoDeIdea(bloques)).toBe('Título\nPrimera línea\n\nOtra')
+  })
+
+  it('sin título (arriba quedó una imagen o nada), la primera línea queda vacía', () => {
+    expect(escritoDeIdea([{ tipo: 'imagen', ruta: 'T-1/a.png' }])).toBe('\n![](T-1/a.png)')
+    expect(escritoDeIdea([{ tipo: 'parrafo', partes: [] }])).toBe('')
   })
 })

@@ -117,6 +117,8 @@
 .tarjeta {
   position: relative;
   display: grid;
+  /* Una sola columna que no crece con lo de adentro: lo que no entra se corta, no se sale (R-79) */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   gap: 10px;
   min-height: 148px;

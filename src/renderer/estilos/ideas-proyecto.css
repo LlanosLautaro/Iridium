@@ -78,20 +78,44 @@
 
 /* La idea abierta: su texto para escribir (la primera línea es el título) o el de la IA, para leer */
 .idp-nota {
-  width: 100%;
   max-width: var(--ancho-lectura);
   min-height: 96px;
-  resize: none;
-  field-sizing: content;
-  padding: 0;
-  background: none;
   font-size: var(--tam-base);
+  outline: none;
+  caret-color: var(--texto);
+  overflow-wrap: anywhere;
 }
-/* Texto libre, como en la maqueta: sin el borde del campo, ni al pasar ni al escribir */
-.idp-nota,
-.idp-nota:hover,
-.idp-nota:focus {
-  border-color: transparent;
+.idp-nota p {
+  margin: 0 0 var(--esp-2);
+}
+/* La primera línea es el título */
+.idp-nota > p:first-child {
+  font-weight: 500;
+}
+.idp-nota .nota-imagen {
+  margin: var(--esp-2) 0 var(--esp-3);
+  user-select: none;
+}
+.idp-nota .nota-imagen img {
+  display: block;
+  max-width: min(100%, 480px);
+  max-height: 360px;
+  border-radius: var(--radio-bloque);
+  border: 1px solid var(--borde);
+}
+.idp-nota .nota-imagen.falta {
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+}
+/* Borrar pide confirmar en el mismo lugar (ID-8) */
+.idp-confirmar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+  padding-left: var(--esp-2);
+  color: var(--texto-2);
+  font-size: var(--tam-chico);
+  white-space: nowrap;
 }
 .idp-texto-ia {
   font-size: var(--tam-base);
