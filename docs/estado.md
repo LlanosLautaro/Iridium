@@ -36,13 +36,13 @@
 | Ideas (`modulos/ideas/estado.md`) | sección | 7. Construcción (ID-I1, ID-I2 e ID-I3 probadas; sigue ID-I4) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
-| Mapa (T-71) | sección | 1. Propuesta (el Mapa como una red de pasos por frente; pensarlo en el chat; orden con Capacidades a decidir) | pendiente |
+| Mapa (T-71) | sección | 1. Propuesta (repensado como hoja de ruta: qué viene después de Pendientes; espera Q-193) | pendiente |
 
 ## En qué estamos ahora
 **Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones: ID-I1 (Ideas en un proyecto) e ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación, D-131) están hechas y probadas (Q-181, Q-183; tras Q-183, el ícono de compartir y sin el `T-n` a la vista). ID-I3 (la nota de una idea con enlaces e imágenes pegados, y Borrar) está probada (Q-189, Q-190). Sigue ID-I4 (las ideas sueltas del inicio, que reemplazan al bloc: Q-190 lo recordó). La miniatura del sitio al pegar un enlace queda como T-76.
 Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) no se prueba: el usuario la dio por descontinuada (Q-174) y la reemplaza Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir: el repo es público (D-132): la otra persona baja el `.zip` de la última versión y se actualiza sola, sin invitación; tu copia sigue armándose en tu PC. Falta publicar una versión al día (Q-185). Ver la IA de la otra persona desde acá queda como idea (T-74).
-R-79 (el texto de las tarjetas que se salía) quedó probado en Q-189. Actualizar al framework abre siempre una conversación nueva (D-133) y Ejecutar volvió al verde (R-78): probados (Q-186). El tema propio (T-75) se hará solo con tokens, editado con la IA desde Ajustes (D-134), después de Ideas. El arranque del período de 5 horas (T-70) se hará con trabajo real de una bandeja lista, desde la misma Iridium abierta, a las 3 y al vencer cada ventana (D-135, Q-188), después de Ideas. La grilla de Proyectos va toda por el último cambio (D-136, Q-191, T-77) y la tarjeta marca cuando todo está respondido o la bandeja está vacía (R-81) y ya no muestra el hito ni el Próximo paso (R-83, R-84); el título de la Bandeja ya no se recuadra al abrir (R-82): esperan Q-192.
+R-79 (el texto de las tarjetas que se salía) quedó probado en Q-189. Actualizar al framework abre siempre una conversación nueva (D-133) y Ejecutar volvió al verde (R-78): probados (Q-186). El tema propio (T-75) se hará solo con tokens, editado con la IA desde Ajustes (D-134), después de Ideas. El arranque del período de 5 horas (T-70) se hará con trabajo real de una bandeja lista, desde la misma Iridium abierta, a las 3 y al vencer cada ventana (D-135, Q-188), después de Ideas. La grilla de Proyectos va toda por el último cambio (D-136, Q-191, T-77) y la tarjeta marca cuando todo está respondido o la bandeja está vacía (R-81) y ya no muestra el hito ni el Próximo paso (R-83, R-84); el título de la Bandeja ya no se recuadra al abrir (R-82): probados en Q-192. El Mapa se repensó como una hoja de ruta (T-71): espera Q-193.
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
@@ -53,13 +53,10 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
-- **Q-192 — Probá el orden de la grilla y las marcas de las tarjetas**
-  Tipo: prueba · Frente: Inicio
-  Contexto: D-136 y R-80 a R-84. La versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo).
-  - [ ] En Proyectos, arriba están los que tocaste último, sin agrupar por estado; los archivados, al final
-  - [ ] Arriba a la derecha de cada tarjeta: el número si hay algo sin responder; un tilde blanco si respondiste todo; un círculo vacío si no hay preguntas o el proyecto no empezó (al pasar el mouse dice cuál)
-  - [ ] Las tarjetas ya no muestran el hito ni «Próximo: …»; al pie queda el frente en curso, si tiene (Iridium: «Ideas · 7. Construcción»)
-  - [ ] Al abrir Iridium con un proyecto abierto, «Bandeja de entrada» ya no aparece recuadrado
+- **Q-193 — ¿Qué es el Mapa: una hoja de ruta, una red de pasos o un kanban?**
+  Tipo: decisión
+  Contexto: `trabajo.md` › T-71 › Repensado en el chat. Lo que buscás es ver qué viene después de Pendientes sin leer texto, y si una idea tuya ya está en el plan. Con tu respuesta armo una maqueta con los datos reales de Iridium para que la mires antes de construir; el frente arranca después de Ideas (lo de Capacidades se ve en la propuesta).
+  Opciones: A) Hoja de ruta Ahora / Después / Más adelante, una fila por frente, una línea por cosa; la IA la ordena y vos corregís si querés; «Sin ubicar» para las ideas nuevas (recomendada: responde «qué viene» de un vistazo y sirve antes y después del hito 10) · B) Una red de pasos por frente, con un color cada uno · C) Un kanban por estado (nueva, pendiente, en curso, hecho)
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
