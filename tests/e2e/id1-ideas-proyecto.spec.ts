@@ -370,3 +370,82 @@ test('Pegar una imagen en el campo de arriba (R-87, R-88): queda debajo, se saca
     await app.close()
   }
 })
+
+test('Calidad (paso 8): Shift+Enter, una idea abierta a la vez, pegar con formato y abrir un enlace (ID-1, ID-2, ID-4)', async () => {
+  const { app, win } = await abrir()
+  try {
+    await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+    await win
+      .getByRole('navigation', { name: 'Secciones del proyecto' })
+      .getByRole('button', { name: 'Ideas' })
+      .click()
+    const ideas = win.locator('[data-seccion="ideas"]')
+    const fila = (titulo: string) => ideas.locator('.idp-item', { hasText: titulo })
+    const campo = ideas.getByRole('textbox', { name: 'Anotar una idea o un enlace' })
+
+    // ID-1: Shift+Enter baja de renglón sin anotar; con Enter, la primera línea es el título y el resto, su nota.
+    await campo.fill('Atajos para los filtros')
+    await campo.press('Shift+Enter')
+    await campo.pressSequentially('Con las teclas 1 a 6.')
+    await expect(campo).toHaveValue('Atajos para los filtros\nCon las teclas 1 a 6.')
+    await campo.press('Enter')
+    await expect(campo).toHaveValue('')
+    await expect.poll(trabajo).toMatch(/## T-6 — Atajos para los filtros\nEstado: nueva · Idea: usuario/)
+    await expect
+      .poll(() => readFile(join(raiz, 'Alfa/docs/ideas/T-6.md'), 'utf8').catch(() => ''))
+      .toContain('Con las teclas 1 a 6.')
+
+    // ID-2: una abierta a la vez. Abrir otra cierra la primera; un clic en la abierta la cierra.
+    const abiertas = ideas.locator('.cuerpo-fila')
+    await fila('Un sonido cuando la IA termina').getByRole('button').first().click()
+    await expect(ideas.getByRole('textbox', { name: /Idea Un sonido/ })).toBeVisible()
+    await fila('Dictado').getByRole('button').first().click()
+    await expect(abiertas).toHaveCount(1)
+    await expect(ideas.getByRole('textbox', { name: /Idea Dictado/ })).toBeVisible()
+    await expect(ideas.getByRole('textbox', { name: /Idea Un sonido/ })).toHaveCount(0)
+    await fila('Dictado').getByRole('button').first().click()
+    await expect(abiertas).toHaveCount(0)
+
+    // ID-2: lo que trae formato se pega como texto; cambiar la primera línea cambia el título del renglón.
+    await fila('Un sonido cuando la IA termina').getByRole('button').first().click()
+    const hoja = ideas.getByRole('textbox', { name: /Idea Un sonido/ })
+    await expect(hoja).toBeFocused()
+    await win.keyboard.press('End')
+    await win.keyboard.press('Enter')
+    await app.evaluate(({ clipboard, ClipboardItem }) =>
+      clipboard.write([
+        new ClipboardItem({
+          'text/plain': new Blob(['Negrita y normal'], { type: 'text/plain' }),
+          'text/html': new Blob(['<b>Negrita</b> y <i>normal</i>'], { type: 'text/html' }),
+        }),
+      ]),
+    )
+    expect(
+      await app.evaluate(async ({ clipboard }) => (await clipboard.read()).flatMap((i) => i.types)),
+    ).toContain('text/html')
+    await win.keyboard.press('Control+V')
+    await expect(hoja).toContainText('Negrita y normal')
+    await expect(hoja.locator('b, i, strong, em')).toHaveCount(0)
+    await expect
+      .poll(() => readFile(join(raiz, 'Alfa/docs/ideas/T-1.md'), 'utf8').catch(() => ''))
+      .toContain('Negrita y normal')
+    await hoja.locator('p').first().click()
+    await win.keyboard.press('End')
+    await win.keyboard.type(' al terminar')
+    await expect(fila('Un sonido cuando la IA termina al terminar').locator('.titulo-fila')).toBeVisible()
+    await expect.poll(trabajo).toContain('## T-1 — Un sonido cuando la IA termina al terminar')
+    await win.screenshot({ path: 'test-results/id8-calidad-pegar.png' })
+    await win.keyboard.press('Escape')
+
+    // ID-4: un clic en el renglón de un enlace lo abre en el navegador (en la prueba, se anota en vez de abrirse).
+    await campo.fill('https://github.com/tldraw/tldraw')
+    await campo.press('Enter')
+    await fila('tldraw/tldraw').getByRole('button').first().click()
+    await expect
+      .poll(() => app.evaluate(() => (globalThis as { enlacesAfuera?: string[] }).enlacesAfuera ?? []))
+      .toEqual(['https://github.com/tldraw/tldraw'])
+    await expect(abiertas).toHaveCount(0)
+  } finally {
+    await app.close()
+  }
+})

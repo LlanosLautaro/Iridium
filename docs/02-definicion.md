@@ -231,7 +231,7 @@ Además de lo que está en *Won't*:
 | Vista general | La pantalla con lo de todos los proyectos: la lista, los pendientes, la biblioteca de diseño, las skills (D-015) |
 | Vista de proyecto | La pantalla de un proyecto abierto, donde todo es de ese proyecto (D-015) |
 | Sesión | La conversación con la IA de un proyecto; hay una por proyecto y sigue aunque no esté a la vista |
-| Idea suelta | Una idea anotada en `Ideas/ideas.md` que todavía no pasó a un proyecto (módulo Inicio) |
+| Idea suelta | Una idea anotada en Ideas del inicio, en `Ideas/sueltas.md` de la carpeta Iridium, que todavía no pasó a un proyecto (frente Ideas, D-128, D-130) |
 | Chat general | La conversación de la carpeta `Ideas` de la carpeta Iridium (D-083); se ve al lado de la grilla y en la sección Ideas (D-060, Q-113) |
 | Carpeta Iridium | La carpeta de Iridium aparte de los proyectos, con `Ideas` y `Skills`; de entrada `Documentos\Iridium`, se cambia en Ajustes › Proyectos (D-083) |
 | Motor | Lo que hace el trabajo de IA: hoy Claude Code, por el Agent SDK |

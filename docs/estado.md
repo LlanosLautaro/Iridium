@@ -33,13 +33,13 @@
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 probadas; la tanda 8, el bloc de Ideas, sin probar: lo reemplaza el frente Ideas, D-128, Q-174) | en pausa |
-| Ideas (`modulos/ideas/estado.md`) | sección | 7. Construcción (ID-I1 a ID-I3 probadas; ID-I4: anotar en el inicio y en un proyecto, bien en Q-196; pegar imágenes, Mover y R-87/R-88, en Q-198) | en curso |
+| Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
-| Mapa (T-71) | sección | 1. Propuesta cerrada (un camino de pasos concretos por frente, D-138; la ruta, en el estado de cada frente, D-139); es el frente que sigue a Ideas (D-140) | pendiente |
+| Mapa (T-71) | sección | 1. Propuesta cerrada (un camino de pasos concretos por frente, D-138; la ruta, en el estado de cada frente, D-139); es el frente que sigue (D-140): falta abrir su carpeta | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones: ID-I1 (Ideas en un proyecto) e ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación, D-131) están hechas y probadas (Q-181, Q-183; tras Q-183, el ícono de compartir y sin el `T-n` a la vista). ID-I3 (la nota de una idea con enlaces e imágenes pegados, y Borrar) está probada (Q-189, Q-190). ID-I4 está hecha: Ideas del inicio es la misma lista, con las ideas sueltas en `sueltas.md` de la carpeta Ideas, el selector para anotar directo en un proyecto y Mover a un proyecto; el bloc se sacó (su `notas.md` estaba vacío). En Q-196, anotar sin proyecto y en un proyecto, bien; pegar una imagen no lo marcó: R-87 y R-88 decían que no se podía pegar en el campo de arriba, y ahora se puede (queda debajo con ✕ y va a la nota al anotar). Lo que falta de ID-I4 se prueba en Q-198. Después de Ideas sigue el Mapa (D-140, Q-197). La miniatura del sitio al pegar un enlace queda como T-76.
+**Ideas terminó (2026-11-17):** las cuatro iteraciones probadas (la última en Q-198: pegar imágenes en el campo de arriba y Mover a un proyecto, todo bien) y su calidad hecha: cada historia contra sus pruebas (se sumaron cuatro en la app), y un caso límite arreglado: la descripción de un enlace con una línea que empieza con `#` ya no rompe `trabajo.md` (`modulos/ideas/estado.md` › Calidad). Los avisos de `pnpm audit`, ninguno de Ideas, quedan en T-79. Anotaste T-78 (un estado «implementada» para las ideas): sigue sin evaluar, en tu lista. **Lo que sigue es el Mapa** (D-140, T-71), que todavía no tiene su carpeta en `modulos/`.
 Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) no se prueba: el usuario la dio por descontinuada (Q-174) y la reemplaza Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir: el repo es público (D-132): la otra persona baja el `.zip` de la última versión y se actualiza sola, sin invitación; tu copia sigue armándose en tu PC. Falta publicar una versión al día (Q-185). Ver la IA de la otra persona desde acá queda como idea (T-74).
 R-79 (el texto de las tarjetas que se salía) quedó probado en Q-189. Actualizar al framework abre siempre una conversación nueva (D-133) y Ejecutar volvió al verde (R-78): probados (Q-186). El tema propio (T-75) se hará solo con tokens, editado con la IA desde Ajustes (D-134), después del Mapa (D-140). El arranque del período de 5 horas (T-70) se hará con trabajo real de una bandeja lista, desde la misma Iridium abierta, a las 3 y al vencer cada ventana (D-135, Q-188), después del Mapa (D-140). La grilla de Proyectos va toda por el último cambio (D-136, Q-191, T-77) y la tarjeta marca cuando todo está respondido o la bandeja está vacía (R-81) y ya no muestra el hito ni el Próximo paso (R-83, R-84); el título de la Bandeja ya no se recuadra al abrir (R-82): probados en Q-192. El Mapa (T-71) es un camino de pasos concretos por frente, uno a la vez desde una barra arriba (D-138, maqueta `diseno/pantallas/mapa-b.html`); la ruta de cada frente es una lista «Ruta» en su `estado.md` que la IA pone al día al cerrar cada iteración (D-139, Q-195): el formato entra al framework con su lector y su control al construir el Mapa, después de Ideas. La estrella de «recomendada» va en amarillo (R-85) y «Otro» ya no pisa su campo (R-86).
@@ -53,20 +53,11 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
-- **Q-198 — Probá pegar imágenes en Ideas y Mover a un proyecto**
-  Tipo: prueba · Frente: Ideas
-  Contexto: ID-I4, R-87 y R-88. Primero Armar. El campo de arriba de Ideas ahora acepta una imagen: queda debajo, chica, con ✕ para sacarla, y al anotar va a la nota de la idea. Si algo no pega, copiá acá el aviso que aparece.
-  - [ ] En Ideas del inicio (Ctrl+3) escribí una idea, pegué una captura con Ctrl+V en el campo de arriba: apareció debajo; con Enter quedó anotada y al abrirla la captura está en su nota
-  - [ ] En las Ideas de un proyecto (desde su barra) hice lo mismo: pegar la captura en el campo de arriba, Enter, y la captura está en la idea abierta
-  - [ ] Pegué solo una captura, sin escribir nada, y Enter: quedó una idea «Imagen pegada» con la captura
-  - [ ] Abrí una idea ya anotada y le pegué otra captura con Ctrl+V: quedó en su renglón
-  - [ ] Una idea suelta con su captura la pasé con «Mover a un proyecto»: dijo «Movida a …» y en ese proyecto está con su nota y la captura
-
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Si llega Q-198, procesarla primero (lo que falle se arregla en el momento). Si no: Ideas, paso 8 (Calidad): repasar las historias ID-1 a ID-8 contra las pruebas que hay y cubrir lo que falte. Con Ideas cerrada, sigue el Mapa (D-140).
-**Leer antes:** `modulos/ideas/estado.md` › Próximo paso.
+Abrir el frente **Mapa** (T-71, D-140): crear `modulos/mapa/` con su `estado.md` (la propuesta, el paso 1, ya está cerrada en D-138 y D-139, con la maqueta `diseno/pantallas/mapa-b.html`) y hacer el paso 2, Definición: las historias del camino de pasos por frente, «Por empezar» y la lista «Ruta» de cada `estado.md`, para que las apruebes en una Q-n.
+**Leer antes:** D-138 y D-139 en `decisiones.md`; T-71 en `trabajo.md`; `referencias/modulos.md` del framework.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

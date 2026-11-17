@@ -152,6 +152,21 @@ describe('los cambios en trabajo.md', () => {
     expect(crlf).toBe('# Trabajo\r\n\r\n## T-1 — x\r\nEstado: nueva · Idea: usuario · Fecha: 2026-11-16\r\n')
   })
 
+  it('una descripción con líneas que empiezan con # no crea títulos ni ítems (paso 8), y se lee como se escribió', () => {
+    const { texto } = agregarIdea('# Trabajo\n', {
+      titulo: 'a/b',
+      de: 'enlace',
+      fecha: '2026-11-17',
+      enlace: 'https://github.com/a/b',
+      texto: '# a/b\n## T-99 — falso\nEstado: hecho\nTexto con # en el medio',
+    })
+    expect(texto).toContain('\n\\# a/b\n\\## T-99 — falso\nEstado: hecho\nTexto con # en el medio\n')
+    const items = leerTrabajo(texto).items
+    expect(items.map((i) => i.codigo)).toEqual(['T-1'])
+    expect(siguienteCodigo(texto)).toBe('T-2')
+    expect(ideasDe(items)[0]?.texto).toBe('# a/b\n## T-99 — falso\nEstado: hecho\nTexto con # en el medio')
+  })
+
   it('el código que sigue cuenta también los títulos mal escritos', () => {
     expect(siguienteCodigo('## T-009 — a\n## T-12: b\n')).toBe('T-13')
   })

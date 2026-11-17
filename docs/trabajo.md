@@ -287,8 +287,9 @@ Con los registros de Claude Code se midió cuánto cuesta arrancar un chat y cu�
 Q-168 (A, D-123): aplicada el 2026-11-15 la regla por tamaño y tiempo (framework e instrucciones globales) y el arranque liviano (`estado.md` corto, `CLAUDE.md` sin la lista de herramientas, que pasa a `herramientas-ia.md`). Para medir: `tools/medir-uso.ts`, que guarda el resumen en `research/uso/sesiones.json` (hecho el 2026-11-15, con la línea de base de las 115 conversaciones). Pendiente: correrlo hacia el 2026-11-29 (`--dias 14`); si el `estado.md` largo se repite, que el control marque «En qué estamos ahora» de más de cinco líneas o muy largo.
 
 ## T-69 — Un lugar donde anotar las ideas del proyecto sin salir de la tab del proyecto, ahora debo irme al panel general
-Estado: en curso · Frente: Ideas · Fecha: 2026-11-15
+Estado: hecho · Frente: Ideas · Fecha: 2026-11-15
 Pasó a ser el frente Ideas (D-127): sumado a guardar enlaces de repos para revisar y a ver cada idea por separado. Forma elegida en D-128 (la C); se construye después de su UX.
+Hecho el 2026-11-17: el frente Ideas terminó (ID-I1 a ID-I4 probadas, la última en Q-198; la calidad, en `modulos/ideas/estado.md` › Calidad).
 
 ## T-70 — es posible un "session usage starter"? es decir, una pequeña herramienta que inicie con casi 0 tokens el periodo de 5hs de uso, de este modo se podría iniciar siempre cada 5hs independientemente de si y escribí algo o no, para aprovechar mejor los periodos de tiempo de 5hs, creo que esto es similar a los caché warmers que según entiendo anthropic los permite, quizás deberíamos echar un ojo antes de hacerlo
 Estado: pendiente · Idea: usuario · Fecha: 2026-11-15 · Origen: D-135
@@ -341,3 +342,10 @@ Al pegar una dirección en una idea (y en el campo de arriba), además de la Eti
 Estado: hecho · Frente: Inicio · Fecha: 2026-11-17 · Origen: R-80
 El usuario quiere la grilla de Proyectos ordenada por el último con cambios (hoy: por estado y, dentro de cada uno, por nombre; D-022). El último cambio sería el último commit o, sin git, lo último escrito en `docs/`. Espera Q-191 (si se sigue agrupando por estado). Chico.
 Hecho el 2026-11-17 con Q-191 (A, D-136): todos juntos por el último cambio (lo más reciente entre el último commit y lo último escrito en `docs/`), los archivados al final; con sus pruebas (`tests/t77-ultimo-cambio.test.ts`, `tests/core-grilla.test.ts` y `tests/e2e/i1-esqueleto.spec.ts`).
+
+## T-78 — un nuevo estado "implementada" para las ideas
+Estado: nueva · Idea: usuario · Fecha: 2026-11-17
+
+## T-79 — Paquetes con avisos de seguridad (hono, picomatch, minimatch)
+Estado: pendiente · Fecha: 2026-11-17
+Visto en el paso 8 de Ideas: `pnpm audit` da 10 avisos (1 alto): `hono` y `@hono/node-server` llegan con el SDK de Claude Code (0.3.309; hay 0.3.326) y `picomatch` y `minimatch`, con `electron-builder` (solo al armar). Ninguno en lo que Iridium expone. Subir el SDK con las pruebas completas y ver si `electron-builder` ya trae las versiones arregladas. Menor.

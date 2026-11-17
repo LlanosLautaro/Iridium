@@ -39,7 +39,7 @@ export function ideasDe(
       estado: i.estado ? ESTADO_IDEA[i.estado] : 'sin-evaluar',
       fecha: i.fecha,
       enlace: de === 'enlace' ? i.enlace : null,
-      texto: i.texto,
+      texto: i.texto.replace(/^(\s*)\\#/gm, '$1#'),
       conNota: de === 'usuario' && conNota.has(i.codigo),
     })
   }
@@ -123,7 +123,11 @@ export function agregarIdea(
     `Fecha: ${idea.fecha}`,
     ...(idea.enlace ? [`Enlace: ${idea.enlace}`] : []),
   ].join(' · ')
-  const cuerpo = idea.texto?.trim() ? partirLineas(idea.texto.trim()) : []
+  // Una línea que empieza con # (un título copiado de una página) se escribe como \#: si no, sería un título de
+  // `trabajo.md`, y con «## T-n —» un ítem más.
+  const cuerpo = idea.texto?.trim()
+    ? partirLineas(idea.texto.trim()).map((l) => l.replace(/^(\s*)#/, '$1\\#'))
+    : []
   const bloque = [`## ${codigo} — ${limpiarTitulo(idea.titulo)}`, datos, ...cuerpo]
   const base = texto.trim() ? texto.replace(/\s+$/, '') : encabezado
   return { texto: `${base}${eol}${eol}${bloque.join(eol)}${eol}`, codigo }

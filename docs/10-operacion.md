@@ -12,6 +12,7 @@
 ## Señales recogidas
 | Fecha | Fuente | Observación |
 |---|---|---|
+| 2026-11-17 | Q-196, Q-198 | El frente Ideas terminó: las ideas de cada proyecto y las sueltas del inicio en una sola forma, con imágenes también en el campo de arriba (R-87, R-88) y Mover a un proyecto; probado y con su calidad (`modulos/ideas/estado.md` › Calidad). Sigue el Mapa (D-140) |
 | 2026-11-17 | R-80 a R-84, Q-191 | La grilla va toda por el último cambio (D-136, T-77); la tarjeta marca todo respondido (tilde blanco) y bandeja vacía o sin empezar (círculo), y deja de mostrar el hito y el Próximo paso (R-83, R-84); el título de la pantalla ya no se recuadra al recibir el foco (R-82). Hechos con sus pruebas; probados en Q-192 |
 | 2026-11-15 | Pedido del usuario | La ventana vuelve maximizada o como estaba (T-66) y las actualizaciones locales son automáticas sin cortar a la IA (T-67, D-122): hechas; Q-167: T-66 anda; T-67 sí armaba solo y lo que esperaba era el reinicio: ahora espera a Iridium sin usar y vuelve minimizada si no estaba al frente (corregido; Q-169: probado, anda) |
 | 2026-11-02 | Hito 8 (Q-108) | Tu recorrido completo sin problemas; los defectos que quedan abiertos son los dos menores de abajo |
@@ -35,6 +36,7 @@
 ## Mantenimiento
 | Fecha | Qué se actualizó | Motivo |
 |---|---|---|
+| 2026-11-17 | Nada: revisado. `pnpm audit`: 10 avisos (1 alto, `picomatch`; 8 moderados; 1 bajo), de `hono` por el SDK de Claude Code y de `minimatch` y `picomatch` por `electron-builder` (T-79). `pnpm outdated`: parches de React, Vitest, Zustand, Playwright, Biome y el SDK (0.3.309 → 0.3.326); mayores de Electron (45), Vite (8), electron-vite (6) y el plugin de React (6) | El paso 8 de Ideas |
 | 2026-11-02 | Nada: revisado. `pnpm audit`: las 4 moderadas de `minimatch` dentro de `electron-builder` (Defecto 4). `pnpm outdated`: parches de React, Zustand, Vitest y el SDK de Claude Code (0.3.309 → 0.3.316); versiones mayores de Electron (45), Vite (8) y electron-vite (6) | Primera revisión del hito 10. Los parches van al Backlog (Should); las mayores, cuando haga falta |
 
 ## Crítica de la gestión de ideas
