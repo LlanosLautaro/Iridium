@@ -2,174 +2,203 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Mapa · B · Un camino por frente</title>
+<title>Mapa · Un camino por frente</title>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../piezas.css">
 <style>
-  .grupo + .grupo { margin-top: var(--esp-6); }
-  .frente-b { padding: var(--esp-4) 0 var(--esp-3); border-bottom: 1px solid var(--borde-suave); }
-  .frente-b .cab { display: flex; align-items: baseline; gap: var(--esp-3); }
-  .frente-b h3 { margin: 0; font: var(--estilo-titulo); }
-  .frente-b .cab .derecha { margin-left: auto; }
-  .camino { --w: 108px; overflow-x: auto; padding: var(--esp-3) 0 var(--esp-1); }
-  .linea-pasos { display: flex; height: 84px; }
-  .rama { display: flex; height: 84px; position: relative; margin-top: var(--esp-1); margin-left: calc(var(--desde) * var(--w) + var(--w) / 2); }
-  .rama::before { content: ''; position: absolute; left: 0; top: -4px; width: calc(var(--w) / 2); height: 12px; border-left: 2px solid var(--borde-fuerte); border-bottom: 2px solid var(--borde-fuerte); border-bottom-left-radius: var(--radio-control); }
-  .paso { all: unset; box-sizing: border-box; width: var(--w); flex: none; position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; text-align: center; }
-  .paso::before { content: ''; position: absolute; top: 7px; right: 50%; width: 100%; height: 2px; background: var(--borde-fuerte); z-index: 0; }
-  .linea-pasos .paso:first-child::before, .rama .paso:first-child::before { display: none; }
-  .paso.hecho::before, .paso.foco::before { background: var(--texto-apagado); }
-  .caja-punto { height: 16px; display: flex; align-items: center; z-index: 1; }
-  .punto-b { box-sizing: border-box; width: 12px; height: 10px; border-radius: var(--radio-pildora); border: 2px solid var(--borde-control); background: var(--fondo); }
-  .hecho .punto-b { background: var(--bien); border-color: var(--bien); }
-  .foco .punto-b { width: 16px; height: 16px; border-color: var(--texto); box-shadow: 0 0 0 4px var(--sel-fondo); }
-  .pausa .punto-b, .tuya .punto-b { border-color: var(--espera); }
-  .descartado .punto-b { border-color: var(--texto-apagado); }
-  .plegado .punto-b { text-align: center; width: 22px; height: 16px; border: 0; background: var(--sel-fondo); color: var(--texto-2); font: var(--estilo-codigo); line-height: 16px; }
-  .paso .n { font: var(--estilo-rotulo); color: var(--texto-3); white-space: nowrap; }
-  .paso .s { font-size: var(--tam-chico); line-height: 1.3; color: var(--texto-3); padding: 0 var(--esp-1); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .hecho .n { color: var(--texto-2); }
-  .foco .n, .foco .s { color: var(--texto); }
-  .tuya .s, .pausa .s { color: var(--espera); }
-  .descartado .n, .descartado .s { color: var(--texto-apagado); text-decoration: line-through; }
-  .paso:hover .n, .paso:hover .s { color: var(--texto); }
-  .paso.elegido .n { text-decoration: underline; text-underline-offset: 4px; }
-  .detalle-b { display: flex; align-items: baseline; gap: var(--esp-3); min-height: var(--alto-control); padding-top: var(--esp-1); color: var(--texto-2); }
-  .detalle-b .codigo { font: var(--estilo-codigo); color: var(--texto-3); }
-  .detalle-b .t { color: var(--texto); }
-  .detalle-b .boton { margin-left: auto; }
+  /* Clases con prefijo rt-: «paso» ya es de la conversación (.mensaje-ia .paso). */
+  .rt-frentes { margin-bottom: var(--esp-5); overflow-x: auto; }
+  .rt-frentes .pestana { flex: none; white-space: nowrap; }
+  .rt-frentes .pestana .cuenta { margin-left: var(--esp-1); }
+  .rt-frentes .pestana:last-child { margin-left: auto; }
+  .rt-cuerpo { max-width: var(--ancho-centrado); }
+  .rt-cab { display: flex; align-items: baseline; gap: var(--esp-3); margin-bottom: var(--esp-4); }
+  .rt-cab h2 { margin: 0; font: var(--estilo-titulo); }
+  .rt-cab .derecha { margin-left: auto; }
+  .rt-camino { display: grid; grid-template-columns: 24px 24px 1fr; }
+  .rt-fila { display: contents; }
+  .rt-carril { position: relative; min-height: 40px; }
+  .rt-texto { display: flex; align-items: center; gap: var(--esp-3); padding: var(--esp-2) 0 var(--esp-2) var(--esp-2); color: var(--texto-3); font: var(--estilo-cuerpo); }
+  .rt-fila.principal .rt-texto { grid-column: 2 / 4; }
+  /* Las líneas: arriba y abajo del punto, en su carril. */
+  .rt-carril.arriba::before, .rt-carril.abajo::after, .rt-carril.sigue::before {
+    content: ''; position: absolute; left: 11px; width: 2px; background: var(--borde-fuerte);
+  }
+  .rt-carril.arriba::before { top: 0; height: 50%; }
+  .rt-carril.abajo::after { bottom: 0; height: 50%; }
+  .rt-carril.sigue::before { top: 0; bottom: 0; }
+  .rt-carril.codo::before {
+    content: ''; position: absolute; left: -13px; top: 0; width: 24px; height: 50%;
+    border-left: 2px solid var(--borde-fuerte); border-bottom: 2px solid var(--borde-fuerte); border-bottom-left-radius: var(--radio-control);
+  }
+  .rt-punto { position: absolute; left: 6px; top: 50%; width: 12px; height: 12px; margin-top: -6px; box-sizing: border-box; border-radius: var(--radio-pildora); border: 2px solid var(--borde-control); background: var(--fondo); z-index: 1; }
+  .hecho .rt-punto { background: var(--bien); border-color: var(--bien); }
+  .foco .rt-punto { left: 4px; width: 16px; height: 16px; margin-top: -8px; border-color: var(--texto); box-shadow: 0 0 0 4px var(--sel-fondo); }
+  .tuya .rt-punto, .pausa .rt-punto { border-color: var(--espera); }
+  .descartado .rt-punto { border-color: var(--texto-apagado); }
+  .hecho .rt-texto { color: var(--texto-2); }
+  .foco .rt-texto, .tuya .rt-texto, .pausa .rt-texto { color: var(--texto); }
+  .foco .rt-texto { font-weight: 600; }
+  .descartado .rt-texto { color: var(--texto-apagado); text-decoration: line-through; }
+  .rt-plegado { cursor: pointer; }
+  .rt-plegado .rt-punto { left: 3px; width: 18px; height: 14px; margin-top: -7px; border: 0; background: var(--sel-fondo); color: var(--texto-2); font: var(--estilo-codigo); line-height: 14px; text-align: center; }
+  .rt-plegado:hover .rt-texto { color: var(--texto); }
+  .rt-vacio { color: var(--texto-3); }
 </style>
 </head>
 <body data-marco="proyecto" data-seccion="mapa">
 <main class="seccion">
   <header class="cabecera">
-    <div class="fila-cab"><h1>Mapa</h1><span class="ruta">Hito 10 · Operación</span>
-      <span class="acciones-cab"><a class="boton sin-fondo" href="mapa-a.html"><i data-ic="mapa"></i>Ver la hoja de ruta</a></span></div>
+    <div class="fila-cab"><h1>Mapa</h1><span class="ruta">Hito 10 · Operación</span></div>
   </header>
-  <div class="contenido" id="mapa"></div>
+  <div class="contenido">
+    <div class="pestanas rt-frentes" id="frentes"></div>
+    <div class="rt-cuerpo" id="frente"></div>
+  </div>
 </main>
 <script src="../piezas.js"></script>
 <script>
-  // Cada frente: su camino y sus ramas. e: hecho, foco, pausa, tuya, descartado; sin e, lo que viene.
-  // pl: los primeros hechos plegados (el foco queda cerca del último hecho).
-  const GRUPOS = [
-    ['', [
-      { nombre: 'Hitos', estado: '10 · Operación', pl: 8, pasos: [
-        ['0', 'Idea cruda', 'hecho'], ['1', 'Exploración', 'hecho'], ['2', 'Definición', 'hecho'], ['3', 'Investigación', 'hecho'],
-        ['4', 'UX', 'hecho'], ['5', 'Arquitectura', 'hecho'], ['6', 'UI', 'hecho'], ['7', 'Construcción', 'hecho'],
-        ['8', 'Calidad', 'hecho', 'Portón aprobado en Q-108'], ['9', 'Lanzamiento', 'hecho', 'Portón aprobado en Q-111'],
-        ['10', 'Operación', 'foco', 'Los frentes de abajo crecen desde acá'] ] },
-    ]],
-    ['En curso', [
-      { nombre: 'Ideas', estado: '7. Construcción', pl: 4, pasos: [
-        ['1', 'Propuesta', 'hecho'], ['2', 'Definición', 'hecho'], ['4', 'UX', 'hecho'], ['5', 'Diseño técnico', 'hecho'],
-        ['ID-I1', 'Ideas en un proyecto', 'hecho', 'Probada en Q-181'], ['ID-I2', 'Revisar y hablar de una idea', 'hecho', 'Probada en Q-183'],
-        ['ID-I3', 'La nota con enlaces e imágenes', 'hecho', 'Probada en Q-189 y Q-190'],
-        ['ID-I4', 'Las ideas sueltas del inicio', 'foco', 'Anotar con un proyecto y Mover a un proyecto; se saca el bloc'],
-        ['8', 'Calidad'], ['9', 'Lanzamiento'] ],
-        ramas: [['ID-I3', [['T-76', 'Miniatura del sitio en un enlace', '', 'Al pegar un enlace en la nota, la imagen del sitio']]]] },
-      { nombre: 'Mapa', estado: '1. Propuesta', pasos: [
-        ['1', 'Propuesta', 'tuya', 'Las maquetas A y B: te espera Q-194'], ['2', 'Definición'], ['4', 'UX'], ['5', 'Diseño técnico'],
-        ['7', 'Construcción'], ['8', 'Calidad'] ] },
-    ]],
-    ['En pausa', [
-      { nombre: 'Diseño', estado: '7. Construcción', pl: 4, pasos: [
-        ['1', 'Propuesta', 'hecho'], ['2', 'Definición', 'hecho'], ['4', 'UX', 'hecho'], ['5', 'Diseño técnico', 'hecho'],
-        ['DI-I1', 'La sección Diseño', 'hecho', 'Probada en Q-152'], ['DI-I2', 'Iridium en maquetas', 'hecho', 'Aprobada en Q-157'],
-        ['DI-I3', 'Pasar al código', 'pausa', 'Tandas 1 a 7 probadas; sigue la tanda 9 (Skills) después de Ideas'],
-        ['DI-I4', 'Otra versión y otra dirección'], ['8', 'Calidad'], ['9', 'Lanzamiento'] ],
-        ramas: [['DI-I3', [['Tanda 8', 'El bloc de Ideas', 'descartado', 'Lo reemplaza el frente Ideas (D-128, Q-174)']]]] },
-      { nombre: 'Orden', estado: '8. Calidad', pl: 6, pasos: [
-        ['1', 'Propuesta', 'hecho'], ['2', 'Definición', 'hecho'], ['3', 'Investigación', 'hecho'], ['4', 'UX', 'hecho'], ['5', 'Diseño técnico', 'hecho'], ['6', 'UI', 'hecho'],
-        ['OR-I1', 'El modelo y el control', 'hecho'], ['OR-I2', 'La Bandeja de entrada', 'hecho'], ['OR-I3', 'Trabajo e Ideas', 'hecho'],
-        ['OR-I4', 'Skills › Framework', 'hecho', 'Probada en Q-146'],
-        ['8', 'Calidad', 'pausa', 'Espera a que Diseño termine (D-102)'], ['9', 'Lanzamiento'] ] },
-    ]],
-    ['En operación', [
-      { nombre: 'Compartir', pasos: [
-        ['En uso', 'Repo público', 'hecho', 'D-132'], ['Q-185', 'Publicar una versión al día', 'tuya', 'Te espera: la última es del 4 de noviembre'],
-        ['T-37', 'El .zip más chico'], ['T-38', 'Versión y CHANGELOG'] ],
-        ramas: [['Q-185', [['T-74', 'Ver la IA de la otra persona', '', 'Un informe sin el contenido de sus proyectos']]]] },
-      { nombre: 'Apariencia y ajustes', pasos: [
-        ['En uso', 'Ajustes', 'hecho'], ['T-75', 'Un tema propio', '', 'Solo con tokens, editado con la IA desde Ajustes (D-134)'],
-        ['T-70', 'Arrancar el período de 5 horas', '', 'Con trabajo real de una bandeja lista (D-135)'] ],
-        ramas: [['En uso', [['T-72', 'Imagen y color de cada IA'], ['T-52', 'Un sonido al terminar']]]] },
-      { nombre: 'Skills', pasos: [
-        ['En uso', 'Skills › Framework', 'hecho'], ['T-43', 'El framework reemplaza a la guía'], ['T-44', 'Las skills que la licencia permite'] ],
-        ramas: [['En uso', [['T-18', 'Avisar si hay dos copias']]]] },
-      { nombre: 'Inicio', pasos: [
-        ['En uso', 'La grilla', 'hecho'], ['T-77', 'Por el último cambio', 'hecho', 'Probado en Q-192'] ] },
-    ]],
-    ['Sin empezar', [
-      { nombre: 'Capacidades', pasos: [['1', 'Propuesta', '', 'T-28: más capacidades de Claude'], ['2', 'Definición'], ['4', 'UX']] , empezar: true },
-      { nombre: 'Puente PC–celular', pasos: [['T-8', 'Archivos y textos'], ['T-14', 'Avisos y APK'], ['T-15', 'Recibir por enlace']],
-        ramas: [['T-8', [['T-13', 'Tareas desde el celular']]]], empezar: true },
-    ]],
+  // Cada frente, su ruta: pasos concretos en orden; e: hecho, foco, pausa, tuya, descartado (sin e, lo que viene).
+  // ramas: [paso del que sale, [pasos]]. pl: los primeros hechos van plegados (el foco queda cerca del último hecho).
+  const FRENTES = [
+    { nombre: 'Ideas', estado: '7. Construcción', pl: 3, pasos: [
+      ['Pensar las ideas como trabajo del proyecto', 'hecho'],
+      ['Definir que aprobar una idea es pasarla al trabajo', 'hecho'],
+      ['Diseñar cómo se guarda cada idea y su nota', 'hecho'],
+      ['Anotar, filtrar y aprobar las ideas de un proyecto', 'hecho'],
+      ['Revisar una idea con la IA y hablar de ella', 'hecho'],
+      ['Pegar enlaces e imágenes en la nota de una idea', 'hecho'],
+      ['Mover las ideas sueltas del inicio a un proyecto', 'foco'],
+      ['Sacar el bloc de notas del inicio'],
+      ['Probar Ideas con cien ideas y proyectos reales'] ],
+      ramas: [[5, [['Mostrar la miniatura del sitio al pegar un enlace']]]] },
+    { nombre: 'Mapa', estado: '1. Propuesta', pasos: [
+      ['Pensar para qué sirve el Mapa', 'hecho'],
+      ['Elegir la maqueta del camino por frente', 'tuya', 'Te espera'],
+      ['Escribir la ruta de cada frente en su estado.md'],
+      ['Dibujar el camino de un frente, con sus ramas'],
+      ['Elegir el frente desde la barra de arriba'],
+      ['Ubicar cada idea aprobada en la ruta de su frente'] ] },
+    { nombre: 'Apariencia y ajustes', estado: 'En uso', pl: 2, pasos: [
+      ['Elegir el tamaño de la letra y el zoom', 'hecho'],
+      ['Poner tu nombre y el de la IA', 'hecho'],
+      ['Pasar Iridium al negro, como único tema', 'hecho'],
+      ['Hacer tu propio tema con tokens, desde Ajustes'],
+      ['Arrancar el período de 5 horas con trabajo de la Bandeja'],
+      ['Poner la foto y el color de cada IA en la conversación'],
+      ['Sonar cuando Iridium termina una tarea'] ] },
+    { nombre: 'Compartir', estado: 'En uso', pl: 1, pasos: [
+      ['Armar una copia de Iridium para otra persona', 'hecho'],
+      ['Hacer público el repo para que se actualice sola', 'hecho'],
+      ['Publicar una versión al día', 'tuya', 'Te espera'],
+      ['Achicar el .zip de cada versión'],
+      ['Numerar las versiones con su lista de cambios'] ],
+      ramas: [[2, [['Recibir un informe de la copia de la otra persona']]]] },
+    { nombre: 'Diseño', estado: 'En pausa', pl: 2, pasos: [
+      ['Ver y comentar las maquetas dentro de Iridium', 'hecho'],
+      ['Rediseñar Iridium en negro, en maquetas', 'hecho'],
+      ['Pasar al código la barra, la conversación, la Bandeja y el Mapa', 'hecho'],
+      ['Pasar Skills a la maqueta', 'pausa', 'En pausa'],
+      ['Pasar el resto de las secciones a las piezas'],
+      ['Comparar dos versiones de una pantalla lado a lado'] ],
+      ramas: [[2, [['Pasar el bloc de Ideas', 'descartado']]], [5, [['Copiar ideas de OpenDesigner']]]] },
+    { nombre: 'Orden', estado: 'En pausa', pl: 2, pasos: [
+      ['Controlar el formato que escribe la IA', 'hecho'],
+      ['Armar la Bandeja de entrada', 'hecho'],
+      ['Anotar trabajo e ideas sin la IA', 'hecho'],
+      ['Pasar un proyecto viejo al framework', 'hecho'],
+      ['Medir Orden con el diseño nuevo', 'pausa', 'Espera a Diseño'] ] },
+    { nombre: 'Skills', estado: 'En uso', pasos: [
+      ['Ver y poner al día las skills', 'hecho'],
+      ['Que el framework reemplace a la guía vieja'],
+      ['Traer las skills que la licencia permite'] ],
+      ramas: [[0, [['Avisar si hay dos copias de una skill']]]] },
+    { nombre: 'Inicio', estado: 'En uso', pl: 1, pasos: [
+      ['Ver todos los proyectos en una grilla', 'hecho'],
+      ['Ordenar la grilla por el último cambio', 'hecho'],
+      ['Marcar en la tarjeta si respondiste todo', 'hecho'] ] },
+    { nombre: 'Revisión de la app', estado: 'En uso', pasos: [
+      ['Comentar la app con F8', 'hecho'],
+      ['Guardar la página del comentario con su ruta corta'],
+      ['Revisar también las apps Android'] ] },
+    { nombre: 'Capacidades', estado: 'Sin empezar', empezar: true, pasos: [
+      ['Elegir qué capacidades de Claude suma Iridium'] ] },
+    { nombre: 'Puente PC–celular', estado: 'Sin empezar', empezar: true, pasos: [
+      ['Pasar archivos y textos entre la PC y el celular'],
+      ['Avisar y bajar las APK en el celular'],
+      ['Recibir por enlace, como LocalSend'] ],
+      ramas: [[0, [['Mandar tareas desde el celular']]]] },
   ]
+  const SIN_UBICAR = ['Un canvas para pensar una idea con la IA', 'Diagramas que dibuja la IA, paso a paso', 'Dictado',
+    'Comentar un documento párrafo por párrafo', 'La guía según el tipo de proyecto', 'Iridium para Linux o el celular',
+    'Tareas como tarjetas que un agente toma', 'Una sección de aprobados provisionales']
 
-  const ESTADO = { hecho: 'Hecho', foco: 'Ahora', pausa: 'En pausa', tuya: 'Te espera', descartado: 'Descartado', '': 'Lo que viene' }
-  const raiz = document.getElementById('mapa')
+  const barra = document.getElementById('frentes')
+  const zona = document.getElementById('frente')
 
-  function paso([cod, titulo, e = '', nota = ''], frente) {
-    const b = document.createElement('button')
-    b.className = `paso ${e}`
-    b.dataset.cod = cod
-    b.innerHTML = `<span class="caja-punto"><span class="punto-b"></span></span><span class="n">${cod}</span><span class="s">${titulo}</span>`
-    b.addEventListener('click', () => elegir(frente, b, cod, titulo, e, nota))
-    return b
+  function fila(clase, carril1, carril2, texto, senal) {
+    const f = document.createElement('div')
+    f.className = `rt-fila ${clase}`
+    f.innerHTML = `<div class="rt-carril ${carril1}">${clase.includes('principal') ? '<span class="rt-punto"></span>' : ''}</div>` +
+      (clase.includes('principal') ? '' : `<div class="rt-carril ${carril2}"><span class="rt-punto"></span></div>`) +
+      `<div class="rt-texto"><span>${texto}</span>${senal ? `<span class="senal ambar">${senal}</span>` : ''}</div>`
+    return f
   }
 
-  function elegir(frente, b, cod, titulo, e, nota) {
-    for (const p of frente.querySelectorAll('.paso.elegido')) p.classList.remove('elegido')
-    b.classList.add('elegido')
-    const d = frente.querySelector('.detalle-b')
-    d.innerHTML = `<span class="codigo">${cod}</span><span class="t">${titulo}</span><span class="gris-3">${ESTADO[e]}${nota ? ' · ' + nota : ''}</span>` +
-      `<a class="boton sin-fondo chico" href="docs.html"><i data-ic="docs"></i>Abrir</a>`
-    ponerIconos(d)
-  }
-
-  function ubicarRamas(frente) {
-    const visibles = [...frente.querySelectorAll('.linea-pasos .paso')].filter((p) => p.style.display !== 'none')
-    for (const r of frente.querySelectorAll('.rama')) r.style.setProperty('--desde', visibles.findIndex((p) => p.dataset.cod === r.dataset.de))
-  }
-
-  for (const [titulo, frentes] of GRUPOS) {
-    const g = document.createElement('section')
-    g.className = 'grupo'
-    if (titulo) g.innerHTML = `<h2 class="bloque-titulo">${titulo}</h2>`
-    for (const f of frentes) {
-      const el = document.createElement('div')
-      el.className = 'frente-b'
-      el.innerHTML = `<div class="cab"><h3>${f.nombre}</h3><span class="gris-3">${f.estado ?? ''}</span>` +
-        (f.empezar ? `<span class="derecha"><button class="boton sin-fondo chico"><i data-ic="claude"></i>Empezar este frente</button></span>` : '') +
-        `</div><div class="camino"><div class="linea-pasos"></div></div><div class="detalle-b"></div>`
-      const linea = el.querySelector('.linea-pasos')
-      const pasos = f.pasos.map((p) => paso(p, el))
-      if (f.pl) {
-        const pl = document.createElement('button')
-        pl.className = 'paso hecho plegado'
-        pl.title = 'Ver los pasos hechos'
-        pl.innerHTML = `<span class="caja-punto"><span class="punto-b">+</span></span><span class="n">${f.pl} hechos</span>`
-        linea.append(pl)
-        pasos.slice(0, f.pl).forEach((p) => (p.style.display = 'none'))
-        pl.addEventListener('click', () => { pasos.forEach((p) => (p.style.display = '')); pl.remove(); ubicarRamas(el) })
-      }
-      linea.append(...pasos)
-      for (const [de, rama] of f.ramas ?? []) {
-        const r = document.createElement('div')
-        r.className = 'rama'
-        r.dataset.de = de
-        r.append(...rama.map((p) => paso(p, el)))
-        el.querySelector('.camino').append(r)
-      }
-      g.append(el)
-      ubicarRamas(el)
-      const foco = pasos.find((p) => /foco|tuya|pausa/.test(p.className)) ?? pasos.filter((p) => p.classList.contains('hecho')).pop() ?? pasos[0]
-      foco.click()
+  function dibujar(f, abierto = false) {
+    zona.innerHTML = `<div class="rt-cab"><h2>${f.nombre}</h2><span class="gris-3">${f.estado}</span>` +
+      (f.empezar ? `<span class="derecha"><button class="boton sin-fondo chico"><i data-ic="claude"></i>Empezar este frente</button></span>` : '') +
+      `</div><div class="rt-camino"></div>`
+    const camino = zona.querySelector('.rt-camino')
+    const desde = abierto ? 0 : f.pl ?? 0
+    const ultimo = f.pasos.length - 1
+    if (desde) {
+      const pl = fila('principal hecho rt-plegado', 'abajo', '', `${desde} hechos antes`)
+      pl.querySelector('.rt-punto').textContent = '+'
+      pl.addEventListener('click', () => dibujar(f, true))
+      camino.append(pl)
     }
-    raiz.append(g)
+    f.pasos.forEach(([t, e = '', senal], i) => {
+      if (i < desde) return
+      const lineas = `${i > desde || desde ? 'arriba' : ''} ${i < ultimo ? 'abajo' : ''}`
+      camino.append(fila(`principal ${e}`, lineas, '', t, senal))
+      for (const [de, rama] of f.ramas ?? []) {
+        if (de !== i) continue
+        rama.forEach(([rt, re = ''], j) => {
+          const c2 = `${j === 0 ? 'codo' : 'arriba'} ${j < rama.length - 1 ? 'abajo' : ''}`
+          camino.append(fila(`rama ${re}`, i < ultimo ? 'sigue' : '', c2, rt))
+        })
+      }
+    })
+    ponerIconos(zona)
   }
-  ponerIconos(raiz)
+
+  // Por empezar: los frentes que todavía no arrancaron, con lo que juntan, y las ideas que no tienen frente.
+  function porEmpezar() {
+    const frentes = FRENTES.filter((f) => f.empezar).map((f) =>
+      `<section class="bloque"><h3 class="bloque-titulo">${f.nombre}<span class="derecha"><button class="boton sin-fondo chico"><i data-ic="claude"></i>Empezar este frente</button></span></h3>` +
+      `<div class="filas">${f.pasos.map(([t]) => `<div class="fila"><span class="principal-fila"><span class="titulo-fila">${t}</span></span></div>`).join('')}` +
+      (f.ramas ?? []).flatMap(([, r]) => r).map(([t]) => `<div class="fila"><span class="principal-fila"><span class="titulo-fila">${t}</span></span></div>`).join('') +
+      `</div></section>`).join('')
+    zona.innerHTML = frentes + `<section class="bloque"><h3 class="bloque-titulo">Sin frente <span class="cuenta">${SIN_UBICAR.length}</span></h3><div class="filas">` +
+      SIN_UBICAR.map((t) => `<div class="fila"><span class="principal-fila"><span class="titulo-fila">${t}</span></span></div>`).join('') + '</div></section>'
+    ponerIconos(zona)
+  }
+
+  const POR_EMPEZAR = FRENTES.filter((f) => f.empezar).length + SIN_UBICAR.length
+  const pestanas = [...FRENTES.filter((f) => !f.empezar).map((f) => [f.nombre, () => dibujar(f)]), ['Por empezar', porEmpezar, POR_EMPEZAR]]
+  for (const [nombre, abrir, cuenta] of pestanas) {
+    const b = document.createElement('button')
+    b.className = 'pestana'
+    b.innerHTML = nombre + (cuenta ? `<span class="cuenta">${cuenta}</span>` : '')
+    b.addEventListener('click', () => {
+      for (const o of barra.children) o.classList.remove('elegida')
+      b.classList.add('elegida')
+      abrir()
+    })
+    barra.append(b)
+  }
+  barra.children[0].click()
 </script>
 </body>
 </html>

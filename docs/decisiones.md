@@ -2959,3 +2959,16 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** el usuario quiere ver una secuencia (el paso 1, después el 2, después el 3), no cosas juntadas en un estado, y no busca mover tarjetas a mano.
 
 **Consecuencias:** las dos maquetas usan los datos reales de Iridium; se elige con Q-194. El color por frente (R-59) no está en las maquetas: pediría tokens nuevos.
+
+## D-138 — El Mapa es un camino de pasos concretos por frente, un frente a la vez
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71)
+- **Hito o paso:** 10; frente Mapa, paso 1 (Propuesta), Q-194
+- **Estado:** vigente; deja atrás la hoja de ruta (opción A de D-137)
+
+**Contexto:** con las dos maquetas a la vista, el usuario prefirió el camino por frente, pero marcó tres problemas: demasiados frentes en una pantalla, ruido (el botón Abrir, el detalle de cada paso) y pasos genéricos («Construcción», «Calidad») que no dicen qué se va a hacer ni cuándo llega una idea suya.
+**Decisión:** el Mapa muestra un frente a la vez, elegido en una barra de pestañas arriba; los frentes sin empezar y las ideas sin frente van juntos en la última, «Por empezar», con «Empezar este frente». Cada frente es un camino vertical de pasos con nombre concreto, de una acción («Mover las ideas sueltas del inicio a un proyecto», «Sonar cuando Iridium termina una tarea»), sin códigos ni pasos del método; las ramas salen del paso del que nacen y los hechos de antes van plegados para que el foco quede cerca del último hecho. Sin botón Abrir ni línea de detalle. La maqueta es `diseno/pantallas/mapa-b.html`; la de la hoja de ruta se borró.
+
+**Motivo:** ver qué se va a hacer y en qué orden, sin leer documentos; con nombres concretos se ve cuándo llega cada idea. El camino vertical deja leer nombres largos, que de costado se cortaban.
+
+**Consecuencias:** cada frente necesita una ruta escrita con esos pasos concretos; cómo se escribe y se mantiene sin gastar uso de más, en Q-195. Los nombres de la maqueta los escribió la IA desde lo que hay hoy en los frentes y en `trabajo.md`.
