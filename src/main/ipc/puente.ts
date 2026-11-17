@@ -71,6 +71,7 @@ import { ejecutarPlan } from '../infra/ejecutar'
 import type { ArchivoEscritos } from '../infra/escritos'
 import { leerCommit, leerDiferencia, leerGit } from '../infra/git'
 import { entrarGithub, githubFalso, githubReal, inicializarRepo, publicarRepo } from '../infra/github'
+import { leerImagenDelPortapapeles } from '../infra/portapapeles'
 import { existeCarpeta } from '../infra/raiz'
 import type { Registro } from '../infra/registro'
 import type { ArchivoSesiones } from '../infra/sesiones'
@@ -636,6 +637,7 @@ export function registrarPuente(s: Servicios): Puente {
         ImagenBase64.parse(datos),
       ),
   )
+  ipcMain.handle(CANALES.imagenDelPortapapeles, () => leerImagenDelPortapapeles())
   ipcMain.handle(CANALES.borrarIdea, async (_, ruta: unknown, codigo: unknown) =>
     borrarIdea(await proyecto(ruta), CodigoIdea.parse(codigo)),
   )

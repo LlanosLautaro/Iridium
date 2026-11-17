@@ -4,7 +4,7 @@
 import type { AnchosConversacion } from './ancho-conversacion'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
 import type { EstadoDesdeIdeas, IdeasDeProyecto, NotaIdea, ResultadoIdea } from './ideas'
-import type { HojaNotas, ImagenPegada, ResultadoNotas } from './notas'
+import type { HojaNotas, ImagenDelPortapapeles, ImagenPegada, ResultadoNotas } from './notas'
 import type { Borrador } from './respuestas'
 import type { ListaSkills, ProyectoFramework, SkillProyecto } from './skills'
 import type { Estado, PlanEliminacion } from './tipos'
@@ -834,6 +834,7 @@ export const CANALES = {
   notaIdea: 'proyecto:nota-idea',
   guardarIdea: 'proyecto:guardar-idea',
   pegarImagenIdea: 'proyecto:pegar-imagen-idea',
+  imagenDelPortapapeles: 'portapapeles:imagen',
   borrarIdea: 'proyecto:borrar-idea',
   skillsProyecto: 'proyecto:skills',
   abrirDiseno: 'diseno:abrir',
@@ -1029,6 +1030,8 @@ export interface ApiIridium {
   guardarIdea(ruta: string, codigo: string, escrito: string): Promise<ResultadoIdea>
   /** Una imagen pegada en una idea abierta: `docs/ideas/T-n/AAAA-MM-DD-n.<ext>` (ID-2). */
   pegarImagenIdea(ruta: string, codigo: string, mime: string, base64: string): Promise<ImagenPegada>
+  /** La imagen del portapapeles de Windows, para cuando el pegado no la trae a la ventana (Q-189). Solo lee. */
+  imagenDelPortapapeles(): Promise<ImagenDelPortapapeles>
   /** Borra una idea del usuario o un enlace, con su nota y sus imágenes (ID-8). */
   borrarIdea(ruta: string, codigo: string): Promise<ResultadoIdea>
   /** Las skills de `.claude/skills/` del proyecto (R-8). */

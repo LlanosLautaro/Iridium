@@ -242,24 +242,48 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await expect(hoja.locator('.nota-enlace')).toHaveText('sonidosgithub.com')
     await expect(hoja.locator('.nota-imagen img')).toBeVisible()
 
-    // Borrar (ID-8) pide confirmar en el mismo lugar: No la deja; Sí la saca con su nota y su imagen.
+    // Q-189: si el pegado no trae la imagen a la ventana, Iridium la busca en el portapapeles de Windows.
+    const pegarSinNada = () =>
+      hoja.evaluate((h) => {
+        h.dispatchEvent(new ClipboardEvent('paste', { clipboardData: new DataTransfer(), bubbles: true }))
+      })
+    await hoja.locator('p').last().click()
+    await pegarSinNada()
+    await expect(hoja.locator('.nota-imagen img')).toHaveCount(2)
+    await expect.poll(notaT1).toMatch(/!\[\]\(T-1\/\d{4}-\d{2}-\d{2}-2\.png\)/)
+    // Sin ninguna imagen, lo dice en vez de quedarse callada.
+    await app.evaluate(({ clipboard }) => clipboard.clear())
+    await pegarSinNada()
+    await expect(ideas.locator('.recuadro.error')).toContainText('El portapapeles está vacío')
+    await expect(hoja.locator('.nota-imagen img')).toHaveCount(2)
+
+    // Borrar (ID-8) pide confirmar en el cuadro del centro (Q-189): No la deja; Sí la saca con su nota y su imagen.
     const abiertaAhora = ideas.locator('.cuerpo-fila')
+    const cuadro = win.getByRole('alertdialog')
     await abiertaAhora.getByRole('button', { name: 'Borrar' }).click()
-    await expect(abiertaAhora).toContainText('¿Borrar esta idea?')
+    await expect(cuadro).toContainText('¿Borrar esta idea?')
+    await expect(cuadro.getByRole('button', { name: 'No' })).toBeFocused()
     await win.screenshot({ path: 'test-results/id3-borrar.png' })
-    await abiertaAhora.getByRole('button', { name: 'No' }).click()
+    await cuadro.getByRole('button', { name: 'No' }).click()
+    await expect(cuadro).toHaveCount(0)
+    await expect(abiertaAhora.getByRole('button', { name: 'Aprobar' })).toBeVisible()
+    // Esc es No, y la idea sigue abierta.
+    await abiertaAhora.getByRole('button', { name: 'Borrar' }).click()
+    await win.keyboard.press('Escape')
+    await expect(cuadro).toHaveCount(0)
     await expect(abiertaAhora.getByRole('button', { name: 'Aprobar' })).toBeVisible()
     await abiertaAhora.getByRole('button', { name: 'Borrar' }).click()
-    await abiertaAhora.getByRole('button', { name: 'Sí' }).click()
+    await cuadro.getByRole('button', { name: 'Sí, borrar' }).click()
     await expect(fila('Un sonido cuando la IA termina')).toHaveCount(0)
     await expect.poll(trabajo).not.toContain('## T-1 —')
     await expect.poll(notaT1).toBe('')
-    // Un enlace se borra desde el clic derecho, con la confirmación en su renglón.
+    // Un enlace se borra desde el clic derecho, con la confirmación en el mismo cuadro.
     await filtros.getByRole('button', { name: /^Hechas/ }).click()
     await fila('tldraw/tldraw').getByRole('button').first().click({ button: 'right' })
     await win.getByRole('menu').getByRole('menuitem', { name: 'Borrar' }).click()
-    await expect(fila('tldraw/tldraw')).toContainText('¿Borrar este enlace?')
-    await fila('tldraw/tldraw').getByRole('button', { name: 'Sí' }).click()
+    await expect(cuadro).toContainText('¿Borrar este enlace?')
+    await win.screenshot({ path: 'test-results/id3-borrar-enlace.png' })
+    await cuadro.getByRole('button', { name: 'Sí, borrar' }).click()
     await expect(fila('tldraw/tldraw')).toHaveCount(0)
     await expect.poll(trabajo).not.toContain('tldraw')
   } finally {

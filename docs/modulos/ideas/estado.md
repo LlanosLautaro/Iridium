@@ -1,7 +1,7 @@
 # Estado del módulo: Ideas
 
 **Tipo:** sección (las ideas y los enlaces para revisar de cada proyecto; D-127)
-**Última actualización:** 2026-11-16
+**Última actualización:** 2026-11-17
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-180) | `ux.md` |
 | 5. Diseño técnico | hecho (D-130) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (las tres piezas nuevas ya están dibujadas en las maquetas aprobadas; pasan a `piezas.css` al construir) | — |
-| 7. Construcción | en curso (ID-I1 e ID-I2 probadas; ID-I3 hecha, espera Q-189; sigue ID-I4) | este archivo |
+| 7. Construcción | en curso (ID-I1 e ID-I2 probadas; ID-I3 con los ajustes de Q-189, espera Q-190; sigue ID-I4) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`, y la nota del usuario va en `docs/ideas/T-n.md`. Construcción en cuatro iteraciones; ID-I1 (Ideas en un proyecto) está hecha y probada (Q-181); ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación sin enviar, D-131) está hecha y probada (Q-183); ID-I3 (la nota completa y Borrar) está hecha y espera la prueba del usuario (Q-189); sigue ID-I4.
+La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:`, y la nota del usuario va en `docs/ideas/T-n.md`. Construcción en cuatro iteraciones; ID-I1 (Ideas en un proyecto) está hecha y probada (Q-181); ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación sin enviar, D-131) está hecha y probada (Q-183); ID-I3 (la nota completa y Borrar) se probó en Q-189: pegar una imagen con Ctrl+V fallaba y la confirmación de Borrar pasó al cuadro del centro; arreglado, espera Q-190. Sigue ID-I4. La miniatura del sitio en un enlace pegado queda como T-76.
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -31,11 +31,12 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 |---|---|---|
 | ID-I1 | Ideas en un proyecto: el formato en el framework con su lector y su control, la lista con filtros, anotar, abrir, aprobar y rechazar | hecha y probada (Q-181) |
 | ID-I2 | Para revisar (enlaces, Revisar con la IA) y Hablar de esta idea | hecha y probada (Q-183) |
-| ID-I3 | La nota completa: enlaces e imágenes pegados, guardado solo, borrar | hecha; espera la prueba del usuario (Q-189) |
+| ID-I3 | La nota completa: enlaces e imágenes pegados, guardado solo, borrar | hecha; probada en Q-189 con dos ajustes, que esperan Q-190 |
 | ID-I4 | El inicio: ideas sueltas, Mover a un proyecto; se saca el bloc | pendiente |
 
 ## Log de iteraciones
-### ID-I3 — La nota completa y Borrar (hecha; espera Q-189)
+### ID-I3 — La nota completa y Borrar (hecha; los ajustes de Q-189 esperan Q-190)
+- **2026-11-17, Q-189:** el enlace pegado, el texto sin formato, Borrar, las de la IA sin Borrar y R-79, bien. Dos ajustes, hechos en el momento: (1) **Ctrl+V con una imagen no hacía nada.** En las pruebas pegaba bien una captura, un archivo copiado en el Explorador y una imagen copiada de un navegador, así que no se pudo ver qué traía lo que copió el usuario. Ahora, si el pegado no trae la imagen a la ventana, Iridium la busca en el portapapeles de Windows (`infra/portapapeles.ts`, con las reglas en `core/portapapeles.ts`: una imagen por su tipo o su formato, o un archivo de imagen copiado), y si no hay ninguna lo dice en el Recuadro de error con los formatos que trae (así, si vuelve a pasar, sabemos qué es). (2) **La confirmación de Borrar** va en el cuadro del centro (PZ-8, «¿Borrar esta idea?» con el título, No y «Sí, borrar»; el foco empieza en No y Esc es No), desde la idea abierta y desde el clic derecho; antes iba en el renglón, lejos del menú. La sugerencia de la miniatura del sitio al pegar un enlace queda como T-76. Pruebas: `tests/id3-portapapeles.test.ts` y la de Playwright (el pegado de respaldo, el portapapeles vacío, el cuadro con No, Esc y Sí; capturas `test-results/id3-borrar.png` e `id3-borrar-enlace.png`). Verificado: `pnpm test` (777 pasan), `pnpm typecheck`, `pnpm lint` y la prueba de Playwright de Ideas (2 de 2).
 - **2026-11-16:** la idea abierta es una hoja como la del bloc (`NotaDeIdea.tsx`), con el título en el primer párrafo: pegar una dirección la vuelve una Etiqueta de enlace (un clic la abre en el navegador), pegar o soltar una imagen la guarda en `docs/ideas/T-n/AAAA-MM-DD-n.png` y queda en su renglón, y lo que trae formato se pega como texto. Se guarda sola como antes. Las piezas de la hoja del bloc pasaron a `ui/hoja.ts` para usarlas en los dos lados; la Etiqueta de enlace pasó al sistema como PZ-14 (`piezas.css`, en las maquetas y en la app). La nota se lee con sus imágenes (solo las de su carpeta) y se escribe con las reglas de `compartido/ideas.ts` (`bloquesDeIdea`, `escritoDeIdea`). **Borrar** (ID-8), abajo en la idea abierta y en el clic derecho de las ideas del usuario y de los enlaces: pide «¿Borrar esta idea? Sí · No» en el mismo lugar (Esc lo cancela) y saca el `T-n` de `trabajo.md`, su nota y sus imágenes; las de la IA no se borran (se rechazan). Dos canales nuevos en el puente, con lo que llega validado. Pruebas: `tests/id1-escritura.test.ts` (imágenes y borrar en el disco), `tests/id1-ideas.test.ts` (la nota como hoja) y la de Playwright (pegar un enlace y una imagen, volver a abrir, borrar con No y Sí, borrar un enlace; capturas `test-results/id3-nota.png` e `id3-borrar.png`). Verificado: `pnpm test`, `pnpm typecheck`, `pnpm lint` y las pruebas de Playwright de Ideas y del bloc.
 ### ID-I2 — Revisar con la IA y Hablar de esta idea (hecha y probada)
 - **2026-11-16, Q-183:** todo bien. Dos ajustes, hechos en el momento: el botón de cada renglón tiene el ícono de compartir (`compartir`, en vez de la flecha), y el código (`T-n`) ya no se ve ni en la etiqueta de la cita («Revisar tldraw/tldraw», «Idea Un sonido…») ni a la derecha de las ideas de la IA (la fecha sí): para el usuario es ruido. El texto que le llega a la IA sigue llevando el código. Pruebas en `tests/id1-ideas.test.ts` y la de Playwright.
@@ -51,5 +52,5 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 - **2026-11-16, parte 4 (la pantalla):** Ideas en la barra del proyecto, entre el Mapa y la Revisión (solo en los que siguen el framework). La lista con los filtros y sus cuentas, «Para revisar» arriba e «Ideas» debajo; el campo de arriba (Enter anota, Shift+Enter baja de renglón; queda a la vista al desplazar); la idea abierta en su lugar con su texto (la primera línea es el título; se guarda sola un momento después de escribir; sin título no se cierra); Aprobar y Rechazar abajo y en el clic derecho (el mismo otra vez vuelve a sin evaluar); el robot y el código en las de la IA, que se leen sin escribir en ellas; el tilde de un enlace lo marca revisado. Si algo no se guarda, el Recuadro de error arriba y lo escrito sigue ahí y queda copiado. La Fila que se abre pasó al sistema como PZ-13 (`piezas.css`, en las maquetas y en la app); la Etiqueta de enlace pasa en ID-I3, que es cuando se usa. Las reglas de los filtros y el nombre de un enlace pasaron a `compartido/ideas.ts` para que la pantalla las use. Prueba en `tests/e2e/id1-ideas-proyecto.spec.ts` (con capturas).
 
 ## Próximo paso
-ID-I4: el inicio. Las ideas sueltas en `sueltas.md` de la carpeta Ideas, con la misma lista; anotar con un proyecto elegido (ID-7) y Mover a un proyecto; se saca el bloc (su hoja ya está en `ui/hoja.ts`). Si llega Q-189, se procesa primero.
+ID-I4: el inicio. Las ideas sueltas en `sueltas.md` de la carpeta Ideas, con la misma lista; anotar con un proyecto elegido (ID-7) y Mover a un proyecto; se saca el bloc (su hoja ya está en `ui/hoja.ts`; el pegado de respaldo de Q-189 va también en la hoja del inicio). Si llega Q-190, se procesa primero.
 **Leer antes:** `ux.md` › ID-7 y W-10; `diseno-tecnico.md` › Ideas sueltas (el inicio); la maqueta `docs/diseno/pantallas/ideas-inicio-c.html`.

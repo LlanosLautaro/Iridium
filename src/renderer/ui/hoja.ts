@@ -117,6 +117,16 @@ export function base64De(archivo: File): Promise<string> {
 export const imagenesDe = (archivos: FileList | null) =>
   [...(archivos ?? [])].filter((a) => TIPOS_IMAGEN[a.type])
 
+/** Las imágenes de lo que se pega: las de sus archivos o, si no trae ninguno, las de sus partes (Q-189). */
+export function imagenesDelPegado(datos: DataTransfer): File[] {
+  const archivos = imagenesDe(datos.files)
+  if (archivos.length) return archivos
+  return [...datos.items]
+    .filter((i) => i.kind === 'file' && TIPOS_IMAGEN[i.type])
+    .map((i) => i.getAsFile())
+    .filter((a): a is File => a !== null)
+}
+
 /**
  * Pega en la hoja lo que no es una imagen: una dirección sola, como Etiqueta de enlace; lo demás, solo su texto (sin el
  * formato de donde vino), cada línea un párrafo. Devuelve si pegó algo. Las imágenes las pega quien usa la hoja.

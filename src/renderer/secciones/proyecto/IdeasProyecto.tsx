@@ -4,7 +4,7 @@
 // Lo que no se pudo guardar no se pierde: queda escrito y copiado, con el Recuadro de error arriba (ID-11).
 // Revisar con la IA y Hablar de esta idea quedan citados en la conversación de al lado, sin enviar (ID-4, ID-6, Q-182);
 // en cada renglón, con el botón de enviar (R-75, R-77). La nota de una idea abierta es una hoja como la del bloc, con
-// enlaces e imágenes (`NotaDeIdea`, ID-I3); Borrar pide confirmar en el mismo lugar (ID-8).
+// enlaces e imágenes (`NotaDeIdea`, ID-I3); Borrar pide confirmar en el cuadro del centro (ID-8, PZ-8; Q-189).
 import { type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { diaCorto } from '../../../compartido/fechas'
 import {
@@ -240,19 +240,6 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   }
   const sePuedeBorrar = (i: IdeaVista) => i.de !== 'IA'
 
-  /** «¿Borrar esta idea? Sí · No», en el lugar del botón (ID-8). */
-  const confirmarBorrar = (i: IdeaVista) => (
-    <span className="idp-confirmar">
-      {i.de === 'enlace' ? '¿Borrar este enlace?' : '¿Borrar esta idea?'}
-      <button type="button" className="boton peligroso chico" onClick={() => void borrar(i)}>
-        Sí
-      </button>
-      <button type="button" className="boton sin-fondo chico" onClick={() => setBorrando(null)}>
-        No
-      </button>
-    </span>
-  )
-
   const cambiarEstado = async (idea: IdeaVista, estado: EstadoDesdeIdeas) => {
     const r = await window.iridium.estadoIdea(ruta, idea.codigo, estado)
     if (r.tipo === 'error') setFallo({ titulo: 'No se pudo cambiar el estado', mensaje: r.mensaje })
@@ -366,8 +353,9 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
   ].filter((g) => g.ideas.length > 0)
   const hoy = new Date()
   const ideaDelMenu = menu ? ideas.find((i) => i.codigo === menu.codigo) : undefined
+  const ideaBorrando = borrando ? ideas.find((i) => i.codigo === borrando) : undefined
 
-  // Borrar desde el menú: la confirmación aparece en el renglón (o abajo, si la idea está abierta).
+  // Borrar desde el menú o desde la idea abierta: la confirmación es el cuadro del centro (Q-189).
   const borrarDelMenu = ideaDelMenu && (
     <button
       type="button"
@@ -439,14 +427,10 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
           </span>
           {!enlace && meta}
         </button>
-        {borrando === idea.codigo && idea.codigo !== abierta ? (
-          <span className="acciones siempre">{confirmarBorrar(idea)}</span>
-        ) : (
-          !enlace && <span className="acciones">{enviar(idea)}</span>
-        )}
+        {!enlace && <span className="acciones">{enviar(idea)}</span>}
         {enlace && (
           <>
-            <span className="acciones" hidden={borrando === idea.codigo}>
+            <span className="acciones">
               {enviar(idea)}
               <button
                 type="button"
@@ -487,60 +471,50 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
         <div className="texto-doc idp-texto-ia">{idea.texto.trim() || 'Sin más texto que el título.'}</div>
       )}
       <div className="pie-fila">
-        {borrando === idea.codigo ? (
-          confirmarBorrar(idea)
-        ) : (
+        <button
+          type="button"
+          className="boton sin-fondo chico"
+          title="La cita en la conversación de al lado, para que escribas sobre ella"
+          onClick={() => void hablar(idea)}
+        >
+          <Icono nombre="comentar" />
+          Hablar de esta idea
+        </button>
+        {idea.estado !== 'hecha' && (
           <>
             <button
               type="button"
-              className="boton sin-fondo chico"
-              title="La cita en la conversación de al lado, para que escribas sobre ella"
-              onClick={() => void hablar(idea)}
+              className={
+                idea.estado === 'aprobada'
+                  ? 'boton sin-fondo chico idp-elegido-bien'
+                  : 'boton sin-fondo chico'
+              }
+              aria-pressed={idea.estado === 'aprobada'}
+              onClick={() => void aprobar(idea)}
             >
-              <Icono nombre="comentar" />
-              Hablar de esta idea
+              <Icono nombre="check" />
+              Aprobar
             </button>
-            {idea.estado !== 'hecha' && (
-              <>
-                <button
-                  type="button"
-                  className={
-                    idea.estado === 'aprobada'
-                      ? 'boton sin-fondo chico idp-elegido-bien'
-                      : 'boton sin-fondo chico'
-                  }
-                  aria-pressed={idea.estado === 'aprobada'}
-                  onClick={() => void aprobar(idea)}
-                >
-                  <Icono nombre="check" />
-                  Aprobar
-                </button>
-                <button
-                  type="button"
-                  className={
-                    idea.estado === 'rechazada'
-                      ? 'boton sin-fondo chico idp-elegido-mal'
-                      : 'boton sin-fondo chico'
-                  }
-                  aria-pressed={idea.estado === 'rechazada'}
-                  onClick={() => void rechazar(idea)}
-                >
-                  <Icono nombre="x" />
-                  Rechazar
-                </button>
-              </>
-            )}
-            {sePuedeBorrar(idea) && (
-              <button
-                type="button"
-                className="boton sin-fondo chico"
-                onClick={() => setBorrando(idea.codigo)}
-              >
-                <Icono nombre="eliminar" />
-                Borrar
-              </button>
-            )}
+            <button
+              type="button"
+              className={
+                idea.estado === 'rechazada'
+                  ? 'boton sin-fondo chico idp-elegido-mal'
+                  : 'boton sin-fondo chico'
+              }
+              aria-pressed={idea.estado === 'rechazada'}
+              onClick={() => void rechazar(idea)}
+            >
+              <Icono nombre="x" />
+              Rechazar
+            </button>
           </>
+        )}
+        {sePuedeBorrar(idea) && (
+          <button type="button" className="boton sin-fondo chico" onClick={() => setBorrando(idea.codigo)}>
+            <Icono nombre="eliminar" />
+            Borrar
+          </button>
         )}
       </div>
     </div>
@@ -706,6 +680,58 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
           )}
         </MenuContextual>
       )}
+      {ideaBorrando && (
+        <CuadroBorrar
+          idea={ideaBorrando}
+          borrar={() => void borrar(ideaBorrando)}
+          cancelar={() => setBorrando(null)}
+        />
+      )}
     </>
+  )
+}
+
+/** «¿Borrar esta idea?» en el cuadro del centro (PZ-8): el foco empieza en No, así Enter no borra; Esc es No. */
+function CuadroBorrar({
+  idea,
+  borrar,
+  cancelar,
+}: {
+  idea: IdeaVista
+  borrar: () => void
+  cancelar: () => void
+}) {
+  const no = useRef<HTMLButtonElement>(null)
+  useEffect(() => no.current?.focus(), [])
+  const enlace = idea.de === 'enlace'
+  return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: el velo solo cierra con un clic afuera del cuadro.
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Esc lo atiende el cuadro.
+    <div className="velo" onClick={(e) => e.target === e.currentTarget && cancelar()}>
+      <div
+        className="cuadro"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="borrar-idea-t"
+        onKeyDown={(e) => {
+          if (e.key !== 'Escape') return
+          e.stopPropagation()
+          cancelar()
+        }}
+      >
+        <h2 id="borrar-idea-t">{enlace ? '¿Borrar este enlace?' : '¿Borrar esta idea?'}</h2>
+        <p>
+          «{idea.titulo}»{enlace ? '' : ', con su nota y sus imágenes'}. No se puede deshacer.
+        </p>
+        <div className="pie">
+          <button ref={no} type="button" className="boton sin-fondo" onClick={cancelar}>
+            No
+          </button>
+          <button type="button" className="boton peligroso" onClick={borrar}>
+            Sí, borrar
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }

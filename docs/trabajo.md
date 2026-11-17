@@ -291,7 +291,8 @@ Estado: en curso · Frente: Ideas · Fecha: 2026-11-15
 Pasó a ser el frente Ideas (D-127): sumado a guardar enlaces de repos para revisar y a ver cada idea por separado. Forma elegida en D-128 (la C); se construye después de su UX.
 
 ## T-70 — es posible un "session usage starter"? es decir, una pequeña herramienta que inicie con casi 0 tokens el periodo de 5hs de uso, de este modo se podría iniciar siempre cada 5hs independientemente de si y escribí algo o no, para aprovechar mejor los periodos de tiempo de 5hs, creo que esto es similar a los caché warmers que según entiendo anthropic los permite, quizás deberíamos echar un ojo antes de hacerlo
-Estado: nueva · Fecha: 2026-11-15
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-15 · Origen: D-135
+Decidido en Q-188 (D-135): con trabajo real y desde la misma Iridium abierta, a eso de las 3 y unos 5 minutos después de que venza cada ventana. Va después de Ideas.
 Revisada con la IA el 2026-11-16 (espera Q-184):
 - **Cómo anda el límite:** en Pro y Max, el período de 5 horas empieza con el primer mensaje (en claude.ai o en Claude Code, que comparten el uso) y se renueva 5 horas después; aparte está el límite semanal, que no cambia con esto.
 - **Se puede:** una tarea programada de Windows que a la hora elegida corre `claude -p` con un mensaje mínimo (con Haiku: casi nada del límite semanal) abre el período aunque no estés. Es el Claude Code oficial, en su modo sin ventana, que Anthropic ofrece para automatizar; otros ya lo hacen («session warmer», «window primer»).
@@ -326,3 +327,11 @@ Revisada con la IA el 2026-11-16:
 - **Por qué tokens y no CSS libre:** con reglas sueltas sobre las piezas, la IA podría cambiar cualquier cosa, pero cada versión que renombre una pieza rompería el tema en silencio. Con tokens, lo que puede salir mal es un color feo o poco legible, y eso se controla (contraste).
 - **La guía para la IA:** mejor dentro de la app que solo en GitHub: anda sin internet, coincide con la versión instalada (en GitHub está la última de `dev`, que puede tener tokens que esa copia no tiene) y respeta lo local. La guía se arma sola de `tokens.css` al armar, así no queda vieja; el enlace a GitHub va igual, como referencia al código.
 - **Cómo sería:** una carpeta `Tema` en la carpeta Iridium (como `Ideas` y `Skills`), con `tema.css`, la guía y un `CLAUDE.md` que le dice a la IA qué puede tocar. En Ajustes › Apariencia: «Tema propio: activo», **Editar con la IA** (abre su conversación ahí), **Quitar** (vuelve al negro) y un aviso si un color no pasa el contraste. El cambio se ve al guardar, sin reiniciar. Chico a mediano: una o dos iteraciones, en el frente Apariencia y ajustes, después de Ideas.
+
+## T-76 — La miniatura del sitio en un enlace pegado
+Estado: nueva · Frente: Ideas · Idea: usuario · Fecha: 2026-11-17 · Origen: Q-189
+Al pegar una dirección en una idea (y en el campo de arriba), además de la Etiqueta de enlace, una tarjeta con la imagen, el título y la descripción del sitio, como en WhatsApp o Reddit. Para eso Iridium tiene que bajar la página que se pegó (su vista previa: `og:image`, `og:title`) y guardar la imagen con la idea, para que se vea sin internet. Es una conexión al sitio que el usuario pegó, nada más (P2). Una iteración, después de ID-I4.
+
+## T-77 — Los proyectos ordenados por el último cambio
+Estado: nueva · Frente: Inicio · Fecha: 2026-11-17 · Origen: R-80
+El usuario quiere la grilla de Proyectos ordenada por el último con cambios (hoy: por estado y, dentro de cada uno, por nombre; D-022). El último cambio sería el último commit o, sin git, lo último escrito en `docs/`. Espera Q-191 (si se sigue agrupando por estado). Chico.

@@ -115,6 +115,7 @@ const api: ApiIridium = {
   guardarIdea: (ruta, codigo, escrito) => ipcRenderer.invoke(CANALES.guardarIdea, ruta, codigo, escrito),
   pegarImagenIdea: (ruta, codigo, mime, base64) =>
     ipcRenderer.invoke(CANALES.pegarImagenIdea, ruta, codigo, mime, base64),
+  imagenDelPortapapeles: () => ipcRenderer.invoke(CANALES.imagenDelPortapapeles),
   borrarIdea: (ruta, codigo) => ipcRenderer.invoke(CANALES.borrarIdea, ruta, codigo),
   skillsProyecto: (ruta) => ipcRenderer.invoke(CANALES.skillsProyecto, ruta),
   abrirDiseno: (ruta) => ipcRenderer.invoke(CANALES.abrirDiseno, ruta),

@@ -42,7 +42,7 @@
   - [ ] En una idea suelta abierta, Mover a un proyecto abre la lista de proyectos con framework; al elegir uno, la idea pasa con su nota y sus imágenes, sin evaluar, y se avisa «Movida a Alfa · Ver».
   - [ ] Revisar con la IA y Hablar de esta idea usan la conversación del inicio (Ideas y proyectos).
 - **ID-8 —** Como usuario quiero borrar una idea mía que anoté por error.
-  - [ ] Borrar, en la idea abierta, la quita después de confirmar en el mismo lugar («¿Borrar esta idea? Sí · No»); con imágenes, se borran con ella.
+  - [ ] Borrar, en la idea abierta o con clic derecho, la quita después de confirmar en el cuadro del centro (PZ-8: «¿Borrar esta idea?» · No · Sí, borrar; Esc es No); con imágenes, se borran con ella. (Antes la confirmación iba en el mismo lugar; cambió en Q-189: desde el menú, en el renglón quedaba lejos de donde se eligió.)
 
 ## Flujos
 **ID-9 — Revisar un enlace con la IA**

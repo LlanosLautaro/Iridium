@@ -28,6 +28,10 @@ export type HojaNotas =
 
 export type ResultadoNotas = { tipo: 'ok' } | { tipo: 'error'; mensaje: string }
 export type ImagenPegada = { tipo: 'ok'; ruta: string; url: string } | { tipo: 'error'; mensaje: string }
+/** Una imagen leída del portapapeles de Windows (Q-189); sin ninguna, los nombres de lo que trae. */
+export type ImagenDelPortapapeles =
+  | { tipo: 'imagen'; mime: string; base64: string }
+  | { tipo: 'nada'; formatos: string[] }
 
 const FECHA = /^##\s+(\d{4}-\d{2}-\d{2})\s*$/
 const IMAGEN = /^!\[[^\]]*\]\(<?([^)\s>]+)>?\)$/

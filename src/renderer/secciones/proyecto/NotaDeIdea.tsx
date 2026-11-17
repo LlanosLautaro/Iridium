@@ -1,6 +1,7 @@
 // La nota de una idea abierta (ID-2, ID-I3): la hoja del bloc (`ui/hoja.ts`) con el título en el primer párrafo y la
 // nota debajo. Pegar una dirección la vuelve una Etiqueta de enlace (PZ-14), pegar o soltar una imagen la guarda en
-// `docs/ideas/T-n/` y el texto con formato se pega como texto. Se pinta una vez al abrir; cada cambio sube como el
+// `docs/ideas/T-n/` y el texto con formato se pega como texto. Si el pegado no trae la imagen a la ventana, se busca en
+// el portapapeles de Windows; sin ninguna, se dice qué trae (Q-189). Se pinta una vez al abrir; cada cambio sube como el
 // texto que guarda Iridium (el título en la primera línea), y quien la usa lo guarda un momento después.
 import { type ClipboardEvent, type DragEvent, type MouseEvent, useLayoutEffect, useRef } from 'react'
 import { bloquesDeIdea, escritoDeIdea } from '../../../compartido/ideas'
@@ -12,6 +13,7 @@ import {
   cursorAlFinal,
   enlaceTocado,
   imagenesDe,
+  imagenesDelPegado,
   nodoImagen,
   nodoParrafo,
   pegarTexto,
@@ -56,13 +58,14 @@ export function NotaDeIdea({ ruta, codigo, titulo, nota, imagenes, alCambiar, al
     if (editor.current) alCambiar(escritoDeIdea(bloquesDe(editor.current)))
   }
 
-  const pegarImagenes = async (archivos: File[]) => {
+  const pegarImagenes = async (archivos: { mime: string; base64: () => Promise<string> }[]) => {
     const h = editor.current
     if (!h) return
     let despues = bloqueDelCursor(h)
     for (const a of archivos) {
-      const r = await window.iridium
-        .pegarImagenIdea(ruta, codigo, a.type, await base64De(a))
+      const r = await a
+        .base64()
+        .then((b) => window.iridium.pegarImagenIdea(ruta, codigo, a.mime, b))
         .catch((e: unknown) => ({
           tipo: 'error' as const,
           mensaje: e instanceof Error ? e.message : String(e),
@@ -84,18 +87,36 @@ export function NotaDeIdea({ ruta, codigo, titulo, nota, imagenes, alCambiar, al
     avisar()
   }
 
+  const deArchivos = (archivos: File[]) => archivos.map((a) => ({ mime: a.type, base64: () => base64De(a) }))
+
+  // Lo que la ventana no ve (Q-189): la imagen, del portapapeles de Windows; sin ninguna, qué trae.
+  const pegarDelPortapapeles = async () => {
+    const r = await window.iridium.imagenDelPortapapeles().catch((e: unknown) => ({
+      tipo: 'fallo' as const,
+      mensaje: e instanceof Error ? e.message : String(e),
+    }))
+    if (r.tipo === 'imagen') return pegarImagenes([{ mime: r.mime, base64: async () => r.base64 }])
+    if (r.tipo === 'fallo') return alFallo(r.mensaje)
+    alFallo(
+      r.formatos.length
+        ? `Lo copiado no trae una imagen que Iridium pueda pegar (trae: ${r.formatos.join(', ')}).`
+        : 'El portapapeles está vacío.',
+    )
+  }
+
   const alPegar = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault()
-    const archivos = imagenesDe(e.clipboardData.files)
-    if (archivos.length) return void pegarImagenes(archivos)
-    if (pegarTexto(e, molde.current?.firstElementChild ?? null)) avisar()
+    const archivos = imagenesDelPegado(e.clipboardData)
+    if (archivos.length) return void pegarImagenes(deArchivos(archivos))
+    if (pegarTexto(e, molde.current?.firstElementChild ?? null)) return avisar()
+    void pegarDelPortapapeles()
   }
 
   const alSoltar = (e: DragEvent<HTMLDivElement>) => {
     if (!e.dataTransfer.files.length) return
     e.preventDefault()
     const archivos = imagenesDe(e.dataTransfer.files)
-    if (archivos.length) void pegarImagenes(archivos)
+    if (archivos.length) void pegarImagenes(deArchivos(archivos))
   }
 
   // Apretar un enlace no mueve el cursor (la hoja se correría bajo el mouse); un clic lo abre en el navegador.

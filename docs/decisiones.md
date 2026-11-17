@@ -141,6 +141,7 @@
 | D-132 | 2026-11-16 | general (Compartir) | 10, a pedido del usuario | El repo de Iridium es público: las copias compartidas se actualizan desde GitHub sin invitación, y la del usuario sigue sin actualizarse desde ahí | vigente (precisa D-085) |
 | D-133 | 2026-11-16 | Orden (Skills › Framework) | 10, a pedido del usuario | Actualizar al framework va siempre en una conversación nueva del proyecto, y el botón se llama Actualizar | vigente (precisa F-9) |
 | D-134 | 2026-11-16 | Apariencia y ajustes | 10, a pedido del usuario (T-75, Q-187) | El tema propio son solo tokens, en un archivo fuera de la app, con la guía dentro de Iridium y la IA desde Ajustes | vigente |
+| D-135 | 2026-11-17 | Inicio (Bandeja) y Ajustes | 10, a pedido del usuario (T-70, Q-188) | El período de 5 horas se arranca con trabajo real: Iridium abierta toca «Continúa con el proyecto» en un proyecto con respuestas sin procesar, a las 3 y al vencer cada ventana | vigente |
 
 ---
 
@@ -2911,3 +2912,23 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** con tokens, una versión nueva no rompe el tema en silencio; lo peor que puede salir es un color poco legible, y eso se controla.
 
 **Consecuencias:** T-75 pasa a `pendiente`, en el frente Apariencia y ajustes, después de Ideas (una o dos iteraciones).
+
+## D-135 — El período de 5 horas se arranca con trabajo real, desde la misma Iridium
+- **Fecha:** 2026-11-17
+- **Ámbito:** Inicio (Bandeja) y Apariencia y ajustes
+- **Hito o paso:** 10, a pedido del usuario (T-70, Q-184, Q-188)
+- **Estado:** vigente
+
+**Contexto:** el período de uso de 5 horas de Claude empieza con el primer mensaje. Arrancarlo cuando el usuario no está aprovecha mejor el día (T-70). Se podía con un mensaje vacío desde una tarea de Windows o, como propuso el usuario, con trabajo real; y correrlo con Iridium abierta, con una tarea de Windows que la abra, o solo una vez por noche.
+
+**Decisión:**
+1. Se arranca con **trabajo real**: «Continúa con el proyecto» en una conversación nueva de un solo proyecto con respuestas sin procesar (el que espera hace más), si no hay una sesión trabajando ahí. Sin nada listo, no hace nada ni gasta.
+2. Lo corre **la misma Iridium, abierta**: a eso de las 3 (si la PC está prendida) y unos 5 minutos después de que venza cada ventana (Iridium ya la lee del motor, la barra de uso). Sin tareas de Windows.
+3. La Bandeja dice qué arrancó y cuándo; se prende y se apaga en Ajustes.
+
+**Motivo:** es uso normal de Iridium (lo mismo que hace el usuario al tocar Continuar), no un mensaje para abrir el período; y sin tareas de Windows, nada se abre solo de noche.
+
+**Consecuencias:**
+- Con Iridium cerrada no arranca nada.
+- Cuenta para el límite semanal como cualquier sesión; por eso solo trabaja lo que el usuario ya respondió.
+- T-70 pasa a `pendiente`, después de Ideas.

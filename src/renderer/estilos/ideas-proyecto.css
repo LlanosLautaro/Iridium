@@ -107,16 +107,6 @@
   color: var(--texto-3);
   font-size: var(--tam-chico);
 }
-/* Borrar pide confirmar en el mismo lugar (ID-8) */
-.idp-confirmar {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--esp-2);
-  padding-left: var(--esp-2);
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-  white-space: nowrap;
-}
 .idp-texto-ia {
   font-size: var(--tam-base);
   white-space: pre-wrap;
