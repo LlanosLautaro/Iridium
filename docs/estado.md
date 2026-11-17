@@ -36,14 +36,13 @@
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
-| Mapa (T-71) | sección | 1. Propuesta cerrada (un camino de pasos concretos por frente, D-138; la ruta, en el estado de cada frente, D-139); es el frente que sigue (D-140): falta abrir su carpeta | pendiente |
+| Mapa (`modulos/mapa/estado.md`) | sección | 2. Definición (espera Q-199 a Q-201) | en curso |
 
 ## En qué estamos ahora
-**Ideas terminó (2026-11-17):** las cuatro iteraciones probadas (la última en Q-198: pegar imágenes en el campo de arriba y Mover a un proyecto, todo bien) y su calidad hecha: cada historia contra sus pruebas (se sumaron cuatro en la app), y un caso límite arreglado: la descripción de un enlace con una línea que empieza con `#` ya no rompe `trabajo.md` (`modulos/ideas/estado.md` › Calidad). Los avisos de `pnpm audit`, ninguno de Ideas, quedan en T-79. Anotaste T-78 (un estado «implementada» para las ideas): sigue sin evaluar, en tu lista. **Lo que sigue es el Mapa** (D-140, T-71), que todavía no tiene su carpeta en `modulos/`.
-Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) no se prueba: el usuario la dio por descontinuada (Q-174) y la reemplaza Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
-Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir: el repo es público (D-132): la otra persona baja el `.zip` de la última versión y se actualiza sola, sin invitación; tu copia sigue armándose en tu PC. Falta publicar una versión al día (Q-185). Ver la IA de la otra persona desde acá queda como idea (T-74).
-R-79 (el texto de las tarjetas que se salía) quedó probado en Q-189. Actualizar al framework abre siempre una conversación nueva (D-133) y Ejecutar volvió al verde (R-78): probados (Q-186). El tema propio (T-75) se hará solo con tokens, editado con la IA desde Ajustes (D-134), después del Mapa (D-140). El arranque del período de 5 horas (T-70) se hará con trabajo real de una bandeja lista, desde la misma Iridium abierta, a las 3 y al vencer cada ventana (D-135, Q-188), después del Mapa (D-140). La grilla de Proyectos va toda por el último cambio (D-136, Q-191, T-77) y la tarjeta marca cuando todo está respondido o la bandeja está vacía (R-81) y ya no muestra el hito ni el Próximo paso (R-83, R-84); el título de la Bandeja ya no se recuadra al abrir (R-82): probados en Q-192. El Mapa (T-71) es un camino de pasos concretos por frente, uno a la vez desde una barra arriba (D-138, maqueta `diseno/pantallas/mapa-b.html`); la ruta de cada frente es una lista «Ruta» en su `estado.md` que la IA pone al día al cerrar cada iteración (D-139, Q-195): el formato entra al framework con su lector y su control al construir el Mapa, después de Ideas. La estrella de «recomendada» va en amarillo (R-85) y «Otro» ya no pisa su campo (R-86).
-Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
+**Frente activo: Mapa** (D-140, T-71). Se abrió su carpeta (`modulos/mapa/`) con la propuesta cerrada en el chat (D-137 a D-139) y la definición escrita: el camino de pasos concretos de un frente a la vez, «Por empezar» al final, la ruta en el `estado.md` de cada frente y lo que deja de mostrar el Mapa de hoy. Esperan tus respuestas: Q-199 (si la definición va así), Q-200 (qué muestra antes del hito 10) y Q-201 (de dónde sale «Por empezar»). El estado del Mapa ya tiene su propia «Ruta», como muestra del formato.
+Ideas terminó (2026-11-17): probada y con su calidad hecha; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar. Los avisos de `pnpm audit`, en T-79.
+En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185). Después del Mapa, sin orden entre ellos: el tema propio (T-75, D-134) y el arranque del período de 5 horas (T-70, D-135).
+Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
 - **Q-185 — Publicá una versión al día y pasale el .zip a la otra persona**
@@ -53,11 +52,24 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
+- **Q-199 — ¿La definición del Mapa va así?**
+  Tipo: decisión · frena · Frente: Mapa
+  Contexto: `modulos/mapa/definicion.md` › Must. Un frente a la vez desde la barra de arriba, el camino de pasos con sus marcas (hecho, el que sigue, «Te espera», en pausa, descartado), los hechos de antes plegados y «Empezar este frente», que lo cita en la conversación sin enviar. Un frente sin ruta todavía muestra los pasos del método con un aviso gris. En operación deja de mostrar la fila de hitos, el bloque del frente activo (Próximo paso, «En curso», «En tu bandeja»), las líneas «En espera» y «En operación» y «Lo último de la IA»: lo tuyo sigue en la Bandeja y en el «Te espera» de su paso.
+  Opciones: A) Sí, va así (recomendada: es la maqueta que elegiste, sin el ruido que marcaste) · B) Sí, pero el Próximo paso del frente queda arriba del camino, en una línea · C) Sí, pero «Lo último de la IA» queda abajo
+- **Q-200 — ¿Qué muestra el Mapa antes del hito 10?**
+  Tipo: decisión · frena · Frente: Mapa
+  Contexto: un proyecto que todavía no está en operación no tiene frentes: su camino son los hitos (0 a 9), que tienen nombres del método («Exploración», «Construcción»).
+  Opciones: A) El camino son los hitos, sin pestañas: el actual es el que sigue y debajo, como rama, sus pasos o iteraciones con su objetivo (recomendada: sale de lo que ya existe, no gasta y en la construcción ya dice qué se hace) · B) Lo mismo, pero la IA escribe también una «Ruta» de pasos concretos para el hito en curso (más claro, unas líneas más en cada sesión) · C) Antes del hito 10 queda el Mapa de hoy; el nuevo, solo en operación
+- **Q-201 — ¿De dónde sale «Por empezar»?**
+  Tipo: decisión · frena · Frente: Mapa
+  Contexto: un frente que espera y no tiene carpeta todavía no tiene `estado.md` donde escribir su ruta, y lo aprobado sin frente tampoco. Hoy serían Capacidades (T-28), el Puente PC–celular (T-8) y unas 20 cosas `pendiente` sin frente.
+  Opciones: A) Sale solo de `trabajo.md`: cada frente que espera, con sus `T-n` abiertos como pasos; en «Sin frente», los `T-n` pendientes que no tienen frente, con su título (recomendada: no gasta y nunca queda vieja; los títulos largos bajan de renglón) · B) La IA escribe una lista «Por empezar» en `docs/modulos/README.md`, con nombres concretos y en orden (más clara, pero hay que mantenerla) · C) A ahora, y la IA repasa una vez esas 20 cosas para darles frente o descartarlas
+
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Abrir el frente **Mapa** (T-71, D-140): crear `modulos/mapa/` con su `estado.md` (la propuesta, el paso 1, ya está cerrada en D-138 y D-139, con la maqueta `diseno/pantallas/mapa-b.html`) y hacer el paso 2, Definición: las historias del camino de pasos por frente, «Por empezar» y la lista «Ruta» de cada `estado.md`, para que las apruebes en una Q-n.
-**Leer antes:** D-138 y D-139 en `decisiones.md`; T-71 en `trabajo.md`; `referencias/modulos.md` del framework.
+Frente **Mapa**: procesar Q-199 a Q-201 (cerrar `definicion.md` y registrar lo decidido) y hacer el paso 4, UX: las historias `MA-n` y cómo se ve cada caso, con la maqueta `mapa-b.html` al día, para que la apruebes en una `Q-n`.
+**Leer antes:** `modulos/mapa/estado.md` y `modulos/mapa/definicion.md`; las respuestas Q-199 a Q-201; `04-ux.md` › H-7 y W-7.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
