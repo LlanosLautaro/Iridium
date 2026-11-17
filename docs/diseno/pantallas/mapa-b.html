@@ -44,6 +44,11 @@
   .rt-plegado .rt-punto { left: 3px; width: 18px; height: 14px; margin-top: -7px; border: 0; background: var(--sel-fondo); color: var(--texto-2); font: var(--estilo-codigo); line-height: 14px; text-align: center; }
   .rt-plegado:hover .rt-texto { color: var(--texto); }
   .rt-vacio { color: var(--texto-3); }
+  .rt-gris { margin: 0 0 var(--esp-3); color: var(--texto-3); font: var(--estilo-cuerpo); }
+  .rt-camino + .rt-gris { margin: var(--esp-3) 0 0 var(--esp-6); }
+  .rt-texto a.senal { cursor: pointer; }
+  .rt-aparte { margin-top: var(--esp-6); }
+  .rt-lista .titulo-fila { white-space: normal; }
 </style>
 </head>
 <body data-marco="proyecto" data-seccion="mapa">
@@ -58,135 +63,163 @@
 </main>
 <script src="../piezas.js"></script>
 <script>
-  // Cada frente, su ruta: pasos concretos en orden; e: hecho, foco, pausa, tuya, descartado (sin e, lo que viene).
-  // ramas: [paso del que sale, [pasos]]. pl: los primeros hechos van plegados (el foco queda cerca del último hecho).
+  // Cada frente, su ruta: pasos concretos en orden; e: hecho, pausa, tuya, descartado (sin e, lo que viene).
+  // El que sigue lo calcula Iridium: el primero sin hacer. El tercer dato de un paso «tuya» es la pregunta que espera.
+  // ramas: [paso del que sale, [pasos]]. Los hechos anteriores al último van plegados (el foco queda cerca del último hecho).
+  // sinRuta: un frente de antes de este cambio (sus pasos del método). sinLugar: aprobado con frente, todavía fuera de la ruta.
   const FRENTES = [
-    { nombre: 'Ideas', estado: '7. Construcción', pl: 3, pasos: [
+    { nombre: 'Mapa', estado: 'En curso', pasos: [
+      ['Pensar para qué sirve el Mapa', 'hecho'],
+      ['Elegir la maqueta del camino por frente', 'hecho'],
+      ['Decidir dónde se escribe la ruta de cada frente', 'hecho'],
+      ['Definir qué muestra el Mapa y qué deja de mostrar', 'hecho'],
+      ['Dibujar cómo se usa, también antes del hito 10 y en «Por empezar»', 'tuya', 'Q-202'],
+      ['Enseñarle a la IA a escribir la ruta, con su control'],
+      ['Dibujar el camino de un frente, con sus ramas'],
+      ['Elegir el frente desde la barra de arriba'],
+      ['Escribir la ruta de cada frente de Iridium'],
+      ['Ubicar cada idea aprobada en la ruta de su frente'] ] },
+    { nombre: 'Ideas', estado: 'En uso', pasos: [
       ['Pensar las ideas como trabajo del proyecto', 'hecho'],
       ['Definir que aprobar una idea es pasarla al trabajo', 'hecho'],
       ['Diseñar cómo se guarda cada idea y su nota', 'hecho'],
       ['Anotar, filtrar y aprobar las ideas de un proyecto', 'hecho'],
       ['Revisar una idea con la IA y hablar de ella', 'hecho'],
       ['Pegar enlaces e imágenes en la nota de una idea', 'hecho'],
-      ['Mover las ideas sueltas del inicio a un proyecto', 'foco'],
-      ['Sacar el bloc de notas del inicio'],
-      ['Probar Ideas con cien ideas y proyectos reales'] ],
-      ramas: [[5, [['Mostrar la miniatura del sitio al pegar un enlace']]]] },
-    { nombre: 'Mapa', estado: '1. Propuesta', pasos: [
-      ['Pensar para qué sirve el Mapa', 'hecho'],
-      ['Elegir la maqueta del camino por frente', 'tuya', 'Te espera'],
-      ['Escribir la ruta de cada frente en su estado.md'],
-      ['Dibujar el camino de un frente, con sus ramas'],
-      ['Elegir el frente desde la barra de arriba'],
-      ['Ubicar cada idea aprobada en la ruta de su frente'] ] },
-    { nombre: 'Apariencia y ajustes', estado: 'En uso', pl: 2, pasos: [
+      ['Mover las ideas sueltas del inicio a un proyecto', 'hecho'],
+      ['Sacar el bloc de notas del inicio', 'hecho'],
+      ['Probar Ideas con sus historias, una por una', 'hecho'] ] },
+    { nombre: 'Apariencia y ajustes', estado: 'En uso', pasos: [
       ['Elegir el tamaño de la letra y el zoom', 'hecho'],
       ['Poner tu nombre y el de la IA', 'hecho'],
       ['Pasar Iridium al negro, como único tema', 'hecho'],
-      ['Hacer tu propio tema con tokens, desde Ajustes'],
-      ['Arrancar el período de 5 horas con trabajo de la Bandeja'],
-      ['Poner la foto y el color de cada IA en la conversación'],
-      ['Sonar cuando Iridium termina una tarea'] ] },
-    { nombre: 'Compartir', estado: 'En uso', pl: 1, pasos: [
+      ['Hacer tu propio tema con tokens, desde Ajustes'] ] },
+    { nombre: 'Compartir', estado: 'En uso', pasos: [
       ['Armar una copia de Iridium para otra persona', 'hecho'],
       ['Hacer público el repo para que se actualice sola', 'hecho'],
-      ['Publicar una versión al día', 'tuya', 'Te espera'],
+      ['Publicar una versión al día', 'tuya', 'Q-185'],
       ['Achicar el .zip de cada versión'],
-      ['Numerar las versiones con su lista de cambios'] ],
-      ramas: [[2, [['Recibir un informe de la copia de la otra persona']]]] },
-    { nombre: 'Diseño', estado: 'En pausa', pl: 2, pasos: [
+      ['Numerar las versiones con su lista de cambios'] ] },
+    { nombre: 'Diseño', estado: 'En pausa', pasos: [
       ['Ver y comentar las maquetas dentro de Iridium', 'hecho'],
       ['Rediseñar Iridium en negro, en maquetas', 'hecho'],
       ['Pasar al código la barra, la conversación, la Bandeja y el Mapa', 'hecho'],
-      ['Pasar Skills a la maqueta', 'pausa', 'En pausa'],
+      ['Pasar Skills a la maqueta', 'pausa'],
       ['Pasar el resto de las secciones a las piezas'],
       ['Comparar dos versiones de una pantalla lado a lado'] ],
-      ramas: [[2, [['Pasar el bloc de Ideas', 'descartado']]], [5, [['Copiar ideas de OpenDesigner']]]] },
-    { nombre: 'Orden', estado: 'En pausa', pl: 2, pasos: [
+      ramas: [[2, [['Pasar el bloc de Ideas', 'descartado']]], [4, [['Lo que el rediseño cambia en la app además de las piezas']]]],
+      sinLugar: ['La captura del detalle de Ideas no sale en auditoria-ux.ts'] },
+    { nombre: 'Orden', estado: 'En pausa', pasos: [
       ['Controlar el formato que escribe la IA', 'hecho'],
       ['Armar la Bandeja de entrada', 'hecho'],
       ['Anotar trabajo e ideas sin la IA', 'hecho'],
       ['Pasar un proyecto viejo al framework', 'hecho'],
-      ['Medir Orden con el diseño nuevo', 'pausa', 'Espera a Diseño'] ] },
+      ['Medir Orden con el diseño nuevo', 'pausa'],
+      ['Que un proyecto sepa cuándo el framework le pide algo'] ] },
     { nombre: 'Skills', estado: 'En uso', pasos: [
       ['Ver y poner al día las skills', 'hecho'],
       ['Que el framework reemplace a la guía vieja'],
-      ['Traer las skills que la licencia permite'] ],
-      ramas: [[0, [['Avisar si hay dos copias de una skill']]]] },
-    { nombre: 'Inicio', estado: 'En uso', pl: 1, pasos: [
+      ['Traer las skills que la licencia permite'] ] },
+    { nombre: 'Inicio', estado: 'En uso', pasos: [
       ['Ver todos los proyectos en una grilla', 'hecho'],
       ['Ordenar la grilla por el último cambio', 'hecho'],
       ['Marcar en la tarjeta si respondiste todo', 'hecho'] ] },
-    { nombre: 'Revisión de la app', estado: 'En uso', pasos: [
-      ['Comentar la app con F8', 'hecho'],
-      ['Guardar la página del comentario con su ruta corta'],
-      ['Revisar también las apps Android'] ] },
-    { nombre: 'Capacidades', estado: 'Sin empezar', empezar: true, pasos: [
-      ['Elegir qué capacidades de Claude suma Iridium'] ] },
-    { nombre: 'Puente PC–celular', estado: 'Sin empezar', empezar: true, pasos: [
-      ['Pasar archivos y textos entre la PC y el celular'],
-      ['Avisar y bajar las APK en el celular'],
-      ['Recibir por enlace, como LocalSend'] ],
-      ramas: [[0, [['Mandar tareas desde el celular']]]] },
+    { nombre: 'Revisión de la app', estado: 'En uso', sinRuta: true, pasos: [
+      ['1. Propuesta', 'hecho'], ['2. Definición', 'hecho'], ['3. Investigación', 'hecho'], ['4. UX', 'hecho'],
+      ['5. Diseño técnico', 'hecho'], ['6. UI', 'hecho'], ['7. Construcción', 'hecho'], ['8. Calidad', 'hecho'],
+      ['9. Lanzamiento', 'hecho'] ] },
   ]
-  const SIN_UBICAR = ['Un canvas para pensar una idea con la IA', 'Diagramas que dibuja la IA, paso a paso', 'Dictado',
-    'Comentar un documento párrafo por párrafo', 'La guía según el tipo de proyecto', 'Iridium para Linux o el celular',
-    'Tareas como tarjetas que un agente toma', 'Una sección de aprobados provisionales']
+  // Por empezar sale de trabajo.md (D-143): el frente que espera sin carpeta, con su trabajo aprobado,
+  // y lo aprobado sin frente, con su título tal cual (lo que la IA está haciendo, primero).
+  const ESPERAN = [{ nombre: 'Capacidades', pasos: [] }]
+  const SIN_FRENTE = [
+    ['Medir si conviene un chat nuevo o seguir en el mismo', 'En curso'],
+    ['Puente PC–celular'], ['Mantenimiento: subir los parches'], ['Lo del Gestor que falta en Iridium'], ['Plan completo'],
+    ['Respaldo de .iridium en GitHub'], ['Las Could de la definición'], ['Revisión: la línea «Página» con la ruta relativa'],
+    ['Seguir a la IA, el cierre con comprobación y los avisos de Windows'], ['Pendientes completos'],
+    ['Defecto 1: una prueba que falla a veces en la tanda completa'], ['Defecto 4: minimatch vulnerable dentro de electron-builder'],
+    ['Deuda: lo copiado del Gestor sin usar y la ventana sin minificar'], ['Sacar de carpeta-iridium.ts el nombre viejo de la carpeta de skills'],
+    ['Las rutas que nombran la carpeta vieja, después de Mover'],
+    ['Un sonido para cuando el agente termine de trabajar (cuidado de que no suene cuando el aente simplemente está esperando mientras hace pruebas)'],
+    ['es posible un "session usage starter"? es decir, una pequeña herramienta que inicie con casi 0 tokens el periodo de 5hs de uso, de este modo se podría iniciar siempre cada 5hs independientemente de si y escribí algo o no, para aprovechar mejor los periodos de tiempo de 5hs, creo que esto es similar a los caché warmers que según entiendo anthropic los permite, quizás deberíamos echar un ojo antes de hacerlo'],
+    ['Paquetes con avisos de seguridad (hono, picomatch, minimatch)'] ]
 
   const barra = document.getElementById('frentes')
   const zona = document.getElementById('frente')
 
-  function fila(clase, carril1, carril2, texto, senal) {
+  function senal(e, q) {
+    if (e === 'tuya') return `<a class="senal ambar" title="Abrir ${q} en la Bandeja">Te espera</a>`
+    if (e === 'pausa') return '<span class="senal ambar">En pausa</span>'
+    return ''
+  }
+
+  function fila(clase, carril1, carril2, texto, marca = '') {
     const f = document.createElement('div')
     f.className = `rt-fila ${clase}`
     f.innerHTML = `<div class="rt-carril ${carril1}">${clase.includes('principal') ? '<span class="rt-punto"></span>' : ''}</div>` +
       (clase.includes('principal') ? '' : `<div class="rt-carril ${carril2}"><span class="rt-punto"></span></div>`) +
-      `<div class="rt-texto"><span>${texto}</span>${senal ? `<span class="senal ambar">${senal}</span>` : ''}</div>`
+      `<div class="rt-texto"><span>${texto}</span>${marca}</div>`
     return f
   }
 
+  function filas(lista) {
+    return `<div class="filas rt-lista">${lista.map(([t, m]) => `<div class="fila"><span class="principal-fila"><span class="titulo-fila">${t}</span></span>` +
+      (m ? `<span class="senal blanco">${m}</span>` : '') + '</div>').join('')}</div>`
+  }
+
   function dibujar(f, abierto = false) {
-    zona.innerHTML = `<div class="rt-cab"><h2>${f.nombre}</h2><span class="gris-3">${f.estado}</span>` +
-      (f.empezar ? `<span class="derecha"><button class="boton sin-fondo chico"><i data-ic="claude"></i>Empezar este frente</button></span>` : '') +
-      `</div><div class="rt-camino"></div>`
+    const ultimoHecho = f.pasos.map(([, e]) => e).lastIndexOf('hecho')
+    const todoHecho = ultimoHecho === f.pasos.length - 1
+    zona.innerHTML = `<div class="rt-cab"><h2>${f.nombre}</h2><span class="gris-3">${f.estado}</span></div>` +
+      (f.sinRuta ? '<p class="rt-gris">Todavía sin ruta: la IA la escribe la próxima vez que trabaje en este frente.</p>' : '') +
+      '<div class="rt-camino"></div>' +
+      (todoHecho && !f.sinRuta ? '<p class="rt-gris">Todo hecho por ahora. Lo que venga, la IA lo suma a la ruta.</p>' : '') +
+      (f.sinLugar ? `<section class="bloque rt-aparte"><h3 class="bloque-titulo">Aprobado, sin lugar en la ruta <span class="cuenta">${f.sinLugar.length}</span></h3>` +
+        filas(f.sinLugar.map((t) => [t])) + '</section>' : '')
     const camino = zona.querySelector('.rt-camino')
-    const desde = abierto ? 0 : f.pl ?? 0
+    // El que sigue: el primero sin hacer; si espera al usuario o está en pausa, lleva su señal en lugar del resalte.
+    const sigue = f.pasos.findIndex(([, e]) => e !== 'hecho' && e !== 'descartado')
+    const desde = abierto ? 0 : Math.max(0, ultimoHecho)
     const ultimo = f.pasos.length - 1
     if (desde) {
-      const pl = fila('principal hecho rt-plegado', 'abajo', '', `${desde} hechos antes`)
+      const pl = fila('principal hecho rt-plegado', 'abajo', '', `${f.pasos.slice(0, desde).filter(([, e]) => e === 'hecho').length} hechos antes`)
       pl.querySelector('.rt-punto').textContent = '+'
       pl.addEventListener('click', () => dibujar(f, true))
       camino.append(pl)
+    } else if (abierto && ultimoHecho > 0) {
+      const pl = fila('principal hecho rt-plegado', 'abajo', '', 'Plegar los hechos de antes')
+      pl.querySelector('.rt-punto').textContent = '−'
+      pl.addEventListener('click', () => dibujar(f))
+      camino.append(pl)
     }
-    f.pasos.forEach(([t, e = '', senal], i) => {
+    const conLinea = camino.children.length > 0
+    f.pasos.forEach(([t, e = '', q], i) => {
       if (i < desde) return
-      const lineas = `${i > desde || desde ? 'arriba' : ''} ${i < ultimo ? 'abajo' : ''}`
-      camino.append(fila(`principal ${e}`, lineas, '', t, senal))
+      const clase = i === sigue && !e ? 'foco' : e
+      const lineas = `${i > desde || conLinea ? 'arriba' : ''} ${i < ultimo ? 'abajo' : ''}`
+      camino.append(fila(`principal ${clase}`, lineas, '', t, senal(e, q)))
       for (const [de, rama] of f.ramas ?? []) {
         if (de !== i) continue
-        rama.forEach(([rt, re = ''], j) => {
+        rama.forEach(([rt, re = '', rq], j) => {
           const c2 = `${j === 0 ? 'codo' : 'arriba'} ${j < rama.length - 1 ? 'abajo' : ''}`
-          camino.append(fila(`rama ${re}`, i < ultimo ? 'sigue' : '', c2, rt))
+          camino.append(fila(`rama ${re}`, i < ultimo ? 'sigue' : '', c2, rt, senal(re, rq)))
         })
       }
     })
     ponerIconos(zona)
   }
 
-  // Por empezar: los frentes que todavía no arrancaron, con lo que juntan, y las ideas que no tienen frente.
   function porEmpezar() {
-    const frentes = FRENTES.filter((f) => f.empezar).map((f) =>
+    const frentes = ESPERAN.map((f) =>
       `<section class="bloque"><h3 class="bloque-titulo">${f.nombre}<span class="derecha"><button class="boton sin-fondo chico"><i data-ic="claude"></i>Empezar este frente</button></span></h3>` +
-      `<div class="filas">${f.pasos.map(([t]) => `<div class="fila"><span class="principal-fila"><span class="titulo-fila">${t}</span></span></div>`).join('')}` +
-      (f.ramas ?? []).flatMap(([, r]) => r).map(([t]) => `<div class="fila"><span class="principal-fila"><span class="titulo-fila">${t}</span></span></div>`).join('') +
-      `</div></section>`).join('')
-    zona.innerHTML = frentes + `<section class="bloque"><h3 class="bloque-titulo">Sin frente <span class="cuenta">${SIN_UBICAR.length}</span></h3><div class="filas">` +
-      SIN_UBICAR.map((t) => `<div class="fila"><span class="principal-fila"><span class="titulo-fila">${t}</span></span></div>`).join('') + '</div></section>'
+      (f.pasos.length ? filas(f.pasos.map((t) => [t])) : '<p class="rt-gris">Los pasos se escriben al empezarlo.</p>') + '</section>').join('')
+    zona.innerHTML = frentes + `<section class="bloque"><h3 class="bloque-titulo">Sin frente <span class="cuenta">${SIN_FRENTE.length}</span></h3>` +
+      filas(SIN_FRENTE) + '</section>'
     ponerIconos(zona)
   }
 
-  const POR_EMPEZAR = FRENTES.filter((f) => f.empezar).length + SIN_UBICAR.length
-  const pestanas = [...FRENTES.filter((f) => !f.empezar).map((f) => [f.nombre, () => dibujar(f)]), ['Por empezar', porEmpezar, POR_EMPEZAR]]
+  const POR_EMPEZAR = ESPERAN.length + SIN_FRENTE.length
+  const pestanas = [...FRENTES.map((f) => [f.nombre, () => dibujar(f)]), ['Por empezar', porEmpezar, POR_EMPEZAR]]
   for (const [nombre, abrir, cuenta] of pestanas) {
     const b = document.createElement('button')
     b.className = 'pestana'
@@ -195,6 +228,11 @@
       for (const o of barra.children) o.classList.remove('elegida')
       b.classList.add('elegida')
       abrir()
+    })
+    // Con el foco en la barra, las flechas pasan de una pestaña a otra.
+    b.addEventListener('keydown', (ev) => {
+      const otra = ev.key === 'ArrowRight' ? b.nextElementSibling : ev.key === 'ArrowLeft' ? b.previousElementSibling : null
+      if (otra) { otra.focus(); otra.click() }
     })
     barra.append(b)
   }

@@ -2994,3 +2994,36 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción A de Q-197: cuando Ideas cierre sus pasos 8 y 9, sigue el Mapa.
 **Motivo:** ataca lo que más le cuesta hoy al usuario, perder el foco entre tantas cosas abiertas, y su diseño está fresco.
 **Consecuencias:** el arranque del período de 5 horas y el tema propio quedan después del Mapa, sin orden entre ellos todavía.
+
+## D-141 — La definición del Mapa va como se escribió
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71)
+- **Hito o paso:** 10; frente Mapa, paso 2 (Definición), Q-199
+- **Estado:** vigente
+
+**Contexto:** la definición (`modulos/mapa/definicion.md`) juntó la maqueta elegida (D-138) con la ruta escrita en cada frente (D-139) y listó lo que el Mapa de hoy deja de mostrar.
+**Decisión:** opción A de Q-199: un frente a la vez desde la barra de arriba, el camino de pasos con sus marcas (hecho, el que sigue, «Te espera», en pausa, descartado), los hechos de antes plegados, «Por empezar» con «Empezar este frente» (cita sin enviar) y, para un frente sin ruta, los pasos del método con un aviso gris. En operación el Mapa deja de mostrar la fila de hitos, el bloque del frente activo (Próximo paso, «En curso», «En tu bandeja»), las líneas «En espera» y «En operación» y «Lo último de la IA».
+**Motivo:** es la maqueta que eligió el usuario, sin el ruido que marcó en Q-194. Lo que lo espera sigue en la Bandeja y en el «Te espera» de su paso; el Próximo paso, en `estado.md`.
+**Consecuencias:** H-7 y W-7 (`04-ux.md`) se reescriben con la UX del frente (`modulos/mapa/ux.md`).
+
+## D-142 — Antes del hito 10 el camino del Mapa son los hitos
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71)
+- **Hito o paso:** 10; frente Mapa, paso 2 (Definición), Q-200
+- **Estado:** vigente
+
+**Contexto:** un proyecto que todavía no está en operación no tiene frentes; sus pasos son los hitos (0 a 9), con nombres del método.
+**Decisión:** opción A de Q-200: antes del hito 10 el Mapa no tiene pestañas y su camino son los hitos; el actual es el que sigue y debajo, como rama, sus pasos (la lista del portón) o, en la construcción, sus iteraciones con su objetivo.
+**Motivo:** sale de lo que la IA ya escribe, no gasta uso y en la construcción ya dice qué se hace.
+**Consecuencias:** la IA no escribe una «Ruta» para los hitos. Si un proyecto abre un frente antes del hito 10, la barra aparece con «Hitos» primero (`modulos/mapa/ux.md` › MA-5).
+
+## D-143 — «Por empezar» sale solo de trabajo.md
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71)
+- **Hito o paso:** 10; frente Mapa, paso 2 (Definición), Q-201
+- **Estado:** vigente
+
+**Contexto:** un frente que espera sin carpeta no tiene `estado.md` donde escribir su ruta, y lo aprobado sin frente tampoco.
+**Decisión:** opción A de Q-201: «Por empezar» lo arma Iridium con `trabajo.md`: cada frente que espera (`pendiente` en la tabla `## Módulos`, sin carpeta), con sus `T-n` abiertos como pasos, y «Sin frente», los `T-n` `pendiente` o `en curso` que no tienen frente, con su título (los largos bajan de renglón). Las ideas sin evaluar (`nueva`) siguen solo en Ideas.
+**Motivo:** no gasta uso y nunca queda vieja.
+**Consecuencias:** los títulos de `trabajo.md` se leen tal cual; repasar esas cosas para darles frente queda fuera del Mapa (`definicion.md` › Fuera de alcance).

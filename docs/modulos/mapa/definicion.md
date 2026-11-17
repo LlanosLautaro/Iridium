@@ -1,7 +1,7 @@
 # Definición del módulo: Mapa
 
 **Fecha:** 2026-11-17
-**Estado:** propuesta, espera Q-199 a Q-201
+**Estado:** aprobada en Q-199 (D-141); Q-200 → D-142, Q-201 → D-143
 **Base:** `propuesta.md`, D-138 (un frente a la vez, pasos concretos, sin ruido), D-139 (la ruta en el `estado.md` de cada frente) y la maqueta `docs/diseno/pantallas/mapa-b.html`.
 
 ## Objetivo del módulo
@@ -28,9 +28,9 @@ Ver, en cada proyecto, **qué se va a hacer y en qué orden**, frente por frente
   - **lo que viene:** el punto vacío.
 - **Las ramas:** salen del paso del que nacen, con sangría y su codo; se marcan igual.
 - **Los hechos de antes, plegados:** quedan a la vista el último hecho y lo que sigue; los anteriores, en una línea «N hechos antes» que se despliega con un clic.
-- **«Por empezar»:** los frentes que esperan y no empezaron, cada uno con sus pasos y **Empezar este frente**, que lo cita arriba del campo de la conversación, sin enviar (como Hablar de esta idea, D-131); y **«Sin frente»**, lo aprobado que todavía no tiene frente. De dónde salen, en Q-201.
+- **«Por empezar»:** los frentes que esperan y no empezaron, cada uno con sus pasos y **Empezar este frente**, que lo cita arriba del campo de la conversación, sin enviar (como Hablar de esta idea, D-131); y **«Sin frente»**, lo aprobado que todavía no tiene frente. Sale solo de `trabajo.md` (D-143): cada frente `pendiente` sin carpeta con sus `T-n` abiertos, y los `T-n` `pendiente` o `en curso` sin frente, con su título.
 - **Un frente sin ruta todavía** (los proyectos de antes de este cambio): su camino son los pasos del método de su `estado.md` (Propuesta, Definición…), con una línea gris «Todavía sin ruta: la IA la escribe la próxima vez que trabaje en este frente». El Mapa nunca queda vacío.
-- **Antes del hito 10:** qué muestra, en Q-200.
+- **Antes del hito 10** (D-142): sin pestañas, el camino son los hitos; el actual es el que sigue y debajo, como rama, sus pasos (la lista del portón) o, en la construcción, sus iteraciones con su objetivo.
 - **La ruta en el framework** (D-139, D-086, D-092), en el mismo cambio que su lector, el control y sus pruebas: la sección `## Ruta` en la plantilla del `estado.md` de un frente; el framework le enseña a la IA a escribirla al abrir un frente, a ponerla al día al cerrar cada iteración y a ubicar ahí cada idea que se aprueba; el control marca una ruta mal escrita (una marca que no existe, una rama sin paso del que salga) y un frente en curso sin ruta.
 - **Las rutas de los frentes de Iridium**, escritas por la IA desde la maqueta y lo que hay hoy en cada frente.
 - **Lo que deja de mostrar el Mapa** en operación (el ruido de D-138): la fila de hitos, el bloque del frente activo (su paso del método, el Próximo paso, «En curso» y «En tu bandeja»), las líneas «En espera» y «En operación» y «Lo último de la IA». Lo que espera al usuario sigue en la Bandeja y en el «Te espera» de su paso; el Próximo paso, en `estado.md` (Docs).
@@ -78,6 +78,4 @@ Sigue en P2. Lee archivos del proyecto que Iridium ya lee; no hay datos nuevos n
 | Por empezar | Los frentes que esperan y lo aprobado que todavía no tiene frente |
 
 ## Preguntas abiertas para investigar
-- Q-199: ¿la definición va así, con lo que deja de mostrar el Mapa?
-- Q-200: qué muestra el Mapa antes del hito 10.
-- Q-201: de dónde sale «Por empezar».
+(ninguna: Q-199 a Q-201 respondidas)
