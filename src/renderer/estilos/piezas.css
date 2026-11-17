@@ -152,7 +152,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 /* ───────── PZ-7 · Cuenta y señal ─────────
    Grupo: Avisos
    Para qué: un número o una marca chica que dice que hay algo, sin píldora. El ámbar es lo que frena, el rojo lo que falla y el verde lo que está andando (Trabajando, R-71); si nada falla, no se muestra (D-108).
-   Estados: cuenta, cuenta que frena, punto, punto ámbar, punto rojo, señal de texto (con o sin ícono), señal verde. */
+   Estados: cuenta, cuenta que frena, punto, punto ámbar, punto rojo, señal de texto (con o sin ícono), señal verde, señal blanca (lo que está listo: la bandeja toda respondida, R-81). */
 .cuenta { font: var(--estilo-codigo); color: var(--texto-3); }
 .cuenta.frena { color: var(--espera); }
 .punto { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--texto-3); flex: none; }
@@ -164,6 +164,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .senal.ambar { color: var(--espera); }
 .senal.rojo { color: var(--error); }
 .senal.verde { color: var(--bien); }
+.senal.blanco { color: var(--texto); }
 
 /* ───────── PZ-8 · Menú, cuadro y ventana ─────────
    Grupo: Acciones

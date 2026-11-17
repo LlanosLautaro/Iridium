@@ -33,16 +33,16 @@
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 probadas; la tanda 8, el bloc de Ideas, sin probar: lo reemplaza el frente Ideas, D-128, Q-174) | en pausa |
-| Ideas (`modulos/ideas/estado.md`) | sección | 7. Construcción (ID-I1 e ID-I2 probadas; ID-I3 probada con dos ajustes, que esperan Q-190; sigue ID-I4) | en curso |
+| Ideas (`modulos/ideas/estado.md`) | sección | 7. Construcción (ID-I1, ID-I2 e ID-I3 probadas; sigue ID-I4) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (T-71) | sección | 1. Propuesta (el Mapa como una red de pasos por frente; pensarlo en el chat; orden con Capacidades a decidir) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones: ID-I1 (Ideas en un proyecto) e ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación, D-131) están hechas y probadas (Q-181, Q-183; tras Q-183, el ícono de compartir y sin el `T-n` a la vista). ID-I3 (la nota de una idea con enlaces e imágenes pegados, y Borrar) se probó en Q-189: Ctrl+V con una imagen no andaba (ahora, si la ventana no la ve, Iridium la busca en el portapapeles de Windows y, si no hay, dice qué trae) y la confirmación de Borrar pasó al cuadro del centro; esperan Q-190. Sigue ID-I4 (las ideas sueltas del inicio, que reemplazan al bloc). La miniatura del sitio al pegar un enlace queda como T-76.
+**Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones: ID-I1 (Ideas en un proyecto) e ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación, D-131) están hechas y probadas (Q-181, Q-183; tras Q-183, el ícono de compartir y sin el `T-n` a la vista). ID-I3 (la nota de una idea con enlaces e imágenes pegados, y Borrar) está probada (Q-189, Q-190). Sigue ID-I4 (las ideas sueltas del inicio, que reemplazan al bloc: Q-190 lo recordó). La miniatura del sitio al pegar un enlace queda como T-76.
 Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) no se prueba: el usuario la dio por descontinuada (Q-174) y la reemplaza Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir: el repo es público (D-132): la otra persona baja el `.zip` de la última versión y se actualiza sola, sin invitación; tu copia sigue armándose en tu PC. Falta publicar una versión al día (Q-185). Ver la IA de la otra persona desde acá queda como idea (T-74).
-R-79 (el texto de las tarjetas que se salía) quedó probado en Q-189. Actualizar al framework abre siempre una conversación nueva (D-133) y Ejecutar volvió al verde (R-78): probados (Q-186). El tema propio (T-75) se hará solo con tokens, editado con la IA desde Ajustes (D-134), después de Ideas. El arranque del período de 5 horas (T-70) se hará con trabajo real de una bandeja lista, desde la misma Iridium abierta, a las 3 y al vencer cada ventana (D-135, Q-188), después de Ideas. Ordenar la grilla de Proyectos por el último cambio (R-80) quedó en T-77 y espera Q-191.
+R-79 (el texto de las tarjetas que se salía) quedó probado en Q-189. Actualizar al framework abre siempre una conversación nueva (D-133) y Ejecutar volvió al verde (R-78): probados (Q-186). El tema propio (T-75) se hará solo con tokens, editado con la IA desde Ajustes (D-134), después de Ideas. El arranque del período de 5 horas (T-70) se hará con trabajo real de una bandeja lista, desde la misma Iridium abierta, a las 3 y al vencer cada ventana (D-135, Q-188), después de Ideas. La grilla de Proyectos va toda por el último cambio (D-136, Q-191, T-77) y la tarjeta marca cuando todo está respondido o la bandeja está vacía (R-81) y ya no muestra el hito ni el Próximo paso (R-83, R-84); el título de la Bandeja ya no se recuadra al abrir (R-82): esperan Q-192.
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
@@ -53,22 +53,18 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
-- **Q-190 — Probá pegar una imagen con Ctrl+V y Borrar en el cuadro del centro**
-  Tipo: prueba · Frente: Ideas
-  Contexto: los dos ajustes de Q-189 (`modulos/ideas/estado.md` › ID-I3). La versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo). Es en Ideas de un proyecto con el framework.
-  - [ ] Copié una captura (Win+Shift+S) y la pegué con Ctrl+V en una idea abierta: quedó en su renglón
-  - [ ] Hice lo mismo con lo que copié la vez anterior (si fue otra cosa, anotá de dónde): quedó la imagen o, si no, el aviso de arriba dice qué trae lo copiado (copiá ese texto acá)
-  - [ ] Borrar, abajo en la idea abierta y con clic derecho en un enlace: la pregunta apareció en el centro de la pantalla; No (o Esc) la dejó y «Sí, borrar» la sacó
-
-- **Q-191 — ¿Cómo ordeno la grilla de Proyectos por el último cambio (R-80)?**
-  Tipo: decisión · Frente: Inicio
-  Contexto: T-77. Hoy van por estado (en desarrollo, en uso, idea, pausado…) y, dentro de cada uno, por nombre (D-022). El último cambio sería el último commit del proyecto o, sin git, lo último escrito en su `docs/`. Los archivados siguen al final.
-  Opciones: A) Todos por el último cambio, sin agrupar por estado: el estado sigue en cada tarjeta (recomendada: lo que estás tocando queda siempre arriba, que es lo que pediste) · B) Por estado como hoy, y dentro de cada estado por el último cambio (lo pausado nunca sube, pero un proyecto en uso que tocás queda debajo de todos los en desarrollo) · C) Un selector arriba de la grilla: «Por estado» o «Por último cambio» (las dos, con un control más en la pantalla)
+- **Q-192 — Probá el orden de la grilla y las marcas de las tarjetas**
+  Tipo: prueba · Frente: Inicio
+  Contexto: D-136 y R-80 a R-84. La versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo).
+  - [ ] En Proyectos, arriba están los que tocaste último, sin agrupar por estado; los archivados, al final
+  - [ ] Arriba a la derecha de cada tarjeta: el número si hay algo sin responder; un tilde blanco si respondiste todo; un círculo vacío si no hay preguntas o el proyecto no empezó (al pasar el mouse dice cuál)
+  - [ ] Las tarjetas ya no muestran el hito ni «Próximo: …»; al pie queda el frente en curso, si tiene (Iridium: «Ideas · 7. Construcción»)
+  - [ ] Al abrir Iridium con un proyecto abierto, «Bandeja de entrada» ya no aparece recuadrado
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Ideas, ID-I4: las ideas sueltas del inicio (`sueltas.md`), anotar con un proyecto elegido y Mover a un proyecto; se saca el bloc. Si llegan Q-190 o Q-191, se procesan primero (Q-191 es una decisión: va a `decisiones.md`, T-77 a `pendiente`, y R-80 se cierra cuando T-77 esté hecho).
+Ideas, ID-I4: las ideas sueltas del inicio (`sueltas.md`), anotar con un proyecto elegido y Mover a un proyecto; se saca el bloc. Si llega Q-192, se procesa primero.
 **Leer antes:** `modulos/ideas/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

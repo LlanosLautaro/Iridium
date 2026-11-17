@@ -19,6 +19,7 @@ function tarjeta(cambio: Partial<TarjetaProyecto> = {}): TarjetaProyecto {
     revision: 0,
     skills: 0,
     framework: { avisos: [] },
+    ultimoCambio: null,
     ...cambio,
   }
 }

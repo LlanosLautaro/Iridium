@@ -25,6 +25,11 @@ body {
   outline: 1px solid var(--primario);
   outline-offset: -1px;
 }
+/* El título de una pantalla recibe el foco al cambiar de pantalla (Defecto 19) para que el próximo Tab siga desde ahí,
+   pero no es un control: nunca se recuadra (R-82). */
+:is(h1, h2, h3)[tabindex="-1"]:focus-visible {
+  outline: none;
+}
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--borde-fuerte) transparent;

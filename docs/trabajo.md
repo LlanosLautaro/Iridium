@@ -333,5 +333,6 @@ Estado: nueva · Frente: Ideas · Idea: usuario · Fecha: 2026-11-17 · Origen: 
 Al pegar una dirección en una idea (y en el campo de arriba), además de la Etiqueta de enlace, una tarjeta con la imagen, el título y la descripción del sitio, como en WhatsApp o Reddit. Para eso Iridium tiene que bajar la página que se pegó (su vista previa: `og:image`, `og:title`) y guardar la imagen con la idea, para que se vea sin internet. Es una conexión al sitio que el usuario pegó, nada más (P2). Una iteración, después de ID-I4.
 
 ## T-77 — Los proyectos ordenados por el último cambio
-Estado: nueva · Frente: Inicio · Fecha: 2026-11-17 · Origen: R-80
+Estado: hecho · Frente: Inicio · Fecha: 2026-11-17 · Origen: R-80
 El usuario quiere la grilla de Proyectos ordenada por el último con cambios (hoy: por estado y, dentro de cada uno, por nombre; D-022). El último cambio sería el último commit o, sin git, lo último escrito en `docs/`. Espera Q-191 (si se sigue agrupando por estado). Chico.
+Hecho el 2026-11-17 con Q-191 (A, D-136): todos juntos por el último cambio (lo más reciente entre el último commit y lo último escrito en `docs/`), los archivados al final; con sus pruebas (`tests/t77-ultimo-cambio.test.ts`, `tests/core-grilla.test.ts` y `tests/e2e/i1-esqueleto.spec.ts`).

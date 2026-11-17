@@ -1,8 +1,9 @@
 // La tarjeta de un proyecto (04-ux.md › W-2, D-034): estado con ícono y palabra; la cuenta de la bandeja arriba a la
-// derecha, amarilla solo si algo frena (D-100). Con el
+// derecha, amarilla solo si algo frena (D-100); sin nada que responder, una marca: el tilde si todo está respondido y
+// la IA puede seguir, el círculo vacío si la bandeja está vacía o el proyecto no empezó (R-81). Con el
 // clic derecho (o la tecla de menú), sus acciones (R-7).
 import type { MouseEvent } from 'react'
-import { textoDeCuenta } from '../../../compartido/cuentas'
+import { marcaDeBandeja, TEXTO_MARCA, textoDeCuenta } from '../../../compartido/cuentas'
 import { textoFrente } from '../../../compartido/en-que'
 import type { FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
 import type { Estado } from '../../../compartido/tipos'
@@ -91,6 +92,12 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
   const preguntas = textoPreguntas(p.preguntas)
   const avisos = textoAvisos(p.framework)
   const enQue = textoFrente(p.hito)
+  // Al pie, solo el frente en curso: el hito y el Próximo paso no van en la tarjeta (R-83, R-84); se leen en el
+  // proyecto y en el nombre de la tarjeta.
+  const frente = p.hito?.frente ? enQue : null
+  const conPie = frente !== null || p.framework === 'viejo' || ficha !== null || p.archivado
+  // Un archivado no espera nada: sin marca.
+  const marca = p.archivado ? 'cuenta' : marcaDeBandeja(p.preguntas, p.hito !== null)
   const etiqueta = [
     p.nombre,
     est.nombre,
@@ -98,7 +105,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
     p.hito ? textoHito(p.hito) : 'sin estado',
     p.framework === 'viejo' && 'framework viejo',
     enQue,
-    preguntas,
+    preguntas ?? (marca !== 'cuenta' && TEXTO_MARCA[marca]),
     avisos,
     ficha && PALABRA_SESION[ficha.estado],
     p.archivado && 'archivado',
@@ -123,7 +130,18 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
           {p.icono ? <img src={p.icono} alt="" /> : <span className="inicial">{p.inicial}</span>}
         </span>
         <span className="nombre">{p.nombre}</span>
-        <Cuenta n={p.preguntas.sinResponder} frenan={p.preguntas.frenan} clase="en-tarjeta" />
+        {marca === 'cuenta' ? (
+          <Cuenta n={p.preguntas.sinResponder} frenan={p.preguntas.frenan} clase="en-tarjeta" />
+        ) : (
+          <span
+            className={`senal en-tarjeta${marca === 'respondida' ? ' blanco' : ''}`}
+            title={TEXTO_MARCA[marca]}
+            role="img"
+            aria-label={TEXTO_MARCA[marca]}
+          >
+            <Icono nombre={marca === 'respondida' ? 'tilde' : 'circulo'} />
+          </span>
+        )}
         <span className="linea2">
           <span className={`estado ${est.clase}`}>
             <Icono nombre={est.icono} />
@@ -133,45 +151,27 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
         </span>
       </div>
       <p className="desc">{p.descripcion}</p>
-      <div className="pie">
-        {p.hito ? (
-          <span className="hito">
-            {p.hito.numero !== null ? (
-              <>
-                Hito <b>{p.hito.numero}</b>
-                {p.hito.nombre && ` · ${p.hito.nombre}`}
-              </>
-            ) : (
-              (p.hito.nombre ?? 'Sin hito')
-            )}
-          </span>
-        ) : (
-          <span className="hito sin">Sin estado</span>
-        )}
-        {p.framework === 'viejo' && <span className="viejo">framework viejo</span>}
-        {ficha && (
-          <span className="sesion">
-            <SenalSesion ficha={ficha} />
-          </span>
-        )}
-        {p.archivado && (
-          <span className="archivada">
-            <Icono nombre="archivo" />
-            Archivado
-          </span>
-        )}
-      </div>
-      {enQue && (
-        <p className={p.hito?.frente ? 'en-que' : 'en-que sin-frente'} title={enQue}>
-          {p.hito?.frente ? (
-            <>
-              <span className="fr">{p.hito.frente.nombre}</span>
-              {p.hito.frente.paso && ` · ${p.hito.frente.paso}`}
-            </>
-          ) : (
-            enQue
+      {conPie && (
+        <div className="pie">
+          {frente && (
+            <span className="en-que" title={frente}>
+              <span className="fr">{p.hito?.frente?.nombre}</span>
+              {p.hito?.frente?.paso && ` · ${p.hito.frente.paso}`}
+            </span>
           )}
-        </p>
+          {p.framework === 'viejo' && <span className="viejo">framework viejo</span>}
+          {ficha && (
+            <span className="sesion">
+              <SenalSesion ficha={ficha} />
+            </span>
+          )}
+          {p.archivado && (
+            <span className="archivada">
+              <Icono nombre="archivo" />
+              Archivado
+            </span>
+          )}
+        </div>
       )}
       {avisos && p.framework !== null && p.framework !== 'viejo' && (
         <div

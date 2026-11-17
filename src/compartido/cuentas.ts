@@ -21,3 +21,24 @@ export function textoDeCuenta(cuenta: number, frenan: number): string {
   if (frenan <= 0) return base
   return `${base}; ${frenan === 1 ? 'una frena' : `${frenan} frenan`} el proyecto`
 }
+
+/**
+ * Lo que dice la esquina de la tarjeta cuando no hay nada sin responder (R-81): todo respondido (la IA puede seguir),
+ * la bandeja vacía o el proyecto sin empezar (sin `docs/estado.md`), que se ven igual. Con algo sin responder, la cuenta.
+ */
+export type MarcaDeBandeja = 'cuenta' | 'respondida' | 'vacia' | 'sin-empezar'
+
+export function marcaDeBandeja(
+  p: { sinResponder: number; respondidas: number },
+  empezado: boolean,
+): MarcaDeBandeja {
+  if (p.sinResponder > 0) return 'cuenta'
+  if (p.respondidas > 0) return 'respondida'
+  return empezado ? 'vacia' : 'sin-empezar'
+}
+
+export const TEXTO_MARCA: Record<Exclude<MarcaDeBandeja, 'cuenta'>, string> = {
+  respondida: 'Todo respondido: la IA puede seguir',
+  vacia: 'Bandeja vacía',
+  'sin-empezar': 'Sin empezar',
+}

@@ -682,7 +682,7 @@
 - **Fecha:** 2026-10-23
 - **Ámbito:** general
 - **Hito o paso:** 4
-- **Estado:** vigente, salvo el color de cada estado en Proyectos, reemplazado por D-034 (respuesta a Q-34 › F-3, W-2 y W-5; ajusta D-010 y D-020; la lectura de W-5, confirmada en Q-36)
+- **Estado:** vigente, salvo el color de cada estado en Proyectos, reemplazado por D-034, y el orden por estado, reemplazado por D-136 (respuesta a Q-34 › F-3, W-2 y W-5; ajusta D-010 y D-020; la lectura de W-5, confirmada en Q-36)
 
 **Contexto:** W-5 era una bandeja con todas las `Q-n` de todos los proyectos en una lista plana, con el detalle de una a la vez y el contexto como enlaces. W-2 agrupaba los proyectos en secciones plegables, como el Gestor. El usuario pidió, para F-3: íconos a la izquierda, al lado una columna angosta de pendientes por proyecto y, en el área grande, el detalle de cada proyecto (no de una pregunta a la vez), con todo lo necesario para decidir ahí mismo y, si hace falta, un panel a la derecha. Para W-5: que no le interesa una bandeja completa, que le alcanza con avisos dentro de la app y con moverse entre proyectos sin recargar ni cortar sesiones. Para W-2: que ahora hay más lugar y se puede agrupar sin el anidamiento de pausado, archivado y en rescate, quizás solo con colores.
 
@@ -2932,3 +2932,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - Con Iridium cerrada no arranca nada.
 - Cuenta para el límite semanal como cualquier sesión; por eso solo trabaja lo que el usuario ya respondió.
 - T-70 pasa a `pendiente`, después de Ideas.
+
+## D-136 — Los proyectos van por el último cambio, sin agrupar por estado
+- **Fecha:** 2026-11-17
+- **Ámbito:** Inicio (la grilla de Proyectos)
+- **Hito o paso:** 10, a pedido del usuario (R-80, T-77, Q-191)
+- **Estado:** vigente; reemplaza el orden por estado de D-022 (opción 1) y de H-1
+
+**Contexto:** la grilla iba por estado (en desarrollo, en uso, idea…) y, dentro de cada uno, por nombre. El usuario quiere ver arriba lo que está tocando. Se podía ordenar todo por el último cambio, mantener los estados y ordenar dentro de cada uno, o sumar un selector.
+
+**Decisión:** opción A de Q-191. Todos los proyectos van juntos, el último cambio primero; el estado sigue en cada tarjeta. El último cambio es lo más reciente entre el último commit y el último archivo escrito en `docs/` (lo que la IA toca en cada sesión, aunque no haya commiteado). Sin ninguno de los dos, al final y por nombre. Los archivados siguen al final y, después, las fichas dañadas.
+
+**Motivo:** lo que se está tocando queda siempre arriba, que es lo que se pidió; con los estados, un proyecto en uso que se toca quedaría debajo de todos los en desarrollo. Un selector suma un control para algo que no se va a alternar.
+
+**Consecuencias:** H-1 (`04-ux.md`) cambia su primer criterio; el orden de la grilla cambia solo cuando la IA trabaja en un proyecto.

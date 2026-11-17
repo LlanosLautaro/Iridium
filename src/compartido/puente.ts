@@ -46,6 +46,11 @@ export interface TarjetaProyecto {
    * (`docs/estado.md:12 — …`); `'viejo'`, todavía no pasó; null, sin `docs/estado.md`.
    */
   framework: { avisos: string[] } | 'viejo' | null
+  /**
+   * El último cambio del proyecto (ms), que ordena la grilla (D-136): el último commit o lo último escrito en `docs/`,
+   * lo más reciente de los dos; null si no tiene ninguno.
+   */
+  ultimoCambio: number | null
 }
 
 /**

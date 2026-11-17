@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { marcaDeBandeja } from '../src/compartido/cuentas'
 import type { TarjetaProyecto } from '../src/compartido/puente'
 import { armarTarjeta, ordenarTarjetas } from '../src/main/core/grilla'
 import { leerMetadatos } from '../src/main/core/metadatos'
@@ -64,34 +65,29 @@ describe('armarTarjeta', () => {
   })
 })
 
-describe('ordenarTarjetas (H-1)', () => {
-  it('ordena por estado, después sin ficha, archivados y fichas dañadas; dentro de cada grupo por nombre', () => {
+describe('ordenarTarjetas (H-1, D-136)', () => {
+  const con = (t: TarjetaProyecto, ultimoCambio: number | null): TarjetaProyecto => ({ ...t, ultimoCambio })
+  it('todos por el último cambio, sin agrupar por estado; después los archivados y al final las fichas dañadas', () => {
     const orden = ordenarTarjetas([
-      tarjeta('Roto', leerMetadatos('no es json')),
-      tarjeta('zeta', ficha('en-uso', { archivado: true })),
-      tarjeta('Sin ficha', null),
-      tarjeta('Para borrar', ficha('para-eliminar')),
-      tarjeta('Viejo', ficha('en-rescate')),
-      tarjeta('Pausa', ficha('pausado')),
-      tarjeta('Idea', ficha('idea')),
-      tarjeta('delta', ficha('en-desarrollo')),
-      tarjeta('Uso', ficha('en-uso')),
-      tarjeta('Alfa', ficha('en-desarrollo')),
-      tarjeta('Baja', ficha('descontinuado')),
+      con(tarjeta('Roto', leerMetadatos('no es json')), 900),
+      con(tarjeta('zeta', ficha('en-uso', { archivado: true })), 800),
+      con(tarjeta('Sin ficha', null), 300),
+      con(tarjeta('Pausa', ficha('pausado')), 500),
+      con(tarjeta('Idea', ficha('idea')), null),
+      con(tarjeta('delta', ficha('en-desarrollo')), 100),
+      con(tarjeta('Uso', ficha('en-uso')), 700),
+      con(tarjeta('Viejo', ficha('en-rescate', { archivado: true })), 50),
     ]).map((t) => t.nombre)
-    expect(orden).toEqual([
-      'Alfa',
-      'delta',
-      'Uso',
-      'Idea',
-      'Pausa',
-      'Viejo',
-      'Baja',
-      'Para borrar',
-      'Sin ficha',
-      'zeta',
-      'Roto',
-    ])
+    expect(orden).toEqual(['Uso', 'Pausa', 'Sin ficha', 'delta', 'Idea', 'zeta', 'Viejo', 'Roto'])
+  })
+  it('sin cambios, o con el mismo, por nombre', () => {
+    const orden = ordenarTarjetas([
+      con(tarjeta('beta', ficha('idea')), null),
+      con(tarjeta('Alfa', ficha('en-uso')), null),
+      con(tarjeta('Gamma', ficha('pausado')), 10),
+      con(tarjeta('delta', ficha('en-desarrollo')), 10),
+    ]).map((t) => t.nombre)
+    expect(orden).toEqual(['delta', 'Gamma', 'Alfa', 'beta'])
   })
 })
 
@@ -184,5 +180,14 @@ describe('proyectoAfectado (vigilancia)', () => {
     'Alfa\\README.md',
   ])('%s no cambia ninguna tarjeta', (ruta) => {
     expect(proyectoAfectado(ruta)).toBeNull()
+  })
+})
+
+describe('la marca de la bandeja en la tarjeta (R-81)', () => {
+  it('con algo sin responder, la cuenta; todo respondido, el tilde; vacía o sin empezar, el círculo', () => {
+    expect(marcaDeBandeja({ sinResponder: 2, respondidas: 1 }, true)).toBe('cuenta')
+    expect(marcaDeBandeja({ sinResponder: 0, respondidas: 3 }, true)).toBe('respondida')
+    expect(marcaDeBandeja({ sinResponder: 0, respondidas: 0 }, true)).toBe('vacia')
+    expect(marcaDeBandeja({ sinResponder: 0, respondidas: 0 }, false)).toBe('sin-empezar')
   })
 })

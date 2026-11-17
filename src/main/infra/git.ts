@@ -92,6 +92,17 @@ export async function tieneRepo(proyecto: string): Promise<boolean> {
   }
 }
 
+/** La fecha (ms) del último commit del proyecto; null sin repositorio, sin commits o sin git (D-136). */
+export async function fechaUltimoCommit(proyecto: string): Promise<number | null> {
+  if (!(await tieneRepo(proyecto))) return null
+  try {
+    const s = Number((await correr(proyecto, ['log', '-1', '--format=%ct'])).trim())
+    return s > 0 ? s * 1000 : null
+  } catch {
+    return null
+  }
+}
+
 /** HEAD, o null si el repositorio todavía no tiene commits. */
 async function cabeza(proyecto: string): Promise<string | null> {
   const h = (await correr(proyecto, ['rev-parse', '--verify', '-q', 'HEAD'], [0, 1])).trim()

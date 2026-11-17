@@ -1,5 +1,5 @@
 // I-1: la app abre, muestra los proyectos, entra a uno y vuelve; la grilla se actualiza sola (H-1, H-3).
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm, utimes, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
@@ -50,6 +50,9 @@ test.beforeEach(async () => {
   await proyecto('Archivo', { '.proyecto.json': ficha('en-uso', { archivado: true }) })
   await proyecto('Beta', { '.proyecto.json': ficha('idea'), 'docs/estado.md': estado('1 — Exploración') })
   await proyecto('Gestor', { '.proyecto.json': ficha('en-uso') })
+  // El último cambio ordena la grilla (D-136): Beta se tocó después que Alfa; Gestor no tiene docs/.
+  await utimes(join(raiz, 'Alfa', 'docs', 'estado.md'), 1_700_000_000, 1_700_000_000)
+  await utimes(join(raiz, 'Beta', 'docs', 'estado.md'), 1_700_100_000, 1_700_100_000)
 })
 
 test.afterEach(async () => {
@@ -57,16 +60,25 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true })
 })
 
-test('la grilla muestra los proyectos en orden, con hito y preguntas; los archivados con su interruptor', async () => {
+test('la grilla muestra los proyectos por el último cambio, con hito y preguntas; los archivados con su interruptor', async () => {
   const { app, win } = await abrir()
   const nombres = win.locator('.grilla .tarjeta .nombre')
-  await expect(nombres).toHaveText(['Alfa', 'Gestor', 'Beta'])
+  await expect(nombres).toHaveText(['Beta', 'Alfa', 'Gestor'])
   const alfa = win.locator('.tarjeta', { hasText: 'Alfa' })
-  await expect(alfa).toContainText('Hito 7 · Construcción')
+  // El hito y el Próximo paso no se ven en la tarjeta (R-83, R-84): quedan en su nombre, para el lector de pantalla.
+  await expect(alfa).not.toContainText('Hito 7')
+  await expect(alfa).not.toContainText('Próximo')
+  await expect(alfa).toHaveAttribute('aria-label', /Hito 7 · Construcción/)
   // La cuenta arriba a la derecha, amarilla y con «!» porque una frena (D-100); el total, solo en el inicio.
   await expect(alfa.locator('.cuenta')).toHaveText('2')
   await expect(alfa.locator('.cuenta')).toHaveClass(/frena/)
-  await expect(win.locator('.tarjeta', { hasText: 'Gestor' })).toContainText('Sin estado')
+  // Sin nada que responder, una marca (R-81): la bandeja vacía y el proyecto sin empezar, con el círculo.
+  await expect(
+    win.locator('.tarjeta', { hasText: 'Beta' }).getByRole('img', { name: 'Bandeja vacía' }),
+  ).toBeVisible()
+  await expect(
+    win.locator('.tarjeta', { hasText: 'Gestor' }).getByRole('img', { name: 'Sin empezar' }),
+  ).toBeVisible()
   await expect(win.getByRole('button', { name: /^Inicio/ })).toHaveAttribute(
     'aria-label',
     /^Inicio, 2 en la bandeja/,
@@ -81,27 +93,31 @@ test('la grilla muestra los proyectos en orden, con hito y preguntas; los archiv
   await expect(win.locator('[data-motor="listo"]')).toHaveText('')
 
   await win.getByRole('switch', { name: /Archivados/ }).click()
-  await expect(nombres).toHaveText(['Alfa', 'Gestor', 'Beta', 'Archivo'])
+  await expect(nombres).toHaveText(['Beta', 'Alfa', 'Gestor', 'Archivo'])
+  await win.screenshot({ path: 'test-results/t77-grilla.png' })
   await app.close()
 
   // La app recuerda el interruptor.
   const otra = await abrir()
-  await expect(otra.win.locator('.grilla .tarjeta .nombre')).toHaveText(['Alfa', 'Gestor', 'Beta', 'Archivo'])
+  await expect(otra.win.locator('.grilla .tarjeta .nombre')).toHaveText(['Beta', 'Alfa', 'Gestor', 'Archivo'])
   await otra.app.close()
 })
 
 test('la grilla se actualiza sola cuando cambia un estado.md o llega una respuesta', async () => {
   const { app, win } = await abrir()
   const beta = win.locator('.tarjeta', { hasText: 'Beta' })
-  await expect(beta).toContainText('Hito 1 · Exploración')
+  await expect(beta).toHaveAttribute('aria-label', /Hito 1 · Exploración/)
   await writeFile(join(raiz, 'Beta', 'docs', 'estado.md'), estado('2 — Definición', '- **Q-1 — ¿Nombre?**'))
-  await expect(beta).toContainText('Hito 2 · Definición')
+  await expect(beta).toHaveAttribute('aria-label', /Hito 2 · Definición/)
   await expect(beta.locator('.cuenta')).toHaveText('1')
   await expect(beta.locator('.cuenta')).not.toHaveClass(/frena/)
 
   await mkdir(join(raiz, 'Beta', 'docs', 'respuestas'))
   await writeFile(join(raiz, 'Beta', 'docs', 'respuestas', 'Q-1.md'), '# Q-1 — ¿Nombre?\n\nBeta.\n')
   await expect(beta.locator('.cuenta')).toHaveCount(0)
+  // Todo respondido: el tilde blanco, la IA puede seguir (R-81).
+  await expect(beta.getByRole('img', { name: 'Todo respondido: la IA puede seguir' })).toBeVisible()
+  await beta.screenshot({ path: 'test-results/r81-respondida.png' })
 
   await proyecto('Nuevo', { '.proyecto.json': ficha('idea') })
   await expect(win.locator('.tarjeta', { hasText: 'Nuevo' })).toBeVisible()
@@ -126,6 +142,17 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
     'page',
   )
   await expect(win.locator('[data-seccion="pendientes"] .pregunta')).toHaveCount(2)
+  // El título de la pantalla recibe el foco (para que Tab siga desde ahí), pero nunca se recuadra (R-82).
+  const titulo = win.locator('[data-seccion="pendientes"] h2').first()
+  await win.keyboard.press('Tab')
+  await titulo.evaluate((h) => {
+    h.tabIndex = -1
+    h.focus()
+  })
+  await expect(titulo).toBeFocused()
+  expect(
+    await titulo.evaluate((h) => [h.matches(':focus-visible'), getComputedStyle(h).outlineStyle]),
+  ).toEqual([true, 'none'])
   await expect(win.locator('.trabajo')).not.toContainText('Beta')
   await expect(win.locator('.barra-proyectos .proy.elegido')).toContainText('Alfa')
   await expect(win.locator('.chat .compositor')).toBeVisible()

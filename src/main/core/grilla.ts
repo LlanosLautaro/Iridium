@@ -1,19 +1,9 @@
-// La grilla de Proyectos (H-1, 04-ux.md › W-2): qué muestra cada tarjeta y en qué orden. Reglas puras.
+// La grilla de Proyectos (H-1, 04-ux.md › W-2): qué muestra cada tarjeta y en qué orden (por el último cambio, D-136).
+// Reglas puras.
 import type { TarjetaProyecto } from '../../compartido/puente'
-import type { Estado, Guia } from '../../compartido/tipos'
+import type { Guia } from '../../compartido/tipos'
 import type { LecturaMetadatos } from './metadatos'
 import { inicialDe } from './proyectos'
-
-/** Orden de los estados en la grilla (H-1, D-022); dentro de cada uno, por nombre. */
-export const ORDEN_ESTADOS: readonly Estado[] = [
-  'en-desarrollo',
-  'en-uso',
-  'idea',
-  'pausado',
-  'en-rescate',
-  'descontinuado',
-  'para-eliminar',
-]
 
 export interface DatosProyecto {
   nombre: string
@@ -30,6 +20,8 @@ export interface DatosProyecto {
   skills?: number
   /** El framework y sus avisos (W-2); null si no se dice. */
   framework?: TarjetaProyecto['framework']
+  /** El último cambio (ms); null o sin decir, ninguno. */
+  ultimoCambio?: number | null
 }
 
 export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
@@ -55,6 +47,7 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
     revision: d.revision ?? 0,
     skills: d.skills ?? 0,
     framework: d.framework ?? null,
+    ultimoCambio: d.ultimoCambio ?? null,
   }
   if (d.metadatos === null) return base
   if (d.metadatos.tipo === 'danado') return { ...base, problema: d.metadatos.motivo }
@@ -74,14 +67,19 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
 
 const porNombre = new Intl.Collator('es', { sensitivity: 'base', numeric: true })
 
-/** Grupo de orden: los clasificados por estado, después los sin ficha, los archivados y al final las fichas dañadas. */
+/** Grupo de orden: todos juntos, sin agrupar por estado (D-136); después los archivados y al final las fichas dañadas. */
 function grupo(t: TarjetaProyecto): number {
-  if (t.problema !== null) return ORDEN_ESTADOS.length + 2
-  if (t.archivado) return ORDEN_ESTADOS.length + 1
-  if (t.estado === null) return ORDEN_ESTADOS.length
-  return ORDEN_ESTADOS.indexOf(t.estado)
+  if (t.problema !== null) return 2
+  if (t.archivado) return 1
+  return 0
 }
 
+/** Dentro de cada grupo, el último cambio primero (D-136, R-80); sin ninguno, al final; a la par, por nombre. */
 export function ordenarTarjetas(tarjetas: readonly TarjetaProyecto[]): TarjetaProyecto[] {
-  return [...tarjetas].sort((a, b) => grupo(a) - grupo(b) || porNombre.compare(a.nombre, b.nombre))
+  return [...tarjetas].sort(
+    (a, b) =>
+      grupo(a) - grupo(b) ||
+      (b.ultimoCambio ?? -1) - (a.ultimoCambio ?? -1) ||
+      porNombre.compare(a.nombre, b.nombre),
+  )
 }

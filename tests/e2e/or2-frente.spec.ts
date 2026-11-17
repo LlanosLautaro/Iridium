@@ -64,7 +64,7 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
 })
 
-test('la tarjeta muestra el frente en curso o, sin frentes, el Próximo paso', async () => {
+test('la tarjeta muestra el frente en curso; sin frentes, nada (el Próximo paso no va en la tarjeta, R-84)', async () => {
   const env = {
     ...process.env,
     IRIDIUM_DATOS: datos,
@@ -83,11 +83,11 @@ test('la tarjeta muestra el frente en curso o, sin frentes, el Próximo paso', a
     await expect(alfa).toHaveAttribute('aria-label', /Orden · 4\. UX/)
 
     const beta = win.locator('.tarjeta', { hasText: 'Beta' })
-    await expect(beta.locator('.en-que')).toHaveText('Próximo: Probar la I-3 con la grilla de muestra.')
-    await expect(beta.locator('.en-que')).toHaveClass(/sin-frente/)
+    await expect(beta.locator('.en-que')).toHaveCount(0)
+    await expect(beta).not.toContainText('Próximo')
 
     // Una línea: lo largo se corta con «…» y la tarjeta no crece.
-    const alto = await beta.locator('.en-que').evaluate((e) => e.getBoundingClientRect().height)
+    const alto = await alfa.locator('.en-que').evaluate((e) => e.getBoundingClientRect().height)
     expect(alto).toBeLessThan(24)
     await win.locator('.grilla').screenshot({ path: 'test-results/or2-frente.png' })
   } finally {

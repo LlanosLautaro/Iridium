@@ -270,24 +270,16 @@
   width: 13px;
   height: 13px;
 }
-/* En qué anda (W-2): el frente en curso y su paso o, sin frentes, el Próximo paso; una línea */
-.tarjeta .en-que {
-  align-self: start;
-  margin: -5px 0 0;
-  line-height: 1.5;
-  font-size: var(--tam-chico);
-  color: var(--texto-2);
+/* En qué anda (W-2), al pie: el frente en curso y su paso, en una línea; sin frente, nada (R-83, R-84) */
+.tarjeta .pie .en-que {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  min-width: 0;
 }
 .tarjeta .en-que .fr {
   font-weight: 600;
   color: var(--texto);
-}
-.tarjeta .en-que.sin-frente {
-  color: var(--texto-3);
 }
 .tarjeta.archivado .en-que,
 .tarjeta.archivado .en-que .fr {
