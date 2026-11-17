@@ -2972,3 +2972,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** ver qué se va a hacer y en qué orden, sin leer documentos; con nombres concretos se ve cuándo llega cada idea. El camino vertical deja leer nombres largos, que de costado se cortaban.
 
 **Consecuencias:** cada frente necesita una ruta escrita con esos pasos concretos; cómo se escribe y se mantiene sin gastar uso de más, en Q-195. Los nombres de la maqueta los escribió la IA desde lo que hay hoy en los frentes y en `trabajo.md`.
+
+## D-139 — La ruta de cada frente es una lista corta en su estado.md, que la IA mantiene al cerrar cada iteración
+- **Fecha:** 2026-11-17
+- **Ámbito:** Mapa (T-71) y el framework (el estado de un frente)
+- **Hito o paso:** 10; frente Mapa, paso 1 (Propuesta), Q-195
+- **Estado:** vigente
+
+**Contexto:** el Mapa (D-138) necesita, por frente, sus pasos concretos en orden. Lo que cuesta uso es que la IA lea mucho; dibujar lo escrito lo hace Iridium sin costo. Se podía escribir la ruta en el estado de cada frente (A), mantenerla con una skill que se dispare al cambiar el trabajo (B) o que la IA arme el Mapa a pedido leyendo todo (C).
+**Decisión:** opción A de Q-195. El `estado.md` de cada frente lleva una sección «Ruta»: un paso concreto por línea, en orden, con su marca de hecho; las ramas, con sangría bajo el paso del que salen. La IA la escribe al abrir el frente y la pone al día al cerrar cada iteración (ya toca ese archivo); al aprobar una idea, la ubica con una línea en la ruta de su frente, o en «Por empezar» si no tiene frente. Iridium la lee y dibuja el Mapa.
+**Motivo:** cuesta unas líneas por iteración, queda escrita (no se rearma cada vez) y vale para todos los proyectos porque va en el framework. Una skill se carga entera cada vez y no siempre se dispara cuando debe; armarla a pedido es lo más caro y no queda escrita.
+**Consecuencias:** el formato de «Ruta» entra al framework en el mismo cambio que su lector en Iridium, el control y sus pruebas (D-086, D-092), con la construcción del Mapa (T-71), después de Ideas. Los frentes que ya existen reciben su ruta la primera vez que se tocan después de ese cambio; la de los frentes de Iridium la escribe la IA al construirlo, desde la maqueta `diseno/pantallas/mapa-b.html`.
