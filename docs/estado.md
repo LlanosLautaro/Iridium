@@ -33,35 +33,19 @@
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 probadas; la tanda 8, el bloc de Ideas, sin probar: lo reemplaza el frente Ideas, D-128, Q-174) | en pausa |
-| Ideas (`modulos/ideas/estado.md`) | sección | 7. Construcción (ID-I1 probada en Q-181; ID-I2 rehecha con citas, D-131, espera Q-183; sigue ID-I3) | en curso |
+| Ideas (`modulos/ideas/estado.md`) | sección | 7. Construcción (ID-I1 e ID-I2 probadas, Q-181 y Q-183; sigue ID-I3) | en curso |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (T-71) | sección | 1. Propuesta (el Mapa como una red de pasos por frente; pensarlo en el chat; orden con Capacidades a decidir) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones: ID-I1 (Ideas en un proyecto) está hecha y probada (Q-181); ID-I2 (Revisar con la IA y Hablar de esta idea) se rehízo tras Q-182: ahora citan en la conversación, sin enviar (D-131), y espera la prueba del usuario (Q-183); sigue ID-I3 (la nota completa: pegar enlaces e imágenes, borrar). El bloc de notas sigue en la app hasta ID-I4.
+**Frente activo: Ideas** (D-127, T-69): la forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) y el diseño técnico cerrado (D-130): cada idea es un `T-n` de `trabajo.md` con el campo `Idea:` y la nota del usuario aparte. La construcción va en cuatro iteraciones: ID-I1 (Ideas en un proyecto) e ID-I2 (Revisar con la IA y Hablar de esta idea, que citan en la conversación, D-131) están hechas y probadas (Q-181, Q-183; tras Q-183, el ícono de compartir y sin el `T-n` a la vista); sigue ID-I3 (la nota completa: pegar enlaces e imágenes, borrar). El bloc de notas sigue en la app hasta ID-I4.
 Diseño (DI-I3) queda en pausa mientras tanto: las tandas 1 a 7 están probadas y la tanda 8 (el bloc de notas del inicio) no se prueba: el usuario la dio por descontinuada (Q-174) y la reemplaza Ideas. El Mapa se rehará como frente propio (T-71). Detalle en `modulos/diseno/estado.md`.
 Orden terminó su construcción (OR-I4 probada en Q-146) y su paso 8 espera el rediseño. Compartir: el repo es público (D-132): la otra persona baja el `.zip` de la última versión y se actualiza sola, sin invitación; tu copia sigue armándose en tu PC. Falta publicar una versión al día (Q-185). Ver la IA de la otra persona desde acá queda como idea (T-74).
-Actualizar al framework (antes «Pasar al framework») abre siempre una conversación nueva del proyecto, para no releer la anterior en vano (D-133); espera Q-186 junto con el verde de Ejecutar (R-78).
+Actualizar al framework abre siempre una conversación nueva (D-133) y Ejecutar volvió al verde (R-78): probados (Q-186). El tema propio (T-75) se hará solo con tokens, editado con la IA desde Ajustes (D-134), después de Ideas. El arranque del período de 5 horas (T-70) cambió con tu propuesta: arrancarlo con trabajo real de una bandeja lista; se decide en Q-188.
 Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`, que ya guardó la línea de base.
 
 ## Preguntas abiertas
-- **Q-183 — Probá las citas de Revisar con la IA y Hablar de esta idea**
-  Tipo: prueba · Frente: Ideas
-  Contexto: lo que pediste en Q-182 (D-131). La versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo). Es en Ideas de un proyecto con el framework; detalle en `modulos/ideas/estado.md` › ID-I2.
-  - [ ] En un enlace de «Enlaces», la flecha de enviar del renglón (al pasar el mouse): arriba del campo de la conversación apareció «Revisar T-n · nombre» con su ✕, sin enviarse nada, y el cursor quedó en el campo
-  - [ ] Escribí lo que me interesa y envié: en la conversación se ve el pedido citado (gris, con la línea a la izquierda) y debajo lo mío; la etiqueta se fue
-  - [ ] La IA propuso qué sacar; lo que elegí lo anotó como ideas con el robot y el enlace pasó a Hechas
-  - [ ] Abrí una idea y toqué Hablar de esta idea: quedó citada «Idea T-n · título»; con la ✕ se va
-  - [ ] En una idea cerrada, la flecha de enviar del renglón la cita igual, sin abrirla
-  - [ ] La lista es más ancha que antes (R-74)
-  - [ ] Con clic derecho en un renglón también están Revisar con la IA (en los enlaces) y Hablar de esta idea (en las ideas)
-
-- **Q-184 — ¿Hacemos el arranque del período de 5 horas (T-70)?**
-  Tipo: decisión
-  Contexto: `trabajo.md` › T-70. Se puede: un mensaje mínimo con Claude Code a la hora que elijas abre el período antes de que llegues, sin gastar casi nada. Mueve cuándo se renueva, no da más uso, y no hay permiso escrito de Anthropic (tampoco prohibición; los «cache warmers» son de la API y no aplican).
-  Opciones: A) En Iridium, en Ajustes: elegís la hora y Iridium deja la tarea programada en Windows, anda con Iridium cerrada (recomendada: se prende y apaga desde la app y avisa si falló) · B) Solo la tarea de Windows, sin pantalla en Iridium · C) No hacerlo por ahora
-
 - **Q-185 — Publicá una versión al día y pasale el .zip a la otra persona**
   Tipo: tarea · Frente: Compartir
   Contexto: D-132. El repo ya es público: no hace falta invitarla. La última versión publicada es del 4 de noviembre; las que publiques desde ahora le llegan solas (las mira al abrir y cada seis horas, y entran al cerrar Iridium). Tu Iridium no se actualiza desde GitHub.
@@ -69,22 +53,15 @@ Chat nuevo por tamaño y tiempo, y arranque liviano (D-123, T-68): se compara ha
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridiumwin-unpackedIridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
-- **Q-186 — Probá Actualizar al framework y el verde de Ejecutar**
-  Tipo: prueba · Frente: Orden
-  Contexto: D-133 y R-78. La versión entra sola cuando dejás Iridium unos 3 minutos sin usar (o tocá **Actualizar** abajo).
-  - [ ] En Scripts de un proyecto, el botón Ejecutar se ve en verde (R-78)
-  - [ ] En Skills › Framework, el botón de cada proyecto de afuera dice **Actualizar**; en el menú de la tarjeta, **Actualizar al framework**
-  - [ ] Lo toqué en un proyecto que ya tenía una conversación: el pedido salió en una conversación nueva, y la anterior sigue en el historial (el reloj de arriba)
-
-- **Q-187 — ¿Cómo hacemos el tema propio (T-75)?**
-  Tipo: decisión · Frente: Apariencia y ajustes
-  Contexto: `trabajo.md` › T-75. Se puede sin tocar el código: un archivo con los colores que cambiás, guardado fuera de la app, que las actualizaciones no pisan. Lo que cambia entre las opciones es cuánto puede tocar la IA y dónde busca la guía.
-  Opciones: A) Solo los tokens (colores, líneas, letras), con la guía dentro de la app y el enlace a GitHub de referencia, editado con la IA desde Ajustes (recomendada: no se rompe con las versiones nuevas y anda sin internet) · B) Igual que A, pero la guía solo en GitHub, como lo pensaste (más simple, necesita internet y puede no coincidir con tu versión) · C) CSS libre: la IA puede cambiar cualquier pieza (más poder, pero una versión nueva puede romperlo sin aviso) · D) Dejarlo como idea por ahora
+- **Q-188 — ¿Va así el arranque del período con trabajo real (T-70)?**
+  Tipo: decisión
+  Contexto: tu propuesta de Q-184, revisada en `trabajo.md` › T-70. Me parece mejor que el mensaje vacío: es uso normal de Iridium, no un truco, y si no hay nada listo no gasta nada. Iridium ya sabe cuándo vence la ventana (la barra de uso). Arranca «Continúa con el proyecto» en una conversación nueva de un solo proyecto con respuestas sin procesar (el que espera hace más), si no hay una sesión trabajando ahí, y la Bandeja dice qué arrancó. Se prende y apaga en Ajustes.
+  Opciones: A) Con Iridium abierta: a eso de las 3 (si la PC está prendida) y unos 5 minutos después de que venza cada ventana (recomendada: lo corre la misma Iridium que ves al volver, sin tareas de Windows) · B) Igual que A, y además una tarea de Windows abre Iridium a las 3 si estaba cerrada (anda aunque la cierres, pero la app se abre sola de noche) · C) Solo a las 3, no después de cada ventana (más prudente con el límite semanal)
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Ideas, ID-I3: la nota completa en la idea abierta (pegar una dirección la vuelve una etiqueta, pegar una imagen la guarda con la idea) y Borrar (ID-8). ID-I2 está hecha y espera Q-183, y Q-186 espera la prueba de D-133 y R-78: si llegan, se procesan primero.
+Ideas, ID-I3: la nota completa en la idea abierta (pegar una dirección la vuelve una etiqueta, pegar una imagen la guarda con la idea) y Borrar (ID-8). Si llega Q-188, se procesa primero (es una decisión: va a `decisiones.md` y T-70 a `pendiente` u otro estado).
 **Leer antes:** `modulos/ideas/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

@@ -225,6 +225,14 @@ const TRAZOS = {
   enchufe: <path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0zM12 17v5" />,
   comentar: <path d="M20 11.5a7.5 7.5 0 0 1-11 6.6L4 19.5l1.4-4.6A7.5 7.5 0 1 1 20 11.5z" />,
   enviar: <path d="M5 12h13M13 6l6 6-6 6" />,
+  compartir: (
+    <>
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" />
+    </>
+  ),
   reabrir: (
     <>
       <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />

@@ -6,7 +6,7 @@ export interface Cita {
   clave: string
   /** Lo que dice la etiqueta, corto: «Revisar», «Idea». */
   tipo: string
-  /** Lo que sigue en la etiqueta: el código y el nombre. */
+  /** Lo que sigue en la etiqueta: el nombre, sin el código (Q-183). */
   nombre: string
   /** Lo que le llega a la IA. */
   texto: string

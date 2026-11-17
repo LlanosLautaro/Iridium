@@ -213,11 +213,11 @@ describe('lo que va a la conversación (ID-4, ID-6)', () => {
     )
   })
 
-  it('Hablar de esta idea la cita con su código y su título (Q-182)', () => {
+  it('Hablar de esta idea la cita con su título; el código va solo en el texto para la IA (Q-182, Q-183)', () => {
     expect(citaHablar({ codigo: 'T-3', titulo: 'Una mía aprobada' })).toEqual({
       clave: 'T-3',
       tipo: 'Idea',
-      nombre: 'T-3 · Una mía aprobada',
+      nombre: 'Una mía aprobada',
       texto: 'Sobre la idea T-3 «Una mía aprobada»',
     })
   })
@@ -239,7 +239,7 @@ describe('lo que va a la conversación (ID-4, ID-6)', () => {
     const a = citaHablar({ codigo: 'T-3', titulo: 'Vieja' })
     const b = citaHablar({ codigo: 'T-1', titulo: 'Otra' })
     const otra = sumarCita(sumarCita(sumarCita([], a), b), citaHablar({ codigo: 'T-3', titulo: 'Nueva' }))
-    expect(otra.map((c) => c.nombre)).toEqual(['T-3 · Nueva', 'T-1 · Otra'])
+    expect(otra.map((c) => c.nombre)).toEqual(['Nueva', 'Otra'])
   })
 })
 

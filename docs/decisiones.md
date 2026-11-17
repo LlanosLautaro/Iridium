@@ -140,6 +140,7 @@
 | D-131 | 2026-11-16 | Ideas | 10, frente Ideas, paso 7 (ID-I2, Q-182) | Revisar con la IA y Hablar de esta idea citan en la conversación, sin enviar | vigente |
 | D-132 | 2026-11-16 | general (Compartir) | 10, a pedido del usuario | El repo de Iridium es público: las copias compartidas se actualizan desde GitHub sin invitación, y la del usuario sigue sin actualizarse desde ahí | vigente (precisa D-085) |
 | D-133 | 2026-11-16 | Orden (Skills › Framework) | 10, a pedido del usuario | Actualizar al framework va siempre en una conversación nueva del proyecto, y el botón se llama Actualizar | vigente (precisa F-9) |
+| D-134 | 2026-11-16 | Apariencia y ajustes | 10, a pedido del usuario (T-75, Q-187) | El tema propio son solo tokens, en un archivo fuera de la app, con la guía dentro de Iridium y la IA desde Ajustes | vigente |
 
 ---
 
@@ -2892,3 +2893,21 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** pedido del usuario; el pedido trae todo lo que la IA necesita (la referencia `pasar-al-framework.md`), así que la charla anterior no aporta.
 
 **Consecuencias:** sin Claude disponible, el pedido sigue quedando escrito en el cuadro de su conversación, sin abrir una nueva. Lo prueba `tests/e2e/or4-framework.spec.ts` (una charla previa no aparece en la conversación del pedido).
+
+## D-134 — El tema propio son solo tokens, en un archivo fuera de la app, editado con la IA desde Ajustes
+- **Fecha:** 2026-11-16
+- **Ámbito:** Apariencia y ajustes
+- **Hito o paso:** 10, a pedido del usuario (T-75, Q-187)
+- **Estado:** vigente
+
+**Contexto:** el usuario quiere un tema propio que las actualizaciones no pisen, y que la IA sepa hacerlo sin equivocarse (T-75). Se podía dejar a la IA solo los tokens o cualquier regla de estilo, y la guía dentro de la app o solo en GitHub.
+
+**Decisión:**
+1. El tema pisa **solo tokens** (colores, líneas, letras) de `tokens.css` (D-104); nada de reglas sueltas sobre las piezas.
+2. Vive en los datos de quien usa Iridium (una carpeta `Tema` en la carpeta Iridium, D-083), no en la carpeta de la app: una versión nueva no lo toca. Un token nuevo que el tema no pisa se ve como siempre.
+3. La guía para la IA va **dentro de la app**, armada de `tokens.css` al armar (coincide con la versión instalada y anda sin internet), con el enlace a GitHub como referencia al código.
+4. Se edita con la IA desde Ajustes › Apariencia (su conversación abre en la carpeta `Tema`), con Quitar (vuelve al negro) y un aviso si un color no pasa el contraste.
+
+**Motivo:** con tokens, una versión nueva no rompe el tema en silencio; lo peor que puede salir es un color poco legible, y eso se controla.
+
+**Consecuencias:** T-75 pasa a `pendiente`, en el frente Apariencia y ajustes, después de Ideas (una o dos iteraciones).

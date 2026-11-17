@@ -328,8 +328,9 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     setMenu({ codigo: idea.codigo, en: puntoDelMenu(e) })
   }
 
-  // Enviar a la conversación (R-75, R-77): el mismo botón en cada renglón, a la vista al pasar el mouse. Una idea
-  // queda citada como Hablar de esta idea; un enlace, con el pedido de revisarlo. Sale con el próximo mensaje.
+  // Enviar a la conversación (R-75, R-77; el ícono de compartir, Q-183): el mismo botón en cada renglón, a la vista al
+  // pasar el mouse. Una idea queda citada como Hablar de esta idea; un enlace, con el pedido de revisarlo. Sale con el
+  // próximo mensaje.
   const enviar = (idea: IdeaVista) => (
     <button
       type="button"
@@ -338,7 +339,7 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
       title="La cita en la conversación de al lado: va con tu próximo mensaje"
       onClick={() => (idea.de === 'enlace' ? revisarConIa(idea) : void hablar(idea))}
     >
-      <Icono nombre="enviar" />
+      <Icono nombre="compartir" />
     </button>
   )
 
@@ -359,7 +360,6 @@ export function IdeasProyecto({ ruta }: { ruta: string }) {
     const meta = (
       <span className="meta idp-meta">
         <Senal idea={idea} />
-        {idea.de === 'IA' && <span className="cuenta">{idea.codigo}</span>}
         {idea.fecha && diaCorto(idea.fecha, hoy)}
       </span>
     )

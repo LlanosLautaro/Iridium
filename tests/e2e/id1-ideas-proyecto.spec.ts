@@ -95,7 +95,8 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await expect(
       fila('El Mapa como una red de pasos').getByRole('img', { name: 'Anotada por la IA' }),
     ).toBeVisible()
-    await expect(fila('El Mapa como una red de pasos')).toContainText('T-2')
+    // Sin el código: para el usuario es ruido (Q-183); la fecha sí.
+    await expect(fila('El Mapa como una red de pasos')).not.toContainText('T-2')
     await expect(fila('Dictado')).toContainText('Aprobada')
     await expect(fila('Revisión para apps Android')).toContainText('Rechazada')
     await win.screenshot({ path: 'test-results/id1-ideas-lista.png' })
@@ -125,7 +126,8 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await revisar.getByRole('button', { name: 'Enviar a la conversación' }).click()
     await revisar.getByRole('button', { name: 'Enviar a la conversación' }).click()
     await expect(citas).toHaveCount(1)
-    await expect(citas).toContainText('Revisar T-7 · tldraw/tldraw')
+    await expect(citas).toContainText('Revisar tldraw/tldraw')
+    await expect(citas).not.toContainText('T-7')
     await expect(mensaje).toBeFocused()
     await expect(win.locator('.hilo')).not.toContainText('Revisá https://github.com/tldraw/tldraw')
     await win.screenshot({ path: 'test-results/id2-revisar.png' })
@@ -151,21 +153,21 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
       .toContain('Que no suene si estoy mirando la ventana.')
     await expect.poll(trabajo).toContain('## T-1 — Un sonido cuando la IA termina (bajito)')
 
-    // Hablar de esta idea (ID-I2, Q-182): queda citada en la conversación, sin enviar, con su código y su título; la ✕
-    // la saca.
+    // Hablar de esta idea (ID-I2, Q-182): queda citada en la conversación, sin enviar, con su título (sin el código,
+    // Q-183); la ✕ la saca.
     await ideas.locator('.cuerpo-fila').getByRole('button', { name: 'Hablar de esta idea' }).click()
-    await expect(citas).toContainText('Idea T-1 · Un sonido cuando la IA termina (bajito)')
+    await expect(citas).toContainText('Idea Un sonido cuando la IA termina (bajito)')
     await expect(mensaje).toHaveValue('')
     await expect(mensaje).toBeFocused()
     await win.screenshot({ path: 'test-results/id2-hablar.png' })
-    await win.getByRole('button', { name: /Quitar la cita T-1/ }).click()
+    await win.getByRole('button', { name: /Quitar la cita Un sonido/ }).click()
     await expect(citas).toHaveCount(0)
     // El botón de enviar de cada renglón (R-75) la cita igual, sin abrirla.
     await fila('El Mapa como una red de pasos').hover()
     await fila('El Mapa como una red de pasos')
       .getByRole('button', { name: 'Enviar a la conversación' })
       .click()
-    await expect(citas).toContainText(/Idea T-\d+ · El Mapa como una red de pasos/)
+    await expect(citas).toContainText('Idea El Mapa como una red de pasos')
     await win.screenshot({ path: 'test-results/r75-enviar.png' })
     await win.getByRole('button', { name: /Quitar la cita/ }).click()
     await expect(citas).toHaveCount(0)

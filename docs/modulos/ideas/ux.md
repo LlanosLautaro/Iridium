@@ -33,10 +33,10 @@
   - [ ] El tilde del renglón lo marca como revisado a mano. Un enlace revisado pasa a Hechas.
   - [ ] Un clic en el renglón abre el enlace en el navegador.
 - **ID-5 —** Como usuario quiero ver las ideas de la IA junto a las mías, para tener un solo lugar con lo que hay por pensar (Q-176).
-  - [ ] Las ideas de la IA (los `T-n` que nacen como idea) llevan un robot en lugar de la lamparita y su código a la derecha.
+  - [ ] Las ideas de la IA (los `T-n` que nacen como idea) llevan un robot en lugar de la lamparita (sin el código a la derecha: para el usuario es ruido, Q-183; la fecha sí).
   - [ ] Se aprueban y rechazan igual; su texto se lee al abrirlas, y para cambiarlo está Hablar de esta idea (no se borran: se rechazan).
 - **ID-6 —** Como usuario quiero hablar de una idea con la IA.
-  - [ ] Hablar de esta idea la cita arriba del campo de la conversación, con su código y su título, para escribir sobre ella (D-131); la ✕ la saca.
+  - [ ] Hablar de esta idea la cita arriba del campo de la conversación, con su título (sin el código, Q-183), para escribir sobre ella (D-131); la ✕ la saca.
 - **ID-7 —** Como usuario quiero anotar en el inicio lo que todavía no tiene proyecto y pasarlo a uno después (Q-177).
   - [ ] En Ideas del inicio, al lado del campo, el selector de proyecto dice «Sin proyecto»; con otro elegido, la idea va directo a ese proyecto (y se avisa «Anotada en Alfa · Ver»).
   - [ ] En una idea suelta abierta, Mover a un proyecto abre la lista de proyectos con framework; al elegir uno, la idea pasa con su nota y sus imágenes, sin evaluar, y se avisa «Movida a Alfa · Ver».

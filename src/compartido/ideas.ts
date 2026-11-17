@@ -132,7 +132,10 @@ export function pedidoRevisar(
   return descripcion ? `${pedido}\n\n${descripcion}` : pedido
 }
 
-/** Revisar con la IA, como cita del campo de la conversación (Q-182): se envía junto con lo que escriba el usuario. */
+/**
+ * Revisar con la IA, como cita del campo de la conversación (Q-182): se envía junto con lo que escriba el usuario. La
+ * etiqueta muestra solo el nombre (el código es ruido para el usuario, Q-183); el texto para la IA lo lleva.
+ */
 export function citaRevisar(
   idea: Pick<IdeaVista, 'codigo' | 'enlace' | 'texto' | 'titulo'>,
   proyecto: string,
@@ -140,7 +143,7 @@ export function citaRevisar(
   return {
     clave: idea.codigo,
     tipo: 'Revisar',
-    nombre: `${idea.codigo} · ${idea.titulo}`,
+    nombre: idea.titulo,
     texto: pedidoRevisar(idea, proyecto),
   }
 }
@@ -150,7 +153,7 @@ export function citaHablar(idea: Pick<IdeaVista, 'codigo' | 'titulo'>): Cita {
   return {
     clave: idea.codigo,
     tipo: 'Idea',
-    nombre: `${idea.codigo} · ${idea.titulo}`,
+    nombre: idea.titulo,
     texto: `Sobre la idea ${idea.codigo} «${idea.titulo}»`,
   }
 }
