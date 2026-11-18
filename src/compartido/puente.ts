@@ -119,6 +119,41 @@ export interface AjusteArranque {
   hora: string
 }
 
+/** Lo que pasó en un momento del arranque (D-149 › 6). */
+export type ResultadoArranque =
+  | 'arranco'
+  | 'periodo-abierto'
+  | 'nada-listo'
+  | 'semana'
+  | 'sin-uso'
+  | 'sin-sesion'
+
+/** Un momento del arranque para mostrar (AR-2 a AR-4). */
+export interface RenglonArranqueVista {
+  cuando: number
+  resultado: ResultadoArranque
+  /** El proyecto que arrancó, con cómo va la conversación que le abrió; null si no arrancó. */
+  proyecto: {
+    ruta: string
+    nombre: string
+    estado: 'trabajando' | 'terminada' | 'detenida' | 'error'
+    /** Las preguntas que dejó y cuántas frenan. */
+    preguntas: number
+    frenan: number
+  } | null
+}
+
+/** El arranque para la ventana: el detalle del uso y el aviso al volver. */
+export interface EstadoArranque {
+  prendido: boolean
+  /** El próximo momento; null apagado. */
+  proximo: number | null
+  /** Lo que pasó en los últimos 7 días, el más nuevo primero. */
+  semana: RenglonArranqueVista[]
+  /** Lo que muestra el aviso al volver (AR-4), del más viejo al más nuevo; vacío, sin aviso. */
+  aviso: RenglonArranqueVista[]
+}
+
 /** Lo más largo que puede ser cada texto de Ajustes. */
 export const LARGO_AJUSTES = { nombreUsuario: 60, nombreIa: 40, tono: 100 } as const
 
@@ -377,6 +412,8 @@ export interface ConversacionProyecto {
   id: string | null
   /** Dónde empezó: en Iridium o afuera (VS Code). */
   origen: 'iridium' | 'vscode' | null
+  /** La empezó el arranque del período (frente Arranque, AR-2): cuándo; null si no. */
+  arrancada: number | null
   /** El título que le da Claude Code (el resumen o el primer mensaje); null si todavía no tiene. */
   titulo: string | null
   /** Última vez que se escribió, en milisegundos. */
@@ -398,6 +435,8 @@ export interface CambioConversacion {
   id: string | null
   /** true = la conversación empezó de cero (Nueva): `entradas` reemplaza a las que había. */
   reiniciar: boolean
+  /** Con `reiniciar`: si la empezó el arranque del período, cuándo (AR-2). */
+  arrancada?: number | null
   entradas: Entrada[]
   ficha: FichaSesion | null
   contexto: ContextoConversacion | null
@@ -807,6 +846,9 @@ export const CANALES = {
   armar: 'app:armar',
   actualizarSolo: 'app:actualizar-solo',
   segundosSinUso: 'app:segundos-sin-uso',
+  arranque: 'arranque:leer',
+  arranqueCambio: 'arranque:cambio',
+  arranqueVisto: 'arranque:visto',
   cancelarArmado: 'app:cancelar-armado',
   verConsolaArmado: 'app:ver-consola-armado',
   accesoVersiones: 'app:acceso-versiones',
@@ -891,6 +933,11 @@ export interface ApiIridium {
   /** El uso de la suscripción (H-12); null hasta que se lee. */
   uso(): Promise<UsoSuscripcion | null>
   alCambiarUso(escuchar: (uso: UsoSuscripcion) => void): () => void
+  /** El arranque del período (frente Arranque): lo último que pasó, la semana y el aviso al volver. */
+  arranque(): Promise<EstadoArranque>
+  alCambiarArranque(escuchar: (estado: EstadoArranque) => void): () => void
+  /** Listo en el aviso al volver (AR-4): lo mostrado hasta `hasta` no vuelve a aparecer. */
+  arranqueVisto(hasta: number): Promise<void>
   /** Se quiso cerrar la ventana con sesiones trabajando (F-6): las rutas de esos proyectos. */
   alPedirCierre(escuchar: (trabajando: string[]) => void): () => void
   /** «Cerrar igual» (F-6): frena las sesiones y cierra; las conversaciones quedan para Seguí. */

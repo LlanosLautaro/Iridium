@@ -74,6 +74,12 @@ export class ArchivoSesiones {
     return (await this.todas()).get(id) ?? null
   }
 
+  /** La conversación que abrió el arranque de `cuando` en esa carpeta (D-149 › 7); null si no está. */
+  async deArranque(ruta: string, cuando: number): Promise<ResumenSesion | null> {
+    for (const r of (await this.todas()).values()) if (r.ruta === ruta && r.arranque === cuando) return r
+    return null
+  }
+
   /** Las conversaciones de una carpeta que se mudó pasan a la ruta nueva (D-083). */
   async mudarRuta(antes: string, despues: string): Promise<void> {
     const todas = await this.todas()

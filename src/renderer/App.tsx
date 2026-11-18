@@ -12,6 +12,7 @@ function useConexion() {
   const ponerPreferencias = usarEstado((s) => s.ponerPreferencias)
   const aplicarCambio = usarEstado((s) => s.aplicarCambio)
   const ponerUso = usarEstado((s) => s.ponerUso)
+  const ponerArranque = usarEstado((s) => s.ponerArranque)
   const ponerCierre = usarEstado((s) => s.ponerCierre)
   const ponerVersionNueva = usarEstado((s) => s.ponerVersionNueva)
   const ponerSinArmar = usarEstado((s) => s.ponerSinArmar)
@@ -30,6 +31,7 @@ function useConexion() {
     window.addEventListener('beforeunload', guardarTodoYa)
     void api.estadoMotor().then(ponerMotor)
     void api.uso().then((u) => u && ponerUso(u))
+    void api.arranque().then(ponerArranque)
     void api.versionNueva().then(ponerVersionNueva)
     void api.sinArmar().then(ponerSinArmar)
     void api.accesoVersiones().then(ponerAccesoVersiones)
@@ -38,6 +40,7 @@ function useConexion() {
       api.alCambiarMotor(ponerMotor),
       api.alCambiarConversacion(aplicarCambio),
       api.alCambiarUso(ponerUso),
+      api.alCambiarArranque(ponerArranque),
       api.alPedirCierre(ponerCierre),
       api.alCambiarVersionNueva(ponerVersionNueva),
       api.alCambiarSinArmar(ponerSinArmar),
@@ -53,6 +56,7 @@ function useConexion() {
     ponerPreferencias,
     aplicarCambio,
     ponerUso,
+    ponerArranque,
     ponerCierre,
     ponerVersionNueva,
     ponerSinArmar,

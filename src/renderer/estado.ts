@@ -11,6 +11,7 @@ import {
   type ConversacionProyecto,
   type Destino,
   type Entrada,
+  type EstadoArranque,
   type EstadoMotor,
   type FichaSesion,
   type ListaProyectos,
@@ -173,6 +174,9 @@ interface EstadoApp {
   /** El uso de la suscripción (H-12); null hasta que se lee. */
   uso: UsoSuscripcion | null
   ponerUso(uso: UsoSuscripcion): void
+  /** El arranque del período (frente Arranque): el detalle del uso y el aviso al volver; null hasta que se lee. */
+  arranque: EstadoArranque | null
+  ponerArranque(arranque: EstadoArranque): void
   /** Los avisos de H-13 a la vista, del más viejo al más nuevo. */
   avisos: AvisoSesion[]
   quitarAviso(id: number): void
@@ -337,6 +341,8 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   },
   uso: null,
   ponerUso: (uso) => set({ uso }),
+  arranque: null,
+  ponerArranque: (arranque) => set({ arranque }),
   avisos: [],
   quitarAviso: (id) => set((s) => ({ avisos: s.avisos.filter((a) => a.id !== id) })),
   cierre: null,
@@ -512,6 +518,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
         ruta: cambio.ruta,
         id: null,
         origen: 'iridium',
+        arrancada: null,
         titulo: null,
         modificada: null,
         usadaAfuera: null,
@@ -524,6 +531,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
             ...base,
             id: cambio.id,
             origen: 'iridium',
+            arrancada: cambio.arrancada ?? null,
             titulo: null,
             modificada: null,
             usadaAfuera: null,

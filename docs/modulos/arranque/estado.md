@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-207 con el aviso al volver, D-147) | `ux.md` |
 | 5. Diseño técnico | hecho (D-149) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (sin piezas nuevas: el aviso fijo es un estado de la pieza Aviso, D-149) | — |
-| 7. Construcción | en curso (AR-I1 hecha; sigue AR-I2) | este archivo |
+| 7. Construcción | en curso (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 hecha el 2026-11-18: el ajuste y el motor arrancan solos; todavía no se cuenta lo que hizo. Sigue AR-I2.
+Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso al volver, el detalle del uso y la línea de la conversación). Espera la prueba de una noche del usuario (Q-210); con ella, el paso 8.
 
 ## Ruta
 - [x] Decidir cómo se arranca el período (con trabajo real, desde Iridium)
@@ -26,8 +26,8 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - [x] Dibujar el interruptor en Ajustes y dónde se ve lo que hizo
 - [x] Decidir cómo se construye (D-149)
 - [x] Arrancar el proyecto que espera hace más, a la hora elegida y al vencer el período (AR-I1)
-- [ ] Contar qué arrancó o por qué no pudo: el aviso al volver, la pestaña y el detalle del uso (AR-I2)
-- [ ] Probarlo una noche con Iridium abierta
+- [x] Contar qué arrancó o por qué no pudo: el aviso al volver, la pestaña y el detalle del uso (AR-I2)
+- [ ] Probarlo una noche con Iridium abierta (Q-210)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -38,7 +38,7 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 | ID | Objetivo | Estado |
 |---|---|---|
 | AR-I1 | El motor del arranque: el ajuste, el temporizador con la suspensión, la elección del proyecto, arrancar como Nueva y `arranques.json` | hecho (2026-11-18; la prueba del usuario va con AR-I2) |
-| AR-I2 | Contar lo que hizo: la línea de la conversación, el detalle del uso y el aviso al volver | pendiente |
+| AR-I2 | Contar lo que hizo: la línea de la conversación, el detalle del uso y el aviso al volver | hecho (2026-11-18; la prueba de una noche, en Q-210) |
 
 ## Log de iteraciones
 ### AR-I1 — El motor del arranque (2026-11-18)
@@ -49,6 +49,14 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - **Pruebas:** Vitest `tests/ar1-arranque.test.ts` (18: reglas con fechas fijas, el caso de uso con reloj falso, la suspensión, el reinicio, `arranques.json`, el ajuste y la marca en `sesiones.json`); Playwright `tests/e2e/ar1-arranque.spec.ts` (el ajuste queda al cerrar y abrir; con `IRIDIUM_ARRANQUE_EN=3` y `IRIDIUM_FALSO_PERIODO=cerrado`, arranca Alfa, la respuesta más vieja, y no Beta ni Gamma archivado; la pestaña aparece sola y termina). Variables nuevas en `herramientas-ia.md`.
 - **Queda por confirmar** (riesgo del diseño): qué informa el uso real sin un período abierto. Se supone sin vencimiento o con uno pasado; se ve en la prueba de una noche (AR-I2), con lo que anota el registro.
 
+### AR-I2 — Contar lo que hizo (2026-11-18)
+- **La conversación arrancada (AR-2):** debajo del título, «Hoy a las 03:40 · la empezó Iridium a las 03:02 para abrir el período», en lugar de «empezada en VS Code». Sale de la marca `arranque` de `sesiones.json` al abrirla, y al arrancar llega con el cambio de la conversación (`arrancada`). Una Nueva del usuario no la lleva.
+- **El detalle del uso (AR-2, AR-3):** con el arranque prendido, debajo de la ventana de 5 horas, lo último que pasó («Último arranque: Alfa, hoy a las 03:02 · dejó 1 pregunta» con Abrir, o «Hoy a las 03:00 no había respuestas tuyas esperando»); sin nada todavía, «Arranque prendido: el próximo, hoy a las 03:00». Cambio sobre la UX: los de la semana se despliegan con un botón aparte («Los 6 anteriores de la semana») en vez de tocar la línea, que ya tiene Abrir.
+- **El aviso al volver (AR-4):** «Mientras no estabas», abajo a la derecha, con un renglón por arranque (el proyecto, la hora, qué dejó con la cuenta en ámbar si frena, y Abrir) y los que no pudieron; no se va solo; los cuatro últimos y «y N más», que abre el detalle del uso; Listo guarda `vistoHasta` y no vuelve. Cambio sobre el diseño: no espera al primer foco, aparece en cuanto pasa (solo entran los arranques con Iridium sin usar hace 5 minutos o más, así que el usuario no estaba): el efecto es el mismo y no hace falta otra señal. Sus estilos van con los del aviso flotante en `uso.css`: el aviso de W-4 no es una pieza de `piezas.css`, así que no cambia ninguna ficha.
+- **Reglas y caso de uso:** `paraElAviso` (`core/arranque.ts`); `Arranque.estado()` arma lo que va a la ventana (la semana y el aviso, con cómo va cada conversación según `sesiones.json` y la Bandeja), `visto()` y el evento `arranque:cambio` al hacer un momento, al cambiar el próximo, con Listo y cuando termina la conversación de un arranque.
+- **Pruebas:** Vitest `tests/ar2-arranque.test.ts` (6: qué entra al aviso, la semana, cómo va cada conversación, Listo que queda, el aviso a la ventana y la marca de la conversación); Playwright `tests/e2e/ar2-arranque.spec.ts` (el aviso con lo de la noche escrito antes de abrir, que no se va solo, «y 1 más», el detalle con la semana, Abrir, Listo que no vuelve al reabrir; y con el usuario delante, sin aviso, con la línea de la conversación y el último arranque en el uso). Capturas: `test-results/ar2-aviso.png`, `ar2-detalle-uso.png`, `ar2-conversacion.png`.
+- **Queda:** la línea de la conversación se corta en la cabecera angosta (como «empezada en VS Code»); entera al pasar el mouse.
+
 ## Próximo paso
-Construir AR-I2: la línea de la conversación arrancada (AR-2), el detalle del uso con lo último y la semana (AR-2, AR-3), el aviso al volver (AR-4, un estado de la pieza Aviso) y el evento `arranque` a la ventana; al terminar, la prueba de una noche como `Q-n`.
-**Leer antes:** `diseno-tecnico.md` › Las piezas, › Las decisiones de este paso (punto 8); `ux.md` › AR-2 a AR-4 y › Pantallas; este archivo › Log de iteraciones; en el código, `src/main/app/arranque.ts`, `src/main/infra/arranques.ts`, `src/renderer/marco/Uso.tsx`, `src/renderer/marco/Avisos.tsx` y `src/renderer/secciones/proyecto/Conversacion.tsx`.
+Esperar la prueba de una noche (Q-210). Con la respuesta: confirmar en el registro del día qué informa el uso sin un período abierto (el riesgo del diseño), arreglar lo que falle y pasar al paso 8 (calidad).
+**Leer antes:** `respuestas/Q-210.md`; este archivo › Log de iteraciones.

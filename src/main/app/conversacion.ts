@@ -107,6 +107,8 @@ interface Proyecto {
   fondo: string[]
   /** La conversación nueva la abrió el arranque (D-149 › 7): la marca va a su resumen cuando Claude Code le da un id. */
   arranque: number | null
+  /** La conversación que se muestra la empezó el arranque: cuándo (la línea de debajo del título, AR-2). */
+  arrancada: number | null
 }
 
 export class Conversaciones {
@@ -148,6 +150,7 @@ export class Conversaciones {
         envios: 0,
         fondo: [],
         arranque: null,
+        arrancada: null,
       }
       this.proyectos.set(ruta, p)
     }
@@ -202,6 +205,7 @@ export class Conversaciones {
       ruta: p.ruta,
       id: p.id,
       reiniciar,
+      ...(reiniciar ? { arrancada: p.arrancada } : {}),
       entradas,
       ficha: this.ficha(p),
       contexto: p.contexto,
@@ -270,6 +274,7 @@ export class Conversaciones {
       Object.assign(p, {
         id: null,
         origen: null,
+        arrancada: null,
         titulo: null,
         elegida: null,
         modificada: null,
@@ -294,6 +299,7 @@ export class Conversaciones {
     p.id = ultima.id
     p.modificada = ultima.modificada
     p.origen = resumen?.empezadaEn === 'iridium' ? 'iridium' : 'vscode'
+    p.arrancada = resumen?.arranque ?? null
     p.usoCentro = resumen?.ultimoUso ?? null
     p.detenida = resumen?.detenida ?? false
     p.entradas = mensajes.map((m) => this.entradaDe(p, m))
@@ -321,6 +327,7 @@ export class Conversaciones {
       ruta: p.ruta,
       id: p.id,
       origen: p.origen,
+      arrancada: p.arrancada,
       titulo: p.titulo,
       modificada: p.modificada,
       usadaAfuera: afuera,
@@ -372,6 +379,7 @@ export class Conversaciones {
       if (pedido.nueva) {
         if (this.trabajando(p)) return
         p.arranque = opciones.arranque ?? null
+        p.arrancada = p.arranque
         p.sesion?.cerrar()
         Object.assign(p, {
           cargado: true,

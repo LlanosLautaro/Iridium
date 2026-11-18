@@ -332,7 +332,12 @@ export function registrarPuente(s: Servicios): Puente {
     motor: s.motor,
     registro: s.sesiones,
     preguntas: leerPreguntasAbiertas,
-    alCambio: (c) => enviar(CANALES.conversacionCambio, c),
+    alCambio: (c) => {
+      enviar(CANALES.conversacionCambio, c)
+      // La conversación de un arranque terminó o dejó preguntas: cambia lo que dicen el detalle del uso y el aviso.
+      if (c.ficha && c.ficha.estado !== 'trabajando')
+        void arranque.arrancoEn(c.ruta).then((si) => si && avisarArranque())
+    },
     instruccionBase: (ruta) =>
       ruta === enDisco.rutas.ideas
         ? instruccionGeneral(raizActual)
@@ -401,6 +406,43 @@ export function registrarPuente(s: Servicios): Puente {
     segundosSinUsar: () => s.segundosSinUso(),
     registrar: (t) => s.registro.escribir(t),
     ...(s.arranqueEnSegundos !== undefined ? { primeroEnSegundos: s.arranqueEnSegundos } : {}),
+    alCambio: () => avisarArranque(),
+    conversacion: async (ruta, cuando) => {
+      const r = await s.sesiones.deArranque(ruta, cuando)
+      const preguntas = r?.preguntas ?? []
+      let frenan = 0
+      if (preguntas.length > 0) {
+        const p = await pendientes.proyecto(ruta)
+        if (p.tipo === 'ok')
+          frenan = p.pendientes.filter((q) => q.frena && preguntas.includes(q.codigo)).length
+      }
+      return {
+        estado: r?.ultimoEstado ?? null,
+        preguntas,
+        frenan,
+        trabajando: conversaciones.enMarcha().includes(ruta),
+        guardada: r !== null,
+      }
+    },
+  })
+  /** Lo que muestra el arranque cambió: se manda a la ventana (una vez aunque lo pidan varios juntos). */
+  let avisandoArranque = false
+  const avisarArranque = (): void => {
+    if (avisandoArranque) return
+    avisandoArranque = true
+    setTimeout(() => {
+      avisandoArranque = false
+      void arranque.estado().then(
+        (e) => enviar(CANALES.arranqueCambio, e),
+        () => {},
+      )
+    }, 50)
+  }
+  ipcMain.handle(CANALES.arranque, () => arranque.estado())
+  ipcMain.handle(CANALES.arranqueVisto, (_, hasta: unknown) => {
+    if (typeof hasta !== 'number' || !Number.isFinite(hasta))
+      throw new Error('arranqueVisto: hasta no es un número')
+    return arranque.visto(hasta)
   })
 
   ipcMain.handle(CANALES.listarProyectos, () => listar())
@@ -449,7 +491,7 @@ export function registrarPuente(s: Servicios): Puente {
     const tonoAntes = previa.tono
     const despues = preferenciasDe(await s.config.guardar(limpio))
     if (despues.tono !== tonoAntes) conversaciones.ponerTono(despues.tono || null)
-    if (valido.arranque) void arranque.recalcular()
+    if (valido.arranque) void arranque.recalcular().then(avisarArranque)
     // El modelo o el esfuerzo de un proyecto con la sesión abierta valen desde su próximo mensaje (C-58).
     if (valido.ajustesIa)
       for (const [ruta, a] of Object.entries(valido.ajustesIa))

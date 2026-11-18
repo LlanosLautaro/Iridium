@@ -1,12 +1,18 @@
 // El arranque del período de 5 horas (frente Arranque, D-135, D-146, D-149): cuándo es el próximo momento, si se
 // arranca y qué proyecto. Sin disco, motor ni temporizadores.
-import type { AjusteArranque, UsoSuscripcion } from '../../compartido/puente'
+import type { AjusteArranque, ResultadoArranque, UsoSuscripcion } from '../../compartido/puente'
 
 /** Cuánto después de que vence el período se arranca (D-146): el uso ya se liberó y lo vio el motor. */
 export const DESPUES_DEL_VENCIMIENTO_MS = 5 * 60_000
 
 /** Con la semana en esto o más no arranca (D-146): lo que queda es del usuario. */
 export const TOPE_SEMANA = 90
+
+/** El aviso al volver muestra solo lo que pasó con Iridium sin usar hace esto o más (D-149 › 8). */
+export const SIN_USAR_PARA_EL_AVISO_S = 5 * 60
+
+/** Lo que va al aviso al volver; «nada listo» y «período abierto» van solo al detalle del uso (D-149 › 8). */
+const PARA_EL_AVISO: ReadonlySet<Resultado> = new Set(['arranco', 'semana', 'sin-sesion', 'sin-uso'])
 
 /** Cuántos días se guardan en `arranques.json` (D-149). */
 export const DIAS_GUARDADOS = 7
@@ -29,7 +35,7 @@ export interface Momento {
   momento: CualMomento
 }
 
-export type Resultado = 'arranco' | 'periodo-abierto' | 'nada-listo' | 'semana' | 'sin-uso' | 'sin-sesion'
+export type Resultado = ResultadoArranque
 
 /** Un proyecto con trabajo listo: respuestas del usuario esperando, la más vieja de `desde` (ms). */
 export interface Candidato {
@@ -95,4 +101,23 @@ export function elegir(candidatos: readonly Candidato[]): Candidato | null {
 /** Si el momento programado que quedó al cerrar se hace al abrir (el reinicio de Actualizar solo, D-149 › 2). */
 export function pendienteAlAbrir(programado: number | null, ahora: number): boolean {
   return programado !== null && programado <= ahora && ahora - programado < HUECO_REINICIO_MS
+}
+
+/**
+ * Los renglones del aviso al volver (D-149 › 8), del más viejo al más nuevo: los que todavía no se mostraron, que
+ * pasaron con Iridium sin usar hace 5 minutos o más y que dicen algo (arrancó, o no pudo por la semana, la sesión de
+ * Claude o el uso sin leer).
+ */
+export function paraElAviso<R extends { cuando: number; resultado: Resultado; sinUsarIridium: number }>(
+  momentos: readonly R[],
+  vistoHasta: number | null,
+): R[] {
+  return momentos
+    .filter(
+      (m) =>
+        m.cuando > (vistoHasta ?? Number.NEGATIVE_INFINITY) &&
+        m.sinUsarIridium >= SIN_USAR_PARA_EL_AVISO_S &&
+        PARA_EL_AVISO.has(m.resultado),
+    )
+    .sort((a, b) => a.cuando - b.cuando)
 }

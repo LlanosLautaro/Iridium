@@ -1,8 +1,11 @@
-// Los avisos de H-13 (abajo a la derecha, W-4) y la confirmación de cerrar con sesiones trabajando (F-6).
+// Los avisos de H-13 (abajo a la derecha, W-4), el aviso al volver del arranque (AR-4) y la confirmación de cerrar con
+// sesiones trabajando (F-6).
 import { useEffect, useRef, useState } from 'react'
+import type { RenglonArranqueVista } from '../../compartido/puente'
 import { type AvisoSesion, tarjetaDe, usarEstado } from '../estado'
 import { useAnchoConversacion } from '../ui/Divisor'
 import { Icono } from '../ui/Icono'
+import { horaCorta, porQueNo, queDejo } from './arranque'
 
 /** Cuánto queda un aviso a la vista (no mientras el mouse está encima). */
 const DURA_MS = 8000
@@ -81,9 +84,92 @@ function Aviso({ a }: { a: AvisoSesion }) {
   )
 }
 
+/** Con más de estos, el aviso al volver muestra los últimos y «y N más». */
+const FILAS_ARRANQUE = 4
+
+/** Un renglón del aviso al volver: «Alfa  03:02  dejó 2 preguntas  Abrir» o «13:10 no arrancó: …». */
+function FilaArranque({ r }: { r: RenglonArranqueVista }) {
+  const abrirProyecto = usarEstado((s) => s.abrirProyecto)
+  if (!r.proyecto)
+    return (
+      <li className="sin-arrancar">
+        {horaCorta(r.cuando)} {porQueNo(r)}
+      </li>
+    )
+  const p = r.proyecto
+  return (
+    <li>
+      <b>{p.nombre}</b>
+      <span className="cuando">{horaCorta(r.cuando)}</span>
+      <span className={p.frenan > 0 ? 'cuenta frena' : p.estado === 'error' ? 'fallo' : undefined}>
+        {queDejo(p)}
+      </span>
+      <button type="button" className="boton sin-fondo chico" onClick={() => abrirProyecto(p.ruta)}>
+        Abrir
+      </button>
+    </li>
+  )
+}
+
+/**
+ * AR-4: lo que hizo el arranque mientras no estaba el usuario. No se va solo: es lo primero que ve al volver; Listo lo
+ * cierra y lo que mostró no vuelve a aparecer.
+ */
+function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
+  const [cerrado, setCerrado] = useState<number | null>(null)
+  const ultimo = filas.at(-1)
+  if (!ultimo || (cerrado !== null && cerrado >= ultimo.cuando)) return null
+  const mostradas = filas.slice(-FILAS_ARRANQUE)
+  const resto = filas.length - mostradas.length
+  // Rojo si una conversación falló; ámbar si dejó preguntas o algo no arrancó.
+  const falla = filas.some((r) => r.proyecto?.estado === 'error')
+  const espera = filas.some((r) => !r.proyecto || r.proyecto.preguntas > 0)
+  return (
+    <div
+      className="aviso-flotante fijo"
+      data-estado={falla ? 'error' : espera ? 'espera' : 'ok'}
+      role="status"
+      aria-label="Lo que hizo Iridium mientras no estabas"
+    >
+      <Icono nombre={falla ? 'error' : espera ? 'espera' : 'check'} />
+      <b className="t">Mientras no estabas</b>
+      <ul className="renglones-arranque">
+        {mostradas.map((r) => (
+          <FilaArranque key={r.cuando} r={r} />
+        ))}
+      </ul>
+      <div className="acc">
+        {resto > 0 && (
+          <button
+            type="button"
+            className="boton sin-fondo chico"
+            // El detalle del uso tiene los de la semana: se abre como si se tocara el uso de la barra.
+            onClick={() =>
+              document.querySelector<HTMLButtonElement>('.desplegable.uso > .menu-boton')?.click()
+            }
+          >
+            y {resto} más
+          </button>
+        )}
+        <button
+          type="button"
+          className="boton principal chico"
+          onClick={() => {
+            setCerrado(ultimo.cuando)
+            void window.iridium.arranqueVisto(ultimo.cuando)
+          }}
+        >
+          Listo
+        </button>
+      </div>
+    </div>
+  )
+}
+
 /** Abajo a la derecha, sobre todo lo demás; `Esc` cierra el último. */
 export function Avisos() {
   const avisos = usarEstado((s) => s.avisos)
+  const delArranque = usarEstado((s) => s.arranque?.aviso) ?? []
   const quitar = usarEstado((s) => s.quitarAviso)
   // Dentro de un proyecto, a la izquierda de la conversación: no tapa el cuadro para escribir (D-032).
   const ruta = usarEstado((s) => (s.seccion === 'proyecto' ? s.proyectoAbierto : null))
@@ -97,9 +183,10 @@ export function Avisos() {
     window.addEventListener('keydown', alTeclado)
     return () => window.removeEventListener('keydown', alTeclado)
   }, [avisos, quitar])
-  if (avisos.length === 0) return null
+  if (avisos.length === 0 && delArranque.length === 0) return null
   return (
     <section className="avisos" aria-label="Avisos de las sesiones" style={{ right: ancho + 12 }}>
+      {delArranque.length > 0 && <AvisoArranque filas={delArranque} />}
       {avisos.map((a) => (
         <Aviso key={a.id} a={a} />
       ))}

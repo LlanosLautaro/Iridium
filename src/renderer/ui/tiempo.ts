@@ -21,6 +21,17 @@ export function cuandoSera(ms: number, ahora = Date.now()): string {
   return `el ${d.getDate()} ${MESES[d.getMonth()]} a las ${hora(ms)}`
 }
 
+/** Cuándo pasó algo: «hoy a las 09:50», «ayer a las 20:47», «el 5 nov a las 09:50». */
+export function cuandoFue(ms: number): string {
+  const d = new Date(ms)
+  const hoy = new Date()
+  const ayer = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1)
+  const mismoDia = (a: Date, b: Date) => a.toDateString() === b.toDateString()
+  if (mismoDia(d, hoy)) return `hoy a las ${hora(ms)}`
+  if (mismoDia(d, ayer)) return `ayer a las ${hora(ms)}`
+  return `el ${d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })} a las ${hora(ms)}`
+}
+
 /** «2,5 días», «1 día», «18 h». */
 export function duracionDias(dias: number): string {
   if (dias < 1) return `${Math.max(1, Math.round(dias * 24))} h`

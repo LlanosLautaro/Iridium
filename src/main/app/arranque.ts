@@ -2,12 +2,20 @@
 // recalculado al cambiar el ajuste o el uso y al despertar la PC; al llegar, lee el uso de nuevo, busca el proyecto que
 // espera hace más con respuestas del usuario y le abre una conversación nueva, como el botón Nueva. Lo que pasó va a
 // `arranques.json`.
-import type { AjusteArranque, PendienteVista, TarjetaProyecto, UsoSuscripcion } from '../../compartido/puente'
+import type {
+  AjusteArranque,
+  EstadoArranque,
+  PendienteVista,
+  RenglonArranqueVista,
+  TarjetaProyecto,
+  UsoSuscripcion,
+} from '../../compartido/puente'
 import {
   bloqueo,
   type Candidato,
   elegir,
   type Momento,
+  paraElAviso,
   pendienteAlAbrir,
   proximoMomento,
 } from '../core/arranque'
@@ -39,6 +47,23 @@ export interface DependenciasArranque {
   ahora?: () => number
   /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento, a tantos segundos de empezar. */
   primeroEnSegundos?: number
+  /** Cambió lo que hay para mostrar (lo que pasó, el próximo momento o lo visto): la ventana lo pide de nuevo. */
+  alCambio?: () => void
+  /** Cómo va la conversación que abrió el arranque (D-149 › 6: sale de `sesiones.json`, no se copia). */
+  conversacion?: (ruta: string, cuando: number) => Promise<ConversacionArrancada>
+}
+
+/** La conversación de un arranque según `sesiones.json`: cómo terminó su último turno y las preguntas que dejó. */
+export interface ConversacionArrancada {
+  /** null = todavía no terminó un turno. */
+  estado: 'terminada' | 'detenida' | 'error' | null
+  preguntas: string[]
+  /** Cuántas de esas preguntas frenan. */
+  frenan: number
+  /** La IA del proyecto está trabajando ahora. */
+  trabajando: boolean
+  /** Claude Code le dio un id y quedó en `sesiones.json`. */
+  guardada: boolean
 }
 
 export class Arranque {
@@ -78,8 +103,10 @@ export class Arranque {
       proximo = { cuando: this.primero, momento: 'hora' }
     const antes = this.programado?.cuando ?? null
     this.programado = proximo
-    if (antes !== (proximo?.cuando ?? null))
+    if (antes !== (proximo?.cuando ?? null)) {
       await this.d.archivo.guardar({ programado: proximo?.cuando ?? null }).catch(() => {})
+      this.d.alCambio?.()
+    }
     if (!proximo || this.durmiendo || this.cerrado) return
     this.parar()
     this.temporizador = setTimeout(
@@ -99,6 +126,54 @@ export class Arranque {
   alDespertar(): Promise<void> {
     this.durmiendo = false
     return this.revisar()
+  }
+
+  /** Lo que se muestra en la ventana: el detalle del uso (AR-2, AR-3) y el aviso al volver (AR-4). */
+  async estado(): Promise<EstadoArranque> {
+    const [ajuste, datos] = await Promise.all([
+      this.d.ajuste(),
+      this.d.archivo.leer().catch(() => ({ momentos: [], vistoHasta: null })),
+    ])
+    const vista = (r: RenglonArranque) => this.vista(r)
+    const semana = await Promise.all([...datos.momentos].sort((a, b) => b.cuando - a.cuando).map(vista))
+    const delAviso = new Set(paraElAviso(datos.momentos, datos.vistoHasta).map((r) => r.cuando))
+    return {
+      prendido: ajuste.prendido,
+      proximo: ajuste.prendido ? (this.programado?.cuando ?? null) : null,
+      semana,
+      aviso: semana.filter((r) => delAviso.has(r.cuando)).reverse(),
+    }
+  }
+
+  /** Listo en el aviso al volver: lo que pasó hasta `hasta` ya se mostró. */
+  async visto(hasta: number): Promise<void> {
+    const { vistoHasta } = await this.d.archivo.leer()
+    if (vistoHasta !== null && vistoHasta >= hasta) return
+    await this.d.archivo.guardar({ vistoHasta: hasta })
+    this.d.alCambio?.()
+  }
+
+  /** Si `ruta` arrancó en los últimos 7 días: lo que muestra cambia cuando cambia su conversación. */
+  async arrancoEn(ruta: string): Promise<boolean> {
+    const { momentos } = await this.d.archivo.leer().catch(() => ({ momentos: [] as RenglonArranque[] }))
+    return momentos.some((m) => m.proyecto?.ruta === ruta)
+  }
+
+  private async vista(r: RenglonArranque): Promise<RenglonArranqueVista> {
+    if (!r.proyecto) return { cuando: r.cuando, resultado: r.resultado, proyecto: null }
+    const c = (await this.d.conversacion?.(r.proyecto.ruta, r.cuando).catch(() => null)) ?? null
+    return {
+      cuando: r.cuando,
+      resultado: r.resultado,
+      proyecto: {
+        ruta: r.proyecto.ruta,
+        nombre: r.proyecto.nombre,
+        // Sin turno terminado ni la IA trabajando: guardada, la cortó el cierre; sin guardar, no llegó a empezar.
+        estado: c?.trabajando ? 'trabajando' : (c?.estado ?? (c?.guardada ? 'detenida' : 'error')),
+        preguntas: c?.preguntas.length ?? 0,
+        frenan: c?.frenan ?? 0,
+      },
+    }
   }
 
   /** Lo que está programado (para las pruebas y el detalle del uso). */
@@ -147,6 +222,7 @@ export class Arranque {
     )
     await this.d.archivo.anotar(renglon).catch(() => {})
     this.haciendo = false
+    this.d.alCambio?.()
     return this.recalcular()
   }
 

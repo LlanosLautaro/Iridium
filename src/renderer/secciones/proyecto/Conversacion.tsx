@@ -25,16 +25,13 @@ import { type ConversacionVista, fichaDe, usarEstado, vistaDe } from '../../esta
 import { useAltoDelTexto } from '../../ui/altoDelTexto'
 import { Icono } from '../../ui/Icono'
 import { Menu } from '../../ui/Menu'
-import { cuandoSera, pc } from '../../ui/tiempo'
+import { cuandoFue, cuandoSera, hora, pc } from '../../ui/tiempo'
 import { MedidorContexto, ModeloYEsfuerzo } from './AjustesIa'
 import { tocarEnlace } from './enlaces'
 import { Captura } from './Revision'
 
 /** Dónde quedó cada conversación: la posición y si estaba pegada al final (para seguir lo que llega). */
 const posiciones = new Map<string, { arriba: number; alFinal: boolean }>()
-
-const hora = (ms: number) =>
-  new Date(ms).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
 
 /** El título de una conversación que Claude Code todavía no nombró: su primer mensaje, como hace él. */
 function primerMensaje(entradas: readonly Entrada[]): string | null {
@@ -56,16 +53,6 @@ function fechaCorta(ms: number): string {
   if (d.toDateString() === hoy.toDateString()) return `hoy ${hora(ms)}`
   if (d.toDateString() === ayer.toDateString()) return `ayer ${hora(ms)}`
   return `${d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' })} ${hora(ms)}`
-}
-
-function cuandoFue(ms: number): string {
-  const d = new Date(ms)
-  const hoy = new Date()
-  const ayer = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1)
-  const mismoDia = (a: Date, b: Date) => a.toDateString() === b.toDateString()
-  if (mismoDia(d, hoy)) return `hoy a las ${hora(ms)}`
-  if (mismoDia(d, ayer)) return `ayer a las ${hora(ms)}`
-  return `el ${d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })} a las ${hora(ms)}`
 }
 
 const mayuscula = (t: string) => t.charAt(0).toUpperCase() + t.slice(1)
@@ -893,10 +880,17 @@ export function Conversacion({
         : general
           ? 'Ideas y proyectos'
           : 'Sin conversación todavía'
-  // Sin ruido (D-108): debajo del título, cuándo fue y si se empezó en VS Code; lo demás lo dice la conversación.
+  // Sin ruido (D-108): debajo del título, cuándo fue y si se empezó en VS Code o la empezó el arranque del período
+  // (AR-2); lo demás lo dice la conversación.
   const subtitulo =
     !enBlanco && hayConversacion && c
-      ? `${mayuscula(c.modificada !== null ? cuandoFue(c.modificada) : 'hoy')}${c.origen === 'vscode' ? ' · empezada en VS Code' : ''}`
+      ? `${mayuscula(c.modificada !== null ? cuandoFue(c.modificada) : 'hoy')}${
+          c.arrancada !== null
+            ? ` · la empezó Iridium a las ${hora(c.arrancada)} para abrir el período`
+            : c.origen === 'vscode'
+              ? ' · empezada en VS Code'
+              : ''
+        }`
       : null
 
   return (
