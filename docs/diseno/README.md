@@ -17,8 +17,8 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | B · Tarjetas | Ideas de un proyecto (propuesta) | pantallas/ideas-proyecto-b.html | — |
 | C · Ideas y enlaces para revisar | Ideas de un proyecto (propuesta) | pantallas/ideas-proyecto-c.html | — |
 | C · Ideas del inicio (sin proyecto) | Ideas de un proyecto (propuesta) | pantallas/ideas-inicio-c.html | — |
-| Un camino por frente | Mapa (propuesta) | pantallas/mapa-b.html | — |
-| Antes del hito 10 (los hitos) | Mapa (propuesta) | pantallas/mapa-hitos.html | — |
+| Un camino por frente | Mapa (propuesta) | pantallas/mapa-b.html | 2026-11-18 00:48 |
+| Antes del hito 10 (los hitos) | Mapa (propuesta) | pantallas/mapa-hitos.html | 2026-11-18 00:48 |
 | Bandeja de entrada | Un proyecto | pantallas/bandeja.html | — |
 | Mapa | Un proyecto | pantallas/mapa.html | — |
 | Revisión | Un proyecto | pantallas/revision.html | — |

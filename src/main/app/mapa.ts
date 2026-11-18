@@ -216,16 +216,38 @@ function frentesDe(
     const pasos = ruta
       ? ruta.pasos.map((p) => pasoDeRuta(d, p, x.modulo.ruta, abiertas))
       : pasosDelMetodo(d, x.modulo.texto, x.modulo.carpeta, framework)
+    const sinCamino = pasos.length === 0
     return {
       clave: x.modulo.carpeta,
       nombre: x.fila?.nombre ?? x.modulo.nombre,
       ...estadoDe(x.fila, pasos),
       documento: x.modulo.ruta,
-      sinRuta: ruta === null,
+      sinRuta: ruta === null && !sinCamino,
       pasos,
       sinLugar: listas.sinLugar[i] ?? [],
+      error: !sinCamino
+        ? null
+        : x.modulo.texto === ''
+          ? `No se puede leer ${x.modulo.ruta}: está vacío o no se pudo abrir.`
+          : `${x.modulo.ruta} no tiene camino: le faltan la sección «Ruta» y la tabla «Progreso».`,
     }
   })
+  // Una fila que cita su carpeta y ya empezó, pero su `estado.md` no está (lo borraron o lo movieron, MA-12).
+  for (const x of filas) {
+    const carpeta = x.fila.carpeta
+    if (x.modulo || !carpeta || x.fila.estado === 'pendiente' || x.fila.estado === 'nueva') continue
+    const documento = `docs/modulos/${carpeta}/estado.md`
+    frentes.push({
+      clave: carpeta,
+      nombre: x.fila.nombre,
+      ...estadoDe(x.fila, []),
+      documento,
+      sinRuta: false,
+      pasos: [],
+      sinLugar: [],
+      error: `No se encuentra ${documento}, que nombra la tabla «Módulos» de docs/estado.md.`,
+    })
+  }
   const activo = frentes.findIndex((f) => f.estado === 'en curso')
   if (activo > 0) frentes.unshift(...frentes.splice(activo, 1))
   return { frentes, porEmpezar: listas.porEmpezar }

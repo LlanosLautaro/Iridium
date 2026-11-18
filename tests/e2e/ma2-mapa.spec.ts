@@ -273,3 +273,37 @@ test('en ancho chico el camino ocupa todo y «Te espera» baja debajo del nombre
   await win.screenshot({ path: 'test-results/ma2-mapa-angosto.png' })
   await app.close()
 })
+
+test('MA-12: un frente sin su estado.md muestra el error en su pestaña; al cambiar la ruta se redibuja en el lugar', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  const mapa = await alMapa(win)
+  const barra = mapa.getByRole('tablist', { name: 'Frentes' })
+  const frente = mapa.getByRole('region', { name: 'Galería' })
+  const camino = frente.locator('.camino')
+  await camino.getByRole('button', { name: '2 hechos antes' }).click()
+
+  // La IA cambia la ruta mientras se mira: el camino se redibuja sin plegar lo desplegado ni cambiar de pestaña.
+  await writeFile(
+    join(raiz, 'Alfa', 'docs/modulos/galeria/estado.md'),
+    GALERIA.replace(
+      '- [ ] Buscar una foto por fecha',
+      '- [ ] Buscar una foto por fecha\n- [ ] Marcar fotos favoritas',
+    ),
+  )
+  await expect(camino.locator('.tramo.principal .nombre-tramo')).toContainText(['Marcar fotos favoritas'])
+  await expect(camino.getByRole('button', { name: 'Plegar los hechos de antes' })).toBeVisible()
+  await expect(barra.getByRole('tab', { name: 'Galería' })).toHaveAttribute('aria-selected', 'true')
+
+  // Se borra el estado.md de Avisos: su pestaña sigue, con el Recuadro de error; las otras andan.
+  await barra.getByRole('tab', { name: 'Avisos' }).click()
+  await rm(join(raiz, 'Alfa', 'docs/modulos/avisos'), { recursive: true, force: true })
+  const avisos = mapa.getByRole('region', { name: 'Avisos' })
+  await expect(avisos.getByRole('alert')).toContainText('docs/modulos/avisos/estado.md')
+  await expect(avisos.locator('.camino')).toHaveCount(0)
+  await expect(barra.getByRole('tab', { name: 'Avisos' })).toHaveAttribute('aria-selected', 'true')
+  await win.screenshot({ path: 'test-results/ma3-mapa-error.png' })
+  await barra.getByRole('tab', { name: 'Notas' }).click()
+  await expect(mapa.getByRole('region', { name: 'Notas' })).toContainText('Todo hecho por ahora')
+  await app.close()
+})

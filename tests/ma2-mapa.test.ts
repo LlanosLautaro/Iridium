@@ -221,6 +221,39 @@ describe('El Mapa en operación (MA-I2)', () => {
   })
 })
 
+describe('Los bordes del Mapa (MA-I3)', () => {
+  it('un frente cuyo estado.md se borró: un Recuadro de error en su pestaña; los demás siguen (MA-12)', async () => {
+    await rm(join(raiz, 'docs/modulos/avisos'), { recursive: true })
+    const m = await mapa()
+    expect(m.frentes.map((f) => [f.nombre, f.error === null])).toEqual([
+      ['Mapa', true],
+      ['Notas', true],
+      ['Avisos', false],
+    ])
+    const avisos = m.frentes.find((f) => f.nombre === 'Avisos')
+    expect(avisos?.estado).toBe('en pausa')
+    expect(avisos?.pasos).toEqual([])
+    expect(avisos?.error).toContain('docs/modulos/avisos/estado.md')
+  })
+
+  it('un estado.md sin ruta ni progreso, o vacío: el error dice qué le falta (MA-12)', async () => {
+    await escribir('docs/modulos/notas/estado.md', '# Estado del módulo: Notas\n\nSin nada más.\n')
+    await escribir('docs/modulos/avisos/estado.md', '')
+    const m = await mapa()
+    const de = (n: string) => m.frentes.find((f) => f.nombre === n)
+    expect(de('Notas')?.error).toMatch(/no tiene camino/)
+    expect(de('Notas')?.sinRuta).toBe(false)
+    expect(de('Avisos')?.error).toMatch(/No se puede leer/)
+    expect(de('Mapa')?.error).toBeNull()
+  })
+
+  it('un frente que espera sin carpeta sigue en «Por empezar», sin error', async () => {
+    const m = await mapa()
+    expect(m.frentes.some((f) => f.error !== null)).toBe(false)
+    expect(m.porEmpezar.frentes.map((f) => f.nombre)).toEqual(['Exportar'])
+  })
+})
+
 describe('listasDelMapa', () => {
   it('lo que nombra una ruta de otro frente no va a «Sin frente»', () => {
     const l = listasDelMapa(

@@ -12,6 +12,7 @@
 ## Señales recogidas
 | Fecha | Fuente | Observación |
 |---|---|---|
+| 2026-11-18 | R-89, Q-203 | El desglose del contexto se guarda con la conversación y sigue al volver a abrir Iridium (R-89); el Mapa nuevo probado (MA-I2, Q-203) |
 | 2026-11-17 | Q-196, Q-198 | El frente Ideas terminó: las ideas de cada proyecto y las sueltas del inicio en una sola forma, con imágenes también en el campo de arriba (R-87, R-88) y Mover a un proyecto; probado y con su calidad (`modulos/ideas/estado.md` › Calidad). Sigue el Mapa (D-140) |
 | 2026-11-17 | R-80 a R-84, Q-191 | La grilla va toda por el último cambio (D-136, T-77); la tarjeta marca todo respondido (tilde blanco) y bandeja vacía o sin empezar (círculo), y deja de mostrar el hito y el Próximo paso (R-83, R-84); el título de la pantalla ya no se recuadra al recibir el foco (R-82). Hechos con sus pruebas; probados en Q-192 |
 | 2026-11-15 | Pedido del usuario | La ventana vuelve maximizada o como estaba (T-66) y las actualizaciones locales son automáticas sin cortar a la IA (T-67, D-122): hechas; Q-167: T-66 anda; T-67 sí armaba solo y lo que esperaba era el reinicio: ahora espera a Iridium sin usar y vuelve minimizada si no estaba al frente (corregido; Q-169: probado, anda) |

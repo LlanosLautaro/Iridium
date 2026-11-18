@@ -549,6 +549,8 @@ export interface FrenteMapa {
   pasos: PasoCamino[]
   /** Su trabajo aprobado que la ruta todavía no nombra (MA-8). */
   sinLugar: TrabajoMapa[]
+  /** Su `estado.md` falta o no tiene camino: un Recuadro de error en lugar del camino (MA-12); null si se lee. */
+  error: string | null
 }
 
 export type MapaProyecto =

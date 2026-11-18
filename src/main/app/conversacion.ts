@@ -294,6 +294,10 @@ export class Conversaciones {
     p.usoCentro = resumen?.ultimoUso ?? null
     p.detenida = resumen?.detenida ?? false
     p.entradas = mensajes.map((m) => this.entradaDe(p, m))
+    // El guardado al terminar el último turno, con su desglose, si nadie siguió la conversación después (R-89).
+    const guardado =
+      resumen?.contexto && !tocadaDespues(ultima.modificada, p.usoCentro) ? resumen.contexto : null
+    if (guardado && !this.contextos.has(ultima.id)) this.contextos.set(ultima.id, guardado)
     p.contexto = this.contextos.get(ultima.id) ?? null
   }
 
@@ -539,7 +543,12 @@ export class Conversaciones {
         if (!e.sigue) this.terminarTurno(p, e.resultado, e.motivo, e.falla)
         return
       case 'contexto':
-        if (p.id) this.contextos.set(p.id, e.contexto)
+        if (p.id) {
+          this.contextos.set(p.id, e.contexto)
+          void this.d.registro
+            .guardar(p.id, this.resumenInicial(p, 'iridium'), { contexto: e.contexto })
+            .catch(() => {})
+        }
         p.contexto = e.contexto
         this.emitir(p, [])
         return

@@ -18,7 +18,7 @@ import {
 } from '../src/main/core/uso'
 import { ArchivoConfig, preferenciasDe } from '../src/main/infra/config'
 import { lineaDeRegistro, nombreDelDia, Registro } from '../src/main/infra/registro'
-import { ArchivoSesiones } from '../src/main/infra/sesiones'
+import { ArchivoSesiones, type ResumenSesion } from '../src/main/infra/sesiones'
 import { CambioPreferencias } from '../src/main/ipc/esquemas'
 import { crearMotorFalso, type EventoMotor, type Motor, type UsoMotor } from '../src/main/motor/motor'
 import {
@@ -424,12 +424,31 @@ describe('la conversación con el uso, el contexto y los errores (I-6)', () => {
     expect(usos.at(-1)?.cincoHoras?.usado).toBe(36)
   })
 
-  it('una conversación guardada lee su contexto al abrirla, sin mandar nada', async () => {
+  it('al volver a abrir la app, el contexto del último turno sigue con su desglose (R-89)', async () => {
     const motor = crearMotorFalso({ pasoMs: 5 })
     const primero = armar({ motor })
     await primero.c.seguir(alfa, {})
     await hasta(() => ultimo()?.ficha?.estado === 'terminada')
-    // Otra vez la app: no sabe el contexto hasta leerlo.
+    const alTerminar = ultimo()?.contexto
+    await primero.c.detenerTodo()
+    // Otra vez la app (por ejemplo, después de Armar): el desglose quedó guardado con la conversación.
+    cambios = []
+    const { c } = armar({ motor })
+    const v = await c.abrir(alfa)
+    expect(v.contexto).toEqual(alTerminar)
+    expect(v.contexto?.categorias?.length).toBeGreaterThan(0)
+  })
+
+  it('una conversación seguida afuera lee su contexto del historial, sin desglose y sin mandar nada', async () => {
+    const motor = crearMotorFalso({ pasoMs: 5 })
+    const primero = armar({ motor })
+    await primero.c.seguir(alfa, {})
+    await hasta(() => ultimo()?.ficha?.estado === 'terminada')
+    await primero.c.detenerTodo()
+    // Alguien la siguió después en VS Code: lo guardado ya no es lo último.
+    const id = ultimo()?.id as string
+    const guardado = await primero.registro.de(id)
+    await primero.registro.guardar(id, guardado as ResumenSesion, { ultimoUso: 1 })
     cambios = []
     const { c } = armar({ motor })
     const v = await c.abrir(alfa)

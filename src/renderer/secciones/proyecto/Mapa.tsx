@@ -219,12 +219,18 @@ function VistaFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
           {ESTADO_FRENTE[f.estado] || f.estadoTexto}
         </span>
       </div>
+      {f.error && (
+        <div className="recuadro error" role="alert">
+          <Icono nombre="error" />
+          <div className="cuerpo-recuadro">{f.error}</div>
+        </div>
+      )}
       {f.sinRuta && (
         <p className="gris-mapa">
           Todavía sin ruta: la IA la escribe la próxima vez que trabaje en este frente.
         </p>
       )}
-      <Camino ruta={ruta} pasos={f.pasos} pausa={f.estado === 'en pausa'} />
+      {!f.error && <Camino ruta={ruta} pasos={f.pasos} pausa={f.estado === 'en pausa'} />}
       {todoHecho && !f.sinRuta && (
         <p className="gris-mapa al-pie">Todo hecho por ahora. Lo que venga, la IA lo suma a la ruta.</p>
       )}

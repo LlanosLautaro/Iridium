@@ -336,7 +336,10 @@ export function MedidorContexto({ contexto }: { contexto: ContextoConversacion }
           {contexto.categorias ? (
             <Desglose categorias={contexto.categorias} maximo={contexto.maximo} />
           ) : (
-            <p className="nota">El desglose llega cuando la IA termine un turno en Iridium.</p>
+            <p className="nota">
+              El desglose lo da la IA al terminar un turno en Iridium: esta conversación siguió afuera (VS
+              Code) o es anterior. Llega con el próximo turno.
+            </p>
           )}
           <h3>Caché</h3>
           <Cache c={contexto} ahora={ahora} />

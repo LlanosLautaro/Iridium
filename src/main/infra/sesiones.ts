@@ -6,6 +6,25 @@ import { dirname } from 'node:path'
 import { z } from 'zod'
 import { escribirAtomico, leerDatos } from './escritura'
 
+/** El contexto que informó la sesión al terminar su último turno, con el desglose (R-89). */
+const Contexto = z.object({
+  porcentaje: z.number(),
+  usados: z.number(),
+  maximo: z.number(),
+  categorias: z
+    .array(
+      z.object({
+        id: z.string(),
+        nombre: z.string(),
+        tokens: z.number(),
+        clase: z.enum(['usado', 'libre', 'reserva']),
+      }),
+    )
+    .nullable(),
+  cacheMs: z.number().nullable(),
+  ultimoPedido: z.number().nullable(),
+})
+
 const Resumen = z.object({
   /** La carpeta del proyecto. */
   ruta: z.string(),
@@ -18,6 +37,11 @@ const Resumen = z.object({
   ultimoEstado: z.enum(['terminada', 'detenida', 'error']).nullable(),
   /** Las preguntas que dejó en su último turno. */
   preguntas: z.array(z.string()),
+  /**
+   * El contexto al terminar el último turno en el Centro: el desglose solo lo da una sesión abierta, y así sigue
+   * ahí al volver a abrir la app (R-89). Falta en las conversaciones de antes.
+   */
+  contexto: Contexto.nullable().optional().catch(undefined),
 })
 export type ResumenSesion = z.infer<typeof Resumen>
 
