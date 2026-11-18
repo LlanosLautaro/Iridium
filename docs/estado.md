@@ -42,7 +42,7 @@
 
 ## En qué estamos ahora
 **Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). AR-I1 hecha el 2026-11-18 (el ajuste en Ajustes › IA y el motor que arranca solo); sigue AR-I2, contar lo que hizo, y al final la prueba de una noche.
-El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. T-81 (los tests de cada app sin ventanas a la vista), nueva, sin evaluar. Los avisos de `pnpm audit`, en T-79.
+El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. T-81 (las pruebas de cada app sin ventanas a la vista) evaluada, espera Q-209. Los avisos de `pnpm audit`, en T-79.
 En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
@@ -53,6 +53,10 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] Con lo que querés compartir ya en tu Iridium (Armar), en Scripts toqué **Publicar la versión para compartir** y terminó sin error
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
+- **Q-209 — ¿Cómo seguimos con T-81 (las pruebas de cada app sin ventanas a la vista)?**
+  Tipo: decisión
+  Contexto: `trabajo.md` › T-81. Lo que hace Iridium (D-072) es una receta en su propio código, no algo que se prende desde afuera, y cambia según el tipo de app (página, Electron, consola, otra de escritorio).
+  Opciones: A) Una regla en el framework con la receta por tipo de app, que la IA aplica al armar o retomar las pruebas de cada proyecto (recomendada: chica, sirve para todos y no espera a nada; cada proyecto la toma la próxima vez que se trabaja) · B) La regla y además plantillas por tipo de app (el esqueleto de una app de Electron, una página…) con esto ya resuelto (más completo, pero es un frente nuevo y largo) · C) Solo arreglarlo en esa app, pidiéndolo desde su propio proyecto, sin tocar el framework
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
