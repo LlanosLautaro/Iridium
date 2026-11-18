@@ -32,19 +32,19 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10); repo público (D-132), falta publicar una versión al día (Q-185) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 probadas; la tanda 8, el bloc de Ideas, sin probar: lo reemplaza el frente Ideas, D-128, Q-174) | en pausa |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 probadas; la 9, Skills, espera Q-212; sigue Revisión; D-151) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
-| Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
+| Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; MA-I3 probada en Q-204, calidad el 2026-11-18) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
-| Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Arranque, D-150; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
+| Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (T-80) | sección | 1. Propuesta (detrás de Plantillas, D-148) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso «Mientras no estabas», el detalle del uso y la línea de la conversación). Espera tu prueba de una noche (Q-210). Qué frente a medio cerrar va primero (Diseño, Orden o seguir con Plantillas), en Q-211.
-El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. T-81 aprobada (D-150): frente Plantillas, piezas por tipo de app que empiezan por las pruebas sin ventanas; va antes de Abrir. Los avisos de `pnpm audit`, en T-79.
-En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185).
+**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso «Mientras no estabas», el detalle del uso y la línea de la conversación). Espera tu prueba de una noche (Q-210). Mientras, se terminan Diseño y Orden (D-151, Q-211): **Diseño** pasó Skills (DI-I3, tanda 9; espera Q-212) y sigue sección por sección; al cerrar, Orden mide la calidad sobre la interfaz negra. Plantillas y Abrir, después.
+El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. T-81 aprobada (D-150): frente Plantillas, detrás de Diseño y Orden (D-151). Los avisos de `pnpm audit`, en T-79.
+En pausa: Orden (su paso 8 va al cerrar Diseño). Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
@@ -62,16 +62,19 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-211 — ¿Qué frente a medio cerrar atacamos primero?**
-  Tipo: decisión · frena
-  Contexto: pediste atacar los frentes a medio cerrar. Arranque (Q-210) y Compartir (Q-185) solo esperan tu prueba o tarea. Diseño está a medio pasar al código (DI-I3: faltan Skills, Revisión, Docs, Archivos, Git, Scripts y Ajustes, más T-58, T-53 y DI-I4), y Orden solo espera su paso 8 (Calidad), que D-102 dejó detrás del rediseño para no medir una interfaz que va a cambiar. Terminar Diseño destraba Orden: cierra dos frentes de una.
-  Opciones: A) Diseño completo: las secciones que faltan, de a una tanda (Skills primero), y después Orden mide todo (recomendada: cierra los dos frentes y la app queda pareja) · B) Diseño recortado: Skills y T-58, DI-I3 por hecha, DI-I4 en pausa, y enseguida Orden (más rápido; las secciones de uso raro quedan con el estilo de antes) · C) Seguir el plan: Plantillas primero (D-150), Diseño y Orden después
-
+- **Q-212 — Probá Skills con el diseño nuevo**
+  Tipo: prueba · Frente: Diseño
+  Contexto: `modulos/diseno/estado.md` › Log de iteraciones (DI-I3, tanda 9). Antes, Actualizar para tener la versión de hoy. Comparala con la maqueta en Diseño › Pantallas › Skills.
+  - [ ] En Skills (Ctrl+2) la columna se ve como la maqueta: Framework arriba, cada origen con su título gris y su cuenta, y la que está dos veces con «doble» en ámbar
+  - [ ] Un clic en el título de un grupo lo pliega en una fila gris con su cuenta, y otro clic lo abre
+  - [ ] En una skill, Resumen muestra los avisos en un recuadro y la descripción; Archivos abre su SKILL.md y deja recorrer las carpetas
+  - [ ] En Framework, cada proyecto tiene su botón a la vista y «N avisos» abre la lista debajo de su fila
+  - [ ] La «i» de Framework muestra la ayuda al pasar el mouse
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Según Q-211: con A o B, Diseño retoma DI-I3 por la tanda 9 (Skills: `docs/diseno/pantallas/skills.html` al código); con C, Plantillas (T-81) y su propuesta (paso 1). Arranque espera Q-210.
-**Leer antes:** con A o B, `modulos/diseno/estado.md` › Próximo paso y lo que pide; con C, `decisiones.md` › D-150 y D-072, `trabajo.md` › T-81.
+Diseño, DI-I3 tanda 10: pasar Revisión a la maqueta y a las piezas.
+**Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

@@ -1,6 +1,6 @@
 /* Los pendientes de un proyecto, en su Bandeja de entrada (04-ux.md › W-5 y W-6), con las piezas desde DI-I3, tanda 6
-   (docs/diseno/pantallas/bandeja.html). Arriba quedan el texto de los documentos y la columna de proyectos, que usan
-   Docs y Skills hasta que sus secciones pasen. */
+   (docs/diseno/pantallas/bandeja.html). Arriba queda el texto de los documentos, que usa Docs
+   hasta que su sección pase. */
 
 /* Texto de un documento del proyecto (citas y panel): el HTML que arma el visor */
 .doc-texto {
@@ -102,62 +102,7 @@
   background: var(--sel-fondo);
 }
 
-/* La columna de proyectos (la de Skills) */
-.columna {
-  flex: none;
-  width: 236px;
-  background: var(--lateral);
-  border-right: 1px solid var(--borde);
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-.columna .titulo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 40px;
-  padding: 0 14px 0 16px;
-  flex: none;
-  border-bottom: 1px solid var(--borde-suave);
-}
-.columna .titulo h1 {
-  font: 600 14.5px / 1 var(--ui);
-}
-.columna .titulo .n {
-  font: 500 12px / 1 var(--mono);
-  color: var(--texto-3);
-}
-.columna .lista {
-  flex: 1;
-  overflow-y: auto;
-  padding: 6px 0 12px;
-}
-.columna .seccion {
-  padding: 12px 14px 6px 16px;
-  font: 600 var(--tam-chico) / 1 var(--ui);
-  letter-spacing: 0.02em;
-  color: var(--texto-3);
-}
-.columna .proy {
-  width: calc(100% - 12px);
-  margin: 0 6px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  height: 32px;
-  padding: 0 8px;
-  border-radius: var(--radio-fila);
-  color: var(--texto-2);
-}
-.columna .proy:hover {
-  background: var(--hover);
-  color: var(--texto);
-}
-.columna .proy[aria-current="true"] {
-  background: var(--sel-fondo);
-  color: var(--texto);
-}
+/* El ícono de un proyecto (la barra de proyectos) y la línea de las siluetas */
 .ico-proy {
   width: 20px;
   height: 20px;
@@ -170,21 +115,6 @@
   border: 1px dashed var(--borde-fuerte);
   color: var(--texto-3);
   font: 600 11px / 1 var(--ui);
-}
-.columna .proy .nom {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-}
-.proy-silueta {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  height: 32px;
-  padding: 0 14px;
 }
 .linea-silueta {
   display: block;

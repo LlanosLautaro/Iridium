@@ -157,6 +157,7 @@
 | D-148 | 2026-11-18 | frente nuevo Abrir (T-80), con el framework e Inicio | 10 | Abrir lo que hace cada proyecto, y después mantener al día las apps de escritorio | vigente |
 | D-149 | 2026-11-18 | Arranque (T-70) | 10; frente Arranque, paso 5 (Diseño técnico) | El arranque: un temporizador recalculado, la Bandeja como fuente y lo que pasó en arranques.json | vigente |
 | D-150 | 2026-11-18 | frente nuevo Plantillas (T-81), con el framework | 10 | Plantillas por tipo de app: piezas modulares que crecen, empezando por las pruebas sin ventanas | vigente |
+| D-151 | 2026-11-18 | frentes Diseño, Orden y Plantillas | 10 | Primero se terminan Diseño y Orden; Plantillas espera | vigente |
 
 ---
 
@@ -3119,3 +3120,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción B de Q-209, con lo que agregó el usuario: un frente nuevo de **plantillas por tipo de app**, modulares y genéricas, con configuraciones básicas, que crecen con el tiempo y con los casos de uso. Además de las reglas, pueden traer código probado de Iridium (como su sistema de pruebas) para que la IA de otro proyecto lo use tal cual o lo adapte. La primera pieza: las pruebas no ocupan la pantalla del usuario, con la receta por tipo. Se define el frente, se resuelve al menos esa pieza y queda en pausa.
 **Motivo:** una pieza por problema se puede sumar sin rehacer nada y cada proyecto toma solo las que le sirven; el código que ya funciona en Iridium ahorra reinventarlo en cada proyecto.
 **Consecuencias:** las piezas viven en el framework (`recursos/plugins/iridium`) y no nombran otros proyectos (D-082); si Iridium llega a leerlas o mostrarlas, va con el lector y el control (D-086). El tipo de app es el mismo dato que declara el frente Abrir (D-148): la propuesta del frente define dónde se escribe una sola vez. El frente entra detrás de Arranque y antes de Abrir, porque su primera parte es chica.
+
+## D-151 — Primero se terminan Diseño y Orden; Plantillas espera
+- **Fecha:** 2026-11-18
+- **Ámbito:** frentes Diseño, Orden y Plantillas
+- **Hito o paso:** 10, a pedido del usuario (Q-211)
+- **Estado:** vigente (cambia el orden de D-150)
+
+**Contexto:** el usuario pidió atacar los frentes a medio cerrar. Arranque y Compartir solo esperan su prueba o tarea (Q-210, Q-185); Diseño quedó con DI-I3 a medio pasar y Orden espera el rediseño para su paso 8 (D-102).
+**Decisión:** opción A de Q-211: Diseño se reactiva y termina completo (DI-I3 sección por sección, Skills primero, con T-58, T-53 y DI-I4); al cerrarlo, Orden hace su paso 8 (Calidad) sobre la interfaz negra. Plantillas y Abrir quedan detrás.
+**Motivo:** terminar Diseño destraba Orden y cierra los dos frentes; la calidad se mide sobre la app definitiva.
+**Consecuencias:** Diseño pasa a `en curso`; Plantillas (D-150) y Abrir (D-148) esperan a que cierre Orden.
+

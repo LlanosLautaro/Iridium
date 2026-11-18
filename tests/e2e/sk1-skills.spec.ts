@@ -92,7 +92,8 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Actualizar (SK-1, SK
 
   const lista = win.getByRole('navigation', { name: 'Skills' })
   await expect(lista.getByRole('heading', { name: 'Skills' })).toBeVisible()
-  await expect(lista.getByText('1 doble')).toBeVisible()
+  // Sin la cuenta total ni «1 doble» (D-108): la que está dos veces lleva su señal en la fila.
+  await expect(lista.getByTitle('Está dos veces').first()).toHaveText('doble')
   await expect(lista.getByRole('button', { name: /Propias\s*3/ })).toBeVisible()
   await expect(lista.getByRole('button', { name: /Copias de terceros\s*3/ })).toBeVisible()
   await expect(lista.getByRole('button', { name: /De complementos\s*3/ })).toBeVisible()
@@ -100,17 +101,17 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Actualizar (SK-1, SK
   await expect(lista.getByText('borrada')).toHaveCount(0)
 
   // La primera vez: Framework, con Gamma fuera (framework viejo) y Alfa al día, sin botón. La cuenta, en gris.
-  await expect(lista.locator('.sk-framework .n')).toHaveText('1')
+  await expect(lista.locator('.sk-framework .cuenta')).toHaveText('1 fuera')
   const detalle = win.getByRole('region', { name: 'Framework' })
   await expect(detalle.locator('.cab-seccion .sub')).toHaveText('1 fuera')
-  const gamma = detalle.locator('.sk-proy[data-proyecto="Gamma"]')
-  const alfa = detalle.locator('.sk-proy[data-proyecto="Alfa"]')
+  const gamma = detalle.locator('li.fila[data-proyecto="Gamma"]')
+  const alfa = detalle.locator('li.fila[data-proyecto="Alfa"]')
   await expect(gamma).toContainText('framework viejo · 2026-10-16')
   await expect(alfa).toContainText('al día · 2026-11-06')
   await expect(alfa.getByRole('button', { name: 'Actualizar' })).toHaveCount(0)
-  await expect(detalle.locator('.sk-proy')).toHaveText([/Gamma/, /Alfa/])
+  await expect(detalle.locator('li.fila')).toHaveText([/Gamma/, /Alfa/])
   await detalle.getByRole('button', { name: /Fuera del framework/ }).click()
-  await expect(detalle.locator('.sk-proy')).toHaveText([/Gamma/])
+  await expect(detalle.locator('li.fila')).toHaveText([/Gamma/])
   await win.screenshot({ path: 'test-results/sk1-framework.png' })
 
   // Una ruta que no salió de la lista se rechaza, y una que ya sigue el framework también.
@@ -137,7 +138,7 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Actualizar (SK-1, SK
   await detalle.getByRole('button', { name: /^Todos/ }).click()
   await expect(gamma).toContainText('al día')
   await expect(detalle.getByText('Todos los proyectos siguen el framework.')).toBeVisible()
-  await expect(lista.locator('.sk-framework .n')).toHaveCount(0)
+  await expect(lista.locator('.sk-framework .cuenta')).toHaveCount(0)
 
   // La doble: el aviso y Pedir que la saquen, que deja el pedido escrito en el chat.
   await lista.getByTitle('impeccable', { exact: true }).click()
@@ -210,8 +211,16 @@ test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', as
   await lista.getByTitle('hitos-desarrollo-app', { exact: true }).click()
   const detalle = win.getByRole('region', { name: 'La skill hitos-desarrollo-app' })
   const arbol = detalle.getByRole('navigation', { name: 'Archivos de hitos-desarrollo-app' })
-  // Empieza en el Resumen.
-  await expect(arbol.getByRole('button', { name: 'Resumen' })).toHaveAttribute('aria-current', 'true')
+  // Empieza en el Resumen; Archivos abre el SKILL.md.
+  await expect(detalle.getByRole('tab', { name: 'Resumen' })).toHaveAttribute('aria-selected', 'true')
+  await win.screenshot({ path: 'test-results/sk1-resumen.png' })
+  await detalle.getByRole('tab', { name: 'Archivos' }).click()
+  await expect(arbol.getByRole('button', { name: 'SKILL.md' })).toBeVisible()
+  await expect(detalle.locator('.visor-cab')).toContainText('SKILL.md')
+  // Con las flechas se vuelve al Resumen y otra vez a Archivos, al mismo archivo.
+  await detalle.getByRole('tab', { name: 'Archivos' }).press('ArrowLeft')
+  await expect(detalle.getByRole('tab', { name: 'Resumen' })).toBeFocused()
+  await detalle.getByRole('tab', { name: 'Resumen' }).press('ArrowRight')
 
   await arbol.getByRole('button', { name: 'SKILL.md' }).click()
   await expect(detalle.locator('.visor-cab')).toContainText('SKILL.md')
@@ -227,10 +236,8 @@ test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', as
   // Otra skill tiene su propio lugar; al volver, sigue en el archivo que se miraba.
   await lista.getByTitle('gestor-proyectos', { exact: true }).click()
   await expect(
-    win
-      .getByRole('navigation', { name: 'Archivos de gestor-proyectos' })
-      .getByRole('button', { name: 'Resumen' }),
-  ).toHaveAttribute('aria-current', 'true')
+    win.getByRole('region', { name: 'La skill gestor-proyectos' }).getByRole('tab', { name: 'Resumen' }),
+  ).toHaveAttribute('aria-selected', 'true')
   await lista.getByTitle('hitos-desarrollo-app', { exact: true }).click()
   await expect(detalle.locator('.visor-codigo')).toContainText('Pasos para poner al día un proyecto.')
 

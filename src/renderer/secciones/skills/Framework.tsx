@@ -2,6 +2,7 @@
 // viejo o con avisos del control), después las carpetas simples y al final los que están al día. Cada uno de afuera
 // (y cada carpeta) con **Actualizar** (F-9, OR-8), que manda el pedido a una conversación nueva del proyecto sin salir
 // de acá; mientras trabaja, «Actualizando…» y Ver la conversación. Los avisos de uno se despliegan en su fila (T-48).
+// DI-I3, tanda 9: cada proyecto es una Fila con su acción a la vista y la que tiene avisos se abre en su lugar (PZ-13).
 import { type ReactNode, useState } from 'react'
 import {
   type EstadoFramework,
@@ -15,11 +16,15 @@ import { Icono } from '../../ui/Icono'
 
 type Filtro = 'todos' | 'fuera' | 'carpetas'
 
+/** Lo que antes era la nota fija debajo de la lista, como Información a pedido (R-41). */
+const AYUDA =
+  'Actualizar envía el pedido a una conversación nueva de cada proyecto; sigues aquí. Las carpetas simples no ' +
+  'cuentan como fuera: se ven y se conversan igual.'
+
 function IconoProyecto({ p }: { p: ProyectoFramework }) {
-  if (p.icono) return <img className="ico-proy" src={p.icono} alt="" />
   return (
-    <span className="ico-proy sin-icono" aria-hidden="true">
-      {p.inicial}
+    <span className="icono-fila" aria-hidden="true">
+      {p.icono ? <img src={p.icono} alt="" /> : p.inicial}
     </span>
   )
 }
@@ -75,14 +80,14 @@ function Fila({ p }: { p: ProyectoFramework }) {
           <Icono nombre="sync" gira />
           Actualizando…
         </span>
-        <button type="button" className="boton secundario chico" onClick={() => abrirProyecto(p.ruta)}>
+        <button type="button" className="boton sin-fondo chico" onClick={() => abrirProyecto(p.ruta)}>
           Ver la conversación
         </button>
       </>
     )
   else if (trabajando)
     accion = (
-      <button type="button" className="boton secundario chico" disabled title="Su IA está trabajando">
+      <button type="button" className="boton sin-fondo chico" disabled title="Su IA está trabajando">
         Actualizar
       </button>
     )
@@ -90,14 +95,14 @@ function Fila({ p }: { p: ProyectoFramework }) {
     accion = (
       <>
         {loMande && ficha?.estado === 'error' && (
-          <button type="button" className="boton secundario chico" onClick={() => abrirProyecto(p.ruta)}>
+          <button type="button" className="boton sin-fondo chico" onClick={() => abrirProyecto(p.ruta)}>
             <Icono nombre="error" />
             Ver el error
           </button>
         )}
         <button
           type="button"
-          className="boton secundario chico"
+          className="boton sin-fondo chico"
           disabled={mandando}
           title="Le manda el pedido a la IA de este proyecto, en una conversación nueva: gasta uso"
           onClick={() => void pasar()}
@@ -108,42 +113,46 @@ function Fila({ p }: { p: ProyectoFramework }) {
     )
 
   return (
-    <li className="sk-proy" data-proyecto={p.nombre}>
-      <div className="sk-proy-fila">
+    <>
+      <li className={abierto ? 'fila con-detalle abierta' : 'fila con-detalle'} data-proyecto={p.nombre}>
         <IconoProyecto p={p} />
-        <div className="datos">
-          <b title={p.nombre}>{p.nombre}</b>
-          {e.tipo === 'avisos' ? (
-            <button
-              type="button"
-              className="sk-avisos"
-              aria-expanded={abierto}
-              onClick={() => cambiarSkills({ avisosDe: abierto ? null : p.ruta })}
-            >
-              <span className="aviso-punto" aria-hidden="true">
-                !
+        <span className="principal-fila">
+          <span className="titulo-fila" title={p.nombre}>
+            {p.nombre}
+          </span>
+          <span className="detalle">
+            {e.tipo === 'avisos' ? (
+              <button
+                type="button"
+                className="sk-ver-avisos senal rojo"
+                aria-expanded={abierto}
+                onClick={() => cambiarSkills({ avisosDe: abierto ? null : p.ruta })}
+              >
+                {textoEstado(e)}
+              </button>
+            ) : (
+              textoEstado(e)
+            )}
+            {nota && (
+              <span className="senal rojo" role="status">
+                {' · '}
+                {nota}
               </span>
-              {textoEstado(e)}
-            </button>
-          ) : (
-            <span className={`sk-estado ${e.tipo}`}>{textoEstado(e)}</span>
-          )}
-          {nota && (
-            <span className="sk-falla" role="status">
-              {nota}
-            </span>
-          )}
-        </div>
-        <div className="acc">{accion}</div>
-      </div>
+            )}
+          </span>
+        </span>
+        {accion && <span className="acciones siempre">{accion}</span>}
+      </li>
       {abierto && (
-        <ul className="sk-lista-avisos">
-          {e.avisos.map((a) => (
-            <li key={a}>{a}</li>
-          ))}
-        </ul>
+        <li className="cuerpo-fila">
+          <ul className="sk-lista-avisos">
+            {e.avisos.map((a) => (
+              <li key={a}>{a}</li>
+            ))}
+          </ul>
+        </li>
       )}
-    </li>
+    </>
   )
 }
 
@@ -161,9 +170,19 @@ export function Framework({ proyectos }: { proyectos: ProyectoFramework[] | null
   const elegido = filtros.some((f) => f.clave === filtro) ? filtro : 'todos'
   const vistos = elegido === 'fuera' ? fuera : elegido === 'carpetas' ? carpetas : lista
   return (
-    <section className="sk-detalle sk-framework-detalle" aria-label="Framework">
+    <section className="sk-detalle" aria-label="Framework">
       <Cabecera
         titulo="Framework"
+        acciones={
+          lista.length > 0 && (
+            <button type="button" className="info" aria-label={AYUDA}>
+              <Icono nombre="duda" />
+              <span className="globo" aria-hidden="true">
+                {AYUDA}
+              </span>
+            </button>
+          )
+        }
         sub={
           proyectos === null ? 'Leyendo los proyectos…' : fuera.length > 0 ? `${fuera.length} fuera` : null
         }
@@ -178,25 +197,19 @@ export function Framework({ proyectos }: { proyectos: ProyectoFramework[] | null
           )
         }
       />
-      <div className="cuerpo">
+      <div className="sk-cuerpo">
         {proyectos !== null && fuera.length === 0 && (
-          <p className="sk-todos">
+          <p className="senal sk-todos">
             <Icono nombre="check" />
             Todos los proyectos siguen el framework.
           </p>
         )}
         {vistos.length > 0 && (
-          <>
-            <ul className="sk-proyectos">
-              {vistos.map((p) => (
-                <Fila key={p.ruta} p={p} />
-              ))}
-            </ul>
-            <p className="sk-nota">
-              Actualizar manda el pedido a una conversación nueva de cada proyecto; seguís acá. Las carpetas
-              simples no cuentan como fuera: se ven y se conversan igual.
-            </p>
-          </>
+          <ul className="filas con-lineas sk-proyectos" aria-label="Proyectos">
+            {vistos.map((p) => (
+              <Fila key={p.ruta} p={p} />
+            ))}
+          </ul>
         )}
       </div>
     </section>

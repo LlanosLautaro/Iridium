@@ -1,5 +1,5 @@
 /* Lo que quedó del bloc de notas de Ideas (D-112, D-126; ID-I4 lo reemplazó por la lista): las imágenes pegadas en la
-   nota de una idea y Abrir como proyecto. Ideas del inicio usa la lista de ideas-proyecto.css. */
+   nota de una idea y el ícono de Abrir como proyecto. Ideas del inicio usa la lista de ideas-proyecto.css. */
 
 /* Los enlaces son la Etiqueta de enlace (PZ-14). */
 
@@ -21,15 +21,6 @@
 }
 
 /* Abrir como proyecto, a la derecha del título (Ideas y la columna de Skills) */
-.columna .titulo .abrir-como-proyecto {
-  flex: none;
-  margin: 0 -8px 0 auto;
-  width: 26px;
-  height: 26px;
-}
-.columna .titulo .sk-dobles + .abrir-como-proyecto {
-  margin-left: 0;
-}
 .abrir-como-proyecto .ic {
   width: 14px;
   height: 14px;

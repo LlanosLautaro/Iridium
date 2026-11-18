@@ -86,13 +86,13 @@ test('los avisos de la tarjeta llevan a su lista en Framework; Ideas lleva a Fra
   await expect(alfa.locator('.aviso-fw')).toHaveText('!1 aviso del framework')
   await alfa.locator('.aviso-fw').click()
   const framework = win.getByRole('region', { name: 'Framework' })
-  const fila = framework.locator('.sk-proy[data-proyecto="Alfa"]')
+  const fila = framework.locator('li.fila[data-proyecto="Alfa"]')
   await expect(fila.getByRole('button', { name: /1 aviso del framework/ })).toHaveAttribute(
     'aria-expanded',
     'true',
   )
-  await expect(fila.locator('.sk-lista-avisos')).toContainText('docs/estado.md')
-  await expect(framework.locator('.sk-proy')).toHaveText([
+  await expect(framework.locator('.sk-lista-avisos')).toContainText('docs/estado.md')
+  await expect(framework.locator('li.fila')).toHaveText([
     /Gamma.*framework viejo/,
     /Alfa/,
     /Beta.*carpeta simple/,

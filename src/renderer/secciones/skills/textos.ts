@@ -34,15 +34,15 @@ export function pedidoSacar(s: Skill): string {
   const cual = d.sobra === 'esta' ? s.id : d.otra
   return (
     `Está dos veces: también llega ${dondeEsta(d.otraOrigen, d.otraComplemento)} (${d.otraNombre}). ` +
-    `Sacá la copia que sobra, \`${cual}\` (D-014); antes fijate que no tenga nada que no esté en la otra.`
+    `Saca la copia que sobra, \`${cual}\` (D-014); antes fíjate que no tenga nada que no esté en la otra.`
   )
 }
 
 /** «Pedir que lo arreglen», para un enlace roto. */
 export function pedidoArreglar(s: Skill): string {
   return (
-    `El enlace \`${s.id}\` lleva a \`${s.destino ?? '?'}\`, que ya no existe. Arreglalo: volvé a instalar la ` +
-    'skill desde la carpeta Skills o, si ya no va, sacá el enlace.'
+    `El enlace \`${s.id}\` lleva a \`${s.destino ?? '?'}\`, que ya no existe. Arréglalo: vuelve a instalar la ` +
+    'skill desde la carpeta Skills o, si ya no va, saca el enlace.'
   )
 }
 

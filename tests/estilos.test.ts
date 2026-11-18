@@ -176,11 +176,9 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
   'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
   'git.css': ['commit', 'arch', 'fila-git', 'remoto', 'plegable', 'aviso-git', 'arbol-lista', 'git-cuenta'],
-  // DI-I3, tanda 8: Ideas es el bloc de notas (D-112); queda Abrir como proyecto en la columna de Skills
-  'ideas.css': ['columna'],
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
-  // DI-I3, tanda 6: la Bandeja pasó a las piezas; quedan el texto de los documentos y la columna de Skills
-  'pendientes.css': ['columna', 'aviso-doc', 'gp-casilla', 'doc-texto'],
+  // DI-I3, tanda 6: la Bandeja pasó a las piezas; queda el texto de los documentos (la columna de Skills, tanda 9)
+  'pendientes.css': ['aviso-doc', 'gp-casilla', 'doc-texto'],
   // DI-I3, tanda 7: el Mapa pasó a las piezas
   'proyecto.css': [
     'atras',
@@ -206,28 +204,18 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'interruptor-arch',
   ],
   'revision.css': ['reabrir', 'fila-com', 'rev-vacio'],
-  'skills.css': [
-    'sk-fila',
-    'sk-proy',
-    'sk-grupo',
-    'aviso-detalle',
-    'sk-avisos',
-    'aviso-punto',
-    'arbol-lista',
-    'arbol-nodo',
-  ],
   'uso.css': ['menu-boton', 'medidor', 'menu-lista', 'dialogo', 'velo-dialogo'],
 }
 
 /** Cuántas veces se usa cada token de antes (`tokens-viejos.css`) en la app: como mucho esto. */
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
-  '--lateral': 3,
+  '--lateral': 2,
   '--barra': 1,
-  '--caja': 21,
+  '--caja': 19,
   '--medidor-fondo': 5,
-  '--primario': 21,
-  '--primario-texto': 7,
-  '--ok': 13,
+  '--primario': 20,
+  '--primario-texto': 6,
+  '--ok': 12,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,
