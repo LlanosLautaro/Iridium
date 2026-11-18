@@ -14,7 +14,7 @@
   .ajuste .que { display: flex; flex-direction: column; gap: 2px; }
   .ajuste .que span { font-size: var(--tam-chico); color: var(--texto-3); }
   .ajuste .control { display: flex; flex-direction: column; gap: var(--esp-2); align-items: flex-start; }
-  .opcion .expl { display: block; font-size: var(--tam-chico); color: var(--texto-3); }
+  .opcion .expl, .control > .expl { display: block; font-size: var(--tam-chico); color: var(--texto-3); }
   .cerrar-ventana { position: absolute; top: var(--esp-3); right: var(--esp-3); }
 </style>
 </head>
@@ -51,6 +51,12 @@
               <label class="opcion"><input type="radio" name="tono"><span>Aprendiendo<span class="expl">Con un poco más de contexto en cada paso</span></span></label>
             </div></div>
           <div class="ajuste"><div class="que">Al abrir un proyecto</div><div class="control"><label class="interruptor"><input type="checkbox" checked>Seguir con la última conversación</label></div></div>
+          <div class="ajuste"><div class="que">Abrir el período de Claude<span>Mientras no estás, con trabajo listo</span></div>
+            <div class="control">
+              <label class="interruptor"><input type="checkbox" checked>Prendido</label>
+              <span>A las <input class="campo" type="time" value="03:00" style="width:96px"> y al vencer cada período</span>
+              <span class="expl">Sigue el proyecto que espera hace más con tus respuestas. No arranca si la semana pasó el 90 %. Necesita Iridium abierta.</span>
+            </div></div>
         </section>
         <section data-panel-de="ajustes" data-panel="apariencia" hidden>
           <h3>Apariencia</h3>

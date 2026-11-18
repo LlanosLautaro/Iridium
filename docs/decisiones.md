@@ -3049,3 +3049,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** `## Ruta` es una lista de casillas: `[x]` hecho, `[ ]` lo que viene, `[-]` descartado; una rama, un nivel de sangría. El que sigue y la pausa los calcula Iridium (el primer `[ ]`; el estado del frente). Los códigos van en la línea y no se muestran: una `Q-n` sin responder hace «Te espera», un `T-n` dice qué trabajo es y una iteración da el destino en Docs. «Por empezar», «Sin frente» y «Aprobado, sin lugar en la ruta» se calculan con `trabajo.md` al leer. La pestaña elegida se recuerda en memoria. El control avisa de una marca o una línea que no entiende, una rama sin paso, un código que no existe y un frente `en curso` sin ruta. Se construye en tres iteraciones (MA-I1 a MA-I3). Detalle: `modulos/mapa/diseno-tecnico.md`.
 **Motivo:** es lo más corto de escribir para la IA (una línea por paso, sin mover marcas) y lo que no se escribe no se desactualiza.
 **Consecuencias:** la plantilla del `estado.md` de un frente, `SKILL.md`, `referencias/modulos.md` y `referencias/10-operacion.md` cambian en MA-I1 junto con el lector y el control.
+
+## D-146 — La definición del Arranque va como se escribió
+- **Fecha:** 2026-11-18
+- **Ámbito:** Arranque (T-70), con Apariencia y ajustes (el ajuste) e Inicio (el detalle del uso)
+- **Hito o paso:** 10; frente Arranque, paso 2 (Definición)
+- **Estado:** vigente
+
+**Contexto:** D-135 dijo cómo se arranca el período de 5 horas. La definición sumó dos cosas que D-135 no decía: no arrancar si la semana pasó el 90 % y que venga apagado.
+**Decisión:** opción A de Q-206: `modulos/arranque/definicion.md` como está. Con Iridium abierta, a la hora elegida (por defecto las 3:00) y unos 5 minutos después de que venza cada período, si no hay uno abierto: una conversación nueva en el proyecto con la respuesta sin procesar más vieja, sin una sesión trabajando, con «Continúa con el proyecto.». No arranca si la semana pasó el 90 %. Si la PC estaba suspendida, lo hace al despertar. Apagado hasta que el usuario lo prenda en Ajustes.
+**Motivo:** cumple D-135 y cuida la semana, que es lo único que el arranque gasta.
+**Consecuencias:** donde la definición dice «la Bandeja», va lo que la UX decida: desde D-111 no hay una Bandeja de todos los proyectos.

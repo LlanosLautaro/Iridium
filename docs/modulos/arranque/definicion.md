@@ -1,7 +1,7 @@
 # Definición del módulo: Arranque
 
 **Fecha:** 2026-11-18
-**Estado:** espera Q-206
+**Estado:** aprobada en Q-206 (D-146). Lo que dice de «la Bandeja» lo ubica la UX (`ux.md`): desde D-111 no hay una Bandeja de todos los proyectos
 **Base:** `propuesta.md`, D-135 (trabajo real, desde la misma Iridium, a eso de las 3 y al vencer cada ventana) y lo revisado en `trabajo.md` › T-70.
 
 ## Objetivo del módulo
