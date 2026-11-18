@@ -37,10 +37,10 @@
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; MA-I3 probada en Q-204, calidad el 2026-11-18) | hecho |
-| Arranque (`modulos/arranque/estado.md`) | sección | 4. UX (espera Q-207) | en curso |
+| Arranque (`modulos/arranque/estado.md`) | sección | 5. Diseño técnico | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). Definición aprobada (D-146); la UX espera Q-207.
+**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). Definición (D-146) y UX (D-147, con un aviso al volver) aprobadas; sigue el diseño técnico.
 El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar. Los avisos de `pnpm audit`, en T-79.
 En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -53,16 +53,11 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
-- **Q-207 — ¿Apruebo cómo se usa el arranque?**
-  Tipo: decisión · frena · Frente: Arranque
-  Contexto: `modulos/arranque/ux.md` y la maqueta `diseno/pantallas/ajustes.html` (Ajustes › IA, al final). Se prende en Ajustes › IA, con la hora. Lo que hizo se ve donde ya mirás: la pestaña del proyecto arriba (✓ o su cuenta de preguntas), debajo del título de la conversación «la empezó Iridium a las 3:02», y en el detalle del uso (tocar «5 h · Semana») «Último arranque: Alfa, hoy a las 3:02 · Abrir» o por qué no arrancó. Cambia lo de la definición: no hay Bandeja de todos los proyectos desde D-111, así que no va ahí.
-  Opciones: A) Aprobada como está (recomendada: no suma pantallas y está donde ya mirás) · B) Además, un aviso al abrir Iridium a la mañana con lo que hizo de noche
-
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Con Q-207 respondida: registrar la UX del Arranque como decisión y escribir su diseño técnico.
-**Leer antes:** `respuestas/Q-207.md`; `modulos/arranque/estado.md` › Próximo paso.
+Arranque: escribir el diseño técnico y planear sus iteraciones.
+**Leer antes:** `modulos/arranque/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

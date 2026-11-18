@@ -3060,3 +3060,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción A de Q-206: `modulos/arranque/definicion.md` como está. Con Iridium abierta, a la hora elegida (por defecto las 3:00) y unos 5 minutos después de que venza cada período, si no hay uno abierto: una conversación nueva en el proyecto con la respuesta sin procesar más vieja, sin una sesión trabajando, con «Continúa con el proyecto.». No arranca si la semana pasó el 90 %. Si la PC estaba suspendida, lo hace al despertar. Apagado hasta que el usuario lo prenda en Ajustes.
 **Motivo:** cumple D-135 y cuida la semana, que es lo único que el arranque gasta.
 **Consecuencias:** donde la definición dice «la Bandeja», va lo que la UX decida: desde D-111 no hay una Bandeja de todos los proyectos.
+
+## D-147 — La UX del Arranque, con un aviso al volver
+- **Fecha:** 2026-11-18
+- **Ámbito:** Arranque (T-70), con Apariencia y ajustes e Inicio
+- **Hito o paso:** 10; frente Arranque, paso 4 (UX)
+- **Estado:** vigente
+
+**Contexto:** la UX ponía lo que hizo el arranque donde ya se mira (la pestaña del proyecto, la línea de debajo del título de la conversación y el detalle del uso), porque desde D-111 no hay una Bandeja de todos.
+**Decisión:** opción B de Q-207: `modulos/arranque/ux.md` como está y, además, un aviso con lo que hizo mientras el usuario no estaba (AR-4). Como el arranque necesita Iridium abierta, «al abrir Iridium» es al volver a la PC: la primera vez que la ventana toma el foco o recibe el mouse después de uno o más arranques. Es el aviso de W-4, con un renglón por arranque (y lo que no pudo), Abrir en cada uno y Listo; no se va solo y sale una vez por tanda.
+**Motivo:** lo primero que ve el usuario al sentarse es lo que se hizo de noche, sin buscarlo.
+**Consecuencias:** el aviso de W-4 suma una variante que no se va sola.
