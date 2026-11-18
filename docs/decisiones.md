@@ -3132,3 +3132,13 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** terminar Diseño destraba Orden y cierra los dos frentes; la calidad se mide sobre la app definitiva.
 **Consecuencias:** Diseño pasa a `en curso`; Plantillas (D-150) y Abrir (D-148) esperan a que cierre Orden.
 
+## D-152 — El Mapa archiva los frentes en uso sin nada por hacer
+- **Fecha:** 2026-11-18
+- **Ámbito:** frente Mapa
+- **Hito o paso:** 10, a pedido del usuario (R-91)
+- **Estado:** vigente (suma a MA-3 y D-141)
+
+**Contexto:** con once frentes, la barra del Mapa se llenaba de frentes terminados que no tienen nada para hacer y escondía los que sí.
+**Decisión:** un frente está **archivado** cuando está en uso (`hecho` en la tabla «Módulos»), su ruta no tiene nada que venga y no tiene trabajo aprobado sin lugar en la ruta. Los archivados no están en la barra; el interruptor «Archivados», arriba a la derecha y con su cuenta, los muestra después de los activos y en gris. Se recuerda por proyecto, como la pestaña elegida (D-145). En cuanto un archivado tiene algo que hacer (un paso nuevo en su ruta o una idea aprobada), vuelve solo a la barra. No se escribe nada en los documentos: es una forma de mirar.
+**Motivo:** el pedido del usuario; la barra muestra lo que tiene trabajo y lo terminado queda a un clic.
+**Consecuencias:** MA-3 suma su criterio; la prueba del Mapa (`ma2-mapa.spec.ts`) lo recorre con su captura.

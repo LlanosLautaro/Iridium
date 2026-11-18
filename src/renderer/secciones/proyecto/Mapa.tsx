@@ -2,7 +2,8 @@
 // barra con un frente por pestaña (el activo primero) y «Por empezar»; debajo, el camino del frente elegido (la pieza
 // Camino, PZ-15): lo hecho antes plegado, el último hecho, el que sigue resaltado y lo que viene, con sus ramas. Antes
 // del hito 10 o sin frentes, el camino son los hitos (D-142). La pestaña elegida se recuerda en la vista del proyecto
-// (D-145). Se relee solo cuando cambia un documento del proyecto, sin mover la pestaña ni lo desplegado.
+// (D-145). Se relee solo cuando cambia un documento del proyecto, sin mover la pestaña ni lo desplegado. Los frentes
+// en uso sin nada por hacer se archivan: no están en la barra salvo con «Archivados» prendido, y ahí van en gris (D-152).
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { FrenteMapa, MapaProyecto, PasoCamino, TrabajoMapa } from '../../../compartido/puente'
 import { usarEstado, vistaDe } from '../../estado'
@@ -23,6 +24,16 @@ const ESTADO_FRENTE: Record<FrenteMapa['estado'], string> = {
   otro: '',
 }
 
+/** En uso, sin nada que venga en la ruta ni trabajo aprobado sin lugar: no tiene nada por hacer (R-91, D-152). */
+export function archivado(f: FrenteMapa): boolean {
+  return (
+    f.estado === 'en uso' &&
+    !f.error &&
+    f.sinLugar.length === 0 &&
+    !f.pasos.some((p) => p.marca === 'viene' || p.marca === 'otro')
+  )
+}
+
 function useMapa(ruta: string): MapaProyecto | null {
   const [mapa, setMapa] = useState<MapaProyecto | null>(null)
   const leer = useCallback(() => {
@@ -38,26 +49,48 @@ export function Mapa({ ruta }: { ruta: string }) {
   const abrirDoc = usarEstado((s) => s.abrirDoc)
   const hito = m?.tipo === 'mapa' ? m.hito : null
   const documento = m?.tipo === 'mapa' ? m.documento : null
+  const archivados = m?.tipo === 'mapa' ? m.frentes.filter(archivado).length : 0
   return (
     <>
       <Cabecera
         titulo="Mapa"
         sub={hito && `Hito ${hito.numero}${hito.nombre ? ` · ${hito.nombre}` : ''}`}
         acciones={
-          documento && (
-            <button
-              type="button"
-              className="boton sin-fondo"
-              onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
-            >
-              <Icono nombre="docs" />
-              Abrir {nombreDoc(documento)}
-            </button>
-          )
+          <>
+            {archivados > 0 && <InterruptorArchivados ruta={ruta} cuenta={archivados} />}
+            {documento && (
+              <button
+                type="button"
+                className="boton sin-fondo"
+                onClick={() => abrirDoc(ruta, { documento, ancla: '' })}
+              >
+                <Icono nombre="docs" />
+                Abrir {nombreDoc(documento)}
+              </button>
+            )}
+          </>
         }
       />
       <CuerpoMapa ruta={ruta} m={m} />
     </>
+  )
+}
+
+/** Arriba a la derecha: muestra u oculta los frentes archivados; se recuerda en la vista del proyecto. */
+function InterruptorArchivados({ ruta, cuenta }: { ruta: string; cuenta: number }) {
+  const ver = usarEstado((s) => vistaDe(s.vistas, ruta).mapaArchivados)
+  const cambiarVista = usarEstado((s) => s.cambiarVista)
+  return (
+    <label className="interruptor" title="Los frentes en uso sin nada por hacer">
+      <input
+        type="checkbox"
+        role="switch"
+        aria-checked={ver}
+        checked={ver}
+        onChange={(e) => cambiarVista(ruta, { mapaArchivados: e.target.checked })}
+      />
+      Archivados <span className="cuenta">{cuenta}</span>
+    </label>
   )
 }
 
@@ -113,26 +146,40 @@ interface Pestana {
   clave: string
   nombre: string
   cuenta?: number
+  archivado?: boolean
 }
 
 function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
   const guardada = usarEstado((s) => vistaDe(s.vistas, ruta).pestanaMapa)
+  const verArchivados = usarEstado((s) => vistaDe(s.vistas, ruta).mapaArchivados)
   const cambiarVista = usarEstado((s) => s.cambiarVista)
   const cuenta = m.porEmpezar.frentes.length + m.porEmpezar.sinFrente.length
+  const activos = m.frentes.filter((f) => !archivado(f))
+  const archivados = verArchivados ? m.frentes.filter(archivado) : []
   const pestanas: Pestana[] = [
     ...(m.hitos ? [{ clave: HITOS, nombre: 'Hitos' }] : []),
-    ...m.frentes.map((f) => ({ clave: f.clave, nombre: f.nombre })),
+    ...activos.map((f) => ({ clave: f.clave, nombre: f.nombre })),
+    ...archivados.map((f) => ({
+      clave: f.clave,
+      nombre: f.nombre,
+      archivado: true,
+    })),
     ...(cuenta > 0 ? [{ clave: POR_EMPEZAR, nombre: 'Por empezar', cuenta }] : []),
   ]
   // La que se dejó; si ya no está, la primera: los hitos antes del 10, si no el frente activo (MA-3).
   const elegida = pestanas.find((p) => p.clave === guardada)?.clave ?? pestanas[0]?.clave ?? HITOS
   const elegir = (clave: string) => cambiarVista(ruta, { pestanaMapa: clave })
-  const frente = m.frentes.find((f) => f.clave === elegida)
+  const frente = m.frentes.find((f) => f.clave === elegida && pestanas.some((p) => p.clave === f.clave))
+  const todosArchivados = !m.hitos && m.frentes.length > 0 && activos.length === 0 && pestanas.length === 0
   return (
     <div className="mapa">
       <div className="mapa-int">
         {pestanas.length > 1 && <BarraFrentes pestanas={pestanas} elegida={elegida} elegir={elegir} />}
-        {elegida === POR_EMPEZAR ? (
+        {todosArchivados ? (
+          <p className="gris-mapa">
+            Todos los frentes están archivados: ninguno tiene nada por hacer. Prendé «Archivados» para verlos.
+          </p>
+        ) : elegida === POR_EMPEZAR ? (
           <PorEmpezar ruta={ruta} m={m} />
         ) : frente ? (
           <VistaFrente key={frente.clave} ruta={ruta} f={frente} />
@@ -187,7 +234,7 @@ function BarraFrentes({
           data-clave={p.clave}
           aria-selected={p.clave === elegida}
           tabIndex={p.clave === elegida ? 0 : -1}
-          className={`pestana${p.clave === elegida ? ' elegida' : ''}${p.clave === POR_EMPEZAR ? ' por-empezar' : ''}`}
+          className={`pestana${p.clave === elegida ? ' elegida' : ''}${p.clave === POR_EMPEZAR ? ' por-empezar' : ''}${p.archivado ? ' archivado' : ''}`}
           onClick={() => elegir(p.clave)}
         >
           {p.nombre}

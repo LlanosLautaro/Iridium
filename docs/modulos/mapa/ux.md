@@ -26,6 +26,7 @@
   - [ ] Un clic en una pestaña muestra ese frente; con el foco en la barra, las flechas pasan de una a otra.
   - [ ] Con muchos frentes la barra se desplaza de costado y la elegida queda a la vista.
   - [ ] Al volver al proyecto, el Mapa muestra la pestaña que se dejó; si ese frente ya no está, el activo.
+  - [ ] Un frente en uso sin nada por hacer (nada que venga en su ruta ni trabajo aprobado sin lugar) está archivado: no está en la barra. «Archivados», arriba a la derecha con su cuenta, los muestra después de los activos y en gris; se recuerda por proyecto (D-152, R-91).
 - **MA-4 —** Como usuario quiero ver lo de antes solo si lo pido, para que el foco quede en lo que sigue.
   - [ ] Los hechos anteriores al último van en una línea «N hechos antes»; un clic los despliega y otro los pliega.
   - [ ] Un paso hecho que nombra una iteración (`ID-I3`) abre su sección del `estado.md` del frente en Docs (sin mostrar el código).

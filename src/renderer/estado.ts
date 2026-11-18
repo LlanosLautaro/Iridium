@@ -86,6 +86,8 @@ export interface VistaProyecto {
   maqueta: string | null
   /** La pestaña elegida del Mapa (la clave de un frente, `hitos` o `por-empezar`); null = el frente activo (D-145). */
   pestanaMapa: string | null
+  /** El Mapa muestra también los frentes archivados: en uso y sin nada por hacer (R-91, D-152). */
+  mapaArchivados: boolean
 }
 
 const VISTA_INICIAL: VistaProyecto = {
@@ -102,6 +104,7 @@ const VISTA_INICIAL: VistaProyecto = {
   enBlanco: false,
   maqueta: null,
   pestanaMapa: null,
+  mapaArchivados: false,
 }
 
 /** Hasta dónde se recuerda para volver. */

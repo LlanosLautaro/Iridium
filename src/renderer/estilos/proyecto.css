@@ -149,6 +149,10 @@
 .barra-frentes .por-empezar {
   margin-left: auto;
 }
+/* Un frente archivado (en uso, sin nada por hacer; D-152): en gris, después de los activos */
+.barra-frentes .archivado:not(.elegida) {
+  color: var(--texto-3);
+}
 .cab-frente {
   display: flex;
   align-items: baseline;

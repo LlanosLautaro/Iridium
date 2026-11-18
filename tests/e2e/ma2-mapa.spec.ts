@@ -163,9 +163,10 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const mapa = await alMapa(win)
   await expect(mapa.locator('.cab-seccion')).toContainText('Hito 10 · Operación')
-  // El activo primero, después en el orden de la tabla y «Por empezar» con su cuenta (MA-3).
+  // El activo primero, después en el orden de la tabla y «Por empezar» con su cuenta (MA-3); Notas, en uso y con
+  // todo hecho, está archivada (D-152).
   const barra = mapa.getByRole('tablist', { name: 'Frentes' })
-  await expect(barra.getByRole('tab')).toHaveText(['Galería', 'Notas', 'Avisos', 'Por empezar3'])
+  await expect(barra.getByRole('tab')).toHaveText(['Galería', 'Avisos', 'Por empezar3'])
   await expect(barra.getByRole('tab', { name: 'Galería' })).toHaveAttribute('aria-selected', 'true')
 
   const frente = mapa.getByRole('region', { name: 'Galería' })
@@ -216,6 +217,13 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   const avisos = mapa.getByRole('region', { name: 'Avisos' })
   await expect(avisos.locator('.estado-frente')).toHaveText('En pausa')
   await expect(avisos.locator('.tramo.pausa')).toHaveText(/Sonar al terminar\s*En pausa/)
+  // «Archivados», arriba a la derecha, la muestra después de los activos y en gris; se recuerda (R-91, D-152).
+  const archivados = mapa.getByRole('switch')
+  await expect(mapa.locator('.cab-seccion')).toContainText('Archivados 1')
+  await archivados.check()
+  await expect(barra.getByRole('tab')).toHaveText(['Galería', 'Avisos', 'Notas', 'Por empezar3'])
+  await expect(barra.getByRole('tab', { name: 'Notas' })).toHaveClass(/archivado/)
+  await win.screenshot({ path: 'test-results/ma2-mapa-archivados.png' })
   await barra.getByRole('tab', { name: 'Notas' }).click()
   const notas = mapa.getByRole('region', { name: 'Notas' })
   await expect(notas.locator('.estado-frente')).toHaveText('En uso')
@@ -303,6 +311,7 @@ test('MA-12: un frente sin su estado.md muestra el error en su pestaña; al camb
   await expect(avisos.locator('.camino')).toHaveCount(0)
   await expect(barra.getByRole('tab', { name: 'Avisos' })).toHaveAttribute('aria-selected', 'true')
   await win.screenshot({ path: 'test-results/ma3-mapa-error.png' })
+  await mapa.getByRole('switch').check()
   await barra.getByRole('tab', { name: 'Notas' }).click()
   await expect(mapa.getByRole('region', { name: 'Notas' })).toContainText('Todo hecho por ahora')
   await app.close()
@@ -430,9 +439,9 @@ Usarla.
     const mapa = await alMapa(win)
     const barra = mapa.getByRole('tablist', { name: 'Frentes' })
     expect(await barra.evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(true)
-    // Con las flechas hasta el último frente: la barra corre y la elegida se ve.
+    // Con las flechas hasta el último frente (Notas, archivada, no está): la barra corre y la elegida se ve.
     await barra.getByRole('tab', { name: 'Galería' }).focus()
-    for (let i = 0; i < nombres.length + 2; i++) await win.keyboard.press('ArrowRight')
+    for (let i = 0; i < nombres.length + 1; i++) await win.keyboard.press('ArrowRight')
     const ultima = barra.getByRole('tab', { name: nombres.at(-1) ?? '' })
     await expect(ultima).toHaveAttribute('aria-selected', 'true')
     await expect(ultima).toBeInViewport({ ratio: 0.9 })
