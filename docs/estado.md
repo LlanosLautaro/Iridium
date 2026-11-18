@@ -42,7 +42,7 @@
 | Abrir (T-80) | sección | 1. Propuesta (detrás de Plantillas, D-148) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso «Mientras no estabas», el detalle del uso y la línea de la conversación). Espera tu prueba de una noche (Q-210); mientras, se abre el frente Plantillas.
+**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso «Mientras no estabas», el detalle del uso y la línea de la conversación). Espera tu prueba de una noche (Q-210). Qué frente a medio cerrar va primero (Diseño, Orden o seguir con Plantillas), en Q-211.
 El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. T-81 aprobada (D-150): frente Plantillas, piezas por tipo de app que empiezan por las pruebas sin ventanas; va antes de Abrir. Los avisos de `pnpm audit`, en T-79.
 En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -62,12 +62,16 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
+- **Q-211 — ¿Qué frente a medio cerrar atacamos primero?**
+  Tipo: decisión · frena
+  Contexto: pediste atacar los frentes a medio cerrar. Arranque (Q-210) y Compartir (Q-185) solo esperan tu prueba o tarea. Diseño está a medio pasar al código (DI-I3: faltan Skills, Revisión, Docs, Archivos, Git, Scripts y Ajustes, más T-58, T-53 y DI-I4), y Orden solo espera su paso 8 (Calidad), que D-102 dejó detrás del rediseño para no medir una interfaz que va a cambiar. Terminar Diseño destraba Orden: cierra dos frentes de una.
+  Opciones: A) Diseño completo: las secciones que faltan, de a una tanda (Skills primero), y después Orden mide todo (recomendada: cierra los dos frentes y la app queda pareja) · B) Diseño recortado: Skills y T-58, DI-I3 por hecha, DI-I4 en pausa, y enseguida Orden (más rápido; las secciones de uso raro quedan con el estilo de antes) · C) Seguir el plan: Plantillas primero (D-150), Diseño y Orden después
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Plantillas (T-81): abrir el frente y escribir su propuesta (paso 1): qué es una pieza, dónde vive en el framework, dónde se anota el tipo de app (el mismo dato que Abrir, D-148) y la primera, las pruebas sin ventanas a la vista. Arranque espera Q-210.
-**Leer antes:** `decisiones.md` › D-150 y D-072; `trabajo.md` › T-81; `recursos/plugins/iridium/skills/iridium/referencias/modulos.md` › el paso 1.
+Según Q-211: con A o B, Diseño retoma DI-I3 por la tanda 9 (Skills: `docs/diseno/pantallas/skills.html` al código); con C, Plantillas (T-81) y su propuesta (paso 1). Arranque espera Q-210.
+**Leer antes:** con A o B, `modulos/diseno/estado.md` › Próximo paso y lo que pide; con C, `decisiones.md` › D-150 y D-072, `trabajo.md` › T-81.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
