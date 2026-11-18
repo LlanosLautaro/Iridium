@@ -1,7 +1,7 @@
 // R-I2 de la Revisión (modulos/revision/diseno-tecnico.md › Pruebas): Edge con la extensión sobre una app de prueba e
 // Iridium con datos aparte y el motor falso. Enviar ahora sin sesión y con el proyecto abierto (el mensaje entra a la
 // conversación como tarjeta); la sección Revisión con su contador, la lista, el detalle, el enlace a Archivos en la
-// línea; la IA lo cierra y pasa a Cerrados; se reabre con una nota; un proyecto Electron sin la línea.
+// línea; la IA lo cierra y pasa a Hechos; se reabre con una nota; un proyecto Electron sin la línea.
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import {
@@ -158,19 +158,19 @@ test('Revisión en Iridium: el contador en gris, la lista con la captura y el de
   await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 1 abierto/)
   await expect(botonRevision().locator('.punto')).not.toHaveClass(/ambar/)
   await botonRevision().click()
-  const fila = seccion().locator('.fila-com', { hasText: 'R-1' })
+  const fila = seccion().locator('.rv-fila', { hasText: 'R-1' })
   await expect(fila).toContainText('el botón queda muy pegado')
   await expect(fila).toContainText('Tarjeta.jsx:')
   await expect(fila.locator('.cap img')).toBeVisible()
-  await expect(seccion().getByRole('group', { name: 'Grupo' })).toContainText('Abiertos 1')
-  await expect(seccion().locator('.ext-est')).toContainText('conectada por última vez hoy')
+  await expect(seccion().getByRole('group', { name: 'Grupo' })).toContainText('Nuevos 1')
+  await expect(seccion().locator('.rv-ayuda')).toHaveAttribute('aria-label', /conectada por última vez hoy/)
   await win.screenshot({ path: join(SALIDA, 'revision-r2-lista.png') })
 
-  await fila.click()
-  await expect(seccion().locator('.det-barra')).toContainText('R-1')
-  await expect(seccion().locator('.det-barra')).toContainText('abierto')
-  await expect(seccion().locator('.historia li')).toHaveCount(1)
-  await expect(seccion().locator('.historia')).toContainText('dejado')
+  await fila.locator('.rv-abrir').click()
+  await expect(seccion().locator('.rv-barra')).toContainText('R-1')
+  await expect(seccion().locator('.rv-barra')).toContainText('nuevo')
+  await expect(seccion().locator('.rv-historia li')).toHaveCount(1)
+  await expect(seccion().locator('.rv-historia')).toContainText('dejado')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-detalle.png') })
 
   // El archivo y la línea abren Archivos con esa línea marcada; Atrás vuelve al comentario.
@@ -180,7 +180,7 @@ test('Revisión en Iridium: el contador en gris, la lista con la captura y el de
   await expect(archivos.locator('.visor-codigo .marcada')).toContainText('<button')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-archivo.png') })
   await archivos.getByRole('button', { name: 'Atrás' }).click()
-  await expect(seccion().locator('.det-barra')).toContainText('R-1')
+  await expect(seccion().locator('.rv-barra')).toContainText('R-1')
 })
 
 test('Enviar ahora desde la app con el proyecto abierto: entra a la conversación como tarjeta', async () => {
@@ -207,16 +207,16 @@ test('Enviar ahora desde la app con el proyecto abierto: entra a la conversació
 
   // Tocar la tarjeta abre el comentario en Revisión.
   await com.click()
-  await expect(seccion().locator('.det-barra')).toContainText('R-2')
-  await expect(seccion().locator('.historia')).toContainText('enviado a la sesión')
+  await expect(seccion().locator('.rv-barra')).toContainText('R-2')
+  await expect(seccion().locator('.rv-historia')).toContainText('enviado a la sesión')
 })
 
-test('Enviar ahora desde Revisión, la IA lo cierra y pasa a Cerrados; se reabre con una nota', async () => {
+test('Mandar a la IA desde Revisión, la IA lo cierra y pasa a Hechos; se reabre con una nota', async () => {
   // Atrás vuelve un paso: de R-2 (abierto desde la conversación) a R-1, que se miraba antes.
   await seccion().getByRole('button', { name: 'Atrás' }).click()
-  await expect(seccion().locator('.det-barra .cod-r')).toHaveText('R-1')
-  await seccion().getByRole('button', { name: 'Enviar ahora' }).click()
-  await expect(seccion().locator('.det-barra')).toContainText('enviado a la sesión de Alfa')
+  await expect(seccion().locator('.rv-barra .rv-codigo')).toHaveText('R-1')
+  await seccion().getByRole('button', { name: 'Mandar a la IA' }).click()
+  await expect(seccion().locator('.rv-barra')).toContainText('enviado a la sesión de Alfa')
   await expect(win.locator('.hilo .msg-com')).toHaveCount(2)
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).not.toContainText('Trabajando', {
     timeout: 15_000,
@@ -231,38 +231,39 @@ test('Enviar ahora desde Revisión, la IA lo cierra y pasa a Cerrados; se reabre
       .replace('**Estado:** abierto', '**Estado:** cerrado')
       .trimEnd()}\n- 2026-10-29 15:05 — cerrado por la IA: separó el título con 12 px\n`,
   )
-  await expect(seccion().locator('.det-barra')).toContainText('cerrado')
-  await expect(seccion().locator('.historia li.cerro')).toContainText('separó el título con 12 px')
+  await expect(seccion().locator('.rv-barra')).toContainText('hecho')
+  await expect(seccion().locator('.rv-historia li.cerro')).toContainText('separó el título con 12 px')
   await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 1 abierto/)
 
   await seccion().getByRole('button', { name: 'Atrás' }).click()
   await seccion()
-    .getByRole('button', { name: /^Cerrados/ })
+    .getByRole('button', { name: /^Hechos/ })
     .click()
-  const cerrado = seccion().locator('.fila-com', { hasText: 'R-1' })
-  await expect(cerrado.locator('.senal')).toContainText('cerrado')
-  await expect(cerrado.locator('.hizo')).toContainText('separó el título con 12 px')
+  const cerrado = seccion().locator('.rv-fila', { hasText: 'R-1' })
+  await expect(cerrado.locator('.rv-hizo')).toContainText('separó el título con 12 px')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-cerrados.png') })
 
-  await cerrado.click()
+  await cerrado.locator('.rv-abrir').click()
   await seccion().getByRole('button', { name: 'Reabrir' }).click()
-  await seccion().locator('.reabrir textarea').fill('en el celular sigue chico')
+  await seccion().locator('.rv-reabrir textarea').fill('en el celular sigue chico')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-reabrir.png') })
-  await seccion().locator('.reabrir').getByRole('button', { name: 'Reabrir' }).click()
-  await expect(seccion().locator('.det-barra')).toContainText('abierto')
-  await expect(seccion().locator('.historia')).toContainText('reabierto: en el celular sigue chico')
+  await seccion().locator('.rv-reabrir').getByRole('button', { name: 'Reabrir' }).click()
+  await expect(seccion().locator('.rv-barra')).toContainText('nuevo')
+  await expect(seccion().locator('.rv-historia')).toContainText('reabierto: en el celular sigue chico')
   await expect(botonRevision()).toHaveAttribute('aria-label', /^Revisión, 2 abierto/)
   expect(await readFile(r1, 'utf8')).toMatch(
     /\*\*Estado:\*\* abierto[\s\S]*— reabierto: en el celular sigue chico/,
   )
   await seccion().getByRole('button', { name: 'Atrás' }).click()
   await seccion()
-    .getByRole('button', { name: /^Abiertos/ })
+    .getByRole('button', { name: /^Nuevos/ })
     .click()
-  await expect(seccion().locator('.fila-com', { hasText: 'R-1' }).locator('.reab')).toContainText('reabierto')
+  await expect(seccion().locator('.rv-fila', { hasText: 'R-1' }).locator('.rv-reabierto')).toContainText(
+    'reabierto',
+  )
 })
 
-test('R-9: lo que la IA deja para después queda en Anotados, no en Cerrados ni entre los abiertos', async () => {
+test('R-9: lo que la IA deja para después queda en Anotados, no en Hechos ni entre los abiertos', async () => {
   const r1 = join(revisionAlfa(), 'R-1.md')
   const md = await readFile(r1, 'utf8')
   await writeFile(
@@ -275,14 +276,13 @@ test('R-9: lo que la IA deja para después queda en Anotados, no en Cerrados ni 
   await seccion()
     .getByRole('button', { name: /^Anotados/ })
     .click()
-  const anotado = seccion().locator('.fila-com', { hasText: 'R-1' })
-  await expect(anotado.locator('.senal')).toContainText('anotado')
-  await expect(anotado.locator('.hizo.anotado')).toContainText('Backlog (Should)')
-  await expect(seccion().getByRole('button', { name: /^Cerrados/ })).toContainText('0')
+  const anotado = seccion().locator('.rv-fila', { hasText: 'R-1' })
+  await expect(anotado.locator('.rv-hizo.anotado')).toContainText('Backlog (Should)')
+  await expect(seccion().getByRole('button', { name: /^Hechos/ })).toContainText('0')
   await win.screenshot({ path: join(SALIDA, 'revision-r9-anotados.png') })
-  await anotado.click()
-  await expect(seccion().locator('.det-barra')).toContainText('anotado')
-  await expect(seccion().getByRole('button', { name: 'Enviar ahora' })).toBeVisible()
+  await anotado.locator('.rv-abrir').click()
+  await expect(seccion().locator('.rv-barra')).toContainText('anotado')
+  await expect(seccion().getByRole('button', { name: 'Mandar a la IA' })).toBeVisible()
   await seccion().getByRole('button', { name: 'Atrás' }).click()
 })
 
@@ -290,11 +290,11 @@ test('un proyecto Electron sin la línea: Revisión lo dice y Pedírselo a la IA
   await win.getByRole('button', { name: /^Inicio/ }).click()
   await win.locator('.tarjeta', { hasText: 'Gamma' }).click()
   await botonRevision().click()
-  await expect(seccion().locator('.rev-vacio h2')).toHaveText('Todavía no hay comentarios')
-  await expect(seccion().locator('.electron')).toContainText('Esta app es Electron')
+  await expect(seccion().locator('.rv-vacia strong')).toHaveText('Sin comentarios')
+  await expect(seccion().locator('.rv-electron')).toContainText('Esta app es Electron')
   await seccion().getByRole('button', { name: 'Pedírselo a la IA' }).click()
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
-  await expect(campo).toHaveValue(/Agregá al proceso principal de la app la línea de la Revisión de Iridium/)
+  await expect(campo).toHaveValue(/Agrega al proceso principal de la app la línea de la Revisión de Iridium/)
   await expect(campo).toBeFocused()
   await win.screenshot({ path: join(SALIDA, 'revision-r2-electron.png') })
   // No se envió: no hay conversación ni sesión trabajando.

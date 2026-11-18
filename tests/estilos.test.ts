@@ -203,7 +203,6 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
     'cab-proyecto',
     'interruptor-arch',
   ],
-  'revision.css': ['reabrir', 'fila-com', 'rev-vacio'],
   'uso.css': ['menu-boton', 'medidor', 'menu-lista', 'dialogo', 'velo-dialogo'],
 }
 
@@ -211,11 +210,11 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--lateral': 2,
   '--barra': 1,
-  '--caja': 19,
+  '--caja': 14,
   '--medidor-fondo': 5,
-  '--primario': 20,
-  '--primario-texto': 6,
-  '--ok': 12,
+  '--primario': 18,
+  '--primario-texto': 5,
+  '--ok': 10,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,

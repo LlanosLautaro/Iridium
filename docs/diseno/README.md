@@ -9,8 +9,8 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Proyectos archivados | Inicio | pantallas/archivados.html | — |
 | Nuevo proyecto | Inicio | pantallas/nuevo-proyecto.html | — |
 | Eliminar un proyecto | Inicio | pantallas/eliminar.html | — |
-| Skills › Framework | Inicio | pantallas/skills.html | — |
-| Detalle de una skill | Inicio | pantallas/skill.html | — |
+| Skills › Framework | Inicio | pantallas/skills.html | 2026-11-18 15:21 |
+| Detalle de una skill | Inicio | pantallas/skill.html | 2026-11-18 15:21 |
 | Ideas | Inicio | pantallas/ideas.html | — |
 | Ajustes | Inicio | pantallas/ajustes.html | — |
 | A · Notas | Ideas de un proyecto (propuesta) | pantallas/ideas-proyecto-a.html | — |
@@ -21,8 +21,8 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Antes del hito 10 (los hitos) | Mapa (propuesta) | pantallas/mapa-hitos.html | 2026-11-18 00:48 |
 | Bandeja de entrada | Un proyecto | pantallas/bandeja.html | — |
 | Mapa | Un proyecto | pantallas/mapa.html | — |
-| Revisión | Un proyecto | pantallas/revision.html | — |
-| Revisión sin comentarios | Un proyecto | pantallas/revision-vacia.html | — |
+| Revisión | Un proyecto | pantallas/revision.html | 2026-11-18 19:45 |
+| Revisión sin comentarios | Un proyecto | pantallas/revision-vacia.html | 2026-11-18 19:45 |
 | Diseño | Un proyecto | pantallas/diseno.html | — |
 | Diseño › una maqueta grande | Un proyecto | pantallas/diseno-grande.html | — |
 | Diseño › Sistema | Un proyecto | pantallas/diseno-sistema.html | — |

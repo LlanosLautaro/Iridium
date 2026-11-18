@@ -1,7 +1,8 @@
-// Revisión (modulos/revision/ux.md › W-R3, H-R5, H-R7): los comentarios que el usuario dejó sobre la app, en Abiertos,
-// Anotados (R-9: quedaron en un plan, sin hacer) y Cerrados, del más nuevo al más viejo. Uno elegido se ve entero: la
-// captura grande, el texto, las pistas y su historia; un abierto o anotado se puede Enviar ahora y un cerrado, Reabrir
-// con una nota. La lista se relee sola cuando la IA cierra uno.
+// Revisión (modulos/revision/ux.md › W-R3, H-R5, H-R7; DI-I3, tanda 10: las maquetas revision.html y
+// revision-vacia.html): los comentarios que el usuario dejó sobre la app, en Nuevos, Anotados (R-9: quedaron en un plan,
+// sin hacer), Hechos y Todos, del más nuevo al más viejo. Cada uno es una Fila con su captura; uno nuevo o anotado se
+// puede mandar a la IA desde la fila. Uno elegido se ve entero: la captura grande, el texto, las pistas y su historia;
+// uno hecho se puede Reabrir con una nota. La lista se relee sola cuando la IA cierra uno.
 // Nada se borra desde acá.
 import { useCallback, useEffect, useState } from 'react'
 import type { ListaComentarios, ResultadoEnvio, VistaComentario } from '../../../compartido/puente'
@@ -33,15 +34,18 @@ export function fechaComentario(f: string | null, conHora = false): string {
 }
 
 function fechaConexion(iso: string | null): string {
-  if (!iso) return 'nunca conectada'
+  if (!iso) return 'nunca se conectó'
   const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return 'nunca conectada'
+  if (Number.isNaN(d.getTime())) return 'nunca se conectó'
   const local = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
   return `conectada por última vez ${fechaComentario(local, true)}`
 }
 
 /** El archivo sin carpetas, para la fila: `Tarjeta.jsx:6`. */
 const corto = (a: { ruta: string; linea: number }) => `${a.ruta.split('/').at(-1)}:${a.linea}`
+
+/** La maqueta como la nombra la sección Diseño: `pantallas/mapa.html` → `mapa.html`. */
+const maquetaCorta = (ruta: string) => ruta.replace(/^docs\/diseno\//, '').replace(/^pantallas\//, '')
 
 export function useCaptura(ruta: string, codigo: string, conCaptura: boolean): string | null | undefined {
   const clave = `${ruta}|${codigo}`
@@ -91,82 +95,150 @@ export function Captura({
   )
 }
 
-function Fila({ ruta, c }: { ruta: string; c: VistaComentario }) {
-  const abrirComentario = usarEstado((s) => s.abrirComentario)
-  const cerrado = c.estado === 'cerrado'
-  const anotado = c.estado === 'anotado'
+/** Cómo está un comentario, con las palabras de los filtros. */
+function Estado({ c, conFecha = false }: { c: VistaComentario; conFecha?: boolean }) {
+  if (c.estado === 'cerrado')
+    return (
+      <span className="senal verde">
+        <Icono nombre="check" />
+        hecho{conFecha && c.cierre ? ` ${fechaComentario(c.cierre.fecha)}` : ''}
+      </span>
+    )
+  if (c.estado === 'anotado')
+    return (
+      <span className="senal" title="Quedó en un plan: se cierra cuando esté hecho">
+        <Icono nombre="docs" />
+        anotado{conFecha && c.anotacion ? ` ${fechaComentario(c.anotacion.fecha)}` : ''}
+      </span>
+    )
   return (
-    <button type="button" className="fila-com" onClick={() => abrirComentario(ruta, c.codigo)}>
-      <Captura ruta={ruta} codigo={c.codigo} conCaptura={c.conCaptura} />
-      <div>
-        <div className="txt">{c.texto}</div>
-        <div className="donde">
-          {c.maqueta ? (
-            <>
-              <code>{c.maqueta.ruta.replace(/^docs\/diseno\//, '')}</code>
-              {!c.maqueta.existe && <span>· la maqueta ya no está</span>}
-            </>
-          ) : c.archivo ? (
-            <>
-              <code>{corto(c.archivo)}</code>
-              {!c.archivo.existe && <span>· el archivo ya no está</span>}
-            </>
-          ) : (
-            <span>{c.pagina ?? 'sin archivo ni página'}</span>
-          )}
-          {(cerrado || anotado) && c.dejado && <span>· dejado {fechaComentario(c.dejado)}</span>}
-        </div>
-        {c.cierre?.que && (
-          <div className="hizo">
-            <Icono nombre="check" />
-            <span>{c.cierre.que}</span>
-          </div>
-        )}
-        {c.anotacion?.que && (
-          <div className="hizo anotado">
-            <Icono nombre="docs" />
-            <span>{c.anotacion.que}</span>
-          </div>
-        )}
-      </div>
-      <div className="meta-der">
-        {cerrado ? (
-          <span className="senal">
-            <Icono nombre="check" />
-            cerrado{c.cierre ? ` ${fechaComentario(c.cierre.fecha)}` : ''}
+    <span className="senal">
+      <Icono nombre="circulo" />
+      nuevo
+    </span>
+  )
+}
+
+/** Mandar el comentario a la sesión del proyecto: si la IA trabaja, entra en su turno. */
+function useMandar(ruta: string, codigo: string) {
+  const [envio, setEnvio] = useState<ResultadoEnvio | 'enviando' | null>(null)
+  const mandar = async () => {
+    setEnvio('enviando')
+    setEnvio(await window.iridium.enviarComentario(ruta, codigo).catch(() => 'no-existe' as const))
+  }
+  return { envio, mandar, reiniciar: () => setEnvio(null) }
+}
+
+/** Lo que pasó al mandarlo, como señal; o el botón, si todavía no se mandó (o falló). */
+function Mandar({
+  envio,
+  mandar,
+  nombre,
+}: {
+  envio: ResultadoEnvio | 'enviando' | null
+  mandar: () => void
+  nombre: string
+}) {
+  if (envio === 'enviado')
+    return (
+      <span className="senal verde" role="status">
+        <Icono nombre="check" />
+        enviado a la sesión de {nombre}
+      </span>
+    )
+  if (envio === 'sin-sesion')
+    return (
+      <span className="senal" role="status">
+        <Icono nombre="espera" />
+        sin sesión abierta: la IA lo ve al empezar
+      </span>
+    )
+  return (
+    <>
+      {envio === 'no-existe' && (
+        <span className="senal rojo" role="alert">
+          <Icono nombre="error" />
+          no se pudo enviar
+        </span>
+      )}
+      <button
+        type="button"
+        className="boton sin-fondo chico"
+        disabled={envio === 'enviando'}
+        title="Mandarlo a la sesión de este proyecto: si la IA trabaja, entra en su turno"
+        onClick={mandar}
+      >
+        Mandar a la IA
+      </button>
+    </>
+  )
+}
+
+function Fila({
+  ruta,
+  c,
+  nombre,
+  conEstado,
+}: {
+  ruta: string
+  c: VistaComentario
+  nombre: string
+  conEstado: boolean
+}) {
+  const abrirComentario = usarEstado((s) => s.abrirComentario)
+  const { envio, mandar } = useMandar(ruta, c.codigo)
+  const cerrado = c.estado === 'cerrado'
+  return (
+    <li className="fila se-abre rv-fila" data-codigo={c.codigo}>
+      <button type="button" className="rv-abrir" onClick={() => abrirComentario(ruta, c.codigo)}>
+        <Captura ruta={ruta} codigo={c.codigo} conCaptura={c.conCaptura} />
+        <span className="rv-texto">
+          <span className="cuenta">
+            {c.codigo} · {fechaComentario(c.dejado, true)}
+            {c.reabierto && <span className="rv-reabierto"> · reabierto</span>}
           </span>
-        ) : anotado ? (
-          <span className="senal" title="Quedó en un plan: se cierra cuando esté hecho">
-            <Icono nombre="docs" />
-            anotado{c.anotacion ? ` ${fechaComentario(c.anotacion.fecha)}` : ''}
+          <span className="rv-dicho">{c.texto}</span>
+          <span className="rv-donde">
+            {c.maqueta ? (
+              <>
+                la maqueta <code>{maquetaCorta(c.maqueta.ruta)}</code>
+                {!c.maqueta.existe && ' · ya no está'}
+              </>
+            ) : c.archivo ? (
+              <>
+                <code>{corto(c.archivo)}</code>
+                {!c.archivo.existe && ' · el archivo ya no está'}
+              </>
+            ) : (
+              (c.pagina ?? 'sin archivo ni página')
+            )}
           </span>
-        ) : (
-          <time>{fechaComentario(c.dejado)}</time>
-        )}
-        <span className="cod-r">{c.codigo}</span>
-        {c.reabierto && (
-          <span className="reab">
-            <Icono nombre="reabrir" />
-            reabierto
-          </span>
-        )}
-      </div>
-    </button>
+          {c.cierre?.que && <span className="rv-hizo">{c.cierre.que.replace(/`/g, '')}</span>}
+          {c.anotacion?.que && <span className="rv-hizo anotado">{c.anotacion.que.replace(/`/g, '')}</span>}
+        </span>
+      </button>
+      {conEstado && <Estado c={c} />}
+      {!cerrado && (
+        <span className={envio ? 'acciones siempre' : 'acciones'}>
+          <Mandar envio={envio} mandar={() => void mandar()} nombre={nombre} />
+        </span>
+      )}
+    </li>
   )
 }
 
 function Ilegible({ nombre }: { nombre: string }) {
   return (
-    <div className="fila-com rota">
-      <div>
-        <b>
-          <Icono nombre="espera" />
-          No se pudo leer este comentario
-        </b>{' '}
-        · <code>docs/revision/{nombre}</code>: le falta el título o la línea del estado. El resto se muestra
-        igual.
-      </div>
-    </div>
+    <li className="recuadro error rv-ilegible" role="alert">
+      <Icono nombre="error" />
+      <span className="cuerpo-recuadro">
+        <strong>No se pudo leer este comentario</strong>
+        <span>
+          <code>docs/revision/{nombre}</code>: le falta el título o la línea del estado. El resto se muestra
+          igual.
+        </span>
+      </span>
+    </li>
   )
 }
 
@@ -174,28 +246,43 @@ function Ilegible({ nombre }: { nombre: string }) {
 function AvisoElectron({ ruta }: { ruta: string }) {
   const escribirEnCampo = usarEstado((s) => s.escribirEnCampo)
   return (
-    <div className="electron">
+    <div className="recuadro aviso rv-electron" role="note">
       <Icono nombre="atomo" />
-      <div>
-        <b>Esta app es Electron y todavía no carga la extensión.</b>
-        <p>
+      <div className="cuerpo-recuadro">
+        <strong>Esta app es Electron y todavía no carga la extensión</strong>
+        <span>
           Hace falta una línea en el arranque de la app. Si Iridium no está instalado, la línea no hace nada.
-        </p>
+        </span>
+        <div className="acciones-recuadro">
+          <button
+            type="button"
+            className="boton secundario chico"
+            title="Escribe el pedido en la conversación, sin enviarlo"
+            onClick={() =>
+              escribirEnCampo(
+                ruta,
+                'Agrega al proceso principal de la app la línea de la Revisión de Iridium, como pide el framework (referencias/07-construccion.md › Antes de empezar).',
+              )
+            }
+          >
+            Pedírselo a la IA
+          </button>
+        </div>
       </div>
-      <button
-        type="button"
-        className="boton sin-fondo chico"
-        title="Escribe el pedido en la conversación, sin enviarlo"
-        onClick={() =>
-          escribirEnCampo(
-            ruta,
-            'Agregá al proceso principal de la app la línea de la Revisión de Iridium, como pide la guía hitos-desarrollo-app (references/07-construccion.md › Revisión de Iridium).',
-          )
-        }
-      >
-        Pedírselo a la IA
-      </button>
     </div>
+  )
+}
+
+/** La «i» de la cabecera: cómo se comenta y cómo está la extensión (D-108: no ocupa lugar si anda). */
+function Ayuda({ extension }: { extension: string | null }) {
+  const ayuda = `F8 activa el modo comentar en cualquier pantalla de la app. Extensión: ${fechaConexion(extension)}.`
+  return (
+    <button type="button" className="info rv-ayuda" aria-label={ayuda}>
+      <Icono nombre="duda" />
+      <span className="globo" aria-hidden="true">
+        {ayuda}
+      </span>
+    </button>
   )
 }
 
@@ -203,35 +290,27 @@ function Vacio({ ruta, l }: { ruta: string; l: Extract<ListaComentarios, { tipo:
   return (
     <>
       <Cabecera titulo="Revisión" />
-      <div className="rev-vacio">
+      <div className="rv-contenido">
         {l.electron.esElectron && !l.electron.cargaLinea && <AvisoElectron ruta={ruta} />}
-        <h2>Todavía no hay comentarios</h2>
-        <p>
-          Abrí la app en modo desarrollo y apretá <kbd>F8</kbd>. Señalás una parte, escribís qué le pasa y
-          llega acá.
-        </p>
-        <ol className="pasos">
-          <li>
-            <span>1</span>
-            <div>
-              Instalá la extensión una vez en Chrome o Edge: en el <code>scripts.md</code> de Iridium,
-              «Instalar la extensión de Revisión».
-            </div>
-          </li>
-          <li>
-            <span>2</span>
-            <div>
-              Abrí la app en modo desarrollo (<code>localhost</code>, o la app Electron con la línea).
-            </div>
-          </li>
-          <li>
-            <span>3</span>
-            <div>Con Iridium abierto, apretá F8 o el botón de la extensión.</div>
-          </li>
-        </ol>
-        <div className="conexion">
-          <Icono nombre="enchufe" />
-          Extensión: {fechaConexion(l.extension)}
+        <div className="recuadro vacio rv-vacia">
+          <strong>Sin comentarios</strong>
+          <span>
+            Pulsa <kbd>F8</kbd> en cualquier pantalla de la app y toca lo que quieras cambiar.
+          </span>
+          {l.extension ? (
+            <span className="rv-extension">Extensión: {fechaConexion(l.extension)}</span>
+          ) : (
+            <ol className="rv-pasos">
+              <li>
+                Instala la extensión una vez en Chrome o Edge: en los Scripts de Iridium, «Instalar la
+                extensión de Revisión».
+              </li>
+              <li>
+                Abre la app en modo desarrollo (<code>localhost</code>, o la app Electron con la línea).
+              </li>
+              <li>Con Iridium abierto, pulsa F8 o el botón de la extensión.</li>
+            </ol>
+          )}
         </div>
       </div>
     </>
@@ -254,40 +333,44 @@ function Reabrir({ ruta, codigo, cerrar }: { ruta: string; codigo: string; cerra
     }
   }
   return (
-    <div className="reabrir">
-      <label htmlFor={`nota-${codigo}`}>
-        ¿Qué falta? <span className="opc">(opcional)</span>
-      </label>
-      <textarea
-        id={`nota-${codigo}`}
-        // biome-ignore lint/a11y/noAutofocus: se abre al tocar Reabrir, para escribir enseguida.
-        autoFocus
-        placeholder="Por ejemplo: en el celular sigue chico"
-        value={nota}
-        onChange={(e) => setNota(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && e.ctrlKey) void confirmar()
-          if (e.key === 'Escape') cerrar()
-        }}
-      />
-      {error && (
-        <p className="mal" role="alert">
-          No se pudo reabrir: {error}
-        </p>
-      )}
-      <div className="pie">
-        <button type="button" className="boton sin-fondo chico" onClick={cerrar}>
-          Cancelar
-        </button>
-        <button
-          type="button"
-          className="boton secundario chico"
-          disabled={enviando}
-          onClick={() => void confirmar()}
-        >
-          <Icono nombre="reabrir" />
-          Reabrir
-        </button>
+    <div className="recuadro rv-reabrir">
+      <div className="cuerpo-recuadro">
+        <label className="etiqueta-campo">
+          <span>
+            ¿Qué falta? <span className="rv-opcional">(opcional)</span>
+          </span>
+          <textarea
+            className="area"
+            // biome-ignore lint/a11y/noAutofocus: se abre al tocar Reabrir, para escribir enseguida.
+            autoFocus
+            placeholder="Por ejemplo: en el celular sigue chico"
+            value={nota}
+            onChange={(e) => setNota(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.ctrlKey) void confirmar()
+              if (e.key === 'Escape') cerrar()
+            }}
+          />
+        </label>
+        {error && (
+          <span className="senal rojo" role="alert">
+            No se pudo reabrir: {error}
+          </span>
+        )}
+        <div className="acciones-recuadro">
+          <button type="button" className="boton sin-fondo chico" onClick={cerrar}>
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="boton secundario chico"
+            disabled={enviando}
+            onClick={() => void confirmar()}
+          >
+            <Icono nombre="reabrir" />
+            Reabrir
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -308,86 +391,38 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
   const abrirArchivo = usarEstado((s) => s.abrirArchivo)
   const abrirMaqueta = usarEstado((s) => s.abrirMaqueta)
   const [reabriendo, setReabriendo] = useState(false)
-  const [envio, setEnvio] = useState<ResultadoEnvio | 'enviando' | null>(null)
+  const { envio, mandar, reiniciar } = useMandar(ruta, c.codigo)
   const cerrado = c.estado === 'cerrado'
   // Si cambia de estado (la IA lo cerró, o se reabrió), las acciones vuelven a empezar.
   // biome-ignore lint/correctness/useExhaustiveDependencies: se reinicia solo cuando cambia el estado.
   useEffect(() => {
     setReabriendo(false)
-    setEnvio(null)
+    reiniciar()
   }, [c.estado])
-  const enviar = async () => {
-    setEnvio('enviando')
-    setEnvio(await window.iridium.enviarComentario(ruta, c.codigo).catch(() => 'no-existe' as const))
-  }
   return (
-    <div className="rev-det">
-      <div className="det-barra">
+    <div className="rv-detalle">
+      <div className="rv-barra">
         <BotonAtras ruta={ruta} />
-        <span className="cod-r">{c.codigo}</span>
-        {cerrado ? (
-          <span className="senal">
-            <Icono nombre="check" />
-            cerrado
-          </span>
-        ) : c.estado === 'anotado' ? (
-          <span className="senal" title="Quedó en un plan: se cierra cuando esté hecho">
-            <Icono nombre="docs" />
-            anotado
-          </span>
-        ) : (
-          <span className="senal">
-            <Icono nombre="circulo" />
-            abierto
-          </span>
-        )}
-        <div className="acc">
+        <span className="rv-codigo">{c.codigo}</span>
+        <Estado c={c} />
+        <div className="rv-acciones">
           {cerrado && !reabriendo && (
             <button type="button" className="boton secundario chico" onClick={() => setReabriendo(true)}>
               <Icono nombre="reabrir" />
               Reabrir
             </button>
           )}
-          {!cerrado && envio === 'enviado' && (
-            <span className="senal" role="status">
-              <Icono nombre="check" />
-              enviado a la sesión de {nombre}
-            </span>
-          )}
-          {!cerrado && envio === 'sin-sesion' && (
-            <span className="senal" role="status">
-              <Icono nombre="espera" />
-              sin sesión abierta: la IA lo ve al empezar
-            </span>
-          )}
-          {!cerrado && envio === 'no-existe' && (
-            <span className="senal rojo" role="alert">
-              <Icono nombre="error" />
-              no se pudo enviar
-            </span>
-          )}
-          {!cerrado && envio !== 'enviado' && envio !== 'sin-sesion' && (
-            <button
-              type="button"
-              className="boton secundario chico"
-              disabled={envio === 'enviando'}
-              title="Mandarlo a la sesión de este proyecto: si la IA trabaja, entra en su turno"
-              onClick={() => void enviar()}
-            >
-              <Icono nombre="enviar" />
-              Enviar ahora
-            </button>
-          )}
+          {!cerrado && <Mandar envio={envio} mandar={() => void mandar()} nombre={nombre} />}
         </div>
       </div>
-      <div className="det-cuerpo">
+      <div className="rv-cuerpo">
         <Captura ruta={ruta} codigo={c.codigo} conCaptura={c.conCaptura} clase="grande" />
-        <div>
-          <p className="texto">{c.texto}</p>
+        <div className="rv-lado">
+          <p className="rv-comentario">{c.texto}</p>
           {reabriendo && <Reabrir ruta={ruta} codigo={c.codigo} cerrar={() => setReabriendo(false)} />}
         </div>
       </div>
-      <dl className="pistas">
+      <dl className="rv-pistas">
         <dt>Dónde</dt>
         <dd>
           {c.maqueta ? (
@@ -445,7 +480,7 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
         )}
         <dt>Historia</dt>
         <dd>
-          <ul className="historia">
+          <ul className="rv-historia">
             {c.historia.map((h, i) => (
               <li
                 // biome-ignore lint/suspicious/noArrayIndexKey: la historia solo crece al final.
@@ -469,17 +504,18 @@ function Cargando() {
   return (
     <>
       <Cabecera titulo="Revisión" />
-      <div className="rev" aria-busy="true">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="silueta">
-            <i />
-            <div>
-              <i style={{ width: '80%' }} />
-              <i style={{ width: '55%' }} />
-              <i style={{ width: '30%' }} />
-            </div>
-          </div>
-        ))}
+      <div className="rv-contenido" aria-busy="true">
+        <ul className="filas con-lineas">
+          {[0, 1, 2, 3].map((i) => (
+            <li key={i} className="fila rv-silueta">
+              <i />
+              <span>
+                <i style={{ width: '80%' }} />
+                <i style={{ width: '55%' }} />
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   )
@@ -491,7 +527,7 @@ export function Revision({ ruta }: { ruta: string }) {
     s.lista?.tipo === 'lista' ? (s.lista.proyectos.find((p) => p.ruta === ruta)?.nombre ?? '') : '',
   )
   const [l, setL] = useState<ListaComentarios | null>(() => leidas.get(ruta) ?? null)
-  const [grupo, setGrupo] = useState('abiertos')
+  const [grupo, setGrupo] = useState('nuevos')
   const leer = useCallback(() => {
     void window.iridium.comentarios(ruta).then((r) => {
       leidas.set(ruta, r)
@@ -507,10 +543,14 @@ export function Revision({ ruta }: { ruta: string }) {
     return (
       <>
         <Cabecera titulo="Revisión" />
-        <div className="rev">
-          <p className="mal" role="alert">
-            No se pudieron leer los comentarios: {l.mensaje}
-          </p>
+        <div className="rv-contenido">
+          <div className="recuadro error" role="alert">
+            <Icono nombre="error" />
+            <div className="cuerpo-recuadro">
+              <strong>No se pudieron leer los comentarios</strong>
+              <span>{l.mensaje}</span>
+            </div>
+          </div>
         </div>
       </>
     )
@@ -519,63 +559,76 @@ export function Revision({ ruta }: { ruta: string }) {
     const c = l.comentarios.find((x) => x.codigo === elegido)
     if (c) return <Detalle key={c.codigo} ruta={ruta} c={c} nombre={nombre} />
     return (
-      <div className="rev-det">
-        <div className="det-barra">
+      <div className="rv-detalle">
+        <div className="rv-barra">
           <BotonAtras ruta={ruta} />
-          <span className="cod-r">{elegido}</span>
+          <span className="rv-codigo">{elegido}</span>
         </div>
-        <p className="ninguno">Este comentario ya no está en docs/revision/.</p>
+        <div className="recuadro vacio">
+          <span>Este comentario ya no está en docs/revision/.</span>
+        </div>
       </div>
     )
   }
 
   if (l.comentarios.length === 0 && l.ilegibles.length === 0) return <Vacio ruta={ruta} l={l} />
 
-  const abiertos = l.comentarios.filter((c) => c.estado === 'abierto')
+  const nuevos = l.comentarios.filter((c) => c.estado === 'abierto')
   const anotados = l.comentarios.filter((c) => c.estado === 'anotado')
-  const cerrados = l.comentarios.filter((c) => c.estado === 'cerrado')
-  const mostrar = grupo === 'abiertos' ? abiertos : grupo === 'anotados' ? anotados : cerrados
+  const hechos = l.comentarios.filter((c) => c.estado === 'cerrado')
+  const mostrar =
+    grupo === 'nuevos'
+      ? nuevos
+      : grupo === 'anotados'
+        ? anotados
+        : grupo === 'hechos'
+          ? hechos
+          : l.comentarios
   return (
     <>
       <Cabecera
         titulo="Revisión"
-        cuenta={abiertos.length}
-        acciones={
-          <span className="ext-est">
-            <Icono nombre="enchufe" />
-            Extensión {fechaConexion(l.extension)}
-          </span>
-        }
+        acciones={<Ayuda extension={l.extension} />}
         filtros={
           <Filtros
             etiqueta="Grupo"
             elegido={grupo}
             elegir={setGrupo}
             filtros={[
-              { clave: 'abiertos', nombre: 'Abiertos', n: abiertos.length },
+              { clave: 'nuevos', nombre: 'Nuevos', n: nuevos.length },
               {
                 clave: 'anotados',
                 nombre: 'Anotados',
                 n: anotados.length,
                 titulo: 'Quedaron en un plan: se cierran cuando estén hechos',
               },
-              { clave: 'cerrados', nombre: 'Cerrados', n: cerrados.length },
+              { clave: 'hechos', nombre: 'Hechos', n: hechos.length },
+              { clave: 'todos', nombre: 'Todos', n: l.comentarios.length },
             ]}
           />
         }
       />
-      <div className="rev">
+      <div className="rv-contenido">
         {l.electron.esElectron && !l.electron.cargaLinea && <AvisoElectron ruta={ruta} />}
-        <div className="filas-com">
-          {mostrar.length ? (
-            mostrar.map((c) => <Fila key={c.codigo} ruta={ruta} c={c} />)
-          ) : (
-            <div className="ninguno">Ninguno.</div>
-          )}
+        <ul className="filas con-lineas rv-filas">
+          {mostrar.map((c) => (
+            <Fila key={c.codigo} ruta={ruta} c={c} nombre={nombre} conEstado={grupo === 'todos'} />
+          ))}
           {l.ilegibles.map((n) => (
             <Ilegible key={n} nombre={n} />
           ))}
-        </div>
+        </ul>
+        {mostrar.length === 0 && l.ilegibles.length === 0 && (
+          <div className="recuadro vacio">
+            <span>
+              {grupo === 'nuevos'
+                ? 'Nada nuevo: lo que comentes con F8 aparece aquí.'
+                : grupo === 'anotados'
+                  ? 'Ninguno anotado.'
+                  : 'Ninguno hecho todavía.'}
+            </span>
+          </div>
+        )}
       </div>
     </>
   )

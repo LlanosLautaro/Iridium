@@ -210,7 +210,7 @@ test('F8 sobre una maqueta grande: el comentario llega a su proyecto con la maqu
     .getByRole('navigation', { name: 'Secciones del proyecto' })
     .getByRole('button', { name: 'Revisión' })
     .click()
-  await win.locator('.fila-com', { hasText: 'la tarjeta necesita más aire' }).click()
+  await win.locator('.rv-fila', { hasText: 'la tarjeta necesita más aire' }).locator('.rv-abrir').click()
   await win.getByRole('button', { name: /la maqueta docs\/diseno\/pantallas\/lista\.html/ }).click()
   await expect(win.locator('[data-seccion="diseno"] .di-grande-t')).toHaveText('Lista · 1 de 3')
   await win.screenshot({ path: 'test-results/di1-f8-revision.png' })

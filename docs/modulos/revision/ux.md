@@ -48,7 +48,7 @@ Diseña la definición aprobada (`definicion.md`, Q-68). Hay dos lugares: **la a
 ### H-R5 — Ver los comentarios de un proyecto y reabrir uno
 - Como usuario quiero ver en Iridium qué comenté, qué resolvió la IA y reabrir lo que no quedó bien (C-38).
   - Criterios de aceptación:
-    - [ ] **Revisión**, en la barra del proyecto, muestra los comentarios en tres grupos: **Abiertos**, **Anotados** (quedaron en un plan sin hacer, D-088) y **Cerrados**, del más nuevo al más viejo; el ícono cuenta los abiertos.
+    - [ ] **Revisión**, en la barra del proyecto, muestra los comentarios en tres grupos: **Abiertos**, **Anotados** (quedaron en un plan sin hacer, D-088) y **Cerrados**, del más nuevo al más viejo; el ícono cuenta los abiertos. *(Desde DI-I3, tanda 10: **Nuevos**, **Anotados**, **Hechos** y **Todos**, como la maqueta `docs/diseno/pantallas/revision.html`; «Enviar ahora» de la sección se llama **Mandar a la IA** y está también en cada fila. En la tarjeta de F8 sigue «Enviar ahora».)*
     - [ ] Cada fila: la captura chica, el texto (dos líneas), dónde está (archivo y línea, o la página) y la fecha. En los cerrados, cuándo los cerró la IA y una línea de lo que hizo; en los anotados, cuándo y dónde quedaron.
     - [ ] Al elegir uno se ve entero: la captura grande, el texto, todas las pistas y su historia (dejado, enviado, cerrado, reabierto).
     - [ ] El archivo y la línea son un enlace que abre Archivos en esa línea.
@@ -171,6 +171,7 @@ Abierto ──(la IA lo resuelve y lo cierra, con una línea de lo que hizo)─�
   - **Texto a medio escribir:** al volver al mismo elemento, la tarjeta lo trae.
 
 ### W-R3 — Revisión, en la vista del proyecto
+> Desde DI-I3 (tanda 10) la pantalla es la maqueta `docs/diseno/pantallas/revision.html`; este dibujo queda como historia.
 - Propósito: ver los comentarios del proyecto, su estado y reabrir (H-R5).
 - Wireframe:
 
