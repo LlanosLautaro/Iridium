@@ -1,161 +1,174 @@
 ---
 name: Iridium
-description: Consola de fósforo tranquila para dirigir proyectos con la IA.
+description: Consola negra y tranquila para dirigir proyectos con la IA.
 colors:
-  fondo: "#0a0f0e"
-  lateral: "#070b0a"
-  barra: "#060908"
-  elevado: "#0e1513"
-  hover: "#121c19"
-  caja: "#0f1714"
-  medidor-fondo: "#17241f"
-  borde: "#18241f"
-  borde-suave: "#121b18"
-  borde-fuerte: "#24362f"
-  borde-control: "#557068"
-  texto: "#d9e6e0"
-  texto-2: "#a3b8b0"
-  texto-3: "#74908a"
-  primario: "#3ee6a8"
-  primario-texto: "#5cecb8"
-  espera: "#f5b13d"
-  espera-borde: "#4a3c1a"
-  espera-fondo: "#12170f"
-  error: "#ff5f57"
-  sobre-color: "#0a0d0b"
-  seleccion: "#3ee6a844"
-  sel-fondo: "#0f241d"
-  cod-cadena: "#c9b77a"
+  fondo: "#000000"
+  elevado: "#0c0c0d"
+  tarjeta: "#0a0a0b"
+  hover: "#111113"
+  sel-fondo: "#161618"
+  velo: "#000000b3"
+  borde: "#1c1c1e"
+  borde-suave: "#121213"
+  borde-fuerte: "#2a2a2d"
+  borde-control: "#3d3d42"
+  texto: "#e6e6e6"
+  texto-2: "#a3a3a3"
+  texto-3: "#8a8a8a"
+  texto-apagado: "#4d4d4d"
+  principal: "#3ccf7f"
+  principal-hover: "#5adb93"
+  principal-fondo: "#06140c"
+  sobre-principal: "#000000"
+  marcado: "#4cc38a"
+  espera: "#d9a441"
+  espera-fondo: "#0d0a04"
+  espera-borde: "#3a2f15"
+  error: "#e5484d"
+  error-fondo: "#0f0506"
+  error-borde: "#3d1a1c"
+  seleccion: "#ffffff2e"
+  bien: "#4cc38a"
+  recomendada: "#f2c94c"
+  enlace: "#6cb6ff"
+  cod-clave: "#569cd6"
+  cod-cadena: "#ce9178"
+  cod-comentario: "#6a9955"
+  cod-numero: "#b5cea8"
+  cod-suma: "#0b1a10"
+  cod-resta: "#1c0a0b"
+  git-modificado: "#e2c08d"
+  git-agregado: "#73c991"
+  git-borrado: "#e5484d"
 typography:
-  titulo:
-    fontFamily: "Chakra Petch, Segoe UI, sans-serif"
-    fontSize: "16px"
+  documento:
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
+    fontSize: "22px"
     fontWeight: 600
-    lineHeight: 1.4
+    lineHeight: 1.25
+  titulo:
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 600
+    lineHeight: 1.35
   lectura:
-    fontFamily: "Chakra Petch, Segoe UI, sans-serif"
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
     fontSize: "15px"
     fontWeight: 400
     lineHeight: 1.65
-  base:
-    fontFamily: "Chakra Petch, Segoe UI, sans-serif"
+  cuerpo:
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
     fontSize: "13.5px"
     fontWeight: 400
     lineHeight: 1.5
-    fontFeature: "tnum"
-  etiqueta:
-    fontFamily: "Chakra Petch, Segoe UI, sans-serif"
-    fontSize: "12.5px"
-    fontWeight: 600
-    lineHeight: 1
-    letterSpacing: "0.02em"
-  chico:
-    fontFamily: "Chakra Petch, Segoe UI, sans-serif"
-    fontSize: "12.5px"
-    fontWeight: 400
-    lineHeight: 1.5
-  mono:
-    fontFamily: "JetBrains Mono, Consolas, monospace"
-    fontSize: "12.5px"
-    fontWeight: 400
-    lineHeight: 1.5
-  mono-dato:
-    fontFamily: "JetBrains Mono, Consolas, monospace"
-    fontSize: "12px"
+  boton:
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
+    fontSize: "13.5px"
     fontWeight: 500
     lineHeight: 1
+  control:
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
+    fontSize: "13.5px"
+    fontWeight: 400
+    lineHeight: 1
+  rotulo:
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
+    fontSize: "12.5px"
+    fontWeight: 500
+    lineHeight: 1.5
+  meta:
+    fontFamily: "Segoe UI Variable Text, Segoe UI, system-ui, sans-serif"
+    fontSize: "12.5px"
+    fontWeight: 400
+    lineHeight: 1.5
+  codigo:
+    fontFamily: "Cascadia Mono, Consolas, monospace"
+    fontSize: "12.5px"
+    fontWeight: 400
+    lineHeight: 1.5
 rounded:
-  medidor: "3px"
-  control: "5px"
-  fila: "6px"
-  bloque: "8px"
-  tarjeta: "10px"
-  pildora: "11px"
+  control: "8px"
+  fila: "8px"
+  bloque: "12px"
+  tarjeta: "16px"
+  pildora: "999px"
 spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "14px"
-  lg: "20px"
-  xl: "32px"
+  esp-1: "4px"
+  esp-2: "8px"
+  esp-3: "12px"
+  esp-4: "16px"
+  esp-5: "24px"
+  esp-6: "32px"
+  esp-7: "48px"
 components:
-  button-primario:
-    backgroundColor: "{colors.texto}"
-    textColor: "{colors.sobre-color}"
-    typography: "{typography.etiqueta}"
+  button-principal:
+    backgroundColor: "transparent"
+    textColor: "{colors.principal}"
+    typography: "{typography.boton}"
     rounded: "{rounded.control}"
-    padding: "0 14px"
+    padding: "0 12px"
     height: "30px"
+  button-principal-hover:
+    backgroundColor: "{colors.principal-fondo}"
+    textColor: "{colors.principal-hover}"
   button-secundario:
     backgroundColor: "transparent"
-    textColor: "{colors.texto-2}"
-    typography: "{typography.etiqueta}"
+    textColor: "{colors.texto}"
+    typography: "{typography.boton}"
     rounded: "{rounded.control}"
-    padding: "0 14px"
+    padding: "0 12px"
     height: "30px"
   button-secundario-hover:
-    textColor: "{colors.texto}"
-  button-icono:
-    backgroundColor: "transparent"
-    textColor: "{colors.texto-3}"
-    rounded: "{rounded.control}"
-    size: "30px"
-  button-icono-hover:
     backgroundColor: "{colors.hover}"
-    textColor: "{colors.texto}"
-  chip-trabaja:
-    textColor: "{colors.primario}"
-    typography: "{typography.etiqueta}"
-    rounded: "{rounded.control}"
-    padding: "0 7px"
-    height: "20px"
-  chip-espera:
-    textColor: "{colors.espera}"
-    typography: "{typography.etiqueta}"
-    rounded: "{rounded.control}"
-    padding: "0 7px"
-    height: "20px"
-  chip-error:
-    textColor: "{colors.error}"
-    typography: "{typography.etiqueta}"
-    rounded: "{rounded.control}"
-    padding: "0 7px"
-    height: "20px"
-  tarjeta-pedido:
-    backgroundColor: "{colors.espera-fondo}"
-    textColor: "{colors.texto}"
-    rounded: "{rounded.tarjeta}"
-    padding: "14px 16px"
-  compositor:
-    backgroundColor: "{colors.caja}"
-    textColor: "{colors.texto}"
-    rounded: "{rounded.tarjeta}"
-    padding: "12px 14px 8px"
-  pestana-sesion:
-    backgroundColor: "{colors.barra}"
-    textColor: "{colors.texto-3}"
-    height: "40px"
-    padding: "0 6px 0 14px"
-  pestana-sesion-activa:
-    backgroundColor: "{colors.fondo}"
-    textColor: "{colors.texto}"
-  nodo-mapa:
+  button-sin-fondo:
+    backgroundColor: "transparent"
     textColor: "{colors.texto-2}"
-    height: "27px"
-    padding: "0 14px 0 10px"
-  nodo-mapa-sel:
-    backgroundColor: "{colors.sel-fondo}"
+    typography: "{typography.boton}"
+    rounded: "{rounded.control}"
+    padding: "0 8px"
+    height: "30px"
+  button-peligroso:
+    backgroundColor: "transparent"
+    textColor: "{colors.error}"
+    typography: "{typography.boton}"
+    rounded: "{rounded.control}"
+    padding: "0 12px"
+    height: "30px"
+  campo:
+    backgroundColor: "transparent"
     textColor: "{colors.texto}"
-    rounded: "6px"
-  medidor:
-    backgroundColor: "{colors.medidor-fondo}"
-    rounded: "{rounded.medidor}"
-    width: "72px"
-    height: "6px"
+    typography: "{typography.control}"
+    rounded: "{rounded.control}"
+    padding: "0 12px"
+    height: "32px"
+  fila:
+    textColor: "{colors.texto}"
+    typography: "{typography.cuerpo}"
+    rounded: "{rounded.fila}"
+    padding: "4px 8px"
+    height: "34px"
+  fila-elegida:
+    backgroundColor: "{colors.sel-fondo}"
+  recuadro-aviso:
+    backgroundColor: "{colors.espera-fondo}"
+    textColor: "{colors.texto-2}"
+    rounded: "{rounded.bloque}"
+    padding: "12px 16px"
+  recuadro-error:
+    backgroundColor: "{colors.error-fondo}"
+    textColor: "{colors.texto-2}"
+    rounded: "{rounded.bloque}"
+    padding: "12px 16px"
+  ventana:
+    backgroundColor: "{colors.elevado}"
+    rounded: "{rounded.tarjeta}"
+    width: "860px"
+    height: "600px"
 ---
 
 # Design System: Iridium
 
-> **Desde el 2026-11-13 (DI-I3, D-104) rige el negro, único tema.** Los tokens que usa la app son los de `docs/diseno/tokens.css` y las piezas, las de `docs/diseno/piezas.css` (frente Diseño). Lo de abajo describe el sistema de antes (Iridium verde y Carbón): se reescribe desde lo construido al cerrar DI-I3.
+> **Desde el 2026-11-13 (DI-I3, D-104) rige el negro, único tema.** Los tokens que usa la app son los de `docs/diseno/tokens.css` y las piezas, las de `docs/diseno/piezas.css` (frente Diseño). Los tokens de arriba (frontmatter) y `.impeccable/design.json` salen de ahí desde el 2026-11-18. El texto de abajo todavía describe el sistema de antes (Iridium verde y Carbón): se reescribe desde lo construido al cerrar DI-I3.
 
 > El nombre es Iridium (D-033). Fuente de los tokens: `docs/ui/vista-proyecto.html`, la primera superficie construida y revisada.
 

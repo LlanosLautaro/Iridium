@@ -1,567 +1,533 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T18:00:00Z",
+  "generatedAt": "2026-11-18T11:56:37Z",
   "title": "Design System: Iridium",
   "extensions": {
     "colorMeta": {
       "fondo": {
         "role": "neutral",
-        "displayName": "Negro Fósforo",
-        "tonalRamp": [
-          "oklch(15% 0.008 182)",
-          "oklch(25% 0.008 182)",
-          "oklch(35% 0.008 182)",
-          "oklch(48% 0.008 182)",
-          "oklch(60% 0.008 182)",
-          "oklch(72% 0.008 182)",
-          "oklch(84% 0.008 182)",
-          "oklch(95% 0.008 182)"
-        ]
-      },
-      "lateral": {
-        "role": "neutral",
-        "displayName": "Negro Lateral",
-        "tonalRamp": [
-          "oklch(15% 0.007 180)",
-          "oklch(25% 0.007 180)",
-          "oklch(35% 0.007 180)",
-          "oklch(48% 0.007 180)",
-          "oklch(60% 0.007 180)",
-          "oklch(72% 0.007 180)",
-          "oklch(84% 0.007 180)",
-          "oklch(95% 0.007 180)"
-        ]
-      },
-      "barra": {
-        "role": "neutral",
-        "displayName": "Negro Barra",
-        "tonalRamp": [
-          "oklch(15% 0.006 175)",
-          "oklch(25% 0.006 175)",
-          "oklch(35% 0.006 175)",
-          "oklch(48% 0.006 175)",
-          "oklch(60% 0.006 175)",
-          "oklch(72% 0.006 175)",
-          "oklch(84% 0.006 175)",
-          "oklch(95% 0.006 175)"
-        ]
+        "displayName": "Fondo",
+        "canonical": "#000000",
+        "purpose": "el fondo de toda la app: las secciones se apoyan directo en el negro"
       },
       "elevado": {
         "role": "neutral",
-        "displayName": "Superficie Elevada",
-        "tonalRamp": [
-          "oklch(15% 0.011 176)",
-          "oklch(25% 0.011 176)",
-          "oklch(35% 0.011 176)",
-          "oklch(48% 0.011 176)",
-          "oklch(60% 0.011 176)",
-          "oklch(72% 0.011 176)",
-          "oklch(84% 0.011 176)",
-          "oklch(95% 0.011 176)"
-        ]
+        "displayName": "Elevado",
+        "canonical": "#0c0c0d",
+        "purpose": "lo que flota o se separa del fondo: menús, cuadros, ventanas, el ícono de una fila"
+      },
+      "tarjeta": {
+        "role": "neutral",
+        "displayName": "Tarjeta",
+        "canonical": "#0a0a0b",
+        "purpose": "un bloque de código"
       },
       "hover": {
         "role": "neutral",
-        "displayName": "Velo de Hover",
-        "tonalRamp": [
-          "oklch(15% 0.016 174)",
-          "oklch(25% 0.016 174)",
-          "oklch(35% 0.016 174)",
-          "oklch(48% 0.016 174)",
-          "oklch(60% 0.016 174)",
-          "oklch(72% 0.016 174)",
-          "oklch(84% 0.016 174)",
-          "oklch(95% 0.016 174)"
-        ]
-      },
-      "caja": {
-        "role": "neutral",
-        "displayName": "Fondo del Compositor",
-        "tonalRamp": [
-          "oklch(15% 0.013 170)",
-          "oklch(25% 0.013 170)",
-          "oklch(35% 0.013 170)",
-          "oklch(48% 0.013 170)",
-          "oklch(60% 0.013 170)",
-          "oklch(72% 0.013 170)",
-          "oklch(84% 0.013 170)",
-          "oklch(95% 0.013 170)"
-        ]
-      },
-      "medidor-fondo": {
-        "role": "neutral",
-        "displayName": "Canal del Medidor",
-        "tonalRamp": [
-          "oklch(15% 0.020 169)",
-          "oklch(25% 0.020 169)",
-          "oklch(35% 0.020 169)",
-          "oklch(48% 0.020 169)",
-          "oklch(60% 0.020 169)",
-          "oklch(72% 0.020 169)",
-          "oklch(84% 0.020 169)",
-          "oklch(95% 0.020 169)"
-        ]
-      },
-      "borde": {
-        "role": "neutral",
-        "displayName": "Borde Verdoso",
-        "tonalRamp": [
-          "oklch(15% 0.019 167)",
-          "oklch(25% 0.019 167)",
-          "oklch(35% 0.019 167)",
-          "oklch(48% 0.019 167)",
-          "oklch(60% 0.019 167)",
-          "oklch(72% 0.019 167)",
-          "oklch(84% 0.019 167)",
-          "oklch(95% 0.019 167)"
-        ]
-      },
-      "borde-suave": {
-        "role": "neutral",
-        "displayName": "Borde Susurro",
-        "tonalRamp": [
-          "oklch(15% 0.014 172)",
-          "oklch(25% 0.014 172)",
-          "oklch(35% 0.014 172)",
-          "oklch(48% 0.014 172)",
-          "oklch(60% 0.014 172)",
-          "oklch(72% 0.014 172)",
-          "oklch(84% 0.014 172)",
-          "oklch(95% 0.014 172)"
-        ]
-      },
-      "borde-fuerte": {
-        "role": "neutral",
-        "displayName": "Borde Firme",
-        "tonalRamp": [
-          "oklch(15% 0.027 169)",
-          "oklch(25% 0.027 169)",
-          "oklch(35% 0.027 169)",
-          "oklch(48% 0.027 169)",
-          "oklch(60% 0.027 169)",
-          "oklch(72% 0.027 169)",
-          "oklch(84% 0.027 169)",
-          "oklch(95% 0.027 169)"
-        ]
-      },
-      "texto": {
-        "role": "neutral",
-        "displayName": "Blanco Ceniza Verde",
-        "tonalRamp": [
-          "oklch(15% 0.016 167)",
-          "oklch(25% 0.016 167)",
-          "oklch(35% 0.016 167)",
-          "oklch(48% 0.016 167)",
-          "oklch(60% 0.016 167)",
-          "oklch(72% 0.016 167)",
-          "oklch(84% 0.016 167)",
-          "oklch(95% 0.016 167)"
-        ]
-      },
-      "texto-2": {
-        "role": "neutral",
-        "displayName": "Gris Salvia",
-        "tonalRamp": [
-          "oklch(15% 0.026 171)",
-          "oklch(25% 0.026 171)",
-          "oklch(35% 0.026 171)",
-          "oklch(48% 0.026 171)",
-          "oklch(60% 0.026 171)",
-          "oklch(72% 0.026 171)",
-          "oklch(84% 0.026 171)",
-          "oklch(95% 0.026 171)"
-        ]
-      },
-      "texto-3": {
-        "role": "neutral",
-        "displayName": "Gris Liquen",
-        "tonalRamp": [
-          "oklch(15% 0.033 181)",
-          "oklch(25% 0.033 181)",
-          "oklch(35% 0.033 181)",
-          "oklch(48% 0.033 181)",
-          "oklch(60% 0.033 181)",
-          "oklch(72% 0.033 181)",
-          "oklch(84% 0.033 181)",
-          "oklch(95% 0.033 181)"
-        ]
-      },
-      "primario": {
-        "role": "primary",
-        "displayName": "Verde Fósforo",
-        "tonalRamp": [
-          "oklch(15% 0.162 163)",
-          "oklch(25% 0.162 163)",
-          "oklch(35% 0.162 163)",
-          "oklch(48% 0.162 163)",
-          "oklch(60% 0.162 163)",
-          "oklch(72% 0.162 163)",
-          "oklch(84% 0.162 163)",
-          "oklch(95% 0.162 163)"
-        ]
-      },
-      "primario-texto": {
-        "role": "primary",
-        "displayName": "Fósforo Claro",
-        "tonalRamp": [
-          "oklch(15% 0.145 166)",
-          "oklch(25% 0.145 166)",
-          "oklch(35% 0.145 166)",
-          "oklch(48% 0.145 166)",
-          "oklch(60% 0.145 166)",
-          "oklch(72% 0.145 166)",
-          "oklch(84% 0.145 166)",
-          "oklch(95% 0.145 166)"
-        ]
-      },
-      "espera": {
-        "role": "secondary",
-        "displayName": "Ámbar de Espera",
-        "tonalRamp": [
-          "oklch(15% 0.148 76)",
-          "oklch(25% 0.148 76)",
-          "oklch(35% 0.148 76)",
-          "oklch(48% 0.148 76)",
-          "oklch(60% 0.148 76)",
-          "oklch(72% 0.148 76)",
-          "oklch(84% 0.148 76)",
-          "oklch(95% 0.148 76)"
-        ]
-      },
-      "espera-borde": {
-        "role": "secondary",
-        "displayName": "Ámbar Hundido",
-        "tonalRamp": [
-          "oklch(15% 0.054 87)",
-          "oklch(25% 0.054 87)",
-          "oklch(35% 0.054 87)",
-          "oklch(48% 0.054 87)",
-          "oklch(60% 0.054 87)",
-          "oklch(72% 0.054 87)",
-          "oklch(84% 0.054 87)",
-          "oklch(95% 0.054 87)"
-        ]
-      },
-      "espera-fondo": {
-        "role": "secondary",
-        "displayName": "Fondo de Pedido",
-        "tonalRamp": [
-          "oklch(15% 0.017 134)",
-          "oklch(25% 0.017 134)",
-          "oklch(35% 0.017 134)",
-          "oklch(48% 0.017 134)",
-          "oklch(60% 0.017 134)",
-          "oklch(72% 0.017 134)",
-          "oklch(84% 0.017 134)",
-          "oklch(95% 0.017 134)"
-        ]
-      },
-      "error": {
-        "role": "tertiary",
-        "displayName": "Rojo Señal",
-        "tonalRamp": [
-          "oklch(15% 0.170 26)",
-          "oklch(25% 0.170 26)",
-          "oklch(35% 0.170 26)",
-          "oklch(48% 0.170 26)",
-          "oklch(60% 0.170 26)",
-          "oklch(72% 0.170 26)",
-          "oklch(84% 0.170 26)",
-          "oklch(95% 0.170 26)"
-        ]
-      },
-      "sobre-color": {
-        "role": "neutral",
-        "displayName": "Tinta sobre Color",
-        "tonalRamp": [
-          "oklch(15% 0.006 156)",
-          "oklch(25% 0.006 156)",
-          "oklch(35% 0.006 156)",
-          "oklch(48% 0.006 156)",
-          "oklch(60% 0.006 156)",
-          "oklch(72% 0.006 156)",
-          "oklch(84% 0.006 156)",
-          "oklch(95% 0.006 156)"
-        ]
+        "displayName": "Hover",
+        "canonical": "#111113",
+        "purpose": "el fondo de una fila, un botón o una pestaña al pasar el mouse"
       },
       "sel-fondo": {
         "role": "neutral",
-        "displayName": "Fondo de Selección",
-        "tonalRamp": [
-          "oklch(15% 0.031 170)",
-          "oklch(25% 0.031 170)",
-          "oklch(35% 0.031 170)",
-          "oklch(48% 0.031 170)",
-          "oklch(60% 0.031 170)",
-          "oklch(72% 0.031 170)",
-          "oklch(84% 0.031 170)",
-          "oklch(95% 0.031 170)"
-        ]
+        "displayName": "Sel fondo",
+        "canonical": "#161618",
+        "purpose": "la fila, la pestaña (también el proyecto elegido en la barra) o la opción de menú elegida"
       },
-      "cod-cadena": {
-        "role": "tertiary",
-        "displayName": "Cadena de Código",
-        "tonalRamp": [
-          "oklch(15% 0.083 92)",
-          "oklch(25% 0.083 92)",
-          "oklch(35% 0.083 92)",
-          "oklch(48% 0.083 92)",
-          "oklch(60% 0.083 92)",
-          "oklch(72% 0.083 92)",
-          "oklch(84% 0.083 92)",
-          "oklch(95% 0.083 92)"
-        ]
+      "velo": {
+        "role": "neutral",
+        "displayName": "Velo",
+        "canonical": "#000000b3",
+        "purpose": "el oscurecido detrás de un cuadro abierto"
       },
-      "seleccion": {
-        "role": "primary",
-        "displayName": "Selección Fósforo",
-        "tonalRamp": [
-          "oklch(15% 0.162 163)",
-          "oklch(25% 0.162 163)",
-          "oklch(35% 0.162 163)",
-          "oklch(48% 0.162 163)",
-          "oklch(60% 0.162 163)",
-          "oklch(72% 0.162 163)",
-          "oklch(84% 0.162 163)",
-          "oklch(95% 0.162 163)"
-        ]
+      "borde": {
+        "role": "neutral",
+        "displayName": "Borde",
+        "canonical": "#1c1c1e",
+        "purpose": "la línea común: recuadros, la cabecera, las barras del marco"
+      },
+      "borde-suave": {
+        "role": "neutral",
+        "displayName": "Borde suave",
+        "canonical": "#121213",
+        "purpose": "la línea entre filas o bloques de una misma lista"
+      },
+      "borde-fuerte": {
+        "role": "neutral",
+        "displayName": "Borde fuerte",
+        "canonical": "#2a2a2d",
+        "purpose": "lo que tiene que verse sobre el negro: la barra de desplazamiento, el compositor, las citas"
       },
       "borde-control": {
         "role": "neutral",
-        "displayName": "Borde de Campo",
-        "tonalRamp": [
-          "oklch(15% 0.027 169)",
-          "oklch(25% 0.027 169)",
-          "oklch(35% 0.027 169)",
-          "oklch(48% 0.027 169)",
-          "oklch(60% 0.027 169)",
-          "oklch(72% 0.027 169)",
-          "oklch(84% 0.027 169)",
-          "oklch(95% 0.027 169)"
-        ]
+        "displayName": "Borde control",
+        "canonical": "#3d3d42",
+        "purpose": "el borde de lo que se toca: campos, casillas, el botón secundario"
+      },
+      "texto": {
+        "role": "neutral",
+        "displayName": "Texto",
+        "canonical": "#e6e6e6",
+        "purpose": "el texto que se lee: títulos, nombres, el cuerpo"
+      },
+      "texto-2": {
+        "role": "neutral",
+        "displayName": "Texto 2",
+        "canonical": "#a3a3a3",
+        "purpose": "lo secundario: la descripción de una fila, los botones sin fondo, los íconos"
+      },
+      "texto-3": {
+        "role": "neutral",
+        "displayName": "Texto 3",
+        "canonical": "#8a8a8a",
+        "purpose": "lo de apoyo: fechas, cuentas, códigos y los títulos de bloque; el más tenue que pasa AA"
+      },
+      "texto-apagado": {
+        "role": "neutral",
+        "displayName": "Texto apagado",
+        "canonical": "#4d4d4d",
+        "purpose": "lo deshabilitado y los números de línea; nunca para texto que haya que leer"
+      },
+      "principal": {
+        "role": "primary",
+        "displayName": "Principal",
+        "canonical": "#3ccf7f",
+        "purpose": "la letra y el borde del botón principal y nada más: uno por pantalla (Enviar, Continuar; D-109, R-49), salvo el Enviar de cada pregunta de la Bandeja (R-73)"
+      },
+      "principal-hover": {
+        "role": "primary",
+        "displayName": "Principal hover",
+        "canonical": "#5adb93",
+        "purpose": "la letra y el borde del botón principal al pasar el mouse"
+      },
+      "principal-fondo": {
+        "role": "primary",
+        "displayName": "Principal fondo",
+        "canonical": "#06140c",
+        "purpose": "el fondo del botón principal al pasar el mouse; quieto, va sobre el negro"
+      },
+      "sobre-principal": {
+        "role": "primary",
+        "displayName": "Sobre principal",
+        "canonical": "#000000",
+        "purpose": "lo que va sobre lo marcado: el tilde de una casilla, la perilla de un interruptor"
+      },
+      "marcado": {
+        "role": "semantic",
+        "displayName": "Marcado",
+        "canonical": "#4cc38a",
+        "purpose": "lo prendido: casillas, opciones e interruptores, en el verde de los medidores (R-60); no es un color de acción"
+      },
+      "espera": {
+        "role": "semantic",
+        "displayName": "Espera",
+        "canonical": "#d9a441",
+        "purpose": "lo que espera al usuario: la cuenta de preguntas, una prueba pendiente"
+      },
+      "espera-fondo": {
+        "role": "semantic",
+        "displayName": "Espera fondo",
+        "canonical": "#0d0a04",
+        "purpose": "el fondo de un aviso que espera al usuario"
+      },
+      "espera-borde": {
+        "role": "semantic",
+        "displayName": "Espera borde",
+        "canonical": "#3a2f15",
+        "purpose": "el borde de un aviso que espera al usuario"
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Error",
+        "canonical": "#e5484d",
+        "purpose": "un error y lo que borra: el aviso, el botón de Eliminar"
+      },
+      "error-fondo": {
+        "role": "semantic",
+        "displayName": "Error fondo",
+        "canonical": "#0f0506",
+        "purpose": "el fondo de un aviso de error"
+      },
+      "error-borde": {
+        "role": "semantic",
+        "displayName": "Error borde",
+        "canonical": "#3d1a1c",
+        "purpose": "el borde de un aviso de error"
+      },
+      "seleccion": {
+        "role": "neutral",
+        "displayName": "Seleccion",
+        "canonical": "#ffffff2e",
+        "purpose": "el texto seleccionado con el mouse"
+      },
+      "bien": {
+        "role": "semantic",
+        "displayName": "Bien",
+        "canonical": "#4cc38a",
+        "purpose": "lo que tiene margen en un medidor (el uso de la suscripción, el contexto; se pone ámbar y rojo al llenarse, R-56), la ruedita y la señal de Trabajando (R-63, R-71) y el tilde de lo que funciona (R-69)"
+      },
+      "recomendada": {
+        "role": "semantic",
+        "displayName": "Recomendada",
+        "canonical": "#f2c94c",
+        "purpose": "la estrella de la opción recomendada en una pregunta (R-85); no es el ámbar de lo que espera"
+      },
+      "enlace": {
+        "role": "semantic",
+        "displayName": "Enlace",
+        "canonical": "#6cb6ff",
+        "purpose": "un enlace dentro de un texto: los documentos, el Próximo paso, la Bandeja, la conversación (Q-171)"
+      },
+      "cod-clave": {
+        "role": "syntax",
+        "displayName": "Cod clave",
+        "canonical": "#569cd6",
+        "purpose": "las palabras clave en un bloque de código"
+      },
+      "cod-cadena": {
+        "role": "syntax",
+        "displayName": "Cod cadena",
+        "canonical": "#ce9178",
+        "purpose": "los textos entre comillas en un bloque de código"
+      },
+      "cod-comentario": {
+        "role": "syntax",
+        "displayName": "Cod comentario",
+        "canonical": "#6a9955",
+        "purpose": "los comentarios en un bloque de código"
+      },
+      "cod-numero": {
+        "role": "syntax",
+        "displayName": "Cod numero",
+        "canonical": "#b5cea8",
+        "purpose": "los números en un bloque de código"
+      },
+      "cod-suma": {
+        "role": "syntax",
+        "displayName": "Cod suma",
+        "canonical": "#0b1a10",
+        "purpose": "el fondo de una línea agregada en una diferencia"
+      },
+      "cod-resta": {
+        "role": "syntax",
+        "displayName": "Cod resta",
+        "canonical": "#1c0a0b",
+        "purpose": "el fondo de una línea quitada en una diferencia"
+      },
+      "git-modificado": {
+        "role": "syntax",
+        "displayName": "Git modificado",
+        "canonical": "#e2c08d",
+        "purpose": "la M de un archivo modificado"
+      },
+      "git-agregado": {
+        "role": "syntax",
+        "displayName": "Git agregado",
+        "canonical": "#73c991",
+        "purpose": "la A o la U de un archivo agregado o nuevo; no es el verde del botón principal"
+      },
+      "git-borrado": {
+        "role": "syntax",
+        "displayName": "Git borrado",
+        "canonical": "#e5484d",
+        "purpose": "la D de un archivo borrado"
       }
     },
     "typographyMeta": {
+      "documento": {
+        "displayName": "Documento",
+        "purpose": "el título de un documento, uno por página"
+      },
       "titulo": {
-        "displayName": "Título",
-        "purpose": "Pregunta del pedido y títulos de docs."
+        "displayName": "Titulo",
+        "purpose": "el título de una sección o un cuadro y los subtítulos de un documento"
       },
       "lectura": {
         "displayName": "Lectura",
-        "purpose": "Texto de la conversación, máximo 72ch."
+        "purpose": "el cuerpo de un documento para leer de corrido"
       },
-      "base": {
-        "displayName": "Base",
-        "purpose": "Todo el marco; números tabulares."
+      "cuerpo": {
+        "displayName": "Cuerpo",
+        "purpose": "el texto de la interfaz: filas, mensajes, el compositor"
       },
-      "etiqueta": {
-        "displayName": "Etiqueta",
-        "purpose": "Chips, botones, pestañas, autor del turno; sin mayúsculas."
+      "boton": {
+        "displayName": "Boton",
+        "purpose": "la letra de un botón"
       },
-      "chico": {
-        "displayName": "Chico",
-        "purpose": "Migas, barra de estado, ayudas."
+      "control": {
+        "displayName": "Control",
+        "purpose": "campos, opciones de menú y pestañas"
       },
-      "mono": {
-        "displayName": "Mono",
-        "purpose": "Código en línea y citas de archivo."
+      "rotulo": {
+        "displayName": "Rotulo",
+        "purpose": "los títulos de bloque, en el gris de apoyo"
       },
-      "mono-dato": {
-        "displayName": "Mono dato",
-        "purpose": "Horas, porcentajes, numeración, Q-n."
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "lo que acompaña: el detalle de una fila, fechas, la barra de abajo"
+      },
+      "codigo": {
+        "displayName": "Codigo",
+        "purpose": "códigos (D-n, Q-n), cuentas y números en columna"
       }
     },
     "shadows": [
       {
-        "name": "flotante",
-        "value": "0 6px 14px oklch(0 0 0 / .5)",
-        "purpose": "Solo el aviso flotante abajo a la derecha."
+        "name": "sombra-menu",
+        "value": "0 0 0 1px #2a2a2d, 0 10px 28px #00000099",
+        "purpose": "menús y listas que se abren"
       },
       {
-        "name": "brillo-medidor",
-        "value": "0 0 8px var(--medidor, var(--primario))",
-        "purpose": "Solo el relleno de los medidores; el único brillo del sistema."
+        "name": "sombra-ventana",
+        "value": "0 0 0 1px #2a2a2d, 0 24px 64px #000000cc",
+        "purpose": "cuadros y ventanas sobre el velo"
       }
     ],
     "motion": [
       {
         "name": "sale",
         "value": "cubic-bezier(.16, 1, .3, 1)",
-        "purpose": "Única curva: entradas y desplazamientos."
+        "purpose": "la única curva: todo lo que aparece o se mueve"
       },
       {
-        "name": "abre-panel",
-        "value": "200ms sale, desde translateX(12px) y opacidad 0",
-        "purpose": "Apertura del panel derecho."
+        "name": "interruptor",
+        "value": ".15s sale",
+        "purpose": "El interruptor y su perilla al prenderse."
       },
       {
-        "name": "llega-aviso",
-        "value": "300ms sale, 500ms de demora, desde translateY(8px)",
-        "purpose": "Entrada del aviso."
-      },
-      {
-        "name": "gira",
-        "value": "1.4s linear infinite",
-        "purpose": "Ícono de la IA trabajando."
-      },
-      {
-        "name": "chevron",
-        "value": "120ms a 150ms, rotate(90deg)",
-        "purpose": "Abrir nodos y herramientas plegadas."
+        "name": "acciones-fila",
+        "value": ".12s sale, opacidad",
+        "purpose": "Las acciones de una fila al pasar el mouse."
       }
     ],
     "breakpoints": [
       {
         "name": "minimo",
-        "value": "1024px"
+        "value": "1024px",
+        "purpose": "El ancho mínimo de la ventana (minWidth); agrandada, la app no se corta."
+      }
+    ],
+    "sizes": [
+      {
+        "name": "alto-barra",
+        "value": "36px",
+        "purpose": "la barra de proyectos, arriba de todo"
       },
       {
-        "name": "probado-desde",
-        "value": "1280px"
+        "name": "alto-estado",
+        "value": "26px",
+        "purpose": "la barra de abajo"
       },
       {
-        "name": "probado-hasta",
-        "value": "1920px"
+        "name": "ancho-secciones",
+        "value": "48px",
+        "purpose": "la barra de secciones a la izquierda y el botón del menú, arriba de ella"
+      },
+      {
+        "name": "ancho-conversacion",
+        "value": "360px",
+        "purpose": "el panel de la conversación, a la derecha"
+      },
+      {
+        "name": "alto-cabecera-conversacion",
+        "value": "48px",
+        "purpose": "la cabecera de la conversación, con su nombre y sus botones"
+      },
+      {
+        "name": "alto-control",
+        "value": "30px",
+        "purpose": "botones, opciones de menú y pestañas; también el ancho de un botón de solo ícono"
+      },
+      {
+        "name": "alto-control-chico",
+        "value": "24px",
+        "purpose": "el botón chico, dentro de una fila o un recuadro"
+      },
+      {
+        "name": "alto-campo",
+        "value": "32px",
+        "purpose": "campos y selectores, y la fila de la cabecera de una sección para que no salte con uno"
+      },
+      {
+        "name": "alto-campo-chico",
+        "value": "26px",
+        "purpose": "el campo chico, en un filtro o una fila"
+      },
+      {
+        "name": "alto-fila",
+        "value": "34px",
+        "purpose": "lo mínimo de una fila de lista; con detalle crece"
+      },
+      {
+        "name": "alto-nodo",
+        "value": "26px",
+        "purpose": "una carpeta o un archivo del árbol, más apretado que una fila"
+      },
+      {
+        "name": "ancho-codigo",
+        "value": "44px",
+        "purpose": "la columna del código (D-n, Q-n) en una fila, para que los títulos queden alineados"
+      },
+      {
+        "name": "ancho-menu",
+        "value": "200px",
+        "purpose": "lo mínimo de un menú"
+      },
+      {
+        "name": "ancho-lista-menu",
+        "value": "320px",
+        "purpose": "un menú en lista, con título y detalle en cada opción: las conversaciones"
+      },
+      {
+        "name": "ancho-cuadro",
+        "value": "440px",
+        "purpose": "un cuadro que confirma o pide un dato; también el texto de un recuadro punteado"
+      },
+      {
+        "name": "ancho-ventana",
+        "value": "860px",
+        "purpose": "la ventana de Ajustes"
+      },
+      {
+        "name": "alto-ventana",
+        "value": "600px",
+        "purpose": "la ventana de Ajustes"
+      },
+      {
+        "name": "ancho-pestanas-ventana",
+        "value": "200px",
+        "purpose": "las pestañas a la izquierda de la ventana de Ajustes"
+      },
+      {
+        "name": "ancho-lectura",
+        "value": "760px",
+        "purpose": "lo más ancho de un documento para leer de corrido"
+      },
+      {
+        "name": "ancho-centrado",
+        "value": "820px",
+        "purpose": "lo más ancho del contenido centrado de una sección"
+      },
+      {
+        "name": "ancho-lista",
+        "value": "1080px",
+        "purpose": "lo más ancho de una lista de renglones largos: las ideas (R-74)"
+      },
+      {
+        "name": "ancho-proyecto",
+        "value": "220px",
+        "purpose": "lo más ancho de un proyecto en la barra de arriba; el nombre largo se corta"
+      },
+      {
+        "name": "ancho-globo",
+        "value": "280px",
+        "purpose": "lo más ancho del texto de la «i»"
       }
     ]
   },
   "components": [
     {
-      "name": "Botón primario",
+      "name": "Botón",
       "kind": "button",
-      "refersTo": "button-primario",
-      "description": "Claro, sin color: la acción principal de la pantalla (Enviar, Responder; D-100).",
-      "html": "<button class=\"ds-btn ds-btn-primario\">Enviar</button>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-btn{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 14px;border-radius:var(--radio-control);font:600 13px/1 var(--ui);letter-spacing:.02em;border:0;background:none;cursor:pointer}.ds-btn:focus-visible{outline:1px solid var(--primario);outline-offset:-1px}.ds-btn-primario{background:var(--texto);color:var(--sobre-color)}.ds-btn-primario:hover{filter:brightness(1.1)}"
+      "refersTo": "button-principal",
+      "description": "Un principal (verde, delineado) como mucho por pantalla; las acciones de una fila, sin fondo; el rojo, solo para lo que no se deshace.",
+      "html": "<div class=\"ds\"><button class=\"boton principal\">Enviar</button><button class=\"boton secundario\">Abrir</button><button class=\"boton sin-fondo\">Postergar</button><button class=\"boton peligroso\">Eliminar</button><button class=\"boton secundario chico\">Chico</button></div>",
+      "css": ":host{--fondo:#000000;--elevado:#0c0c0d;--tarjeta:#0a0a0b;--hover:#111113;--sel-fondo:#161618;--velo:#000000b3;--borde:#1c1c1e;--borde-suave:#121213;--borde-fuerte:#2a2a2d;--borde-control:#3d3d42;--texto:#e6e6e6;--texto-2:#a3a3a3;--texto-3:#8a8a8a;--texto-apagado:#4d4d4d;--principal:#3ccf7f;--principal-hover:#5adb93;--principal-fondo:#06140c;--sobre-principal:#000000;--marcado:#4cc38a;--espera:#d9a441;--espera-fondo:#0d0a04;--espera-borde:#3a2f15;--error:#e5484d;--error-fondo:#0f0506;--error-borde:#3d1a1c;--seleccion:#ffffff2e;--bien:#4cc38a;--recomendada:#f2c94c;--enlace:#6cb6ff;--cod-clave:#569cd6;--cod-cadena:#ce9178;--cod-comentario:#6a9955;--cod-numero:#b5cea8;--cod-suma:#0b1a10;--cod-resta:#1c0a0b;--git-modificado:#e2c08d;--git-agregado:#73c991;--git-borrado:#e5484d;--ui:\"Segoe UI Variable Text\", \"Segoe UI\", system-ui, sans-serif;--mono:\"Cascadia Mono\", Consolas, monospace;--tam-chico:12.5px;--tam-base:13.5px;--tam-lectura:15px;--tam-titulo:17px;--tam-grande:22px;--estilo-documento:600 var(--tam-grande)/1.25 var(--ui);--estilo-titulo:600 var(--tam-titulo)/1.35 var(--ui);--estilo-lectura:400 var(--tam-lectura)/1.65 var(--ui);--estilo-cuerpo:400 var(--tam-base)/1.5 var(--ui);--estilo-boton:500 var(--tam-base)/1 var(--ui);--estilo-control:400 var(--tam-base)/1 var(--ui);--estilo-rotulo:500 var(--tam-chico)/1.5 var(--ui);--estilo-meta:400 var(--tam-chico)/1.5 var(--ui);--estilo-codigo:400 var(--tam-chico)/1.5 var(--mono);--esp-1:4px;--esp-2:8px;--esp-3:12px;--esp-4:16px;--esp-5:24px;--esp-6:32px;--esp-7:48px;--radio-control:8px;--radio-fila:8px;--radio-bloque:12px;--radio-tarjeta:16px;--radio-pildora:999px;--alto-barra:36px;--alto-estado:26px;--ancho-secciones:48px;--ancho-conversacion:360px;--alto-cabecera-conversacion:48px;--alto-control:30px;--alto-control-chico:24px;--alto-campo:32px;--alto-campo-chico:26px;--alto-fila:34px;--alto-nodo:26px;--ancho-codigo:44px;--ancho-menu:200px;--ancho-lista-menu:320px;--ancho-cuadro:440px;--ancho-ventana:860px;--alto-ventana:600px;--ancho-pestanas-ventana:200px;--ancho-lectura:760px;--ancho-centrado:820px;--ancho-lista:1080px;--ancho-proyecto:220px;--ancho-globo:280px;--sombra-menu:0 0 0 1px #2a2a2d, 0 10px 28px #00000099;--sombra-ventana:0 0 0 1px #2a2a2d, 0 24px 64px #000000cc;--sale:cubic-bezier(.16, 1, .3, 1);}.ds{font:var(--estilo-cuerpo);color:var(--texto);background:var(--fondo);padding:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.ds *{box-sizing:border-box}.ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6} .boton { display: inline-flex; align-items: center; gap: var(--esp-2); height: var(--alto-control); padding: 0 var(--esp-3); font: var(--estilo-boton); color: var(--texto); background: transparent; border: 1px solid transparent; border-radius: var(--radio-control); cursor: pointer; white-space: nowrap; text-decoration: none; transition: background .12s var(--sale), color .12s var(--sale), border-color .12s var(--sale); } .boton .ic { width: 15px; height: 15px; } .boton.principal { color: var(--principal); border-color: var(--principal); font-weight: 600; letter-spacing: .01em; } .boton.principal:hover { color: var(--principal-hover); border-color: var(--principal-hover); background: var(--principal-fondo); } .boton.secundario { border-color: var(--borde-control); } .boton.secundario:hover { background: var(--hover); border-color: var(--texto-3); } .boton.sin-fondo { color: var(--texto-2); padding: 0 var(--esp-2); } .boton.sin-fondo:hover { color: var(--texto); background: var(--hover); } .boton.peligroso { color: var(--error); border-color: var(--error-borde); } .boton.peligroso:hover { background: var(--error-fondo); } .boton.principal.peligroso, .boton.principal.peligroso:hover { color: var(--error); border-color: var(--error); } .boton.principal.peligroso:hover { background: var(--error-fondo); } .boton.chico { height: var(--alto-control-chico); padding: 0 var(--esp-2); font-size: var(--tam-chico); } .boton.solo-icono { width: var(--alto-control); padding: 0; justify-content: center; color: var(--texto-2); } .boton.solo-icono.chico { width: var(--alto-control-chico); } .boton.solo-icono:hover { color: var(--texto); background: var(--hover); } .boton[disabled], .boton.apagado { opacity: .4; pointer-events: none; }"
     },
     {
-      "name": "Botón secundario",
-      "kind": "button",
-      "refersTo": "button-secundario",
-      "description": "Sin fondo, borde firme; acciones de apoyo y Detener.",
-      "html": "<button class=\"ds-btn ds-btn-secundario\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"5\" y=\"5\" width=\"14\" height=\"14\"/></svg>Detener</button>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-btn{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 14px;border-radius:var(--radio-control);font:600 13px/1 var(--ui);letter-spacing:.02em;border:0;background:none;cursor:pointer}.ds-btn:focus-visible{outline:1px solid var(--primario);outline-offset:-1px}.ds-btn-secundario{border:1px solid var(--borde-fuerte);color:var(--texto-2)}.ds-btn-secundario:hover{color:var(--texto);border-color:var(--texto-3)}"
+      "name": "Fila",
+      "kind": "list-item",
+      "refersTo": "fila",
+      "description": "Un elemento de una lista; sus acciones aparecen al pasar el mouse.",
+      "html": "<div class=\"ds\"><div class=\"filas\" style=\"width:420px\"><div class=\"fila con-detalle\"><span class=\"codigo\">Q-12</span><span class=\"principal-fila\"><span class=\"titulo-fila\">¿Lista o grilla?</span><span class=\"detalle\">decisión · frena</span></span><span class=\"meta\">hoy</span></div><div class=\"fila elegida\"><span class=\"codigo\">T-70</span><span class=\"principal-fila\"><span class=\"titulo-fila\">El arranque del período</span></span></div></div></div>",
+      "css": ":host{--fondo:#000000;--elevado:#0c0c0d;--tarjeta:#0a0a0b;--hover:#111113;--sel-fondo:#161618;--velo:#000000b3;--borde:#1c1c1e;--borde-suave:#121213;--borde-fuerte:#2a2a2d;--borde-control:#3d3d42;--texto:#e6e6e6;--texto-2:#a3a3a3;--texto-3:#8a8a8a;--texto-apagado:#4d4d4d;--principal:#3ccf7f;--principal-hover:#5adb93;--principal-fondo:#06140c;--sobre-principal:#000000;--marcado:#4cc38a;--espera:#d9a441;--espera-fondo:#0d0a04;--espera-borde:#3a2f15;--error:#e5484d;--error-fondo:#0f0506;--error-borde:#3d1a1c;--seleccion:#ffffff2e;--bien:#4cc38a;--recomendada:#f2c94c;--enlace:#6cb6ff;--cod-clave:#569cd6;--cod-cadena:#ce9178;--cod-comentario:#6a9955;--cod-numero:#b5cea8;--cod-suma:#0b1a10;--cod-resta:#1c0a0b;--git-modificado:#e2c08d;--git-agregado:#73c991;--git-borrado:#e5484d;--ui:\"Segoe UI Variable Text\", \"Segoe UI\", system-ui, sans-serif;--mono:\"Cascadia Mono\", Consolas, monospace;--tam-chico:12.5px;--tam-base:13.5px;--tam-lectura:15px;--tam-titulo:17px;--tam-grande:22px;--estilo-documento:600 var(--tam-grande)/1.25 var(--ui);--estilo-titulo:600 var(--tam-titulo)/1.35 var(--ui);--estilo-lectura:400 var(--tam-lectura)/1.65 var(--ui);--estilo-cuerpo:400 var(--tam-base)/1.5 var(--ui);--estilo-boton:500 var(--tam-base)/1 var(--ui);--estilo-control:400 var(--tam-base)/1 var(--ui);--estilo-rotulo:500 var(--tam-chico)/1.5 var(--ui);--estilo-meta:400 var(--tam-chico)/1.5 var(--ui);--estilo-codigo:400 var(--tam-chico)/1.5 var(--mono);--esp-1:4px;--esp-2:8px;--esp-3:12px;--esp-4:16px;--esp-5:24px;--esp-6:32px;--esp-7:48px;--radio-control:8px;--radio-fila:8px;--radio-bloque:12px;--radio-tarjeta:16px;--radio-pildora:999px;--alto-barra:36px;--alto-estado:26px;--ancho-secciones:48px;--ancho-conversacion:360px;--alto-cabecera-conversacion:48px;--alto-control:30px;--alto-control-chico:24px;--alto-campo:32px;--alto-campo-chico:26px;--alto-fila:34px;--alto-nodo:26px;--ancho-codigo:44px;--ancho-menu:200px;--ancho-lista-menu:320px;--ancho-cuadro:440px;--ancho-ventana:860px;--alto-ventana:600px;--ancho-pestanas-ventana:200px;--ancho-lectura:760px;--ancho-centrado:820px;--ancho-lista:1080px;--ancho-proyecto:220px;--ancho-globo:280px;--sombra-menu:0 0 0 1px #2a2a2d, 0 10px 28px #00000099;--sombra-ventana:0 0 0 1px #2a2a2d, 0 24px 64px #000000cc;--sale:cubic-bezier(.16, 1, .3, 1);}.ds{font:var(--estilo-cuerpo);color:var(--texto);background:var(--fondo);padding:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.ds *{box-sizing:border-box}.ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6} .filas { display: flex; flex-direction: column; } .filas.con-lineas > .fila + .fila { border-top: 1px solid var(--borde-suave); border-radius: 0; } .fila { display: flex; align-items: center; gap: var(--esp-3); min-height: var(--alto-fila); padding: var(--esp-1) var(--esp-2); border-radius: var(--radio-fila); color: var(--texto); text-decoration: none; cursor: default; } a.fila, .fila.se-abre { cursor: pointer; } .fila:hover { background: var(--hover); } .fila.elegida { background: var(--sel-fondo); } .fila .codigo { font: var(--estilo-codigo); color: var(--texto-3); width: var(--ancho-codigo); flex: none; } .fila .principal-fila { flex: 1; min-width: 0; } .fila .titulo-fila { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .fila .detalle { display: block; font: var(--estilo-meta); color: var(--texto-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .fila.con-detalle { padding-block: var(--esp-2); } .fila .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; } .fila .meta.fija { font-family: var(--mono); } .fila .acciones { display: flex; gap: var(--esp-1); opacity: 0; transition: opacity .12s var(--sale); } .fila:hover .acciones, .fila:focus-within .acciones, .fila .acciones.siempre { opacity: 1; } .fila .icono-fila { width: 28px; height: 28px; border-radius: var(--radio-control); background: var(--elevado); display: grid; place-items: center; color: var(--texto-2); flex: none; }"
     },
     {
-      "name": "Botón de ícono",
-      "kind": "button",
-      "refersTo": "button-icono",
-      "description": "30 x 30 para herramientas del marco; verde cuando está presionado.",
-      "html": "<button class=\"ds-btn-ic\" aria-label=\"Panel\" aria-pressed=\"false\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"16\"/><path d=\"M15 4v16\"/></svg></button>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-btn-ic{width:30px;height:30px;display:grid;place-items:center;border:0;background:none;border-radius:var(--radio-control);color:var(--texto-3);cursor:pointer}.ds-btn-ic:hover{background:var(--hover);color:var(--texto)}.ds-btn-ic[aria-pressed=true]{color:var(--primario)}.ds-btn-ic:focus-visible{outline:1px solid var(--primario);outline-offset:-1px}"
+      "name": "Recuadro",
+      "kind": "alert",
+      "refersTo": "recuadro-aviso",
+      "description": "Lo que hay que ver aunque no se busque: aviso (ámbar), error (rojo), vacío o punteado.",
+      "html": "<div class=\"ds\"><div class=\"recuadro aviso\" style=\"width:420px\"><div class=\"cuerpo-recuadro\"><strong>Te espera una pregunta</strong>Sin tu respuesta la IA no sigue.</div></div><div class=\"recuadro error\" style=\"width:420px\"><div class=\"cuerpo-recuadro\"><strong>No se pudo leer</strong>Falta docs/estado.md.</div></div></div>",
+      "css": ":host{--fondo:#000000;--elevado:#0c0c0d;--tarjeta:#0a0a0b;--hover:#111113;--sel-fondo:#161618;--velo:#000000b3;--borde:#1c1c1e;--borde-suave:#121213;--borde-fuerte:#2a2a2d;--borde-control:#3d3d42;--texto:#e6e6e6;--texto-2:#a3a3a3;--texto-3:#8a8a8a;--texto-apagado:#4d4d4d;--principal:#3ccf7f;--principal-hover:#5adb93;--principal-fondo:#06140c;--sobre-principal:#000000;--marcado:#4cc38a;--espera:#d9a441;--espera-fondo:#0d0a04;--espera-borde:#3a2f15;--error:#e5484d;--error-fondo:#0f0506;--error-borde:#3d1a1c;--seleccion:#ffffff2e;--bien:#4cc38a;--recomendada:#f2c94c;--enlace:#6cb6ff;--cod-clave:#569cd6;--cod-cadena:#ce9178;--cod-comentario:#6a9955;--cod-numero:#b5cea8;--cod-suma:#0b1a10;--cod-resta:#1c0a0b;--git-modificado:#e2c08d;--git-agregado:#73c991;--git-borrado:#e5484d;--ui:\"Segoe UI Variable Text\", \"Segoe UI\", system-ui, sans-serif;--mono:\"Cascadia Mono\", Consolas, monospace;--tam-chico:12.5px;--tam-base:13.5px;--tam-lectura:15px;--tam-titulo:17px;--tam-grande:22px;--estilo-documento:600 var(--tam-grande)/1.25 var(--ui);--estilo-titulo:600 var(--tam-titulo)/1.35 var(--ui);--estilo-lectura:400 var(--tam-lectura)/1.65 var(--ui);--estilo-cuerpo:400 var(--tam-base)/1.5 var(--ui);--estilo-boton:500 var(--tam-base)/1 var(--ui);--estilo-control:400 var(--tam-base)/1 var(--ui);--estilo-rotulo:500 var(--tam-chico)/1.5 var(--ui);--estilo-meta:400 var(--tam-chico)/1.5 var(--ui);--estilo-codigo:400 var(--tam-chico)/1.5 var(--mono);--esp-1:4px;--esp-2:8px;--esp-3:12px;--esp-4:16px;--esp-5:24px;--esp-6:32px;--esp-7:48px;--radio-control:8px;--radio-fila:8px;--radio-bloque:12px;--radio-tarjeta:16px;--radio-pildora:999px;--alto-barra:36px;--alto-estado:26px;--ancho-secciones:48px;--ancho-conversacion:360px;--alto-cabecera-conversacion:48px;--alto-control:30px;--alto-control-chico:24px;--alto-campo:32px;--alto-campo-chico:26px;--alto-fila:34px;--alto-nodo:26px;--ancho-codigo:44px;--ancho-menu:200px;--ancho-lista-menu:320px;--ancho-cuadro:440px;--ancho-ventana:860px;--alto-ventana:600px;--ancho-pestanas-ventana:200px;--ancho-lectura:760px;--ancho-centrado:820px;--ancho-lista:1080px;--ancho-proyecto:220px;--ancho-globo:280px;--sombra-menu:0 0 0 1px #2a2a2d, 0 10px 28px #00000099;--sombra-ventana:0 0 0 1px #2a2a2d, 0 24px 64px #000000cc;--sale:cubic-bezier(.16, 1, .3, 1);}.ds{font:var(--estilo-cuerpo);color:var(--texto);background:var(--fondo);padding:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.ds *{box-sizing:border-box}.ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6} .recuadro { display: flex; gap: var(--esp-3); align-items: flex-start; padding: var(--esp-3) var(--esp-4); border: 1px solid var(--borde); border-radius: var(--radio-bloque); color: var(--texto-2); } .recuadro .ic { margin-top: 2px; } .recuadro strong { color: var(--texto); font-weight: 600; } .recuadro .cuerpo-recuadro { flex: 1; display: flex; flex-direction: column; gap: var(--esp-1); } .recuadro .acciones-recuadro { display: flex; gap: var(--esp-2); margin-top: var(--esp-2); } .recuadro.aviso { border-color: var(--espera-borde); background: var(--espera-fondo); } .recuadro.aviso > .ic { color: var(--espera); } .recuadro.error { border-color: var(--error-borde); background: var(--error-fondo); } .recuadro.error > .ic { color: var(--error); } .recuadro.vacio { border: 0; padding: var(--esp-6) 0; flex-direction: column; align-items: flex-start; color: var(--texto-3); } .recuadro.punteado { border-style: dashed; border-color: var(--borde-control); padding: var(--esp-6); flex-direction: column; align-items: center; text-align: center; } .recuadro.punteado .cuerpo-recuadro { align-items: center; max-width: var(--ancho-cuadro); }"
     },
     {
-      "name": "Chips de estado",
-      "kind": "chip",
-      "refersTo": "chip-espera",
-      "description": "Estado con ícono y palabra; borde del color al 45 %.",
-      "html": "<span class=\"ds-chip ds-trab\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-3-6.7\"/><path d=\"M21 3v6h-6\"/></svg>Trabajando</span> <span class=\"ds-chip ds-espera\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5\"/><path d=\"M12 16h.01\"/></svg>2 preguntas</span> <span class=\"ds-chip ds-error\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"m15 9-6 6M9 9l6 6\"/></svg>Error</span>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-chip{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 7px;border:1px solid color-mix(in oklab,currentColor 45%,transparent);border-radius:var(--radio-control);font:600 12.5px/1 var(--ui);letter-spacing:.02em;white-space:nowrap}.ds-trab{color:var(--primario)}.ds-trab svg{animation:ds-gira 1.4s linear infinite}.ds-espera{color:var(--espera)}.ds-error{color:var(--error)}@keyframes ds-gira{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.ds-trab svg{animation:none}}"
-    },
-    {
-      "name": "Tarjeta del pedido",
-      "kind": "card",
-      "refersTo": "tarjeta-pedido",
-      "description": "La Q-n dentro de la conversación, con su contexto y Responder.",
-      "html": "<div class=\"ds-pedido\"><div class=\"ds-meta\"><span class=\"ds-q\">Q-45</span><span class=\"ds-chip\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5\"/><path d=\"M12 16h.01\"/></svg>Frena</span></div><h3>¿Cuál de las cuatro alternativas seguimos?</h3><div class=\"ds-ctx\">Decisión entre 4 opciones · contexto: <code>D-031</code></div><div class=\"ds-acc\"><button class=\"ds-btn ds-p\">Responder</button><button class=\"ds-btn ds-s\">Ver en Pendientes</button></div></div>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-btn{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 14px;border-radius:var(--radio-control);font:600 13px/1 var(--ui);letter-spacing:.02em;border:0;background:none;cursor:pointer}.ds-btn:focus-visible{outline:1px solid var(--primario);outline-offset:-1px}.ds-chip{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 7px;border:1px solid color-mix(in oklab,currentColor 45%,transparent);border-radius:var(--radio-control);font:600 12.5px/1 var(--ui);letter-spacing:.02em;white-space:nowrap}.ds-pedido{max-width:72ch;border:1px solid var(--espera-borde);border-radius:var(--radio-tarjeta);background:var(--espera-fondo);padding:14px 16px;display:grid;gap:8px;color:var(--texto);font-family:var(--ui)}.ds-meta{display:flex;align-items:center;gap:10px}.ds-q{font:700 12.5px/1 var(--mono)}.ds-chip{color:var(--espera)}.ds-pedido h3{margin:0;font-size:16px;font-weight:600;line-height:1.4}.ds-ctx{font-size:12.5px;color:var(--texto-2)}.ds-ctx code{font-family:var(--mono);color:var(--texto-2)}.ds-acc{display:flex;gap:8px;margin-top:2px}.ds-p{background:var(--espera);color:var(--sobre-color)}.ds-p:hover{filter:brightness(1.1)}.ds-s{border:1px solid var(--borde-fuerte);color:var(--texto-2)}.ds-s:hover{color:var(--texto);border-color:var(--texto-3)}"
-    },
-    {
-      "name": "Compositor",
+      "name": "Campo",
       "kind": "input",
-      "refersTo": "compositor",
-      "description": "Tarjeta donde se le escribe a la IA; el borde pasa a verde con el foco.",
-      "html": "<div class=\"ds-caja\"><div class=\"ds-prompt\"><span class=\"ds-sig\" aria-hidden=\"true\">&gt;</span><textarea placeholder=\"Escribile a la IA…\" aria-label=\"Mensaje para la IA\"></textarea></div><div class=\"ds-fila\"><span class=\"ds-ayuda\">Enter envía · Shift+Enter, salto de línea</span></div></div>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-caja{max-width:780px;border:1px solid var(--borde-fuerte);border-radius:var(--radio-tarjeta);background:var(--caja)}.ds-caja:focus-within{border-color:var(--primario)}.ds-prompt{display:flex;align-items:flex-start;gap:8px;padding:12px 14px 4px}.ds-sig{color:var(--primario);font:700 14px/1.5 var(--mono)}.ds-caja textarea{flex:1;resize:none;border:0;outline:0;background:none;color:var(--texto);font:400 14px/1.5 var(--ui);height:44px;caret-color:var(--primario)}.ds-caja textarea::placeholder{color:var(--texto-3)}.ds-fila{padding:4px 8px 8px 14px}.ds-ayuda{color:var(--texto-3);font:400 12.5px/1.5 var(--ui)}"
+      "refersTo": "campo",
+      "description": "Escribir o elegir: texto, área, selector, casilla, opción e interruptor; lo escrito se guarda solo.",
+      "html": "<div class=\"ds\"><input class=\"campo\" style=\"width:220px\" placeholder=\"Cómo querés que te llame\"><label class=\"casilla\"><input type=\"checkbox\" checked>Casilla</label><label class=\"opcion\"><input type=\"radio\" checked>Opción</label><label class=\"interruptor\"><input type=\"checkbox\" checked>Prendido</label></div>",
+      "css": ":host{--fondo:#000000;--elevado:#0c0c0d;--tarjeta:#0a0a0b;--hover:#111113;--sel-fondo:#161618;--velo:#000000b3;--borde:#1c1c1e;--borde-suave:#121213;--borde-fuerte:#2a2a2d;--borde-control:#3d3d42;--texto:#e6e6e6;--texto-2:#a3a3a3;--texto-3:#8a8a8a;--texto-apagado:#4d4d4d;--principal:#3ccf7f;--principal-hover:#5adb93;--principal-fondo:#06140c;--sobre-principal:#000000;--marcado:#4cc38a;--espera:#d9a441;--espera-fondo:#0d0a04;--espera-borde:#3a2f15;--error:#e5484d;--error-fondo:#0f0506;--error-borde:#3d1a1c;--seleccion:#ffffff2e;--bien:#4cc38a;--recomendada:#f2c94c;--enlace:#6cb6ff;--cod-clave:#569cd6;--cod-cadena:#ce9178;--cod-comentario:#6a9955;--cod-numero:#b5cea8;--cod-suma:#0b1a10;--cod-resta:#1c0a0b;--git-modificado:#e2c08d;--git-agregado:#73c991;--git-borrado:#e5484d;--ui:\"Segoe UI Variable Text\", \"Segoe UI\", system-ui, sans-serif;--mono:\"Cascadia Mono\", Consolas, monospace;--tam-chico:12.5px;--tam-base:13.5px;--tam-lectura:15px;--tam-titulo:17px;--tam-grande:22px;--estilo-documento:600 var(--tam-grande)/1.25 var(--ui);--estilo-titulo:600 var(--tam-titulo)/1.35 var(--ui);--estilo-lectura:400 var(--tam-lectura)/1.65 var(--ui);--estilo-cuerpo:400 var(--tam-base)/1.5 var(--ui);--estilo-boton:500 var(--tam-base)/1 var(--ui);--estilo-control:400 var(--tam-base)/1 var(--ui);--estilo-rotulo:500 var(--tam-chico)/1.5 var(--ui);--estilo-meta:400 var(--tam-chico)/1.5 var(--ui);--estilo-codigo:400 var(--tam-chico)/1.5 var(--mono);--esp-1:4px;--esp-2:8px;--esp-3:12px;--esp-4:16px;--esp-5:24px;--esp-6:32px;--esp-7:48px;--radio-control:8px;--radio-fila:8px;--radio-bloque:12px;--radio-tarjeta:16px;--radio-pildora:999px;--alto-barra:36px;--alto-estado:26px;--ancho-secciones:48px;--ancho-conversacion:360px;--alto-cabecera-conversacion:48px;--alto-control:30px;--alto-control-chico:24px;--alto-campo:32px;--alto-campo-chico:26px;--alto-fila:34px;--alto-nodo:26px;--ancho-codigo:44px;--ancho-menu:200px;--ancho-lista-menu:320px;--ancho-cuadro:440px;--ancho-ventana:860px;--alto-ventana:600px;--ancho-pestanas-ventana:200px;--ancho-lectura:760px;--ancho-centrado:820px;--ancho-lista:1080px;--ancho-proyecto:220px;--ancho-globo:280px;--sombra-menu:0 0 0 1px #2a2a2d, 0 10px 28px #00000099;--sombra-ventana:0 0 0 1px #2a2a2d, 0 24px 64px #000000cc;--sale:cubic-bezier(.16, 1, .3, 1);}.ds{font:var(--estilo-cuerpo);color:var(--texto);background:var(--fondo);padding:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.ds *{box-sizing:border-box}.ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6} .campo, .selector, .area { height: var(--alto-campo); padding: 0 var(--esp-3); width: 100%; font: var(--estilo-control); color: var(--texto); background: transparent; border: 1px solid var(--borde-control); border-radius: var(--radio-control); } .campo::placeholder, .area::placeholder { color: var(--texto-3); } .campo:hover, .selector:hover, .area:hover { border-color: var(--texto-3); } .campo:focus, .selector:focus, .area:focus { border-color: var(--texto-2); outline: none; } .campo.chico { height: var(--alto-campo-chico); font-size: var(--tam-chico); } .area { height: auto; min-height: 72px; padding: var(--esp-2) var(--esp-3); line-height: 1.5; resize: vertical; } .selector { appearance: none; padding-right: var(--esp-6); cursor: pointer; background-image: linear-gradient(45deg, transparent 50%, var(--texto-2) 50%), linear-gradient(-45deg, transparent 50%, var(--texto-2) 50%); background-position: calc(100% - 15px) 14px, calc(100% - 10px) 14px; background-size: 5px 5px; background-repeat: no-repeat; } .selector option { background: var(--elevado); } .selector.sin-borde { border-color: transparent; color: var(--texto-2); } .etiqueta-campo { display: flex; flex-direction: column; gap: var(--esp-1); font-size: var(--tam-chico); color: var(--texto-2); } .casilla, .opcion { display: inline-flex; align-items: flex-start; gap: var(--esp-2); cursor: pointer; } .casilla input, .opcion input { appearance: none; margin: 2px 0 0; width: 16px; height: 16px; flex: none; border: 1px solid var(--borde-control); background: transparent; cursor: pointer; } .casilla input { border-radius: 4px; } .opcion input { border-radius: 50%; } .casilla input { position: relative; } .casilla input:checked { background: var(--marcado); border-color: var(--marcado); } .casilla input:checked::after { content: \"\"; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid var(--sobre-principal); border-width: 0 2px 2px 0; transform: rotate(45deg); } .opcion input:checked { border-color: var(--marcado); box-shadow: inset 0 0 0 4px var(--fondo), inset 0 0 0 8px var(--marcado); } .interruptor { display: inline-flex; align-items: center; gap: var(--esp-2); cursor: pointer; color: var(--texto-2); } .interruptor input { appearance: none; margin: 0; width: 28px; height: 16px; border-radius: var(--radio-pildora); background: var(--borde-fuerte); position: relative; cursor: pointer; transition: background .15s var(--sale); } .interruptor input::after { content: \"\"; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--texto-2); transition: transform .15s var(--sale), background .15s var(--sale); } .interruptor input:checked { background: var(--marcado); } .interruptor input:checked::after { transform: translateX(12px); background: var(--sobre-principal); }"
     },
     {
-      "name": "Pestañas de sesión",
-      "kind": "nav",
-      "refersTo": "pestana-sesion",
-      "description": "Sesiones abiertas como pestañas con chip de estado; la activa con barra verde arriba.",
-      "html": "<div class=\"ds-ses-barra\"><div class=\"ds-ses ds-activa\"><span class=\"ds-nom\">Centro</span><span class=\"ds-chip ds-v\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-3-6.7\"/><path d=\"M21 3v6h-6\"/></svg>Trabajando</span></div><div class=\"ds-ses\"><span class=\"ds-nom\">otra app</span><span class=\"ds-chip ds-a\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5\"/><path d=\"M12 16h.01\"/></svg>2 preguntas</span></div></div>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-chip{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 7px;border:1px solid color-mix(in oklab,currentColor 45%,transparent);border-radius:var(--radio-control);font:600 12.5px/1 var(--ui);letter-spacing:.02em;white-space:nowrap}.ds-ses-barra{display:flex;height:40px;background:var(--barra);border-bottom:1px solid var(--borde);font:400 13.5px/1.5 var(--ui)}.ds-ses{position:relative;display:flex;align-items:center;gap:8px;padding:0 14px;border-right:1px solid var(--borde);color:var(--texto-3);cursor:pointer}.ds-ses:hover{color:var(--texto-2);background:var(--hover)}.ds-activa,.ds-activa:hover{background:var(--fondo);color:var(--texto)}.ds-activa::before{content:'';position:absolute;left:10px;right:10px;top:0;height:2px;border-radius:0 0 2px 2px;background:var(--primario)}.ds-nom{font-weight:600}.ds-v{color:var(--primario)}.ds-a{color:var(--espera)}"
-    },
-    {
-      "name": "Nodo del mapa",
-      "kind": "nav",
-      "refersTo": "nodo-mapa",
-      "description": "Fila del plan: número mono, nombre y estado con palabra e ícono.",
-      "html": "<div class=\"ds-arbol\"><button class=\"ds-nodo\"><span class=\"ds-num\">05</span><span>Arquitectura técnica</span><span class=\"ds-est\">completo<svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"m8 12 3 3 5-6\"/></svg></span></button><button class=\"ds-nodo ds-sel\"><span>Design system</span><span class=\"ds-est\">la IA trabaja<svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-3-6.7\"/><path d=\"M21 3v6h-6\"/></svg></span></button></div>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-arbol{background:var(--lateral);padding:8px 0;width:320px}.ds-nodo{width:100%;display:flex;align-items:center;gap:8px;height:27px;padding:0 14px 0 10px;border:0;background:none;color:var(--texto-2);font:400 13px/1 var(--ui);text-align:left;cursor:pointer}.ds-nodo:hover{background:var(--hover)}.ds-nodo:focus-visible{outline:1px solid var(--primario);outline-offset:-1px}.ds-sel,.ds-sel:hover{margin:0 6px;width:calc(100% - 12px);border-radius:6px;background:var(--sel-fondo);color:var(--texto)}.ds-num{color:var(--texto-3);min-width:18px;font:500 12px/1 var(--mono)}.ds-est{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--texto-3)}.ds-est svg{color:var(--primario)}"
-    },
-    {
-      "name": "Medidor",
-      "kind": "custom",
-      "refersTo": "medidor",
-      "description": "Lo único que brilla: contexto y uso en la barra de estado.",
-      "html": "<div class=\"ds-estado\"><span class=\"ds-med\">Contexto <span class=\"ds-barra\" style=\"--v:42%\"><b></b></span><span class=\"ds-pc\">42 %</span></span><span class=\"ds-med\">Semana <span class=\"ds-barra\" style=\"--v:61%;--m:var(--espera)\"><b></b></span><span class=\"ds-pc\">61 %</span></span></div>",
-      "css": ":host{--fondo:#0a0f0e;--lateral:#070b0a;--barra:#060908;--elevado:#0e1513;--hover:#121c19;--caja:#0f1714;--medidor-fondo:#17241f;--borde:#18241f;--borde-suave:#121b18;--borde-fuerte:#24362f;--texto:#d9e6e0;--texto-2:#a3b8b0;--texto-3:#74908a;--primario:#3ee6a8;--espera:#f5b13d;--espera-borde:#4a3c1a;--espera-fondo:#12170f;--error:#ff5f57;--sobre-color:#0a0d0b;--sel-fondo:#0f241d;--ui:'Chakra Petch','Segoe UI',sans-serif;--mono:'JetBrains Mono',Consolas,monospace;--radio-tarjeta:10px;--radio-control:5px;--sale:cubic-bezier(.16,1,.3,1)}.ds-estado{display:flex;gap:6px;height:28px;align-items:center;padding:0 12px;background:var(--barra);border-top:1px solid var(--borde);font:400 12.5px/1 var(--ui);color:var(--texto-2)}.ds-med{display:inline-flex;align-items:center;gap:8px;padding:0 8px}.ds-barra{position:relative;display:inline-block;width:72px;height:6px;border-radius:3px;overflow:hidden;background:var(--medidor-fondo)}.ds-barra b{position:absolute;inset:0 auto 0 0;width:var(--v);border-radius:3px;background:var(--m,var(--primario));box-shadow:0 0 8px var(--m,var(--primario))}.ds-pc{font:500 12px/1 var(--mono);color:var(--texto);min-width:34px}"
+      "name": "Cuenta y señal",
+      "kind": "badge",
+      "refersTo": "senal",
+      "description": "Un número o una marca chica, sin píldora: ámbar lo que frena, rojo lo que falla, verde lo que está andando.",
+      "html": "<div class=\"ds\"><span class=\"cuenta\">3</span><span class=\"cuenta frena\">2</span><span class=\"punto ambar\"></span><span class=\"senal verde\">Trabajando</span><span class=\"senal rojo\">Error</span></div>",
+      "css": ":host{--fondo:#000000;--elevado:#0c0c0d;--tarjeta:#0a0a0b;--hover:#111113;--sel-fondo:#161618;--velo:#000000b3;--borde:#1c1c1e;--borde-suave:#121213;--borde-fuerte:#2a2a2d;--borde-control:#3d3d42;--texto:#e6e6e6;--texto-2:#a3a3a3;--texto-3:#8a8a8a;--texto-apagado:#4d4d4d;--principal:#3ccf7f;--principal-hover:#5adb93;--principal-fondo:#06140c;--sobre-principal:#000000;--marcado:#4cc38a;--espera:#d9a441;--espera-fondo:#0d0a04;--espera-borde:#3a2f15;--error:#e5484d;--error-fondo:#0f0506;--error-borde:#3d1a1c;--seleccion:#ffffff2e;--bien:#4cc38a;--recomendada:#f2c94c;--enlace:#6cb6ff;--cod-clave:#569cd6;--cod-cadena:#ce9178;--cod-comentario:#6a9955;--cod-numero:#b5cea8;--cod-suma:#0b1a10;--cod-resta:#1c0a0b;--git-modificado:#e2c08d;--git-agregado:#73c991;--git-borrado:#e5484d;--ui:\"Segoe UI Variable Text\", \"Segoe UI\", system-ui, sans-serif;--mono:\"Cascadia Mono\", Consolas, monospace;--tam-chico:12.5px;--tam-base:13.5px;--tam-lectura:15px;--tam-titulo:17px;--tam-grande:22px;--estilo-documento:600 var(--tam-grande)/1.25 var(--ui);--estilo-titulo:600 var(--tam-titulo)/1.35 var(--ui);--estilo-lectura:400 var(--tam-lectura)/1.65 var(--ui);--estilo-cuerpo:400 var(--tam-base)/1.5 var(--ui);--estilo-boton:500 var(--tam-base)/1 var(--ui);--estilo-control:400 var(--tam-base)/1 var(--ui);--estilo-rotulo:500 var(--tam-chico)/1.5 var(--ui);--estilo-meta:400 var(--tam-chico)/1.5 var(--ui);--estilo-codigo:400 var(--tam-chico)/1.5 var(--mono);--esp-1:4px;--esp-2:8px;--esp-3:12px;--esp-4:16px;--esp-5:24px;--esp-6:32px;--esp-7:48px;--radio-control:8px;--radio-fila:8px;--radio-bloque:12px;--radio-tarjeta:16px;--radio-pildora:999px;--alto-barra:36px;--alto-estado:26px;--ancho-secciones:48px;--ancho-conversacion:360px;--alto-cabecera-conversacion:48px;--alto-control:30px;--alto-control-chico:24px;--alto-campo:32px;--alto-campo-chico:26px;--alto-fila:34px;--alto-nodo:26px;--ancho-codigo:44px;--ancho-menu:200px;--ancho-lista-menu:320px;--ancho-cuadro:440px;--ancho-ventana:860px;--alto-ventana:600px;--ancho-pestanas-ventana:200px;--ancho-lectura:760px;--ancho-centrado:820px;--ancho-lista:1080px;--ancho-proyecto:220px;--ancho-globo:280px;--sombra-menu:0 0 0 1px #2a2a2d, 0 10px 28px #00000099;--sombra-ventana:0 0 0 1px #2a2a2d, 0 24px 64px #000000cc;--sale:cubic-bezier(.16, 1, .3, 1);}.ds{font:var(--estilo-cuerpo);color:var(--texto);background:var(--fondo);padding:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}.ds *{box-sizing:border-box}.ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6} .cuenta { font: var(--estilo-codigo); color: var(--texto-3); } .cuenta.frena { color: var(--espera); } .punto { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--texto-3); flex: none; } .punto.ambar { background: var(--espera); } .punto.rojo { background: var(--error); } .punto.blanco { background: var(--texto); } .senal { display: inline-flex; gap: 6px; align-items: center; font-size: var(--tam-chico); color: var(--texto-3); white-space: nowrap; } .senal .ic { width: 14px; height: 14px; flex: none; } .senal.ambar { color: var(--espera); } .senal.rojo { color: var(--error); } .senal.verde { color: var(--bien); } .senal.blanco { color: var(--texto); }"
     }
   ],
   "narrative": {
-    "northStar": "La consola de fósforo que se lee como un libro",
-    "overview": "Casi negro con tinte verde, una sola luz de fósforo y la conversación en el centro. Es una consola, pero no se disfraza de terminal: nada de mayúsculas, rayas ni brillo en las superficies. Se lee tranquilo, como un texto largo (D-029).\n\nLa forma es la de VS Code (D-031): barra de actividad a la izquierda, sesiones como pestañas, área principal grande, panel que se despliega y barra de estado abajo. Casi todo es gris verdoso. El color aparece solo para avisar algo, y siempre con ícono y palabra.\n\nEl estilo es F4 (D-032): esquinas redondeadas, tarjetas suaves con fondo apenas teñido y medidores finos. Los medidores son lo único que brilla.",
+    "northStar": "La consola negra que se lee como un libro",
+    "overview": "Negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto (D-103, D-104: único tema). Lo activo y lo marcado van en blanco; lo prendido, en verde. Un solo color de acción, el verde del botón principal, en la letra y el borde sobre negro. Las señales: ámbar lo que espera del usuario, rojo un error.\n\nLa forma sigue siendo la de VS Code (D-031): barra de secciones a la izquierda, proyectos como pestañas arriba, área principal grande, la conversación a la derecha y la barra de estado abajo. Los tokens de `docs/diseno/tokens.css` los importa la app tal cual; las piezas (PZ-1 a PZ-15) están en `docs/diseno/piezas.css`.",
     "keyCharacteristics": [
-      "Solo oscuro. No hay tema claro.",
-      "Tres señales y nada más: verde (activo, hecho, foco), ámbar (espera al usuario), rojo (error).",
-      "Chakra Petch para todo lo que se lee; JetBrains Mono solo para códigos y números.",
-      "Densidad de herramienta de escritorio: base de 13,5 px, lectura de 15 px.",
-      "Profundidad por tono, no por sombra."
+      "Solo oscuro: el negro, único tema (D-104).",
+      "Un principal verde como mucho por pantalla (D-109).",
+      "Ámbar solo para lo que espera al usuario; rojo solo para errores (D-100).",
+      "La letra del sistema (Segoe UI) para leer; Cascadia Mono solo para códigos y números.",
+      "Profundidad por tono y líneas; la sombra, solo para lo que flota."
     ],
     "rules": [
       {
-        "name": "The Color Avisa Rule",
-        "body": "El color solo señala estado: verde activo, ámbar espera, rojo error. Todo lo demás es gris verdoso (D-031).",
+        "name": "The Un Principal Rule",
+        "body": "El verde de acción es la letra y el borde del botón principal y nada más: uno por pantalla (D-109, R-49).",
         "section": "colors"
       },
       {
-        "name": "The Ícono y Palabra Rule",
-        "body": "Ningún estado va solo con color: cada chip y cada nodo lleva ícono y palabra («Trabajando», «2 preguntas», «Error», «pendiente»).",
+        "name": "The Ámbar Espera Rule",
+        "body": "El ámbar es solo para lo que espera al usuario; el rojo, para un error y lo que borra (D-100).",
         "section": "colors"
       },
       {
-        "name": "The Ámbar Frena Rule",
-        "body": "El ámbar es solo para lo que frena: sin la respuesta del usuario, la IA no sigue. Lo que espera sin frenar (una cuenta, una pregunta, una prueba) va en gris (D-100).",
+        "name": "The Marcado No Es Acción Rule",
+        "body": "Lo prendido (casillas, opciones, interruptores) va en el verde de los medidores, que no es un color de acción (R-60).",
         "section": "colors"
       },
       {
-        "name": "The Botón Claro Rule",
-        "body": "El botón principal es claro y sin color (fondo del texto principal, tinta sobre color): pide sin avisar. Ni ámbar, que avisa, ni verde, que marca (D-100).",
+        "name": "The Grises Neutros Rule",
+        "body": "El texto va en grises neutros, sin tinte (R-46); el más tenue que pasa AA es texto-3.",
         "section": "colors"
+      },
+      {
+        "name": "The Ningún Color Escrito Rule",
+        "body": "Las piezas y las maquetas solo usan var(--…) de tokens que existen; el control de estilos lo marca (D-114).",
+        "section": "components"
+      },
+      {
+        "name": "The Medidas en Tokens Rule",
+        "body": "Las medidas fijas (barras, controles, filas, paneles) son tokens --alto-/--ancho-, no números escritos (T-63).",
+        "section": "layout"
       },
       {
         "name": "The Dos Letras Rule",
-        "body": "Chakra Petch para leer, JetBrains Mono solo para códigos y números. No se suma otra familia.",
+        "body": "La letra del sistema para la interfaz y la lectura; la fija solo para códigos, rutas y números en columna.",
         "section": "typography"
       },
       {
-        "name": "The Minúscula Rule",
-        "body": "Nada en mayúsculas sostenidas. Las etiquetas se distinguen por peso (600) y un tracking leve (0,02em), no por versalitas.",
-        "section": "typography"
-      },
-      {
-        "name": "The Solo los Medidores Brillan Rule",
-        "body": "Ningún fondo, tarjeta, texto ni botón lleva brillo. El resplandor es exclusivo del relleno de los medidores (D-032).",
-        "section": "elevation"
+        "name": "The Una Curva Rule",
+        "body": "Todo lo que aparece o se mueve usa la curva sale.",
+        "section": "motion"
       }
     ],
     "dos": [
-      "Do usar el verde fósforo solo para lo activo, lo hecho y el foco.",
-      "Do poner en ámbar solo lo que frena, y en gris lo que espera sin frenar; el botón principal, claro (D-100).",
-      "Do acompañar cada estado con ícono y palabra.",
-      "Do separar superficies por tono (barra, lateral, fondo) y bordes de 1 px.",
-      "Do escribir códigos, horas y porcentajes en JetBrains Mono, y todo lo demás en Chakra Petch.",
-      "Do mantener la lectura a 15 px con interlineado 1,65 y no más de 72ch.",
-      "Do dejar foco visible en todo: contorno verde de 1 px."
+      "Do elegir el token por lo que dice su comentario, no por cómo se ve.",
+      "Do separar con espacio; con una línea gris solo donde hace falta.",
+      "Do reusar una pieza de piezas.css antes de hacer una nueva."
     ],
     "donts": [
-      "Don't poner brillo en fondos, tarjetas, textos ni botones: solo en el relleno de los medidores (D-032).",
-      "Don't usar mayúsculas sostenidas, rayas de monitor ni otros disfraces de terminal.",
-      "Don't usar el color como decoración ni como único portador de un estado (D-031).",
-      "Don't agregar un tema claro (D-029).",
-      "Don't sumar familias tipográficas ni usar la mono para la prosa.",
-      "Don't usar sombras para dar profundidad, salvo el aviso flotante."
+      "Don't escribir un color o una medida fija a mano.",
+      "Don't poner dos botones principales en una pantalla.",
+      "Don't usar el ámbar para algo que no espera al usuario."
     ]
   }
 }
