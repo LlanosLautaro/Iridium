@@ -37,11 +37,12 @@
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; MA-I3 probada en Q-204, calidad el 2026-11-18) | hecho |
-| Arranque (`modulos/arranque/estado.md`) | sección | 5. Diseño técnico | en curso |
+| Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1) | en curso |
+| Abrir (T-80) | sección | 1. Propuesta (detrás de Arranque, D-148) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). Definición (D-146) y UX (D-147, con un aviso al volver) aprobadas; sigue el diseño técnico.
-El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 (abrir y actualizar las apps) evaluada, espera Q-208. Los avisos de `pnpm audit`, en T-79.
+**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). Definición (D-146), UX (D-147) y diseño técnico (D-149, dos iteraciones) cerrados; sigue AR-I1.
+El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. Los avisos de `pnpm audit`, en T-79.
 En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
@@ -52,15 +53,11 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] Con lo que querés compartir ya en tu Iridium (Armar), en Scripts toqué **Publicar la versión para compartir** y terminó sin error
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
-- **Q-208 — ¿Cómo seguimos con T-80 (abrir y mantener al día lo que hace cada proyecto)?**
-  Tipo: decisión
-  Contexto: `trabajo.md` › T-80. Primero un **Abrir** en la tarjeta para todo proyecto con algo que usar (escritorio, página, consola), que declara la IA en `scripts.md`; después, solo para las apps de escritorio, armarlas solas con la app cerrada, como hace Iridium (D-122). Va como frente nuevo, después de Arranque.
-  Opciones: A) Las dos partes, en ese orden: Abrir primero y la actualización después (recomendada: Abrir resuelve ya lo que les pasa a otras personas y la actualización se apoya en lo mismo) · B) Solo Abrir; la actualización queda como idea · C) Solo la actualización de las apps de escritorio, como la anoté
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Arranque: escribir el diseño técnico y planear sus iteraciones.
+Arranque: construir AR-I1 (el motor del arranque y su ajuste en Ajustes › IA).
 **Leer antes:** `modulos/arranque/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

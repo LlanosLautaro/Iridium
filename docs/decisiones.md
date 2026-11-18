@@ -142,6 +142,20 @@
 | D-133 | 2026-11-16 | Orden (Skills › Framework) | 10, a pedido del usuario | Actualizar al framework va siempre en una conversación nueva del proyecto, y el botón se llama Actualizar | vigente (precisa F-9) |
 | D-134 | 2026-11-16 | Apariencia y ajustes | 10, a pedido del usuario (T-75, Q-187) | El tema propio son solo tokens, en un archivo fuera de la app, con la guía dentro de Iridium y la IA desde Ajustes | vigente |
 | D-135 | 2026-11-17 | Inicio (Bandeja) y Ajustes | 10, a pedido del usuario (T-70, Q-188) | El período de 5 horas se arranca con trabajo real: Iridium abierta toca «Continúa con el proyecto» en un proyecto con respuestas sin procesar, a las 3 y al vencer cada ventana | vigente |
+| D-136 | 2026-11-17 | Inicio (la grilla de Proyectos) | 10, a pedido del usuario (R-80, T-77, Q-191) | Los proyectos van por el último cambio, sin agrupar por estado | vigente; reemplaza el orden por estado de D-022 (opción 1) y de H-1 |
+| D-137 | 2026-11-17 | Mapa (T-71) | 10; frente Mapa, paso 1 (Propuesta), Q-193 | El Mapa se elige entre una hoja de ruta y un camino de pasos por frente, sin kanban | vigente |
+| D-138 | 2026-11-17 | Mapa (T-71) | 10; frente Mapa, paso 1 (Propuesta), Q-194 | El Mapa es un camino de pasos concretos por frente, un frente a la vez | vigente; deja atrás la hoja de ruta (opción A de D-137) |
+| D-139 | 2026-11-17 | Mapa (T-71) y el framework (el estado de un frente) | 10; frente Mapa, paso 1 (Propuesta), Q-195 | La ruta de cada frente es una lista corta en su estado.md, que la IA mantiene al cerrar cada iteración | vigente |
+| D-140 | 2026-11-17 | el orden de los frentes | 10, Q-197 | Después de Ideas se construye el Mapa | vigente |
+| D-141 | 2026-11-17 | Mapa (T-71) | 10; frente Mapa, paso 2 (Definición), Q-199 | La definición del Mapa va como se escribió | vigente |
+| D-142 | 2026-11-17 | Mapa (T-71) | 10; frente Mapa, paso 2 (Definición), Q-200 | Antes del hito 10 el camino del Mapa son los hitos | vigente |
+| D-143 | 2026-11-17 | Mapa (T-71) | 10; frente Mapa, paso 2 (Definición), Q-201 | «Por empezar» sale solo de trabajo.md | vigente |
+| D-144 | 2026-11-17 | Mapa (T-71) | 10; frente Mapa, paso 4 (UX), Q-202 | La UX del Mapa queda como se escribió, sin color por frente | vigente |
+| D-145 | 2026-11-17 | Mapa (T-71) y el framework (el `estado.md` de un frente) | 10; frente Mapa, paso 5 (Diseño técnico) | La ruta: casillas con tres marcas, los códigos escondidos y «Por empezar» calculado al leer | vigente |
+| D-146 | 2026-11-18 | Arranque (T-70), con Apariencia y ajustes (el ajuste) e Inicio (el detalle del uso) | 10; frente Arranque, paso 2 (Definición) | La definición del Arranque va como se escribió | vigente |
+| D-147 | 2026-11-18 | Arranque (T-70), con Apariencia y ajustes e Inicio | 10; frente Arranque, paso 4 (UX) | La UX del Arranque, con un aviso al volver | vigente |
+| D-148 | 2026-11-18 | frente nuevo Abrir (T-80), con el framework e Inicio | 10 | Abrir lo que hace cada proyecto, y después mantener al día las apps de escritorio | vigente |
+| D-149 | 2026-11-18 | Arranque (T-70) | 10; frente Arranque, paso 5 (Diseño técnico) | El arranque: un temporizador recalculado, la Bandeja como fuente y lo que pasó en arranques.json | vigente |
 
 ---
 
@@ -3071,3 +3085,25 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción B de Q-207: `modulos/arranque/ux.md` como está y, además, un aviso con lo que hizo mientras el usuario no estaba (AR-4). Como el arranque necesita Iridium abierta, «al abrir Iridium» es al volver a la PC: la primera vez que la ventana toma el foco o recibe el mouse después de uno o más arranques. Es el aviso de W-4, con un renglón por arranque (y lo que no pudo), Abrir en cada uno y Listo; no se va solo y sale una vez por tanda.
 **Motivo:** lo primero que ve el usuario al sentarse es lo que se hizo de noche, sin buscarlo.
 **Consecuencias:** el aviso de W-4 suma una variante que no se va sola.
+
+## D-148 — Abrir lo que hace cada proyecto, y después mantener al día las apps de escritorio
+- **Fecha:** 2026-11-18
+- **Ámbito:** frente nuevo Abrir (T-80), con el framework e Inicio
+- **Hito o paso:** 10
+- **Estado:** vigente
+
+**Contexto:** T-80 pedía mantener al día las apps instaladas de los proyectos cuando están cerradas. Al evaluarla salió un problema más amplio: otras personas que usan Iridium no saben cómo se abre lo que hace cada proyecto, y no todos los proyectos son apps ni todas se instalan.
+**Decisión:** opción A de Q-208: un frente nuevo, en dos partes y en ese orden. Primero **Abrir**: la IA declara en `scripts.md` cuál script abre lo que el proyecto hace y de qué tipo es, e Iridium lo muestra como botón; el usuario lo quiere en el menú del clic derecho de la tarjeta y dentro del proyecto (pensó en la barra lateral, abierto a un lugar mejor, que se decide en la UX del frente). Después, solo para las apps de escritorio, armarlas solas cuando hay cambios y la app está cerrada, como Iridium consigo mismo (D-122).
+**Motivo:** Abrir resuelve ya lo que les pasa a otras personas y vale para casi todo tipo de proyecto; la actualización se apoya en la misma declaración.
+**Consecuencias:** cambia el formato de `scripts.md`: va con el lector, el control y el framework (D-086). El frente entra detrás de Arranque.
+
+## D-149 — El arranque: un temporizador recalculado, la Bandeja como fuente y lo que pasó en arranques.json
+- **Fecha:** 2026-11-18
+- **Ámbito:** Arranque (T-70)
+- **Hito o paso:** 10; frente Arranque, paso 5 (Diseño técnico)
+- **Estado:** vigente
+
+**Contexto:** la definición (D-146) y la UX (D-147) estaban aprobadas; faltaba cómo se construye.
+**Decisión:** un solo temporizador hasta el próximo momento, recalculado al cambiar el ajuste o el uso y al despertar la PC (el aviso de Windows de suspensión); antes de decidir se relee el uso sin gastar. El trabajo listo sale de la lectura de la Bandeja (respondidas, sin las «Más tarde»), la más vieja por la fecha de su archivo. Arranca como Nueva, con el modelo y el esfuerzo del proyecto. Lo que pasó va a `arranques.json` (7 días, y hasta dónde se mostró) y la conversación queda marcada en `sesiones.json`. El aviso al volver junta solo lo que pasó con Iridium sin usar hace 5 minutos o más, y no muestra «nada listo» ni «período abierto». El paso 6 (UI) se descarta: el aviso fijo es un estado de la pieza Aviso. Dos iteraciones: AR-I1 (el motor y el ajuste) y AR-I2 (contar lo que hizo). Detalle: `modulos/arranque/diseno-tecnico.md`.
+**Motivo:** reusa lo que ya funciona (Nueva, la Bandeja, el uso, el rato sin usar Iridium) y no guarda dos veces lo mismo.
+**Consecuencias:** `config.json` suma `arranque`; los datos de Iridium suman `arranques.json`; el resumen de sesión suma `arranque`. Se confirma en AR-I1 qué informa el uso sin un período abierto.
