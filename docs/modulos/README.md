@@ -11,4 +11,5 @@
 | Inicio | sección | en operación (con el hito 10) | `modulos/inicio/` |
 | Orden | sección | 3. Investigación (la auditoría) | `modulos/orden/` |
 | Ideas | sección | en operación (con el hito 10) | `modulos/ideas/` |
-| Mapa | sección | 2. Definición | `modulos/mapa/` |
+| Mapa | sección | en operación (con el hito 10) | `modulos/mapa/` |
+| Arranque | sección | 2. Definición | `modulos/arranque/` |

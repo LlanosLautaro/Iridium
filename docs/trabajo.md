@@ -292,7 +292,7 @@ Pasó a ser el frente Ideas (D-127): sumado a guardar enlaces de repos para revi
 Hecho el 2026-11-17: el frente Ideas terminó (ID-I1 a ID-I4 probadas, la última en Q-198; la calidad, en `modulos/ideas/estado.md` › Calidad).
 
 ## T-70 — es posible un "session usage starter"? es decir, una pequeña herramienta que inicie con casi 0 tokens el periodo de 5hs de uso, de este modo se podría iniciar siempre cada 5hs independientemente de si y escribí algo o no, para aprovechar mejor los periodos de tiempo de 5hs, creo que esto es similar a los caché warmers que según entiendo anthropic los permite, quizás deberíamos echar un ojo antes de hacerlo
-Estado: pendiente · Idea: usuario · Fecha: 2026-11-15 · Origen: D-135
+Estado: en curso · Frente: Arranque · Idea: usuario · Fecha: 2026-11-15 · Origen: D-135
 Decidido en Q-188 (D-135): con trabajo real y desde la misma Iridium abierta, a eso de las 3 y unos 5 minutos después de que venza cada ventana. Va después de Ideas.
 Revisada con la IA el 2026-11-16 (espera Q-184):
 - **Cómo anda el límite:** en Pro y Max, el período de 5 horas empieza con el primer mensaje (en claude.ai o en Claude Code, que comparten el uso) y se renueva 5 horas después; aparte está el límite semanal, que no cambia con esto.
