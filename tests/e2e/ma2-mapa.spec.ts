@@ -307,3 +307,162 @@ test('MA-12: un frente sin su estado.md muestra el error en su pestaña; al camb
   await expect(mapa.getByRole('region', { name: 'Notas' })).toContainText('Todo hecho por ahora')
   await app.close()
 })
+
+// Paso 8 del frente: los criterios de MA-1 a MA-12 que no tenían su prueba con la app abierta.
+test.describe('Calidad del Mapa (paso 8)', () => {
+  test('antes del hito 10, el portón como ramas con «Te espera»; en el hito 10 sin frentes, la línea gris (MA-5)', async () => {
+    await proyecto('Beta', {
+      '.proyecto.json': ficha,
+      'docs/README.md': '# Docs\n\n**Framework:** 2026-11-17\n',
+      'docs/estado.md': `# Estado del proyecto
+
+## Hito actual
+4 — UX — en curso
+
+## Progreso de hitos
+| # | Hito | Estado | Documento |
+|---|---|---|---|
+| 3 | Investigación de dominio | hecho | \`03-investigacion.md\` |
+| 4 | UX | en curso | \`04-ux.md\` |
+| 5 | Arquitectura técnica | pendiente | |
+
+## Preguntas abiertas
+- **Q-7 — ¿Los flujos están bien?**
+  Tipo: decisión
+  Opciones: A) Sí · B) No
+
+## Próximo paso
+Esperar Q-7.
+`,
+      'docs/04-ux.md': '# UX\n\n## Portón\n- [x] Historias con criterios\n- [ ] Flujos aprobados (Q-7)\n',
+    })
+    await proyecto('Gamma', {
+      '.proyecto.json': ficha,
+      'docs/README.md': '# Docs\n\n**Framework:** 2026-11-17\n',
+      'docs/estado.md': `# Estado del proyecto
+
+## Hito actual
+10 — Operación — en curso
+
+## Progreso de hitos
+| # | Hito | Estado | Documento |
+|---|---|---|---|
+| 9 | Lanzamiento | hecho | |
+| 10 | Operación | en curso | \`10-operacion.md\` |
+
+## Preguntas abiertas
+(ninguna)
+
+## Próximo paso
+Usarla.
+`,
+      'docs/10-operacion.md': '# Operación\n',
+    })
+    const { app, win } = await abrir()
+    await win.locator('.tarjeta', { hasText: 'Beta' }).click()
+    let mapa = await alMapa(win)
+    await expect(mapa.getByRole('tablist')).toHaveCount(0)
+    const camino = mapa.locator('.camino')
+    await expect(camino.locator('.tramo.foco')).toHaveText('UX')
+    // La lista del portón, como ramas: lo hecho con el punto lleno, lo que falta vacío y sin el código.
+    await expect(camino.locator('.tramo.rama .nombre-tramo')).toHaveText([
+      'Historias con criterios',
+      'Flujos aprobados',
+    ])
+    await expect(camino.locator('.tramo.rama.hecho')).toHaveText('Historias con criterios')
+    await expect(camino.locator('.tramo.rama.espera')).toContainText('Te espera')
+    await expect(mapa).not.toContainText('Q-7')
+    await win.screenshot({ path: 'test-results/ma8-mapa-porton.png' })
+
+    await win.getByRole('button', { name: /^Inicio/ }).click()
+    await win.locator('.tarjeta', { hasText: 'Gamma' }).click()
+    mapa = await alMapa(win)
+    await expect(mapa.getByRole('tablist')).toHaveCount(0)
+    await expect(mapa.locator('.camino .tramo.foco')).toHaveText('Operación')
+    await expect(mapa).toContainText(
+      'Todavía no hay frentes: la IA abre uno cuando haya algo grande para hacer.',
+    )
+    await app.close()
+  })
+
+  test('Empezar este frente: la ✕ saca la cita; al enviar va «Empezá el frente» con lo escrito (MA-7)', async () => {
+    const { app, win } = await abrir()
+    await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+    const mapa = await alMapa(win)
+    await mapa.getByRole('tab', { name: /Por empezar/ }).click()
+    const empezar = mapa.getByRole('button', { name: 'Empezar este frente' })
+    const citas = win.locator('.compositor .citado')
+    await empezar.click()
+    await expect(citas).toHaveCount(1)
+    await win.getByRole('button', { name: 'Quitar la cita Exportar' }).click()
+    await expect(citas).toHaveCount(0)
+    await empezar.click()
+    await expect(win.locator('.hilo')).not.toContainText('Empezá el frente Exportar')
+    const mensaje = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+    await mensaje.fill('Primero el PDF')
+    await mensaje.press('Enter')
+    await expect(win.locator('.hilo')).toContainText('Empezá el frente Exportar')
+    await expect(win.locator('.hilo')).toContainText('Primero el PDF')
+    await expect(citas).toHaveCount(0)
+    // Se cierra con la conversación quieta: después del turno, el que le devuelve el control (la muestra tiene avisos).
+    await expect(win.locator('.hilo')).toContainText(
+      /avisos del framework[\s\S]*Listo: dejé el estado al día\./,
+    )
+    await app.close()
+  })
+
+  test('muchos frentes: la barra se desplaza y la elegida queda a la vista; la pestaña que se fue vuelve al activo (MA-3)', async () => {
+    const nombres = Array.from({ length: 14 }, (_, i) => `Frente con nombre largo ${i + 1}`)
+    const archivos: Record<string, string> = {}
+    for (const [i, n] of nombres.entries()) {
+      archivos[`docs/modulos/f${i + 1}/estado.md`] = `# Estado del módulo: ${n}\n\n## Ruta\n- [ ] Un paso\n`
+    }
+    await proyecto('Alfa', {
+      ...archivos,
+      'docs/estado.md': ESTADO.replace(
+        '| Exportar (T-20)',
+        `${nombres.map((n, i) => `| ${n} (\`modulos/f${i + 1}/estado.md\`) | sección | 1. Propuesta | hecho |`).join('\n')}\n| Exportar (T-20)`,
+      ),
+    })
+    const { app, win } = await abrir()
+    await win.setViewportSize({ width: 1000, height: 800 })
+    await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+    const mapa = await alMapa(win)
+    const barra = mapa.getByRole('tablist', { name: 'Frentes' })
+    expect(await barra.evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(true)
+    // Con las flechas hasta el último frente: la barra corre y la elegida se ve.
+    await barra.getByRole('tab', { name: 'Galería' }).focus()
+    for (let i = 0; i < nombres.length + 2; i++) await win.keyboard.press('ArrowRight')
+    const ultima = barra.getByRole('tab', { name: nombres.at(-1) ?? '' })
+    await expect(ultima).toHaveAttribute('aria-selected', 'true')
+    await expect(ultima).toBeInViewport({ ratio: 0.9 })
+    await win.screenshot({ path: 'test-results/ma8-mapa-muchos.png' })
+
+    // Avisos elegida; la IA lo saca de la tabla y borra su carpeta: al volver, el Mapa muestra el activo.
+    await barra.getByRole('tab', { name: 'Avisos' }).click()
+    await win
+      .getByRole('navigation', { name: 'Secciones del proyecto' })
+      .getByRole('button', { name: 'Docs' })
+      .click()
+    await rm(join(raiz, 'Alfa', 'docs/modulos/avisos'), { recursive: true, force: true })
+    await writeFile(join(raiz, 'Alfa', 'docs/estado.md'), ESTADO.replace(/\| Avisos .*\n/, ''))
+    const vuelta = await alMapa(win)
+    await expect(vuelta.getByRole('tab', { name: 'Avisos' })).toHaveCount(0)
+    await expect(vuelta.getByRole('tab', { name: 'Galería' })).toHaveAttribute('aria-selected', 'true')
+    await app.close()
+  })
+
+  test('un estado fuera del vocabulario se muestra tal cual, en gris (MA-12)', async () => {
+    await proyecto('Alfa', {
+      'docs/estado.md': ESTADO.replace('| 8. Calidad | en pausa |', '| 8. Calidad | bloqueado |'),
+    })
+    const { app, win } = await abrir()
+    await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+    const mapa = await alMapa(win)
+    await mapa.getByRole('tab', { name: 'Avisos' }).click()
+    const estado = mapa.getByRole('region', { name: 'Avisos' }).locator('.estado-frente')
+    await expect(estado).toHaveText('bloqueado')
+    await expect(estado).toHaveClass(/fuera/)
+    await app.close()
+  })
+})

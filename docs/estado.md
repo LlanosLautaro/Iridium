@@ -36,12 +36,12 @@
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
-| Mapa (`modulos/mapa/estado.md`) | sección | 7. Construcción (MA-I1 y MA-I2 hechas; MA-I3 construida, espera Q-204) | en curso |
+| Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; MA-I3 probada en Q-204, calidad el 2026-11-18) | hecho |
 
 ## En qué estamos ahora
-**Frente activo: Mapa** (D-140, T-71). La UX quedó aprobada (Q-202 → D-144) y el diseño técnico, cerrado (D-145: la ruta es una lista de casillas con tres marcas, y lo que está por empezar se calcula con `trabajo.md`). MA-I1 hecha: la ruta entró al framework con su lector y su control, y cada frente de Iridium tiene la suya. MA-I2 hecha y probada (Q-203): el Mapa nuevo reemplazó al de antes. MA-I3 construida (un frente cuyo archivo falta muestra el error en su pestaña; las maquetas usan la pieza Camino): espera tu prueba en un proyecto antes de operación (Q-204). El desglose del contexto ya no se pierde al volver a abrir Iridium (R-89).
-Ideas terminó (2026-11-17): probada y con su calidad hecha; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar. Los avisos de `pnpm audit`, en T-79.
-En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185). Después del Mapa, sin orden entre ellos: el tema propio (T-75, D-134) y el arranque del período de 5 horas (T-70, D-135).
+**Sin frente activo:** espera Q-205 (qué sigue). El Mapa terminó (2026-11-18): el camino de pasos por frente reemplazó al de antes, probado (Q-203, Q-204) y con su calidad (`modulos/mapa/estado.md` › Calidad); T-71 hecho.
+Ideas terminó el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar. Los avisos de `pnpm audit`, en T-79.
+En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
@@ -52,18 +52,16 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
   - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 
-- **Q-204 — Probá el Mapa en un proyecto que todavía no está en operación**
-  Tipo: prueba · Frente: Mapa
-  Contexto: MA-I3 (`modulos/mapa/ux.md` › MA-5). Primero Armar. Antes del hito 10 el camino son los hitos, con los pasos del hito actual debajo. Lo que no anda, contalo en tus palabras o con una captura.
-  - [ ] En un proyecto tuyo antes del hito 10, el Mapa muestra los hitos como camino y el hito actual resaltado, con sus pasos (el portón o las iteraciones) debajo, como ramas
-  - [ ] Si alguno de esos pasos espera una pregunta tuya, dice «Te espera» en ámbar
-  - [ ] En el Mapa de Iridium, en la pestaña Mapa, un clic en «N hechos antes» y después en «Enseñarle a la IA a escribir la ruta…» abrió esa iteración en Docs; con Atrás volví al Mapa en la misma pestaña
+- **Q-205 — ¿Qué hacemos ahora que el Mapa terminó?**
+  Tipo: decisión · frena
+  Contexto: las dos van después del Mapa, sin orden entre ellas, y cada una es de una o dos iteraciones. T-70 (D-135): Iridium arranca el período de 5 horas con trabajo real, a eso de las 3 y al vencer cada ventana, con un proyecto que tenga respuestas tuyas esperando. T-75 (D-134): un tema propio, solo colores y letras, que las actualizaciones no pisan, editado con la IA desde Ajustes.
+  Opciones: A) El arranque del período de 5 horas, T-70 (recomendada: rinde todos los días y es chico) · B) El tema propio, T-75 · C) Retomar Diseño, en pausa desde que Ideas reemplazó su tanda 8
 
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Frente **Mapa**: espera Q-204 (la prueba de MA-I3). Con la respuesta, lo que falle se arregla en MA-I3; si está bien, sigue el paso 8 del frente (la calidad).
-**Leer antes:** `modulos/mapa/estado.md` › Próximo paso (dice qué leer).
+Con Q-205 respondida: abrir lo elegido (T-70 como frente nuevo, T-75 en el frente Apariencia y ajustes, o Diseño desde su DI-I3) con su ruta.
+**Leer antes:** `respuestas/Q-205.md`; según lo elegido, `trabajo.md` › T-70 y `decisiones.md` › D-135, o `trabajo.md` › T-75 y `decisiones.md` › D-134, o `modulos/diseno/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

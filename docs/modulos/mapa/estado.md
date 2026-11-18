@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-202, D-144) | `ux.md` |
 | 5. Diseño técnico | hecho (D-145) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (el camino, sus marcas y sus ramas ya están en las maquetas `diseno/pantallas/mapa-b.html` y `mapa-hitos.html`; pasan a `piezas.css` al construir) | — |
-| 7. Construcción | en curso (MA-I1 y MA-I2 hechas; MA-I3 construida, espera Q-204) | este archivo |
-| 8. Calidad | pendiente | este archivo |
-| 9. Lanzamiento | pendiente | este archivo |
+| 7. Construcción | hecho (MA-I1 a MA-I3; la última, probada en Q-204) | este archivo |
+| 8. Calidad | hecho (2026-11-18: las historias contra las pruebas y dos casos límite del lector arreglados; ver Calidad) | este archivo |
+| 9. Lanzamiento | hecho (entra con Armar, como cada versión) | este archivo |
 
 ## En qué estamos ahora
-UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1 hecha: la ruta ya es parte del framework, con su lector y su control, y cada frente de Iridium tiene la suya. MA-I2 hecha y probada (Q-203): el Mapa nuevo reemplazó entero al de antes (la barra de frentes, el camino con sus marcas y ramas, «Aprobado, sin lugar en la ruta» y «Por empezar»). MA-I3 construida: el Recuadro de error de un frente que no se puede leer y las maquetas con la pieza Camino; espera la prueba en un proyecto antes de operación (Q-204). Después, la calidad del frente (paso 8).
+UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1: la ruta es parte del framework, con su lector y su control, y cada frente de Iridium tiene la suya. MA-I2 (probada en Q-203): el Mapa nuevo reemplazó entero al de antes. MA-I3 (probada en Q-204): el error de un frente que no se puede leer y el camino de los hitos antes de operación. **Módulo completo (2026-11-18):** la calidad está en la sección Calidad.
 
 ## Ruta
 - [x] Pensar para qué sirve el Mapa
@@ -34,7 +34,8 @@ UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1 hecha: la ruta ya 
 - [x] Ver lo que está por empezar y empezar un frente (MA-I2)
 - [x] Probar el Mapa nuevo con los frentes de Iridium (MA-I2)
 - [x] Avisar en su pestaña cuando falta el archivo de un frente (MA-I3)
-- [ ] Ver el camino de los hitos en un proyecto antes de operación (MA-I3, Q-204)
+- [x] Ver el camino de los hitos en un proyecto antes de operación (MA-I3)
+- [x] Repasar cada historia contra sus pruebas y los casos límite
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -49,7 +50,7 @@ UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1 hecha: la ruta ya 
 |---|---|---|
 | MA-I1 | La ruta en el framework, su lector y su control, y la ruta de cada frente de Iridium | hecho (2026-11-17; sin prueba del usuario: no cambia nada que se vea) |
 | MA-I2 | El Mapa nuevo en operación: la barra de frentes, el camino con sus marcas, ramas y plegados, «Aprobado, sin lugar», «Por empezar» y la pieza Camino | hecho (2026-11-18; probada en Q-203) |
-| MA-I3 | Los bordes que quedan: el Recuadro de error de un frente que no se puede leer (MA-12), las maquetas `mapa-b.html` y `mapa-hitos.html` con la pieza Camino, y la prueba en un proyecto antes del hito 10, junto con el clic en un paso hecho que lleva a su iteración, que en Q-203 quedó sin probar (los hitos como camino, el hito 10 sin frentes, un frente sin ruta y el ancho chico ya entraron en MA-I2) | en curso (construida; espera la prueba del usuario, Q-204) |
+| MA-I3 | Los bordes que quedan: el Recuadro de error de un frente que no se puede leer (MA-12), las maquetas `mapa-b.html` y `mapa-hitos.html` con la pieza Camino, y la prueba en un proyecto antes del hito 10, junto con el clic en un paso hecho que lleva a su iteración, que en Q-203 quedó sin probar (los hitos como camino, el hito 10 sin frentes, un frente sin ruta y el ancho chico ya entraron en MA-I2) | hecho (2026-11-18; probada en Q-204) |
 
 ## Log de iteraciones
 (todavía ninguna)
@@ -59,7 +60,7 @@ UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1 hecha: la ruta ya 
 - **Hecho:** un frente cuyo `estado.md` falta (la tabla «Módulos» lo nombra y ya empezó), está vacío o no tiene ni «Ruta» ni «Progreso» muestra en su pestaña un Recuadro de error que dice qué archivo y qué le falta, en lugar del camino; las otras pestañas siguen (`FrenteMapa.error`, `app/mapa.ts`). Las maquetas `mapa-b.html` y `mapa-hitos.html` dibujan el camino con la pieza Camino de `piezas.css` (se fueron sus estilos propios) y quedan «En la app» en `diseno/README.md`.
 - **Criterios verificados:** MA-12 con Vitest y Playwright (el error en su pestaña; la ruta que cambia mientras se mira se redibuja sin cambiar de pestaña ni plegar lo desplegado); las maquetas, con capturas. `pnpm test` (817), `pnpm typecheck`, `pnpm lint`, la prueba de estilos y el control, sin errores.
 - **Pruebas:** `tests/ma2-mapa.test.ts` › Los bordes del Mapa; `tests/e2e/ma2-mapa.spec.ts` › MA-12 (captura `ma3-mapa-error.png`).
-- **Pendiente:** la prueba del usuario en un proyecto suyo antes de operación (Q-204).
+- **Probada:** Q-204, el 2026-11-18, las tres casillas: los hitos como camino con el portón o las iteraciones como ramas, «Te espera» en ámbar y el clic en un paso hecho que abre su iteración.
 
 ### MA-I2 — El Mapa nuevo en operación
 - **Leer antes:** `diseno-tecnico.md` › Lo que lee Iridium; `ux.md` › MA-1 a MA-9 y W-7; la maqueta `diseno/pantallas/mapa-b.html`.
@@ -76,6 +77,16 @@ UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1 hecha: la ruta ya 
 
 - 2026-11-17 — Paso 2 cerrado: Q-199 a Q-201 → D-141 a D-143. Paso 4: `ux.md` escrita y las maquetas al día (`mapa-b.html` rehecha con los datos de hoy; `mapa-hitos.html` nueva); el control y la prueba de estilos, sin avisos.
 
+## Calidad (paso 8, 2026-11-18)
+**Historias.** Cada criterio de MA-1 a MA-12 tiene su prueba. A la app le faltaban cinco, que suma `tests/e2e/ma2-mapa.spec.ts` › Calidad del Mapa: antes del hito 10, la lista del portón como ramas con «Te espera» y, en el hito 10 sin frentes, la línea gris (MA-5, captura `ma8-mapa-porton.png`); Empezar este frente con la ✕ que saca la cita y el mensaje que sale con lo escrito (MA-7); con catorce frentes, la barra que se desplaza con las flechas y deja la elegida a la vista, y la pestaña recordada de un frente que se fue, que vuelve al activo (MA-3, captura `ma8-mapa-muchos.png`); un estado fuera del vocabulario, tal cual y en gris (MA-12). Lo demás ya lo cubrían `ma2-mapa` (Vitest y Playwright), `i4-tres-paneles` e `i8-frentes`. Que la IA ubique en la ruta una idea aprobada al cerrar su iteración (MA-8, MA-10) depende de la IA: lo pide el framework y el control avisa de un frente en curso sin ruta. Las pruebas del usuario: Q-203 y Q-204.
+
+**Casos límite.** Probados: un `estado.md` borrado, vacío o sin ruta ni progreso (el error en su pestaña), la ruta que cambia mientras se mira, un frente que espera sin carpeta, fines de línea de Windows, una marca rara, una rama sin paso, una línea suelta. **Encontrado y arreglado** (`core/ruta.ts`, con su prueba en `tests/ma1-ruta.test.ts`): una rama con sangría de tabulación se leía como un paso más de la línea principal, sin aviso; ahora es una rama. Y un bloque de código dentro de «Ruta» sumaba sus líneas como pasos y mostraba las comillas como pasos raros; ahora se salta entero y el control avisa una vez. Ninguna ruta de Iridium los tenía.
+
+**Seguridad (P2).** El Mapa solo lee: los `estado.md`, `trabajo.md` y las preguntas abiertas del proyecto. Lo único que hace es citar «Empezá el frente…» en la conversación, sin enviar. Sin dependencias nuevas.
+
+**Accesibilidad y UI.** La barra es una lista de pestañas con su nombre («Frentes»), las flechas pasan de una a otra y el foco la sigue; «Te espera», los hechos plegados y cada paso son botones con su nombre; el error es un `alert`. La pieza Camino (PZ-15) está en `piezas.css` y el control de estilos pasa. Rendimiento: el Mapa de este proyecto (nueve frentes, 18 cosas en «Por empezar») se arma en unos 0,2 s.
+
+**Verificado:** `pnpm test` (819), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` (134 pasan).
+
 ## Próximo paso
-Con Q-204 respondida: si algo falla, arreglarlo en MA-I3; si está bien, MA-I3 probada y sigue el paso 8 (la calidad del frente: las historias MA-1 a MA-12 contra las pruebas, como en Ideas).
-**Leer antes:** `respuestas/Q-204.md`; para el paso 8, `ux.md` › Historias de usuario y `modulos/ideas/estado.md` › Calidad (como modelo).
+Módulo completo. Lo que salga del uso va a `trabajo.md` con `Frente: Mapa`.

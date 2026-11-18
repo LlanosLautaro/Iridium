@@ -68,16 +68,25 @@ export function leerRuta(estado: string): RutaLeida | null {
   const fin = fuera.find((l) => l.n > inicio.n && /^ {0,3}#{1,2}\s/.test(l.texto))?.n ?? lineas.length
   const pasos: PasoRuta[] = []
   const problemas: ProblemaRuta[] = []
+  const deTexto = new Set(fuera.map((l) => l.n))
   let comentario = false
   for (let n = inicio.n + 1; n < fin; n++) {
     const l = lineas[n] ?? ''
+    // Un bloque de código no es parte del camino: se salta entero, con un aviso al abrirlo.
+    if (!deTexto.has(n)) {
+      if (deTexto.has(n - 1))
+        problemas.push({ linea: n + 1, texto: 'la ruta no lleva bloques de código: un paso por línea' })
+      continue
+    }
     if (comentario || /^\s*<!--/.test(l)) {
       comentario = !/-->/.test(l)
       continue
     }
     if (l.trim() === '') continue
     const m = /^(\s*)[-*]\s+\[(.?)\]\s+(.+)$/.exec(l)
-    const rama = (m?.[1] ?? /^\s*/.exec(l)?.[0] ?? '').length >= 2
+    // Dos espacios o una tabulación: la IA a veces escribe la sangría con tabulación.
+    const sangria = m?.[1] ?? /^\s*/.exec(l)?.[0] ?? ''
+    const rama = sangria.length >= 2 || sangria.includes('\t')
     let marca: MarcaRuta = 'otro'
     if (!m) problemas.push({ linea: n + 1, texto: 'cada línea de «Ruta» es una casilla: `- [ ] Paso`' })
     else if (m[2] === 'x' || m[2] === 'X') marca = 'hecho'

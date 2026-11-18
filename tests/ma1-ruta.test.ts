@@ -66,6 +66,26 @@ describe('leerRuta', () => {
     ])
     expect(mal?.problemas.map((p) => p.linea)).toEqual([2, 3, 4])
   })
+
+  // Calidad del frente (paso 8): los casos límite de cómo la escribe la IA.
+  it('una rama con sangría de tabulación es una rama; los fines de línea de Windows no cambian nada', () => {
+    const tab = leerRuta('## Ruta\n- [x] Uno\n\t- [ ] Rama con tabulación\n')
+    expect(tab?.pasos[0]?.ramas.map((p) => p.texto)).toEqual(['Rama con tabulación'])
+    expect(tab?.problemas).toEqual([])
+    const crlf = leerRuta('## Ruta\r\n- [x] Uno\r\n  - [ ] Rama\r\n- [ ] Dos (Q-3)\r\n')
+    expect(crlf?.pasos.map((p) => [p.texto, p.marca, p.preguntas, p.ramas.length])).toEqual([
+      ['Uno', 'hecho', [], 1],
+      ['Dos', 'viene', ['Q-3'], 0],
+    ])
+  })
+
+  it('un bloque de código no suma pasos: se salta y avisa una vez', () => {
+    const r = leerRuta('## Ruta\n- [x] Uno\n```\n- [ ] no es un paso\n```\n- [ ] Dos\n')
+    expect(r?.pasos.map((p) => p.texto)).toEqual(['Uno', 'Dos'])
+    expect(r?.problemas).toEqual([
+      { linea: 3, texto: 'la ruta no lleva bloques de código: un paso por línea' },
+    ])
+  })
 })
 
 describe('textoSinCodigos', () => {
