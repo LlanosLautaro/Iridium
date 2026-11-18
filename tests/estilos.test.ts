@@ -177,18 +177,14 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
   'git.css': ['commit', 'arch', 'fila-git', 'remoto', 'plegable', 'aviso-git', 'arbol-lista', 'git-cuenta'],
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
-  // DI-I3, tanda 6: la Bandeja pasó a las piezas; queda el texto de los documentos (la columna de Skills, tanda 9)
-  'pendientes.css': ['aviso-doc', 'gp-casilla', 'doc-texto'],
-  // DI-I3, tanda 7: el Mapa pasó a las piezas
+  // DI-I3, tanda 6: la Bandeja pasó a las piezas; queda el texto de los documentos de Scripts (tanda 11: Docs pasó)
+  'pendientes.css': ['aviso-doc', 'doc-texto'],
+  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás
   'proyecto.css': [
-    'atras',
     'script',
     'aviso-doc',
     'recuadro-simple',
-    'menu-boton',
-    'ancho-lectura',
     'menu-lista',
-    'barra-doc',
     'cab-panel',
     'doc-texto',
     'arbol-lista',
@@ -212,13 +208,13 @@ const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--barra': 1,
   '--caja': 14,
   '--medidor-fondo': 5,
-  '--primario': 18,
-  '--primario-texto': 5,
+  '--primario': 17,
+  '--primario-texto': 4,
   '--ok': 10,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,
-  '--radio-medidor': 4,
+  '--radio-medidor': 2,
   '--sombra-flotante': 1,
 }
 

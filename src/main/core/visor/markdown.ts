@@ -148,9 +148,9 @@ function marcarCasillas(state: StateCore): void {
     if (!m) continue
     const hecha = m[1] !== ' '
     primero.content = primero.content.slice(m[0].length)
-    li.attrJoin('class', hecha ? 'gp-casilla gp-casilla--hecha' : 'gp-casilla')
+    li.attrJoin('class', hecha ? 'casilla-doc hecha' : 'casilla-doc')
     const abre = new state.Token('html_inline', '', 0)
-    abre.content = `<span class="gp-casilla-caja" role="img" aria-label="${hecha ? 'Hecho' : 'Pendiente'}"></span><span>`
+    abre.content = `<span class="casilla-doc-caja" role="img" aria-label="${hecha ? 'Hecho' : 'Pendiente'}"></span><span>`
     const cierra = new state.Token('html_inline', '', 0)
     cierra.content = '</span>'
     inline.children = [abre, ...inline.children, cierra]

@@ -1,6 +1,6 @@
 /* Los pendientes de un proyecto, en su Bandeja de entrada (04-ux.md › W-5 y W-6), con las piezas desde DI-I3, tanda 6
-   (docs/diseno/pantallas/bandeja.html). Arriba queda el texto de los documentos, que usa Docs
-   hasta que su sección pase. */
+   (docs/diseno/pantallas/bandeja.html). Arriba queda el texto de los documentos, que usa Scripts
+   hasta que su sección pase (Docs ya es el Texto de documento, tanda 11). */
 
 /* Texto de un documento del proyecto (citas y panel): el HTML que arma el visor */
 .doc-texto {
@@ -76,21 +76,25 @@
   text-align: left;
   vertical-align: top;
 }
-.doc-texto .gp-casilla {
+/* Una casilla de un documento (`- [ ]`): se dibuja, no se marca. En Docs, la Bandeja y Scripts */
+.casilla-doc {
   list-style: none;
-  margin-left: -18px;
+  margin-left: calc(-1 * var(--esp-5));
   display: flex;
-  gap: 8px;
+  gap: var(--esp-2);
 }
-.doc-texto .gp-casilla-caja {
+.doc-texto .casilla-doc {
+  margin-left: -18px;
+}
+.casilla-doc-caja {
   flex: none;
   width: 12px;
   height: 12px;
-  margin-top: 5px;
+  margin-top: 0.4em;
   border: 1px solid var(--borde-control);
-  border-radius: var(--radio-medidor);
+  border-radius: 3px;
 }
-.doc-texto .gp-casilla--hecha .gp-casilla-caja {
+.casilla-doc.hecha .casilla-doc-caja {
   background: var(--marcado);
   border-color: var(--marcado);
 }

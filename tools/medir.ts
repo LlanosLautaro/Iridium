@@ -149,15 +149,14 @@ try {
   await win.waitForSelector('[data-seccion="mapa"] .hito-mapa', { timeout: 30_000 })
   anotar('mapaDeIridiumMs', Date.now() - t)
   await seccion(win, 'Docs')
-  await win.waitForSelector('[data-seccion="docs"] .doc-texto', { timeout: 30_000 })
+  await win.waitForSelector('[data-seccion="docs"] .texto-doc', { timeout: 30_000 })
   t = Date.now()
-  await win.locator('[data-seccion="docs"] .barra-doc .menu-boton').first().click()
   await win
-    .getByRole('menuitem', { name: /^decisiones/ })
-    .first()
+    .getByRole('navigation', { name: 'Documentos' })
+    .getByRole('button', { name: 'decisiones.md' })
     .click()
   await win.waitForFunction(
-    () => (document.querySelector('[data-seccion="docs"] .doc-texto')?.textContent ?? '').includes('D-070'),
+    () => (document.querySelector('[data-seccion="docs"] .texto-doc')?.textContent ?? '').includes('D-070'),
     null,
     { timeout: 30_000 },
   )

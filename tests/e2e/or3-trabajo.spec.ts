@@ -89,11 +89,11 @@ test('sin Trabajo en la barra: un T-n abre trabajo.md en Docs, en ese ítem, y A
     await barra.getByRole('button', { name: 'Docs' }).click()
     const docs = win.locator('[data-seccion="docs"]')
     await docs.locator('a.gp-codigo-enlace', { hasText: 'T-2' }).first().click()
-    await expect(docs.locator('.barra-doc .nom')).toHaveText('trabajo.md')
+    await expect(docs.locator('.docs-ruta')).toHaveText('trabajo.md')
     await expect(docs.locator('[id="t-2"]')).toBeInViewport()
     await win.screenshot({ path: 'test-results/or3-trabajo-en-docs.png' })
     await win.keyboard.press('Alt+ArrowLeft')
-    await expect(docs.locator('.barra-doc .nom')).toHaveText('estado.md')
+    await expect(docs.locator('.docs-ruta')).toHaveText('estado.md')
   } finally {
     await app.close()
   }

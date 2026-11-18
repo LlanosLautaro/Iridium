@@ -134,13 +134,13 @@ test('el Mapa antes del hito 10 con un frente abierto: «Hitos» primero y el fr
   // El nombre del frente lleva a su estado.md en Docs; un paso, a su documento.
   await frente.getByRole('button', { name: 'Skills' }).click()
   const docs = win.locator('[data-seccion="docs"]')
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('modulos/skills/estado.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('modulos/skills/estado.md')
   await expect(docs).toContainText('Definiendo qué se ve de cada skill.')
   await docs.getByRole('button', { name: 'Atrás' }).click()
   // Al volver, el Mapa sigue en la pestaña que se dejó (D-145).
   await expect(barra.getByRole('tab', { name: 'Skills' })).toHaveAttribute('aria-selected', 'true')
   await frente.getByRole('button', { name: '1. Propuesta' }).click()
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('modulos/skills/propuesta.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('modulos/skills/propuesta.md')
   await app.close()
 })
 

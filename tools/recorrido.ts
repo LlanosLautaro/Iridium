@@ -240,11 +240,11 @@ try {
     await foto('H-7-hito-4')
     await m.locator('.hito-mapa .fila').first().click()
     const docs = win.locator('[data-seccion="docs"]')
-    await docs.locator('.doc-texto').waitFor({ timeout: 10_000 })
+    await docs.locator('.texto-doc').waitFor({ timeout: 10_000 })
     await win.waitForTimeout(400)
     await foto('H-8-caja-a-documento')
     const r: Record<string, unknown> = {
-      doc: await docs.locator('.barra-doc .nom').textContent(),
+      doc: await docs.locator('.docs-ruta').textContent(),
       marcada: await docs
         .locator('.marcada')
         .textContent()
@@ -254,12 +254,12 @@ try {
         .textContent()
         .catch(() => null),
     }
-    const enlace = docs.locator('.doc-texto a', { hasText: /^D-\d+/ }).first()
+    const enlace = docs.locator('.texto-doc a', { hasText: /^D-\d+/ }).first()
     if (await enlace.count()) {
       r.enlace = await enlace.textContent()
       await enlace.click()
       await win.waitForTimeout(400)
-      r.saltoA = await docs.locator('.barra-doc .nom').textContent()
+      r.saltoA = await docs.locator('.docs-ruta').textContent()
       r.marcadaTrasSalto = await docs
         .locator('.marcada')
         .textContent()
@@ -267,7 +267,7 @@ try {
       await foto('H-8-codigo')
       await win.keyboard.press('Alt+ArrowLeft')
       await win.waitForTimeout(300)
-      r.trasAtras = await docs.locator('.barra-doc .nom').textContent()
+      r.trasAtras = await docs.locator('.docs-ruta').textContent()
     }
     await seccion('Mapa')
     r.vuelveAlMapa = await win.locator('[data-seccion="mapa"] .hito-mapa').isVisible()
@@ -280,10 +280,10 @@ try {
   await paso('F-4-seccion-inexistente', async () => {
     await win.locator('[data-seccion="mapa"] .proximo-paso a').first().click()
     const docs = win.locator('[data-seccion="docs"]')
-    await docs.locator('.doc-texto').waitFor({ timeout: 10_000 })
+    await docs.locator('.texto-doc').waitFor({ timeout: 10_000 })
     await foto('F-4-proximo-paso')
     return {
-      doc: await docs.locator('.barra-doc .nom').textContent(),
+      doc: await docs.locator('.docs-ruta').textContent(),
       marcada: await docs
         .locator('.marcada')
         .textContent()
@@ -597,7 +597,7 @@ try {
       .getByRole('button', { name: 'Ver entero' })
       .click()
     // Sin la Bandeja de todos, «Ver entero» abre el documento en Docs (D-111).
-    await win.locator('[data-seccion="docs"]:not([hidden]) .doc-texto').waitFor({ timeout: 10_000 })
+    await win.locator('[data-seccion="docs"]:not([hidden]) .texto-doc').waitFor({ timeout: 10_000 })
     await win.waitForTimeout(300)
     await foto('H-9-ver-entero')
     return { seccion: await win.locator('.act.elegida').getAttribute('aria-label') }

@@ -1,12 +1,15 @@
-// Docs (H-8, W-8, D-035): el lector liviano. Arriba, el documento y «En esta página» como menús, el ancho del texto y
-// Atrás; la hoja centrada con los códigos y las citas como enlaces. Las tablas de más de seis filas empiezan plegadas.
-// Si el documento cambia mientras se lee, se actualiza sin perder la posición. Sin lista de documentos, muestra uno fijo.
-import { type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+// Docs (H-8, W-8, D-035), como la maqueta desde DI-I3, tanda 11 (docs/diseno/pantallas/docs.html): la Cabecera con el
+// documento, «En esta página», el ancho del texto, Atrás y Abrir en Archivos; a la izquierda el Árbol de los documentos
+// y a la derecha el Texto de documento centrado, con los códigos y las citas como enlaces. Las tablas de más de seis
+// filas empiezan plegadas. Si el documento cambia mientras se lee, se actualiza sin perder la posición.
+import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { AnchoHoja } from '../../../compartido/puente'
 import type { ContenidoDocumento } from '../../../compartido/visor'
 import { type LugarDoc, usarEstado, vistaDe } from '../../estado'
+import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 import { Menu } from '../../ui/Menu'
+import { arbolDeDocs, contiene, type NodoDoc } from './arbolDocs'
 import { nombreDoc, tocarEnlace, useDocsCambian } from './enlaces'
 
 export const ANCHOS: { id: AnchoHoja; nombre: string }[] = [
@@ -80,7 +83,7 @@ export function BotonAtras({ ruta }: { ruta: string }) {
   return (
     <button
       type="button"
-      className="atras"
+      className="boton sin-fondo chico"
       disabled={!paso}
       title={paso ? `Volver a ${adonde} (Alt+←)` : 'Volver a donde estabas (Alt+←)'}
       onClick={() => volver(ruta)}
@@ -91,32 +94,120 @@ export function BotonAtras({ ruta }: { ruta: string }) {
   )
 }
 
-export function Lector({
-  ruta,
-  lugar,
-  documentos,
-  aviso,
-  sinDocumento,
+/** El Árbol de los documentos (PZ-11). */
+function ArbolDocs({
+  nodos,
+  actual,
+  abrir,
+  abiertas,
+  alternar,
+  nivel = 0,
 }: {
-  ruta: string
-  lugar: LugarDoc
-  /** Los documentos para el menú; sin lista, no hay menú (un documento fijo). */
-  documentos?: string[] | null
-  /** Una línea arriba de la hoja (opcional). */
-  aviso?: ReactNode
-  /** Lo que se dice si el documento no existe. */
-  sinDocumento?: ReactNode
+  nodos: NodoDoc[]
+  actual: string
+  abrir: (documento: string) => void
+  abiertas: Set<string>
+  alternar: (clave: string) => void
+  nivel?: number
 }) {
+  const sangria = nivel > 0 ? ({ '--nivel': nivel } as CSSProperties) : undefined
+  return (
+    <>
+      {nodos.map((n) => {
+        if (n.tipo === 'doc')
+          return (
+            <button
+              key={n.ruta}
+              type="button"
+              className={n.ruta === actual ? 'nodo elegido' : 'nodo'}
+              style={sangria}
+              title={n.ruta}
+              aria-current={n.ruta === actual ? 'page' : undefined}
+              onClick={() => abrir(n.ruta)}
+            >
+              <Icono nombre="archivo" />
+              <span className="docs-nombre">{n.nombre}</span>
+            </button>
+          )
+        const abierta = abiertas.has(n.clave)
+        return (
+          <div key={n.clave} className="docs-carpeta">
+            <button
+              type="button"
+              className="nodo carpeta"
+              style={sangria}
+              aria-expanded={abierta}
+              onClick={() => alternar(n.clave)}
+            >
+              <Icono nombre="chev" />
+              <span className="docs-nombre">{n.nombre}</span>
+            </button>
+            {abierta && (
+              <ArbolDocs
+                nodos={n.hijos}
+                actual={actual}
+                abrir={abrir}
+                abiertas={abiertas}
+                alternar={alternar}
+                nivel={nivel + 1}
+              />
+            )}
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
+/** Las carpetas abiertas: las que se abrieron a mano y, si nadie las tocó, las del documento que se lee. */
+function useCarpetasAbiertas(arbol: NodoDoc[], actual: string) {
+  const [tocadas, setTocadas] = useState<Map<string, boolean>>(() => new Map())
+  const abiertas = useMemo(() => {
+    const r = new Set<string>()
+    const recorrer = (nodos: NodoDoc[]) => {
+      for (const n of nodos) {
+        if (n.tipo !== 'carpeta') continue
+        if (tocadas.get(n.clave) ?? contiene(n, actual)) r.add(n.clave)
+        recorrer(n.hijos)
+      }
+    }
+    recorrer(arbol)
+    return r
+  }, [arbol, actual, tocadas])
+  // Al pasar a otro documento, su carpeta se abre aunque se la haya cerrado antes.
+  useEffect(() => {
+    const delActual = new Set<string>()
+    const recorrer = (nodos: NodoDoc[]) => {
+      for (const n of nodos)
+        if (n.tipo === 'carpeta' && contiene(n, actual)) {
+          delActual.add(n.clave)
+          recorrer(n.hijos)
+        }
+    }
+    recorrer(arbol)
+    setTocadas((m) => {
+      const quedan = [...m].filter(([clave]) => !delActual.has(clave))
+      return quedan.length === m.size ? m : new Map(quedan)
+    })
+  }, [arbol, actual])
+  const alternar = (clave: string) => setTocadas((m) => new Map(m).set(clave, !abiertas.has(clave)))
+  return { abiertas, alternar }
+}
+
+export function Lector({ ruta, lugar, documentos }: { ruta: string; lugar: LugarDoc; documentos: string[] }) {
   const [contenido, setContenido] = useState<{ documento: string; c: ContenidoDocumento } | null>(null)
   const [titulos, setTitulos] = useState<Titulo[]>([])
   const [sinSeccion, setSinSeccion] = useState<string | null>(null)
   const ancho = usarEstado((s) => s.preferencias.anchoHoja)
   const guardarPreferencias = usarEstado((s) => s.guardarPreferencias)
   const abrirDoc = usarEstado((s) => s.abrirDoc)
+  const abrirArchivo = usarEstado((s) => s.abrirArchivo)
   const lectura = useRef<HTMLDivElement>(null)
   const hoja = useRef<HTMLDivElement>(null)
   const ultimo = useRef<LugarDoc | null>(null)
   const arriba = useRef(0)
+  const arbol = useMemo(() => arbolDeDocs(documentos), [documentos])
+  const { abiertas, alternar } = useCarpetasAbiertas(arbol, lugar.documento)
 
   const leer = useCallback(() => {
     const documento = lugar.documento
@@ -176,145 +267,126 @@ export function Lector({
     arriba.current = caja.scrollTop
   }, [c, lugar])
 
-  const ir = (d: { documento: string; ancla: string }) => {
-    // Sin menú de documentos, una sección del mismo documento se busca ahí mismo.
-    const caja = lectura.current
-    const destino = hoja.current?.querySelector<HTMLElement>(`[id="${CSS.escape(d.ancla)}"]`)
-    if (!documentos && d.documento === lugar.documento && caja && destino) {
-      caja.scrollTop =
-        destino.getBoundingClientRect().top - caja.getBoundingClientRect().top + caja.scrollTop - 18
-      return
-    }
-    abrirDoc(ruta, d, caja?.scrollTop ?? 0)
-  }
+  const ir = (d: { documento: string; ancla: string }) => abrirDoc(ruta, d, lectura.current?.scrollTop ?? 0)
   const anchoHoja = useMemo(() => ({ angosto: '60ch', normal: '72ch', ancho: '100ch' })[ancho], [ancho])
 
   return (
-    <div className="lector">
-      <div className="barra-doc">
-        {documentos ? (
-          <Menu
-            titulo="Elegir otro documento"
-            boton={
-              <>
-                <span className="nom">{nombreDoc(lugar.documento)}</span>
-                <Icono nombre="chev" />
-              </>
-            }
-          >
-            {(cerrar) =>
-              documentos.map((d) => (
-                <button
-                  key={d}
-                  type="button"
-                  role="menuitem"
-                  className="mono"
-                  aria-current={d === lugar.documento}
-                  onClick={() => {
-                    cerrar()
-                    ir({ documento: d, ancla: '' })
-                  }}
-                >
-                  {nombreDoc(d)}
-                </button>
-              ))
-            }
-          </Menu>
-        ) : (
-          <span className="doc-fijo">{nombreDoc(lugar.documento)}</span>
-        )}
-        {titulos.length > 0 && (
-          <Menu
-            titulo="Ir a una sección de este documento"
-            boton={
-              <>
-                En esta página
-                <Icono nombre="chev" />
-              </>
-            }
-          >
-            {(cerrar) =>
-              titulos.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  role="menuitem"
-                  className={t.nivel === 3 ? 'sub' : undefined}
-                  title={t.texto}
-                  onClick={() => {
-                    cerrar()
-                    ir({ documento: lugar.documento, ancla: t.id })
-                  }}
-                >
-                  {t.texto}
-                </button>
-              ))
-            }
-          </Menu>
-        )}
-        <div className="der">
-          <fieldset className="ancho-lectura">
-            <legend>Ancho del texto</legend>
-            {ANCHOS.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                aria-pressed={ancho === a.id}
-                onClick={() => guardarPreferencias({ anchoHoja: a.id })}
+    <>
+      <Cabecera
+        titulo="Docs"
+        sub={<span className="docs-ruta">{nombreDoc(lugar.documento)}</span>}
+        acciones={
+          <>
+            {titulos.length > 0 && (
+              <Menu
+                titulo="Ir a una sección de este documento"
+                claseBoton="boton sin-fondo chico docs-en-pagina"
+                boton={
+                  <>
+                    En esta página
+                    <Icono nombre="chev" />
+                  </>
+                }
               >
-                {a.nombre}
-              </button>
-            ))}
-          </fieldset>
-          <BotonAtras ruta={ruta} />
+                {(cerrar) =>
+                  titulos.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      role="menuitem"
+                      className={t.nivel === 3 ? 'sub' : undefined}
+                      title={t.texto}
+                      onClick={() => {
+                        cerrar()
+                        ir({ documento: lugar.documento, ancla: t.id })
+                      }}
+                    >
+                      {t.texto}
+                    </button>
+                  ))
+                }
+              </Menu>
+            )}
+            <span className="docs-anchos">
+              <Filtros
+                etiqueta="Ancho del texto"
+                elegido={ancho}
+                elegir={(a) => guardarPreferencias({ anchoHoja: a as AnchoHoja })}
+                filtros={ANCHOS.map((a) => ({ clave: a.id, nombre: a.nombre }))}
+              />
+            </span>
+            <BotonAtras ruta={ruta} />
+            <button
+              type="button"
+              className="boton sin-fondo solo-icono"
+              aria-label="Abrir en Archivos"
+              title="Abrir en Archivos"
+              onClick={() => abrirArchivo(ruta, lugar.documento)}
+            >
+              <Icono nombre="abrir" />
+            </button>
+          </>
+        }
+      />
+      <div className="docs-cols">
+        <nav className="arbol" aria-label="Documentos">
+          <ArbolDocs
+            nodos={arbol}
+            actual={lugar.documento}
+            abrir={(d) => ir({ documento: d, ancla: '' })}
+            abiertas={abiertas}
+            alternar={alternar}
+          />
+        </nav>
+        <div
+          ref={lectura}
+          className="docs-lectura"
+          onScroll={(e) => {
+            arriba.current = e.currentTarget.scrollTop
+          }}
+        >
+          <div className="docs-hoja" style={{ maxWidth: anchoHoja }}>
+            {sinSeccion !== null && (
+              <div className="recuadro aviso" role="note">
+                <Icono nombre="busca" />
+                <span>No se encontró la sección «{sinSeccion}»: el documento se abre al principio.</span>
+              </div>
+            )}
+            {!c && <div className="docs-carga" aria-busy="true" />}
+            {c?.tipo === 'noExiste' && (
+              <div className="recuadro aviso" role="note">
+                <Icono nombre="busca" />
+                <span>
+                  {nombreDoc(lugar.documento)} no existe. Elige otro documento a la izquierda o vuelve con
+                  Atrás.
+                </span>
+              </div>
+            )}
+            {c?.tipo === 'error' && (
+              <div className="recuadro error" role="alert">
+                <Icono nombre="error" />
+                <span>
+                  No se pudo leer {nombreDoc(lugar.documento)}: {c.mensaje}
+                </span>
+              </div>
+            )}
+            {html !== null && (
+              // biome-ignore lint/a11y/useKeyWithClickEvents lint/a11y/noStaticElementInteractions: solo delega los clics de los enlaces y botones de adentro, que ya son enfocables.
+              <div
+                ref={hoja}
+                className="texto-doc docs-texto"
+                onClick={(e) => {
+                  const b = (e.target as HTMLElement).closest<HTMLElement>('.ver-filas')
+                  if (b) alternarTabla(b)
+                  else tocarEnlace(e, ruta, () => lectura.current?.scrollTop ?? 0)
+                }}
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            )}
+          </div>
         </div>
       </div>
-      <div
-        ref={lectura}
-        className="lectura"
-        onScroll={(e) => {
-          arriba.current = e.currentTarget.scrollTop
-        }}
-      >
-        <div className="hoja" style={{ maxWidth: anchoHoja }}>
-          {aviso}
-          {sinSeccion !== null && (
-            <p className="aviso-doc" role="note">
-              <Icono nombre="busca" />
-              No se encontró la sección «{sinSeccion}»: el documento se abre al principio.
-            </p>
-          )}
-          {!c && <div className="doc-texto carga" aria-busy="true" />}
-          {c?.tipo === 'noExiste' && (
-            <p className="aviso-doc" role="note">
-              <Icono nombre="busca" />
-              {sinDocumento ?? (
-                <>{nombreDoc(lugar.documento)} no existe. Elegí otro documento arriba, o volvé con Atrás.</>
-              )}
-            </p>
-          )}
-          {c?.tipo === 'error' && (
-            <p className="aviso-doc" role="alert">
-              <Icono nombre="error" />
-              No se pudo leer {nombreDoc(lugar.documento)}: {c.mensaje}
-            </p>
-          )}
-          {html !== null && (
-            // biome-ignore lint/a11y/useKeyWithClickEvents lint/a11y/noStaticElementInteractions: solo delega los clics de los enlaces y botones de adentro, que ya son enfocables.
-            <div
-              ref={hoja}
-              className="doc-texto"
-              onClick={(e) => {
-                const b = (e.target as HTMLElement).closest<HTMLElement>('.ver-filas')
-                if (b) alternarTabla(b)
-                else tocarEnlace(e, ruta, () => lectura.current?.scrollTop ?? 0)
-              }}
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML armado por el proceso principal con markdown-it sin HTML crudo (D-027).
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+    </>
   )
 }

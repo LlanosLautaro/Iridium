@@ -1,6 +1,7 @@
 // Docs (W-8): abre el documento que se pidió (desde el Mapa, un enlace o su menú) o, la primera vez, `estado.md`.
 import { useMemo } from 'react'
 import { usarEstado, vistaDe } from '../../estado'
+import { Cabecera } from '../../ui/Cabecera'
 import { Lector, useDocumentos } from './Lector'
 
 function inicial(lista: string[]): string {
@@ -16,13 +17,18 @@ export function Docs({ ruta }: { ruta: string }) {
   const lugar = useMemo(() => doc ?? (primero ? { documento: primero, ancla: '' } : null), [doc, primero])
   if (lista && lista.length === 0)
     return (
-      <div className="vacia">
-        <div>
-          <b>Este proyecto no tiene documentos</b>
-          No hay archivos <code>.md</code> en <code>docs/</code> ni en la carpeta del proyecto.
+      <>
+        <Cabecera titulo="Docs" />
+        <div className="docs-vacia">
+          <div className="recuadro vacio">
+            <strong>Este proyecto no tiene documentos</strong>
+            <span>
+              No hay archivos <code>.md</code> en <code>docs/</code> ni en la carpeta del proyecto.
+            </span>
+          </div>
         </div>
-      </div>
+      </>
     )
-  if (!lugar) return <div className="lector carga" aria-busy="true" />
+  if (!lista || !lugar) return <div className="docs-carga" aria-busy="true" />
   return <Lector ruta={ruta} lugar={lugar} documentos={lista} />
 }

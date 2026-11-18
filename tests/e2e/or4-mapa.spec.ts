@@ -142,10 +142,10 @@ test('Docs: una tabla usa el ancho de la sección y se desplaza dentro de su rec
   await expect(docs.locator('.gp-tabla-caja')).toBeVisible()
   const medidas = await docs.evaluate((d) => {
     const caja = d.querySelector<HTMLElement>('.gp-tabla-caja')
-    const lectura = d.querySelector<HTMLElement>('.lectura')
+    const lectura = d.querySelector<HTMLElement>('.docs-lectura')
     return {
       caja: caja?.getBoundingClientRect().width ?? 0,
-      parrafo: d.querySelector('.doc-texto p')?.getBoundingClientRect().width ?? 0,
+      parrafo: d.querySelector('.texto-doc p')?.getBoundingClientRect().width ?? 0,
       lectura: lectura?.clientWidth ?? 0,
       seDesplaza: (caja?.scrollWidth ?? 0) > (caja?.clientWidth ?? 0),
       paginaQuieta: (lectura?.scrollWidth ?? 0) <= (lectura?.clientWidth ?? 0),

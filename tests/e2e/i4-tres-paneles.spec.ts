@@ -149,14 +149,14 @@ test('el Mapa antes del hito 10: los hitos como camino y de un paso a su secció
   // Un paso abre su sección en Docs; Atrás vuelve al Mapa.
   await camino.getByRole('button', { name: 'Galería' }).click()
   const docs = win.locator('[data-seccion="docs"]')
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('07-construccion.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('07-construccion.md')
   await expect(docs.locator('.marcada')).toHaveText('I-2 — Galería')
   await docs.getByRole('button', { name: 'Atrás' }).click()
   await expect(mapa).toBeVisible()
 
   // El documento del hito, desde la cabecera.
   await mapa.getByRole('button', { name: 'Abrir 07-construccion.md' }).click()
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('07-construccion.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('07-construccion.md')
   await app.close()
 })
 
@@ -168,27 +168,32 @@ test('Docs: códigos que saltan, Atrás con Alt+←, «En esta página», tablas
     .getByRole('button', { name: 'Docs' })
     .click()
   const docs = win.locator('[data-seccion="docs"]')
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('estado.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('estado.md')
 
-  await docs.locator('.barra-doc .menu-boton', { hasText: 'estado.md' }).click()
-  await expect(docs.locator('.menu-lista button')).toHaveText([
+  // El árbol (DI-I3, tanda 11): los sueltos arriba y los de los hitos en «Hitos», cerrada hasta abrir uno suyo.
+  const arbol = docs.getByRole('navigation', { name: 'Documentos' })
+  await expect(arbol.locator('.nodo')).toHaveText(['estado.md', 'decisiones.md', 'scripts.md', 'Hitos'])
+  await arbol.getByRole('button', { name: 'Hitos' }).click()
+  await expect(arbol.locator('.nodo')).toHaveText([
     'estado.md',
+    'decisiones.md',
+    'scripts.md',
+    'Hitos',
     '00-idea.md',
     '02-definicion.md',
     '04-ux.md',
     '07-construccion.md',
-    'decisiones.md',
-    'scripts.md',
   ])
-  await docs.locator('.menu-lista button', { hasText: '04-ux.md' }).click()
-  await docs.locator('.menu-boton', { hasText: 'En esta página' }).click()
+  await arbol.getByRole('button', { name: '04-ux.md' }).click()
+  await expect(arbol.locator('.nodo.elegido')).toHaveText('04-ux.md')
+  await docs.getByRole('button', { name: 'En esta página' }).click()
   await docs.locator('.menu-lista button', { hasText: 'W-14 — Galería' }).click()
   await expect(docs.locator('.marcada')).toHaveText('W-14 — Galería')
 
-  await docs.locator('.doc-texto a', { hasText: 'D-12' }).click()
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('decisiones.md')
+  await docs.locator('.texto-doc a', { hasText: 'D-12' }).click()
+  await expect(docs.locator('.docs-ruta')).toHaveText('decisiones.md')
   await win.keyboard.press('Alt+ArrowLeft')
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('04-ux.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('04-ux.md')
   // Vuelve a donde estaba: la sección W-14 a la vista.
   await expect(docs.locator('#w-14')).toBeInViewport()
 
@@ -197,12 +202,11 @@ test('Docs: códigos que saltan, Atrás con Alt+←, «En esta página», tablas
     'Alfa/docs/04-ux.md',
     `# UX\n\n## Historias\nVer C-3.\n\n${'Relleno.\n\n'.repeat(40)}## W-14 — Galería\nCuatro columnas (D-12), ahora con zoom.\n\n## Portón\n- [x] Historias.\n`,
   )
-  await expect(docs.locator('.doc-texto')).toContainText('ahora con zoom')
+  await expect(docs.locator('.texto-doc')).toContainText('ahora con zoom')
   await expect(docs.locator('#w-14')).toBeInViewport()
 
   // Tabla de más de seis filas: arranca plegada.
-  await docs.locator('.barra-doc .menu-boton', { hasText: '04-ux.md' }).click()
-  await docs.locator('.menu-lista button', { hasText: '02-definicion.md' }).click()
+  await arbol.getByRole('button', { name: '02-definicion.md' }).click()
   await expect(docs.locator('tbody tr:visible')).toHaveCount(5)
   await docs.getByRole('button', { name: 'Ver las 9 filas' }).click()
   await expect(docs.locator('tbody tr:visible')).toHaveCount(9)
@@ -213,7 +217,7 @@ test('Docs: códigos que saltan, Atrás con Alt+←, «En esta página», tablas
   // La cita está en una nota del proceso, que al terminar queda plegado (D-061).
   await win.locator('.hilo .proceso-cab').first().click()
   await win.locator('.hilo .texto-doc a', { hasText: 'docs/estado.md' }).first().click()
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('estado.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('estado.md')
   await win.screenshot({ path: 'test-results/i4-docs.png' })
   await app.close()
 })
@@ -300,7 +304,7 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
   await archivos.locator('.arbol-nodo', { hasText: 'docs' }).first().click()
   await archivos.locator('.arbol-nodo', { hasText: 'decisiones.md' }).click()
   await archivos.getByRole('button', { name: 'Ver en Docs' }).click()
-  await expect(win.locator('[data-seccion="docs"] .barra-doc .nom')).toHaveText('decisiones.md')
+  await expect(win.locator('[data-seccion="docs"] .docs-ruta')).toHaveText('decisiones.md')
   await win.keyboard.press('Alt+ArrowLeft')
   await expect(archivos.locator('.visor-cab .ruta')).toHaveText('docs/decisiones.md')
   await app.close()

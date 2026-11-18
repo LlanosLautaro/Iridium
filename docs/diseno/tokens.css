@@ -115,6 +115,7 @@
   --ancho-ventana: 860px; /* la ventana de Ajustes */
   --alto-ventana: 600px; /* la ventana de Ajustes */
   --ancho-pestanas-ventana: 200px; /* las pestañas a la izquierda de la ventana de Ajustes */
+  --ancho-arbol: 240px; /* la columna del árbol a la izquierda: los documentos de Docs, los archivos */
   --ancho-lectura: 760px; /* lo más ancho de un documento para leer de corrido */
   --ancho-centrado: 820px; /* lo más ancho del contenido centrado de una sección */
   --ancho-lista: 1080px; /* lo más ancho de una lista de renglones largos: las ideas (R-74) */

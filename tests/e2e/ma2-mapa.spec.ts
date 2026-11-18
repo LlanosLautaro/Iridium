@@ -198,7 +198,7 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   // Un paso que nombra su iteración abre su sección en Docs; Atrás vuelve al Mapa en la misma pestaña.
   await camino.getByRole('button', { name: 'Importar las fotos de una carpeta' }).click()
   const docs = win.locator('[data-seccion="docs"]')
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('modulos/galeria/estado.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('modulos/galeria/estado.md')
   await expect(docs.locator('.marcada')).toHaveText('GA-I1 — Importar')
   await docs.getByRole('button', { name: 'Atrás' }).click()
 

@@ -153,9 +153,9 @@ describe('casillas y preguntas', () => {
   it('las casillas se dibujan (no son controles)', () => {
     const r = html('- [ ] pendiente\n- [x] hecha')
     expect(r).toContain(
-      '<li class="gp-casilla"><span class="gp-casilla-caja" role="img" aria-label="Pendiente">',
+      '<li class="casilla-doc"><span class="casilla-doc-caja" role="img" aria-label="Pendiente">',
     )
-    expect(r).toContain('class="gp-casilla gp-casilla--hecha"')
+    expect(r).toContain('class="casilla-doc hecha"')
     expect(r).not.toContain('<input')
   })
 

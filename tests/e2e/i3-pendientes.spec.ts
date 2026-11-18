@@ -125,7 +125,7 @@ test('los pendientes del proyecto con lo que citan y «Ver entero» en Docs (H-9
   // «Ver entero» abre el documento en Docs, en su sección; Atrás vuelve a la Bandeja.
   await q7.locator('.cita').nth(1).getByRole('button', { name: 'Ver entero' }).click()
   const docs = win.locator('[data-seccion="docs"]')
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('04-ux.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('04-ux.md')
   await expect(docs.locator('[id="w-14"]')).toBeInViewport()
   await win.screenshot({ path: 'test-results/i3-ver-entero.png' })
   await win.keyboard.press('Alt+ArrowLeft')
@@ -133,7 +133,7 @@ test('los pendientes del proyecto con lo que citan y «Ver entero» en Docs (H-9
 
   // Los códigos del contexto también llevan a su documento.
   await q7.locator('.contexto a', { hasText: 'D-032' }).click()
-  await expect(docs.locator('.barra-doc .nom')).toHaveText('decisiones.md')
+  await expect(docs.locator('.docs-ruta')).toHaveText('decisiones.md')
   await app.close()
 })
 
