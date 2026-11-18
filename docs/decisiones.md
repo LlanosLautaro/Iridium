@@ -156,6 +156,7 @@
 | D-147 | 2026-11-18 | Arranque (T-70), con Apariencia y ajustes e Inicio | 10; frente Arranque, paso 4 (UX) | La UX del Arranque, con un aviso al volver | vigente |
 | D-148 | 2026-11-18 | frente nuevo Abrir (T-80), con el framework e Inicio | 10 | Abrir lo que hace cada proyecto, y después mantener al día las apps de escritorio | vigente |
 | D-149 | 2026-11-18 | Arranque (T-70) | 10; frente Arranque, paso 5 (Diseño técnico) | El arranque: un temporizador recalculado, la Bandeja como fuente y lo que pasó en arranques.json | vigente |
+| D-150 | 2026-11-18 | frente nuevo Plantillas (T-81), con el framework | 10 | Plantillas por tipo de app: piezas modulares que crecen, empezando por las pruebas sin ventanas | vigente |
 
 ---
 
@@ -3107,3 +3108,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** un solo temporizador hasta el próximo momento, recalculado al cambiar el ajuste o el uso y al despertar la PC (el aviso de Windows de suspensión); antes de decidir se relee el uso sin gastar. El trabajo listo sale de la lectura de la Bandeja (respondidas, sin las «Más tarde»), la más vieja por la fecha de su archivo. Arranca como Nueva, con el modelo y el esfuerzo del proyecto. Lo que pasó va a `arranques.json` (7 días, y hasta dónde se mostró) y la conversación queda marcada en `sesiones.json`. El aviso al volver junta solo lo que pasó con Iridium sin usar hace 5 minutos o más, y no muestra «nada listo» ni «período abierto». El paso 6 (UI) se descarta: el aviso fijo es un estado de la pieza Aviso. Dos iteraciones: AR-I1 (el motor y el ajuste) y AR-I2 (contar lo que hizo). Detalle: `modulos/arranque/diseno-tecnico.md`.
 **Motivo:** reusa lo que ya funciona (Nueva, la Bandeja, el uso, el rato sin usar Iridium) y no guarda dos veces lo mismo.
 **Consecuencias:** `config.json` suma `arranque`; los datos de Iridium suman `arranques.json`; el resumen de sesión suma `arranque`. Se confirma en AR-I1 qué informa el uso sin un período abierto.
+
+## D-150 — Plantillas por tipo de app: piezas modulares que crecen, empezando por las pruebas sin ventanas
+- **Fecha:** 2026-11-18
+- **Ámbito:** frente nuevo Plantillas (T-81), con el framework
+- **Hito o paso:** 10
+- **Estado:** vigente
+
+**Contexto:** las pruebas de otra app de Electron del usuario abren sus ventanas a la vista y no lo dejan usar la PC; Iridium lo resolvió en su propio código (D-072). No se puede prender desde afuera: cada proyecto lo necesita en su código y cambia según el tipo de app.
+**Decisión:** opción B de Q-209, con lo que agregó el usuario: un frente nuevo de **plantillas por tipo de app**, modulares y genéricas, con configuraciones básicas, que crecen con el tiempo y con los casos de uso. Además de las reglas, pueden traer código probado de Iridium (como su sistema de pruebas) para que la IA de otro proyecto lo use tal cual o lo adapte. La primera pieza: las pruebas no ocupan la pantalla del usuario, con la receta por tipo. Se define el frente, se resuelve al menos esa pieza y queda en pausa.
+**Motivo:** una pieza por problema se puede sumar sin rehacer nada y cada proyecto toma solo las que le sirven; el código que ya funciona en Iridium ahorra reinventarlo en cada proyecto.
+**Consecuencias:** las piezas viven en el framework (`recursos/plugins/iridium`) y no nombran otros proyectos (D-082); si Iridium llega a leerlas o mostrarlas, va con el lector y el control (D-086). El tipo de app es el mismo dato que declara el frente Abrir (D-148): la propuesta del frente define dónde se escribe una sola vez. El frente entra detrás de Arranque y antes de Abrir, porque su primera parte es chica.
