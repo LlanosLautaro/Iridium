@@ -11,6 +11,7 @@ import {
   LARGO_AJUSTES,
   type Preferencias,
 } from '../../compartido/puente'
+import { AJUSTE_INICIAL, HORA_ARRANQUE } from '../core/arranque'
 import { escribirAtomico, leerDatos } from './escritura'
 
 /** El modelo y el esfuerzo de un proyecto; null = el de Claude Code. */
@@ -86,6 +87,10 @@ const Config = z.object({
   nombreUsuario: z.string().max(LARGO_AJUSTES.nombreUsuario).catch(''),
   nombreIa: z.string().max(LARGO_AJUSTES.nombreIa).catch(''),
   tono: z.string().max(LARGO_AJUSTES.tono).catch(''),
+  /** Abrir el período de Claude (frente Arranque, AR-1): apagado si falta o está roto. */
+  arranque: z
+    .object({ prendido: z.boolean(), hora: z.string().regex(HORA_ARRANQUE) })
+    .catch({ ...AJUSTE_INICIAL }),
   /** El tamaño de todo, con Ctrl+= y Ctrl+- (Defecto 17): 1 = normal. */
   zoom: z.number().min(0.5).max(3).catch(1),
   /** La ventana como quedó al cerrar (T-66): su lugar y tamaño sin maximizar, y si estaba maximizada. */
@@ -121,6 +126,7 @@ const PREDETERMINADA: Config = {
   nombreUsuario: '',
   nombreIa: '',
   tono: '',
+  arranque: { ...AJUSTE_INICIAL },
   zoom: 1,
   ventana: null,
   abrirDeFondo: null,
@@ -144,6 +150,7 @@ export function preferenciasDe(c: Config): Preferencias {
     nombreUsuario: c.nombreUsuario,
     nombreIa: c.nombreIa,
     tono: c.tono,
+    arranque: c.arranque,
   }
 }
 

@@ -1,5 +1,5 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
-import { mkdir, readdir, rename } from 'node:fs/promises'
+import { mkdir, readdir, rename, stat } from 'node:fs/promises'
 import { basename, dirname, join, normalize } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { z } from 'zod'
@@ -22,6 +22,7 @@ import {
 } from '../../compartido/puente'
 import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/skills'
 import type { PlanEliminacion } from '../../compartido/tipos'
+import { Arranque, candidatosDe } from '../app/arranque'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
 import { crearProyecto } from '../app/creacion'
@@ -58,6 +59,7 @@ import {
   instruccionRevision,
 } from '../core/sesiones'
 import { leerArchivo, leerCarpeta } from '../infra/archivos'
+import type { ArchivoArranques } from '../infra/arranques'
 import type { ArchivoBorradores } from '../infra/borradores'
 import {
   type CarpetasEnDisco,
@@ -162,6 +164,10 @@ export interface Servicios {
   maquetas: MaquetasAbiertas
   /** Lo que ya se miró de cada maqueta (`diseno.json`). */
   vistos: ArchivoVistos
+  /** Lo que pasó en cada momento del arranque (`arranques.json`, frente Arranque). */
+  arranques: ArchivoArranques
+  /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento del arranque, a tantos segundos de abrir. */
+  arranqueEnSegundos?: number
 }
 
 export interface Puente {
@@ -176,6 +182,9 @@ export interface Puente {
   alVolver(): void
   /** Los comentarios de la Revisión: el receptor los usa para Enviar ahora desde la extensión. */
   comentarios: Comentarios
+  /** Windows avisó que la PC se suspende o que volvió (`powerMonitor`): el arranque no ve el tiempo dormido. */
+  alSuspender(): void
+  alDespertar(): void
 }
 
 export function registrarPuente(s: Servicios): Puente {
@@ -208,7 +217,14 @@ export function registrarPuente(s: Servicios): Puente {
   }
 
   // El uso de la suscripción (H-12): al verificar, con cada turno de cualquier sesión, al volver a la ventana y cada tanto.
-  const uso = new UsoDeLaSuscripcion({ motor: s.motor, alCambio: (u) => enviar(CANALES.usoCambio, u) })
+  const uso = new UsoDeLaSuscripcion({
+    motor: s.motor,
+    alCambio: (u) => {
+      enviar(CANALES.usoCambio, u)
+      // Cambia cuándo vence el período: cambia el próximo momento del arranque.
+      void arranque.recalcular()
+    },
+  })
 
   /** Verifica Claude Code sin mandar mensajes; de paso trae los modelos y el uso. */
   let verificando: Promise<EstadoMotor> | null = null
@@ -349,6 +365,44 @@ export function registrarPuente(s: Servicios): Puente {
 
   const pendientes = new Pendientes(s.borradores, Date.now, docs)
 
+  // El arranque del período de 5 horas (frente Arranque, D-149): espera el próximo momento y arranca como Nueva.
+  const arranque = new Arranque({
+    ajuste: async () => (await s.config.leer()).arranque,
+    usoActual: () => uso.get(),
+    leerUso: async () => {
+      const leido = await s.motor.uso().catch(() => null)
+      if (!leido) return null
+      uso.poner(leido)
+      return uso.get()
+    },
+    candidatos: async () => {
+      const lista = await listar()
+      if (lista.tipo !== 'lista') return []
+      return candidatosDe(lista.proyectos, {
+        enMarcha: () => conversaciones.enMarcha(),
+        usadaAfuera: (ruta) => conversaciones.usadaAfuera(ruta),
+        pendientes: async (ruta) => {
+          const p = await pendientes.proyecto(ruta)
+          return p.tipo === 'ok' ? p.pendientes : null
+        },
+        fechaRespuesta: (ruta, codigo) =>
+          stat(join(ruta, 'docs', 'respuestas', `${codigo}.md`)).then(
+            (e) => e.mtimeMs,
+            () => null,
+          ),
+      })
+    },
+    sesionLista: async () => {
+      const e = await motorListo()
+      return e.tipo === 'listo' || e.tipo === 'clave-api'
+    },
+    arrancar: (ruta, marca) => conversaciones.seguir(ruta, { nueva: true }, { arranque: marca }),
+    archivo: s.arranques,
+    segundosSinUsar: () => s.segundosSinUso(),
+    registrar: (t) => s.registro.escribir(t),
+    ...(s.arranqueEnSegundos !== undefined ? { primeroEnSegundos: s.arranqueEnSegundos } : {}),
+  })
+
   ipcMain.handle(CANALES.listarProyectos, () => listar())
 
   ipcMain.handle(CANALES.elegirCarpeta, async () => {
@@ -395,6 +449,7 @@ export function registrarPuente(s: Servicios): Puente {
     const tonoAntes = previa.tono
     const despues = preferenciasDe(await s.config.guardar(limpio))
     if (despues.tono !== tonoAntes) conversaciones.ponerTono(despues.tono || null)
+    if (valido.arranque) void arranque.recalcular()
     // El modelo o el esfuerzo de un proyecto con la sesión abierta valen desde su próximo mensaje (C-58).
     if (valido.ajustesIa)
       for (const [ruta, a] of Object.entries(valido.ajustesIa))
@@ -827,6 +882,7 @@ export function registrarPuente(s: Servicios): Puente {
 
   // Al abrir, el motor se verifica aparte: la grilla no lo espera (05-arquitectura.md › Abrir la app).
   void verificarMotor()
+  void arranque.iniciar()
 
   return {
     comentarios,
@@ -840,7 +896,10 @@ export function registrarPuente(s: Servicios): Puente {
       await new Promise((r) => setTimeout(r, 150))
       await Promise.race([Promise.all([...enCurso]), new Promise((r) => setTimeout(r, 3000))])
     },
+    alSuspender: () => arranque.alSuspender(),
+    alDespertar: () => void arranque.alDespertar(),
     cerrar() {
+      arranque.cerrar()
       uso.cerrar()
       conversaciones.cerrarTodo()
       vigilancia?.cerrar()

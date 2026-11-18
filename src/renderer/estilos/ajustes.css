@@ -243,3 +243,28 @@
 .carpeta-proyectos[data-falta] .d {
   color: var(--error);
 }
+
+/* Abrir el período de Claude (AR-1): el interruptor, la hora y lo que hace, uno debajo del otro. */
+.abrir-periodo .control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--esp-2);
+}
+.abrir-periodo .hora {
+  color: var(--texto-2);
+}
+.abrir-periodo .hora input {
+  width: auto;
+  margin: 0 var(--esp-1);
+}
+.abrir-periodo .hora.apagada {
+  color: var(--texto-3);
+}
+.abrir-periodo .hora input:disabled {
+  color: var(--texto-3);
+  cursor: default;
+}
+.abrir-periodo .control .d {
+  margin: 0;
+}

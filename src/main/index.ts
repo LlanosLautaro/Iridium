@@ -5,7 +5,17 @@ import { createRequire } from 'node:module'
 import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, normalize } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { app, BrowserWindow, Menu, protocol, screen, session, shell, webContents } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  powerMonitor,
+  protocol,
+  screen,
+  session,
+  shell,
+  webContents,
+} from 'electron'
 import { CANALES } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
@@ -14,6 +24,7 @@ import { ENCABEZADO_CONTROL } from './core/control'
 import { abrirDeFondo, UsoDeIridium } from './core/uso-iridium'
 import { comoAbrir, type VentanaGuardada } from './core/ventana'
 import { zoomSiguiente } from './core/zoom'
+import { ArchivoArranques } from './infra/arranques'
 import { ArchivoBorradores } from './infra/borradores'
 import { ArchivoConfig } from './infra/config'
 import { ESQUEMA_MAQUETA, MaquetasAbiertas } from './infra/diseno/protocolo'
@@ -186,8 +197,18 @@ function crearMotor(): Motor {
     // IRIDIUM_FALSO_ESTADO=sin-sesion: Claude Code sin sesión iniciada (F-5).
     const estado =
       process.env.IRIDIUM_FALSO_ESTADO === 'sin-sesion' ? { tipo: 'sin-sesion' as const } : undefined
+    // IRIDIUM_FALSO_PERIODO=cerrado: el uso sin un período de 5 horas abierto (las pruebas del arranque).
+    const periodoCerrado = process.env.IRIDIUM_FALSO_PERIODO === 'cerrado'
     return crearMotorFalso({
       pasoMs,
+      ...(periodoCerrado
+        ? {
+            uso: {
+              cincoHoras: { usado: 0, libera: null, agotada: false },
+              semana: { usado: 40, libera: Date.now() + 3 * 24 * 3_600_000, agotada: false },
+            },
+          }
+        : {}),
       alTurno: async (carpeta, texto) => {
         await dejarPreguntaFalsa(carpeta)
         await escribirMalFalso(carpeta, texto)
@@ -592,7 +613,15 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         void config.guardar({ abrirDeFondo: null }).catch(() => {})
       },
       segundosSinUso: () => uso.segundosSinUsar(),
+      arranques: new ArchivoArranques(join(carpetaDatos, 'arranques.json')),
+      // Solo pruebas: el primer momento del arranque, a tantos segundos de abrir.
+      ...(process.env.IRIDIUM_ARRANQUE_EN
+        ? { arranqueEnSegundos: Number(process.env.IRIDIUM_ARRANQUE_EN) }
+        : {}),
     })
+    // La suspensión de la PC, para el arranque (D-149 › 2): un momento que cayó durmiendo se hace al despertar.
+    powerMonitor.on('suspend', () => puente.alSuspender())
+    powerMonitor.on('resume', () => puente.alDespertar())
     // El teclado y el mouse en la ventana o en la maqueta de Diseño (su `webview`) cuentan como usar Iridium.
     app.on('web-contents-created', (_e, wc) => wc.on('input-event', () => uso.marcar()))
     for (const wc of webContents.getAllWebContents()) wc.on('input-event', () => uso.marcar())

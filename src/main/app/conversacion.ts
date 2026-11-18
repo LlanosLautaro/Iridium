@@ -105,6 +105,8 @@ interface Proyecto {
   envios: number
   /** Lo que la IA dejó corriendo de fondo (T-65); va en la ficha mientras haya algo. */
   fondo: string[]
+  /** La conversación nueva la abrió el arranque (D-149 › 7): la marca va a su resumen cuando Claude Code le da un id. */
+  arranque: number | null
 }
 
 export class Conversaciones {
@@ -145,6 +147,7 @@ export class Conversaciones {
         revisando: false,
         envios: 0,
         fondo: [],
+        arranque: null,
       }
       this.proyectos.set(ruta, p)
     }
@@ -362,12 +365,13 @@ export class Conversaciones {
   }
 
   /** Seguí, Nueva o un mensaje propio. Si ya trabaja, el mensaje se suma a lo que está haciendo. */
-  seguir(ruta: string, pedido: PedidoSeguir): Promise<void> {
+  seguir(ruta: string, pedido: PedidoSeguir, opciones: { arranque?: number } = {}): Promise<void> {
     const p = this.proyecto(ruta)
     return this.enFila(p, async () => {
       let reiniciar = false
       if (pedido.nueva) {
         if (this.trabajando(p)) return
+        p.arranque = opciones.arranque ?? null
         p.sesion?.cerrar()
         Object.assign(p, {
           cargado: true,
@@ -485,6 +489,19 @@ export class Conversaciones {
     this.emitir(p, [])
   }
 
+  /**
+   * Si la última conversación del proyecto se usó afuera hace poco (D-027): puede estar abierta en VS Code. No la
+   * carga ni manda nada.
+   */
+  async usadaAfuera(ruta: string): Promise<boolean> {
+    const p = this.proyectos.get(ruta)
+    if (p && (p.sesion || this.trabajando(p))) return false
+    const ultima = (await this.d.motor.conversaciones(ruta).catch(() => []))[0]
+    if (!ultima) return false
+    const usoCentro = (await this.d.registro.de(ultima.id))?.ultimoUso ?? null
+    return usadaAfuera(ultima.modificada, usoCentro, this.ahora()) !== null
+  }
+
   /** Los proyectos con la IA trabajando (para cerrar la app, F-6). */
   enMarcha(): string[] {
     return [...this.proyectos.values()].filter((p) => this.trabajando(p)).map((p) => p.ruta)
@@ -523,9 +540,13 @@ export class Conversaciones {
       case 'conversacion': {
         if (p.id === e.id) return
         const empezadaEn = p.id === null ? 'iridium' : 'afuera'
+        const arranque = p.id === null ? p.arranque : null
         p.id = e.id
+        p.arranque = null
         p.origen ??= 'iridium'
-        void this.d.registro.guardar(e.id, this.resumenInicial(p, empezadaEn)).catch(() => {})
+        void this.d.registro
+          .guardar(e.id, this.resumenInicial(p, empezadaEn), arranque !== null ? { arranque } : {})
+          .catch(() => {})
         this.emitir(p, [])
         return
       }

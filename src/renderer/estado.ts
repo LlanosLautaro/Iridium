@@ -278,6 +278,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     nombreUsuario: '',
     nombreIa: '',
     tono: '',
+    arranque: { prendido: false, hora: '03:00' },
   },
   skills: { elegida: null, avisosDe: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
   cambiarSkills: (cambio) => set((s) => ({ skills: { ...s.skills, ...cambio } })),

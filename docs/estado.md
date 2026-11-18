@@ -37,12 +37,12 @@
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 espera el rediseño, D-102) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; MA-I3 probada en Q-204, calidad el 2026-11-18) | hecho |
-| Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1) | en curso |
+| Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 hecha; sigue AR-I2) | en curso |
 | Abrir (T-80) | sección | 1. Propuesta (detrás de Arranque, D-148) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). Definición (D-146), UX (D-147) y diseño técnico (D-149, dos iteraciones) cerrados; sigue AR-I1.
-El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. Los avisos de `pnpm audit`, en T-79.
+**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). AR-I1 hecha el 2026-11-18 (el ajuste en Ajustes › IA y el motor que arranca solo); sigue AR-I2, contar lo que hizo, y al final la prueba de una noche.
+El Mapa terminó el 2026-11-18. Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. T-81 (los tests de cada app sin ventanas a la vista), nueva, sin evaluar. Los avisos de `pnpm audit`, en T-79.
 En pausa: Diseño (DI-I3, tandas 1 a 7 probadas; la 8 la reemplazó Ideas) y Orden (su paso 8 espera el rediseño). Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
@@ -57,7 +57,7 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Arranque: construir AR-I1 (el motor del arranque y su ajuste en Ajustes › IA).
+Arranque: construir AR-I2 (la línea de la conversación, el detalle del uso y el aviso al volver).
 **Leer antes:** `modulos/arranque/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

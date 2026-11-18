@@ -9,6 +9,7 @@ import {
   PROYECTOS_CON_FILTRO,
 } from '../../compartido/puente'
 import { ESTADOS } from '../../compartido/tipos'
+import { HORA_ARRANQUE } from '../core/arranque'
 import { LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
 import { AjusteIa, AnchosConversacion } from '../infra/config'
 
@@ -29,6 +30,7 @@ export const CambioPreferencias = z
     nombreIa: z.string().max(LARGO_AJUSTES.nombreIa),
     // Que sea uno de los estilos de Claude Code se comprueba en el puente.
     tono: z.string().max(LARGO_AJUSTES.tono),
+    arranque: z.object({ prendido: z.boolean(), hora: z.string().regex(HORA_ARRANQUE) }).strict(),
   })
   .partial()
   .strict()

@@ -1,5 +1,6 @@
-// Ajustes › IA (AJ-2, AJ-3, CO-I1): la cuenta de Claude, el nombre de la IA en la conversación y el tono, uno de los estilos de respuesta de
-// Claude Code. El tono vale para las sesiones de Iridium; VS Code y la terminal siguen con el suyo.
+// Ajustes › IA (AJ-2, AJ-3, CO-I1, AR-1): la cuenta de Claude, el nombre de la IA en la conversación, el tono, uno de
+// los estilos de respuesta de Claude Code, y abrir el período de Claude mientras no está. El tono vale para las
+// sesiones de Iridium; VS Code y la terminal siguen con el suyo.
 import { useEffect, useState } from 'react'
 import { type EstilosRespuesta, LARGO_AJUSTES } from '../../../compartido/puente'
 import { usarEstado } from '../../estado'
@@ -51,6 +52,62 @@ function CuentaClaude() {
         <Icono nombre={iniciando ? 'sync' : 'abrir'} gira={iniciando} />
         {iniciando ? 'Esperando el navegador…' : conSesion ? 'Cambiar de cuenta' : 'Iniciar sesión'}
       </button>
+    </div>
+  )
+}
+
+/** La hora como la guarda `config.json`: `HH:MM`. */
+const HORA = /^([01]\d|2[0-3]):[0-5]\d$/
+
+/** Abrir el período de Claude (AR-1, D-146): el interruptor y la hora; apagado, la hora en gris. Se guarda solo. */
+function AbrirPeriodo({ cambiar }: PropsSeccion) {
+  const ajuste = usarEstado((s) => s.preferencias.arranque)
+  const [hora, setHora] = useState(ajuste.hora)
+  // Si cambió afuera o volvió atrás por un error, se muestra lo guardado.
+  useEffect(() => setHora(ajuste.hora), [ajuste.hora])
+  return (
+    <div className="campo-ajuste abrir-periodo">
+      <div>
+        <div className="r" id="ajuste-arranque">
+          Abrir el período de Claude
+        </div>
+        <div className="d">Mientras no estás, con trabajo listo</div>
+      </div>
+      <div className="control">
+        <label className="interruptor">
+          <input
+            type="checkbox"
+            role="switch"
+            aria-checked={ajuste.prendido}
+            aria-labelledby="ajuste-arranque"
+            checked={ajuste.prendido}
+            onChange={(e) => void cambiar({ arranque: { ...ajuste, prendido: e.target.checked } })}
+          />
+          {ajuste.prendido ? 'Prendido' : 'Apagado'}
+        </label>
+        <label className={ajuste.prendido ? 'hora' : 'hora apagada'}>
+          A las{' '}
+          <input
+            type="time"
+            className="campo chico"
+            value={hora}
+            disabled={!ajuste.prendido}
+            aria-label="Hora del primer arranque"
+            onChange={(e) => {
+              setHora(e.target.value)
+              if (HORA.test(e.target.value))
+                void cambiar({ arranque: { ...ajuste, hora: e.target.value } }).then((ok) => {
+                  if (!ok) setHora(usarEstado.getState().preferencias.arranque.hora)
+                })
+            }}
+          />{' '}
+          y al vencer cada período
+        </label>
+        <p className="d">
+          Sigue el proyecto que espera hace más con tus respuestas. No arranca si la semana pasó el 90 %.
+          Necesita Iridium abierta.
+        </p>
+      </div>
     </div>
   )
 }
@@ -127,6 +184,7 @@ export function Ia({ cambiar }: PropsSeccion) {
           )}
         </div>
       </div>
+      <AbrirPeriodo cambiar={cambiar} />
     </>
   )
 }

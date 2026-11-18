@@ -109,6 +109,14 @@ export interface Preferencias {
   nombreIa: string
   /** El estilo de respuesta de Claude Code para las sesiones de Iridium (su nombre); vacío = el de Claude Code. */
   tono: string
+  /** Abrir el período de Claude mientras no está (frente Arranque, AR-1): apagado al principio. */
+  arranque: AjusteArranque
+}
+
+/** El arranque del período de 5 horas (D-146): si está prendido y la hora del primero, `HH:MM` local. */
+export interface AjusteArranque {
+  prendido: boolean
+  hora: string
 }
 
 /** Lo más largo que puede ser cada texto de Ajustes. */

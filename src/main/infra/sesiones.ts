@@ -42,6 +42,8 @@ const Resumen = z.object({
    * ahí al volver a abrir la app (R-89). Falta en las conversaciones de antes.
    */
   contexto: Contexto.nullable().optional().catch(undefined),
+  /** La empezó Iridium para abrir el período (frente Arranque, D-149 › 7): cuándo. Falta en las demás. */
+  arranque: z.number().nullable().optional().catch(undefined),
 })
 export type ResumenSesion = z.infer<typeof Resumen>
 
