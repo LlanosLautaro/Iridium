@@ -1,7 +1,7 @@
 # UX del módulo: Abrir
 
 **Fecha:** 2026-11-19
-**Estado:** escrita, espera Q-217
+**Estado:** aprobada en Q-217, con el botón «Ejecutar Alfa» (D-155)
 > Usa los principios de interacción y el design system generales (`04-ux.md`, `06-ui.md`). Alcance: `definicion.md` (D-154).
 
 ## Puntos de entrada y salida
@@ -11,19 +11,20 @@
 - **No hay pantalla propia.** Todo vive en lugares que ya existen.
 
 ### El nombre del botón
-El menú de la tarjeta ya tiene **Abrir**, que entra al proyecto en Iridium. Para no confundirlos, el botón nuevo dice qué abre según el tipo (ver Q-217):
+El menú de la tarjeta ya tiene **Abrir**, que entra al proyecto en Iridium. El botón nuevo dice **Ejecutar Alfa** (con el nombre del proyecto) para todos los tipos, y lo que va a pasar lo dice su detalle, al pasar el mouse, con la descripción del script en `scripts.md` (Q-217, D-155):
 
-| Tipo | En el menú y en la barra | Qué hace |
+| Tipo | El detalle empieza con | Qué hace |
 |---|---|---|
-| escritorio | **Abrir la app** | abre el programa (el `.exe`) |
-| página | **Abrir en el navegador** | abre la dirección o el archivo en el navegador |
-| consola | **Abrir en la consola** | corre el comando en una consola, como Scripts |
+| escritorio | «Abre la app.» | abre el programa (el `.exe`) |
+| página | «Abre en el navegador.» | abre la dirección o el archivo en el navegador |
+| consola | «Corre en una consola.» | corre el comando en una consola, como Scripts |
 
 ## Historias de usuario
 ### AB-1 — Abrir lo que hace un proyecto
 Como usuario quiero abrir la app de un proyecto con un clic, sin buscar entre sus scripts.
-- [ ] En la tarjeta de un proyecto con algo para usar, el menú del clic derecho tiene **Abrir la app** (o el de su tipo) debajo de Abrir, Abrir en VS Code y Abrir la carpeta.
-- [ ] Dentro del proyecto, el mismo botón está en la barra de íconos, abajo, encima de Ajustes del proyecto, con su nombre al pasar el mouse.
+- [ ] En la tarjeta de un proyecto con algo para usar, el menú del clic derecho tiene **Ejecutar Alfa** debajo de Abrir, Abrir en VS Code y Abrir la carpeta.
+- [ ] Dentro del proyecto, el mismo botón está en la barra de íconos, abajo, encima de Ajustes del proyecto.
+- [ ] Al pasar el mouse, en los dos lugares, se lee qué hace según su tipo y la descripción del script («Abre la app. La versión armada, con los últimos cambios.»).
 - [ ] Un proyecto sin script marcado, o una carpeta simple, no muestra el botón en ningún lado.
 
 ### AB-2 — Abrir una app que todavía no está armada
@@ -63,7 +64,7 @@ commit en Alfa ──→ ¿actualización prendida?  ── no ─→ nada
 ```
 ┌ Acciones de Alfa ────────┐
 │ ◈ Abrir                  │
-│ ■ Abrir la app           │
+│ ■ Ejecutar Alfa          │
 │ □ Abrir en VS Code       │
 │ ▫ Abrir la carpeta       │
 │ ──────────────────────── │
@@ -83,7 +84,7 @@ commit en Alfa ──→ ¿actualización prendida?  ── no ─→ nada
 │ ↔  │ Git
 │ ▶  │ Scripts
 │    │
-│ ■  │ Abrir la app
+│ ■  │ Ejecutar Alfa
 │ ◎  │ Ajustes del proyecto
 └────┘
 ```

@@ -161,6 +161,7 @@
 | D-152 | 2026-11-18 | Mapa | 10 (R-91) | El Mapa archiva los frentes en uso sin nada por hacer | vigente |
 | D-153 | 2026-11-19 | frentes Abrir, Diseño, Orden y Plantillas | 10, a pedido del usuario | Abrir pasa adelante: se hace ahora y Diseño espera | vigente (cambia el orden de D-148 y D-151) |
 | D-154 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 2 (Definición) | La definición de Abrir va como se escribió; la actualización automática arranca prendida y se apaga por proyecto | vigente |
+| D-155 | 2026-11-19 | Abrir (T-80) | 10; frente Abrir, paso 4 (UX) | La UX de Abrir va como se escribió, con el botón «Ejecutar» y el nombre del proyecto | vigente |
 
 ---
 
@@ -3167,3 +3168,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción A de Q-216: la definición va como está, y la actualización automática se prende sola en cada app que marca cómo se arma, apagable por proyecto.
 **Motivo:** es lo que pedía T-80 y no hay que acordarse de prenderlo en cada proyecto.
 **Consecuencias:** el glosario suma «Lo que abre el proyecto» y «Actualización automática». Sigue la UX (`modulos/abrir/ux.md`); el paso 3 (investigación) se descarta.
+
+## D-155 — La UX de Abrir, con el botón «Ejecutar» y el nombre del proyecto
+- **Fecha:** 2026-11-19
+- **Ámbito:** Abrir (T-80)
+- **Hito o paso:** 10; frente Abrir, paso 4 (UX)
+- **Estado:** vigente
+
+**Contexto:** la UX (`modulos/abrir/ux.md`) ponía el botón en el menú de la tarjeta y en la barra del proyecto, y proponía nombrarlo según el tipo («Abrir la app», «Abrir en el navegador», «Abrir en la consola») porque el menú ya tiene **Abrir**.
+**Decisión:** Q-217: la UX va como está, con lo que agregó el usuario: el botón se llama **Ejecutar** y el nombre del proyecto («Ejecutar Alfa») para todos los tipos, y lo que pasa (escritorio, navegador o consola) lo dice el detalle al pasar el mouse, con la descripción del script.
+**Motivo:** un solo nombre se reconoce en todos los proyectos y no choca con Abrir; el detalle dice lo demás sin ocupar lugar.
+**Consecuencias:** `04-ux.md` › W-2 y W-3 suman el botón y Ajustes del proyecto, la actualización automática. Sigue el diseño técnico.
