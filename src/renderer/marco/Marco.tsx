@@ -6,6 +6,7 @@ import { textoDeCuenta } from '../../compartido/cuentas'
 import type { ActualizarSolo, EstadoMotor, FichaSesion } from '../../compartido/puente'
 import { tarjetaDe, totalBandeja, usarEstado, vistaDe } from '../estado'
 import { SECCIONES, SECCIONES_PROYECTO, type SeccionDeProyecto } from '../secciones'
+import { ejecutarProyecto, nombreEjecutar } from '../secciones/proyecto/ejecutar'
 import { mismaRuta } from '../secciones/proyecto/enlaces'
 import { Cuenta } from '../ui/Cuenta'
 import { Icono, type NombreIcono } from '../ui/Icono'
@@ -102,6 +103,18 @@ function BarraActividad() {
         {visibles.filter((s) => s.grupo === 'sigue').map(boton)}
         {visibles.some((s) => s.grupo === 'sigue') && <div className="sep" />}
         {visibles.filter((s) => s.grupo === 'dentro').map(boton)}
+        {/* Ejecutar Alfa (frente Abrir, AB-1): abajo, encima de los ajustes, si el proyecto marca lo que abre. */}
+        {tarjeta?.ejecutar && (
+          <button
+            type="button"
+            className="act boton-ejecutar"
+            title={`${nombreEjecutar(tarjeta)} · ${tarjeta.ejecutar.detalle}`}
+            aria-label={nombreEjecutar(tarjeta)}
+            onClick={() => void ejecutarProyecto(tarjeta)}
+          >
+            <Icono nombre="play" />
+          </button>
+        )}
         <BotonAjustes />
       </nav>
     )

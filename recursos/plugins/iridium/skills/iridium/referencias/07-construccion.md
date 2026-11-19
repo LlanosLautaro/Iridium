@@ -47,6 +47,7 @@ Cada iteración tiene un objetivo en una frase, una lista de historias y su **co
 - **Los estilos salen del design system**; si falta algo, se agrega al sistema.
 - **Deuda técnica consciente:** si se toma un atajo, se anota en `07-construccion.md` con su motivo.
 - **Los requisitos de seguridad del nivel asignado se implementan desde el principio**, no al final.
+- **Lo que abre el proyecto:** en cuanto haya algo para usar (un programa, una página, un bot), el script que lo abre lleva su `**Marca:**` en `docs/scripts.md` y, si es una app de escritorio, también el que la arma (`SKILL.md` › Los scripts). Se escribe una vez; así el usuario lo abre con **Ejecutar** desde la tarjeta.
 - **Comentarios de la Revisión:** si hay `docs/revision/`, los `R-n` abiertos son comentarios del usuario sobre la app (con el archivo, la línea y una captura). Leelos al empezar y resolvelos o anotalos como dice `SKILL.md` › Los comentarios de la Revisión.
 
 ## Errores y cambios chicos

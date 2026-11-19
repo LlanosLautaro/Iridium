@@ -57,6 +57,9 @@ Un hito o paso que espera la prueba del usuario sigue `en curso` con su `Q-n`.
 **El design system**
 - [ ] Si los tokens o las piezas están en otro lado (un artifact, `docs/ui/tokens.json`, un `componentes.css`, `DESIGN.md`), pasan a `docs/diseno/` como pide `SKILL.md` › Las maquetas: `tokens.css` con cada token y su uso, `piezas.css` y `piezas.html`. Los valores no cambian. Si un script generaba el CSS, `tokens.css` pasa a ser la fuente y el código lo usa o lo copia; lo de antes se quita o queda dicho como copia. Sin pantallas todavía, el índice queda con la tabla vacía.
 
+**`docs/scripts.md`**
+- [ ] Si el proyecto ya tiene algo para usar, el script que lo abre lleva su `**Marca:**` y, si es una app de escritorio, también el que la arma (`SKILL.md` › Los scripts). Si no hay un script que lo abra, se agrega.
+
 **`docs/README.md`**
 - [ ] `**Formato de la guía:** …` pasa a `**Framework:** <hoy>`.
 - [ ] El índice suma `trabajo.md` (y `revision/` si existe); la tabla «Códigos» declara los prefijos propios.

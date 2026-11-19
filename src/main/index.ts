@@ -5,17 +5,7 @@ import { createRequire } from 'node:module'
 import { homedir, tmpdir } from 'node:os'
 import { basename, dirname, join, normalize } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import {
-  app,
-  BrowserWindow,
-  Menu,
-  powerMonitor,
-  protocol,
-  screen,
-  session,
-  shell,
-  webContents,
-} from 'electron'
+import { app, BrowserWindow, Menu, powerMonitor, protocol, screen, session, webContents } from 'electron'
 import { CANALES } from '../compartido/puente'
 import { PUERTO_REVISION } from '../compartido/revision'
 import { Revision } from './app/revision/recibir'
@@ -30,6 +20,7 @@ import { ArchivoConfig } from './infra/config'
 import { ESQUEMA_MAQUETA, MaquetasAbiertas } from './infra/diseno/protocolo'
 import { ArchivoVistos } from './infra/diseno/vistos'
 import { ArchivoEscritos } from './infra/escritos'
+import { abrirEnNavegador } from './infra/navegador'
 import { leerCarpetas } from './infra/raiz'
 import { Registro } from './infra/registro'
 import { ArchivoRevision } from './infra/revision/datos'
@@ -378,15 +369,8 @@ function crearVentana(puente: Puente, guardada: VentanaGuardada | null, deFondo:
     puente.alVolver()
   })
 
-  // Los enlaces externos se abren en el navegador, solo http y https; la ventana nunca navega a otra página.
-  // Con IRIDIUM_NAVEGADOR=falso (las pruebas) no se abre: se anota en `enlacesAfuera`, para que la prueba lo vea.
-  const abrirAfuera = (url: string) => {
-    if (!/^https?:\/\//.test(url)) return
-    if (process.env.IRIDIUM_NAVEGADOR === 'falso') {
-      const g = globalThis as { enlacesAfuera?: string[] }
-      g.enlacesAfuera = [...(g.enlacesAfuera ?? []), url]
-    } else void shell.openExternal(url)
-  }
+  // Los enlaces externos se abren en el navegador (`abrirEnNavegador`); la ventana nunca navega a otra página.
+  const abrirAfuera = (url: string) => void abrirEnNavegador(url)
   v.webContents.setWindowOpenHandler(({ url }) => {
     abrirAfuera(url)
     return { action: 'deny' }

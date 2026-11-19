@@ -51,6 +51,11 @@ export interface TarjetaProyecto {
    * lo más reciente de los dos; null si no tiene ninguno.
    */
   ultimoCambio: number | null
+  /**
+   * Lo que abre el proyecto (frente Abrir, AB-1, D-156): el script marcado `ejecutar` en `docs/scripts.md`, su tipo y
+   * el detalle del botón «Ejecutar Alfa» (D-155); null sin marca. Opcional: sin decir, no tiene.
+   */
+  ejecutar?: { como: 'escritorio' | 'pagina' | 'consola'; detalle: string } | null
 }
 
 /**
@@ -751,6 +756,9 @@ export interface ScriptsProyecto {
 
 export type ResultadoScript = { tipo: 'ok' | 'error'; mensaje: string }
 
+/** Qué pasó con Ejecutar Alfa (AB-1, AB-2): `sin-armar`, el programa no existe todavía (`armar`: marca cómo se arma). */
+export type ResultadoEjecutar = ResultadoScript | { tipo: 'sin-armar'; armar: boolean }
+
 /** Un comentario de la Revisión para la sección Revisión (modulos/revision/ux.md › W-R3). */
 export interface VistaComentario {
   codigo: string
@@ -822,6 +830,8 @@ export const CANALES = {
   elegirConversacion: 'conversacion:elegir',
   scripts: 'scripts:lista',
   correrScript: 'scripts:correr',
+  ejecutarProyecto: 'proyecto:ejecutar',
+  armarProyecto: 'proyecto:armar-ahora',
   comentarios: 'revision:comentarios',
   capturaComentario: 'revision:captura',
   enviarComentario: 'revision:enviar',
@@ -1010,6 +1020,10 @@ export interface ApiIridium {
   scripts(ruta: string): Promise<ScriptsProyecto>
   /** Ejecuta el script `id` (lo busca de nuevo en `docs/scripts.md`: no confía en lo que mande la ventana). */
   correrScript(ruta: string, id: string): Promise<ResultadoScript>
+  /** Ejecutar Alfa (frente Abrir, AB-1): el script marcado `ejecutar`, buscado de nuevo en `docs/scripts.md`. */
+  ejecutarProyecto(ruta: string): Promise<ResultadoEjecutar>
+  /** Armar ahora (AB-2): el script marcado `armar`, en una consola a la vista. */
+  armarProyecto(ruta: string): Promise<ResultadoScript>
   /** Los comentarios de la Revisión del proyecto (H-R5); se releen con `alCambiarDocs`. */
   comentarios(ruta: string): Promise<ListaComentarios>
   /** La captura de un comentario como dirección `data:`; null si no tiene. */

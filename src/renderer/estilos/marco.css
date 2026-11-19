@@ -133,6 +133,13 @@
   gap: 2px;
   padding-top: var(--esp-2);
 }
+/* Ejecutar Alfa (frente Abrir, AB-1): va abajo con los ajustes, encima de ellos */
+.actividad .boton-ejecutar {
+  margin-top: auto;
+}
+.actividad .boton-ejecutar + .boton-ajustes {
+  margin-top: 0;
+}
 .actividad .sep {
   width: 18px;
   height: 1px;

@@ -200,6 +200,16 @@ Lo que el usuario ejecuta a mano va acá, nunca en el chat. Cada script es un bo
 ```markdown
 # Scripts
 
+## Abrir la app
+La versión armada, con los últimos cambios.
+**Ejecutar:** `dist/win-unpacked/Alfa.exe`
+**Marca:** ejecutar · escritorio
+
+## Armar la app
+Arma la versión de uso con el código de ahora. Cerrala antes.
+**Ejecutar:** `npm run armar`
+**Marca:** armar
+
 ## Abrir en modo desarrollo
 Abre la app con datos de prueba.
 **Ejecutar:** `npm run dev`
@@ -214,6 +224,7 @@ Una vez, o cuando la IA lo pida.
 ```
 
 - Un `##` por script con lo que hace en palabras del usuario, una línea de para qué sirve y **una** línea de acción: `**Ejecutar:**` (un comando, en la raíz o en la `**Carpeta:**` indicada; o un archivo del proyecto, `.exe`, `.msi`, `.bat`, `.lnk`…, que Windows abre) o `**Abrir:**` (una carpeta o un archivo para ver).
+- **Lo que abre el proyecto lleva su marca**, una línea más, sin comillas: `**Marca:** ejecutar · escritorio` (un programa: `**Ejecutar:**` con su `.exe`), `ejecutar · página` (`**Abrir:**` con un `.html` o una dirección `https://`, que abre el navegador) o `ejecutar · consola` (`**Ejecutar:**` con un comando que se queda corriendo, como un bot o un servidor). Con ella, Iridium muestra **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, y la descripción del script es lo que dice al pasar el mouse. Si es una app de escritorio, el script que la arma lleva `**Marca:** armar` (`**Ejecutar:**` con un comando que no pregunta nada y reemplaza el `.exe`). Una sola de cada una por proyecto. Se escriben una vez, cuando el proyecto ya tiene algo para usar (o al retomarlo), y se corrigen si cambia cómo se abre o cómo se arma.
 - Lo más usado primero, no más de ocho. Las herramientas que usa solo la IA van en el `CLAUDE.md`. Se corrige en la misma sesión en que algo cambia. Sin nada que ejecutar: «(Todavía no hay scripts: el proyecto no tiene código.)».
 - En una `Q-n`, citá el script (`scripts.md` › Abrir en modo desarrollo) en vez de repetir el comando.
 
@@ -277,7 +288,7 @@ La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, d
 
 ## El control
 
-Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos, `Idea:` y `Enlace:`, notas de `docs/ideas/` sin su `T-n`), las tablas de estados y los campos de `estado.md`, la `## Ruta` de cada frente (las marcas, las ramas, sus códigos y que el frente en curso la tenga), los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho), los dibujos en texto y las maquetas de `docs/diseno/`. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
+Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos, `Idea:` y `Enlace:`, notas de `docs/ideas/` sin su `T-n`), las tablas de estados y los campos de `estado.md`, la `## Ruta` de cada frente (las marcas, las ramas, sus códigos y que el frente en curso la tenga), los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho), los dibujos en texto, las marcas de `docs/scripts.md` y las maquetas de `docs/diseno/`. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
 
 ## Reglas para la IA
 

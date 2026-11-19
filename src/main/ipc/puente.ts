@@ -74,6 +74,7 @@ import { ejecutarPlan } from '../infra/ejecutar'
 import type { ArchivoEscritos } from '../infra/escritos'
 import { leerCommit, leerDiferencia, leerGit } from '../infra/git'
 import { entrarGithub, githubFalso, githubReal, inicializarRepo, publicarRepo } from '../infra/github'
+import { abrirEnNavegador } from '../infra/navegador'
 import { leerImagenDelPortapapeles } from '../infra/portapapeles'
 import { existeCarpeta } from '../infra/raiz'
 import type { Registro } from '../infra/registro'
@@ -623,8 +624,21 @@ export function registrarPuente(s: Servicios): Puente {
   })
   ipcMain.handle(CANALES.correrScript, async (_, ruta: unknown, id: unknown) => {
     const d = await docs.de(await proyecto(ruta))
-    return ejecutarPlan(await d.prepararScript(IdScript.parse(id)), (r) => shell.openPath(r))
+    return ejecutarPlan(
+      await d.prepararScript(IdScript.parse(id)),
+      (r) => shell.openPath(r),
+      abrirEnNavegador,
+    )
   })
+  // Ejecutar Alfa y Armar ahora (frente Abrir, AB-1, AB-2): lo marcado en `docs/scripts.md`, buscado de nuevo.
+  ipcMain.handle(CANALES.ejecutarProyecto, async (_, ruta: unknown) => {
+    const plan = await (await docs.de(await proyecto(ruta))).prepararEjecutar()
+    if (plan.tipo === 'sin-armar') return plan
+    return ejecutarPlan(plan, (r) => shell.openPath(r), abrirEnNavegador)
+  })
+  ipcMain.handle(CANALES.armarProyecto, async (_, ruta: unknown) =>
+    ejecutarPlan(await (await docs.de(await proyecto(ruta))).prepararArmar(), (r) => shell.openPath(r)),
+  )
   ipcMain.handle(CANALES.comentarios, async (_, ruta: unknown) => comentarios.listar(await proyecto(ruta)))
   ipcMain.handle(CANALES.capturaComentario, async (_, ruta: unknown, codigo: unknown) =>
     comentarios.captura(await proyecto(ruta), CodigoComentario.parse(codigo)),

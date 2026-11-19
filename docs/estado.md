@@ -39,10 +39,10 @@
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (diseño técnico en D-156; sigue AB-I1) | en curso |
+| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 hecha, espera la prueba Q-218; sigue AB-I2) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Definición aprobada (D-154: no usa la IA ni gasta uso; prendida de entrada, apagable por proyecto). UX aprobada (D-155): el botón es «Ejecutar Alfa». Diseño técnico cerrado (D-156: la marca en `scripts.md`, la app abierta por su `.exe` trabado, lo armado en `armados.json`). Sigue AB-I1 (Ejecutar).
+**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Definición aprobada (D-154: no usa la IA ni gasta uso; prendida de entrada, apagable por proyecto). UX aprobada (D-155): el botón es «Ejecutar Alfa». AB-I1 construida: la marca en `scripts.md` (con su control y el framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto; espera tu prueba (Q-218). Sigue AB-I2 (la actualización automática).
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
 El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: versión al día publicada y abierta por la otra persona (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -56,10 +56,18 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
+- **Q-218 — Probá Ejecutar desde la tarjeta y desde el proyecto**
+  Tipo: prueba · Frente: Abrir
+  Contexto: `modulos/abrir/estado.md` › AB-I1. Antes, que tu Iridium tenga la versión de hoy (Actualizar). Elegí un proyecto tuyo que ya tenga algo para usar (una app, una página o un bot) y pedile a su IA: «Marcá en scripts.md lo que abre el proyecto». En los demás proyectos la IA lo marca sola la próxima vez que trabaje en ellos.
+  - [ ] Clic derecho en la tarjeta de ese proyecto: debajo de Abrir la carpeta está «Ejecutar» con su nombre, y al pasar el mouse dice qué hace
+  - [ ] Al tocarlo, se abre lo que hace el proyecto (el programa, el navegador o una consola)
+  - [ ] Dentro del proyecto, el mismo botón está abajo en la barra de íconos, encima de Ajustes, y hace lo mismo
+  - [ ] Un proyecto sin la marca no muestra el botón en ningún lado
+  - [ ] Si es una app de escritorio que todavía no está armada, aparece el aviso «todavía no está armada» con Armar ahora, que la arma en una consola
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Abrir: construir AB-I1 (la marca en `scripts.md` con su control y el botón «Ejecutar Alfa»).
+Abrir: construir AB-I2 (la actualización automática de las apps de escritorio, sin IA).
 **Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

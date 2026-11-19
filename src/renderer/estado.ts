@@ -126,6 +126,19 @@ export interface AvisoSesion {
   motivo: string | null
 }
 
+/**
+ * Lo que pasó con Ejecutar Alfa (frente Abrir, AB-2) cuando no abrió: el programa todavía no está armado (con Armar
+ * ahora si el proyecto marca cómo se arma) o un error. Uno a la vez; se cierra a mano.
+ */
+export interface AvisoEjecutar {
+  ruta: string
+  titulo: string
+  detalle: string | null
+  error: boolean
+  /** Muestra Armar ahora. */
+  armar: boolean
+}
+
 /** Lo que recuerda la sección Skills mientras Iridium está abierto (H-6). */
 export interface VistaSkills {
   /** La skill elegida (su `id`), `framework` o null (la primera vez: Framework si hay alguno fuera, si no la primera propia). */
@@ -183,6 +196,9 @@ interface EstadoApp {
   /** Los avisos de H-13 a la vista, del más viejo al más nuevo. */
   avisos: AvisoSesion[]
   quitarAviso(id: number): void
+  /** El aviso de Ejecutar Alfa (AB-2), o null. */
+  avisoEjecutar: AvisoEjecutar | null
+  ponerAvisoEjecutar(a: AvisoEjecutar | null): void
   skills: VistaSkills
   cambiarSkills(cambio: Partial<VistaSkills>): void
   /** Lleva a Skills › Framework; con un proyecto, con su lista de avisos abierta (W-13, T-48, T-51). */
@@ -348,6 +364,8 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   ponerArranque: (arranque) => set({ arranque }),
   avisos: [],
   quitarAviso: (id) => set((s) => ({ avisos: s.avisos.filter((a) => a.id !== id) })),
+  avisoEjecutar: null,
+  ponerAvisoEjecutar: (avisoEjecutar) => set({ avisoEjecutar }),
   cierre: null,
   ponerCierre: (cierre) => {
     if (cierre === null && get().cierre) {

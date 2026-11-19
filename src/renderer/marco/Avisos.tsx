@@ -2,7 +2,8 @@
 // sesiones trabajando (F-6).
 import { useEffect, useRef, useState } from 'react'
 import type { RenglonArranqueVista } from '../../compartido/puente'
-import { type AvisoSesion, tarjetaDe, usarEstado } from '../estado'
+import { type AvisoEjecutar, type AvisoSesion, tarjetaDe, usarEstado } from '../estado'
+import { armarProyecto } from '../secciones/proyecto/ejecutar'
 import { useAnchoConversacion } from '../ui/Divisor'
 import { Icono } from '../ui/Icono'
 import { horaCorta, porQueNo, queDejo } from './arranque'
@@ -166,14 +167,51 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
   )
 }
 
+/** Ejecutar Alfa no abrió (frente Abrir, AB-2): todavía no está armada, con Armar ahora, o un error. Se cierra a mano. */
+function AvisoDeEjecutar({ a }: { a: AvisoEjecutar }) {
+  const poner = usarEstado((s) => s.ponerAvisoEjecutar)
+  const nombre = usarEstado((s) => tarjetaDe(s.lista, a.ruta)?.nombre) ?? nombreDe(a.ruta)
+  return (
+    <div
+      className="aviso-flotante"
+      data-estado={a.error ? 'error' : 'espera'}
+      role={a.error ? 'alert' : 'status'}
+    >
+      <Icono nombre={a.error ? 'error' : 'espera'} />
+      <b className="t">{a.titulo}</b>
+      <button type="button" className="x" aria-label="Cerrar el aviso" onClick={() => poner(null)}>
+        <Icono nombre="x" />
+      </button>
+      {a.detalle && <span className="d">{a.detalle}</span>}
+      {a.armar && (
+        <div className="acc">
+          <button
+            type="button"
+            className="boton principal chico"
+            title="Corre su script de armar en una consola"
+            onClick={() => void armarProyecto({ ruta: a.ruta, nombre })}
+          >
+            Armar ahora
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 /** Abajo a la derecha, sobre todo lo demás; `Esc` cierra el último. */
 export function Avisos() {
   const avisos = usarEstado((s) => s.avisos)
   const delArranque = usarEstado((s) => s.arranque?.aviso) ?? []
   const quitar = usarEstado((s) => s.quitarAviso)
-  // Dentro de un proyecto, a la izquierda de la conversación: no tapa el cuadro para escribir (D-032).
+  const deEjecutar = usarEstado((s) => s.avisoEjecutar)
+  // A la izquierda de la conversación que esté a la vista (la del proyecto, la general o la de Skills): no tapa el
+  // cuadro para escribir (D-032).
+  const seccion = usarEstado((s) => s.seccion)
   const ruta = usarEstado((s) => (s.seccion === 'proyecto' ? s.proyectoAbierto : null))
-  const ancho = useAnchoConversacion(ruta ? { proyecto: ruta } : null)
+  const ancho = useAnchoConversacion(
+    ruta ? { proyecto: ruta } : seccion === 'skills' ? 'skills' : seccion === 'proyecto' ? null : 'general',
+  )
   useEffect(() => {
     const ultimo = avisos.at(-1)
     if (!ultimo) return
@@ -183,13 +221,14 @@ export function Avisos() {
     window.addEventListener('keydown', alTeclado)
     return () => window.removeEventListener('keydown', alTeclado)
   }, [avisos, quitar])
-  if (avisos.length === 0 && delArranque.length === 0) return null
+  if (avisos.length === 0 && delArranque.length === 0 && !deEjecutar) return null
   return (
     <section className="avisos" aria-label="Avisos de las sesiones" style={{ right: ancho + 12 }}>
       {delArranque.length > 0 && <AvisoArranque filas={delArranque} />}
       {avisos.map((a) => (
         <Aviso key={a.id} a={a} />
       ))}
+      {deEjecutar && <AvisoDeEjecutar a={deEjecutar} />}
     </section>
   )
 }

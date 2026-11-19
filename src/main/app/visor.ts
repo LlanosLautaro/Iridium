@@ -18,6 +18,7 @@ import {
   type VistaPrevia,
   type VistaVisor,
 } from '../../compartido/visor'
+import { scriptQueArma, scriptQueEjecuta } from '../core/abrir'
 import { type Cita, citasDe } from '../core/citas'
 import { construirIndice, entradaPorAncla, type Indice, resolverCodigo } from '../core/visor/codigos'
 import {
@@ -45,7 +46,13 @@ import {
   siguienteCaptura,
   tieneContenido,
 } from '../core/visor/respuestas'
-import { leerScripts, modoDeEjecutar, RUTA_SCRIPTS, type ScriptLeido } from '../core/visor/scripts'
+import {
+  esDireccionWeb,
+  leerScripts,
+  modoDeEjecutar,
+  RUTA_SCRIPTS,
+  type ScriptLeido,
+} from '../core/visor/scripts'
 import {
   escribirImagenNueva,
   escribirRespuesta,
@@ -70,7 +77,11 @@ export type DireccionDe = (ruta: string) => string | null
 export type PlanScript =
   | { tipo: 'terminal'; nombre: string; cwd: string; comando: string }
   | { tipo: 'sistema'; nombre: string; ruta: string; modo: 'lanzar' | 'abrir' }
+  | { tipo: 'web'; nombre: string; direccion: string }
   | { tipo: 'error'; mensaje: string }
+
+/** Qué hacer con Ejecutar Alfa (frente Abrir, AB-1, AB-2): un plan, o el programa todavía no está armado. */
+export type PlanEjecutar = PlanScript | { tipo: 'sin-armar'; armar: boolean }
 
 interface Documento {
   texto: string | null
@@ -169,6 +180,7 @@ export class DocumentosProyecto {
     const ruta = rutaDelProyecto(s.valor)
     const tipo = ruta === null ? null : await tipoDeRuta(this.carpeta, ruta)
     if (s.accion === 'abrir') {
+      if (esDireccionWeb(s.valor)) return { modo: 'abrir', ruta: null, cwd: this.carpeta, falta: null }
       return { modo: 'abrir', ruta, cwd: this.carpeta, falta: tipo ? null : `No se encuentra ${s.valor}.` }
     }
     const modo = modoDeEjecutar(s.valor, tipo === 'archivo')
@@ -194,6 +206,31 @@ export class DocumentosProyecto {
   async prepararScript(id: string): Promise<PlanScript> {
     const s = this.scriptsLeidos().find((x) => x.id === id)?.leido
     if (!s) return { tipo: 'error', mensaje: 'Ese script ya no está en docs/scripts.md.' }
+    return this.planDe(s)
+  }
+
+  /** Ejecutar Alfa (AB-1): el script marcado `ejecutar`; si es un programa que todavía no existe, `sin-armar` (AB-2). */
+  async prepararEjecutar(): Promise<PlanEjecutar> {
+    const leidos = this.scriptsLeidos().map((x) => x.leido)
+    const e = scriptQueEjecuta(leidos)
+    if (!e) return { tipo: 'error', mensaje: 'El proyecto ya no marca qué ejecuta en docs/scripts.md.' }
+    if (e.como === 'escritorio' && e.script.accion === 'ejecutar') {
+      const r = await this.resolverScript(e.script)
+      if (r.modo === 'lanzar' && r.falta) return { tipo: 'sin-armar', armar: scriptQueArma(leidos) !== null }
+    }
+    return this.planDe(e.script)
+  }
+
+  /** Armar ahora (AB-2): el script marcado `armar`, a la vista como un botón de Scripts. */
+  async prepararArmar(): Promise<PlanScript> {
+    const s = scriptQueArma(this.scriptsLeidos().map((x) => x.leido))
+    if (!s) return { tipo: 'error', mensaje: 'El proyecto no marca cómo se arma en docs/scripts.md.' }
+    return this.planDe(s)
+  }
+
+  private async planDe(s: ScriptLeido): Promise<PlanScript> {
+    if (s.accion === 'abrir' && esDireccionWeb(s.valor))
+      return { tipo: 'web', nombre: s.nombre, direccion: s.valor.trim() }
     const r = await this.resolverScript(s)
     if (r.falta) return { tipo: 'error', mensaje: r.falta }
     if (r.modo === 'comando') return { tipo: 'terminal', nombre: s.nombre, cwd: r.cwd, comando: s.valor }

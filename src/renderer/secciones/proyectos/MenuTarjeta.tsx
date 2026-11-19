@@ -1,11 +1,12 @@
 // El menú del clic derecho en una tarjeta (R-7, C-9, C-12, D-089): abrir el proyecto, en VS Code o su carpeta; pasarlo
 // al framework o ver sus avisos (OR-8, T-48); y de la ficha, el estado, archivar y el ícono; y eliminarlo, con
-// confirmación (R-10). En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
+// confirmación (R-10). Si el proyecto marca lo que abre, Ejecutar Alfa (frente Abrir, AB-1). En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
 import type { ListaProyectos, ResultadoFicha, TarjetaProyecto } from '../../../compartido/puente'
 import { ESTADOS, type Estado, NOMBRE_ESTADO } from '../../../compartido/tipos'
 import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
 import { MenuContextual, type Punto } from '../../ui/MenuContextual'
+import { ejecutarProyecto, nombreEjecutar } from '../proyecto/ejecutar'
 
 /** Lo que pasó, para el aviso de la grilla; `deshacer` vuelve atrás (archivar). */
 export interface AvisoGrilla {
@@ -96,6 +97,17 @@ export function MenuTarjeta({
         <Icono nombre="carpeta" />
         Abrir la carpeta
       </button>
+      {p.ejecutar && (
+        <button
+          type="button"
+          role="menuitem"
+          title={p.ejecutar.detalle}
+          onClick={hacer(() => ejecutarProyecto(p))}
+        >
+          <Icono nombre="play" />
+          {nombreEjecutar(p)}
+        </button>
+      )}
       {(pasable || conAvisos) && <hr />}
       {pasable && (
         <button

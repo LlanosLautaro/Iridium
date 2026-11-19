@@ -22,6 +22,8 @@ export interface DatosProyecto {
   framework?: TarjetaProyecto['framework']
   /** El último cambio (ms); null o sin decir, ninguno. */
   ultimoCambio?: number | null
+  /** Lo que abre el proyecto (frente Abrir); null o sin decir, nada. */
+  ejecutar?: TarjetaProyecto['ejecutar']
 }
 
 export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
@@ -48,6 +50,7 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
     skills: d.skills ?? 0,
     framework: d.framework ?? null,
     ultimoCambio: d.ultimoCambio ?? null,
+    ejecutar: d.ejecutar ?? null,
   }
   if (d.metadatos === null) return base
   if (d.metadatos.tipo === 'danado') return { ...base, problema: d.metadatos.motivo }

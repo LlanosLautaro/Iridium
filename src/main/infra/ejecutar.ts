@@ -6,11 +6,27 @@ import type { PlanScript } from '../app/visor'
 /** Abre un archivo o una carpeta con su programa; devuelve el error o '' (como `shell.openPath` de Electron). */
 export type AbrirConWindows = (ruta: string) => Promise<string>
 
+/** Abre una dirección `http(s)://` en el navegador (como `shell.openExternal`). */
+export type AbrirEnNavegador = (direccion: string) => Promise<void>
+
 export async function ejecutarPlan(
   plan: PlanScript,
   abrir: AbrirConWindows,
+  navegador?: AbrirEnNavegador,
 ): Promise<{ tipo: 'ok'; mensaje: string } | { tipo: 'error'; mensaje: string }> {
   if (plan.tipo === 'error') return plan
+  if (plan.tipo === 'web') {
+    if (!navegador) return { tipo: 'error', mensaje: 'No se puede abrir el navegador desde acá.' }
+    try {
+      await navegador(plan.direccion)
+      return { tipo: 'ok', mensaje: 'Abierto en el navegador.' }
+    } catch (e) {
+      return {
+        tipo: 'error',
+        mensaje: `No se pudo abrir el navegador: ${e instanceof Error ? e.message : String(e)}`,
+      }
+    }
+  }
   if (plan.tipo === 'sistema') {
     const error = await abrir(plan.ruta)
     if (error) return { tipo: 'error', mensaje: `Windows no lo pudo abrir: ${error}` }

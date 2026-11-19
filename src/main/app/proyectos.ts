@@ -3,12 +3,14 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { basename, extname, join } from 'node:path'
 import type { CarpetasIridium, ListaProyectos, PreguntaNueva, TarjetaProyecto } from '../../compartido/puente'
+import { queEjecuta } from '../core/abrir'
 import { dondeDe } from '../core/control'
 import { armarTarjeta, ordenarTarjetas } from '../core/grilla'
 import { rutaIconoSegura } from '../core/metadatos'
 import { contarPendientes, preguntasSinResponder } from '../core/pendientes'
 import type { CarpetaProyecto } from '../core/proyectos'
 import { CARPETA_REVISION, leerComentario } from '../core/revision/comentario'
+import { leerScripts, RUTA_SCRIPTS } from '../core/visor/scripts'
 import type { CarpetasEnDisco } from '../infra/carpeta-iridium'
 import { leerArchivoGuia, leerArchivoMetadatos, leerCarpetas, RaizNoEncontrada } from '../infra/raiz'
 import { skillsEnProyecto } from '../infra/skills'
@@ -115,14 +117,21 @@ async function leerFramework(c: CarpetaProyecto): Promise<TarjetaProyecto['frame
   return avisos === null ? 'viejo' : { avisos: avisos.map((a) => `${dondeDe(a)} — ${a.texto}`) }
 }
 
+/** Lo que abre el proyecto (frente Abrir, AB-1): el script marcado `ejecutar` de `docs/scripts.md`, o null. */
+async function leerEjecutar(ruta: string): Promise<TarjetaProyecto['ejecutar']> {
+  const texto = await textoSiExiste(join(ruta, ...RUTA_SCRIPTS.split('/')))
+  return texto === null ? null : queEjecuta(leerScripts(texto))
+}
+
 async function tarjetaDe(c: CarpetaProyecto): Promise<TarjetaProyecto> {
-  const [icono, preguntas, revision, skills, framework, ultimoCambio] = await Promise.all([
+  const [icono, preguntas, revision, skills, framework, ultimoCambio, ejecutar] = await Promise.all([
     leerIcono(c),
     leerPendientes(c.ruta),
     contarRevisionAbiertos(c.ruta),
     skillsEnProyecto(c.ruta),
     leerFramework(c),
     leerUltimoCambio(c.ruta),
+    leerEjecutar(c.ruta),
   ])
   return armarTarjeta({
     nombre: c.nombre,
@@ -135,6 +144,7 @@ async function tarjetaDe(c: CarpetaProyecto): Promise<TarjetaProyecto> {
     skills: skills.length,
     framework,
     ultimoCambio,
+    ejecutar,
   })
 }
 
