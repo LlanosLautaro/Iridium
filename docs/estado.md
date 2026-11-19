@@ -64,8 +64,8 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
 - **Q-216 — ¿Va la definición de Abrir así?**
   Tipo: decisión · frena · Frente: Abrir
-  Contexto: `modulos/abrir/definicion.md`. Primero el botón **Abrir** en la tarjeta y en el proyecto (cada IA marca en Scripts qué abre su proyecto y de qué tipo es); después, cada app de escritorio se arma sola cuando tiene commits nuevos, está cerrada y ninguna IA trabaja en ella. Lo que falta decidir es si eso último arranca prendido.
-  Opciones: A) Sí; mantener al día se prende solo en cada app que marca cómo se arma, y se puede apagar por proyecto (recomendada: es lo que pediste en T-80 y no hay que acordarse de prenderlo) · B) Sí, pero mantener al día empieza apagado y lo prendés en cada proyecto · C) Solo Abrir por ahora; mantener al día queda para después
+  Contexto: `modulos/abrir/definicion.md`. Primero el botón **Abrir** en la tarjeta y en el proyecto (cada IA marca en Scripts qué abre su proyecto y de qué tipo es); después, la actualización automática: cada app de escritorio se arma sola, sin IA y sin gastar uso de Claude, cuando tiene commits nuevos, está cerrada y ninguna IA trabaja en ella. Las dos marcas las escribe la IA una sola vez, al armar la app por primera vez. Lo que falta decidir es si la actualización arranca prendida.
+  Opciones: A) Sí; la actualización automática se prende sola en cada app que marca cómo se arma, y se puede apagar por proyecto (recomendada: es lo que pediste en T-80 y no hay que acordarse de prenderlo) · B) Sí, pero la actualización automática empieza apagada y lo prendés en cada proyecto · C) Solo Abrir por ahora; la actualización automática queda para después
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso

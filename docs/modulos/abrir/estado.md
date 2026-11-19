@@ -18,7 +18,7 @@
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-19, adelante de Diseño (D-153). Propuesta hecha y definición escrita: dos partes, primero **Abrir** (AB-I1) y después **mantener al día** las apps de escritorio (AB-I2). Espera tu visto bueno (Q-216).
+Abierto el 2026-11-19, adelante de Diseño (D-153). Propuesta hecha y definición escrita: dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA (AB-I2). Espera tu visto bueno (Q-216).
 
 ## Ruta
 - [x] Pensar qué resuelve y por qué va primero
@@ -33,13 +33,13 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Propuesta hecha y definició
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|
 | El framework (`recursos/plugins/iridium`) | La marca de lo que abre el proyecto y de cómo se arma, en `SKILL.md` › Los scripts y en la plantilla, con su lector y su control | D-148 | no (AB-I1, AB-I2) |
-| `02-definicion.md` › Glosario | «Lo que abre el proyecto» y «Mantener al día» | — | no (al aprobarse la definición) |
+| `02-definicion.md` › Glosario | «Lo que abre el proyecto» y «Actualización automática» | — | no (al aprobarse la definición) |
 
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
 | AB-I1 | Abrir: la marca en `scripts.md` (framework, lector y control) y el botón en la tarjeta y en el proyecto | pendiente |
-| AB-I2 | Mantener al día: armar solas las apps de escritorio con cambios, cerradas y sin IA trabajando | pendiente |
+| AB-I2 | Actualización automática: armar solas, sin IA, las apps de escritorio con cambios, cerradas y sin IA trabajando | pendiente |
 
 ## Log de iteraciones
 (Todavía ninguna.)

@@ -20,8 +20,9 @@ Que cada proyecto con algo para usar se abra desde Iridium con un clic, sin busc
 - Si lo que abre todavía no existe (una app sin armar), Abrir lo dice en vez de fallar callado.
 - El framework enseña a marcarlo al escribir los scripts y al retomar un proyecto; el control marca dos scripts marcados, un tipo que no existe o una marca sin línea de acción. Los proyectos que ya existen lo suman cuando su IA los retoma: desde acá no se tocan.
 
-**Parte 2 — Mantener al día (AB-I2):**
-- En una app de tipo escritorio, la IA marca también el script que la arma.
+**Parte 2 — Actualización automática (AB-I2):**
+- En una app de tipo escritorio, la IA marca también el script que la arma. Las dos marcas se escriben **una sola vez**, en el hito en que la app empieza a armarse (el framework lo pide ahí, y en Plantillas va la receta de cada tipo, D-150), o al retomar un proyecto que ya existe.
+- **Sin IA y sin gastar uso de Claude:** Iridium corre el script de armar como cualquier botón de Scripts; solo usa la PC (un minuto, según la app).
 - Iridium la arma sola cuando hay commits que la versión armada no tiene, ningún archivo a medio cambiar, ninguna IA trabajando en ese proyecto y la app cerrada. Si el usuario la abre mientras se arma, espera a que termine.
 - La tarjeta dice si está al día, armándose o si falló (con lo que pasó, como **Ver la consola** de Iridium); un armado que falló no se reintenta solo hasta el próximo commit (como D-122).
 - Se puede apagar en cada proyecto (ver Q-216).
@@ -49,7 +50,7 @@ No sube: Iridium ya ejecuta los scripts de `scripts.md` (D-039) y ya arma su pro
 | Término | Significado |
 |---|---|
 | Lo que abre el proyecto | El script de `scripts.md` que la IA marca para el botón **Abrir**, con su tipo (escritorio, página o consola) |
-| Mantener al día | Que Iridium arme sola una app de escritorio de un proyecto cuando tiene cambios y está cerrada |
+| Actualización automática | Que Iridium arme sola, sin IA, una app de escritorio de un proyecto cuando tiene cambios y está cerrada |
 
 ## Preguntas abiertas para investigar
 - Cómo sabe Iridium que una app está abierta (por el programa que corre desde esa carpeta) y qué versión está armada (el commit con que se armó la última vez). Van al diseño técnico; no hace falta el paso 3: no hay dominio de terceros.
