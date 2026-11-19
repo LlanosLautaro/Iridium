@@ -3202,3 +3202,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** la IA de Iridium marca ahora, desde acá, los proyectos del usuario que ya tienen algo para usar (Q-219, opción A); los nuevos los marca su IA, como dice el framework. Se marcó la única app de escritorio que se arma dentro de su carpeta (`ejecutar · escritorio` y `armar`, con su commit en ese repo, sin subirlo: un cambio sin commitear frenaría la actualización). Los que no tienen nada para usar o están archivados quedan sin marca. La app que se usa instalada fuera de su carpeta no entra en la marca de hoy (su `.exe` no está en el proyecto): cómo se abre, Q-220.
 **Motivo:** se hace una vez y queda; no gasta uso en cada proyecto.
 **Consecuencias:** la prueba de AB-I1 y AB-I2 se hace con esa app (Q-221).
+
+## D-158 — La app que se usa instalada se abre y se actualiza sola, con una ruta que empieza con una variable de Windows
+- **Fecha:** 2026-11-19
+- **Ámbito:** Abrir (T-80), con el framework
+- **Hito o paso:** 10; frente Abrir, paso 7 (Construcción)
+- **Estado:** vigente
+
+**Contexto:** una app del usuario se usa instalada fuera de su carpeta, y la marca solo abría programas de adentro del proyecto. Q-220: el usuario pidió que Iridium sepa dónde está instalada y la mantenga al día (la opción B, general, o un caso especial si hiciera falta).
+**Decisión:** general, sin caso especial. `**Ejecutar:**` (y `**Abrir:**`) aceptan una ruta que empieza con una variable de Windows (`%LOCALAPPDATA%\…`), que Iridium completa en la PC donde corre; con ella Ejecutar abre el programa instalado y la actualización vigila ese `.exe` (si está abierta y su fecha). El script `armar` de una app así arma el instalador y lo corre sin preguntas (`… && instalador\Alfa-instalador.exe /S`). El control marca una ruta fija (con la letra del disco) en lo que abre el proyecto: no sirve en otra PC. Se marcó así la app instalada del usuario, con su commit en ese repo (solo `docs/scripts.md`).
+**Motivo:** reusa todo lo de AB-I1 y AB-I2: lo único nuevo es dónde está el `.exe`. Una variable vale en cualquier PC; una ruta fija no.
+**Consecuencias:** el framework (`SKILL.md` › Los scripts) dice cómo se marca una app instalada. Iteración AB-I3, con su prueba (Q-222). Las rutas con variable en **Abrir:**, que antes decían «No se encuentra», ahora abren.

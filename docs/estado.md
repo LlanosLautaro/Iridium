@@ -39,10 +39,10 @@
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 y AB-I2 hechas; esperan tu prueba, Q-221) | en curso |
+| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 y AB-I2 probadas; AB-I3, tu app instalada, espera Q-222) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos ya tienen la marca (D-157, Q-219): Iridium y tu app de escritorio que se arma en su carpeta. Las dos iteraciones esperan una sola prueba (Q-221); la app que usás instalada, cómo se abre (Q-220).
+**Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos tienen la marca (D-157) y las dos iteraciones salieron bien (Q-221). AB-I3 (D-158): tu app instalada se abre y se actualiza sola, con la ruta de su `.exe` desde una variable de Windows; espera tu prueba (Q-222).
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
 El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: versión al día publicada y abierta por la otra persona (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -56,23 +56,17 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-220 — ¿Cómo abre Iridium tu app que se usa instalada?**
-  Tipo: decisión · Frente: Abrir
-  Contexto: D-157 (marcar tus proyectos). Tu app con instalador se usa desde donde la instala Windows, fuera de su carpeta, y la marca de hoy solo abre programas de adentro del proyecto: por eso no tiene **Ejecutar** todavía.
-  Opciones: A) Que **Ejecutar** abra la app instalada; la versión nueva se sigue instalando a mano, como hoy (recomendada: cambia poco y no toca cómo la usás) · B) Lo de A y, además, que se actualice sola: Iridium arma el instalador y lo corre sin ventanas (más trabajo; instala sin que mires una app con datos cifrados) · C) Sin **Ejecutar** por ahora
-- **Q-221 — Probá Ejecutar y la actualización automática**
+- **Q-222 — Probá Ejecutar y la actualización de tu app instalada**
   Tipo: prueba · Frente: Abrir
-  Contexto: `modulos/abrir/ux.md` › AB-1 a AB-4. Antes, que tu Iridium tenga la versión de hoy (Actualizar). La app es tu app de escritorio marcada (además de Iridium, la única con **Ejecutar** en el menú); como hoy tiene un cambio nuevo, se arma sola una vez apenas la encuentre cerrada.
-  - [ ] En el menú de su tarjeta, debajo de Abrir la carpeta, está «Ejecutar» con su nombre; al pasar el mouse dice «Abre la app.» y para qué es
-  - [ ] Tocarlo abre la app; lo mismo con el botón de la barra del proyecto (abajo, encima de Ajustes)
-  - [ ] Con la app cerrada, en unos minutos se vio «Actualizando…» en el pie de la tarjeta, sin ninguna consola, y después se fue
-  - [ ] En Ajustes › Este proyecto (el engranaje de la barra del proyecto) el interruptor está prendido y dice «Actualizada hoy a las…»
-  - [ ] Si tocás Ejecutar mientras dice «Actualizando…», avisa que abre en cuanto termine y la abre sola
-  - [ ] Apagué el interruptor, cerré y abrí Iridium y seguía apagado (después lo volví a prender)
+  Contexto: `modulos/abrir/estado.md` › AB-I3. Antes, que tu Iridium tenga la versión de hoy (Actualizar). Su proyecto tiene cambios sin commitear de su IA: mientras estén así no se actualiza sola (D-156); pedile a esa IA que los cierre.
+  - [ ] En el menú de su tarjeta está «Ejecutar» con su nombre, y abre la app instalada (la de siempre, con tus datos)
+  - [ ] En sus Scripts, «Abrir la carpeta de la extensión» abre la carpeta (antes decía que no se encontraba)
+  - [ ] Con sus cambios commiteados y la app cerrada, en unos minutos se vio «Actualizando…» en la tarjeta (tarda más: arma el instalador) y después se fue, sin ventanas
+  - [ ] Al abrirla, es la versión nueva y tus datos siguen ahí; la extensión anda después de recargarla en Brave
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Abrir: con la respuesta de Q-220, que Ejecutar abra tu app instalada; con la de Q-221, cerrar AB-I1 y AB-I2. Sin respuestas, el paso 8 (calidad) del frente.
+Abrir: el paso 8 (calidad) del frente; con la respuesta de Q-222, cerrar AB-I3.
 **Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

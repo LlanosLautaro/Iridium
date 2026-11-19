@@ -118,8 +118,13 @@ export async function escribirImagenNueva(
 
 /** ¿Qué hay en esta ruta de la carpeta (para los scripts, D-039)? */
 export async function tipoDeRuta(carpeta: string, ruta: string): Promise<'archivo' | 'carpeta' | null> {
+  return tipoDeRutaCompleta(join(carpeta, ...ruta.split('/')))
+}
+
+/** ¿Qué hay en esta ruta completa (un script que nombra algo fuera del proyecto, D-158)? */
+export async function tipoDeRutaCompleta(ruta: string): Promise<'archivo' | 'carpeta' | null> {
   try {
-    const s = await stat(join(carpeta, ...ruta.split('/')))
+    const s = await stat(ruta)
     return s.isFile() ? 'archivo' : s.isDirectory() ? 'carpeta' : null
   } catch {
     return null

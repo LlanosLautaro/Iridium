@@ -4,7 +4,7 @@
 // Los documentos se guardan en memoria; al cambiar algo en el disco solo se releen los archivos que cambiaron.
 // Iridium suma lo que necesita Pendientes (I-3): las preguntas con su respuesta, sus citas y el contexto en línea.
 import { readdir } from 'node:fs/promises'
-import { join } from 'node:path'
+import { join, normalize } from 'node:path'
 import { tamanoLegible } from '../../compartido/tamanos'
 import {
   type ContenidoDocumento,
@@ -51,6 +51,7 @@ import {
   leerScripts,
   modoDeEjecutar,
   RUTA_SCRIPTS,
+  rutaConVariable,
   type ScriptLeido,
 } from '../core/visor/scripts'
 import {
@@ -61,7 +62,7 @@ import {
   listarDocumentos,
   listarImagenes,
   tieneDocs,
-  tipoDeRuta,
+  tipoDeRutaCompleta,
 } from '../infra/documentos'
 
 /**
@@ -177,8 +178,8 @@ export class DocumentosProyecto {
   private async resolverScript(
     s: ScriptLeido,
   ): Promise<{ modo: ScriptVista['modo']; ruta: string | null; cwd: string; falta: string | null }> {
-    const ruta = rutaDelProyecto(s.valor)
-    const tipo = ruta === null ? null : await tipoDeRuta(this.carpeta, ruta)
+    const ruta = rutaDeScript(this.carpeta, s.valor)
+    const tipo = ruta === null ? null : await tipoDeRutaCompleta(ruta)
     if (s.accion === 'abrir') {
       if (esDireccionWeb(s.valor)) return { modo: 'abrir', ruta: null, cwd: this.carpeta, falta: null }
       return { modo: 'abrir', ruta, cwd: this.carpeta, falta: tipo ? null : `No se encuentra ${s.valor}.` }
@@ -189,7 +190,8 @@ export class DocumentosProyecto {
       return { modo: 'lanzar', ruta, cwd: this.carpeta, falta: `No se encuentra ${s.valor}.` }
     if (s.carpeta === null) return { modo, ruta: null, cwd: this.carpeta, falta: null }
     const carpeta = rutaDelProyecto(s.carpeta)
-    const existe = carpeta !== null && (await tipoDeRuta(this.carpeta, carpeta)) === 'carpeta'
+    const existe =
+      carpeta !== null && (await tipoDeRutaCompleta(join(this.carpeta, ...carpeta.split('/')))) === 'carpeta'
     return {
       modo,
       ruta: null,
@@ -235,7 +237,7 @@ export class DocumentosProyecto {
     if (r.falta) return { tipo: 'error', mensaje: r.falta }
     if (r.modo === 'comando') return { tipo: 'terminal', nombre: s.nombre, cwd: r.cwd, comando: s.valor }
     if (r.ruta === null) return { tipo: 'error', mensaje: `No se encuentra ${s.valor}.` }
-    return { tipo: 'sistema', nombre: s.nombre, ruta: join(this.carpeta, ...r.ruta.split('/')), modo: r.modo }
+    return { tipo: 'sistema', nombre: s.nombre, ruta: r.ruta, modo: r.modo }
   }
 
   private get indiceActual(): Indice {
@@ -558,6 +560,26 @@ export class DocumentosProyecto {
     if (!esCodigoDePregunta(codigo) || !esImagenDe(codigo, imagen)) throw new Error('Imagen no válida.')
     await papelera(join(this.carpeta, ...CARPETA_RESPUESTAS.split('/'), ...imagen.split('/')))
   }
+}
+
+/**
+ * La ruta completa de lo que nombra un script: del proyecto o, si empieza con una variable de Windows, fuera de él
+ * (un programa instalado, D-158). null si es una ruta fija, sale de la carpeta o la variable no existe.
+ */
+export function rutaDeScript(
+  carpeta: string,
+  valor: string,
+  env: NodeJS.ProcessEnv = process.env,
+): string | null {
+  const conVariable = rutaConVariable(valor)
+  if (conVariable) {
+    const nombre = conVariable.variable.toLowerCase()
+    const base = Object.entries(env).find(([k, v]) => k.toLowerCase() === nombre && v)?.[1]
+    if (!base) return null
+    return normalize(join(base, ...conVariable.resto.split(/[\\/]/).filter((p) => p !== '')))
+  }
+  const rel = rutaDelProyecto(valor)
+  return rel === null ? null : join(carpeta, ...rel.split('/'))
 }
 
 /** Ruta de un script, relativa a la raíz del proyecto (acepta `\`); null si es absoluta o sale de la carpeta. */

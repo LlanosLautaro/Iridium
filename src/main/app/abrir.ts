@@ -6,7 +6,7 @@ import type { ActualizacionProyecto } from '../../compartido/puente'
 import { armadoSupuesto, porQueNoArma, puedeArmarse, scriptQueArma, scriptQueEjecuta } from '../core/abrir'
 import type { ScriptLeido } from '../core/visor/scripts'
 import type { ArchivoArmados, ArmadoProyecto, UltimoArmado } from '../infra/armados'
-import { rutaDelProyecto } from './visor'
+import { rutaDelProyecto, rutaDeScript } from './visor'
 
 /** Cada cuánto se mira (D-156 › 7): tres comandos de git cortos y un intento de abrir el `.exe` por proyecto. */
 const CADA_MS = 60_000
@@ -24,16 +24,20 @@ export interface PlanArmado {
   cwd: string
 }
 
-/** El `.exe` y el comando de armar de un proyecto, según las marcas de su `scripts.md`; null si no se arma solo. */
-export function planDeArmado(ruta: string, scripts: readonly ScriptLeido[]): PlanArmado | null {
+/** El `.exe` (del proyecto o instalado fuera, D-158) y el comando de armar de un proyecto, según las marcas de su `scripts.md`; null si no se arma solo. */
+export function planDeArmado(
+  ruta: string,
+  scripts: readonly ScriptLeido[],
+  env: NodeJS.ProcessEnv = process.env,
+): PlanArmado | null {
   if (!puedeArmarse(scripts)) return null
-  const exe = rutaDelProyecto(scriptQueEjecuta(scripts)?.script.valor ?? '')
+  const exe = rutaDeScript(ruta, scriptQueEjecuta(scripts)?.script.valor ?? '', env)
   const armar = scriptQueArma(scripts)
   if (exe === null || !armar) return null
   const carpeta = armar.carpeta === null ? '' : rutaDelProyecto(armar.carpeta)
   if (carpeta === null) return null
   return {
-    exe: join(ruta, ...exe.split('/')),
+    exe,
     comando: armar.valor.trim(),
     cwd: carpeta === '' ? ruta : join(ruta, ...carpeta.split('/')),
   }

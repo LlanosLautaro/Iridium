@@ -142,6 +142,20 @@ export function esDireccionWeb(valor: string): boolean {
   return /^https?:\/\/\S+$/i.test(valor.trim())
 }
 
+/**
+ * Una ruta fuera del proyecto que empieza con una variable de Windows (`%LOCALAPPDATA%\Programs\Alfa\Alfa.exe`,
+ * D-158): la de un programa instalado. La variable y lo que sigue (sin la barra), o null si no empieza así.
+ */
+export function rutaConVariable(valor: string): { variable: string; resto: string } | null {
+  const m = /^%([A-Za-z_][A-Za-z0-9_]*)%(?:[\\/](.*))?$/.exec(valor.trim())
+  return m?.[1] ? { variable: m[1], resto: m[2] ?? '' } : null
+}
+
+/** Una ruta fija de Windows (`C:\…`, `\\equipo\…`): no sirve en otra PC (D-158). */
+export function esRutaFija(valor: string): boolean {
+  return /^([a-z]:|[\\/])/i.test(valor.trim())
+}
+
 /** Archivos que Windows ejecuta al abrirlos: con **Ejecutar:**, una ruta así es un archivo aunque todavía no exista. */
 const EJECUTABLE = /\.(exe|msi|msix|msixbundle|appx|appxbundle|bat|cmd|lnk|vsix)$/i
 

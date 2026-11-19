@@ -1,6 +1,6 @@
 // `docs/scripts.md` (frente Abrir, D-156): la marca `**Marca:**` de lo que abre el proyecto y de cómo se arma. Un solo
 // script de cada una, un tipo conocido, que vaya con su acción y `armar` solo con un `ejecutar · escritorio`.
-import { esDireccionWeb, leerScriptsYMarcas, RUTA_SCRIPTS } from '../visor/scripts'
+import { esDireccionWeb, esRutaFija, leerScriptsYMarcas, RUTA_SCRIPTS } from '../visor/scripts'
 import type { Aviso, Regla } from './tipos'
 
 const TIPOS = '`ejecutar · escritorio`, `ejecutar · página`, `ejecutar · consola` o `armar`'
@@ -41,6 +41,11 @@ export const reglaScripts: Regla = (a) => {
       )
     if (m.como !== 'pagina' && s.accion !== 'ejecutar')
       av(e.linea, `«${s.nombre}»: \`ejecutar · ${m.como}\` va con **Ejecutar:**`)
+    if (m.como === 'escritorio' && s.accion === 'ejecutar' && esRutaFija(s.valor))
+      av(
+        s.linea,
+        `«${s.nombre}»: una ruta fija no sirve en otra PC; un programa instalado fuera del proyecto empieza con una variable de Windows (\`%LOCALAPPDATA%\\…\`)`,
+      )
   }
   for (const s of scripts)
     if (s.accion === 'ejecutar' && esDireccionWeb(s.valor))
