@@ -13,3 +13,4 @@
 | Ideas | sección | en operación (con el hito 10) | `modulos/ideas/` |
 | Mapa | sección | en operación (con el hito 10) | `modulos/mapa/` |
 | Arranque | sección | 2. Definición | `modulos/arranque/` |
+| Abrir | sección | 2. Definición | `modulos/abrir/` |

@@ -1,7 +1,7 @@
 # Estado del módulo: Mapa
 
 **Tipo:** sección (la sección Mapa de cada proyecto, rehecha; T-71)
-**Última actualización:** 2026-11-18
+**Última actualización:** 2026-11-19
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -36,7 +36,7 @@ UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1: la ruta es parte 
 - [x] Avisar en su pestaña cuando falta el archivo de un frente (MA-I3)
 - [x] Ver el camino de los hitos en un proyecto antes de operación (MA-I3)
 - [x] Repasar cada historia contra sus pruebas y los casos límite
-- [ ] Archivar los frentes sin nada por hacer, con «Archivados» para verlos (Q-215)
+- [x] Archivar los frentes sin nada por hacer, con «Archivados» para verlos
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -57,7 +57,7 @@ UX aprobada (D-144) y diseño técnico cerrado (D-145). MA-I1: la ruta es parte 
 ### En operación — 2026-11-18 — Los frentes archivados (R-91, D-152)
 - **Hecho:** `Mapa.tsx`: un frente en uso sin nada que venga en su ruta ni trabajo aprobado sin lugar sale de la barra; el interruptor «Archivados» (la pieza Campo, en la Cabecera, con su cuenta y solo si hay alguno) los muestra después de los activos, en gris (`.barra-frentes .archivado`). Se recuerda en la vista del proyecto (`mapaArchivados`). Si todos están archivados y no hay nada por empezar, una línea gris lo dice.
 - **Pruebas:** `tests/e2e/ma2-mapa.spec.ts` al día (Notas, en uso y con todo hecho, está archivada; con el interruptor aparece en gris; captura `ma2-mapa-archivados.png`). Las 8 del Mapa, `pnpm test` (846), `pnpm typecheck` y `pnpm lint`, sin errores.
-- **Prueba:** Q-215.
+- **Prueba:** Q-215, probada el 2026-11-19 (las tres casillas bien).
 
 ### MA-I3 — Los bordes
 - **Leer antes:** `ux.md` › MA-5, MA-12 y W-7 › Estados.

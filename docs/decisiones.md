@@ -157,7 +157,9 @@
 | D-148 | 2026-11-18 | frente nuevo Abrir (T-80), con el framework e Inicio | 10 | Abrir lo que hace cada proyecto, y después mantener al día las apps de escritorio | vigente |
 | D-149 | 2026-11-18 | Arranque (T-70) | 10; frente Arranque, paso 5 (Diseño técnico) | El arranque: un temporizador recalculado, la Bandeja como fuente y lo que pasó en arranques.json | vigente |
 | D-150 | 2026-11-18 | frente nuevo Plantillas (T-81), con el framework | 10 | Plantillas por tipo de app: piezas modulares que crecen, empezando por las pruebas sin ventanas | vigente |
-| D-151 | 2026-11-18 | frentes Diseño, Orden y Plantillas | 10 | Primero se terminan Diseño y Orden; Plantillas espera | vigente |
+| D-151 | 2026-11-18 | frentes Diseño, Orden y Plantillas | 10 | Primero se terminan Diseño y Orden; Plantillas espera | vigente (Abrir pasa adelante, D-153) |
+| D-152 | 2026-11-18 | Mapa | 10 (R-91) | El Mapa archiva los frentes en uso sin nada por hacer | vigente |
+| D-153 | 2026-11-19 | frentes Abrir, Diseño, Orden y Plantillas | 10, a pedido del usuario | Abrir pasa adelante: se hace ahora y Diseño espera | vigente (cambia el orden de D-148 y D-151) |
 
 ---
 
@@ -3130,7 +3132,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Contexto:** el usuario pidió atacar los frentes a medio cerrar. Arranque y Compartir solo esperan su prueba o tarea (Q-210, Q-185); Diseño quedó con DI-I3 a medio pasar y Orden espera el rediseño para su paso 8 (D-102).
 **Decisión:** opción A de Q-211: Diseño se reactiva y termina completo (DI-I3 sección por sección, Skills primero, con T-58, T-53 y DI-I4); al cerrarlo, Orden hace su paso 8 (Calidad) sobre la interfaz negra. Plantillas y Abrir quedan detrás.
 **Motivo:** terminar Diseño destraba Orden y cierra los dos frentes; la calidad se mide sobre la app definitiva.
-**Consecuencias:** Diseño pasa a `en curso`; Plantillas (D-150) y Abrir (D-148) esperan a que cierre Orden.
+**Consecuencias:** Diseño pasa a `en curso`; Plantillas (D-150) y Abrir (D-148) esperan a que cierre Orden. Abrir pasó adelante el 2026-11-19 (D-153).
 
 ## D-152 — El Mapa archiva los frentes en uso sin nada por hacer
 - **Fecha:** 2026-11-18
@@ -3142,3 +3144,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** un frente está **archivado** cuando está en uso (`hecho` en la tabla «Módulos»), su ruta no tiene nada que venga y no tiene trabajo aprobado sin lugar en la ruta. Los archivados no están en la barra; el interruptor «Archivados», arriba a la derecha y con su cuenta, los muestra después de los activos y en gris. Se recuerda por proyecto, como la pestaña elegida (D-145). En cuanto un archivado tiene algo que hacer (un paso nuevo en su ruta o una idea aprobada), vuelve solo a la barra. No se escribe nada en los documentos: es una forma de mirar.
 **Motivo:** el pedido del usuario; la barra muestra lo que tiene trabajo y lo terminado queda a un clic.
 **Consecuencias:** MA-3 suma su criterio; la prueba del Mapa (`ma2-mapa.spec.ts`) lo recorre con su captura.
+
+## D-153 — Abrir pasa adelante: se hace ahora y Diseño espera
+- **Fecha:** 2026-11-19
+- **Ámbito:** frentes Abrir, Diseño, Orden y Plantillas
+- **Hito o paso:** 10, a pedido del usuario
+- **Estado:** vigente (cambia el orden de D-148 y D-151)
+
+**Contexto:** el usuario preguntó si ya estaba la actualización automática de sus otras apps de escritorio (T-80). Estaba aprobada como frente Abrir (D-148), detrás de Plantillas, que esperaba a Diseño y Orden (D-151). Se le ofreció pasarla adelante y respondió «adelante».
+**Decisión:** Abrir se abre ahora, con sus dos partes (Abrir y mantener al día las apps de escritorio). Diseño queda en pausa entre tandas: DI-I3 retoma con la tanda 12 (Archivos) cuando Abrir cierre. Después sigue el orden de D-151: Orden (paso 8) y Plantillas.
+**Motivo:** el pedido del usuario; además, Abrir define el tipo de app que Plantillas necesita (D-150). Diseño se corta limpio: la tanda 11 está probada (Q-214).
+**Consecuencias:** Abrir pasa a `en curso` con su carpeta (`modulos/abrir/`, iteraciones `AB-In`); Diseño, a `en pausa`. Si el usuario quería solo adelantarlo a Plantillas (y no a Diseño), se vuelve a cambiar el orden sin pérdida: nada de Diseño quedó a medio hacer.

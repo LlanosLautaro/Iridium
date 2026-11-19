@@ -3,7 +3,7 @@
 > Este archivo es lo primero que lee la IA en cada sesión. Cabe en una pantalla: el historial va al documento del hito.
 
 **Proyecto:** Iridium (carpeta «Centro de Desarrollo», D-033)
-**Última actualización:** 2026-11-18
+**Última actualización:** 2026-11-19
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
@@ -32,19 +32,19 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10); repo público (D-132), falta publicar una versión al día (Q-185) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 11 probadas; sigue Archivos; D-151) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 11 probadas; retoma con Archivos al cerrar Abrir, D-153) | en pausa |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
-| Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, esperan Q-215) | hecho |
+| Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (T-80) | sección | 1. Propuesta (detrás de Plantillas, D-148) | pendiente |
+| Abrir (`modulos/abrir/estado.md`) | sección | 2. Definición (espera Q-216; pasó adelante, D-153) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Arranque** (T-70, elegido en Q-205): Iridium abre sola el período de 5 horas con trabajo listo (D-135). AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso «Mientras no estabas», el detalle del uso y la línea de la conversación). Espera tu prueba de una noche (Q-210). Mientras, se terminan Diseño y Orden (D-151, Q-211): **Diseño** pasó Skills (Q-212), Revisión (Q-213) y Docs (Q-214) y sigue sección por sección, con Archivos; al cerrar, Orden mide la calidad sobre la interfaz negra. Plantillas y Abrir, después.
-El Mapa terminó el 2026-11-18; archiva los frentes sin nada por hacer (R-91, D-152; espera Q-215). Ideas, el 2026-11-17; T-76 (miniatura de un enlace) y T-78 (el estado «implementada») siguen sin evaluar; T-80 aprobada (D-148): frente Abrir, detrás de Arranque. T-81 aprobada (D-150): frente Plantillas, detrás de Diseño y Orden (D-151). Los avisos de `pnpm audit`, en T-79.
-En pausa: Orden (su paso 8 va al cerrar Diseño). Compartir: falta publicar una versión al día (Q-185).
+**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Propuesta hecha y definición escrita; espera Q-216.
+**Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
+El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
@@ -62,17 +62,15 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-215 — Probá los frentes archivados del Mapa**
-  Tipo: prueba · Frente: Mapa
-  Contexto: R-91 y D-152 (frentes archivados). Antes, Actualizar para tener la versión de hoy. En Iridium, abrí el Mapa.
-  - [ ] La barra muestra solo los frentes con algo por hacer (Diseño, Arranque, Orden…) y «Por empezar»
-  - [ ] Arriba a la derecha, «Archivados» con su cuenta: al prenderlo, los terminados aparecen después de los activos, en gris, y se pueden abrir
-  - [ ] Al apagarlo se van; al cerrar y abrir Iridium, el interruptor sigue como lo dejé
+- **Q-216 — ¿Va la definición de Abrir así?**
+  Tipo: decisión · frena · Frente: Abrir
+  Contexto: `modulos/abrir/definicion.md`. Primero el botón **Abrir** en la tarjeta y en el proyecto (cada IA marca en Scripts qué abre su proyecto y de qué tipo es); después, cada app de escritorio se arma sola cuando tiene commits nuevos, está cerrada y ninguna IA trabaja en ella. Lo que falta decidir es si eso último arranca prendido.
+  Opciones: A) Sí; mantener al día se prende solo en cada app que marca cómo se arma, y se puede apagar por proyecto (recomendada: es lo que pediste en T-80 y no hay que acordarse de prenderlo) · B) Sí, pero mantener al día empieza apagado y lo prendés en cada proyecto · C) Solo Abrir por ahora; mantener al día queda para después
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño, DI-I3 tanda 12: pasar Archivos a la maqueta y a las piezas.
-**Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
+Con Q-216 respondida: cerrar la definición de Abrir y escribir su UX (`modulos/abrir/ux.md`).
+**Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
