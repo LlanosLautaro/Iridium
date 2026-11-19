@@ -5,6 +5,7 @@
 ## Abrir Iridium
 La app de uso diario, la última versión armada.
 **Ejecutar:** `release/win-unpacked/Iridium.exe`
+**Marca:** ejecutar · escritorio
 
 ## Crear el acceso directo
 Pone «Iridium» en el escritorio, apuntando a la app armada. Alcanza con hacerlo una vez.
