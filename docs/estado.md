@@ -39,10 +39,10 @@
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (`modulos/abrir/estado.md`) | sección | 2. Definición (espera Q-216; pasó adelante, D-153) | en curso |
+| Abrir (`modulos/abrir/estado.md`) | sección | 4. UX (definición aprobada, D-154; espera Q-217) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Propuesta hecha y definición escrita; espera Q-216.
+**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Definición aprobada (D-154: no usa la IA ni gasta uso; prendida de entrada, apagable por proyecto). UX escrita; espera Q-217.
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
 El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: falta publicar una versión al día (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -62,14 +62,14 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-216 — ¿Va la definición de Abrir así?**
+- **Q-217 — ¿Va la UX de Abrir así, y cómo se llama el botón?**
   Tipo: decisión · frena · Frente: Abrir
-  Contexto: `modulos/abrir/definicion.md`. Primero el botón **Abrir** en la tarjeta y en el proyecto (cada IA marca en Scripts qué abre su proyecto y de qué tipo es); después, la actualización automática: cada app de escritorio se arma sola, sin IA y sin gastar uso de Claude, cuando tiene commits nuevos, está cerrada y ninguna IA trabaja en ella. Las dos marcas las escribe la IA una sola vez, al armar la app por primera vez. Lo que falta decidir es si la actualización arranca prendida.
-  Opciones: A) Sí; la actualización automática se prende sola en cada app que marca cómo se arma, y se puede apagar por proyecto (recomendada: es lo que pediste en T-80 y no hay que acordarse de prenderlo) · B) Sí, pero la actualización automática empieza apagada y lo prendés en cada proyecto · C) Solo Abrir por ahora; la actualización automática queda para después
+  Contexto: `modulos/abrir/ux.md`. El botón va en el menú de la tarjeta y en la barra del proyecto, encima de Ajustes; la tarjeta solo dice algo mientras se actualiza o si falló; en Ajustes del proyecto, el interruptor, la última vez y **Actualizar ahora**. El menú ya tiene **Abrir** (entra al proyecto), así que el nombre nuevo tiene que distinguirse.
+  Opciones: A) Sí; el botón dice qué abre: «Abrir la app», «Abrir en el navegador» o «Abrir en la consola» (recomendada: se entiende sin pensar y no choca con Abrir) · B) Sí; el botón dice «Usar» para todos los tipos · C) Sí, y el Abrir de siempre pasa a «Entrar», y el nuevo se llama «Abrir»
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Con Q-216 respondida: cerrar la definición de Abrir y escribir su UX (`modulos/abrir/ux.md`).
+Con Q-217 respondida: cerrar la UX de Abrir y escribir su diseño técnico (`modulos/abrir/diseno-tecnico.md`).
 **Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

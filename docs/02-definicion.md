@@ -230,6 +230,8 @@ Además de lo que está en *Won't*:
 | Pasar al framework | La pasada que pone un proyecto en el formato del framework; reemplaza «Poner al día» de Skills |
 | Vista general | La pantalla con lo de todos los proyectos: la lista, los pendientes, la biblioteca de diseño, las skills (D-015) |
 | Vista de proyecto | La pantalla de un proyecto abierto, donde todo es de ese proyecto (D-015) |
+| Lo que abre el proyecto | El script de `scripts.md` que la IA marca para el botón que abre lo que hace el proyecto, con su tipo: escritorio, página o consola (D-154) |
+| Actualización automática | Que Iridium arme sola, sin IA, una app de escritorio de un proyecto cuando tiene cambios y está cerrada; se apaga por proyecto (D-154) |
 | Sesión | La conversación con la IA de un proyecto; hay una por proyecto y sigue aunque no esté a la vista |
 | Idea suelta | Una idea anotada en Ideas del inicio, en `Ideas/sueltas.md` de la carpeta Iridium, que todavía no pasó a un proyecto (frente Ideas, D-128, D-130) |
 | Chat general | La conversación de la carpeta `Ideas` de la carpeta Iridium (D-083); se ve al lado de la grilla y en la sección Ideas (D-060, Q-113) |

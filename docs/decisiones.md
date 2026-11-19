@@ -160,6 +160,7 @@
 | D-151 | 2026-11-18 | frentes Diseño, Orden y Plantillas | 10 | Primero se terminan Diseño y Orden; Plantillas espera | vigente (Abrir pasa adelante, D-153) |
 | D-152 | 2026-11-18 | Mapa | 10 (R-91) | El Mapa archiva los frentes en uso sin nada por hacer | vigente |
 | D-153 | 2026-11-19 | frentes Abrir, Diseño, Orden y Plantillas | 10, a pedido del usuario | Abrir pasa adelante: se hace ahora y Diseño espera | vigente (cambia el orden de D-148 y D-151) |
+| D-154 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 2 (Definición) | La definición de Abrir va como se escribió; la actualización automática arranca prendida y se apaga por proyecto | vigente |
 
 ---
 
@@ -3155,3 +3156,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** Abrir se abre ahora, con sus dos partes (Abrir y mantener al día las apps de escritorio). Diseño queda en pausa entre tandas: DI-I3 retoma con la tanda 12 (Archivos) cuando Abrir cierre. Después sigue el orden de D-151: Orden (paso 8) y Plantillas.
 **Motivo:** el pedido del usuario; además, Abrir define el tipo de app que Plantillas necesita (D-150). Diseño se corta limpio: la tanda 11 está probada (Q-214).
 **Consecuencias:** Abrir pasa a `en curso` con su carpeta (`modulos/abrir/`, iteraciones `AB-In`); Diseño, a `en pausa`. Si el usuario quería solo adelantarlo a Plantillas (y no a Diseño), se vuelve a cambiar el orden sin pérdida: nada de Diseño quedó a medio hacer.
+
+## D-154 — La definición de Abrir va como se escribió; la actualización automática arranca prendida
+- **Fecha:** 2026-11-19
+- **Ámbito:** Abrir (T-80), con el framework
+- **Hito o paso:** 10; frente Abrir, paso 2 (Definición)
+- **Estado:** vigente
+
+**Contexto:** la definición (`modulos/abrir/definicion.md`) tenía dos partes: el botón para abrir lo que hace cada proyecto y la actualización automática de las apps de escritorio. El usuario preguntó si la actualización gasta uso: no, Iridium corre el script de armar sin IA; la IA solo marca una vez, en `scripts.md`, el tipo de app y cómo se arma.
+**Decisión:** opción A de Q-216: la definición va como está, y la actualización automática se prende sola en cada app que marca cómo se arma, apagable por proyecto.
+**Motivo:** es lo que pedía T-80 y no hay que acordarse de prenderlo en cada proyecto.
+**Consecuencias:** el glosario suma «Lo que abre el proyecto» y «Actualización automática». Sigue la UX (`modulos/abrir/ux.md`); el paso 3 (investigación) se descarta.
