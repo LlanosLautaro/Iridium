@@ -3191,3 +3191,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** una línea más en el script, `**Marca:** ejecutar · escritorio` (o `página`, `consola`) y `**Marca:** armar`, con su control. `**Abrir:**` acepta direcciones `http(s)://` para el tipo página. La app está abierta si Windows no deja escribir su `.exe`. El commit armado y cómo terminó cada armado van a `armados.json`, en los datos de Iridium (la primera vez, el `.exe` más nuevo que el último commit cuenta como armado); los logs, en `armados/`. Se arma solo con commits nuevos, sin cambios a medio hacer, sin IA trabajando (Iridium o VS Code en los últimos 10 minutos), con la app cerrada y la actualización prendida, de a uno, escondido y suelto como Actualizar, cortado a los 10 minutos. Se mira cada minuto y al terminar un turno de la IA; la carpeta de código de Iridium queda afuera (D-122). El paso 6 (UI) se descarta: no hay piezas nuevas. Detalle: `modulos/abrir/diseno-tecnico.md`.
 **Motivo:** reusa Scripts y el armado de Iridium; el `.exe` trabado es instantáneo y vale aunque la app se abra por fuera; los proyectos del usuario no reciben archivos de Iridium.
 **Consecuencias:** el framework suma `**Marca:**` (SKILL.md, plantilla, construcción, pasar al framework) con su control; `config.json` suma `actualizacionApagada`; los datos de Iridium suman `armados.json` y `armados/`. Dos iteraciones: AB-I1 (Ejecutar) y AB-I2 (la actualización automática).
+
+## D-157 — Los proyectos del usuario se marcan desde acá, una vez
+- **Fecha:** 2026-11-19
+- **Ámbito:** Abrir (T-80)
+- **Hito o paso:** 10; frente Abrir, paso 7 (Construcción)
+- **Estado:** vigente
+
+**Contexto:** sin la marca de `scripts.md` no se ve **Ejecutar** (Q-218), y ningún proyecto la tenía. Q-219: marcarlos ahora desde este proyecto, que cada uno lo haga su IA o un ítem del menú que se lo pida.
+**Decisión:** la IA de Iridium marca ahora, desde acá, los proyectos del usuario que ya tienen algo para usar (Q-219, opción A); los nuevos los marca su IA, como dice el framework. Se marcó la única app de escritorio que se arma dentro de su carpeta (`ejecutar · escritorio` y `armar`, con su commit en ese repo, sin subirlo: un cambio sin commitear frenaría la actualización). Los que no tienen nada para usar o están archivados quedan sin marca. La app que se usa instalada fuera de su carpeta no entra en la marca de hoy (su `.exe` no está en el proyecto): cómo se abre, Q-220.
+**Motivo:** se hace una vez y queda; no gasta uso en cada proyecto.
+**Consecuencias:** la prueba de AB-I1 y AB-I2 se hace con esa app (Q-221).
