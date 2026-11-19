@@ -366,3 +366,11 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-18
 ## T-83 — Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea
 Estado: pendiente · Frente: Ideas · Fecha: 2026-11-18 · Origen: R-90
 En las ideas de un proyecto, al escribir la nota de una idea: Enter guarda lo escrito y cierra el cuadro, sin cambiar el estado de la idea; Ctrl+Enter hace el salto de línea. Hoy Enter salta de línea.
+
+## T-84 — La pestaña no muestra «esperando» mientras la IA espera algo de fondo
+Estado: pendiente · Fecha: 2026-11-19 · Origen: R-92
+En la conversación de un proyecto, la IA terminó su turno con algo corriendo de fondo («Quedo a la espera del resultado de las pruebas») y la pestaña no la marcó «esperando lo que dejó de fondo» (T-65); al rato retomó sola. Parece que Iridium perdió el rastro de lo que corría de fondo. Reproducir con el motor falso («de fondo») y con un caso real: varias tareas de fondo, o una que se corta.
+
+## T-85 — «Respondida, sin procesar» en verde
+Estado: pendiente · Fecha: 2026-11-19 · Origen: R-93
+En la Bandeja de entrada, la Señal «Respondida, sin procesar» de una pregunta va en verde (`--bien`), como lo que ya está hecho del lado del usuario. Revisar que no choque con D-108 (sin ruido) ni con la Señal en la tarjeta.
