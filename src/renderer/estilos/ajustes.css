@@ -245,7 +245,8 @@
 }
 
 /* Abrir el período de Claude (AR-1): el interruptor, la hora y lo que hace, uno debajo del otro. */
-.abrir-periodo .control {
+.abrir-periodo .control,
+.actualizacion-proyecto .control {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -265,6 +266,11 @@
   color: var(--texto-3);
   cursor: default;
 }
-.abrir-periodo .control .d {
+.abrir-periodo .control .d,
+.actualizacion-proyecto .control .d {
   margin: 0;
+}
+/* Ajustes › Este proyecto (AB-4): la última vez, en rojo si falló. */
+.actualizacion-proyecto .ultima.fallo {
+  color: var(--error);
 }

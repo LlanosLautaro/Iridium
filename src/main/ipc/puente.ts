@@ -1,5 +1,5 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
-import { mkdir, readdir, rename, stat } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rename, stat } from 'node:fs/promises'
 import { basename, dirname, join, normalize } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { z } from 'zod'
@@ -13,15 +13,18 @@ import {
   type ListaProyectos,
   type Preferencias,
   type ResultadoAbrir,
+  type ResultadoEjecutar,
   type ResultadoFicha,
   type ResultadoMudanza,
   type ResultadoNuevo,
   type ResultadoPlanEliminar,
+  type ResultadoScript,
   type SinArmar,
   type VersionNueva,
 } from '../../compartido/puente'
 import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/skills'
 import type { PlanEliminacion } from '../../compartido/tipos'
+import { planDeArmado, VigiaArmados } from '../app/abrir'
 import { Arranque, candidatosDe } from '../app/arranque'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
@@ -58,7 +61,20 @@ import {
   instruccionGeneral,
   instruccionRevision,
 } from '../core/sesiones'
+import { leerScripts, RUTA_SCRIPTS } from '../core/visor/scripts'
 import { leerArchivo, leerCarpeta } from '../infra/archivos'
+import {
+  type ArchivoArmados,
+  abiertaAhora,
+  carpetaDeArmado,
+  cortarArmado,
+  fechaDe,
+  finDeArmado,
+  gitDeArmado,
+  LOG_ARMADO,
+  lanzarArmado,
+  procesoVivo,
+} from '../infra/armados'
 import type { ArchivoArranques } from '../infra/arranques'
 import type { ArchivoBorradores } from '../infra/borradores'
 import {
@@ -169,6 +185,11 @@ export interface Servicios {
   arranques: ArchivoArranques
   /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento del arranque, a tantos segundos de abrir. */
   arranqueEnSegundos?: number
+  /**
+   * La actualización automática (frente Abrir, AB-I2): `armados.json` y la carpeta de datos (los logs van en
+   * `armados/`); `excluida`, la carpeta del código de Iridium, que se arma con D-122.
+   */
+  armados?: { archivo: ArchivoArmados; carpetaDatos: string; excluida: string | null }
 }
 
 export interface Puente {
@@ -253,12 +274,19 @@ export function registrarPuente(s: Servicios): Puente {
   }
 
   /** Lista los proyectos y deja vigilando esa carpeta (si cambió, se vigila la nueva). */
+  let ultimaLista: ListaProyectos | null = null
   const listar = async (): Promise<ListaProyectos> => {
     const [actual, iridium, antes] = await Promise.all([raiz(), carpetaIridium(), anteriores()])
     // Sin la carpeta de proyectos no se crea `.iridium`: crearla de rebote escondería que falta (CO-4).
     enDisco = await prepararCarpetaIridium(iridium, actual, !mudando && (await existeCarpeta(actual)), antes)
     raizActual = actual
     const lista = await listarProyectos(actual, iridium, enDisco)
+    // Cambiaron los proyectos (o es la primera lista): la actualización automática los mira ya, no al minuto.
+    const rutas = (l: ListaProyectos | null) =>
+      l?.tipo === 'lista' ? l.proyectos.map((p) => p.ruta).join('|') : ''
+    const otros = rutas(lista) !== rutas(ultimaLista)
+    ultimaLista = lista
+    if (otros) void armados?.mirar()
     if (lista.tipo === 'error')
       s.registro.escribir(`No se pudo leer la carpeta de proyectos: ${lista.mensaje}`)
     if (raizVigilada !== actual) {
@@ -312,6 +340,43 @@ export function registrarPuente(s: Servicios): Puente {
 
   const docs = new Documentos()
 
+  /** Los scripts de un proyecto, leídos del disco (sin cargar sus documentos). */
+  const scriptsDe = async (ruta: string) => {
+    const texto = await readFile(join(ruta, ...RUTA_SCRIPTS.split('/')), 'utf8').catch(() => null)
+    return texto === null ? null : leerScripts(texto)
+  }
+  const planDe = async (ruta: string) => {
+    const scripts = await scriptsDe(ruta)
+    return scripts ? planDeArmado(ruta, scripts) : null
+  }
+  // La actualización automática (frente Abrir, AB-I2): arma solas, sin IA, las apps de escritorio de los proyectos.
+  const datosArmados = s.armados
+  const armados = datosArmados
+    ? new VigiaArmados({
+        proyectos: async () =>
+          ultimaLista?.tipo === 'lista'
+            ? ultimaLista.proyectos.filter((p) => !p.archivado).map((p) => p.ruta)
+            : [],
+        scripts: scriptsDe,
+        git: gitDeArmado,
+        iaTrabajando: async (ruta) =>
+          conversaciones.enMarcha().includes(ruta) || (await conversaciones.usadaAfuera(ruta)),
+        apagados: async () => (await s.config.leer()).actualizacionApagada,
+        archivo: datosArmados.archivo,
+        carpeta: (ruta) => carpetaDeArmado(datosArmados.carpetaDatos, ruta),
+        lanzar: lanzarArmado,
+        fin: finDeArmado,
+        vivo: procesoVivo,
+        cortar: cortarArmado,
+        abierta: abiertaAhora,
+        fechaExe: fechaDe,
+        ahora: Date.now,
+        excluida: datosArmados.excluida,
+        alCambio: (e) => enviar(CANALES.actualizacionCambio, e),
+        registrar: (t) => s.registro.escribir(t),
+      })
+    : null
+
   /** Lo que la ventana mandó a guardar y todavía se está escribiendo: al cerrar se espera (D-060). */
   const enCurso = new Set<Promise<unknown>>()
   const guardando = <T>(f: () => Promise<T>): Promise<T> => {
@@ -336,8 +401,10 @@ export function registrarPuente(s: Servicios): Puente {
     alCambio: (c) => {
       enviar(CANALES.conversacionCambio, c)
       // La conversación de un arranque terminó o dejó preguntas: cambia lo que dicen el detalle del uso y el aviso.
-      if (c.ficha && c.ficha.estado !== 'trabajando')
+      if (c.ficha && c.ficha.estado !== 'trabajando') {
         void arranque.arrancoEn(c.ruta).then((si) => si && avisarArranque())
+        armados?.alTerminarTurno(c.ruta)
+      }
     },
     instruccionBase: (ruta) =>
       ruta === enDisco.rutas.ideas
@@ -493,6 +560,7 @@ export function registrarPuente(s: Servicios): Puente {
     const despues = preferenciasDe(await s.config.guardar(limpio))
     if (despues.tono !== tonoAntes) conversaciones.ponerTono(despues.tono || null)
     if (valido.arranque) void arranque.recalcular().then(avisarArranque)
+    if (valido.actualizacionApagada) void armados?.mirar()
     // El modelo o el esfuerzo de un proyecto con la sesión abierta valen desde su próximo mensaje (C-58).
     if (valido.ajustesIa)
       for (const [ruta, a] of Object.entries(valido.ajustesIa))
@@ -631,14 +699,45 @@ export function registrarPuente(s: Servicios): Puente {
     )
   })
   // Ejecutar Alfa y Armar ahora (frente Abrir, AB-1, AB-2): lo marcado en `docs/scripts.md`, buscado de nuevo.
-  ipcMain.handle(CANALES.ejecutarProyecto, async (_, ruta: unknown) => {
-    const plan = await (await docs.de(await proyecto(ruta))).prepararEjecutar()
+  /** Ejecutar Alfa (AB-1): lo que abre el proyecto; si es un programa que no existe, `sin-armar` (AB-2). */
+  const ejecutar = async (carpeta: string): Promise<ResultadoEjecutar> => {
+    const plan = await (await docs.de(carpeta)).prepararEjecutar()
     if (plan.tipo === 'sin-armar') return plan
     return ejecutarPlan(plan, (r) => shell.openPath(r), abrirEnNavegador)
+  }
+  /** Al terminar de armarse, la abre (AB-2): con la versión nueva o, si falló, con la anterior que haya. */
+  const abrirAlTerminar = (carpeta: string, fin: Promise<unknown>): void => {
+    void fin.then(() => ejecutar(carpeta)).catch(() => {})
+  }
+  ipcMain.handle(CANALES.ejecutarProyecto, async (_, ruta: unknown): Promise<ResultadoEjecutar> => {
+    const carpeta = await proyecto(ruta)
+    // Se está armando (AB-2, AB-3): espera y la abre al terminar.
+    if (armados?.armando(carpeta)) {
+      abrirAlTerminar(carpeta, armados.esperar(carpeta))
+      return { tipo: 'esperando' }
+    }
+    return ejecutar(carpeta)
   })
-  ipcMain.handle(CANALES.armarProyecto, async (_, ruta: unknown) =>
-    ejecutarPlan(await (await docs.de(await proyecto(ruta))).prepararArmar(), (r) => shell.openPath(r)),
-  )
+  // Armar ahora (AB-2): escondido, como la actualización automática, y la abre al terminar. Sin el vigía, o si el
+  // proyecto no se arma solo, el script de armar a la vista, como Scripts.
+  ipcMain.handle(CANALES.armarProyecto, async (_, ruta: unknown): Promise<ResultadoScript> => {
+    const carpeta = await proyecto(ruta)
+    if (armados && (await planDe(carpeta))) {
+      abrirAlTerminar(carpeta, armados.armarYa(carpeta))
+      return { tipo: 'ok', mensaje: 'Armando.' }
+    }
+    return ejecutarPlan(await (await docs.de(carpeta)).prepararArmar(), (r) => shell.openPath(r))
+  })
+  ipcMain.handle(CANALES.actualizaciones, () => armados?.ultimos() ?? {})
+  ipcMain.handle(CANALES.actualizarAhora, async (_, ruta: unknown) => {
+    const carpeta = await proyecto(ruta)
+    if (!armados || !(await planDe(carpeta))) return 'falla'
+    return armados.armarYa(carpeta)
+  })
+  ipcMain.handle(CANALES.consolaArmado, async (_, ruta: unknown) => {
+    if (!s.armados) return
+    await shell.openPath(join(carpetaDeArmado(s.armados.carpetaDatos, await proyecto(ruta)), LOG_ARMADO))
+  })
   ipcMain.handle(CANALES.comentarios, async (_, ruta: unknown) => comentarios.listar(await proyecto(ruta)))
   ipcMain.handle(CANALES.capturaComentario, async (_, ruta: unknown, codigo: unknown) =>
     comentarios.captura(await proyecto(ruta), CodigoComentario.parse(codigo)),
@@ -939,6 +1038,7 @@ export function registrarPuente(s: Servicios): Puente {
   // Al abrir, el motor se verifica aparte: la grilla no lo espera (05-arquitectura.md › Abrir la app).
   void verificarMotor()
   void arranque.iniciar()
+  armados?.vigilar()
 
   return {
     comentarios,
@@ -956,6 +1056,7 @@ export function registrarPuente(s: Servicios): Puente {
     alDespertar: () => void arranque.alDespertar(),
     cerrar() {
       arranque.cerrar()
+      armados?.cerrar()
       uso.cerrar()
       conversaciones.cerrarTodo()
       vigilancia?.cerrar()

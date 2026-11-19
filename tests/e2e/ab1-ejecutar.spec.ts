@@ -1,6 +1,6 @@
 // AB-I1 con la app abierta y el motor falso (frente Abrir, AB-1, AB-2): Ejecutar Alfa en el menú de la tarjeta y en la
 // barra del proyecto solo con la marca, su detalle al pasar el mouse y el aviso de una app que todavía no está armada,
-// con Armar ahora (una consola escondida, IRIDIUM_OCULTA). No se abre ningún programa de verdad.
+// con Armar ahora (escondido, AB-I2). No se abre ningún programa de verdad.
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -105,7 +105,7 @@ test('Ejecutar Alfa en el menú de la tarjeta, con su detalle, y el aviso de una
   await win.screenshot({ path: 'test-results/ab1-sin-armar.png' })
   await aviso.getByRole('button', { name: 'Armar ahora' }).click()
   await expect(
-    win.locator('.aviso-flotante', { hasText: 'Alfa se está armando en una consola' }),
+    win.locator('.aviso-flotante', { hasText: 'Alfa se está armando: abre en cuanto termine' }),
   ).toBeVisible()
   await app.close()
 })

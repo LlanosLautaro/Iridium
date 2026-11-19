@@ -109,6 +109,8 @@ const Config = z.object({
    * esté usando; se borra al abrir.
    */
   abrirDeFondo: z.number().nullable().catch(null),
+  /** Los proyectos con la actualización automática apagada (frente Abrir, D-154); si falta o está roto, ninguno. */
+  actualizacionApagada: z.array(z.string().min(1).max(1024)).max(500).catch([]),
 })
 export type Config = z.infer<typeof Config>
 
@@ -130,6 +132,7 @@ const PREDETERMINADA: Config = {
   zoom: 1,
   ventana: null,
   abrirDeFondo: null,
+  actualizacionApagada: [],
 }
 
 export function preferenciasDe(c: Config): Preferencias {
@@ -151,6 +154,7 @@ export function preferenciasDe(c: Config): Preferencias {
     nombreIa: c.nombreIa,
     tono: c.tono,
     arranque: c.arranque,
+    actualizacionApagada: c.actualizacionApagada,
   }
 }
 

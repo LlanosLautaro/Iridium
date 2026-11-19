@@ -5,8 +5,9 @@
 import type { MouseEvent } from 'react'
 import { marcaDeBandeja, TEXTO_MARCA, textoDeCuenta } from '../../../compartido/cuentas'
 import { textoFrente } from '../../../compartido/en-que'
-import type { FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
+import type { ActualizacionProyecto, FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
 import type { Estado } from '../../../compartido/tipos'
+import { usarEstado } from '../../estado'
 import { SenalSesion } from '../../marco/Marco'
 import { Cuenta } from '../../ui/Cuenta'
 import { Icono, type NombreIcono } from '../../ui/Icono'
@@ -56,7 +57,30 @@ const PALABRA_SESION = {
   error: 'IA con error',
 } as const
 
+/**
+ * La actualización automática en la tarjeta (frente Abrir, AB-3, AB-4): «Actualizando…» mientras se arma y
+ * «No se pudo actualizar» si falló con el commit de ahora; al día no se dice.
+ */
+export function SenalActualizacion({ a }: { a: ActualizacionProyecto | undefined }) {
+  if (a?.armando != null)
+    return (
+      <span className="senal actualizacion">
+        <Icono nombre="sync" gira />
+        Actualizando…
+      </span>
+    )
+  if (a?.fallo)
+    return (
+      <span className="senal rojo actualizacion" title={a.ultimo?.motivo ?? undefined}>
+        <Icono nombre="error" />
+        No se pudo actualizar
+      </span>
+    )
+  return null
+}
+
 export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
+  const actualizacion = usarEstado((s) => s.actualizaciones[p.ruta])
   if (p.problema !== null) {
     return (
       <button
@@ -95,7 +119,8 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
   // Al pie, solo el frente en curso: el hito y el Próximo paso no van en la tarjeta (R-83, R-84); se leen en el
   // proyecto y en el nombre de la tarjeta.
   const frente = p.hito?.frente ? enQue : null
-  const conPie = frente !== null || p.framework === 'viejo' || ficha !== null || p.archivado
+  const actualiza = actualizacion?.armando != null || actualizacion?.fallo === true
+  const conPie = frente !== null || p.framework === 'viejo' || ficha !== null || p.archivado || actualiza
   // Un archivado no espera nada: sin marca.
   const marca = p.archivado ? 'cuenta' : marcaDeBandeja(p.preguntas, p.hito !== null)
   const etiqueta = [
@@ -108,6 +133,8 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
     preguntas ?? (marca !== 'cuenta' && TEXTO_MARCA[marca]),
     avisos,
     ficha && PALABRA_SESION[ficha.estado],
+    actualizacion?.armando != null && 'actualizando',
+    actualizacion?.fallo && 'no se pudo actualizar',
     p.archivado && 'archivado',
   ]
     .filter(Boolean)
@@ -165,6 +192,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
               <SenalSesion ficha={ficha} />
             </span>
           )}
+          {actualiza && <SenalActualizacion a={actualizacion} />}
           {p.archivado && (
             <span className="archivada">
               <Icono nombre="archivo" />

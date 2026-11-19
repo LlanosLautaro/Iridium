@@ -10,6 +10,18 @@ export function nombreEjecutar(p: Pick<TarjetaProyecto, 'nombre'>): string {
   return `Ejecutar ${p.nombre}`
 }
 
+/** Se está armando (AB-2): la abre sola al terminar. */
+function avisoArmando(p: Proyecto) {
+  return {
+    ruta: p.ruta,
+    titulo: `${p.nombre} se está armando: abre en cuanto termine`,
+    detalle: null,
+    error: false,
+    armar: false,
+    esperaArmado: true,
+  }
+}
+
 function motivo(e: unknown): string {
   return e instanceof Error ? e.message : String(e)
 }
@@ -22,6 +34,7 @@ export async function ejecutarProyecto(p: Proyecto): Promise<void> {
   try {
     const r = await window.iridium.ejecutarProyecto(p.ruta)
     if (r.tipo === 'error') error(r.mensaje)
+    else if (r.tipo === 'esperando') poner(avisoArmando(p))
     else if (r.tipo === 'sin-armar')
       poner({
         ruta: p.ruta,
@@ -35,7 +48,7 @@ export async function ejecutarProyecto(p: Proyecto): Promise<void> {
   }
 }
 
-/** Armar ahora (AB-2): corre el script de armar a la vista, en una consola, como un botón de Scripts. */
+/** Armar ahora (AB-2): arma escondido, como la actualización automática, y la abre al terminar. */
 export async function armarProyecto(p: Proyecto): Promise<void> {
   const poner = usarEstado.getState().ponerAvisoEjecutar
   poner(null)
@@ -44,14 +57,7 @@ export async function armarProyecto(p: Proyecto): Promise<void> {
   try {
     const r = await window.iridium.armarProyecto(p.ruta)
     if (r.tipo === 'error') fallo(r.mensaje)
-    else
-      poner({
-        ruta: p.ruta,
-        titulo: `${p.nombre} se está armando en una consola`,
-        detalle: `Cuando termine, ${nombreEjecutar(p)} la abre.`,
-        error: false,
-        armar: false,
-      })
+    else poner(avisoArmando(p))
   } catch (e) {
     fallo(motivo(e))
   }

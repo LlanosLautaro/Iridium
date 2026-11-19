@@ -52,7 +52,8 @@ function BotonActividad({
 }
 
 /** El ⚙ abajo en la barra de íconos, en cualquier pantalla: abre la ventana de Ajustes (AJ-W1). */
-function BotonAjustes() {
+/** El ⚙ de abajo; dentro de un proyecto abre en «Este proyecto» (Ajustes del proyecto, W-3, AB-4). */
+function BotonAjustes({ seccion }: { seccion?: 'proyecto' }) {
   const abierta = usarEstado((s) => s.ajustes.abierta)
   const abrirAjustes = usarEstado((s) => s.abrirAjustes)
   return (
@@ -62,7 +63,7 @@ function BotonAjustes() {
       title="Ajustes (Ctrl+,)"
       aria-label="Ajustes"
       aria-haspopup="dialog"
-      onClick={() => abrirAjustes()}
+      onClick={() => abrirAjustes(seccion)}
     >
       <Icono nombre="ajustes" />
     </button>
@@ -115,7 +116,7 @@ function BarraActividad() {
             <Icono nombre="play" />
           </button>
         )}
-        <BotonAjustes />
+        <BotonAjustes seccion="proyecto" />
       </nav>
     )
   }

@@ -5,6 +5,7 @@ import { SIN_ANCHOS } from '../compartido/ancho-conversacion'
 import { type Cita, sumarCita } from '../compartido/citas'
 import {
   type AccesoVersiones,
+  type ActualizacionProyecto,
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
   type CambioConversacion,
@@ -30,7 +31,7 @@ import { guardarLuego } from './ui/guardarLuego'
 export type Seccion = 'proyectos' | 'skills' | 'ideas' | 'proyecto'
 
 /** Las secciones de la ventana de Ajustes (AJ-W1); el frente Compartir suma las suyas. */
-export type SeccionAjustes = 'perfil' | 'ia' | 'apariencia' | 'proyectos' | 'acerca'
+export type SeccionAjustes = 'proyecto' | 'perfil' | 'ia' | 'apariencia' | 'proyectos' | 'acerca'
 
 /** Las secciones de la barra de íconos dentro de un proyecto (D-041). */
 /** La primera, «pendientes», es la de entrada: lo que espera del usuario y, al pie, los scripts (D-043, Q-62). */
@@ -137,6 +138,8 @@ export interface AvisoEjecutar {
   error: boolean
   /** Muestra Armar ahora. */
   armar: boolean
+  /** Espera el armado (AB-2): se cierra solo cuando termina y la app se abre. */
+  esperaArmado?: boolean
 }
 
 /** Lo que recuerda la sección Skills mientras Iridium está abierto (H-6). */
@@ -193,6 +196,9 @@ interface EstadoApp {
   /** El arranque del período (frente Arranque): el detalle del uso y el aviso al volver; null hasta que se lee. */
   arranque: EstadoArranque | null
   ponerArranque(arranque: EstadoArranque): void
+  /** La actualización automática de los proyectos que se arman solos (frente Abrir, AB-3, AB-4), por ruta. */
+  actualizaciones: Record<string, ActualizacionProyecto>
+  ponerActualizaciones(a: Record<string, ActualizacionProyecto>): void
   /** Los avisos de H-13 a la vista, del más viejo al más nuevo. */
   avisos: AvisoSesion[]
   quitarAviso(id: number): void
@@ -302,6 +308,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     nombreIa: '',
     tono: '',
     arranque: { prendido: false, hora: '03:00' },
+    actualizacionApagada: [],
   },
   skills: { elegida: null, avisosDe: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
   cambiarSkills: (cambio) => set((s) => ({ skills: { ...s.skills, ...cambio } })),
@@ -362,6 +369,8 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   ponerUso: (uso) => set({ uso }),
   arranque: null,
   ponerArranque: (arranque) => set({ arranque }),
+  actualizaciones: {},
+  ponerActualizaciones: (actualizaciones) => set({ actualizaciones }),
   avisos: [],
   quitarAviso: (id) => set((s) => ({ avisos: s.avisos.filter((a) => a.id !== id) })),
   avisoEjecutar: null,

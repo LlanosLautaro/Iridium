@@ -4,6 +4,7 @@ import { version } from '../../package.json'
 import type { CambioDiseno } from '../compartido/diseno'
 import {
   type AccesoVersiones,
+  type ActualizacionProyecto,
   type ApiIridium,
   CANALES,
   type CambioConversacion,
@@ -84,6 +85,11 @@ const api: ApiIridium = {
   correrScript: (ruta, id) => ipcRenderer.invoke(CANALES.correrScript, ruta, id),
   ejecutarProyecto: (ruta) => ipcRenderer.invoke(CANALES.ejecutarProyecto, ruta),
   armarProyecto: (ruta) => ipcRenderer.invoke(CANALES.armarProyecto, ruta),
+  actualizaciones: () => ipcRenderer.invoke(CANALES.actualizaciones),
+  alCambiarActualizaciones: (f) =>
+    escuchar<Record<string, ActualizacionProyecto>>(CANALES.actualizacionCambio, f),
+  actualizarAhora: (ruta) => ipcRenderer.invoke(CANALES.actualizarAhora, ruta),
+  consolaArmado: (ruta) => ipcRenderer.invoke(CANALES.consolaArmado, ruta),
   comentarios: (ruta) => ipcRenderer.invoke(CANALES.comentarios, ruta),
   capturaComentario: (ruta, codigo) => ipcRenderer.invoke(CANALES.capturaComentario, ruta, codigo),
   enviarComentario: (ruta, codigo) => ipcRenderer.invoke(CANALES.enviarComentario, ruta, codigo),

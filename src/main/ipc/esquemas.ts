@@ -31,6 +31,7 @@ export const CambioPreferencias = z
     // Que sea uno de los estilos de Claude Code se comprueba en el puente.
     tono: z.string().max(LARGO_AJUSTES.tono),
     arranque: z.object({ prendido: z.boolean(), hora: z.string().regex(HORA_ARRANQUE) }).strict(),
+    actualizacionApagada: z.array(z.string().min(1).max(1024)).max(500),
   })
   .partial()
   .strict()

@@ -39,10 +39,10 @@
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 hecha; la prueba espera cómo marcar tus proyectos, Q-219; sigue AB-I2) | en curso |
+| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 y AB-I2 hechas; las pruebas esperan cómo marcar tus proyectos, Q-219) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Definición aprobada (D-154: no usa la IA ni gasta uso; prendida de entrada, apagable por proyecto). UX aprobada (D-155): el botón es «Ejecutar Alfa». AB-I1 construida: la marca en `scripts.md` (con su control y el framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca: Iridium ya la tiene; cómo marcar los demás, Q-219 (marcar tus proyectos). Sigue AB-I2 (la actualización automática).
+**Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). La prueba de AB-I1 (Q-218) no mostró el botón porque ningún proyecto tenía la marca en `scripts.md`; Iridium ya la tiene. Cómo marcar los tuyos, Q-219; después, una sola prueba de las dos.
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
 El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: versión al día publicada y abierta por la otra persona (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -58,12 +58,12 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
 - **Q-219 — ¿Cómo se marca en tus proyectos lo que abre cada uno?**
   Tipo: decisión · Frente: Abrir
-  Contexto: la prueba Q-218 falló porque ningún proyecto tenía la marca en su `scripts.md` (ni Iridium: ya la tiene y en la app aparece «Ejecutar Iridium»). Sin la marca, el botón no se muestra.
+  Contexto: la prueba Q-218 falló porque ningún proyecto tenía la marca en su `scripts.md` (ni Iridium: ya la tiene y en la app aparece «Ejecutar Iridium»). Sin la marca, el botón no se muestra. En las apps de escritorio la marca dice también cómo se arman, y con eso se actualizan solas (AB-I2, prendida de entrada, D-154).
   Opciones: A) La IA de Iridium, desde este proyecto, marca ahora los tuyos que ya tienen algo para usar, y después te pido la prueba de nuevo (recomendada: se hace una vez y queda; los nuevos los marca su IA) · B) Un ítem «Marcar qué ejecuta» en el menú de la tarjeta, que se lo pide a la IA de ese proyecto (gasta un poco de uso cada vez) · C) Como está: cada proyecto lo marca su IA la próxima vez que trabaje en él
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Abrir: construir AB-I2 (la actualización automática de las apps de escritorio, sin IA).
+Abrir: con la respuesta de Q-219 (marcar tus proyectos), marcarlos y pedir una sola prueba de AB-I1 y AB-I2; sin respuesta todavía, el paso 8 (calidad) del frente.
 **Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

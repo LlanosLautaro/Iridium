@@ -14,6 +14,7 @@ import { ENCABEZADO_CONTROL } from './core/control'
 import { abrirDeFondo, UsoDeIridium } from './core/uso-iridium'
 import { comoAbrir, type VentanaGuardada } from './core/ventana'
 import { zoomSiguiente } from './core/zoom'
+import { ArchivoArmados } from './infra/armados'
 import { ArchivoArranques } from './infra/arranques'
 import { ArchivoBorradores } from './infra/borradores'
 import { ArchivoConfig } from './infra/config'
@@ -598,6 +599,12 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       },
       segundosSinUso: () => uso.segundosSinUsar(),
       arranques: new ArchivoArranques(join(carpetaDatos, 'arranques.json')),
+      // Abrir (AB-I2): las apps de escritorio de los proyectos se arman solas; la de Iridium, con D-122.
+      armados: {
+        archivo: new ArchivoArmados(join(carpetaDatos, 'armados.json')),
+        carpetaDatos,
+        excluida: release ? dirname(release) : app.getAppPath(),
+      },
       // Solo pruebas: el primer momento del arranque, a tantos segundos de abrir.
       ...(process.env.IRIDIUM_ARRANQUE_EN
         ? { arranqueEnSegundos: Number(process.env.IRIDIUM_ARRANQUE_EN) }

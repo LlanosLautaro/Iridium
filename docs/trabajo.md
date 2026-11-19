@@ -374,3 +374,7 @@ En la conversación de un proyecto, la IA terminó su turno con algo corriendo d
 ## T-85 — «Respondida, sin procesar» en verde
 Estado: pendiente · Fecha: 2026-11-19 · Origen: R-93
 En la Bandeja de entrada, la Señal «Respondida, sin procesar» de una pregunta va en verde (`--bien`), como lo que ya está hecho del lado del usuario. Revisar que no choque con D-108 (sin ruido) ni con la Señal en la tarjeta.
+
+## T-86 — El aviso «Mientras no estabas» suma las apps que se armaron solas
+Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: D-156
+Lo que el diseño técnico dejó como «Should, más adelante»: al volver, el aviso del Arranque dice también qué apps se armaron de noche y cuáles fallaron.

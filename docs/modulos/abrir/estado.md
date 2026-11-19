@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-217, D-155) | `ux.md` |
 | 5. Diseño técnico | hecho (D-156) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (el menú, la Señal, el Campo y el Aviso ya existen, D-156) | — |
-| 7. Construcción | en curso (AB-I1 hecha; la prueba espera Q-219; sigue AB-I2) | este archivo |
+| 7. Construcción | en curso (AB-I1 y AB-I2 hechas; las pruebas esperan Q-219, cómo marcar tus proyectos) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156). AB-I1 construida: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con el aviso de AB-2. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca; cómo marcarlos, Q-219. Sigue AB-I2.
+Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156). AB-I1 construida: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con el aviso de AB-2. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca; cómo marcarlos, Q-219. AB-I2 construida: las apps de escritorio se arman solas, de a una y escondidas, con la Señal en la tarjeta y Ajustes › Este proyecto. Las dos pruebas, juntas, cuando tus proyectos tengan la marca.
 
 ## Ruta
 - [x] Pensar qué resuelve y por qué va primero
@@ -27,7 +27,9 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - [x] Decidir cómo se marca en `scripts.md` y cómo lo lee Iridium
 - [x] Enseñarle a la IA a marcar lo que abre el proyecto, con su control (AB-I1)
 - [ ] Ejecutar el proyecto desde la tarjeta y desde el proyecto (AB-I1, Q-219)
-- [ ] Armar solas las apps de escritorio con cambios, cuando están cerradas (AB-I2)
+- [x] Armar solas las apps de escritorio con cambios, cuando están cerradas (AB-I2)
+- [ ] Marcar tus proyectos y probar Ejecutar y la actualización con una app tuya (Q-219)
+  - [ ] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -35,14 +37,14 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 | El framework (`recursos/plugins/iridium`) | La marca de lo que abre el proyecto y de cómo se arma, en `SKILL.md` › Los scripts y en la plantilla, con su lector y su control | D-148, D-156 | sí (2026-11-19, AB-I1) |
 | `02-definicion.md` › Glosario | «Lo que abre el proyecto» y «Actualización automática» | D-154 | sí (2026-11-19) |
 | `04-ux.md` › W-2 y W-3 | El botón en el menú de la tarjeta y en la barra del proyecto; Ajustes del proyecto suma la actualización automática | D-155 | sí (2026-11-19) |
-| `05-arquitectura.md` › Modelo de datos | `armados.json` y `armados/` en los datos de Iridium; `actualizacionApagada` en Preferencias | D-156 | no (AB-I2) |
+| `05-arquitectura.md` › Modelo de datos | `armados.json` y `armados/` en los datos de Iridium; `actualizacionApagada` en Preferencias | D-156 | sí (2026-11-19, AB-I2) |
 | Scripts (`core/visor/scripts.ts`) | `**Abrir:**` acepta direcciones `http(s)://` (tipo página) | D-156 | sí (2026-11-19, AB-I1) |
 
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
 | AB-I1 | Abrir: la marca en `scripts.md` (framework, lector y control) y el botón en la tarjeta y en el proyecto | en curso (hecha; la prueba espera Q-219) |
-| AB-I2 | Actualización automática: armar solas, sin IA, las apps de escritorio con cambios, cerradas y sin IA trabajando | pendiente |
+| AB-I2 | Actualización automática: armar solas, sin IA, las apps de escritorio con cambios, cerradas y sin IA trabajando | en curso (hecha; la prueba espera Q-219) |
 
 ## Log de iteraciones
 ### AB-I1 — Ejecutar — 2026-11-19
@@ -52,6 +54,12 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - **Criterios verificados:** AB-1 (los cuatro) y AB-2 (el primero) con Vitest (`tests/ab1-ejecutar.test.ts`, 11) y Playwright (`tests/e2e/ab1-ejecutar.spec.ts`, 3, con capturas `ab1-menu.png`, `ab1-sin-armar.png`, `ab1-barra.png`); abrir un programa de verdad queda para tu prueba. El segundo criterio de AB-2 (abre al terminar de armarse) es de AB-I2. `pnpm test` (857), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` (141), sin errores; el control sobre este repo, 0 avisos.
 - **Prueba:** Q-218 (2026-11-19): no se vio el botón en ningún lado. La causa: ningún proyecto tenía la marca, tampoco este. Marcado «Abrir Iridium» (`ejecutar · escritorio`) y comprobado en la app con los proyectos reales: el menú de su tarjeta muestra «Ejecutar Iridium» debajo de Abrir la carpeta. Cómo se marcan los demás, Q-219; con eso, la prueba otra vez.
 
+### AB-I2 — Actualización automática — 2026-11-19
+- **Leer antes:** `diseno-tecnico.md` › Las decisiones (3 a 8), Datos y Procesos centrales; `ux.md` › AB-3, AB-4 y Ajustes del proyecto.
+- **Hecho:** `core/abrir.ts` suma `porQueNoArma` (la regla de D-156 › 5, cada condición como dato) y `armadoSupuesto` (la primera vez, el `.exe` más nuevo que el último commit cuenta como armado). `infra/armados.ts`: `armados.json` (roto, vacío), el `.exe` trabado (`abiertaAhora`), el último commit y si hay cambios a medias, y el armado escondido y suelto: un `armar.cmd` en `armados/<carpeta>-<hash>/` corre el comando con `call`, escribe `armado.log` y deja la marca de fin; lo abre `Start-Process` con la ventana escondida, así lo que lance comparte esa consola y no aparece ninguna. `app/abrir.ts` › `VigiaArmados`: mira cada minuto (cada 3 segundos mientras arma, solo la marca de fin), al terminar un turno de la IA y cuando cambia la lista de proyectos; arma de a uno, primero lo pedido a mano; cierra el que terminó (`ok` guarda el commit; `falla` no se reintenta con ese commit; `falla` con la app abierta es `ocupada` y se reintenta al cerrarla; sin proceso ni marca, «se cortó»; a los 10 minutos lo corta); la carpeta del código de Iridium queda afuera (D-122). En la ventana: la Señal «Actualizando…» y «No se pudo actualizar» (con el motivo al pasar el mouse) en el pie de la tarjeta; Ejecutar mientras se arma responde `esperando`, avisa «Alfa se está armando: abre en cuanto termine» y la abre al terminar (si falló, la versión anterior); Armar ahora arma escondido y la abre al terminar. **Ajustes del proyecto** es la sección **Este proyecto** de la ventana de Ajustes, primera y solo dentro de un proyecto (el ⚙ de la barra del proyecto abre ahí): el interruptor (en `config.json` › `actualizacionApagada`), la última vez («Actualizada hoy a las 14:02», «Falló… · Ver la consola», «Actualizándose…») y **Actualizar ahora**; sin script de armar, la línea gris. La actualización viaja a la ventana con su propio evento (`actualizacion:cambio`), no dentro de la tarjeta: cambia sin releer los proyectos.
+- **Criterios verificados:** AB-2 (el segundo), AB-3 (los cuatro) y AB-4 (los cuatro) con Vitest (`tests/ab2-armados.test.ts`, 16: las reglas, el vigía con un disco de mentira, el `.exe` trabado con un programa que corre y un armado escondido de verdad que termina bien y mal) y Playwright (`tests/e2e/ab2-actualizacion.spec.ts`, 2, con repos git y armados de prueba: las Señales de a una, el interruptor que se recuerda al reabrir y la línea gris; capturas `ab2-actualizando.png`, `ab2-fallo.png`, `ab2-ajustes.png`). Una app de verdad armándose sola queda para tu prueba. `pnpm test` (873), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` (143; `ap1-ajustes` ahora espera que el ⚙ del proyecto abra en Este proyecto), sin errores; el control, 0 avisos.
+- **Prueba:** junto con la de AB-I1, cuando tus proyectos tengan la marca (Q-219).
+
 ## Próximo paso
-Construir AB-I2: la actualización automática (`armados.json`, el vigía, la Señal, Ajustes del proyecto, la espera de AB-2 y Armar ahora escondido). Q-219 (cómo marcar los proyectos) puede llegar mientras tanto; con su respuesta, marcar y pedir la prueba de AB-I1 de nuevo.
-**Leer antes:** `diseno-tecnico.md` › Las decisiones (3 a 8), Datos y Procesos centrales; `ux.md` › AB-3, AB-4 y Ajustes del proyecto; `src/main/infra/sin-armar.ts` (el armado de Iridium, D-122) y `src/main/infra/actividad.ts` (la actividad de VS Code, como el Arranque).
+Con la respuesta de Q-219, marcar lo que abre y cómo se arma cada proyecto tuyo (o esperar a su IA, según lo que elijas) y pedir una sola prueba de AB-I1 y AB-I2 con una app tuya. Después, el paso 8 (calidad) del frente.
+**Leer antes:** `docs/respuestas/Q-219.md`; `ux.md` › AB-1 a AB-4 (para armar la prueba).

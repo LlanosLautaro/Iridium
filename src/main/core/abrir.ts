@@ -43,3 +43,50 @@ function textoPlano(md: string): string {
     .replace(/\s+/g, ' ')
     .trim()
 }
+
+// ---------- La actualización automática (AB-I2, D-156 › 4 y 5) ----------
+
+/** Lo que se sabe de un proyecto para decidir si se arma solo; cada condición, un dato (para probarlas solas). */
+export interface SituacionArmado {
+  /** El último commit; null sin git o fuera de un repositorio. */
+  commit: string | null
+  /** El commit con que se armó la última vez que salió bien; null si no se sabe. */
+  armado: string | null
+  /** Sin archivos con seguimiento a medio cambiar. */
+  limpio: boolean
+  /** Una IA trabaja en el proyecto (una sesión de Iridium en marcha o VS Code hace poco). */
+  iaTrabajando: boolean
+  /** La app está abierta (Windows no deja escribir su `.exe`). */
+  abierta: boolean
+  /** La actualización automática está prendida en el proyecto (D-154). */
+  prendida: boolean
+  /** El commit con que falló el último armado; null si el último no falló. */
+  fallo: string | null
+}
+
+export type PorQueNoArma = 'sin-git' | 'al-dia' | 'apagada' | 'ya-fallo' | 'a-medias' | 'ia' | 'abierta'
+
+/** Por qué no se arma solo ahora (la decisión 5 de D-156), o null si toca armar. */
+export function porQueNoArma(s: SituacionArmado): PorQueNoArma | null {
+  if (s.commit === null) return 'sin-git'
+  if (s.armado === s.commit) return 'al-dia'
+  if (!s.prendida) return 'apagada'
+  if (s.fallo === s.commit) return 'ya-fallo'
+  if (!s.limpio) return 'a-medias'
+  if (s.iaTrabajando) return 'ia'
+  if (s.abierta) return 'abierta'
+  return null
+}
+
+/**
+ * La primera vez, sin nada anotado (D-156 › 4): la versión cuenta como armada con el último commit si el `.exe` es
+ * más nuevo que ese commit. Fechas en ms; null si no se saben.
+ */
+export function armadoSupuesto(
+  commit: string | null,
+  fechaCommit: number | null,
+  fechaExe: number | null,
+): string | null {
+  if (commit === null || fechaCommit === null || fechaExe === null) return null
+  return fechaExe >= fechaCommit ? commit : null
+}

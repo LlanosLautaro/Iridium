@@ -6,6 +6,7 @@ import { type SeccionAjustes, usarEstado } from '../estado'
 import { Icono } from '../ui/Icono'
 import { AcercaDe } from './ajustes/AcercaDe'
 import { Apariencia } from './ajustes/Apariencia'
+import { EsteProyecto } from './ajustes/EsteProyecto'
 import { Ia } from './ajustes/Ia'
 import { Perfil } from './ajustes/Perfil'
 import { Proyectos } from './ajustes/Proyectos'
@@ -15,8 +16,17 @@ export interface PropsSeccion {
   cambiar(cambio: Partial<Preferencias>): Promise<boolean>
 }
 
-/** Las secciones, en orden: el frente Compartir suma las suyas acá sin tocar las demás. */
-const SECCIONES_AJUSTES: { id: SeccionAjustes; nombre: string; Vista: ComponentType<PropsSeccion> }[] = [
+/**
+ * Las secciones, en orden: el frente Compartir suma las suyas acá sin tocar las demás. «Este proyecto» (Ajustes del
+ * proyecto, W-3; frente Abrir, AB-4) va primero y solo dentro de un proyecto.
+ */
+const SECCIONES_AJUSTES: {
+  id: SeccionAjustes
+  nombre: string
+  Vista: ComponentType<PropsSeccion>
+  soloEnProyecto?: boolean
+}[] = [
+  { id: 'proyecto', nombre: 'Este proyecto', Vista: EsteProyecto, soloEnProyecto: true },
   { id: 'perfil', nombre: 'Perfil', Vista: Perfil },
   { id: 'ia', nombre: 'IA', Vista: Ia },
   { id: 'apariencia', nombre: 'Apariencia', Vista: Apariencia },
@@ -26,6 +36,7 @@ const SECCIONES_AJUSTES: { id: SeccionAjustes; nombre: string; Vista: ComponentT
 
 /** Los íconos de la navegación, como en la maqueta (`docs/ui/vista-ajustes.html`). */
 const ICONOS: Record<SeccionAjustes, ReactNode> = {
+  proyecto: <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5" />,
   perfil: (
     <>
       <circle cx="12" cy="8" r="4" />
@@ -57,6 +68,8 @@ export function Ajustes() {
   const cambiarAjustes = usarEstado((s) => s.cambiarAjustes)
   const ventana = useRef<HTMLDivElement>(null)
   const [error, setError] = useState(false)
+  const enProyecto = usarEstado((s) => s.seccion === 'proyecto' && s.proyectoAbierto !== null)
+  const secciones = SECCIONES_AJUSTES.filter((s) => !s.soloEnProyecto || enProyecto)
 
   // Al abrir, el foco entra a la ventana; al cerrar, vuelve a donde estaba (el chat sigue con lo escrito).
   useEffect(() => {
@@ -70,7 +83,7 @@ export function Ajustes() {
   }, [abierta])
 
   if (!abierta) return null
-  const actual = SECCIONES_AJUSTES.find((s) => s.id === seccion) ?? SECCIONES_AJUSTES[0]
+  const actual = secciones.find((s) => s.id === seccion) ?? secciones.find((s) => !s.soloEnProyecto)
   if (!actual) return null
   const Vista = actual.Vista
 
@@ -119,7 +132,7 @@ export function Ajustes() {
       >
         <nav aria-label="Secciones de Ajustes">
           <h2>Ajustes</h2>
-          {SECCIONES_AJUSTES.map((s) => (
+          {secciones.map((s) => (
             <button
               key={s.id}
               type="button"

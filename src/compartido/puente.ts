@@ -116,6 +116,8 @@ export interface Preferencias {
   tono: string
   /** Abrir el período de Claude mientras no está (frente Arranque, AR-1): apagado al principio. */
   arranque: AjusteArranque
+  /** Los proyectos con la actualización automática apagada (frente Abrir, D-154): las demás, prendidas. */
+  actualizacionApagada: string[]
 }
 
 /** El arranque del período de 5 horas (D-146): si está prendido y la hora del primero, `HH:MM` local. */
@@ -756,8 +758,29 @@ export interface ScriptsProyecto {
 
 export type ResultadoScript = { tipo: 'ok' | 'error'; mensaje: string }
 
-/** Qué pasó con Ejecutar Alfa (AB-1, AB-2): `sin-armar`, el programa no existe todavía (`armar`: marca cómo se arma). */
-export type ResultadoEjecutar = ResultadoScript | { tipo: 'sin-armar'; armar: boolean }
+/**
+ * Ejecutar Alfa (AB-1, AB-2): lo de Scripts; `sin-armar` si el programa no existe todavía (con `armar` si sabe
+ * armarse); `esperando` si se está armando: se abre solo al terminar.
+ */
+export type ResultadoEjecutar =
+  | ResultadoScript
+  | { tipo: 'sin-armar'; armar: boolean }
+  | { tipo: 'esperando' }
+
+/**
+ * La actualización automática de un proyecto que marca `ejecutar · escritorio` y `armar` (frente Abrir, AB-3, AB-4).
+ * Los proyectos que no se arman solos no están en la lista.
+ */
+export interface ActualizacionProyecto {
+  /** El interruptor de Ajustes › Este proyecto (D-154: prendida si no se apagó). */
+  prendida: boolean
+  /** Desde cuándo se está armando (ms), o null. */
+  armando: number | null
+  /** Cómo terminó el último armado; null si nunca se armó desde Iridium. */
+  ultimo: { cuando: number; resultado: 'ok' | 'falla' | 'ocupada'; motivo: string | null } | null
+  /** La Señal «No se pudo actualizar» (AB-4): el último falló con el commit de ahora. */
+  fallo: boolean
+}
 
 /** Un comentario de la Revisión para la sección Revisión (modulos/revision/ux.md › W-R3). */
 export interface VistaComentario {
@@ -832,6 +855,10 @@ export const CANALES = {
   correrScript: 'scripts:correr',
   ejecutarProyecto: 'proyecto:ejecutar',
   armarProyecto: 'proyecto:armar-ahora',
+  actualizaciones: 'actualizacion:leer',
+  actualizacionCambio: 'actualizacion:cambio',
+  actualizarAhora: 'actualizacion:ahora',
+  consolaArmado: 'actualizacion:consola',
   comentarios: 'revision:comentarios',
   capturaComentario: 'revision:captura',
   enviarComentario: 'revision:enviar',
@@ -1022,8 +1049,15 @@ export interface ApiIridium {
   correrScript(ruta: string, id: string): Promise<ResultadoScript>
   /** Ejecutar Alfa (frente Abrir, AB-1): el script marcado `ejecutar`, buscado de nuevo en `docs/scripts.md`. */
   ejecutarProyecto(ruta: string): Promise<ResultadoEjecutar>
-  /** Armar ahora (AB-2): el script marcado `armar`, en una consola a la vista. */
+  /** Armar ahora (AB-2): arma escondido, como la actualización automática, y la abre al terminar. */
   armarProyecto(ruta: string): Promise<ResultadoScript>
+  /** La actualización automática de los proyectos que se arman solos (AB-3, AB-4), por ruta. */
+  actualizaciones(): Promise<Record<string, ActualizacionProyecto>>
+  alCambiarActualizaciones(escuchar: (a: Record<string, ActualizacionProyecto>) => void): () => void
+  /** Actualizar ahora (AB-4): arma aunque esté apagada o al día; termina cuando terminó de armar. */
+  actualizarAhora(ruta: string): Promise<'ok' | 'falla' | 'ocupada'>
+  /** Ver la consola (AB-4): abre el log del último armado del proyecto. */
+  consolaArmado(ruta: string): Promise<void>
   /** Los comentarios de la Revisión del proyecto (H-R5); se releen con `alCambiarDocs`. */
   comentarios(ruta: string): Promise<ListaComentarios>
   /** La captura de un comentario como dirección `data:`; null si no tiene. */

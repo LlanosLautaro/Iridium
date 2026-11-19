@@ -171,6 +171,14 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
 function AvisoDeEjecutar({ a }: { a: AvisoEjecutar }) {
   const poner = usarEstado((s) => s.ponerAvisoEjecutar)
   const nombre = usarEstado((s) => tarjetaDe(s.lista, a.ruta)?.nombre) ?? nombreDe(a.ruta)
+  // Esperando el armado (AB-2): cuando termina, la app se abre sola y el aviso se va.
+  const armando = usarEstado((s) => s.actualizaciones[a.ruta]?.armando != null)
+  const vioArmando = useRef(false)
+  useEffect(() => {
+    if (!a.esperaArmado) return
+    if (armando) vioArmando.current = true
+    else if (vioArmando.current) poner(null)
+  }, [a.esperaArmado, armando, poner])
   return (
     <div
       className="aviso-flotante"
@@ -188,7 +196,7 @@ function AvisoDeEjecutar({ a }: { a: AvisoEjecutar }) {
           <button
             type="button"
             className="boton principal chico"
-            title="Corre su script de armar en una consola"
+            title="La arma sin mostrar la consola y la abre al terminar"
             onClick={() => void armarProyecto({ ruta: a.ruta, nombre })}
           >
             Armar ahora

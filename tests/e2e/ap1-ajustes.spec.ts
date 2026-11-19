@@ -59,10 +59,12 @@ test('el ⚙ y Ctrl+, abren Ajustes; Esc, la ✕ y un clic afuera cierran sin pe
   const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('A medio escribir')
 
-  const ajustes = win.getByRole('dialog', { name: 'Perfil' })
+  // Dentro de un proyecto, el ⚙ abre en «Este proyecto» (Ajustes del proyecto, W-3, AB-I2).
+  const ajustes = win.getByRole('dialog', { name: 'Este proyecto' })
   await win.getByRole('button', { name: 'Ajustes' }).click()
   await expect(ajustes).toBeVisible()
-  await expect(ajustes.getByRole('button', { name: 'Perfil' })).toHaveAttribute('aria-current', 'page')
+  await expect(ajustes.getByRole('button', { name: 'Este proyecto' })).toHaveAttribute('aria-current', 'page')
+  await expect(ajustes.getByRole('button', { name: 'Perfil' })).toBeVisible()
   await win.keyboard.press('Escape')
   await expect(ajustes).toHaveCount(0)
 
