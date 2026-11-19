@@ -29,7 +29,7 @@
 |---|---|---|---|
 | Revisión de la app (`modulos/revision/estado.md`) | producto hermano | en operación (con el hito 10) | hecho |
 | Skills (`modulos/skills/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10); repo público (D-132), falta publicar una versión al día (Q-185) | hecho |
+| Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10); repo público (D-132), versión al día publicada (Q-185) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 11 probadas; retoma con Archivos al cerrar Abrir, D-153) | en pausa |
@@ -39,21 +39,15 @@
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (`modulos/abrir/estado.md`) | sección | 5. Diseño técnico (UX aprobada, D-155) | en curso |
+| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (diseño técnico en D-156; sigue AB-I1) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Definición aprobada (D-154: no usa la IA ni gasta uso; prendida de entrada, apagable por proyecto). UX aprobada (D-155): el botón es «Ejecutar Alfa», con lo que hace al pasar el mouse. Sigue el diseño técnico.
+**Frente activo: Abrir** (T-80, pasado adelante en D-153): un botón **Abrir** para lo que hace cada proyecto y, después, las apps de escritorio que se arman solas cuando tienen cambios y están cerradas, como Iridium (D-122). Definición aprobada (D-154: no usa la IA ni gasta uso; prendida de entrada, apagable por proyecto). UX aprobada (D-155): el botón es «Ejecutar Alfa». Diseño técnico cerrado (D-156: la marca en `scripts.md`, la app abierta por su `.exe` trabado, lo armado en `armados.json`). Sigue AB-I1 (Ejecutar).
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
-El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: falta publicar una versión al día (Q-185).
+El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: versión al día publicada y abierta por la otra persona (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-185 — Publicá una versión al día y pasale el .zip a la otra persona**
-  Tipo: tarea · Frente: Compartir
-  Contexto: D-132. El repo ya es público: no hace falta invitarla. La última versión publicada es del 4 de noviembre; las que publiques desde ahora le llegan solas (las mira al abrir y cada seis horas, y entran al cerrar Iridium). Tu Iridium no se actualiza desde GitHub.
-  - [ ] Con lo que querés compartir ya en tu Iridium (Armar), en Scripts toqué **Publicar la versión para compartir** y terminó sin error
-  - [ ] Le pasé el enlace `github.com/LlanosLautaro/Iridium/releases/latest`: bajó el `.zip`, lo descomprimió y abrió `Iridium\win-unpacked\Iridium.exe`
-  - [ ] Abajo no le apareció ningún aviso de GitHub (ni «iniciá sesión» ni «sin acceso»)
 - **Q-210 — Probá el arranque una noche**
   Tipo: prueba · Frente: Arranque
   Contexto: `modulos/arranque/estado.md` › Log de iteraciones (AR-I1, AR-I2). Antes, que tu Iridium tenga la versión de hoy (Actualizar). La PC no tiene que suspenderse: si se suspende, lo hace al despertar.
@@ -65,7 +59,7 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Abrir: escribir el diseño técnico (`modulos/abrir/diseno-tecnico.md`).
+Abrir: construir AB-I1 (la marca en `scripts.md` con su control y el botón «Ejecutar Alfa»).
 **Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

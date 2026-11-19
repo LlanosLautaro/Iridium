@@ -162,6 +162,7 @@
 | D-153 | 2026-11-19 | frentes Abrir, Diseño, Orden y Plantillas | 10, a pedido del usuario | Abrir pasa adelante: se hace ahora y Diseño espera | vigente (cambia el orden de D-148 y D-151) |
 | D-154 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 2 (Definición) | La definición de Abrir va como se escribió; la actualización automática arranca prendida y se apaga por proyecto | vigente |
 | D-155 | 2026-11-19 | Abrir (T-80) | 10; frente Abrir, paso 4 (UX) | La UX de Abrir va como se escribió, con el botón «Ejecutar» y el nombre del proyecto | vigente |
+| D-156 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 5 (Diseño técnico) | Abrir: la marca en scripts.md, el .exe trabado como app abierta y lo armado en armados.json | vigente |
 
 ---
 
@@ -3179,3 +3180,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** Q-217: la UX va como está, con lo que agregó el usuario: el botón se llama **Ejecutar** y el nombre del proyecto («Ejecutar Alfa») para todos los tipos, y lo que pasa (escritorio, navegador o consola) lo dice el detalle al pasar el mouse, con la descripción del script.
 **Motivo:** un solo nombre se reconoce en todos los proyectos y no choca con Abrir; el detalle dice lo demás sin ocupar lugar.
 **Consecuencias:** `04-ux.md` › W-2 y W-3 suman el botón y Ajustes del proyecto, la actualización automática. Sigue el diseño técnico.
+
+## D-156 — Abrir: la marca en scripts.md, el .exe trabado como app abierta y lo armado en armados.json
+- **Fecha:** 2026-11-19
+- **Ámbito:** Abrir (T-80), con el framework
+- **Hito o paso:** 10; frente Abrir, paso 5 (Diseño técnico)
+- **Estado:** vigente
+
+**Contexto:** la definición (D-154) y la UX (D-155) estaban aprobadas; faltaba cómo se construye: cómo se marca en `scripts.md`, cómo sabe Iridium que una app está abierta y con qué commit se armó.
+**Decisión:** una línea más en el script, `**Marca:** ejecutar · escritorio` (o `página`, `consola`) y `**Marca:** armar`, con su control. `**Abrir:**` acepta direcciones `http(s)://` para el tipo página. La app está abierta si Windows no deja escribir su `.exe`. El commit armado y cómo terminó cada armado van a `armados.json`, en los datos de Iridium (la primera vez, el `.exe` más nuevo que el último commit cuenta como armado); los logs, en `armados/`. Se arma solo con commits nuevos, sin cambios a medio hacer, sin IA trabajando (Iridium o VS Code en los últimos 10 minutos), con la app cerrada y la actualización prendida, de a uno, escondido y suelto como Actualizar, cortado a los 10 minutos. Se mira cada minuto y al terminar un turno de la IA; la carpeta de código de Iridium queda afuera (D-122). El paso 6 (UI) se descarta: no hay piezas nuevas. Detalle: `modulos/abrir/diseno-tecnico.md`.
+**Motivo:** reusa Scripts y el armado de Iridium; el `.exe` trabado es instantáneo y vale aunque la app se abra por fuera; los proyectos del usuario no reciben archivos de Iridium.
+**Consecuencias:** el framework suma `**Marca:**` (SKILL.md, plantilla, construcción, pasar al framework) con su control; `config.json` suma `actualizacionApagada`; los datos de Iridium suman `armados.json` y `armados/`. Dos iteraciones: AB-I1 (Ejecutar) y AB-I2 (la actualización automática).

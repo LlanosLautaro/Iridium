@@ -22,12 +22,12 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 
 2026-11-04, a pedido del usuario: las copias compartidas se actualizan solas desde GitHub (D-085, CO-I7). Publicada la primera versión (`aca3668`) y probada de punta a punta con `tools/probar-compartida.ts`. Con Q-123 (A): repo privado y la otra persona como colaboradora; la copia avisa si falta iniciar sesión en GitHub. Publicada `c012989` y probada de nuevo.
 
-2026-11-16, a pedido del usuario: el repo pasó a público (D-132), así que la otra persona no necesita invitación (Q-126 sin efecto) y la copia del usuario sigue sin actualizarse desde GitHub. Falta publicar una versión al día y pasarle el `.zip` (Q-185).
+2026-11-16, a pedido del usuario: el repo pasó a público (D-132), así que la otra persona no necesita invitación (Q-126 sin efecto) y la copia del usuario sigue sin actualizarse desde GitHub. Con Q-185 (2026-11-19) se publicó una versión al día y la otra persona la abrió sin avisos de GitHub.
 
 ## Ruta
 - [x] Armar una copia de Iridium para otra persona
 - [x] Hacer público el repo para que se actualice sola
-- [ ] Publicar una versión al día (Q-185)
+- [x] Publicar una versión al día (Q-185)
 - [ ] Achicar el .zip de cada versión (T-37)
 - [ ] Numerar las versiones con su lista de cambios (T-38)
 

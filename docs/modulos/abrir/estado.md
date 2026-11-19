@@ -11,20 +11,20 @@
 | 2. Definición | hecho (aprobada en Q-216, D-154) | `definicion.md` |
 | 3. Investigación | descartado (no hay dominio de terceros: lo que falta saber va al diseño técnico) | — |
 | 4. UX | hecho (aprobada en Q-217, D-155) | `ux.md` |
-| 5. Diseño técnico | en curso | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | pendiente | — |
-| 7. Construcción | pendiente | este archivo |
+| 5. Diseño técnico | hecho (D-156) | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | descartado (el menú, la Señal, el Campo y el Aviso ya existen, D-156) | — |
+| 7. Construcción | en curso (sigue AB-I1) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Sigue el diseño técnico.
+Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156): la marca `**Marca:**` en `scripts.md`, la app abierta por su `.exe` trabado y lo armado en `armados.json`. Sigue AB-I1.
 
 ## Ruta
 - [x] Pensar qué resuelve y por qué va primero
 - [x] Definir qué abre cada proyecto y cuándo se pone al día
 - [x] Dibujar dónde está Abrir y cómo se ve una app al día
-- [ ] Decidir cómo se marca en `scripts.md` y cómo lo lee Iridium
+- [x] Decidir cómo se marca en `scripts.md` y cómo lo lee Iridium
 - [ ] Enseñarle a la IA a marcar lo que abre el proyecto, con su control (AB-I1)
 - [ ] Ejecutar el proyecto desde la tarjeta y desde el proyecto (AB-I1)
 - [ ] Armar solas las apps de escritorio con cambios, cuando están cerradas (AB-I2)
@@ -32,9 +32,11 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|
-| El framework (`recursos/plugins/iridium`) | La marca de lo que abre el proyecto y de cómo se arma, en `SKILL.md` › Los scripts y en la plantilla, con su lector y su control | D-148 | no (AB-I1, AB-I2) |
+| El framework (`recursos/plugins/iridium`) | La marca de lo que abre el proyecto y de cómo se arma, en `SKILL.md` › Los scripts y en la plantilla, con su lector y su control | D-148, D-156 | no (AB-I1, AB-I2) |
 | `02-definicion.md` › Glosario | «Lo que abre el proyecto» y «Actualización automática» | D-154 | sí (2026-11-19) |
 | `04-ux.md` › W-2 y W-3 | El botón en el menú de la tarjeta y en la barra del proyecto; Ajustes del proyecto suma la actualización automática | D-155 | sí (2026-11-19) |
+| `05-arquitectura.md` › Modelo de datos | `armados.json` y `armados/` en los datos de Iridium; `actualizacionApagada` en Preferencias | D-156 | no (AB-I2) |
+| Scripts (`core/visor/scripts.ts`) | `**Abrir:**` acepta direcciones `http(s)://` (tipo página) | D-156 | no (AB-I1) |
 
 ## Iteraciones
 | ID | Objetivo | Estado |
@@ -46,5 +48,5 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 (Todavía ninguna.)
 
 ## Próximo paso
-Escribir el diseño técnico (`diseno-tecnico.md`): cómo se marca en `scripts.md`, cómo sabe Iridium que una app está abierta y con qué commit se armó, y qué reusa del armado de Iridium.
-**Leer antes:** `ux.md`, `05-arquitectura.md` (las capas), `src/main/core/visor/scripts.ts`, `src/main/infra/sin-armar.ts` y `modulos/compartir/diseno-tecnico.md` › Cambios sin armar.
+Construir AB-I1: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con su detalle y el aviso de AB-2.
+**Leer antes:** `diseno-tecnico.md` (todo), `ux.md` › Pantallas y AB-1, AB-2; `src/main/core/visor/scripts.ts`, `src/main/core/control/index.ts` y `recursos/plugins/iridium/skills/iridium/SKILL.md` › Los scripts.
