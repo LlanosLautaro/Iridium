@@ -1121,7 +1121,8 @@ export interface ApiIridium {
   archivarProyecto(ruta: string, archivado: boolean): Promise<ResultadoFicha>
   /** Abre el cuadro para elegir una imagen del proyecto como ícono. */
   iconoProyecto(ruta: string): Promise<ResultadoFicha>
-  abrirEnVsCode(ruta: string): Promise<ResultadoAbrir>
+  /** El proyecto; con `archivo` (relativo, con `/`), ese archivo en su línea (Archivos). */
+  abrirEnVsCode(ruta: string, archivo?: string, linea?: number | null): Promise<ResultadoAbrir>
   abrirCarpetaProyecto(ruta: string): Promise<ResultadoAbrir>
   /** Crea la carpeta con la plantilla básica del framework (C-10, R-14); la IA no interviene. */
   nuevoProyecto(nombre: string): Promise<ResultadoNuevo>

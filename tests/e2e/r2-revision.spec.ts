@@ -176,7 +176,7 @@ test('Revisión en Iridium: el contador en gris, la lista con la captura y el de
   // El archivo y la línea abren Archivos con esa línea marcada; Atrás vuelve al comentario.
   await seccion().locator('.enlace-archivo').click()
   const archivos = win.locator('[data-seccion="archivos"]')
-  await expect(archivos.locator('.visor-cab .ruta')).toHaveText('src/Tarjeta.jsx')
+  await expect(archivos.locator('.archivos-ruta')).toHaveText('src/Tarjeta.jsx')
   await expect(archivos.locator('.visor-codigo .marcada')).toContainText('<button')
   await win.screenshot({ path: join(SALIDA, 'revision-r2-archivo.png') })
   await archivos.getByRole('button', { name: 'Atrás' }).click()

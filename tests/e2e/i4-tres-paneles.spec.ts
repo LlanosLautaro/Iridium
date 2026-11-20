@@ -283,30 +283,34 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
 
   await barra.getByRole('button', { name: 'Archivos' }).click()
   const archivos = win.locator('[data-seccion="archivos"]')
-  await expect(archivos.locator('.arbol-lista > .arbol-nodo, .arbol-lista > div > .arbol-nodo')).toHaveText([
+  await expect(archivos.locator('nav .arbol > .nodo, nav .arbol > div > .nodo')).toHaveText([
     'docs',
     'src',
     '.proyecto.json',
     'icono.png',
     'marca.txt',
   ])
-  await archivos.locator('.arbol-nodo', { hasText: 'src' }).click()
-  await archivos.locator('.arbol-nodo', { hasText: 'app.ts' }).click()
-  await expect(archivos.locator('.visor-cab')).toContainText('2 líneas · TypeScript · solo lectura')
+  await archivos.locator('.nodo', { hasText: 'src' }).click()
+  await archivos.locator('.nodo', { hasText: 'app.ts' }).click()
+  await expect(archivos.locator('.archivos-ruta')).toHaveText('src/app.ts')
+  await expect(archivos.locator('.archivos-ruta')).toHaveAttribute(
+    'title',
+    '2 líneas · TypeScript · solo lectura',
+  )
   await expect(archivos.locator('.visor-codigo .c')).toHaveText('// La app')
   await expect(archivos.locator('.visor-codigo .k').first()).toHaveText('export')
   await win.screenshot({ path: 'test-results/i4-archivos.png' })
 
-  await archivos.locator('.arbol-nodo', { hasText: 'icono.png' }).click()
+  await archivos.locator('.nodo', { hasText: 'icono.png' }).click()
   await expect(archivos.locator('.imagen img')).toBeVisible()
 
   // Un .md de los documentos se abre en Docs; Atrás vuelve al archivo.
-  await archivos.locator('.arbol-nodo', { hasText: 'docs' }).first().click()
-  await archivos.locator('.arbol-nodo', { hasText: 'decisiones.md' }).click()
+  await archivos.locator('.nodo', { hasText: 'docs' }).first().click()
+  await archivos.locator('.nodo', { hasText: 'decisiones.md' }).click()
   await archivos.getByRole('button', { name: 'Ver en Docs' }).click()
   await expect(win.locator('[data-seccion="docs"] .docs-ruta')).toHaveText('decisiones.md')
   await win.keyboard.press('Alt+ArrowLeft')
-  await expect(archivos.locator('.visor-cab .ruta')).toHaveText('docs/decisiones.md')
+  await expect(archivos.locator('.archivos-ruta')).toHaveText('docs/decisiones.md')
   await app.close()
 })
 

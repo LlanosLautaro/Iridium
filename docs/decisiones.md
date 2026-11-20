@@ -159,7 +159,7 @@
 | D-150 | 2026-11-18 | frente nuevo Plantillas (T-81), con el framework | 10 | Plantillas por tipo de app: piezas modulares que crecen, empezando por las pruebas sin ventanas | vigente |
 | D-151 | 2026-11-18 | frentes Diseño, Orden y Plantillas | 10 | Primero se terminan Diseño y Orden; Plantillas espera | vigente (Abrir pasa adelante, D-153) |
 | D-152 | 2026-11-18 | Mapa | 10 (R-91) | El Mapa archiva los frentes en uso sin nada por hacer | vigente |
-| D-153 | 2026-11-19 | frentes Abrir, Diseño, Orden y Plantillas | 10, a pedido del usuario | Abrir pasa adelante: se hace ahora y Diseño espera | vigente (cambia el orden de D-148 y D-151) |
+| D-153 | 2026-11-19 | frentes Abrir, Diseño, Orden y Plantillas | 10, a pedido del usuario | Abrir pasa adelante: se hace ahora y Diseño espera | vigente (cambia el orden de D-148 y D-151; Diseño vuelve antes, D-162) |
 | D-154 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 2 (Definición) | La definición de Abrir va como se escribió; la actualización automática arranca prendida y se apaga por proyecto | vigente |
 | D-155 | 2026-11-19 | Abrir (T-80) | 10; frente Abrir, paso 4 (UX) | La UX de Abrir va como se escribió, con el botón «Ejecutar» y el nombre del proyecto | vigente |
 | D-156 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 5 (Diseño técnico) | Abrir: la marca en scripts.md, el .exe trabado como app abierta y lo armado en armados.json | vigente |
@@ -168,6 +168,7 @@
 | D-159 | 2026-11-20 | general (Git, H-16) | 10, a pedido del usuario | Iridium se mantiene al día con GitHub sola, y Git hace Commit y subir y Sincronizar | vigente |
 | D-160 | 2026-11-20 | Abrir (T-87) | 10; frente Abrir, paso 7 (Q-223) | La app instalada se pone al día en la otra PC desde sus versiones publicadas | vigente |
 | D-161 | 2026-11-20 | Compartir (T-37) | 10; frente Compartir, a pedido del usuario | Cada versión publicada trae sus piezas: las copias bajan solo la app si Electron y Claude Code no cambiaron | vigente |
+| D-162 | 2026-11-20 | frentes Diseño y Abrir | 10, a pedido del usuario | Diseño vuelve antes del paso 8 de Abrir | vigente (cambia el orden de D-153) |
 
 ---
 
@@ -3262,3 +3263,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - El `.zip` completo sigue en cada versión (271 MB) para instalar por primera vez y para cuando cambian Electron o Claude Code; la subida tarda lo mismo que antes.
 - Una copia de antes de D-161 no tiene `piezas.json`: su primera versión nueva la baja completa y desde la siguiente baja solo la app.
 - Pruebas: `tests/d161-piezas.test.ts`, con un GitHub falso (solo la app, Claude Code cambiado, una copia sin huellas y una pieza rota). Verificado con dos armados reales: Electron y Claude Code dieron la misma huella y la copia quedó idéntica byte a byte a la versión publicada.
+
+## D-162 — Diseño vuelve antes del paso 8 de Abrir
+- **Fecha:** 2026-11-20
+- **Ámbito:** frentes Diseño y Abrir
+- **Hito o paso:** 10, a pedido del usuario
+- **Estado:** vigente (cambia el orden de D-153)
+
+**Contexto:** D-153 dejó Diseño en pausa hasta cerrar Abrir. Abrir tiene sus tres iteraciones probadas (Q-221, Q-222) y le faltan el paso 8 (calidad) y T-87 (la otra PC). El usuario pidió «Pasar el resto de las secciones a las piezas» del frente Diseño: «Sigamos con eso».
+**Decisión:** Diseño vuelve a `en curso` con DI-I3, tanda 12 (Archivos), y sigue tanda por tanda (Git, Scripts, Ajustes, la Cabecera compartida). Abrir queda `en pausa` entre la construcción y la calidad; su paso 8 y T-87 vuelven cuando cierre DI-I3 o cuando el usuario lo pida. Después sigue el orden de D-151: Orden (paso 8) y Plantillas.
+**Motivo:** el pedido del usuario. Abrir se corta limpio: todo lo construido está probado y su paso 8 no tiene nada empezado.
+**Consecuencias:** en `estado.md` › Módulos, Diseño `en curso` y Abrir `en pausa`. Las preguntas de Abrir y Git que esperan prueba (Q-224) siguen abiertas.

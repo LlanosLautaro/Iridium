@@ -112,7 +112,7 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar
   await expect(win.getByRole('button', { name: 'Continuar' })).toHaveCount(0)
   await expect(win.getByText('Esta carpeta no sigue el framework: no hay un próximo paso.')).toBeVisible()
   const archivos = win.locator('[data-seccion="archivos"]')
-  const recuadro = archivos.locator('.recuadro-simple')
+  const recuadro = archivos.locator('.archivos-simple')
   await expect(recuadro).toContainText('Esta carpeta no sigue el framework')
   await win.screenshot({ path: 'test-results/or4-carpeta-simple.png' })
 

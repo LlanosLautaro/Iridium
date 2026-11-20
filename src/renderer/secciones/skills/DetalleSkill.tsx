@@ -7,7 +7,13 @@ import type { Skill } from '../../../compartido/skills'
 import { usarEstado } from '../../estado'
 import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
-import { ArbolArchivos, alternarCarpeta, type FuenteArchivos, VisorArchivo } from '../proyecto/Archivos'
+import {
+  ArbolArchivos,
+  alternarCarpeta,
+  type FuenteArchivos,
+  useArchivo,
+  VisorArchivo,
+} from '../proyecto/Archivos'
 import { dondeEsta, origenEnPalabras, pedidoArreglar, pedidoSacar, porQueNoSeEdita } from './textos'
 
 /** El archivo que se abre al pasar a Archivos sin uno elegido. */
@@ -129,8 +135,8 @@ export function DetalleSkill({
         }
       />
       {enArchivos ? (
-        <div className="partida sk-partida">
-          <nav className="arbol-lista" aria-label={`Archivos de ${s.nombre}`}>
+        <div className="archivos-cols sk-partida">
+          <nav className="arbol" aria-label={`Archivos de ${s.nombre}`}>
             <ArbolArchivos
               fuente={fuente}
               eleccion={{
@@ -141,7 +147,7 @@ export function DetalleSkill({
               }}
             />
           </nav>
-          <VisorArchivo fuente={fuente} archivo={lugar.archivo ?? PRIMER_ARCHIVO} />
+          <VisorSkill fuente={fuente} archivo={lugar.archivo ?? PRIMER_ARCHIVO} />
         </div>
       ) : (
         <div className="sk-resumen" role="tabpanel" aria-label="Resumen">
@@ -177,4 +183,10 @@ export function DetalleSkill({
       )}
     </section>
   )
+}
+
+/** El archivo elegido de la skill, con el visor de Archivos. */
+function VisorSkill({ fuente, archivo }: { fuente: FuenteArchivos; archivo: string }) {
+  const [contenido] = useArchivo(fuente, archivo)
+  return <VisorArchivo contenido={contenido} archivo={archivo} />
 }

@@ -215,16 +215,14 @@ test('los archivos de una skill con el árbol y el visor de Archivos (Q-95)', as
   await expect(detalle.getByRole('tab', { name: 'Resumen' })).toHaveAttribute('aria-selected', 'true')
   await win.screenshot({ path: 'test-results/sk1-resumen.png' })
   await detalle.getByRole('tab', { name: 'Archivos' }).click()
-  await expect(arbol.getByRole('button', { name: 'SKILL.md' })).toBeVisible()
-  await expect(detalle.locator('.visor-cab')).toContainText('SKILL.md')
+  await expect(arbol.getByRole('button', { name: 'SKILL.md' })).toHaveAttribute('aria-current', 'true')
   // Con las flechas se vuelve al Resumen y otra vez a Archivos, al mismo archivo.
   await detalle.getByRole('tab', { name: 'Archivos' }).press('ArrowLeft')
   await expect(detalle.getByRole('tab', { name: 'Resumen' })).toBeFocused()
   await detalle.getByRole('tab', { name: 'Resumen' }).press('ArrowRight')
 
   await arbol.getByRole('button', { name: 'SKILL.md' }).click()
-  await expect(detalle.locator('.visor-cab')).toContainText('SKILL.md')
-  await expect(detalle.locator('.visor-cab')).toContainText('solo lectura')
+  await expect(arbol.getByRole('button', { name: 'SKILL.md' })).toHaveAttribute('aria-current', 'true')
   await expect(detalle.locator('.visor-codigo')).toContainText('Formato vigente')
   await expect(detalle.getByRole('button', { name: 'Ver en Docs' })).toHaveCount(0)
 

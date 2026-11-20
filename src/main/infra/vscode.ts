@@ -1,4 +1,4 @@
-// Abrir un proyecto en VS Code (C-12, R-7). Se lanza `Code.exe` directo, sin consola ni `cmd`: la carpeta va como
+// Abrir un proyecto en VS Code (C-12, R-7), o un archivo suyo en su línea (Archivos, DI-I3 tanda 12). Se lanza `Code.exe` directo, sin consola ni `cmd`: la carpeta va como
 // argumento y no se interpreta. Se busca donde lo deja `code` en el PATH y en los dos lugares donde se instala.
 import { execFile, spawn } from 'node:child_process'
 import { stat } from 'node:fs/promises'
@@ -32,8 +32,17 @@ async function existe(ruta: string): Promise<boolean> {
   return (await stat(ruta).catch(() => null))?.isFile() ?? false
 }
 
+/** Lo que recibe `Code.exe`: la carpeta y, si hay, el archivo en su línea (`-g archivo:línea`). */
+export function argumentosVsCode(
+  carpeta: string,
+  archivo?: { real: string; linea: number | null },
+): string[] {
+  return archivo ? [carpeta, '-g', `${archivo.real}:${archivo.linea ?? 1}`] : [carpeta]
+}
+
 export async function abrirEnVsCode(
   carpeta: string,
+  archivo?: { real: string; linea: number | null },
 ): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }> {
   let exe: string | null = null
   for (const c of candidatosVsCode(await dondeEsta(), process.env))
@@ -47,7 +56,7 @@ export async function abrirEnVsCode(
   for (const k of Object.keys(env)) if (k.startsWith('ELECTRON_') || k === 'NODE_OPTIONS') delete env[k]
   try {
     await new Promise<void>((listo, fallo) => {
-      const p = spawn(exe, [carpeta], { detached: true, stdio: 'ignore', env })
+      const p = spawn(exe, argumentosVsCode(carpeta, archivo), { detached: true, stdio: 'ignore', env })
       p.once('error', fallo)
       p.once('spawn', () => {
         p.unref()

@@ -314,110 +314,81 @@
   flex: 1;
 }
 
-/* Archivos (H-15): el árbol a la izquierda y el visor */
-.partida {
+/* Archivos (H-15), como la maqueta desde DI-I3, tanda 12 (docs/diseno/pantallas/archivos.html): el Árbol a la
+   izquierda con el nombre del proyecto y el visor; también en el detalle de una skill */
+.archivos-cols {
   flex: 1;
-  display: grid;
-  grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
   min-height: 0;
+  display: grid;
+  grid-template-columns: var(--ancho-arbol) minmax(0, 1fr);
 }
-.arbol-lista {
+.archivos-cols > nav {
   overflow: auto;
-  padding: 6px 0 20px;
-  border-right: 1px solid var(--borde);
-  background: color-mix(in oklab, var(--lateral) 50%, var(--fondo));
+  padding: var(--esp-3) var(--esp-2);
+  border-right: 1px solid var(--borde-suave);
 }
-.arbol-lista h3 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 32px;
-  padding: 4px 8px 4px 14px;
-  font: 600 12px / 1.2 var(--ui);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--texto-3);
-}
-.arbol-nodo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  height: 26px;
-  padding: 0 10px 0 calc(8px + var(--n, 0) * 14px);
-  color: var(--texto-2);
-  text-align: left;
+.archivos-titulo {
+  padding: 0 var(--esp-2) var(--esp-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
-.arbol-nodo.sel {
-  background: var(--sel-fondo);
-  color: var(--texto);
-}
-.arbol-nodo .ic {
-  width: 14px;
-  height: 14px;
-  color: var(--texto-3);
-}
-.arbol-nodo .chev {
-  width: 12px;
+.archivos-cols > nav button {
+  width: 100%;
   flex: none;
-  display: grid;
-  place-items: center;
 }
-.arbol-nodo .nombre {
+.archivos-carpeta > [aria-expanded="true"] > .ic {
+  rotate: 90deg;
+}
+.archivos-nombre {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.arbol-nodo.cargando,
-.arbol-nodo.vacio {
-  padding-left: calc(28px + var(--n, 0) * 14px);
+/* La letra de Git, con los colores de la sección Git (gana a la marca gris del Árbol) */
+.archivos-cols .archivos-git-nuevo {
+  color: var(--git-agregado);
+}
+.archivos-cols .archivos-git-modificado,
+.archivos-cols .archivos-git-otro {
+  color: var(--git-modificado);
+}
+.archivos-nota {
+  display: flex;
+  align-items: center;
+  height: var(--alto-nodo);
+  padding-left: calc(var(--esp-2) + 20px + var(--nivel, 0) * 14px);
+  font: var(--estilo-meta);
   color: var(--texto-3);
-  font-size: var(--tam-chico);
+  white-space: nowrap;
 }
-.arbol-nodo.error {
-  padding-left: calc(28px + var(--n, 0) * 14px);
+.archivos-nota.error {
   color: var(--error);
-  font-size: var(--tam-chico);
 }
-.visor {
+.archivos-ruta {
+  font: var(--estilo-codigo);
+}
+.archivos-simple {
+  flex: none;
+  padding: var(--esp-3) var(--esp-4) 0;
+}
+.archivos-simple > div {
+  align-items: center;
+}
+.archivos-visor {
   overflow: auto;
   min-width: 0;
   display: flex;
   flex-direction: column;
 }
-.visor-cab {
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 0 12px 0 16px;
-  border-bottom: 1px solid var(--borde-suave);
-  background: var(--fondo);
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
+.archivos-carga {
+  flex: 1;
 }
-.visor-cab .ruta {
-  font-family: var(--mono);
-  color: var(--texto-2);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.visor-cab .der {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
+.archivos-aviso {
+  padding: 0 var(--esp-6);
 }
 .visor-codigo {
-  padding: 8px 0 30px;
-  font: 12.5px / 1.6 var(--mono);
+  padding: var(--esp-4) 0 var(--esp-6);
+  font: 400 var(--tam-chico) / 1.7 var(--mono);
   color: var(--texto);
   white-space: pre;
   counter-reset: l;
@@ -425,27 +396,25 @@
   min-width: 100%;
 }
 .visor-codigo > div {
-  min-height: 1.6em;
-  padding-right: 16px;
+  min-height: 1.7em;
+  padding-right: var(--esp-5);
 }
 .visor-codigo > div::before {
   counter-increment: l;
   content: counter(l);
   display: inline-block;
-  width: 52px;
-  padding-right: 14px;
+  width: 48px;
+  padding-right: var(--esp-4);
   text-align: right;
-  color: var(--texto-3);
-  opacity: 0.6;
+  color: var(--texto-apagado);
   user-select: none;
 }
 .visor-codigo > div.marcada {
   background: var(--sel-fondo);
-  box-shadow: inset 2px 0 0 var(--primario);
+  box-shadow: inset 2px 0 0 var(--borde-control);
 }
 .visor-codigo > div.marcada::before {
-  color: var(--primario-texto);
-  opacity: 1;
+  color: var(--texto);
 }
 /* El código con colores (D-124, Q-171) */
 .visor-codigo .c {
@@ -464,18 +433,14 @@
   flex: 1;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: var(--esp-5);
 }
 .imagen img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  background: repeating-conic-gradient(var(--caja) 0 25%, var(--elevado) 0 50%) 0 0 / 16px 16px;
+  background: repeating-conic-gradient(var(--tarjeta) 0 25%, var(--hover) 0 50%) 0 0 / 16px 16px;
   border: 1px solid var(--borde);
-}
-.visor-msg {
-  margin: 24px 16px;
-  color: var(--texto-2);
 }
 
 /* Pendientes y scripts (D-043): la vista de entrada del proyecto */
@@ -562,19 +527,6 @@
 }
 .menu-lista > button.conv.actual {
   background: var(--sel-fondo);
-}
-
-button.arbol-nodo:hover {
-  background: var(--hover);
-  color: var(--texto);
-}
-.arbol-nodo .chev .ic {
-  width: 12px;
-  height: 12px;
-  transition: transform 0.15s var(--sale);
-}
-.arbol-nodo[aria-expanded="true"] .chev .ic {
-  transform: rotate(90deg);
 }
 
 /* Las ideas y las skills del proyecto (R-8): como los scripts, una caja por sección o por skill */

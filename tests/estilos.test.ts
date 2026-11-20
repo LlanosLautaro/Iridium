@@ -175,21 +175,23 @@ const VIEJAS = [
 const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
   'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
-  'git.css': ['commit', 'arch', 'fila-git', 'remoto', 'plegable', 'aviso-git', 'arbol-lista', 'git-cuenta'],
+  // DI-I3, tanda 12: Archivos pasó al Árbol; el panel de antes queda solo en Git
+  'git.css': [
+    'commit',
+    'arch',
+    'fila-git',
+    'remoto',
+    'plegable',
+    'aviso-git',
+    'arbol-lista',
+    'arbol-nodo',
+    'git-cuenta',
+  ],
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
   // DI-I3, tanda 6: la Bandeja pasó a las piezas; queda el texto de los documentos de Scripts (tanda 11: Docs pasó)
   'pendientes.css': ['aviso-doc', 'doc-texto'],
-  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás
-  'proyecto.css': [
-    'script',
-    'aviso-doc',
-    'recuadro-simple',
-    'menu-lista',
-    'cab-panel',
-    'doc-texto',
-    'arbol-lista',
-    'arbol-nodo',
-  ],
+  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás; tanda 12: Archivos
+  'proyecto.css': ['script', 'aviso-doc', 'recuadro-simple', 'menu-lista', 'cab-panel', 'doc-texto'],
   'proyectos.css': [
     'peligro',
     'aviso-grilla',
@@ -206,10 +208,10 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--lateral': 2,
   '--barra': 1,
-  '--caja': 14,
+  '--caja': 13,
   '--medidor-fondo': 5,
-  '--primario': 17,
-  '--primario-texto': 4,
+  '--primario': 16,
+  '--primario-texto': 3,
   '--ok': 10,
   '--esp-sm': 4,
   '--esp-md': 3,

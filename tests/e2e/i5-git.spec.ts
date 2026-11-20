@@ -54,6 +54,7 @@ async function abrir(): Promise<{ app: ElectronApplication; win: Page }> {
     IRIDIUM_DATOS: datos,
     IRIDIUM_MOTOR: 'falso',
     IRIDIUM_GITHUB: 'falso',
+    IRIDIUM_VSCODE: 'falso',
     GIT_AUTHOR_NAME: 'Lautaro',
     GIT_AUTHOR_EMAIL: 'l@x',
     GIT_COMMITTER_NAME: 'Lautaro',
@@ -203,6 +204,42 @@ test('Git: la rama, lo sin guardar, el historial y el antes y después de un arc
   await expect(seccion('Cambios')).toContainText('Nada sin guardar: todo está en commits.')
   // Lo elegido sigue elegido.
   await expect(g.locator('.git-det h2')).toHaveText('I-2: la galería en cuatro columnas (D-12)')
+  await app.close()
+})
+
+test('Archivos: las letras de Git en el árbol y Abrir en VS Code (DI-I3, tanda 12)', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await win
+    .getByRole('navigation', { name: 'Secciones del proyecto' })
+    .getByRole('button', { name: 'Archivos' })
+    .click()
+  const a = win.locator('[data-seccion="archivos"]')
+  const arbol = a.getByRole('navigation', { name: 'Archivos de Alfa' })
+  await expect(arbol.locator('.bloque-titulo')).toHaveText('Alfa')
+  await expect(a.locator('.recuadro.vacio')).toContainText('Elige un archivo del árbol')
+  await arbol.getByRole('button', { name: 'src' }).click()
+  await expect(arbol.getByRole('button', { name: 'src' })).toHaveAttribute('aria-expanded', 'true')
+  // Lo nuevo con A en verde, lo modificado con M; lo guardado, sin letra.
+  await expect(arbol.getByRole('button', { name: /etiquetas\.ts/ }).locator('.marca')).toHaveText('A')
+  await expect(arbol.getByRole('button', { name: /galeria\.ts/ }).locator('.marca')).toHaveCount(0)
+  const verde = await arbol
+    .getByRole('button', { name: /etiquetas\.ts/ })
+    .locator('.marca')
+    .evaluate((m) => getComputedStyle(m).color)
+  expect(verde).toBe('rgb(115, 201, 145)')
+  await arbol.getByRole('button', { name: 'docs' }).click()
+  await expect(arbol.getByRole('button', { name: /estado\.md/ }).locator('.marca')).toHaveText('M')
+  await expect(arbol.getByRole('button', { name: /estado\.md/ })).toHaveAttribute('title', /Modificado/)
+
+  // Elegido: la ruta en la cabecera (con cuántas líneas al pasar el mouse) y Abrir en VS Code, sin error.
+  await arbol.getByRole('button', { name: /etiquetas\.ts/ }).click()
+  await expect(a.locator('.archivos-ruta')).toHaveText('src/etiquetas.ts')
+  await expect(a.locator('.archivos-ruta')).toHaveAttribute('title', '1 línea · TypeScript · solo lectura')
+  await expect(arbol.getByRole('button', { name: /etiquetas\.ts/ })).toHaveClass(/elegido/)
+  await a.getByRole('button', { name: 'Abrir en VS Code' }).click()
+  await expect(a.locator('.recuadro.error')).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/di3-t12-archivos.png' })
   await app.close()
 })
 

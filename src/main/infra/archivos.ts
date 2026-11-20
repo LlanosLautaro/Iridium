@@ -19,7 +19,7 @@ import {
 import { esRutaDeDocumento } from '../core/visor/documentos'
 
 /** La ruta en el disco, o null si sale del proyecto (también a través de un enlace). */
-async function enElProyecto(proyecto: string, ruta: string): Promise<string | null> {
+export async function enElProyecto(proyecto: string, ruta: string): Promise<string | null> {
   if (!rutaDeArchivoValida(ruta)) return null
   const base = await realpath(proyecto)
   const real = await realpath(join(base, ...ruta.split('/').filter(Boolean)))

@@ -11,7 +11,7 @@ import { listarProyectos } from '../src/main/app/proyectos'
 import { skillsDelProyecto } from '../src/main/app/skills'
 import { seccionDeIdeas } from '../src/main/core/ideas-proyecto'
 import { proyectoAfectado } from '../src/main/core/vigilancia'
-import { candidatosVsCode } from '../src/main/infra/vscode'
+import { argumentosVsCode, candidatosVsCode } from '../src/main/infra/vscode'
 
 let raiz: string
 beforeEach(async () => {
@@ -200,6 +200,22 @@ describe('candidatosVsCode (C-12)', () => {
       join('C:\\Users\\u\\AppData\\Local\\Programs\\Microsoft VS Code', 'Code.exe'),
       join('D:\\Otra\\VS Code', 'Code.exe'),
       join('C:\\Program Files', 'Microsoft VS Code', 'Code.exe'),
+    ])
+  })
+})
+
+describe('argumentosVsCode (Archivos, DI-I3 tanda 12)', () => {
+  it('la carpeta sola, o la carpeta y el archivo en su línea (la primera si no viene)', () => {
+    expect(argumentosVsCode('C:PAlfa')).toEqual(['C:PAlfa'])
+    expect(argumentosVsCode('C:PAlfa', { real: 'C:PAlfasrca.ts', linea: 12 })).toEqual([
+      'C:PAlfa',
+      '-g',
+      'C:PAlfasrca.ts:12',
+    ])
+    expect(argumentosVsCode('C:PAlfa', { real: 'C:PAlfa\b.md', linea: null })).toEqual([
+      'C:PAlfa',
+      '-g',
+      'C:PAlfa\b.md:1',
     ])
   })
 })

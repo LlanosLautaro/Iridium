@@ -1,13 +1,15 @@
-// Archivos (H-15, D-041): el árbol del proyecto sin `node_modules` ni `.git` (las carpetas se abren y se cierran) y
-// el visor de solo lectura: texto con colores y números de línea, imágenes, y lo que no se puede mostrar lo dice.
-// Un `.md` de los documentos también se abre en Docs. Cada proyecto recuerda el archivo y las carpetas abiertas.
-// El árbol y el visor reciben de dónde leer: la sección Skills los usa con la carpeta de una skill.
+// Archivos (H-15, D-041; como la maqueta desde DI-I3, tanda 12: docs/diseno/pantallas/archivos.html): el Árbol
+// (PZ-11) del proyecto sin `node_modules` ni `.git`, con la letra de Git de lo cambiado sin guardar, y el visor de solo
+// lectura: texto con colores y números de línea, imágenes, y lo que no se puede mostrar lo dice. La ruta del archivo va
+// en la Cabecera, con Abrir en VS Code; un `.md` de los documentos también se abre en Docs. Cada proyecto recuerda el
+// archivo y las carpetas abiertas. El árbol y el visor reciben de dónde leer: Skills los usa con la carpeta de una skill.
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CarpetaArchivos, ContenidoArchivo } from '../../../compartido/puente'
 import { fichaDe, rutaGeneral, rutaSkills, tarjetaDe, usarEstado, vistaDe } from '../../estado'
 import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
 import { useDocsCambian } from './enlaces'
+import { LETRA, useGit } from './Git'
 import { BotonAtras } from './Lector'
 
 /** De dónde leen el árbol y el visor: un proyecto o la carpeta de una skill. */
@@ -57,34 +59,46 @@ function useCarpeta(fuente: FuenteArchivos, carpeta: string): CarpetaArchivos | 
   return leidas.get(clave) ?? null
 }
 
+/** La marca de Git de un archivo del árbol (la letra de VS Code), con lo que dice al pasar el mouse. */
+export interface MarcaArbol {
+  letra: string
+  titulo: string
+  /** La clase del color: `nuevo`, `modificado` u `otro`. */
+  clase: string
+}
+
+/** El Árbol (PZ-11) de una carpeta: las carpetas se abren y se cierran; un archivo se elige. */
 export function ArbolArchivos({
   fuente,
   eleccion,
+  marcas,
   carpeta = '',
   nivel = 0,
 }: {
   fuente: FuenteArchivos
   eleccion: EleccionArbol
+  /** Lo cambiado sin guardar en Git, por ruta (solo en un proyecto). */
+  marcas?: ReadonlyMap<string, MarcaArbol> | undefined
   carpeta?: string
   nivel?: number
 }) {
   const c = useCarpeta(fuente, carpeta)
-  const sangria = { '--n': nivel } as CSSProperties
+  const sangria = { '--nivel': nivel } as CSSProperties
   if (!c)
     return (
-      <div className="arbol-nodo cargando" style={sangria}>
+      <div className="archivos-nota" style={sangria}>
         Leyendo…
       </div>
     )
   if (c.tipo === 'error')
     return (
-      <div className="arbol-nodo error" style={sangria} title={c.mensaje}>
+      <div className="archivos-nota error" style={sangria} title={c.mensaje}>
         {c.mensaje}
       </div>
     )
   if (c.hijos.length === 0 && nivel > 0)
     return (
-      <div className="arbol-nodo vacio" style={sangria}>
+      <div className="archivos-nota" style={sangria}>
         (vacía)
       </div>
     )
@@ -94,42 +108,47 @@ export function ArbolArchivos({
         if (n.tipo === 'carpeta') {
           const abierta = eleccion.abiertas.includes(n.ruta)
           return (
-            <div key={n.ruta}>
+            <div key={n.ruta} className="archivos-carpeta">
               <button
                 type="button"
-                className="arbol-nodo"
+                className="nodo carpeta"
                 style={sangria}
                 aria-expanded={abierta}
                 title={n.ruta}
                 onClick={() => eleccion.alternar(n.ruta)}
               >
-                <span className="chev">
-                  <Icono nombre="chev" />
-                </span>
-                <Icono nombre="archivos" />
-                <span className="nombre">{n.nombre}</span>
+                <Icono nombre="chev" />
+                <span className="archivos-nombre">{n.nombre}</span>
               </button>
               {abierta && (
-                <ArbolArchivos fuente={fuente} eleccion={eleccion} carpeta={n.ruta} nivel={nivel + 1} />
+                <ArbolArchivos
+                  fuente={fuente}
+                  eleccion={eleccion}
+                  marcas={marcas}
+                  carpeta={n.ruta}
+                  nivel={nivel + 1}
+                />
               )}
             </div>
           )
         }
+        const elegido = eleccion.elegido === n.ruta
+        const marca = marcas?.get(n.ruta)
         return (
           <button
             key={n.ruta}
             type="button"
-            className={eleccion.elegido === n.ruta ? 'arbol-nodo sel' : 'arbol-nodo'}
+            className={elegido ? 'nodo elegido' : 'nodo'}
             style={sangria}
-            aria-current={eleccion.elegido === n.ruta}
-            title={n.ruta}
+            aria-current={elegido}
+            title={marca ? `${n.ruta} · ${marca.titulo}` : n.ruta}
             onClick={() => eleccion.elegir(n.ruta)}
           >
-            <span className="chev" />
             <Icono
               nombre={/\.(png|jpe?g|gif|webp|avif|bmp|ico|svg)$/i.test(n.nombre) ? 'imagen' : 'archivo'}
             />
-            <span className="nombre">{n.nombre}</span>
+            <span className="archivos-nombre">{n.nombre}</span>
+            {marca && <span className={`marca archivos-git-${marca.clase}`}>{marca.letra}</span>}
           </button>
         )
       })}
@@ -143,20 +162,24 @@ function tamano(bytes: number): string {
   return `${(bytes / 1024 / 1024).toLocaleString('es-AR', { maximumFractionDigits: 1 })} MB`
 }
 
-/** «Ver en Docs» en un `.md` de los documentos del proyecto. */
-function VerEnDocs({ ruta, archivo }: { ruta: string; archivo: string }) {
-  const abrirDoc = usarEstado((s) => s.abrirDoc)
-  return (
-    <button
-      type="button"
-      className="boton secundario chico"
-      title="Leerlo en Docs, con los códigos como enlaces"
-      onClick={() => abrirDoc(ruta, { documento: archivo, ancla: '' })}
-    >
-      <Icono nombre="docs" />
-      Ver en Docs
-    </button>
-  )
+/** Lo leído de un archivo (null mientras se lee) y cómo releerlo. */
+export function useArchivo(fuente: FuenteArchivos, archivo: string): [ContenidoArchivo | null, () => void] {
+  const [c, setC] = useState<{ clave: string; c: ContenidoArchivo } | null>(null)
+  const clave = `${fuente.clave}|${archivo}`
+  // biome-ignore lint/correctness/useExhaustiveDependencies: la fuente se identifica por su clave.
+  const leer = useCallback(() => {
+    void fuente.archivo(archivo).then((r) => setC({ clave, c: r }))
+  }, [clave])
+  useEffect(leer, [leer])
+  return [c?.clave === clave ? c.c : null, leer]
+}
+
+/** Sin ruido (D-108): cuántas líneas y de qué lenguaje, al pasar el mouse por la ruta. */
+export function detalleArchivo(c: ContenidoArchivo | null): string {
+  if (c?.tipo === 'texto')
+    return `${c.lineas.length} ${c.lineas.length === 1 ? 'línea' : 'líneas'} · ${c.lenguaje} · solo lectura`
+  if (c?.tipo === 'imagen') return `imagen · ${tamano(c.bytes)}`
+  return ''
 }
 
 /** Un `.md` del proyecto que cambia mientras se mira se relee (los demás, al volver a elegirlos). */
@@ -170,87 +193,88 @@ function ReleerDocs({ ruta, archivo, leer }: { ruta: string; archivo: string; le
   return null
 }
 
+/** El visor de solo lectura: el texto con colores y números de línea, la imagen, o por qué no se muestra. */
 export function VisorArchivo({
-  fuente,
+  contenido,
   archivo,
   linea = null,
-  proyecto,
 }: {
-  fuente: FuenteArchivos
+  contenido: ContenidoArchivo | null
   archivo: string
   linea?: number | null
-  /** El proyecto del archivo: suma «Ver en Docs» y relee los `.md` que cambian. */
-  proyecto?: string
 }) {
-  const [c, setC] = useState<{ clave: string; c: ContenidoArchivo } | null>(null)
   const codigo = useRef<HTMLDivElement>(null)
-  const clave = `${fuente.clave}|${archivo}`
-  // biome-ignore lint/correctness/useExhaustiveDependencies: la fuente se identifica por su clave.
-  const leer = useCallback(() => {
-    void fuente.archivo(archivo).then((r) => setC({ clave, c: r }))
-  }, [clave])
-  useEffect(leer, [leer])
-  const actual = c?.clave === clave ? c.c : null
   // Desde un comentario de la Revisión: la línea queda marcada y a la vista (en el medio).
   useEffect(() => {
-    if (actual?.tipo !== 'texto' || !linea) return
+    if (contenido?.tipo !== 'texto' || !linea) return
     const el = codigo.current?.children[linea - 1]
     if (el instanceof HTMLElement) el.scrollIntoView({ block: 'center' })
-  }, [actual, linea])
-  let detalle = ''
-  if (actual?.tipo === 'texto')
-    detalle = `${actual.lineas.length} ${actual.lineas.length === 1 ? 'línea' : 'líneas'} · ${actual.lenguaje}`
-  else if (actual?.tipo === 'imagen') detalle = `imagen · ${tamano(actual.bytes)}`
-  let extra: ReactNode = null
-  if (proyecto && actual?.tipo === 'texto' && actual.documento)
-    extra = <VerEnDocs ruta={proyecto} archivo={archivo} />
-  return (
-    <div className="visor">
-      {proyecto && <ReleerDocs ruta={proyecto} archivo={archivo} leer={leer} />}
-      <div className="visor-cab">
-        <span className="ruta">{archivo}</span>
-        <span className="der">
-          {detalle && <span>{detalle} · solo lectura</span>}
-          {extra}
-        </span>
+  }, [contenido, linea])
+  let aviso: ReactNode = null
+  if (contenido?.tipo === 'error')
+    aviso = (
+      <div className="recuadro error" role="alert">
+        <Icono nombre="error" />
+        <span>No se pudo leer: {contenido.mensaje}</span>
       </div>
-      {!actual && <div className="visor-msg" aria-busy="true" />}
-      {actual?.tipo === 'texto' && (
+    )
+  else if (contenido?.tipo === 'no-existe')
+    aviso = (
+      <div className="recuadro vacio">
+        <strong>Este archivo ya no existe</strong>
+        <span>Elige otro en el árbol.</span>
+      </div>
+    )
+  else if (contenido?.tipo === 'grande')
+    aviso = (
+      <div className="recuadro vacio">
+        <strong>Es muy grande para mostrarlo aquí</strong>
+        <span>Pesa {tamano(contenido.bytes)}: ábrelo en VS Code o con su programa.</span>
+      </div>
+    )
+  else if (contenido?.tipo === 'binario')
+    aviso = (
+      <div className="recuadro vacio">
+        <strong>No es un archivo de texto</strong>
+        <span>Pesa {tamano(contenido.bytes)} y no se puede mostrar aquí: ábrelo con su programa.</span>
+      </div>
+    )
+  return (
+    <div className="archivos-visor">
+      {!contenido && <div className="archivos-carga" aria-busy="true" />}
+      {contenido?.tipo === 'texto' && (
         <div
           ref={codigo}
           className="visor-codigo"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: cada línea la escapa y colorea el proceso principal (core/archivos.ts).
           dangerouslySetInnerHTML={{
-            __html: actual.lineas
+            __html: contenido.lineas
               .map((l, i) => (i + 1 === linea ? `<div class="marcada">${l}</div>` : `<div>${l}</div>`))
               .join(''),
           }}
         />
       )}
-      {actual?.tipo === 'imagen' && (
+      {contenido?.tipo === 'imagen' && (
         <div className="imagen">
-          <img src={actual.url} alt={archivo} />
+          <img src={contenido.url} alt={archivo} />
         </div>
       )}
-      {actual?.tipo === 'grande' && (
-        <p className="visor-msg">
-          Pesa {tamano(actual.bytes)}: es muy grande para mostrarlo acá. Abrilo con su programa si lo
-          necesitás.
-        </p>
-      )}
-      {actual?.tipo === 'binario' && (
-        <p className="visor-msg">
-          No es un archivo de texto ({tamano(actual.bytes)}): no se puede mostrar acá.
-        </p>
-      )}
-      {actual?.tipo === 'no-existe' && <p className="visor-msg">Este archivo ya no existe.</p>}
-      {actual?.tipo === 'error' && (
-        <p className="visor-msg" role="alert">
-          No se pudo leer: {actual.mensaje}
-        </p>
-      )}
+      {aviso && <div className="archivos-aviso">{aviso}</div>}
     </div>
   )
+}
+
+/** Las letras de Git (las de VS Code) de lo cambiado sin guardar, para el árbol de un proyecto. */
+function useMarcasGit(ruta: string): ReadonlyMap<string, MarcaArbol> {
+  const [g] = useGit(ruta, true)
+  return useMemo(() => {
+    const m = new Map<string, MarcaArbol>()
+    if (g?.tipo === 'ok')
+      for (const a of g.cambios)
+        if (a.cambio !== 'borrado')
+          m.set(a.ruta, { letra: LETRA[a.cambio].letra, titulo: LETRA[a.cambio].titulo, clase: a.cambio })
+    return m
+  }, [g])
 }
 
 /**
@@ -267,38 +291,41 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
     setError(null)
     window.iridium.pasarAlFramework(ruta).then(
       () => cambiarSkills({ enviados: [...enviados.filter((r) => r !== ruta), ruta] }),
-      () => setError('No se pudo mandar el pedido.'),
+      () => setError('No se pudo enviar el pedido.'),
     )
   }
   return (
-    <div className="recuadro-simple" role="note">
-      <b>Esta carpeta no sigue el framework</b>
-      <p>
-        {pasando ? 'La IA la está actualizando al framework…' : 'Se ve y se conversa, sin Mapa ni preguntas.'}
-      </p>
-      {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      )}
-      <button
-        type="button"
-        className="boton secundario chico"
-        disabled={trabajando}
-        title={
-          trabajando
-            ? 'Su IA está trabajando'
-            : 'Le manda el pedido a la IA de esta carpeta, en una conversación nueva: gasta uso'
-        }
-        onClick={pasar}
-      >
-        Actualizar
-      </button>
+    <div className="archivos-simple">
+      <div className={error ? 'recuadro error' : 'recuadro'} role="note">
+        <div className="cuerpo-recuadro">
+          <strong>Esta carpeta no sigue el framework</strong>
+          <span>
+            {pasando
+              ? 'La IA la está actualizando al framework…'
+              : 'Se ve y se conversa, sin Mapa ni preguntas.'}
+          </span>
+          {error && <span role="alert">{error}</span>}
+        </div>
+        <button
+          type="button"
+          className="boton secundario"
+          disabled={trabajando}
+          title={
+            trabajando
+              ? 'Su IA está trabajando'
+              : 'Le envía el pedido a la IA de esta carpeta, en una conversación nueva: gasta uso'
+          }
+          onClick={pasar}
+        >
+          Actualizar
+        </button>
+      </div>
     </div>
   )
 }
 
-export function Archivos({ ruta }: { ruta: string }) {
+/** Debajo de la cabecera: el recuadro de la carpeta simple, el árbol con el nombre del proyecto y lo de la derecha. */
+function Cuerpo({ ruta, arbol, children }: { ruta: string; arbol: ReactNode; children: ReactNode }) {
   // Las carpetas de Iridium (Ideas, Skills) tampoco tienen `estado.md`, pero no son proyectos para pasar.
   const simple = usarEstado(
     (s) =>
@@ -306,11 +333,107 @@ export function Archivos({ ruta }: { ruta: string }) {
       ruta !== rutaGeneral(s.lista) &&
       ruta !== rutaSkills(s.lista),
   )
-  const archivo = usarEstado((s) => vistaDe(s.vistas, ruta).archivo)
+  const nombre = usarEstado((s) => tarjetaDe(s.lista, ruta)?.nombre ?? '')
+  return (
+    <>
+      {simple && <CarpetaSimple ruta={ruta} />}
+      <div className="archivos-cols">
+        <nav aria-label={`Archivos de ${nombre}`}>
+          <h3 className="bloque-titulo archivos-titulo">{nombre}</h3>
+          <div className="arbol">{arbol}</div>
+        </nav>
+        {children}
+      </div>
+    </>
+  )
+}
+
+/**
+ * Con un archivo elegido: la Cabecera con su ruta en gris (al pasar el mouse, cuántas líneas y de qué lenguaje), Ver
+ * en Docs si es un documento, Abrir en VS Code (en la línea, si vino de un comentario) y Atrás; debajo, el visor.
+ */
+function ConArchivo({
+  ruta,
+  fuente,
+  archivo,
+  arbol,
+}: {
+  ruta: string
+  fuente: FuenteArchivos
+  archivo: string
+  arbol: ReactNode
+}) {
   const linea = usarEstado((s) => vistaDe(s.vistas, ruta).linea)
+  const atras = usarEstado((s) => vistaDe(s.vistas, ruta).atras.length)
+  const abrirDoc = usarEstado((s) => s.abrirDoc)
+  const [contenido, leer] = useArchivo(fuente, archivo)
+  const [error, setError] = useState<string | null>(null)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: el aviso es del archivo en que se tocó.
+  useEffect(() => setError(null), [archivo])
+  const vsCode = async () => {
+    setError(null)
+    const r = await window.iridium.abrirEnVsCode(ruta, archivo, linea)
+    if (r.tipo === 'error') setError(r.mensaje)
+  }
+  return (
+    <>
+      <ReleerDocs ruta={ruta} archivo={archivo} leer={leer} />
+      <Cabecera
+        titulo="Archivos"
+        sub={
+          <span className="archivos-ruta" title={detalleArchivo(contenido) || undefined}>
+            {archivo}
+          </span>
+        }
+        acciones={
+          <>
+            {contenido?.tipo === 'texto' && contenido.documento && (
+              <button
+                type="button"
+                className="boton sin-fondo"
+                title="Leerlo en Docs, con los códigos como enlaces"
+                onClick={() => abrirDoc(ruta, { documento: archivo, ancla: '' })}
+              >
+                <Icono nombre="docs" />
+                Ver en Docs
+              </button>
+            )}
+            <button
+              type="button"
+              className="boton sin-fondo"
+              title={
+                linea
+                  ? `Lo abre en VS Code, en la línea ${linea}`
+                  : 'Lo abre en VS Code, con la carpeta del proyecto'
+              }
+              onClick={() => void vsCode()}
+            >
+              <Icono nombre="abrir" />
+              Abrir en VS Code
+            </button>
+            {atras > 0 && <BotonAtras ruta={ruta} />}
+          </>
+        }
+      />
+      {error && (
+        <div className="archivos-simple">
+          <div className="recuadro error" role="alert">
+            <Icono nombre="error" />
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+      <Cuerpo ruta={ruta} arbol={arbol}>
+        <VisorArchivo contenido={contenido} archivo={archivo} linea={linea} />
+      </Cuerpo>
+    </>
+  )
+}
+
+export function Archivos({ ruta }: { ruta: string }) {
+  const archivo = usarEstado((s) => vistaDe(s.vistas, ruta).archivo)
   const carpetas = usarEstado((s) => vistaDe(s.vistas, ruta).carpetas)
   const atras = usarEstado((s) => vistaDe(s.vistas, ruta).atras.length)
-  const nombre = usarEstado((s) => tarjetaDe(s.lista, ruta)?.nombre ?? '')
   const cambiarVista = usarEstado((s) => s.cambiarVista)
   const fuente = useMemo<FuenteArchivos>(
     () => ({
@@ -320,32 +443,28 @@ export function Archivos({ ruta }: { ruta: string }) {
     }),
     [ruta],
   )
+  const marcas = useMarcasGit(ruta)
   const eleccion: EleccionArbol = {
     abiertas: carpetas,
     alternar: (c) => cambiarVista(ruta, { carpetas: alternarCarpeta(carpetas, c) }),
     elegido: archivo,
     elegir: (a) => cambiarVista(ruta, { archivo: a, linea: null }),
   }
+  const arbol = <ArbolArchivos fuente={fuente} eleccion={eleccion} marcas={marcas} />
+  if (archivo) return <ConArchivo ruta={ruta} fuente={fuente} archivo={archivo} arbol={arbol} />
   return (
     <>
       <Cabecera titulo="Archivos" acciones={atras > 0 && <BotonAtras ruta={ruta} />} />
-      {simple && <CarpetaSimple ruta={ruta} />}
-      <div className="partida">
-        <nav className="arbol-lista" aria-label={`Archivos de ${nombre}`}>
-          <h3>{nombre}</h3>
-          <ArbolArchivos fuente={fuente} eleccion={eleccion} />
-        </nav>
-        {archivo ? (
-          <VisorArchivo fuente={fuente} archivo={archivo} linea={linea} proyecto={ruta} />
-        ) : (
-          <div className="vacia">
-            <div>
-              <b>Elegí un archivo del árbol</b>
-              Se ve tal cual, sin poder editarlo: el texto con colores, las imágenes como imagen.
+      <Cuerpo ruta={ruta} arbol={arbol}>
+        <div className="archivos-visor">
+          <div className="archivos-aviso">
+            <div className="recuadro vacio">
+              <strong>Elige un archivo del árbol</strong>
+              <span>Se ve tal cual, sin poder editarlo: el texto con colores, las imágenes como imagen.</span>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </Cuerpo>
     </>
   )
 }

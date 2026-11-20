@@ -1,4 +1,64 @@
-/* Git (H-16): la rama, lo sin guardar y el historial a la izquierda; lo elegido con sus archivos a la derecha */
+/* Git (H-16): la rama, lo sin guardar y el historial a la izquierda; lo elegido con sus archivos a la derecha. El panel
+   y sus filas, con la forma de antes hasta que Git pase a las piezas (DI-I3; Archivos pasó en la tanda 12) */
+.partida {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
+  min-height: 0;
+}
+.arbol-lista {
+  overflow: auto;
+  padding: 6px 0 20px;
+  border-right: 1px solid var(--borde);
+  background: color-mix(in oklab, var(--lateral) 50%, var(--fondo));
+}
+.arbol-lista h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 8px 4px 14px;
+  font: 600 12px / 1.2 var(--ui);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-3);
+}
+.arbol-nodo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 26px;
+  padding: 0 10px 0 calc(8px + var(--n, 0) * 14px);
+  color: var(--texto-2);
+  text-align: left;
+  white-space: nowrap;
+}
+.arbol-nodo.sel {
+  background: var(--sel-fondo);
+  color: var(--texto);
+}
+.arbol-nodo .ic {
+  width: 14px;
+  height: 14px;
+  color: var(--texto-3);
+}
+.arbol-nodo .nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.arbol-nodo.vacio {
+  padding-left: calc(28px + var(--n, 0) * 14px);
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+}
+.visor {
+  overflow: auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
 .partida.git .arbol-lista {
   display: flex;
   flex-direction: column;
@@ -426,4 +486,9 @@
 }
 .aviso-git.error {
   color: var(--error);
+}
+
+button.arbol-nodo:hover {
+  background: var(--hover);
+  color: var(--texto);
 }

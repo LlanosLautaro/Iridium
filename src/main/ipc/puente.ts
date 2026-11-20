@@ -64,7 +64,7 @@ import {
   instruccionRevision,
 } from '../core/sesiones'
 import { leerScripts, RUTA_SCRIPTS } from '../core/visor/scripts'
-import { leerArchivo, leerCarpeta } from '../infra/archivos'
+import { enElProyecto, leerArchivo, leerCarpeta } from '../infra/archivos'
 import {
   type ArchivoArmados,
   abiertaAhora,
@@ -954,12 +954,24 @@ export function registrarPuente(s: Servicios): Puente {
     if (!archivo) return { tipo: 'cancelada' }
     return ficha(await cambiarIconoProyecto(await raiz(), r, archivo))
   })
-  ipcMain.handle(CANALES.abrirEnVsCode, async (_, ruta: unknown): Promise<ResultadoAbrir> => {
-    const r = await deLaRaiz(ruta)
-    s.registro.escribir(`Abrir en VS Code: ${basename(r)}`)
-    if (process.env.IRIDIUM_VSCODE === 'falso') return { tipo: 'ok' }
-    return abrirEnVsCode(r)
-  })
+  ipcMain.handle(
+    CANALES.abrirEnVsCode,
+    async (_, ruta: unknown, archivo: unknown, linea: unknown): Promise<ResultadoAbrir> => {
+      const r = await deLaRaiz(ruta)
+      // Un archivo del proyecto (Archivos): solo si queda adentro, también siguiendo enlaces.
+      let elegido: { real: string; linea: number | null } | undefined
+      if (archivo !== undefined && archivo !== null) {
+        const real = await enElProyecto(r, RutaArchivo.parse(archivo)).catch(() => null)
+        if (!real) return { tipo: 'error', mensaje: 'Ese archivo no es del proyecto o ya no existe.' }
+        elegido = { real, linea: z.number().int().positive().nullish().parse(linea) ?? null }
+      }
+      s.registro.escribir(
+        `Abrir en VS Code: ${basename(r)}${elegido ? ` › ${String(archivo)}:${elegido.linea ?? 1}` : ''}`,
+      )
+      if (process.env.IRIDIUM_VSCODE === 'falso') return { tipo: 'ok' }
+      return abrirEnVsCode(r, elegido)
+    },
+  )
   ipcMain.handle(CANALES.abrirCarpetaProyecto, async (_, ruta: unknown): Promise<ResultadoAbrir> => {
     const r = await deLaRaiz(ruta)
     if (process.env.IRIDIUM_VSCODE === 'falso') return { tipo: 'ok' }

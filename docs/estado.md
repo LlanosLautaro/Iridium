@@ -32,21 +32,20 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I8, las piezas de cada versión, probada en Q-225) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 11 probadas; retoma con Archivos al cerrar Abrir, D-153) | en pausa |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 11 probadas; la 12, Archivos, espera Q-228; vuelve por D-162) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; la primera noche falló, arreglado; espera otra, Q-227) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; la otra PC, T-87 con D-160) | en curso |
+| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, al cerrar DI-I3, D-162) | en pausa |
 
 ## En qué estamos ahora
-**Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos tienen la marca (D-157) y las dos iteraciones salieron bien (Q-221). AB-I3 (D-158), tu app instalada, probada en Q-222. En la otra PC se va a actualizar sola desde sus versiones publicadas (D-160, T-87).
-**Git al día con GitHub** (D-159, T-88): Iridium trae sola lo que se subió desde la otra PC, y Git tiene **Commit y subir** y **Sincronizar**; tu prueba en las dos PC, Q-224.
-**Arranque** (D-135): la primera noche no arrancó porque a las 3 el período seguía abierto y se perdía el intento de cuando vence; arreglado, espera otra noche (Q-227). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
-El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. **Compartir:** cada versión publicada trae sus piezas y las copias bajan solo la app, unos 2 MB en vez de 296 (D-161, CO-I8, probado en Q-225). **Revisión:** la línea «Página» de un comentario ya no guarda las carpetas de la PC (T-34). **Skills:** el framework reemplazó a la guía vieja y a `gestor-proyectos` (T-43), confirmado en Q-226.
-Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
+**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Con la tanda 12 Archivos es la de la maqueta: el árbol con las letras de Git, la ruta arriba y **Abrir en VS Code** (Q-228). Siguen Git, Scripts y Ajustes; la lupa para buscar un archivo, en T-90.
+**Abrir** (D-153) queda en pausa con sus tres iteraciones probadas: el paso 8 y la otra PC (T-87, D-160) vuelven al cerrar DI-I3. **Git al día con GitHub** (D-159, T-88): tu prueba en las dos PC, Q-224.
+**Arranque** (D-135): la primera noche no arrancó; arreglado, espera otra noche (Q-227). Después de Diseño, Orden mide la calidad y sigue Plantillas (D-151, D-150).
+Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
 - **Q-224 — Probá Git al día entre tus dos PC**
@@ -64,11 +63,20 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…»
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
+- **Q-228 — Probá Archivos con su forma nueva**
+  Tipo: prueba · Frente: Diseño
+  Contexto: DI-I3, tanda 12 (`modulos/diseno/estado.md` › tanda 12: Archivos). Antes, Actualizar. Entrá a Archivos de este proyecto.
+  - [ ] El árbol se ve como la maqueta: el nombre del proyecto arriba, las carpetas con su flecha que gira al abrirlas
+  - [ ] Los archivos cambiados sin commit tienen una letra a la derecha: A verde los nuevos, M amarilla los modificados
+  - [ ] Al elegir un archivo, su ruta aparece arriba en gris junto a «Archivos» y al pasar el mouse dice cuántas líneas tiene
+  - [ ] «Abrir en VS Code» abre VS Code con ese archivo
+  - [ ] Desde un comentario de Revisión con archivo y línea, Archivos marca esa línea y «Abrir en VS Code» va a esa línea
+  - [ ] En Skills, el detalle de una skill › Archivos se ve igual de limpio
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Abrir: el paso 8 (calidad) del frente; T-87 (la otra PC, D-160) va después.
-**Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
+Diseño, DI-I3 tanda 13: Git como la maqueta (procesar Q-228 si llegó).
+**Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

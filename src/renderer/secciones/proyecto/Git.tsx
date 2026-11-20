@@ -29,7 +29,7 @@ const RELEER_MS = 4000
 /** Lo ya leído de cada proyecto: se muestra en el acto y se relee al entrar. */
 const leidos = new Map<string, GitProyecto>()
 
-const LETRA: Record<CambioArchivoGit, { letra: string; titulo: string }> = {
+export const LETRA: Record<CambioArchivoGit, { letra: string; titulo: string }> = {
   nuevo: { letra: 'A', titulo: 'Nuevo' },
   modificado: { letra: 'M', titulo: 'Modificado' },
   borrado: { letra: 'D', titulo: 'Borrado' },
@@ -42,7 +42,7 @@ function autores(c: CommitGit): string {
   return c.coautores.length ? `${c.autor} con ${c.coautores.join(', ')}` : c.autor
 }
 
-function useGit(ruta: string, visible: boolean): [GitProyecto | null, () => void] {
+export function useGit(ruta: string, visible: boolean): [GitProyecto | null, () => void] {
   const [g, setG] = useState<GitProyecto | null>(() => leidos.get(ruta) ?? null)
   const trabaja = usarEstado((s) => s.fichas.find((f) => f.ruta === ruta)?.estado ?? null)
   const leer = useCallback(() => {

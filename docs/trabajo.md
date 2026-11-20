@@ -390,3 +390,7 @@ Pedido del usuario: un proyecto mostraba lo de antes de lo que se hizo en la otr
 ## T-89 — Subir solas las respuestas a las preguntas
 Estado: nueva · Idea: IA · Fecha: 2026-11-20 · Origen: D-159
 Al responder una `Q-n` desde Iridium, que la respuesta se guarde en un commit y se suba sola (si el proyecto está en GitHub y la IA no trabaja en él), para que la otra PC la vea sin tocar Commit y subir.
+
+## T-90 — Buscar un archivo en Archivos
+Estado: pendiente · Frente: Diseño · Fecha: 2026-11-20 · Origen: DI-I3 (tanda 12) · Idea: IA
+La maqueta de Archivos (`docs/diseno/pantallas/archivos.html`) tiene una lupa en la cabecera: buscar un archivo del proyecto por su nombre. Es una función nueva (hoy no hay cómo buscar), así que la tanda 12 pasó la sección sin ella; va al cerrar DI-I3, con lo que el rediseño cambia además de las piezas (T-58).
