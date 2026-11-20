@@ -45,7 +45,7 @@
 **Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Archivos y **Git** quedaron probadas (Q-228, Q-229); los comentarios de Git R-95 a R-97 (el visor solo con el archivo elegido) están arreglados y esperan Q-231. Siguen Scripts y Ajustes; la lupa para buscar un archivo, en T-90.
 **Abrir** (D-153) queda en pausa con sus tres iteraciones probadas: el paso 8 y la otra PC (T-87, D-160) vuelven al cerrar DI-I3. **Git al día con GitHub** (D-159) quedó probado en las dos PC (Q-224).
 **Arranque** (D-135): la primera noche no arrancó; arreglado, espera otra noche (Q-227). Después de Diseño, Orden mide la calidad y sigue Plantillas (D-151, D-150).
-Ideas sin evaluar: T-76, T-78 y T-89. Las pruebas que corren solas después de cada turno (T-91): medido en `research/costo-de-pruebas.md`, espera Q-230. Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
+Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
 - **Q-227 — Probá el arranque otra noche**
@@ -56,10 +56,6 @@ Ideas sin evaluar: T-76, T-78 y T-89. Las pruebas que corren solas después de c
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…»
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-230 — ¿Cómo corren las pruebas de la IA?**
-  Tipo: decisión
-  Contexto: tu idea de que corran solas después de cada turno (T-91), medida en `research/costo-de-pruebas.md`: son el 14 % de los pasos, pero la verificación final encuentra algo en casi la mitad de las conversaciones. Esperar no gasta; lo caro son los pasos. B ahorra más pero el commit, la subida y la prueba saldrían antes de saber si está en verde.
-  Opciones: A) Ordenarlas: un solo comando de cierre que muestra solo lo que falla, Playwright sin segundo plano ni sondeos y de a varias ventanas si se puede (recomendada: ahorra pasos y minutos sin riesgo, y deja listo B) · B) A, y además Iridium las corre sola al terminar cada turno y solo avisa si algo falla · C) Dejarlo como está
 - **Q-231 — Probá el visor de Git**
   Tipo: prueba · Frente: Diseño
   Contexto: R-95 a R-97 (`modulos/diseno/estado.md` › Q-229 y los comentarios R-95 a R-97). Antes, Actualizar.
@@ -70,7 +66,7 @@ Ideas sin evaluar: T-76, T-78 y T-89. Las pruebas que corren solas después de c
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño, DI-I3 tanda 14: Scripts como la maqueta (procesar Q-230 y Q-231 si llegaron).
+Diseño, DI-I3 tanda 14: Scripts como la maqueta (procesar Q-231 si llegó).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

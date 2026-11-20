@@ -3274,3 +3274,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** Diseño vuelve a `en curso` con DI-I3, tanda 12 (Archivos), y sigue tanda por tanda (Git, Scripts, Ajustes, la Cabecera compartida). Abrir queda `en pausa` entre la construcción y la calidad; su paso 8 y T-87 vuelven cuando cierre DI-I3 o cuando el usuario lo pida. Después sigue el orden de D-151: Orden (paso 8) y Plantillas.
 **Motivo:** el pedido del usuario. Abrir se corta limpio: todo lo construido está probado y su paso 8 no tiene nada empezado.
 **Consecuencias:** en `estado.md` › Módulos, Diseño `en curso` y Abrir `en pausa`. Las preguntas de Abrir y Git que esperan prueba (Q-224) siguen abiertas.
+
+## D-163 — Las pruebas no corren solas después de cada turno
+- **Fecha:** 2026-11-20
+- **Ámbito:** el framework y la forma de trabajar de la IA
+- **Hito o paso:** 10, Q-230
+- **Estado:** vigente
+
+**Contexto:** el usuario propuso que Iridium corra las pruebas al terminar cada turno de la IA y solo avise si fallan (T-91). Medido en `research/costo-de-pruebas.md`: son el 14 % de los pasos, pero la verificación final encuentra algo en el 45 % de las conversaciones, y esperar no gasta (lo caro son los pasos).
+**Decisión:** no se hace. La IA sigue verificando antes de hacer el commit, subir y dejar la prueba. Ordenar cómo corre las pruebas (un comando de cierre, sin segundo plano) queda como idea aparte, T-92, para aprobar o rechazar.
+**Motivo:** el usuario prefirió dejarlo como está. Con la idea, el commit, la subida y la prueba saldrían antes de saber si funciona, casi la mitad de las veces con algo roto, por un ahorro de 2–5 % de los pasos.
+**Consecuencias:** T-91 `descartado`; T-92 `nueva`.

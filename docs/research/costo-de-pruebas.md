@@ -36,6 +36,9 @@
 4. **Lo que se ve como «esperando»** es sobre todo el tiempo de reloj de Playwright (una sola ventana a la vez, `workers: 1`) y, en menos casos, las corridas en segundo plano con sondeo, que suman pasos sin aportar.
 
 ## Opciones (Q-230)
+
+> Decidido el 2026-11-20 (D-163): queda como está; la opción A es la idea T-92.
+
 - **A) Ordenar cómo corre las pruebas la IA:** un solo comando de cierre que corre todo y muestra solo lo que falla; Playwright en primer plano con tiempo largo, nunca en segundo plano con sondeos; mientras trabaja, solo las pruebas de lo tocado; y probar si Playwright puede correr de a varias ventanas. Sin riesgo; ahorra pasos y minutos.
 - **B) La idea del usuario, como red:** además de A, Iridium corre ese comando al terminar cada turno que cambió código; en verde no dice nada (lo marca en la tarjeta), en rojo le manda a la IA el resumen, como el control. Ahorra la verificación final, pero el commit, la subida y la `Q-n` salen antes de saber si está en verde (casi la mitad de las veces no lo está), el proyecto queda ocupado minutos después de cada turno y es un formato nuevo del framework (el comando de cada proyecto, con su lector y su control, D-086).
 - **C) Dejarlo como está.**

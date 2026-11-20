@@ -396,5 +396,9 @@ Estado: pendiente · Frente: Diseño · Fecha: 2026-11-20 · Origen: DI-I3 (tand
 La maqueta de Archivos (`docs/diseno/pantallas/archivos.html`) tiene una lupa en la cabecera: buscar un archivo del proyecto por su nombre. Es una función nueva (hoy no hay cómo buscar), así que la tanda 12 pasó la sección sin ella; va al cerrar DI-I3, con lo que el rediseño cambia además de las piezas (T-58).
 
 ## T-91 — Las pruebas corren solas después de cada turno
-Estado: nueva · Idea: usuario · Fecha: 2026-11-20 · Origen: el chat del 2026-11-20
+Estado: descartado (D-163: la verificación final encuentra algo casi la mitad de las veces) · Idea: usuario · Fecha: 2026-11-20 · Origen: el chat del 2026-11-20
 Que Iridium corra las pruebas al terminar cada turno de la IA y solo le avise si algo falla, para ahorrar los pasos y la espera de la verificación final. Medido en `research/costo-de-pruebas.md`: las pruebas son el 14 % de los pasos, pero la verificación final encuentra algo casi la mitad de las veces. Decisión en Q-230.
+
+## T-92 — Ordenar cómo corre las pruebas la IA
+Estado: nueva · Idea: IA · Fecha: 2026-11-20 · Origen: D-163
+Sin cambiar cuándo se verifica: un solo comando de cierre que corre todo y muestra solo lo que falla, Playwright nunca en segundo plano con sondeos, y probar si puede correr de a varias ventanas (hoy va de a una). Ahorra pasos y minutos de espera (`research/costo-de-pruebas.md`).
