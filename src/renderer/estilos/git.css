@@ -187,9 +187,6 @@
 .git-commit:hover {
   background: var(--hover);
 }
-.git-commit.elegido {
-  background: var(--sel-fondo);
-}
 .git-commit .via {
   position: relative;
   flex: none;
@@ -205,10 +202,10 @@
   width: 2px;
   background: var(--borde-control);
 }
-.git-commit:first-child .via::before {
+.git-commit:first-of-type .via::before {
   top: 50%;
 }
-.git-commit:last-child .via::before {
+.git-commit:last-of-type .via::before {
   bottom: 50%;
 }
 .git-commit .via::after {
@@ -239,6 +236,28 @@
   color: var(--texto-3);
   font-size: var(--tam-chico);
 }
+/* Los archivos de un commit abierto (R-95): cuelgan de su punto y la vía sigue por al lado hasta el commit de abajo */
+.git-commit-archivos {
+  position: relative;
+}
+.git-commit-archivos:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--esp-2) * 2 + 6px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--borde-control);
+}
+.git-commit-archivos .git-arbol {
+  padding: 0;
+}
+.git-commit-archivos .git-nodo {
+  --nivel: 2;
+}
+.git-commit-archivos .git-nada {
+  padding-left: 44px;
+}
 
 /* Lo elegido, a la derecha */
 .git-visor {
@@ -267,33 +286,12 @@
   font: var(--estilo-codigo);
   color: var(--texto-2);
 }
-.git-cuerpo {
-  margin: 0 0 var(--esp-4);
-  color: var(--texto-2);
-  font: var(--estilo-codigo);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-.git-abre {
-  width: 100%;
-  text-align: left;
-}
-/* biome-ignore lint/style/noDescendingSpecificity: íconos de contenedores distintos, no se pisan */
-.git-abre > .ic {
-  width: 12px;
-  height: 12px;
-  flex: none;
-  color: var(--texto-3);
-  transition: rotate 0.15s var(--sale);
-}
-.git-abre[aria-expanded="true"] > .ic {
-  rotate: 90deg;
-}
-.git-ruta {
+.git-de {
+  min-width: 0;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font: var(--estilo-codigo);
 }
 .git-numeros {
   display: flex;

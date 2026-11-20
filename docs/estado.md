@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I8, las piezas de cada versión, probada en Q-225) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 12 probadas; la 13, Git, espera Q-229; vuelve por D-162) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 13 probadas; los arreglos de Git esperan Q-231; vuelve por D-162) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
@@ -42,10 +42,10 @@
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, al cerrar DI-I3, D-162) | en pausa |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Archivos quedó probada (Q-228); con la tanda 13 **Git** es la de la maqueta, como el panel de VS Code (Q-229). Siguen Scripts y Ajustes; la lupa para buscar un archivo, en T-90.
+**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Archivos y **Git** quedaron probadas (Q-228, Q-229); los comentarios de Git R-95 a R-97 (el visor solo con el archivo elegido) están arreglados y esperan Q-231. Siguen Scripts y Ajustes; la lupa para buscar un archivo, en T-90.
 **Abrir** (D-153) queda en pausa con sus tres iteraciones probadas: el paso 8 y la otra PC (T-87, D-160) vuelven al cerrar DI-I3. **Git al día con GitHub** (D-159) quedó probado en las dos PC (Q-224).
 **Arranque** (D-135): la primera noche no arrancó; arreglado, espera otra noche (Q-227). Después de Diseño, Orden mide la calidad y sigue Plantillas (D-151, D-150).
-Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
+Ideas sin evaluar: T-76, T-78 y T-89. Las pruebas que corren solas después de cada turno (T-91): medido en `research/costo-de-pruebas.md`, espera Q-230. Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
 - **Q-227 — Probá el arranque otra noche**
@@ -56,18 +56,21 @@ Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat 
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…»
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-229 — Probá Git con su forma nueva**
+- **Q-230 — ¿Cómo corren las pruebas de la IA?**
+  Tipo: decisión
+  Contexto: tu idea de que corran solas después de cada turno (T-91), medida en `research/costo-de-pruebas.md`: son el 14 % de los pasos, pero la verificación final encuentra algo en casi la mitad de las conversaciones. Esperar no gasta; lo caro son los pasos. B ahorra más pero el commit, la subida y la prueba saldrían antes de saber si está en verde.
+  Opciones: A) Ordenarlas: un solo comando de cierre que muestra solo lo que falla, Playwright sin segundo plano ni sondeos y de a varias ventanas si se puede (recomendada: ahorra pasos y minutos sin riesgo, y deja listo B) · B) A, y además Iridium las corre sola al terminar cada turno y solo avisa si algo falla · C) Dejarlo como está
+- **Q-231 — Probá el visor de Git**
   Tipo: prueba · Frente: Diseño
-  Contexto: DI-I3, tanda 13 (`modulos/diseno/estado.md` › tanda 13: Git). Antes, Actualizar. Entrá a Git de un proyecto con cambios sin commit.
-  - [ ] Arriba, junto a «Git», está la rama en gris
-  - [ ] El panel de la izquierda se ve como la maqueta: dónde está el repositorio con Sincronizar, el mensaje, Cambios con la letra de cada archivo y el Historial al pie
-  - [ ] Al elegir un archivo, a la derecha se ve su antes y después con las líneas quitadas en rojo y las agregadas en verde
-  - [ ] Al abrir el Historial, cada commit tiene su punto en la línea y al pasar el mouse dice quién, cuándo y cuántos archivos
-  - [ ] «Commit y subir» sin escribir mensaje hace el commit, lo sube y lo dice debajo de Sincronizar
+  Contexto: R-95 a R-97 (`modulos/diseno/estado.md` › Q-229 y los comentarios R-95 a R-97). Antes, Actualizar.
+  - [ ] Al entrar a Git, la derecha está vacía hasta que elijo un archivo
+  - [ ] Al abrir un commit del Historial, sus archivos aparecen debajo de él, a la izquierda, y al elegir uno veo su antes y después
+  - [ ] Si el archivo que miro se guarda en un commit, el visor se cierra solo
+  - [ ] Al sincronizar ya al día, solo dice «Revisado recién», sin «Al día con GitHub» ni «Ya estaba al día»
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño, DI-I3 tanda 14: Scripts como la maqueta (procesar Q-229 si llegó).
+Diseño, DI-I3 tanda 14: Scripts como la maqueta (procesar Q-230 y Q-231 si llegaron).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

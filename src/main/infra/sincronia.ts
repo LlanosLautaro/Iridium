@@ -150,7 +150,8 @@ export async function sincronizar(ruta: string): Promise<ResultadoGit> {
       trajo > 0 ? `trajo ${trajo === 1 ? '1 commit' : `${trajo} commits`}` : '',
       l.adelante > 0 ? `subió ${l.adelante === 1 ? '1 commit' : `${l.adelante} commits`}` : '',
     ].filter(Boolean)
-    return bien(partes.length ? `Sincronizado: ${partes.join(' y ')}.` : 'Ya estaba al día.')
+    // Si ya estaba al día no hay aviso: lo dice «Revisado recién» (R-96).
+    return bien(partes.length ? `Sincronizado: ${partes.join(' y ')}.` : null)
   } catch (e) {
     if (e instanceof SinPrograma) return mal('No se encontró git en la PC.')
     return mal(e instanceof Error ? e.message : String(e))

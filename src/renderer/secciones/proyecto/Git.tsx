@@ -1,10 +1,10 @@
 // Git (H-16, D-041, Q-75), como la maqueta (docs/diseno/pantallas/git.html, DI-I3 tanda 13): el panel de Control de
 // código fuente de VS Code. La rama va en la Cabecera; a la izquierda, dónde está el repositorio (solo en la PC o en
 // GitHub) con Sincronizar o Publicar, el mensaje y Commit y subir (D-159), los cambios con el Árbol (PZ-11) y la letra
-// de cada archivo, y el Historial plegado al pie (R-94). A la derecha, lo elegido: un archivo con su antes y después,
-// o un commit con sus archivos, que muestran el antes y después al abrirlos (Q-61). Crear el repositorio y publicarlo
-// en GitHub (D-081). Se relee sola mientras se mira.
-import { type ReactNode, useCallback, useEffect, useState } from 'react'
+// de cada archivo, y el Historial plegado al pie (R-94), donde cada commit se abre con sus archivos (R-95). A la
+// derecha, solo el antes y después del archivo elegido; sin archivo elegido, el visor queda cerrado (R-97). Crear el
+// repositorio y publicarlo en GitHub (D-081). Se relee sola mientras se mira.
+import { Fragment, type ReactNode, useCallback, useEffect, useState } from 'react'
 import { fechaExacta, fechaRelativa } from '../../../compartido/fechas'
 import type {
   ArchivoGit,
@@ -151,61 +151,29 @@ function Diferencia({ ruta, commit, archivo }: { ruta: string; commit: string; a
   )
 }
 
-/** Los archivos de lo elegido, como Filas; cada uno se abre para ver su antes y después. */
-function ListaArchivos({ ruta, commit, archivos }: { ruta: string; commit: string; archivos: ArchivoGit[] }) {
-  const [abiertos, setAbiertos] = useState<Set<string>>(new Set())
-  // Al cambiar de commit se cierran los archivos abiertos.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `commit` solo dispara el reinicio.
-  useEffect(() => setAbiertos(new Set()), [commit])
-  const alternar = (r: string) =>
-    setAbiertos((a) => {
-      const n = new Set(a)
-      if (n.has(r)) n.delete(r)
-      else n.add(r)
-      return n
+/** Los commits ya leídos con sus archivos: un commit no cambia, se lee una vez. */
+const detalles = new Map<string, DetalleCommit>()
+
+function useDetalleCommit(ruta: string, hash: string | null): DetalleCommit | null {
+  const clave = `${ruta}\n${hash}`
+  const [leido, setLeido] = useState<{ clave: string; d: DetalleCommit } | null>(null)
+  useEffect(() => {
+    if (!hash || detalles.has(clave)) return
+    let vigente = true
+    void window.iridium.commit(ruta, hash).then((r) => {
+      if (r.tipo === 'ok') detalles.set(clave, r)
+      if (vigente) setLeido({ clave, d: r })
     })
-  return (
-    <div className="filas con-lineas git-archivos">
-      {archivos.map((a) => {
-        const abierto = abiertos.has(a.ruta)
-        return (
-          <div key={a.ruta} className="git-archivo">
-            <button
-              type="button"
-              className="fila se-abre git-abre"
-              aria-expanded={abierto}
-              onClick={() => alternar(a.ruta)}
-            >
-              <Icono nombre="chev" />
-              <Letra cambio={a.cambio} />
-              <span className="principal-fila git-ruta" title={a.ruta}>
-                {a.ruta}
-              </span>
-              <Numeros a={a} />
-            </button>
-            {abierto && <Diferencia ruta={ruta} commit={commit} archivo={a.ruta} />}
-          </div>
-        )
-      })}
-    </div>
-  )
+    return () => {
+      vigente = false
+    }
+  }, [ruta, hash, clave])
+  if (!hash) return null
+  return detalles.get(clave) ?? (leido?.clave === clave ? leido.d : null)
 }
 
-function DetalleSinGuardar({ ruta, cambios }: { ruta: string; cambios: ArchivoGit[] }) {
-  return (
-    <section className="git-detalle">
-      <h3 className="git-titulo">Cambios sin guardar</h3>
-      <p className="git-meta">
-        {plural(cambios.length, 'archivo', 'archivos')} distintos del último commit. La IA los guarda en un
-        commit al cerrar su trabajo; lo tuyo, con Commit a la izquierda. Abre uno para ver qué cambió.
-      </p>
-      <ListaArchivos ruta={ruta} commit={SIN_GUARDAR} archivos={cambios} />
-    </section>
-  )
-}
-
-/** Un archivo sin guardar elegido en el panel: su antes y después a la vista, como en VS Code. */
-function DetalleArchivo({ ruta, a, todos }: { ruta: string; a: ArchivoGit; todos: () => void }) {
+/** El archivo elegido, a la derecha: su nombre, de dónde es y su antes y después, como en VS Code (R-95). */
+function DetalleArchivo({ ruta, a, c }: { ruta: string; a: ArchivoGit; c: CommitGit | null }) {
   const partes = a.ruta.split('/')
   return (
     <section className="git-detalle">
@@ -213,62 +181,92 @@ function DetalleArchivo({ ruta, a, todos }: { ruta: string; a: ArchivoGit; todos
       <div className="git-meta">
         {partes.length > 1 && <code>{partes.slice(0, -1).join('/')}/</code>}
         <Letra cambio={a.cambio} />
-        <span>{a.preparado ? 'Preparado para el commit' : 'Sin guardar'}</span>
+        {c ? (
+          <span className="git-de" title={`${c.mensaje}\n${fechaExacta(c.fecha)} · ${autores(c)}`}>
+            <code>{c.corto}</code> {c.mensaje}
+          </span>
+        ) : (
+          <span>{a.preparado ? 'Preparado para el commit' : 'Sin guardar'}</span>
+        )}
         <Numeros a={a} />
-        <button type="button" className="boton sin-fondo chico" onClick={todos}>
-          Ver todos los cambios
-        </button>
       </div>
-      <Diferencia ruta={ruta} commit={SIN_GUARDAR} archivo={a.ruta} />
+      <Diferencia ruta={ruta} commit={c?.hash ?? SIN_GUARDAR} archivo={a.ruta} />
     </section>
   )
 }
 
-function DetalleDeCommit({ ruta, c }: { ruta: string; c: CommitGit }) {
-  const [d, setD] = useState<{ hash: string; d: DetalleCommit } | null>(null)
-  useEffect(() => {
-    let vigente = true
-    void window.iridium.commit(ruta, c.hash).then((r) => vigente && setD({ hash: c.hash, d: r }))
-    return () => {
-      vigente = false
-    }
-  }, [ruta, c.hash])
-  const actual = d?.hash === c.hash ? d.d : null
-  // El resto del mensaje, sin los coautores (ya están arriba).
-  const cuerpo =
-    actual?.tipo === 'ok'
-      ? actual.mensajeCompleto
-          .split('\n')
-          .slice(1)
-          .filter((l) => !/^co-authored-by:/i.test(l.trim()))
-          .join('\n')
-          .trim()
-      : ''
+/** Los archivos de un commit abierto en el Historial, colgando de su punto en la vía (R-95). */
+function ArchivosDeCommit({
+  ruta,
+  hash,
+  elegido,
+  elegir,
+}: {
+  ruta: string
+  hash: string
+  elegido: string | null
+  elegir: (archivo: string) => void
+}) {
+  const d = useDetalleCommit(ruta, hash)
   return (
-    <section className="git-detalle">
-      <h3 className="git-titulo">{c.mensaje}</h3>
-      <p className="git-meta">
-        <code>{c.corto}</code> · {fechaExacta(c.fecha)} · {autores(c)} ·{' '}
-        {plural(c.archivos, 'archivo', 'archivos')}
-      </p>
-      {cuerpo && <pre className="git-cuerpo">{cuerpo}</pre>}
-      {!actual && <div className="git-nota" aria-busy="true" />}
-      {actual?.tipo === 'no-esta' && (
-        <div className="recuadro vacio">Este commit ya no está en el repositorio.</div>
+    <div className="git-commit-archivos" aria-busy={!d}>
+      {d?.tipo === 'no-esta' && <p className="git-nada">Este commit ya no está en el repositorio.</p>}
+      {d?.tipo === 'error' && <p className="git-nada">No se pudo leer: {d.mensaje}</p>}
+      {d?.tipo === 'ok' && d.archivos.length === 0 && (
+        <p className="git-nada">Este commit no cambió archivos.</p>
       )}
-      {actual?.tipo === 'error' && (
-        <div className="recuadro error" role="alert">
-          No se pudo leer: {actual.mensaje}
+      {d?.tipo === 'ok' && d.archivos.length > 0 && (
+        <div className="arbol git-arbol">
+          {d.archivos.map((a) => (
+            <NodoArchivo key={a.ruta} a={a} sel={elegido === a.ruta} elegir={() => elegir(a.ruta)} />
+          ))}
         </div>
       )}
-      {actual?.tipo === 'ok' && actual.archivos.length === 0 && (
-        <div className="recuadro vacio">Este commit no cambió archivos.</div>
-      )}
-      {actual?.tipo === 'ok' && actual.archivos.length > 0 && (
-        <ListaArchivos ruta={ruta} commit={c.hash} archivos={actual.archivos} />
-      )}
-    </section>
+    </div>
   )
+}
+
+/**
+ * La derecha: el antes y después del archivo elegido. Sin archivo, o si el elegido ya no tiene cambios (se guardó en
+ * un commit), el visor se cierra solo (R-97).
+ */
+function Visor({
+  ruta,
+  g,
+  origen,
+  archivo,
+  cerrar,
+}: {
+  ruta: string
+  g: Extract<GitProyecto, { tipo: 'ok' }>
+  origen: string | null
+  archivo: string | null
+  cerrar: () => void
+}) {
+  const c = origen && origen !== SIN_GUARDAR ? (g.historial.find((x) => x.hash === origen) ?? null) : null
+  const d = useDetalleCommit(ruta, c?.hash ?? null)
+  const a = !archivo
+    ? null
+    : origen === SIN_GUARDAR
+      ? (g.cambios.find((x) => x.ruta === archivo) ?? null)
+      : d?.tipo === 'ok'
+        ? (d.archivos.find((x) => x.ruta === archivo) ?? null)
+        : null
+  const leyendo = c !== null && d === null
+  const vencido = archivo !== null && a === null && !leyendo
+  useEffect(() => {
+    if (vencido) cerrar()
+  }, [vencido, cerrar])
+  if (leyendo) return <div className="git-nota" aria-busy="true" />
+  if (a) return <DetalleArchivo key={`${origen}\n${a.ruta}`} ruta={ruta} a={a} c={c} />
+  if (g.cambios.length === 0 && g.historial.length === 0)
+    return (
+      <Vacio
+        titulo="El repositorio está vacío"
+        texto="Todavía no tiene commits ni cambios. Cuando la IA guarde su trabajo, aparece aquí."
+      />
+    )
+  return null
 }
 
 /** Un aviso que ocupa la sección: el repositorio vacío (punteado) o git que no se puede leer (error). */
@@ -355,7 +353,6 @@ function Remoto({
     })
   if (r.sinBajar > 0)
     estado.push({ texto: `${plural(r.sinBajar, 'commit', 'commits')} para bajar`, clase: '' })
-  if (estado.length === 0) estado.push({ texto: `Al día con ${donde}`, clase: '' })
   const s = r.sincronia
   const problema =
     s !== null && (s.resultado === 'separada' || s.resultado === 'choca' || s.resultado === 'error')
@@ -393,14 +390,17 @@ function Remoto({
           {sincronizar.enCurso ? 'Sincronizando…' : `Sincronizar${flechas}`}
         </button>
       </div>
-      <p className="git-estado">
-        {estado.map((e, i) => (
-          <span key={e.texto} className={e.clase}>
-            {i > 0 ? ' · ' : ''}
-            {e.texto}
-          </span>
-        ))}
-      </p>
+      {/* Al día no se dice: alcanza con «Revisado hace…» (R-96). */}
+      {estado.length > 0 && (
+        <p className="git-estado">
+          {estado.map((e, i) => (
+            <span key={e.texto} className={e.clase}>
+              {i > 0 ? ' · ' : ''}
+              {e.texto}
+            </span>
+          ))}
+        </p>
+      )}
       {s && (
         <p className={problema ? 'git-estado ambar' : 'git-estado'} title={fechaExacta(s.cuando)}>
           {textoDeSincronia(s, donde, fechaRelativa(s.cuando, Date.now()))}
@@ -526,8 +526,9 @@ export function Git({ ruta }: { ruta: string }) {
 }
 
 function CuerpoGit({ ruta, g, leer }: { ruta: string; g: GitProyecto | null; leer: () => void }) {
-  const elegido = usarEstado((s) => vistaDe(s.vistas, ruta).commit)
+  const origen = usarEstado((s) => vistaDe(s.vistas, ruta).commit)
   const archivoGit = usarEstado((s) => vistaDe(s.vistas, ruta).archivoGit)
+  const abiertos = usarEstado((s) => vistaDe(s.vistas, ruta).gitAbiertos)
   const plegadas = usarEstado((s) => vistaDe(s.vistas, ruta).gitPlegadas)
   const cambiarVista = usarEstado((s) => s.cambiarVista)
   const [publicando, setPublicando] = useState(false)
@@ -544,6 +545,10 @@ function CuerpoGit({ ruta, g, leer }: { ruta: string; g: GitProyecto | null; lee
     else setAviso({ texto: r.mensaje, error: true })
     leer()
   }
+  const cerrar = useCallback(
+    () => cambiarVista(ruta, { commit: null, archivoGit: null }),
+    [cambiarVista, ruta],
+  )
   const sincronizar = () => {
     setSincronizando(true)
     void window.iridium
@@ -565,14 +570,11 @@ function CuerpoGit({ ruta, g, leer }: { ruta: string; g: GitProyecto | null; lee
   if (g.tipo === 'error')
     return <Vacio error titulo="No se pudo leer el git del proyecto" texto={g.mensaje} />
 
-  // Lo elegido; si no hay nada (o ya no está), los cambios sin guardar o el último commit.
-  const hay = (x: string | null) =>
-    x === SIN_GUARDAR ? g.cambios.length > 0 : g.historial.some((c) => c.hash === x)
-  const sel =
-    elegido && hay(elegido) ? elegido : g.cambios.length > 0 ? SIN_GUARDAR : (g.historial[0]?.hash ?? null)
-  const commit = g.historial.find((c) => c.hash === sel) ?? null
-  const archivo = sel === SIN_GUARDAR ? (g.cambios.find((a) => a.ruta === archivoGit) ?? null) : null
-  const elegir = (x: string, a: string | null = null) => cambiarVista(ruta, { commit: x, archivoGit: a })
+  const elegir = (x: string, a: string) => cambiarVista(ruta, { commit: x, archivoGit: a })
+  const abrirCommit = (h: string) =>
+    cambiarVista(ruta, {
+      gitAbiertos: abiertos.includes(h) ? abiertos.filter((x) => x !== h) : [...abiertos, h],
+    })
   const alternar = (id: string) =>
     cambiarVista(ruta, {
       gitPlegadas: plegadas.includes(id) ? plegadas.filter((x) => x !== id) : [...plegadas, id],
@@ -583,7 +585,7 @@ function CuerpoGit({ ruta, g, leer }: { ruta: string; g: GitProyecto | null; lee
     <NodoArchivo
       key={a.ruta}
       a={a}
-      sel={archivo?.ruta === a.ruta}
+      sel={origen === SIN_GUARDAR && archivoGit === a.ruta}
       elegir={() => elegir(SIN_GUARDAR, a.ruta)}
     />
   )
@@ -656,35 +658,39 @@ function CuerpoGit({ ruta, g, leer }: { ruta: string; g: GitProyecto | null; lee
         >
           {g.historial.length === 0 && <p className="git-nada">Todavía no hay commits.</p>}
           <div className="git-historial">
-            {g.historial.map((c) => (
-              <button
-                key={c.hash}
-                type="button"
-                className={sel === c.hash ? 'git-commit elegido' : 'git-commit'}
-                aria-current={sel === c.hash}
-                title={`${c.mensaje}\n${c.corto} · ${fechaExacta(c.fecha)} · ${autores(c)} · ${plural(c.archivos, 'archivo', 'archivos')}${c.subido === false ? `\nTodavía no está en ${donde}` : ''}`}
-                onClick={() => elegir(c.hash)}
-              >
-                <span className="via" aria-hidden="true" />
-                <span className="msj">{c.mensaje}</span>
-                {c.subido === false && <span className="sin-subir">sin subir</span>}
-                <span className="cuando">{fechaRelativa(c.fecha, ahora)}</span>
-              </button>
-            ))}
+            {g.historial.map((c) => {
+              const abierto = abiertos.includes(c.hash)
+              return (
+                <Fragment key={c.hash}>
+                  <button
+                    type="button"
+                    className="git-commit"
+                    aria-expanded={abierto}
+                    title={`${c.mensaje}\n${c.corto} · ${fechaExacta(c.fecha)} · ${autores(c)} · ${plural(c.archivos, 'archivo', 'archivos')}${c.subido === false ? `\nTodavía no está en ${donde}` : ''}`}
+                    onClick={() => abrirCommit(c.hash)}
+                  >
+                    <span className="via" aria-hidden="true" />
+                    <span className="msj">{c.mensaje}</span>
+                    {c.subido === false && <span className="sin-subir">sin subir</span>}
+                    <span className="cuando">{fechaRelativa(c.fecha, ahora)}</span>
+                  </button>
+                  {abierto && (
+                    <ArchivosDeCommit
+                      ruta={ruta}
+                      hash={c.hash}
+                      elegido={origen === c.hash ? archivoGit : null}
+                      elegir={(a) => elegir(c.hash, a)}
+                    />
+                  )}
+                </Fragment>
+              )
+            })}
           </div>
           {g.hayMas && <p className="git-nada">Se muestran los últimos {g.historial.length}.</p>}
         </Grupo>
       </nav>
       <div className="git-visor">
-        {archivo && <DetalleArchivo ruta={ruta} a={archivo} todos={() => elegir(SIN_GUARDAR)} />}
-        {sel === SIN_GUARDAR && !archivo && <DetalleSinGuardar ruta={ruta} cambios={g.cambios} />}
-        {commit && <DetalleDeCommit key={commit.hash} ruta={ruta} c={commit} />}
-        {!sel && (
-          <Vacio
-            titulo="El repositorio está vacío"
-            texto="Todavía no tiene commits ni cambios. Cuando la IA guarde su trabajo, aparece aquí."
-          />
-        )}
+        <Visor ruta={ruta} g={g} origen={origen} archivo={archivoGit} cerrar={cerrar} />
       </div>
       {publicando && <PublicarGithub ruta={ruta} cerrar={() => setPublicando(false)} listo={listo} />}
     </div>

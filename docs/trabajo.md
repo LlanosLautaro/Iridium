@@ -394,3 +394,7 @@ Al responder una `Q-n` desde Iridium, que la respuesta se guarde en un commit y 
 ## T-90 — Buscar un archivo en Archivos
 Estado: pendiente · Frente: Diseño · Fecha: 2026-11-20 · Origen: DI-I3 (tanda 12) · Idea: IA
 La maqueta de Archivos (`docs/diseno/pantallas/archivos.html`) tiene una lupa en la cabecera: buscar un archivo del proyecto por su nombre. Es una función nueva (hoy no hay cómo buscar), así que la tanda 12 pasó la sección sin ella; va al cerrar DI-I3, con lo que el rediseño cambia además de las piezas (T-58).
+
+## T-91 — Las pruebas corren solas después de cada turno
+Estado: nueva · Idea: usuario · Fecha: 2026-11-20 · Origen: el chat del 2026-11-20
+Que Iridium corra las pruebas al terminar cada turno de la IA y solo le avise si algo falla, para ahorrar los pasos y la espera de la verificación final. Medido en `research/costo-de-pruebas.md`: las pruebas son el 14 % de los pasos, pero la verificación final encuentra algo casi la mitad de las veces. Decisión en Q-230.

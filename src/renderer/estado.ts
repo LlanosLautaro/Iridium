@@ -75,10 +75,12 @@ export interface VistaProyecto {
   carpetas: string[]
   /** El comentario de la Revisión que se ve entero (`R-14`); null = la lista. */
   comentario: string | null
-  /** Lo elegido en Git: un commit, `sin-guardar` o null (lo primero que haya). */
+  /** De dónde es el archivo que Git muestra a la derecha: un commit o `sin-guardar`; null = ninguno (R-95). */
   commit: string | null
-  /** El archivo sin guardar que se mira solo en Git; null = la lista de todos. */
+  /** El archivo que Git muestra a la derecha, con su antes y después; null = el visor cerrado (R-97). */
   archivoGit: string | null
+  /** Los commits del Historial abiertos con sus archivos, como en VS Code (R-95). */
+  gitAbiertos: string[]
   /** Las secciones plegadas del panel de Git (`cambios`, `preparados`, `historial`); el historial, de entrada (R-94). */
   gitPlegadas: string[]
   /** Tocó Nueva: se ve una conversación en blanco que empieza con el primer mensaje o con Seguí. */
@@ -101,6 +103,7 @@ const VISTA_INICIAL: VistaProyecto = {
   comentario: null,
   commit: null,
   archivoGit: null,
+  gitAbiertos: [],
   gitPlegadas: ['historial'],
   enBlanco: false,
   maqueta: null,

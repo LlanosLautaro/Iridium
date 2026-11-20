@@ -162,7 +162,7 @@ describe('con repositorios de verdad', () => {
     expect(r).toEqual({ tipo: 'ok', aviso: 'Sincronizado: trajo 1 commit y subió 2 commits.', web: null })
     expect(git(nube, 'show', 'main:docs/trabajo.md')).toBe('de la otra')
     expect(git(nube, 'show', 'main:docs/ideas.md')).toBe('de esta')
-    expect(await sincronizar(estaPc)).toEqual({ tipo: 'ok', aviso: 'Ya estaba al día.', web: null })
+    expect(await sincronizar(estaPc)).toEqual({ tipo: 'ok', aviso: null, web: null })
   })
 
   it('si las dos PC cambiaron las mismas líneas, no deja nada a medias', async () => {

@@ -152,24 +152,23 @@ test('Git: la rama, lo sin guardar, el historial y el antes y después de un arc
   await expect(commits.nth(0)).toHaveAttribute('title', /2 archivos/)
   await expect(commits.nth(0)).not.toContainText('sin subir')
   await expect(commits.nth(1)).toContainText('I-1: importar fotos')
-  // De entrada, todos los cambios sin guardar: la lista, sin el antes y después hasta abrir uno (Q-61).
-  await expect(g.locator('.git-detalle h3')).toHaveText('Cambios sin guardar')
-  await expect(g.locator('.git-archivo')).toHaveCount(2)
+  // De entrada, el visor está cerrado: los archivos están a la izquierda (R-95, R-97).
+  await expect(g.locator('.git-detalle')).toHaveCount(0)
   await expect(g.locator('.git-dif')).toHaveCount(0)
-  await g.locator('.git-abre', { hasText: 'docs/estado.md' }).click()
+
+  // Un archivo elegido en el panel muestra su antes y después a la derecha.
+  await seccion('Cambios').locator('.git-nodo', { hasText: 'estado.md' }).click()
+  await expect(g.locator('.git-detalle h3')).toHaveText('estado.md')
+  await expect(g.locator('.git-detalle .git-meta')).toContainText('Sin guardar')
   await expect(g.locator('.git-dif .quitada')).toContainText('Terminar I-2.')
   await expect(g.locator('.git-dif .agregada')).toContainText('Probar I-2 con el usuario.')
   await expect(g.locator('.git-dif .quitada .signo')).toHaveText('−')
   await expect(g.locator('.git-dif .agregada .signo')).toHaveText('+')
-
-  // Un archivo elegido en el panel se ve solo, con su antes y después a la vista; «Ver todos» vuelve a la lista.
   await seccion('Cambios').locator('.git-nodo', { hasText: 'etiquetas.ts' }).click()
   await expect(g.locator('.git-detalle h3')).toHaveText('etiquetas.ts')
   await expect(g.locator('.git-dif .agregada')).toHaveCount(1)
   await expect(seccion('Cambios').locator('.git-nodo.elegido')).toContainText('etiquetas.ts')
   await win.screenshot({ path: 'test-results/i5-sin-guardar.png' })
-  await g.getByRole('button', { name: 'Ver todos los cambios' }).click()
-  await expect(g.locator('.git-detalle h3')).toHaveText('Cambios sin guardar')
 
   // Las secciones se pliegan y se despliegan.
   await seccion('Cambios').locator('h3 button').click()
@@ -178,18 +177,23 @@ test('Git: la rama, lo sin guardar, el historial y el antes y después de un arc
   await seccion('Cambios').locator('h3 button').click()
   await expect(seccion('Cambios').locator('.git-nodo')).toHaveCount(2)
 
-  // El último commit de la IA: mensaje, autor con Claude, archivos y el antes y después al abrir uno.
+  // Un commit se abre en el Historial con sus archivos (R-95); uno elegido, su antes y después a la derecha.
   await commits.nth(0).click()
-  await expect(g.locator('.git-detalle h3')).toHaveText('I-2: la galería en cuatro columnas (D-12)')
-  await expect(g.locator('.git-detalle .git-meta')).toContainText('Lautaro con Claude Opus 5.5')
-  await expect(g.locator('.git-archivo')).toHaveCount(2)
-  await expect(g.locator('.git-archivo', { hasText: 'src/galeria.ts' }).locator('.git-numeros')).toContainText('+2')
-  await expect(g.locator('.git-archivo', { hasText: 'src/galeria.ts' }).locator('.git-numeros')).toContainText('−1')
-  await expect(g.locator('.git-dif')).toHaveCount(0)
-  await g.locator('.git-abre', { hasText: 'src/galeria.ts' }).click()
+  await expect(commits.nth(0)).toHaveAttribute('aria-expanded', 'true')
+  const delCommit = historial.locator('.git-commit-archivos .git-nodo')
+  await expect(delCommit).toHaveCount(2)
+  await delCommit.filter({ hasText: 'galeria.ts' }).click()
+  await expect(g.locator('.git-detalle h3')).toHaveText('galeria.ts')
+  await expect(g.locator('.git-detalle .git-meta')).toContainText('I-2: la galería en cuatro columnas (D-12)')
+  await expect(g.locator('.git-detalle .git-numeros')).toContainText('+2')
+  await expect(g.locator('.git-detalle .git-numeros')).toContainText('−1')
   await expect(g.locator('.git-dif .quitada')).toHaveText(/export const columnas = 3/)
   await expect(g.locator('.git-dif .agregada').first()).toContainText('export const columnas = 4')
   await win.screenshot({ path: 'test-results/i5-commit.png' })
+
+  // El archivo sin guardar elegido que pasa a un commit cierra el visor (R-97).
+  await seccion('Cambios').locator('.git-nodo', { hasText: 'estado.md' }).click()
+  await expect(g.locator('.git-detalle h3')).toHaveText('estado.md')
 
   // Nada deshace ni descarta: lo que cambia el repositorio es Publicar en GitHub (D-081) y Commit (D-159).
   const botones = await g.locator('button').allTextContents()
@@ -202,8 +206,8 @@ test('Git: la rama, lo sin guardar, el historial y el antes y después de un arc
   await expect(commits.first()).toContainText('I-2: estado al día', { timeout: 10_000 })
   await expect(seccion('Cambios').locator('h3')).toContainText('0')
   await expect(seccion('Cambios')).toContainText('Nada sin guardar: todo está en commits.')
-  // Lo elegido sigue elegido.
-  await expect(g.locator('.git-detalle h3')).toHaveText('I-2: la galería en cuatro columnas (D-12)')
+  await expect(g.locator('.git-detalle')).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/r97-visor-cerrado.png' })
   await app.close()
 })
 
@@ -303,7 +307,8 @@ test('Git: crear el repositorio y publicarlo en GitHub (D-081)', async () => {
   await d.getByRole('button', { name: 'Publicar' }).click()
   await expect(d).toBeHidden()
   await expect(g.locator('.git-remoto')).toContainText('En GitHub · prueba/Beta')
-  await expect(g.locator('.git-remoto')).toContainText('Al día con GitHub')
+  // Al día no se dice (R-96).
+  await expect(g.locator('.git-remoto')).not.toContainText('Al día')
   await win.screenshot({ path: 'test-results/d081-publicado.png' })
   await app.close()
 })
@@ -347,14 +352,16 @@ test('Git: trae solo lo de la otra PC al entrar, y Commit y subir (D-159)', asyn
       'Cambios en estado.md y etiquetas.ts',
     )
     await expect(g.locator('.git-mensaje')).toHaveCount(0)
-    await expect(g.locator('.git-remoto')).toContainText('Al día con el remoto')
+    await expect(g.locator('.git-remoto')).not.toContainText('Al día')
     expect(
       execFileSync('git', ['log', '-1', '--format=%s', 'master'], { cwd: nube, encoding: 'utf8' }).trim(),
     ).toBe('Cambios en estado.md y etiquetas.ts')
 
-    // Sincronizar, ya al día.
+    // Sincronizar, ya al día: no hay aviso, alcanza con «Revisado recién» (R-96).
     await g.getByRole('button', { name: /^Sincronizar/ }).click()
-    await expect(g.locator('.git-aviso')).toContainText('Ya estaba al día.')
+    await expect(g.getByRole('button', { name: /^Sincronizar/ })).toBeEnabled()
+    await expect(g.locator('.git-aviso')).toHaveCount(0)
+    await expect(g.locator('.git-remoto')).toContainText('Revisado recién')
     await win.screenshot({ path: 'test-results/d159-subido.png' })
     await app.close()
   } finally {
