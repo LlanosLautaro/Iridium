@@ -378,3 +378,7 @@ En la Bandeja de entrada, la Señal «Respondida, sin procesar» de una pregunta
 ## T-86 — El aviso «Mientras no estabas» suma las apps que se armaron solas
 Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: D-156
 Lo que el diseño técnico dejó como «Should, más adelante»: al volver, el aviso del Arranque dice también qué apps se armaron de noche y cuáles fallaron.
+
+## T-87 — Que la app instalada en otra PC también se ponga al día
+Estado: nueva · Frente: Abrir · Fecha: 2026-11-19 · Origen: Q-222 · Idea: IA
+La actualización automática arma e instala en la PC donde está el código; en otra PC sin el código la versión nueva se publicó y se bajó a mano. Cómo llevarla allá, Q-223.

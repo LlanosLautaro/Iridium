@@ -79,6 +79,7 @@ export function carpetaDeArmado(datos: string, ruta: string): string {
 export const LOG_ARMADO = 'armado.log'
 const FIN = 'fin'
 const LANZADOR = 'armar.cmd'
+const COMANDO = 'comando.cmd'
 
 /**
  * Si la app está abierta (D-156 › 3): un programa que corre tiene su `.exe` trabado. Se abre para escribir sin
@@ -128,7 +129,9 @@ export async function gitDeArmado(
 /**
  * Lanza el armado escondido y suelto (D-156 › 6): sigue si Iridium se cierra. Un `armar.cmd` en la carpeta del armado
  * corre el comando (con `call`, que vale para `npm` y para un `.exe`), escribe todo en `armado.log` y deja la marca de
- * fin (`ok` o `falla`). Lo abre `Start-Process` con la ventana escondida: lo que lance comparte esa consola escondida.
+ * fin (`ok` o `falla`). El comando va solo en `comando.cmd`: así el log junta la salida de todo lo encadenado con `&&`
+ * (armar el instalador y correrlo, D-158), no solo la del último. Lo abre `Start-Process` con la ventana escondida:
+ * lo que lance comparte esa consola escondida.
  * Devuelve el proceso, para cortarlo.
  */
 export async function lanzarArmado(carpeta: string, comando: string, cwd: string): Promise<number> {
@@ -137,6 +140,8 @@ export async function lanzarArmado(carpeta: string, comando: string, cwd: string
   const log = join(carpeta, LOG_ARMADO)
   const fin = join(carpeta, FIN)
   const lanzador = join(carpeta, LANZADOR)
+  const soloComando = join(carpeta, COMANDO)
+  await writeFile(soloComando, ['@echo off', `call ${comando}`, ''].join('\r\n'), 'utf8')
   await writeFile(
     lanzador,
     [
@@ -144,7 +149,7 @@ export async function lanzarArmado(carpeta: string, comando: string, cwd: string
       'chcp 65001 >nul',
       `cd /d "${cwd}"`,
       `echo ^> ${comando.replace(/[&|<>^]/g, '^$&')}> "${log}"`,
-      `call ${comando} >> "${log}" 2>&1`,
+      `call "${soloComando}" >> "${log}" 2>&1`,
       `if errorlevel 1 (echo falla> "${fin}") else (echo ok> "${fin}")`,
       '',
     ].join('\r\n'),

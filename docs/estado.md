@@ -39,10 +39,10 @@
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
-| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 y AB-I2 probadas; AB-I3, tu app instalada, espera Q-222) | en curso |
+| Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; la otra PC, Q-223) | en curso |
 
 ## En qué estamos ahora
-**Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos tienen la marca (D-157) y las dos iteraciones salieron bien (Q-221). AB-I3 (D-158): tu app instalada se abre y se actualiza sola, con la ruta de su `.exe` desde una variable de Windows; espera tu prueba (Q-222).
+**Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos tienen la marca (D-157) y las dos iteraciones salieron bien (Q-221). AB-I3 (D-158), tu app instalada, probada en Q-222: en esta PC se armó e instaló sola; en la otra PC, sin el código, fue a mano: cómo llevarla allá, Q-223 (T-87).
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
 El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: versión al día publicada y abierta por la otra persona (Q-185).
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -56,17 +56,14 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-222 — Probá Ejecutar y la actualización de tu app instalada**
-  Tipo: prueba · Frente: Abrir
-  Contexto: `modulos/abrir/estado.md` › AB-I3. Antes, que tu Iridium tenga la versión de hoy (Actualizar). Su proyecto tiene cambios sin commitear de su IA: mientras estén así no se actualiza sola (D-156); pedile a esa IA que los cierre.
-  - [ ] En el menú de su tarjeta está «Ejecutar» con su nombre, y abre la app instalada (la de siempre, con tus datos)
-  - [ ] En sus Scripts, «Abrir la carpeta de la extensión» abre la carpeta (antes decía que no se encontraba)
-  - [ ] Con sus cambios commiteados y la app cerrada, en unos minutos se vio «Actualizando…» en la tarjeta (tarda más: arma el instalador) y después se fue, sin ventanas
-  - [ ] Al abrirla, es la versión nueva y tus datos siguen ahí; la extensión anda después de recargarla en Brave
+- **Q-223 — ¿Cómo se pone al día tu app en la otra PC?**
+  Tipo: decisión · Frente: Abrir
+  Contexto: `modulos/abrir/estado.md` › AB-I3 › Prueba. En esta PC sí se actualizó sola: a las 19:50, dos minutos después del commit, Iridium armó e instaló la versión nueva sin ventanas. La otra PC no tiene el código, así que no hay nada que armar ahí; por eso la publicaste y la bajaste a mano. El instalador tiene siempre el mismo nombre: las copias que se juntan son las descargas del navegador.
+  Opciones: A) Que la app se actualice sola al abrirse, desde sus versiones publicadas, como Iridium con D-085: la publica acá después de armarla y la otra PC no necesita nada más; hay que sumarle la pieza que se actualiza a esa app y publicar sus versiones (recomendada: sirve para cualquier app tuya y la otra PC no necesita el código ni herramientas) · B) Que Iridium la ponga al día también en la otra PC: con el proyecto clonado ahí, trae los commits y la arma como acá; necesita el código y las herramientas para armar en esa PC · C) Dejarla a mano en la otra PC: publicás y bajás como hoy
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Abrir: el paso 8 (calidad) del frente; con la respuesta de Q-222, cerrar AB-I3.
+Abrir: el paso 8 (calidad) del frente; con la respuesta de Q-223, ubicar T-87 (la otra PC) en la ruta.
 **Leer antes:** `modulos/abrir/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

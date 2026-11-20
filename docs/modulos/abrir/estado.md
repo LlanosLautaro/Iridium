@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-217, D-155) | `ux.md` |
 | 5. Diseño técnico | hecho (D-156) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (el menú, la Señal, el Campo y el Aviso ya existen, D-156) | — |
-| 7. Construcción | en curso (AB-I1 y AB-I2 probadas en Q-221; AB-I3 hecha, espera tu prueba, Q-222) | este archivo |
+| 7. Construcción | en curso (AB-I1, AB-I2 y AB-I3 probadas; la otra PC, Q-223) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156). AB-I1 construida: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con el aviso de AB-2. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca; cómo marcarlos, Q-219. AB-I2 construida: las apps de escritorio se arman solas, de a una y escondidas, con la Señal en la tarjeta y Ajustes › Este proyecto. Tus proyectos marcados (D-157); las dos, probadas en Q-221. AB-I3 (D-158): la app que se usa instalada se abre y se actualiza sola, con la ruta de su `.exe` empezando por una variable de Windows; espera tu prueba (Q-222).
+Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156). AB-I1 construida: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con el aviso de AB-2. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca; cómo marcarlos, Q-219. AB-I2 construida: las apps de escritorio se arman solas, de a una y escondidas, con la Señal en la tarjeta y Ajustes › Este proyecto. Tus proyectos marcados (D-157); las dos, probadas en Q-221. AB-I3 (D-158): la app que se usa instalada se abre y se actualiza sola, con la ruta de su `.exe` empezando por una variable de Windows; probada en Q-222: en esta PC se armó e instaló sola. Falta la otra PC, que no tiene el código (T-87, Q-223).
 
 ## Ruta
 - [x] Pensar qué resuelve y por qué va primero
@@ -31,7 +31,8 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - [x] Marcar tus proyectos (D-157)
 - [x] Probar Ejecutar y la actualización con una app tuya (Q-221)
   - [ ] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86)
-- [ ] Abrir y actualizar sola tu app que se usa instalada (AB-I3, Q-222)
+- [x] Abrir y actualizar sola tu app que se usa instalada (AB-I3)
+  - [ ] Ponerla al día también en la otra PC (T-87, Q-223)
 - [ ] Revisar que Ejecutar y la actualización sean confiables
 
 ## Cambios requeridos en documentos generales
@@ -49,7 +50,7 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 |---|---|---|
 | AB-I1 | Abrir: la marca en `scripts.md` (framework, lector y control) y el botón en la tarjeta y en el proyecto | hecho (probada en Q-221) |
 | AB-I2 | Actualización automática: armar solas, sin IA, las apps de escritorio con cambios, cerradas y sin IA trabajando | hecho (probada en Q-221) |
-| AB-I3 | La app que se usa instalada: abrirla y actualizarla sola, con la ruta de su `.exe` desde una variable de Windows | en curso (hecha; espera Q-222) |
+| AB-I3 | La app que se usa instalada: abrirla y actualizarla sola, con la ruta de su `.exe` desde una variable de Windows | hecho (probada en Q-222; la otra PC, T-87) |
 
 ## Log de iteraciones
 ### AB-I1 — Ejecutar — 2026-11-19
@@ -70,8 +71,9 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - **Hecho:** `core/visor/scripts.ts` reconoce una ruta que empieza con una variable de Windows (`rutaConVariable`) y una ruta fija (`esRutaFija`); `app/visor.ts` › `rutaDeScript` da la ruta completa (la variable, sin distinguir mayúsculas, o la carpeta del proyecto) y la usan Scripts, Ejecutar y el plan de armado (`app/abrir.ts`), así la actualización vigila el `.exe` instalado. El control avisa una ruta fija en `ejecutar · escritorio`. El framework (`SKILL.md` › Los scripts) dice cómo se marca una app instalada y su `armar` (armar el instalador y correrlo con `/S`). Marcada tu app instalada (en su repo, solo `docs/scripts.md`, con su commit): «Abrir» con la ruta instalada y «Actualizar» que arma el instalador y lo instala sin ventanas; quedaron ocho scripts (los dos que hacían la mitad de eso se sacaron). El lector, con los archivos reales, da el `.exe` instalado de esta PC y el comando.
 - **De paso:** **Abrir:** con una variable (la carpeta de una extensión instalada) decía «No se encuentra»; ahora abre.
 - **Criterios verificados:** `tests/ab3-instalada.test.ts` (8: la variable, la ruta fija, la ruta completa, el control, el plan de armado con el `.exe` instalado, Ejecutar sin instalar y ya instalada, Abrir con variable). `pnpm test` (881), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` (143) sin errores; el control, 0 avisos aquí y en los dos proyectos marcados. Instalar de verdad queda para tu prueba.
-- **Prueba:** Q-222.
+- **Prueba:** Q-222 (2026-11-19): Ejecutar, Abrir la carpeta de la extensión y la versión nueva con los datos y la extensión, bien. «Actualizando…» quedó sin marcar: la versión nueva se publicó y se bajó a mano en la otra PC. En esta PC sí anduvo: el registro de armados dice que Iridium armó el instalador y lo instaló sin ventanas de 19:46 a 19:50, dos minutos después del commit de las 19:44, y Windows tiene instalada esa versión. El instalador tiene siempre el mismo nombre, así que acá no se acumulan copias. Lo que falta es la otra PC, que no tiene el código: T-87, con la decisión en Q-223.
+- **Arreglado de paso:** con un comando encadenado (`armar el instalador && correrlo`), `armado.log` guardaba solo la salida del último; ahora el comando va en su propio `comando.cmd` y el log tiene todo (`tests/ab2-armados.test.ts`, que falla sin el arreglo).
 
 ## Próximo paso
-Con Q-222, cerrar AB-I3 (o arreglar lo que falle). Mientras, el paso 8 (calidad) del frente: AB-I1 y AB-I2 ya están probadas.
-**Leer antes:** `docs/respuestas/Q-222.md`; para la calidad, `referencias/08-calidad.md` del framework y `ux.md` › AB-1 a AB-4.
+El paso 8 (calidad) del frente: AB-I1, AB-I2 y AB-I3 están probadas. Con Q-223, ubicar T-87 (la otra PC) en la ruta.
+**Leer antes:** `referencias/08-calidad.md` del framework y `ux.md` › AB-1 a AB-4.
