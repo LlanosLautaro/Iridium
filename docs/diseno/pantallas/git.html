@@ -8,7 +8,7 @@
 <style>
   /* El panel de Control de código fuente de VS Code (R-44): el mensaje, Confirmar, los cambios plegables con la letra
      de cada archivo y sus acciones al pasar el mouse, y el gráfico de commits. A la derecha, el cambio del archivo. */
-  .dos-col { display: grid; grid-template-columns: 340px 1fr; height: 100%; }
+  .dos-col { display: grid; grid-template-columns: var(--ancho-panel-git) 1fr; height: 100%; }
   .scm { border-right: 1px solid var(--borde); overflow: auto; display: flex; flex-direction: column; font-size: var(--tam-base); }
   .scm-cab { display: flex; align-items: center; gap: 2px; height: 36px; padding: 0 var(--esp-2) 0 var(--esp-4); color: var(--texto-3); font-size: var(--tam-chico); }
   .scm-cab .t { margin-right: auto; }

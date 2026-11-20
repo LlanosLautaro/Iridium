@@ -28,7 +28,7 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Diseño › Sistema | Un proyecto | pantallas/diseno-sistema.html | — |
 | Docs | Un proyecto | pantallas/docs.html | 2026-11-18 20:15 |
 | Archivos | Un proyecto | pantallas/archivos.html | 2026-11-20 15:18 |
-| Git | Un proyecto | pantallas/git.html | — |
+| Git | Un proyecto | pantallas/git.html | 2026-11-20 17:30 |
 | Scripts | Un proyecto | pantallas/scripts.html | — |
 | Conversaciones anteriores | La conversación | pantallas/conversaciones.html | — |
 | La IA no respondió | La conversación | pantallas/error-ia.html | — |

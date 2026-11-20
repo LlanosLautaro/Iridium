@@ -18,28 +18,30 @@ export function SinRepositorio({ ruta, listo }: { ruta: string; listo: (r: Resul
     listo(r)
   }
   return (
-    <div className="vacia">
-      <div className="sin-repo">
-        <b>Este proyecto no usa git</b>
-        No tiene su propio repositorio, así que no hay historial ni cambios para mostrar. Si lo creás, todo lo
-        que hay se guarda en un primer commit; las dependencias y los archivos con claves (como .env) quedan
-        afuera.
-        <div className="acc">
-          <button
-            type="button"
-            className="boton principal chico"
-            disabled={trabajando}
-            onClick={() => void crear()}
-          >
-            {trabajando ? 'Creando…' : 'Inicializar repositorio'}
-          </button>
+    <div className="git-vacio">
+      <div className="recuadro punteado">
+        <div className="cuerpo-recuadro">
+          <strong>Este proyecto no usa git</strong>
+          No tiene su propio repositorio, así que no hay historial ni cambios para mostrar. Si lo creas, todo
+          lo que hay se guarda en un primer commit; las dependencias y los archivos con claves (como .env)
+          quedan afuera.
+          <div className="acciones-recuadro">
+            <button
+              type="button"
+              className="boton principal"
+              disabled={trabajando}
+              onClick={() => void crear()}
+            >
+              {trabajando ? 'Creando…' : 'Inicializar repositorio'}
+            </button>
+          </div>
         </div>
-        {error && (
-          <p className="error-git" role="alert">
-            {error}
-          </p>
-        )}
       </div>
+      {error && (
+        <div className="recuadro error" role="alert">
+          {error}
+        </div>
+      )}
     </div>
   )
 }

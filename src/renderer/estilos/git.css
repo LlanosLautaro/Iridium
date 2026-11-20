@@ -1,458 +1,378 @@
-/* Git (H-16): la rama, lo sin guardar y el historial a la izquierda; lo elegido con sus archivos a la derecha. El panel
-   y sus filas, con la forma de antes hasta que Git pase a las piezas (DI-I3; Archivos pasó en la tanda 12) */
-.partida {
+/* Git (H-16), como la maqueta (docs/diseno/pantallas/git.html, DI-I3 tanda 13): el panel de Control de código fuente
+   de VS Code a la izquierda (dónde está, el mensaje, los cambios con el Árbol y el historial al pie) y lo elegido a la
+   derecha, con el antes y después. Los botones, los recuadros, las filas y el árbol son las piezas. */
+.git-cols {
   flex: 1;
-  display: grid;
-  grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
   min-height: 0;
+  display: grid;
+  grid-template-columns: var(--ancho-panel-git) minmax(0, 1fr);
 }
-.arbol-lista {
-  overflow: auto;
-  padding: 6px 0 20px;
-  border-right: 1px solid var(--borde);
-  background: color-mix(in oklab, var(--lateral) 50%, var(--fondo));
-}
-.arbol-lista h3 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 32px;
-  padding: 4px 8px 4px 14px;
-  font: 600 12px / 1.2 var(--ui);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--texto-3);
-}
-.arbol-nodo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  height: 26px;
-  padding: 0 10px 0 calc(8px + var(--n, 0) * 14px);
-  color: var(--texto-2);
-  text-align: left;
-  white-space: nowrap;
-}
-.arbol-nodo.sel {
-  background: var(--sel-fondo);
-  color: var(--texto);
-}
-.arbol-nodo .ic {
-  width: 14px;
-  height: 14px;
-  color: var(--texto-3);
-}
-.arbol-nodo .nombre {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.arbol-nodo.vacio {
-  padding-left: calc(28px + var(--n, 0) * 14px);
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.visor {
-  overflow: auto;
-  min-width: 0;
+.git-panel {
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  border-right: 1px solid var(--borde-suave);
 }
-.partida.git .arbol-lista {
-  display: flex;
-  flex-direction: column;
-  padding-block: 0;
-}
-.partida.git .arbol-lista > * {
+.git-panel > * {
   flex-shrink: 0;
 }
-/* El historial, al pie del panel (R-94): baja todo lo que sobra; si no entra, sigue a lo de arriba */
-.plegable.al-pie {
-  margin-top: auto;
+.git-rama {
+  font: var(--estilo-codigo);
 }
-.rama {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 40px;
-  padding: 8px 14px 4px;
-  color: var(--texto-2);
-}
-.rama .ic {
-  width: 14px;
-  height: 14px;
-  color: var(--texto-3);
-}
-.rama b {
-  font-family: var(--mono);
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.rama .sub {
+.git-rama.ambar {
   color: var(--espera);
-  font-size: var(--tam-chico);
-}
-.arbol-lista h3 span {
-  font-family: var(--mono);
-  letter-spacing: 0;
-}
-.commit {
-  display: block;
-  width: 100%;
-  padding: 7px 14px 7px 12px;
-  border-left: 2px solid transparent;
-  text-align: left;
-}
-.commit:hover {
-  background: var(--hover);
-}
-.commit.sel {
-  background: var(--sel-fondo);
-  border-left-color: var(--primario);
-}
-.commit b {
-  display: block;
-  overflow: hidden;
-  font-weight: 500;
-  color: var(--texto);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.commit small {
-  display: block;
-  overflow: hidden;
-  color: var(--texto-3);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.commit small code {
-  font: 12px var(--mono);
 }
 
-.git-det {
-  padding: 16px 20px 40px;
+/* Dónde está el repositorio, con Sincronizar o Publicar (D-159, D-081) */
+.git-remoto {
+  padding: var(--esp-2) var(--esp-2) var(--esp-2) var(--esp-4);
 }
-.git-det h2 {
-  margin-bottom: 4px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--texto);
-  overflow-wrap: anywhere;
-}
-.git-det .meta {
-  margin-bottom: 14px;
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.git-det .meta code {
-  font: 12px var(--mono);
-  color: var(--texto-2);
-}
-.git-det .cuerpo {
-  margin: -4px 0 16px;
-  padding: 10px 12px;
-  border: 1px solid var(--borde-suave);
-  border-radius: var(--radio-bloque);
-  background: var(--caja);
-  color: var(--texto-2);
-  font: 12.5px / 1.55 var(--mono);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-.archivos-git {
-  padding: 0;
-  list-style: none;
-}
-.arch {
-  margin-bottom: 8px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-bloque);
-  overflow: hidden;
-}
-.arch > button {
+.git-donde {
   display: flex;
   align-items: center;
-  gap: 8px;
-  width: 100%;
-  min-height: 34px;
-  padding: 0 12px;
-  background: var(--caja);
-  text-align: left;
+  gap: var(--esp-2);
+  min-height: var(--alto-control-chico);
+  color: var(--texto-2);
+  font-size: var(--tam-chico);
 }
-.arch > button:hover {
-  background: var(--hover);
-}
-.arch > button .chev {
-  display: grid;
-  place-items: center;
-  width: 12px;
+.git-donde > .ic {
+  width: 14px;
+  height: 14px;
   flex: none;
-}
-.arch > button .chev .ic {
-  width: 12px;
-  height: 12px;
   color: var(--texto-3);
-  transition: rotate 0.15s var(--sale);
 }
-.arch > button[aria-expanded="true"] .chev .ic {
-  rotate: 90deg;
-}
-.arch .ruta {
+.git-donde .t {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  color: var(--texto);
-  font: 12.5px var(--mono);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.letra {
-  flex: none;
-  width: 14px;
-  font: 600 12px / 1 var(--mono);
-  text-align: center;
-}
-.letra.nuevo {
-  color: var(--ok);
-}
-.letra.modificado,
-.letra.otro {
-  color: var(--espera);
-}
-.letra.borrado {
-  color: var(--error);
-}
-.git-cuenta {
-  display: flex;
-  gap: 8px;
-  flex: none;
-  color: var(--texto-3);
-  font: 600 12px var(--mono);
-}
-.git-cuenta .mas {
-  color: var(--ok);
-}
-.git-cuenta .menos {
-  color: var(--error);
-}
-
-.dif {
-  border-top: 1px solid var(--borde);
-  overflow: auto;
-  max-height: 70vh;
-}
-.dif table {
-  min-width: 100%;
-  border-collapse: collapse;
-  font: 12.5px / 1.6 var(--mono);
-}
-.dif td {
-  padding: 0;
-  vertical-align: top;
-  white-space: pre;
-}
-.dif .num {
-  width: 1%;
-  min-width: 40px;
-  padding: 0 8px;
-  color: var(--texto-3);
-  opacity: 0.7;
-  text-align: right;
-  user-select: none;
-}
-.dif .signo {
-  width: 18px;
-  padding-left: 4px;
-  font-weight: 600;
-  user-select: none;
-}
-.dif .txt {
-  padding-right: 16px;
-}
-.dif .igual .txt {
-  color: var(--texto-2);
-}
-.dif .agregada {
-  background: color-mix(in oklab, var(--ok) 11%, var(--fondo));
+.git-donde a {
   color: var(--texto);
-}
-.dif .agregada .signo {
-  color: var(--ok);
-}
-.dif .quitada {
-  background: color-mix(in oklab, var(--error) 11%, var(--fondo));
-  color: var(--texto);
-}
-.dif .quitada .signo {
-  color: var(--error);
-}
-.dif .tramo td {
-  padding: 2px 12px;
-  background: var(--caja);
-  color: var(--texto-3);
-}
-.dif-msg {
-  min-height: 34px;
-  padding: 8px 12px;
-  border-top: 1px solid var(--borde-suave);
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-}
-.git-det > .dif-msg {
-  border-top: 0;
-  padding-left: 0;
-}
-
-/* El panel como el de VS Code (Q-75): dónde está el repositorio y secciones que se pliegan */
-.remoto {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 2px 14px 10px;
-  border-bottom: 1px solid var(--borde-suave);
-}
-/* biome-ignore lint/style/noDescendingSpecificity: íconos de contenedores distintos, no se pisan */
-.remoto > .ic {
-  flex: none;
-  width: 14px;
-  height: 14px;
-  margin-top: 2px;
-  color: var(--texto-3);
-}
-.remoto > div {
-  min-width: 0;
-}
-.remoto b {
-  display: block;
-  overflow: hidden;
-  color: var(--texto-2);
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.remoto a,
-.remoto .nombre {
-  color: var(--texto);
-}
-.remoto a {
   text-decoration: underline dotted;
   text-underline-offset: 3px;
 }
-.remoto a:hover {
-  color: var(--primario-texto);
-}
-.remoto small {
-  display: block;
+.git-estado {
+  margin: 0;
+  padding-left: 22px;
+  font: var(--estilo-meta);
   color: var(--texto-3);
-  font-size: 12px;
 }
-.remoto small .espera {
+.git-estado .ambar,
+.git-estado.ambar {
   color: var(--espera);
 }
-.remoto small .ok {
-  color: var(--ok);
-}
-.plegable h3 {
-  padding: 0;
-  min-height: 0;
-}
-.plegable h3 button {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  min-height: 30px;
-  padding: 4px 12px 4px 8px;
-  color: inherit;
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-}
-.plegable h3 button:hover {
-  color: var(--texto-2);
-}
-.plegable h3 .chev {
-  display: grid;
-  place-items: center;
-  width: 12px;
-}
-/* biome-ignore lint/style/noDescendingSpecificity: íconos de contenedores distintos, no se pisan */
-.plegable h3 .chev .ic {
-  width: 12px;
-  height: 12px;
-  transition: rotate 0.15s var(--sale);
-}
-.plegable h3 button[aria-expanded="true"] .chev .ic {
-  rotate: 90deg;
-}
-.plegable h3 .n {
-  margin-left: auto;
-}
-.plegable + .plegable {
-  border-top: 1px solid var(--borde-suave);
-}
-.fila-git {
-  padding-left: 26px;
-}
-.fila-git .dir {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--texto-3);
-  font-size: 12px;
-  text-overflow: ellipsis;
-}
-.fila-git .nombre {
-  flex: none;
-  max-width: 60%;
-}
-.fila-git .letra {
-  margin-left: auto;
-}
-.fila-git:hover {
-  background: var(--hover);
-}
-.commit .sin-subir {
-  color: var(--espera);
-}
-.arch-cab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  padding: 0 12px;
-  background: var(--caja);
+.git-aviso {
+  padding: 0 var(--esp-3) var(--esp-3);
 }
 
-/* Crear el repositorio y publicarlo en GitHub (D-081) */
-.sin-repo {
-  max-width: 460px;
+/* El mensaje y Commit y subir (D-159), como el cuadro de VS Code */
+.git-mensaje {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  padding: 0 var(--esp-3) var(--esp-3);
 }
-.sin-repo .acc {
-  margin-top: 14px;
+.git-mensaje textarea {
+  min-height: var(--alto-campo);
+  resize: vertical;
 }
+.git-mensaje > button {
+  justify-content: center;
+}
+
+/* Preparados, Cambios e Historial: grupos que se pliegan, con la cuenta a la derecha */
+.git-grupo h3 {
+  margin: 0;
+}
+.git-pliega {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-1);
+  width: 100%;
+  height: var(--alto-nodo);
+  padding: 0 var(--esp-3) 0 var(--esp-2);
+  font: var(--estilo-rotulo);
+  color: var(--texto-2);
+  cursor: pointer;
+}
+.git-pliega:hover {
+  color: var(--texto);
+}
+.git-pliega .ic {
+  width: 14px;
+  height: 14px;
+  color: var(--texto-3);
+  transition: rotate 0.15s var(--sale);
+}
+.git-pliega[aria-expanded="true"] .ic {
+  rotate: 90deg;
+}
+.git-pliega .t {
+  flex: 1;
+  text-align: left;
+}
+.git-arbol {
+  padding: 0 var(--esp-2);
+}
+.git-nodo {
+  --nivel: 1;
+  width: 100%;
+}
+/* El historial, al pie del panel (R-94): baja todo lo que sobra; si no entra, sigue a lo de arriba */
+.git-grupo.al-pie {
+  margin-top: auto;
+  padding-top: var(--esp-2);
+  border-top: 1px solid var(--borde-suave);
+}
+.git-nombre {
+  flex: none;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.git-carpeta {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+}
+.git-nada {
+  margin: 0;
+  padding: var(--esp-1) var(--esp-3) var(--esp-2) 30px;
+  font: var(--estilo-meta);
+  color: var(--texto-3);
+}
+
+/* La letra de cada archivo, con los colores de VS Code (la misma que la marca del árbol de Archivos) */
+.git-letra {
+  flex: none;
+  width: 14px;
+  font: 600 var(--tam-chico) / 1 var(--mono);
+  text-align: center;
+}
+.git-letra.nuevo {
+  color: var(--git-agregado);
+}
+.git-letra.modificado,
+.git-letra.otro {
+  color: var(--git-modificado);
+}
+.git-letra.borrado {
+  color: var(--git-borrado);
+}
+
+/* Los commits, como el gráfico de VS Code: la vía con su punto, el mensaje y cuándo */
+.git-historial {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--esp-2) var(--esp-2);
+}
+.git-commit {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  width: 100%;
+  height: var(--alto-nodo);
+  padding: 0 var(--esp-2) 0 var(--esp-2);
+  border-radius: var(--radio-control);
+  color: var(--texto);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.git-commit:hover {
+  background: var(--hover);
+}
+.git-commit.elegido {
+  background: var(--sel-fondo);
+}
+.git-commit .via {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: var(--alto-nodo);
+}
+.git-commit .via::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--borde-control);
+}
+.git-commit:first-child .via::before {
+  top: 50%;
+}
+.git-commit:last-child .via::before {
+  bottom: 50%;
+}
+.git-commit .via::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  border: 2px solid var(--texto-2);
+  border-radius: 50%;
+  background: var(--fondo);
+}
+.git-commit .msj {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.git-commit .sin-subir {
+  flex: none;
+  color: var(--espera);
+  font-size: var(--tam-chico);
+}
+.git-commit .cuando {
+  flex: none;
+  color: var(--texto-3);
+  font-size: var(--tam-chico);
+}
+
+/* Lo elegido, a la derecha */
+.git-visor {
+  min-width: 0;
+  overflow: auto;
+}
+.git-detalle {
+  padding: var(--esp-4) var(--esp-5) var(--esp-6);
+}
+.git-titulo {
+  margin: 0 0 var(--esp-1);
+  font: var(--estilo-titulo);
+  color: var(--texto);
+  overflow-wrap: anywhere;
+}
+.git-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--esp-2);
+  margin: 0 0 var(--esp-4);
+  font: var(--estilo-meta);
+  color: var(--texto-3);
+}
+.git-meta code {
+  font: var(--estilo-codigo);
+  color: var(--texto-2);
+}
+.git-cuerpo {
+  margin: 0 0 var(--esp-4);
+  color: var(--texto-2);
+  font: var(--estilo-codigo);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.git-abre {
+  width: 100%;
+  text-align: left;
+}
+/* biome-ignore lint/style/noDescendingSpecificity: íconos de contenedores distintos, no se pisan */
+.git-abre > .ic {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  color: var(--texto-3);
+  transition: rotate 0.15s var(--sale);
+}
+.git-abre[aria-expanded="true"] > .ic {
+  rotate: 90deg;
+}
+.git-ruta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--estilo-codigo);
+}
+.git-numeros {
+  display: flex;
+  gap: var(--esp-2);
+  flex: none;
+  color: var(--texto-3);
+  font: var(--estilo-codigo);
+}
+.git-numeros .mas {
+  color: var(--git-agregado);
+}
+.git-numeros .menos {
+  color: var(--git-borrado);
+}
+
+/* El antes y después, como la maqueta: una columna de código con las líneas quitadas y agregadas de fondo */
+.git-dif {
+  overflow: auto;
+  padding: var(--esp-2) 0 var(--esp-4);
+  font: 400 var(--tam-chico) / 1.7 var(--mono);
+}
+.git-dif > div {
+  padding: 0 var(--esp-4);
+  color: var(--texto-2);
+  white-space: pre;
+}
+.git-dif .signo {
+  display: inline-block;
+  width: 16px;
+  user-select: none;
+}
+.git-dif .agregada {
+  background: var(--cod-suma);
+  color: var(--texto);
+}
+.git-dif .agregada .signo {
+  color: var(--git-agregado);
+}
+.git-dif .quitada {
+  background: var(--cod-resta);
+}
+.git-dif .quitada .signo {
+  color: var(--git-borrado);
+}
+.git-dif .zona {
+  padding-block: var(--esp-2);
+  color: var(--texto-3);
+}
+.git-nota {
+  min-height: var(--alto-fila);
+  margin: 0;
+  padding: var(--esp-2) var(--esp-4);
+  font: var(--estilo-meta);
+  color: var(--texto-3);
+}
+.git-nota.error {
+  color: var(--error);
+}
+
+/* El repositorio vacío, sin git o git que no se lee: un recuadro centrado */
+.git-vacio {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  align-items: center;
+  justify-content: center;
+  padding: var(--esp-6);
+}
+.git-vacio > div {
+  max-width: var(--ancho-centrado);
+}
+
+/* El cuadro de Publicar en GitHub (D-081): pasa a las piezas con los cuadros */
 .error-git {
   margin-top: 10px;
   color: var(--error);
   font-size: var(--tam-chico);
   line-height: 1.5;
-}
-.aviso-git {
-  margin: 0;
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--borde-suave);
-  color: var(--texto-2);
-  font-size: 12px;
-  line-height: 1.5;
-}
-.remoto .publicar {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
 }
 .campo-publicar {
   display: grid;
@@ -471,24 +391,4 @@
   display: block;
   color: var(--texto-3);
   font-size: 12px;
-}
-
-/* Commit y subir y Sincronizar (D-159): el cuadro del mensaje, como el de VS Code, y lo que pasó con el remoto */
-.caja-commit {
-  display: grid;
-  justify-items: end;
-  gap: 8px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--borde-suave);
-}
-.remoto small.sincronia {
-  margin-top: 2px;
-}
-.aviso-git.error {
-  color: var(--error);
-}
-
-button.arbol-nodo:hover {
-  background: var(--hover);
-  color: var(--texto);
 }

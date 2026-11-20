@@ -175,18 +175,6 @@ const VIEJAS = [
 const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
   'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
-  // DI-I3, tanda 12: Archivos pasó al Árbol; el panel de antes queda solo en Git
-  'git.css': [
-    'commit',
-    'arch',
-    'fila-git',
-    'remoto',
-    'plegable',
-    'aviso-git',
-    'arbol-lista',
-    'arbol-nodo',
-    'git-cuenta',
-  ],
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
   // DI-I3, tanda 6: la Bandeja pasó a las piezas; queda el texto de los documentos de Scripts (tanda 11: Docs pasó)
   'pendientes.css': ['aviso-doc', 'doc-texto'],
@@ -206,13 +194,13 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 
 /** Cuántas veces se usa cada token de antes (`tokens-viejos.css`) en la app: como mucho esto. */
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
-  '--lateral': 2,
+  '--lateral': 1,
   '--barra': 1,
-  '--caja': 13,
+  '--caja': 9,
   '--medidor-fondo': 5,
-  '--primario': 16,
-  '--primario-texto': 3,
-  '--ok': 10,
+  '--primario': 15,
+  '--primario-texto': 2,
+  '--ok': 5,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,
