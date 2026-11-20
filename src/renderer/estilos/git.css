@@ -1,6 +1,15 @@
 /* Git (H-16): la rama, lo sin guardar y el historial a la izquierda; lo elegido con sus archivos a la derecha */
 .partida.git .arbol-lista {
-  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  padding-block: 0;
+}
+.partida.git .arbol-lista > * {
+  flex-shrink: 0;
+}
+/* El historial, al pie del panel (R-94): baja todo lo que sobra; si no entra, sigue a lo de arriba */
+.plegable.al-pie {
+  margin-top: auto;
 }
 .rama {
   display: flex;

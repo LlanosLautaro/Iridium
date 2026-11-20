@@ -33,6 +33,12 @@ electronFuses:
   enableNodeOptionsEnvironmentVariable: false
   enableNodeCliInspectArguments: true
   onlyLoadAppFromAsar: true
+# Los textos de Chromium (menús del sistema, diálogos) solo en español y el inglés de reserva: los otros 52 idiomas
+# pesaban 45 MB en cada versión publicada (D-161).
+electronLanguages:
+  - es
+  - es-419
+  - en-US
 # Usa el Electron ya instalado (no descarga otro).
 electronDist: node_modules/electron/dist
 win:

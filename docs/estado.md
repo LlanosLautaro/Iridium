@@ -29,7 +29,7 @@
 |---|---|---|---|
 | Revisión de la app (`modulos/revision/estado.md`) | producto hermano | en operación (con el hito 10) | hecho |
 | Skills (`modulos/skills/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10); repo público (D-132), versión al día publicada (Q-185) | hecho |
+| Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10); CO-I8, las piezas de cada versión (D-161), espera Q-225 | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 11 probadas; retoma con Archivos al cerrar Abrir, D-153) | en pausa |
@@ -45,7 +45,7 @@
 **Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos tienen la marca (D-157) y las dos iteraciones salieron bien (Q-221). AB-I3 (D-158), tu app instalada, probada en Q-222. En la otra PC se va a actualizar sola desde sus versiones publicadas (D-160, T-87).
 **Git al día con GitHub** (D-159, T-88): Iridium trae sola lo que se subió desde la otra PC, y Git tiene **Commit y subir** y **Sincronizar**; tu prueba en las dos PC, Q-224.
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
-El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. Compartir: versión al día publicada y abierta por la otra persona (Q-185).
+El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. **Compartir:** cada versión publicada trae sus piezas y las copias bajan solo la app, unos 2 MB en vez de 296 (D-161, CO-I8); tu prueba al publicar, Q-225.
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
@@ -64,6 +64,12 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] En esta PC, al entrar a ese proyecto, la respuesta ya estaba y Git decía «Trajo 1 commit de GitHub»
   - [ ] El proyecto que mostraba cosas viejas muestra lo último
   - [ ] Sincronizar, con todo al día, dijo «Ya estaba al día.»
+- **Q-225 — Publicá dos versiones y mirá cuánto baja la otra PC**
+  Tipo: prueba · Frente: Compartir
+  Contexto: D-161 (las piezas de cada versión). Antes, Actualizar acá (trae las piezas); la otra PC tiene que tener una versión publicada. La primera publicación la baja completa (tu copia de allá todavía no tiene las huellas); desde la segunda, solo la app.
+  - [ ] Publiqué (`scripts.md` › Publicar la versión para compartir) y la consola dijo «Completa: unos 271 MB · solo la app: unos 2 MB»
+  - [ ] En la otra PC entró esa versión al cerrar Iridium, como siempre
+  - [ ] Después de otro cambio, armé y publiqué de nuevo: en la otra PC «Versión nueva lista» apareció enseguida y, al cerrar, Iridium abrió con la versión nueva (Ajustes › Acerca de)
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso

@@ -156,8 +156,8 @@ Estado: pendiente · Origen: C-24 a C-26, C-28
 Should. Adjuntos, formulario de arranque, respuestas que la IA toma sola, preguntas del chat que pasan a `Q-n`.
 
 ## T-37 — El `.zip` de `pnpm publicar`, más chico
-Estado: pendiente · Frente: Compartir · Origen: D-085
-Could. Pesa unos 280 MB: probar a comprimirlo más.
+Estado: hecho · Frente: Compartir · Origen: D-085
+Could. Pesa unos 280 MB: probar a comprimirlo más. Hecho el 2026-11-20 con D-161 (CO-I8): las copias bajan solo la pieza de la app (2 MB) cuando Electron y Claude Code no cambian; el `.zip` completo, 271 MB sin los idiomas que no se usan. La prueba al publicar, Q-225.
 
 ## T-38 — Número de versión y `CHANGELOG.md`
 Estado: pendiente · Frente: Compartir · Origen: D-077, Q-109

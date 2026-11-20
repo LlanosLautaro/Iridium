@@ -281,16 +281,19 @@ function Plegable({
   cuenta,
   plegada,
   alternar,
+  alPie = false,
   children,
 }: {
   titulo: string
   cuenta: number
   plegada: boolean
   alternar: () => void
+  /** Pegada al pie del panel, como la línea de tiempo de VS Code (R-94). */
+  alPie?: boolean
   children: ReactNode
 }) {
   return (
-    <section className="plegable" aria-label={titulo}>
+    <section className={alPie ? 'plegable al-pie' : 'plegable'} aria-label={titulo}>
       <h3>
         <button type="button" aria-expanded={!plegada} onClick={alternar}>
           <span className="chev">
@@ -632,6 +635,7 @@ function CuerpoGit({ ruta }: { ruta: string }) {
           cuenta={g.historial.length}
           plegada={plegadas.includes('historial')}
           alternar={() => alternar('historial')}
+          alPie
         >
           {g.historial.length === 0 && <div className="arbol-nodo vacio">Todavía no hay commits.</div>}
           {g.historial.map((c) => (

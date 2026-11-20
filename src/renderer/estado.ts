@@ -79,7 +79,7 @@ export interface VistaProyecto {
   commit: string | null
   /** El archivo sin guardar que se mira solo en Git; null = la lista de todos. */
   archivoGit: string | null
-  /** Las secciones plegadas del panel de Git (`cambios`, `preparados`, `historial`). */
+  /** Las secciones plegadas del panel de Git (`cambios`, `preparados`, `historial`); el historial, de entrada (R-94). */
   gitPlegadas: string[]
   /** Tocó Nueva: se ve una conversación en blanco que empieza con el primer mensaje o con Seguí. */
   enBlanco: boolean
@@ -101,7 +101,7 @@ const VISTA_INICIAL: VistaProyecto = {
   comentario: null,
   commit: null,
   archivoGit: null,
-  gitPlegadas: [],
+  gitPlegadas: ['historial'],
   enBlanco: false,
   maqueta: null,
   pestanaMapa: null,

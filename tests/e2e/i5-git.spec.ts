@@ -5,7 +5,14 @@ import { execFileSync } from 'node:child_process'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
+import {
+  type ElectronApplication,
+  _electron as electron,
+  expect,
+  type Locator,
+  type Page,
+  test,
+} from '@playwright/test'
 
 let raiz: string
 let datos: string
@@ -68,6 +75,11 @@ async function irAGit(win: Page, proyecto: string) {
   return win.locator('[data-seccion="git"]:not([hidden])')
 }
 
+/** El historial arranca plegado (R-94): lo abre. */
+async function abrirHistorial(g: Locator) {
+  await g.locator('.plegable', { hasText: 'Historial' }).locator('h3 button').click()
+}
+
 test.beforeEach(async () => {
   raiz = await mkdtemp(join(tmpdir(), 'iridium-e2e-'))
   datos = await mkdtemp(join(tmpdir(), 'iridium-e2e-datos-'))
@@ -121,7 +133,19 @@ test('Git: la rama, lo sin guardar, el historial y el antes y después de un arc
     /estado\.md\s*docs\s*M/,
     /etiquetas\.ts\s*src\s*A/,
   ])
+  // El historial, plegado y al pie del panel (R-94).
+  const historial = seccion('Historial')
+  await expect(historial.locator('h3 button')).toHaveAttribute('aria-expanded', 'false')
+  await expect(historial.locator('h3')).toContainText('2')
+  const panel = await g.locator('.arbol-lista').boundingBox()
+  const pie = await historial.boundingBox()
+  expect(
+    Math.abs((panel?.y ?? 0) + (panel?.height ?? 0) - ((pie?.y ?? 0) + (pie?.height ?? 0))),
+  ).toBeLessThan(2)
+  await win.screenshot({ path: 'test-results/r94-historial-plegado.png' })
   const commits = g.locator('.arbol-lista .commit')
+  await expect(commits).toHaveCount(0)
+  await abrirHistorial(g)
   await expect(commits).toHaveCount(2)
   await expect(commits.nth(0)).toContainText('I-2: la galería en cuatro columnas (D-12)')
   await expect(commits.nth(0)).toContainText('2 archivos')
@@ -197,6 +221,7 @@ test('Git: un repositorio en GitHub lo dice y marca los commits sin subir (Q-75)
     await expect(g.locator('.remoto')).toContainText('En GitHub · LlanosLautaro/Alfa')
     await expect(g.locator('.remoto')).toContainText('1 commit sin subir')
     await expect(g.locator('.remoto a')).toHaveAttribute('href', 'https://github.com/LlanosLautaro/Alfa')
+    await abrirHistorial(g)
     const commits = g.locator('.arbol-lista .commit')
     await expect(commits.nth(0)).toContainText('sin subir')
     await expect(commits.nth(1)).not.toContainText('sin subir')
@@ -221,6 +246,7 @@ test('Git: crear el repositorio y publicarlo en GitHub (D-081)', async () => {
   const { app, win } = await abrir()
   const g = await irAGit(win, 'Beta')
   await g.getByRole('button', { name: 'Inicializar repositorio' }).click()
+  await abrirHistorial(g)
   await expect(g.locator('.arbol-lista .commit').first()).toContainText('Primer commit')
   await expect(g.locator('.aviso-git')).toContainText('.env')
   await expect(g.locator('.remoto')).toContainText('Solo en esta PC')
@@ -266,6 +292,7 @@ test('Git: trae solo lo de la otra PC al entrar, y Commit y subir (D-159)', asyn
 
     const { app, win } = await abrir()
     const g = await irAGit(win, 'Alfa')
+    await abrirHistorial(g)
     // Al entrar al proyecto lo trajo solo, sin tocar lo que estaba sin guardar.
     await expect(g.locator('.arbol-lista .commit').first()).toContainText('Desde la otra PC')
     await expect(g.locator('.remoto')).toContainText('Trajo 1 commit')

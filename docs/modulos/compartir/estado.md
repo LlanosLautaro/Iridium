@@ -1,7 +1,7 @@
 # Estado del módulo: Compartir
 
 **Tipo:** sección
-**Última actualización:** 2026-11-16
+**Última actualización:** 2026-11-20
 **Nivel de protección:** hereda P2; el repo es público desde el 2026-11-16 (D-132).
 
 ## Progreso
@@ -24,11 +24,13 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 
 2026-11-16, a pedido del usuario: el repo pasó a público (D-132), así que la otra persona no necesita invitación (Q-126 sin efecto) y la copia del usuario sigue sin actualizarse desde GitHub. Con Q-185 (2026-11-19) se publicó una versión al día y la otra persona la abrió sin avisos de GitHub.
 
+2026-11-20, a pedido del usuario: CO-I8 (D-161, T-37). Cada versión publicada trae sus piezas y las copias bajan solo la app (unos 2 MB) cuando Electron y Claude Code no cambiaron. Falta verlo publicando de verdad (Q-225).
+
 ## Ruta
 - [x] Armar una copia de Iridium para otra persona
 - [x] Hacer público el repo para que se actualice sola
 - [x] Publicar una versión al día (Q-185)
-- [ ] Achicar el .zip de cada versión (T-37)
+- [x] Achicar el .zip de cada versión (T-37, CO-I8; prueba en Q-225)
 - [ ] Numerar las versiones con su lista de cambios (T-38)
 
 ## Cambios requeridos en documentos generales
@@ -45,8 +47,14 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I5 | La versión de Iridium y cuándo se armó, en Ajustes › Acerca de (Q-103) | hecho, aprobada (Q-102, 2026-11-01) |
 | CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085); con el repo privado, el aviso para iniciar sesión en GitHub (Q-123) | hecho, probada con GitHub (2026-11-04); con el repo público (D-132) no hace falta invitar |
 | CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | hecho, aprobada (Q-102, 2026-11-01) |
+| CO-I8 | Achicar lo que se baja en cada versión: las piezas (D-161, T-37) | en curso (hecha y verificada con dos armados reales; espera Q-225) |
 
 ## Log de iteraciones
+### CO-I8 — Las piezas de cada versión (2026-11-20)
+- **Medido:** el `.zip` pesaba 296 MB; el código de Iridium son 11 MB y el resto es Electron y el Claude Code que viaja adentro. Comprimir con xz lo dejaba en 215 MB, tardando cuatro minutos y sin abrirse en el Explorador de algunas PC: descartado.
+- **Hecho (D-161):** `pnpm publicar` sube, además del `.zip`, `piezas.json` (las huellas de Electron, Claude Code y la app) y la pieza de la app sola. La copia compartida con el mismo Electron y Claude Code baja solo eso, copia lo demás de la versión que usa y le escribe al programa la huella de la app nueva (electron-builder la graba en `Iridium.exe` en cada armado); si las huellas no dan, baja el `.zip` completo. La app trae solo los idiomas de Chromium en español y el inglés (45 MB menos).
+- **Verificado:** dos armados reales seguidos (fuera de la app de uso diario) dieron la misma huella de Electron y de Claude Code. Empaquetados como `pnpm publicar` sin subir: el `.zip`, 271 MB; la pieza, 2,3 MB. Una copia instalada con el primero bajó solo la pieza del segundo desde un GitHub falso en 1,4 s y quedó idéntica byte a byte a la publicada. La app armada abre en español (`es-419`) sin errores.
+- **Pruebas:** `tests/d161-piezas.test.ts` (las piezas, la huella del programa y cuatro casos con un GitHub falso: solo la app, Claude Code cambiado, una copia sin huellas y una pieza rota) y `d085-versiones-github.test.ts` al día.
 ### CO-I1 — Iniciar sesión desde Iridium (2026-10-31)
 - El motor suma `iniciarSesion`: abre `claude auth login --claudeai` del Claude Code que trae Iridium en una consola a la vista (si pide un código, se ve; si falla, queda abierta con el error) y, al cerrarse, Iridium vuelve a verificar. El motor falso «inicia sesión» en dos pasos.
 - El chip de la barra es un botón, «Sin sesión de Claude · Iniciar sesión»; el aviso de la conversación tiene **Iniciar sesión** y Reintentar. Mientras tanto los dos dicen «Esperando el navegador…»; con sesión, el aviso pasa a verde («Ya tenés sesión en Claude») y Reintentar queda como principal.
@@ -97,5 +105,5 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - `master` pasó a `dev` y `main` nació en el mismo commit; las dos están en `LlanosLautaro/Iridium`, que sigue privado (desde afuera da 404). Git ya tenía guardada la cuenta: no hizo falta el paso a mano.
 
 ## Próximo paso
-Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `trabajo.md`. Lo que D-069 dejó para después (instalador, actualizaciones desde GitHub) sigue fuera.
-**Leer antes:** nada.
+Cuando llegue Q-225 (publicar con las piezas), cerrar CO-I8; después sigue la ruta: numerar las versiones (T-38), cuando el usuario lo pida. Sus errores y mejoras van a `trabajo.md`.
+**Leer antes:** `respuestas/Q-225.md`.

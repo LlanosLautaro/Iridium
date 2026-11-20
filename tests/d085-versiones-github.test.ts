@@ -29,8 +29,20 @@ describe('etiquetas y respuestas', () => {
       mensaje: 'Algo',
       fecha: '',
       zip: 'https://api/x/assets/1',
+      piezas: null,
     })
     expect(leerPublicada({ tag_name: 'iridium-2026-11-04-0905-abc1234', assets: [] })).toBeNull()
+    // D-161: con sus piezas, también la pieza de la app y las huellas.
+    const conPiezas = leerPublicada({
+      tag_name: 'iridium-2026-11-04-0905-abc1234',
+      assets: [
+        { name: 'piezas.json', url: 'https://api/x/assets/2' },
+        { name: 'Iridium-abc1234-app.pieza', url: 'https://api/x/assets/3' },
+        zip,
+      ],
+    })
+    expect(conPiezas?.zip).toBe('https://api/x/assets/1')
+    expect(conPiezas?.piezas).toEqual({ app: 'https://api/x/assets/3', huellas: 'https://api/x/assets/2' })
     expect(leerPublicada({ tag_name: 'otra', assets: [zip] })).toBeNull()
     expect(leerPublicada(null)).toBeNull()
   })

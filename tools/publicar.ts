@@ -5,6 +5,8 @@
 // Con `--desde <carpeta>`, la versión armada en otra carpeta (`tools/actualizar.ps1 -Release <carpeta>`): la de
 // `nueva`, con el commit de su `lista.json`, o, si ya se puso, la de `win-unpacked` con `--commit`. Sirve para publicar
 // sin cambiar la app de uso diario.
+// Con la versión van sus piezas (D-161): `piezas.json`, las huellas de Electron, Claude Code y la app, y la pieza de la
+// app sola (`-app.pieza`, un .zip con lo de la app). Una copia que ya tiene ese Electron y ese Claude Code baja solo eso.
 // La sesión de GitHub es la de git (D-081): si no hay, git abre su ventana.
 // Uso: node --experimental-strip-types tools/publicar.ts [--repo dueño/nombre] [--desde carpeta [--commit c]]
 import { execFileSync } from 'node:child_process'
@@ -13,6 +15,7 @@ import { cp, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { etiquetaVersion } from '../src/compartido/versiones.ts'
+import { archivosDe, huellasDe, piezaDe } from '../src/main/infra/piezas.ts'
 
 const API = 'https://api.github.com'
 const git = (...args: string[]) => execFileSync('git', args, { encoding: 'utf8' }).trim()
@@ -105,11 +108,22 @@ try {
     join(copia, 'resources', 'actualizaciones.json'),
     JSON.stringify({ repo, commit, fecha: fecha.toISOString(), mensaje }, null, 2),
   )
+  const huellas = JSON.stringify(await huellasDe(copia), null, 2)
+  await writeFile(join(copia, 'resources', 'piezas.json'), huellas)
   const zip = join(temporal, `Iridium-${commit}.zip`)
   const tar = join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
   execFileSync(tar, ['-a', '-c', '-f', zip, '-C', temporal, 'win-unpacked'])
-  const peso = (await stat(zip)).size
-  console.log(`     ${(peso / 1024 / 1024).toFixed(0)} MB`)
+  // La pieza de la app: sus archivos y los propios de la versión (actualizaciones.json y piezas.json), con la misma
+  // carpeta win-unpacked delante.
+  const pieza = join(temporal, `Iridium-${commit}-app.pieza`)
+  const lista = join(temporal, 'pieza-app.txt')
+  const deLaApp = (await archivosDe(copia)).filter(
+    (r) => piezaDe(r) !== 'electron' && piezaDe(r) !== 'claude',
+  )
+  await writeFile(lista, deLaApp.map((r) => `win-unpacked/${r}`).join('\n'))
+  execFileSync(tar, ['--format', 'zip', '-c', '-f', pieza, '-C', temporal, '-T', lista])
+  const mb = async (archivo: string) => `${((await stat(archivo)).size / 1024 / 1024).toFixed(0)} MB`
+  console.log(`     Completa: ${await mb(zip)} · solo la app: ${await mb(pieza)}`)
 
   console.log('3/4  Creando la versión en GitHub…')
   const r = await fetch(`${API}/repos/${repo}/releases`, {
@@ -126,19 +140,24 @@ try {
   if (!r.ok) throw new Error(`GitHub no creó la versión: ${r.status} ${await r.text()}`)
   const version = (await r.json()) as { id: number; upload_url: string; html_url: string }
 
-  console.log('4/4  Subiendo el .zip…')
-  const subir = version.upload_url.replace(/\{.*\}$/, `?name=Iridium-${commit}.zip`)
-  const s = await fetch(subir, {
-    method: 'POST',
-    headers: { ...encabezados, 'Content-Type': 'application/zip', 'Content-Length': String(peso) },
-    body: await readFile(zip),
-  })
-  if (!s.ok) {
-    // Sin el .zip la versión no sirve: se borra para que no quede como la última.
+  console.log('4/4  Subiendo las piezas y el .zip…')
+  const subir = async (nombre: string, tipo: string, cuerpo: Buffer<ArrayBuffer>) => {
+    const url = version.upload_url.replace(/\{.*\}$/, `?name=${nombre}`)
+    const s = await fetch(url, {
+      method: 'POST',
+      headers: { ...encabezados, 'Content-Type': tipo, 'Content-Length': String(cuerpo.length) },
+      body: cuerpo,
+    })
+    if (s.ok) return
+    // Sin todo lo suyo la versión no sirve: se borra para que no quede como la última.
     await fetch(`${API}/repos/${repo}/releases/${version.id}`, { method: 'DELETE', headers: encabezados })
     await fetch(`${API}/repos/${repo}/git/refs/tags/${etiqueta}`, { method: 'DELETE', headers: encabezados })
-    throw new Error(`No se pudo subir el .zip: ${s.status} ${await s.text()}`)
+    throw new Error(`No se pudo subir ${nombre}: ${s.status} ${await s.text()}`)
   }
+  // Las piezas antes que el .zip: una copia que mira mientras se sube, sin el .zip todavía no la ve.
+  await subir('piezas.json', 'application/json', Buffer.from(huellas))
+  await subir(`Iridium-${commit}-app.pieza`, 'application/zip', await readFile(pieza))
+  await subir(`Iridium-${commit}.zip`, 'application/zip', await readFile(zip))
   console.log('')
   console.log(`Listo: ${version.html_url}`)
   console.log(

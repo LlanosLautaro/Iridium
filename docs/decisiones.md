@@ -163,6 +163,11 @@
 | D-154 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 2 (Definición) | La definición de Abrir va como se escribió; la actualización automática arranca prendida y se apaga por proyecto | vigente |
 | D-155 | 2026-11-19 | Abrir (T-80) | 10; frente Abrir, paso 4 (UX) | La UX de Abrir va como se escribió, con el botón «Ejecutar» y el nombre del proyecto | vigente |
 | D-156 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 5 (Diseño técnico) | Abrir: la marca en scripts.md, el .exe trabado como app abierta y lo armado en armados.json | vigente |
+| D-157 | 2026-11-19 | Abrir (T-80) | 10; frente Abrir, paso 7 (Construcción) | Los proyectos del usuario se marcan desde acá, una vez | vigente |
+| D-158 | 2026-11-19 | Abrir (T-80), con el framework | 10; frente Abrir, paso 7 (Construcción) | La app que se usa instalada se abre y se actualiza sola, con una ruta que empieza con una variable de Windows | vigente |
+| D-159 | 2026-11-20 | general (Git, H-16) | 10, a pedido del usuario | Iridium se mantiene al día con GitHub sola, y Git hace Commit y subir y Sincronizar | vigente |
+| D-160 | 2026-11-20 | Abrir (T-87) | 10; frente Abrir, paso 7 (Q-223) | La app instalada se pone al día en la otra PC desde sus versiones publicadas | vigente |
+| D-161 | 2026-11-20 | Compartir (T-37) | 10; frente Compartir, a pedido del usuario | Cada versión publicada trae sus piezas: las copias bajan solo la app si Electron y Claude Code no cambiaron | vigente |
 
 ---
 
@@ -3240,3 +3245,20 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** A. La app suma la pieza que se actualiza desde sus versiones publicadas en GitHub, y su armado en la PC del código la publica después de instalarla.
 **Motivo:** sirve para cualquier app del usuario y la otra PC no necesita el código ni herramientas.
 **Consecuencias:** T-87 pasa a pendiente, en la ruta de Abrir. Es una pieza para cada app de escritorio que se use en más de una PC: va también como receta del framework (frente Plantillas, D-150).
+
+## D-161 — Cada versión publicada trae sus piezas: las copias bajan solo la app si Electron y Claude Code no cambiaron
+- **Fecha:** 2026-11-20
+- **Ámbito:** Compartir (T-37; precisa D-085)
+- **Hito o paso:** 10; frente Compartir, a pedido del usuario («Achicar el .zip de cada versión»)
+- **Estado:** vigente
+
+**Contexto:** el `.zip` de cada versión pesaba 296 MB. Medido: Electron son unos 330 MB sin comprimir (el programa, 235), el Claude Code que viaja con Iridium 285 MB y el código de Iridium solo 11 MB. Comprimir más (xz) lo dejaba en 215 MB, tardaba cuatro minutos y el Explorador de Windows de algunas PC no lo abre. Electron y Claude Code solo cambian cuando se actualizan a propósito; el programa `Iridium.exe` cambia en cada armado, pero solo en 64 caracteres: la huella de `app.asar` que electron-builder le graba.
+**Decisión:** lo eligió la IA para cumplir el pedido:
+1. **Las piezas:** la app armada se parte en tres, Electron, Claude Code y la app. `pnpm publicar` guarda la huella de cada una en `resources/piezas.json` (la del programa, con esos 64 caracteres en ceros; el valor de la versión va aparte) y sube, además del `.zip` completo, `piezas.json` y la pieza de la app sola (`Iridium-<commit>-app.pieza`, unos 2 MB).
+2. **La copia compartida** que tiene el mismo Electron y el mismo Claude Code baja solo esas dos cosas, copia el resto de la versión que está usando y le escribe al programa la huella de la app nueva. Antes de dejarla lista compara las huellas de lo armado con las publicadas: si no dan, o si algo falla, baja el `.zip` completo, como antes.
+3. **Los idiomas de Chromium:** la app trae solo español (`es`, `es-419`) y el inglés de reserva; los otros 52 pesaban 45 MB.
+**Motivo:** casi todas las versiones cambian solo el código de Iridium: la copia baja 2 MB en vez de 296, sin cambiar cómo entra la versión (al cerrar, CO-I2) ni lo que hace falta para una primera instalación (el `.zip`).
+**Consecuencias:**
+- El `.zip` completo sigue en cada versión (271 MB) para instalar por primera vez y para cuando cambian Electron o Claude Code; la subida tarda lo mismo que antes.
+- Una copia de antes de D-161 no tiene `piezas.json`: su primera versión nueva la baja completa y desde la siguiente baja solo la app.
+- Pruebas: `tests/d161-piezas.test.ts`, con un GitHub falso (solo la app, Claude Code cambiado, una copia sin huellas y una pieza rota). Verificado con dos armados reales: Electron y Claude Code dieron la misma huella y la copia quedó idéntica byte a byte a la versión publicada.
