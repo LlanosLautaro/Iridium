@@ -108,6 +108,8 @@ el botón queda muy pegado al título; separalo
 - 2026-10-28 14:33 — enviado a la sesión
 - 2026-10-28 14:50 — cerrado por la IA: separó el título con 12 px
 ```
+
+**Página** (T-34, D-082): una dirección (`http://…`, `luna-app://…`) va como viene; una página `file://` dentro del proyecto, relativa a él (`release/win-unpacked/resources/app.asar/out/renderer/index.html`), y fuera de él, sin las carpetas de la PC (`…/app.asar/out/renderer/index.html` o `…/index.html`). Es solo una pista: el proyecto sale de la carpeta de la app o del código, nunca de esta línea.
 - El título lleva las primeras palabras del comentario (hasta 60 caracteres); el texto entero va en **Comentario**.
 - **Estado:** `abierto`, `anotado` o `cerrado` (palabras fijas; `anotado` desde R-9, D-088). Lo que falte (archivo y línea, componentes, captura) no se escribe; nunca se inventa.
 - **Numeración:** el próximo `R-n` es el mayor de la carpeta más uno. Los comentarios de un proyecto se guardan de a uno (una cola por proyecto en el proceso principal), así dos que llegan juntos no se pisan.

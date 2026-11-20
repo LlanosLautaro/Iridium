@@ -187,7 +187,9 @@ test('en la versión armada (desde un archivo, instalada fuera de los proyectos)
   await expect(tarjeta()).toContainText('Guardado en Luna')
   await expect(tarjeta()).toContainText('R-2')
   const md = await readFile(join(raiz, 'Luna', 'docs', 'revision', 'R-2.md'), 'utf8')
-  expect(md).toContain('**Página:** file:///')
+  // Instalada fuera del proyecto: sin las carpetas de la PC (T-34).
+  expect(md).toContain('**Página:** …/index.html')
+  expect(md).not.toContain('file:///')
   expect(md).not.toContain('**Dónde:**')
   expect((await stat(join(raiz, 'Luna', 'docs', 'revision', 'R-2.png'))).size).toBeGreaterThan(500)
 

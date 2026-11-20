@@ -76,6 +76,29 @@ function codigo(t: string): string {
 const escaparTitulos = (t: string) => t.replace(/^(\s{0,3})#/gm, '$1\\#')
 const desescaparTitulos = (t: string) => t.replace(/^(\s{0,3})\\#/gm, '$1#')
 
+/**
+ * La página como se guarda (T-34, D-082): una `file://` dentro del proyecto queda relativa a él
+ * (`release/win-unpacked/…/index.html?tema=iridium`); fuera de él, sin las carpetas de la PC (`…/app.asar/out/…` o
+ * `…/index.html`). Una dirección (`http://localhost:5173/…`, `luna-app://…`) queda como viene.
+ */
+export function paginaCorta(url: string, carpetaProyecto: string): string {
+  let ruta: string
+  let resto: string
+  try {
+    const u = new URL(url)
+    if (u.protocol !== 'file:') return url
+    ruta = decodeURIComponent(u.pathname).replace(/^\/([a-z]:)/i, '$1')
+    resto = u.search + u.hash
+  } catch {
+    return url
+  }
+  const base = `${carpetaProyecto.replace(/\\/g, '/').replace(/\/+$/, '')}/`
+  if (ruta.toLowerCase().startsWith(base.toLowerCase())) return ruta.slice(base.length) + resto
+  const asar = ruta.toLowerCase().lastIndexOf('/app.asar/')
+  if (asar >= 0) return `…${ruta.slice(asar)}${resto}`
+  return `…/${ruta.slice(ruta.lastIndexOf('/') + 1)}${resto}`
+}
+
 export function armarComentario(d: DatosComentario): string {
   const r = `R-${d.numero}`
   const lineas = [`# ${r} — ${tituloDe(d.texto)}`, `<!-- id: ${d.id} -->`, '', '**Estado:** abierto']

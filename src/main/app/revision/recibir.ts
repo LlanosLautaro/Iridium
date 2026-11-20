@@ -11,7 +11,13 @@ import {
   type RespuestaEstado,
   VERSION_EXTENSION,
 } from '../../../compartido/revision'
-import { armarComentario, CARPETA_REVISION, idDe, proximoNumero } from '../../core/revision/comentario'
+import {
+  armarComentario,
+  CARPETA_REVISION,
+  idDe,
+  paginaCorta,
+  proximoNumero,
+} from '../../core/revision/comentario'
 import {
   candidatosDeRuta,
   direccionDe,
@@ -337,7 +343,7 @@ export class Revision {
         archivo: fuente ? { ruta: fuente.ruta, linea: fuente.linea } : null,
         maqueta,
         componentes: pedido.componentes,
-        url: pedido.url,
+        url: paginaCorta(pedido.url, proyecto.ruta),
         elemento: pedido.elemento,
         conCaptura: Boolean(captura?.length),
         fecha: Number.isNaN(fecha.getTime()) ? this.ahora() : fecha,

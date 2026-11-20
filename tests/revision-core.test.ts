@@ -5,6 +5,7 @@ import {
   armarComentario,
   cierreDe,
   leerComentario,
+  paginaCorta,
   proximoNumero,
   tituloDe,
 } from '../src/main/core/revision/comentario'
@@ -119,6 +120,32 @@ describe('el archivo R-n.md', () => {
   test('el próximo número es el mayor más uno, sin reusar huecos', () => {
     expect(proximoNumero([])).toBe(1)
     expect(proximoNumero(['R-1.md', 'R-1.png', 'R-7.md', 'r-3.md', 'notas.md'])).toBe(8)
+  })
+
+  test('la página se guarda corta, sin las carpetas de la PC (T-34)', () => {
+    const alfa = 'D:\\Proyectos y más\\Alfa'
+    expect(
+      paginaCorta(
+        'file:///D:/Proyectos%20y%20m%C3%A1s/Alfa/release/win-unpacked/resources/app.asar/out/renderer/index.html?tema=x',
+        alfa,
+      ),
+    ).toBe('release/win-unpacked/resources/app.asar/out/renderer/index.html?tema=x')
+    expect(
+      paginaCorta('file:///d:/proyectos%20y%20m%C3%A1s/alfa/docs/diseno/pantallas/grilla.html', alfa),
+    ).toBe('docs/diseno/pantallas/grilla.html')
+    // Instalada fuera del proyecto.
+    expect(
+      paginaCorta(
+        'file:///C:/Users/Ana/AppData/Local/Programs/alfa/resources/app.asar/out/renderer/index.html#/x',
+        alfa,
+      ),
+    ).toBe('…/app.asar/out/renderer/index.html#/x')
+    expect(paginaCorta('file:///C:/Users/Ana/Programs/Luna/dist/index.html', alfa)).toBe('…/index.html')
+    // No se confunde con una carpeta que empieza igual.
+    expect(paginaCorta('file:///D:/Proyectos%20y%20m%C3%A1s/Alfabeto/index.html', alfa)).toBe('…/index.html')
+    // Las direcciones quedan como vienen.
+    expect(paginaCorta('http://localhost:5173/ajustes', alfa)).toBe('http://localhost:5173/ajustes')
+    expect(paginaCorta('luna-app://interfaz/index.html', alfa)).toBe('luna-app://interfaz/index.html')
   })
 })
 

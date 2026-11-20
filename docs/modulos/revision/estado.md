@@ -1,7 +1,7 @@
 # Estado del módulo: Revisión de la app
 
 **Tipo:** producto hermano (extensión del navegador; la recibe Iridium)
-**Última actualización:** 2026-11-05
+**Última actualización:** 2026-11-20
 **Nivel de protección:** hereda P2. Iridium escucha a la extensión solo en `127.0.0.1:47321` y solo con su origen (`diseno-tecnico.md` › Seguridad).
 
 ## Progreso
@@ -18,11 +18,11 @@
 | 9. Lanzamiento | hecho (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
 
 ## En qué estamos ahora
-Construcción y calidad completas: R-I2 quedó validada con tu recorrido (Q-108) y la prueba intermitente de Electron era un caso real, arreglado (Defecto 7: con la PC ocupada un comentario podía salir sin archivo ni línea). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). 2026-11-05: tercer estado «anotado» para lo que queda en un plan sin hacer (R-9, D-088).
+Construcción y calidad completas: R-I2 quedó validada con tu recorrido (Q-108) y la prueba intermitente de Electron era un caso real, arreglado (Defecto 7: con la PC ocupada un comentario podía salir sin archivo ni línea). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). 2026-11-05: tercer estado «anotado» para lo que queda en un plan sin hacer (R-9, D-088). 2026-11-20: la línea «Página» se guarda corta, sin las carpetas de la PC (T-34, D-082); los comentarios viejos de este repo, pasados.
 
 ## Ruta
 - [x] Comentar la app con F8 y recibirlo en Iridium
-- [ ] Guardar la página del comentario con su ruta corta (T-34)
+- [x] Guardar la página del comentario con su ruta corta (T-34)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

@@ -144,8 +144,8 @@ Estado: pendiente · Origen: `02-definicion.md` › Funcionalidades
 Could. C-17, C-20, C-27, C-34, C-43, C-46 a C-48 (entre ellas, elegir las skills de cada proyecto y adaptar las públicas, D-064).
 
 ## T-34 — Revisión: la línea «Página» con la ruta relativa
-Estado: pendiente · Frente: Revisión de la app · Origen: D-082
-Should. La línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto.
+Estado: hecho (2026-11-20) · Frente: Revisión de la app · Origen: D-082
+Should. La línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto. Hecho el 2026-11-20: dentro del proyecto queda relativa (`docs/diseno/pantallas/grilla.html`); fuera, sin las carpetas de la PC (`…/app.asar/out/renderer/index.html`); los 94 comentarios de este repo, pasados.
 
 ## T-35 — Seguir a la IA, el cierre con comprobación y los avisos de Windows
 Estado: pendiente · Origen: C-4, C-6, C-51
