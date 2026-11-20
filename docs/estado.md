@@ -37,26 +37,18 @@
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
-| Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | en curso |
+| Arranque (`modulos/arranque/estado.md`) | sección | 7. Construcción (AR-I1 y AR-I2 hechas; la primera noche falló, arreglado; espera otra, Q-227) | en curso |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; la otra PC, T-87 con D-160) | en curso |
 
 ## En qué estamos ahora
 **Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos tienen la marca (D-157) y las dos iteraciones salieron bien (Q-221). AB-I3 (D-158), tu app instalada, probada en Q-222. En la otra PC se va a actualizar sola desde sus versiones publicadas (D-160, T-87).
 **Git al día con GitHub** (D-159, T-88): Iridium trae sola lo que se subió desde la otra PC, y Git tiene **Commit y subir** y **Sincronizar**; tu prueba en las dos PC, Q-224.
-**Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
-El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. **Compartir:** cada versión publicada trae sus piezas y las copias bajan solo la app, unos 2 MB en vez de 296 (D-161, CO-I8, probado en Q-225). **Revisión:** la línea «Página» de un comentario ya no guarda las carpetas de la PC (T-34). **Skills:** el framework reemplazó a la guía vieja y a `gestor-proyectos` (T-43): las dos skills y su hook ya no están; tu prueba, Q-226.
+**Arranque** (D-135): la primera noche no arrancó porque a las 3 el período seguía abierto y se perdía el intento de cuando vence; arreglado, espera otra noche (Q-227). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
+El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. **Compartir:** cada versión publicada trae sus piezas y las copias bajan solo la app, unos 2 MB en vez de 296 (D-161, CO-I8, probado en Q-225). **Revisión:** la línea «Página» de un comentario ya no guarda las carpetas de la PC (T-34). **Skills:** el framework reemplazó a la guía vieja y a `gestor-proyectos` (T-43), confirmado en Q-226.
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-210 — Probá el arranque una noche**
-  Tipo: prueba · Frente: Arranque
-  Contexto: `modulos/arranque/estado.md` › Log de iteraciones (AR-I1, AR-I2). Antes, que tu Iridium tenga la versión de hoy (Actualizar). La PC no tiene que suspenderse: si se suspende, lo hace al despertar.
-  - [ ] En Ajustes › IA prendí «Abrir el período de Claude» con la hora que elegí y dejé Iridium abierta toda la noche, con al menos un proyecto con respuestas mías sin procesar
-  - [ ] A la mañana, al volver, estaba el aviso «Mientras no estabas» con el proyecto y la hora; Abrir me llevó al proyecto y Listo lo cerró
-  - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…» (entero al pasar el mouse)
-  - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …» y, si hubo otros, se ven con «Los N anteriores de la semana»
-  - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
 - **Q-224 — Probá Git al día entre tus dos PC**
   Tipo: prueba
   Contexto: D-159 (Git al día con GitHub). Antes, Iridium con la versión de hoy en las dos PC: acá, Actualizar; en la otra, la versión publicada (`scripts.md` › Publicar la versión para compartir).
@@ -64,12 +56,14 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] En esta PC, al entrar a ese proyecto, la respuesta ya estaba y Git decía «Trajo 1 commit de GitHub»
   - [ ] El proyecto que mostraba cosas viejas muestra lo último
   - [ ] Sincronizar, con todo al día, dijo «Ya estaba al día.»
-- **Q-226 — Fijate que las skills viejas ya no estén**
-  Tipo: prueba · Frente: Skills
-  Contexto: `modulos/skills/estado.md` › T-43. Antes, cerrá y abrí Iridium (las skills se leen al entrar).
-  - [ ] En Skills ya no aparecen `hitos-desarrollo-app` ni `gestor-proyectos`, y no hay avisos de enlaces rotos
-  - [ ] En Skills › Framework siguen tus proyectos con su estado (los de framework viejo se pasan con su botón, como antes)
-  - [ ] En un proyecto cualquiera, un mensaje a la IA termina normal, sin avisos de «comprobar-preguntas»
+- **Q-227 — Probá el arranque otra noche**
+  Tipo: prueba · Frente: Arranque
+  Contexto: la primera noche (Q-210) no arrancó porque a las 3 el período seguía abierto y se perdía el intento de cuando vence; ya está arreglado (`modulos/arranque/estado.md` › Arreglo tras Q-210). Antes, Actualizar. Si a la hora elegida el período está abierto, arranca 5 minutos después de que venza.
+  - [ ] Dejé Iridium abierta toda la noche con el arranque prendido y al menos un proyecto con una respuesta mía sin procesar
+  - [ ] A la mañana estaba el aviso «Mientras no estabas» con el proyecto y la hora; Abrir me llevó al proyecto y Listo lo cerró
+  - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…»
+  - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …»
+  - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso

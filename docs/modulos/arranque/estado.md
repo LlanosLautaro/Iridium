@@ -1,7 +1,7 @@
 # Estado del módulo: Arranque
 
 **Tipo:** sección (el arranque del período de 5 horas; T-70)
-**Última actualización:** 2026-11-18
+**Última actualización:** 2026-11-20
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-207 con el aviso al volver, D-147) | `ux.md` |
 | 5. Diseño técnico | hecho (D-149) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (sin piezas nuevas: el aviso fijo es un estado de la pieza Aviso, D-149) | — |
-| 7. Construcción | en curso (AR-I1 y AR-I2 hechas; espera la prueba de una noche, Q-210) | este archivo |
+| 7. Construcción | en curso (AR-I1 y AR-I2 hechas; la primera noche no arrancó, arreglado; espera otra noche, Q-227) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso al volver, el detalle del uso y la línea de la conversación). Espera la prueba de una noche del usuario (Q-210); con ella, el paso 8.
+Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso al volver, el detalle del uso y la línea de la conversación). La primera noche (Q-210, 2026-11-20) no arrancó: a las 03:00 el período seguía abierto y, al vencer, el momento de 5 minutos después se perdía. Arreglado ese día; espera otra noche (Q-227) y con ella el paso 8.
 
 ## Ruta
 - [x] Decidir cómo se arranca el período (con trabajo real, desde Iridium)
@@ -27,7 +27,8 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - [x] Decidir cómo se construye (D-149)
 - [x] Arrancar el proyecto que espera hace más, a la hora elegida y al vencer el período (AR-I1)
 - [x] Contar qué arrancó o por qué no pudo: el aviso al volver, la pestaña y el detalle del uso (AR-I2)
-- [ ] Probarlo una noche con Iridium abierta (Q-210)
+- [x] Arrancar también al vencer el período que estaba abierto a la hora elegida (Q-210)
+- [ ] Probarlo una noche con Iridium abierta (Q-227)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -57,6 +58,11 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - **Pruebas:** Vitest `tests/ar2-arranque.test.ts` (6: qué entra al aviso, la semana, cómo va cada conversación, Listo que queda, el aviso a la ventana y la marca de la conversación); Playwright `tests/e2e/ar2-arranque.spec.ts` (el aviso con lo de la noche escrito antes de abrir, que no se va solo, «y 1 más», el detalle con la semana, Abrir, Listo que no vuelve al reabrir; y con el usuario delante, sin aviso, con la línea de la conversación y el último arranque en el uso). Capturas: `test-results/ar2-aviso.png`, `ar2-detalle-uso.png`, `ar2-conversacion.png`.
 - **Queda:** la línea de la conversación se corta en la cabecera angosta (como «empezada en VS Code»); entera al pasar el mouse.
 
+### Arreglo tras Q-210 (2026-11-20)
+- **Qué pasó:** el usuario dejó Iridium abierta con respuestas sin procesar y no arrancó nada. El registro dice `03:00:01 Arranque (hora): periodo-abierto`: había usado Claude hasta pasadas las 2, así que el período seguía abierto. Eso está bien (D-146); lo que falló fue lo siguiente: el arranque programó «5 minutos después del vencimiento», pero el uso se relee justo al liberarse la ventana y el período cerrado ya no trae vencimiento, así que el próximo momento volvió a ser la hora elegida del día siguiente. La PC no se suspendió (el registro de Windows no tiene suspensiones esa noche). Una sola respuesta sí alcanza para arrancar.
+- **Arreglo:** el arranque recuerda el último vencimiento que vio y lo usa mientras el uso no traiga otro. Además, después de cada momento el registro del día anota el próximo («Arranque: el próximo, … (vencimiento)»), para ver en la próxima noche qué programó.
+- **Pruebas:** Vitest `tests/ar1-arranque.test.ts` suma «con el período abierto a la hora elegida, arranca al vencer aunque el uso releído ya no lo traiga» (falla sin el arreglo: quedaba para el día siguiente a las 03:00). Vitest (902), typecheck y lint en verde.
+
 ## Próximo paso
-Esperar la prueba de una noche (Q-210). Con la respuesta: confirmar en el registro del día qué informa el uso sin un período abierto (el riesgo del diseño), arreglar lo que falle y pasar al paso 8 (calidad).
-**Leer antes:** `respuestas/Q-210.md`; este archivo › Log de iteraciones.
+Esperar la segunda noche (Q-227). Con la respuesta: mirar en el registro del día las líneas «Arranque…» (qué pasó y el próximo programado), arreglar lo que falle y pasar al paso 8 (calidad).
+**Leer antes:** `respuestas/Q-227.md`; este archivo › Arreglo tras Q-210.

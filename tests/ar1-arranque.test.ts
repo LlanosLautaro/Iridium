@@ -248,6 +248,24 @@ describe('el arranque', () => {
     }
   })
 
+  it('con el período abierto a la hora elegida, arranca al vencer aunque el uso releído ya no lo traiga (Q-210)', async () => {
+    const vence = A_LAS_3 + 40 * MIN
+    const { a, arrancados, archivo, ponerUso } = armar()
+    ponerUso(uso(vence))
+    await a.iniciar()
+    await vi.advanceTimersByTimeAsync(A_LAS_3 - NOCHE)
+    expect((await archivo.leer()).momentos.at(-1)?.resultado).toBe('periodo-abierto')
+    await vi.waitFor(() => expect(a.proximo()?.momento).toBe('vencimiento'))
+    // Al liberarse la ventana se relee el uso: el período cerrado ya no trae vencimiento.
+    await vi.advanceTimersByTimeAsync(vence - A_LAS_3 + 30_000)
+    ponerUso(uso(null))
+    await a.recalcular()
+    expect(a.proximo()).toEqual({ cuando: vence + DESPUES_DEL_VENCIMIENTO_MS, momento: 'vencimiento' })
+    await vi.advanceTimersByTimeAsync(DESPUES_DEL_VENCIMIENTO_MS - 30_000)
+    expect(arrancados).toEqual([{ ruta: 'C:\\P\\Alfa', marca: vence + DESPUES_DEL_VENCIMIENTO_MS }])
+    a.cerrar()
+  })
+
   it('apagado no programa nada; prenderlo programa la hora', async () => {
     let ajuste: AjusteArranque = { prendido: false, hora: '03:00' }
     const { a } = armar({ ajuste: async () => ajuste })

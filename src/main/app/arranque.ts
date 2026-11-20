@@ -71,6 +71,11 @@ export class Arranque {
   private programado: Momento | null = null
   /** El último momento que se hizo: no se repite. */
   private hecho: number | null = null
+  /**
+   * El último vencimiento del período que se vio en el uso. Al liberarse la ventana se relee el uso y el período
+   * cerrado ya no trae vencimiento: sin recordarlo, se perdía el momento de 5 minutos después (Q-210).
+   */
+  private vence: number | null = null
   private haciendo = false
   private durmiendo = false
   private cerrado = false
@@ -98,7 +103,14 @@ export class Arranque {
     const ajuste = await this.d.ajuste()
     if (this.cerrado || this.haciendo) return
     const ahora = this.ahora()
-    let proximo = proximoMomento(ajuste, this.d.usoActual(), ahora, this.hecho)
+    const uso = this.d.usoActual()
+    const libera = uso?.cincoHoras?.libera
+    if (typeof libera === 'number') this.vence = libera
+    const conVencimiento =
+      uso && typeof libera !== 'number' && this.vence !== null
+        ? { ...uso, cincoHoras: { usado: 0, agotada: false, ...uso.cincoHoras, libera: this.vence } }
+        : uso
+    let proximo = proximoMomento(ajuste, conVencimiento, ahora, this.hecho)
     if (proximo && this.primero !== null && this.primero < proximo.cuando)
       proximo = { cuando: this.primero, momento: 'hora' }
     const antes = this.programado?.cuando ?? null
@@ -223,7 +235,12 @@ export class Arranque {
     await this.d.archivo.anotar(renglon).catch(() => {})
     this.haciendo = false
     this.d.alCambio?.()
-    return this.recalcular()
+    await this.recalcular()
+    const p = this.programado
+    if (p)
+      this.d.registrar?.(
+        `Arranque: el próximo, ${new Date(p.cuando).toLocaleString('es-AR', { hour12: false })} (${p.momento})`,
+      )
   }
 
   private async decidir(): Promise<Pick<RenglonArranque, 'resultado' | 'proyecto'>> {
