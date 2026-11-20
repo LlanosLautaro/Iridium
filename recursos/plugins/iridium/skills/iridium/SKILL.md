@@ -285,6 +285,7 @@ La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, d
 - `icono`: ruta relativa dentro del proyecto (svg, png, jpg, webp, gif, ico), nunca absoluta ni con `..`; `null` es el genérico. De costumbre, un `.proyecto-icono.svg` con el estilo de `referencias/iconos.md`.
 - `reemplazadoPor`: la carpeta del proyecto que lo reemplaza, o `null`. Los campos que no conozcas, dejalos como están.
 - El usuario cambia `estado`, `archivado` e `icono` desde el menú de la tarjeta: releé la ficha antes de tocarla. Al cerrar un hito, revisá que el estado y la descripción sigan siendo ciertos.
+- Cómo se llena cada campo (la descripción, las etiquetas, qué estado sigue al hito y cuáles decide el usuario) y el repaso de todos los proyectos: `referencias/ficha.md`.
 
 ## El control
 
@@ -318,6 +319,7 @@ Al pasar un portón o terminar una iteración, cerrá así. Un chat nuevo se pag
 - `referencias/00-idea.md` … `referencias/10-operacion.md`: un archivo por hito (objetivo, preguntas, actividades, portón, cómo escala con el perfil, errores comunes y la plantilla del entregable).
 - `referencias/modulos.md`: los frentes (sección, plugin, producto hermano), qué heredan, el ciclo reducido.
 - `referencias/perfil-proyecto.md`: el cuestionario del perfil y los niveles de protección (hito 2 y cada vez que haya que decidir cuánta protección hace falta).
+- `referencias/ficha.md`: cómo se llena la ficha y el repaso de todos los proyectos.
 - `referencias/iconos.md`: el estilo de los íconos de proyecto.
 - `referencias/integraciones.md`: las skills externas (`impeccable`) en los hitos 4, 6, 7, 8 y 10.
 - `referencias/ronda-ux.md`: la ronda de UX de la operación.

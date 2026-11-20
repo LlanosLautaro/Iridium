@@ -179,17 +179,17 @@ Lo copiado se usa con C-9 y C-10, o se borra; la ventana se minifica si el arran
 Estado: pendiente · Origen: D-082, Q-127
 Q-127 ya dio bien la mudanza.
 
-## T-43 — Chat de Skills: el framework reemplaza a la guía y a `gestor-proyectos`
-Estado: pendiente · Frente: Skills · Origen: D-092, D-095
-En el chat de Skills, no acá: lo pendiente de las dos (D-062, D-063, D-068, Defectos 13 y 14, Q-115) pasa al framework y se eliminan cuando funcione; la regla global «todo proyecto sigue la guía» pasa a la de D-095; cuando el control funcione, se saca el hook `comprobar-preguntas.mjs` de la configuración global (D-092.4).
+## T-43 — El framework reemplaza a la guía y a `gestor-proyectos`
+Estado: hecho (2026-11-20) · Frente: Skills · Origen: D-092, D-095
+Lo pendiente de las dos (D-062, D-063, D-068, Defectos 13 y 14, Q-115) ya estaba en el framework, salvo cómo se llena la ficha y el repaso de todos los proyectos: pasaron a `referencias/ficha.md`. Se borraron las dos skills (de la carpeta Skills, con git) y sus enlaces en la carpeta de Claude, y el hook `comprobar-preguntas.mjs` de la configuración global (lo revisa el control). Las instrucciones globales y el `CLAUDE.md` de Ideas dicen que los proyectos se trabajan desde Iridium (D-093, D-095) y apuntan a la carpeta Skills, no a la vieja. Los `CLAUDE.md` de los demás proyectos se ponen al día con Pasar al framework, uno por uno.
 
 ## T-44 — Chat de Skills: traer las skills que la licencia permite
 Estado: pendiente · Frente: Skills · Origen: D-014
 Traer a la carpeta Skills las skills que la licencia permite y sacar las copias dobles.
 
 ## T-45 — Las rutas que nombran la carpeta vieja, después de Mover
-Estado: pendiente · Origen: Q-127
-En el chat de Skills, poner al día las rutas que nombran la carpeta vieja; en el chat general, la sección «Dónde están los demás proyectos» del `CLAUDE.md` de Ideas.
+Estado: hecho (2026-11-20, con T-43) · Origen: Q-127
+Las instrucciones globales y el `CLAUDE.md` de Skills apuntan a la carpeta Skills de Iridium, y el de Ideas dice que la raíz está dos niveles arriba. En la configuración de Claude no quedan rutas a la carpeta vieja.
 
 ## T-46 — Un solo botón Actualizar
 Estado: hecho · Frente: Orden · Fecha: 2026-11-06 · Origen: R-12

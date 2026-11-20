@@ -1,7 +1,7 @@
 # Estado del módulo: Skills
 
 **Tipo:** sección
-**Última actualización:** 2026-11-02
+**Última actualización:** 2026-11-20
 **Nivel de protección:** hereda P2. Editar una skill la cambia para todos los proyectos: cada cambio va con git y se puede deshacer (D-018).
 
 ## Progreso
@@ -18,11 +18,11 @@
 | 9. Lanzamiento | hecho (con el hito 9, `09-lanzamiento.md`; portón aprobado en Q-111) | este archivo |
 
 ## En qué estamos ahora
-La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivos de cada skill probados (Q-96, sin cambios). Con tu comentario R-6, la lista de skills cambia de ancho arrastrando su borde derecho, y lo recuerda. La calidad pasó con el hito 8 (Q-108). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10).
+La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivos de cada skill probados (Q-96, sin cambios). Con tu comentario R-6, la lista de skills cambia de ancho arrastrando su borde derecho, y lo recuerda. La calidad pasó con el hito 8 (Q-108). Lanzado con el hito 9 (Q-111, 2026-11-02): el módulo está en uso y sigue con la operación del proyecto (hito 10). Desde el 2026-11-20 el framework reemplaza a la guía vieja y a `gestor-proyectos` (T-43): las dos skills y el hook viejo ya no están.
 
 ## Ruta
 - [x] Ver y poner al día las skills
-- [ ] Que el framework reemplace a la guía vieja y a gestor-proyectos (T-43)
+- [x] Que el framework reemplace a la guía vieja y a gestor-proyectos (T-43)
 - [ ] Traer las skills que la licencia permite (T-44)
 
 ## Cambios requeridos en documentos generales
@@ -51,6 +51,12 @@ La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivo
   - **Probado por vos** (Q-96, 2026-11-01): los tres puntos funcionaron y no pediste cambios.
 - **R-6 (2026-11-01), la lista de skills cambia de ancho:** su borde derecho se arrastra o se mueve con las flechas (Shift, de a más; doble clic, el de entrada), entre 200 y 640 px y sin dejar el detalle por debajo de 360 px; el ancho se guarda en `config.json` (`anchoListaSkills`). El borde de la conversación y este comparten el mismo componente. Prueba nueva en `sk1-skills.spec.ts` (arrastrar, flechas, el mínimo y que se recuerde al volver a abrir; captura `test-results/sk1-lista-ancha.png`). Pruebas: 448 de Vitest y 55 de Playwright, todas pasan.
 
+### T-43 — El framework reemplaza a la guía vieja y a `gestor-proyectos` (2026-11-20)
+- **Comparado** el contenido de las dos skills con el framework: todo estaba, salvo cómo se llena la ficha (descripción de hasta 180 caracteres, etiquetas, qué estado sigue al hito y cuáles decide el usuario) y el repaso de todos los proyectos. Pasaron a `referencias/ficha.md`, citada desde `SKILL.md` › La ficha.
+- **Borradas** las dos skills de la carpeta Skills (con git: se pueden recuperar), sus enlaces en la carpeta de Claude y el hook `comprobar-preguntas.mjs` de la configuración global: el control de Iridium revisa lo mismo y más. La sección Skills deja de mostrarlas.
+- **Instrucciones globales:** ya no describen el método; dicen que los proyectos se trabajan desde Iridium (D-093) y qué es un proyecto y qué una carpeta simple (D-095), y apuntan a la carpeta Skills de Iridium en lugar de la vieja. El `CLAUDE.md` de Ideas, igual.
+- **No tocado:** los `CLAUDE.md` de los demás proyectos (se ponen al día con Pasar al framework) ni las fichas.
+
 ## Próximo paso
-Nada propio: el módulo está en operación con el proyecto. Sus errores y mejoras van a `trabajo.md`.
+Lo que sigue en la ruta: traer las skills que la licencia permite (T-44), cuando se elija. Sus errores y mejoras van a `trabajo.md`.
 **Leer antes:** nada.

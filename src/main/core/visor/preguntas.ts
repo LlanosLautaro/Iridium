@@ -3,8 +3,8 @@
 // (o en un título dentro de esa sección, como las escribió alguna IA: Defecto 13).
 //   - **Q-7 — ¿La miniatura muestra el modelo 3D o la textura plana?**
 //     Contexto: D-032 (…), `04-ux.md` › W-14. Opciones: A) 3D (recomendada) · B) plana.
-// Estas reglas las repite el comprobador de la guía (la carpeta Skills: skills/hitos-desarrollo-app/scripts/
-// comprobar-preguntas.mjs), que corre como hook al final de cada turno de Claude: si cambian acá, cambiarlas allá.
+// Las mismas reglas están en el framework (`SKILL.md` › Las preguntas) y las revisa el control (D-092): si
+// cambian acá, cambian allá en el mismo cambio.
 import type { OpcionPregunta } from '../../../compartido/visor'
 import { lineasFueraDeCodigo, partirLineas, titulos } from './lineas'
 

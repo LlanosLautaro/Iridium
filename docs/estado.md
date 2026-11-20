@@ -45,7 +45,7 @@
 **Frente activo: Abrir** (T-80, D-153): **Ejecutar Alfa** en la tarjeta y en el proyecto (AB-I1) y las apps de escritorio que se arman solas, sin IA, de a una y escondidas, con «Actualizando…» o «No se pudo actualizar» en la tarjeta y la sección **Este proyecto** en Ajustes (AB-I2). Tus proyectos tienen la marca (D-157) y las dos iteraciones salieron bien (Q-221). AB-I3 (D-158), tu app instalada, probada en Q-222. En la otra PC se va a actualizar sola desde sus versiones publicadas (D-160, T-87).
 **Git al día con GitHub** (D-159, T-88): Iridium trae sola lo que se subió desde la otra PC, y Git tiene **Commit y subir** y **Sincronizar**; tu prueba en las dos PC, Q-224.
 **Arranque** (D-135) espera tu prueba de una noche (Q-210). **Diseño** quedó en pausa entre tandas (Skills, Revisión y Docs probadas): retoma con Archivos al cerrar Abrir; después Orden mide la calidad y sigue Plantillas (D-151, D-150).
-El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. **Compartir:** cada versión publicada trae sus piezas y las copias bajan solo la app, unos 2 MB en vez de 296 (D-161, CO-I8, probado en Q-225). **Revisión:** la línea «Página» de un comentario ya no guarda las carpetas de la PC (T-34).
+El Mapa archiva los frentes sin nada por hacer (D-152, probado en Q-215). Ideas sin evaluar: T-76 y T-78. Los avisos de `pnpm audit`, en T-79. **Compartir:** cada versión publicada trae sus piezas y las copias bajan solo la app, unos 2 MB en vez de 296 (D-161, CO-I8, probado en Q-225). **Revisión:** la línea «Página» de un comentario ya no guarda las carpetas de la PC (T-34). **Skills:** el framework reemplazó a la guía vieja y a `gestor-proyectos` (T-43): las dos skills y su hook ya no están; tu prueba, Q-226.
 Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
@@ -64,6 +64,12 @@ Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 co
   - [ ] En esta PC, al entrar a ese proyecto, la respuesta ya estaba y Git decía «Trajo 1 commit de GitHub»
   - [ ] El proyecto que mostraba cosas viejas muestra lo último
   - [ ] Sincronizar, con todo al día, dijo «Ya estaba al día.»
+- **Q-226 — Fijate que las skills viejas ya no estén**
+  Tipo: prueba · Frente: Skills
+  Contexto: `modulos/skills/estado.md` › T-43. Antes, cerrá y abrí Iridium (las skills se leen al entrar).
+  - [ ] En Skills ya no aparecen `hitos-desarrollo-app` ni `gestor-proyectos`, y no hay avisos de enlaces rotos
+  - [ ] En Skills › Framework siguen tus proyectos con su estado (los de framework viejo se pasan con su botón, como antes)
+  - [ ] En un proyecto cualquiera, un mensaje a la IA termina normal, sin avisos de «comprobar-preguntas»
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso

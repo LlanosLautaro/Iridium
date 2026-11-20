@@ -1,6 +1,6 @@
 // Copiado de la app anterior de proyectos (D-026).
-// Scripts del usuario (D-039): `docs/scripts.md`, con el formato de la skill `hitos-desarrollo-app` › Scripts del
-// usuario. Cada script es un título `##`, una descripción y una línea de acción:
+// Scripts del usuario (D-039): `docs/scripts.md`, con el formato del framework (`SKILL.md` › Los
+// scripts). Cada script es un título `##`, una descripción y una línea de acción:
 //   ## Instalar la última versión
 //   Instala o actualiza la app. Cerrala antes.
 //   **Ejecutar:** `dist/Instalador 1.2.0.exe`

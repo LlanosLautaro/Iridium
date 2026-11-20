@@ -109,16 +109,13 @@ await win.waitForTimeout(800)
 console.log('skills:', await win.textContent('.sk-columna .titulo'))
 console.log('framework:', await win.locator('.sk-proy .datos b').allTextContents())
 await win.screenshot({ path: `${SALIDA}/9-skills-framework.png` })
-for (const nombre of ['hitos-desarrollo-app', 'impeccable']) {
-  await win.getByTitle(nombre, { exact: true }).click()
-  await win.waitForTimeout(400)
-  await win.screenshot({ path: `${SALIDA}/9-skills-${nombre}.png` })
-}
-// Los archivos de la guía (Q-95): su carpeta de referencias abierta y el SKILL.md en el visor.
-await win.getByTitle('hitos-desarrollo-app', { exact: true }).click()
-const arbolGuia = win.getByRole('navigation', { name: 'Archivos de hitos-desarrollo-app' })
-await arbolGuia.getByRole('button', { name: 'references' }).click()
-await arbolGuia.getByRole('button', { name: 'SKILL.md' }).click()
+await win.getByTitle('impeccable', { exact: true }).click()
+await win.waitForTimeout(400)
+await win.screenshot({ path: `${SALIDA}/9-skills-impeccable.png` })
+// Los archivos de una skill (Q-95): su carpeta de referencias abierta y el SKILL.md en el visor.
+const arbolSkill = win.getByRole('navigation', { name: 'Archivos de impeccable' })
+await arbolSkill.getByRole('button', { name: 'reference' }).click()
+await arbolSkill.getByRole('button', { name: 'SKILL.md' }).click()
 await win.waitForSelector('.sk-detalle .visor-codigo', { timeout: 10_000 })
 await win.waitForTimeout(400)
 await win.screenshot({ path: `${SALIDA}/9-skills-archivos.png` })
