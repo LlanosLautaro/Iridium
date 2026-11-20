@@ -143,7 +143,7 @@ test('al volver, el aviso con lo que hizo mientras no estabas; el detalle del us
   // «y 1 más» abre el detalle del uso: lo último y los anteriores de la semana.
   await aviso.getByRole('button', { name: 'y 1 más' }).click()
   const detalle = win.locator('.detalle-uso')
-  await expect(detalle).toContainText('Último arranque: Alfa, hoy a las')
+  await expect(detalle).toContainText(/Último arranque: Alfa, (hoy|ayer) a las/) // una hora antes: después de medianoche es «ayer»
   await detalle.getByRole('button', { name: 'Los 6 anteriores de la semana' }).click()
   await expect(detalle).toContainText('no había respuestas tuyas esperando')
   await expect(detalle).toContainText('el período ya estaba abierto')

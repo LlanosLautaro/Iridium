@@ -1,7 +1,7 @@
 # Estado del módulo: Abrir
 
 **Tipo:** sección (T-80)
-**Última actualización:** 2026-11-19
+**Última actualización:** 2026-11-20
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-217, D-155) | `ux.md` |
 | 5. Diseño técnico | hecho (D-156) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (el menú, la Señal, el Campo y el Aviso ya existen, D-156) | — |
-| 7. Construcción | en curso (AB-I1, AB-I2 y AB-I3 probadas; la otra PC, Q-223) | este archivo |
+| 7. Construcción | en curso (AB-I1, AB-I2 y AB-I3 probadas; la otra PC, T-87) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156). AB-I1 construida: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con el aviso de AB-2. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca; cómo marcarlos, Q-219. AB-I2 construida: las apps de escritorio se arman solas, de a una y escondidas, con la Señal en la tarjeta y Ajustes › Este proyecto. Tus proyectos marcados (D-157); las dos, probadas en Q-221. AB-I3 (D-158): la app que se usa instalada se abre y se actualiza sola, con la ruta de su `.exe` empezando por una variable de Windows; probada en Q-222: en esta PC se armó e instaló sola. Falta la otra PC, que no tiene el código (T-87, Q-223).
+Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156). AB-I1 construida: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con el aviso de AB-2. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca; cómo marcarlos, Q-219. AB-I2 construida: las apps de escritorio se arman solas, de a una y escondidas, con la Señal en la tarjeta y Ajustes › Este proyecto. Tus proyectos marcados (D-157); las dos, probadas en Q-221. AB-I3 (D-158): la app que se usa instalada se abre y se actualiza sola, con la ruta de su `.exe` empezando por una variable de Windows; probada en Q-222: en esta PC se armó e instaló sola. Falta la otra PC, que no tiene el código: se va a actualizar sola desde sus versiones publicadas (D-160, T-87).
 
 ## Ruta
 - [x] Pensar qué resuelve y por qué va primero
@@ -32,7 +32,7 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - [x] Probar Ejecutar y la actualización con una app tuya (Q-221)
   - [ ] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86)
 - [x] Abrir y actualizar sola tu app que se usa instalada (AB-I3)
-  - [ ] Ponerla al día también en la otra PC (T-87, Q-223)
+  - [ ] Ponerla al día también en la otra PC, desde sus versiones publicadas (T-87)
 - [ ] Revisar que Ejecutar y la actualización sean confiables
 
 ## Cambios requeridos en documentos generales
@@ -75,5 +75,5 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - **Arreglado de paso:** con un comando encadenado (`armar el instalador && correrlo`), `armado.log` guardaba solo la salida del último; ahora el comando va en su propio `comando.cmd` y el log tiene todo (`tests/ab2-armados.test.ts`, que falla sin el arreglo).
 
 ## Próximo paso
-El paso 8 (calidad) del frente: AB-I1, AB-I2 y AB-I3 están probadas. Con Q-223, ubicar T-87 (la otra PC) en la ruta.
+El paso 8 (calidad) del frente: AB-I1, AB-I2 y AB-I3 están probadas. T-87 (la otra PC, D-160) queda en la ruta para después de la calidad.
 **Leer antes:** `referencias/08-calidad.md` del framework y `ux.md` › AB-1 a AB-4.

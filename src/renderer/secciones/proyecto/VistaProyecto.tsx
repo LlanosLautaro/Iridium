@@ -54,6 +54,11 @@ export function VistaProyecto() {
   const volver = usarEstado((s) => s.volver)
   const p = tarjetaDe(lista, ruta)
 
+  // Al entrar a un proyecto, Iridium trae lo que haya en GitHub si hace más de un minuto que no lo mira (D-159).
+  useEffect(() => {
+    if (ruta) void window.iridium.revisarRemoto(ruta).catch(() => {})
+  }, [ruta])
+
   // Alt+← y el botón lateral del mouse vuelven un paso (F-4, Q-63), en cualquier sección del proyecto.
   useEffect(() => {
     if (!ruta) return

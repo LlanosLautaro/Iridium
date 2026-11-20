@@ -1,6 +1,6 @@
 // I-5: Git del proyecto (H-16), con un repositorio de verdad en una carpeta temporal y el motor falso. Para mirar:
-// la rama, lo sin guardar, el historial, los archivos de un commit y su antes y después al abrir uno. Lo único que
-// cambia el repositorio es crearlo y publicarlo en GitHub (D-081), acá con el GitHub falso.
+// la rama, lo sin guardar, el historial, los archivos de un commit y su antes y después al abrir uno. Lo que cambia el
+// repositorio: crearlo y publicarlo en GitHub (D-081, acá con el GitHub falso), y Commit y subir y Sincronizar (D-159).
 import { execFileSync } from 'node:child_process'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -166,9 +166,10 @@ test('Git: la rama, lo sin guardar, el historial y el antes y después de un arc
   await expect(g.locator('.dif .agregada').first()).toContainText('export const columnas = 4')
   await win.screenshot({ path: 'test-results/i5-commit.png' })
 
-  // Para mirar: ningún botón cambia lo guardado (los únicos son los commits, los archivos y Publicar en GitHub, D-081).
+  // Nada deshace ni descarta: lo que cambia el repositorio es Publicar en GitHub (D-081) y Commit (D-159).
   const botones = await g.locator('button').allTextContents()
-  for (const b of botones) expect(b).not.toMatch(/guardar cambios|commit$|revertir|descartar|push|pull/i)
+  for (const b of botones) expect(b).not.toMatch(/revertir|descartar|deshacer|push|pull/i)
+  await expect(g.locator('.caja-commit').getByRole('button')).toHaveText('Commit')
 
   // Un commit nuevo hecho afuera (la IA guardando) aparece solo, sin salir de la sección.
   git('Alfa', 'add', '.')
@@ -242,4 +243,58 @@ test('Git: crear el repositorio y publicarlo en GitHub (D-081)', async () => {
   await expect(g.locator('.remoto')).toContainText('Al día con GitHub')
   await win.screenshot({ path: 'test-results/d081-publicado.png' })
   await app.close()
+})
+
+test('Git: trae solo lo de la otra PC al entrar, y Commit y subir (D-159)', async () => {
+  // El remoto es un repositorio en otra carpeta; «la otra PC», un clon que sube un commit antes de abrir Iridium.
+  const nube = await mkdtemp(join(tmpdir(), 'iridium-e2e-nube-'))
+  const otra = await mkdtemp(join(tmpdir(), 'iridium-e2e-otra-'))
+  const enOtra = (...args: string[]) =>
+    execFileSync('git', ['-c', 'user.name=Otra', '-c', 'user.email=o@x', ...args], {
+      cwd: otra,
+      encoding: 'utf8',
+    })
+  try {
+    execFileSync('git', ['init', '-q', '--bare', '-b', 'master', nube])
+    git('Alfa', 'remote', 'add', 'origin', nube)
+    git('Alfa', 'push', '-q', '-u', 'origin', 'master')
+    execFileSync('git', ['clone', '-q', nube, otra])
+    await writeFile(join(otra, 'docs', 'trabajo.md'), '# Trabajo\n')
+    enOtra('add', '.')
+    enOtra('commit', '-q', '--no-gpg-sign', '-m', 'Desde la otra PC')
+    enOtra('push', '-q')
+
+    const { app, win } = await abrir()
+    const g = await irAGit(win, 'Alfa')
+    // Al entrar al proyecto lo trajo solo, sin tocar lo que estaba sin guardar.
+    await expect(g.locator('.arbol-lista .commit').first()).toContainText('Desde la otra PC')
+    await expect(g.locator('.remoto')).toContainText('Trajo 1 commit')
+    await expect(g.locator('.arbol-lista .fila-git')).toHaveCount(2)
+
+    const caja = g.locator('.caja-commit')
+    await expect(caja.getByRole('textbox', { name: 'Mensaje del commit' })).toHaveAttribute(
+      'placeholder',
+      'Cambios en estado.md y etiquetas.ts',
+    )
+    await win.screenshot({ path: 'test-results/d159-commit.png' })
+    await caja.getByRole('button', { name: 'Commit y subir' }).click()
+    await expect(g.locator('.aviso-git')).toContainText('Commit hecho. Sincronizado: subió 1 commit.')
+    await expect(g.locator('.arbol-lista .commit').first()).toContainText(
+      'Cambios en estado.md y etiquetas.ts',
+    )
+    await expect(g.locator('.caja-commit')).toHaveCount(0)
+    await expect(g.locator('.remoto')).toContainText('Al día con el remoto')
+    expect(
+      execFileSync('git', ['log', '-1', '--format=%s', 'master'], { cwd: nube, encoding: 'utf8' }).trim(),
+    ).toBe('Cambios en estado.md y etiquetas.ts')
+
+    // Sincronizar, ya al día.
+    await g.getByRole('button', { name: /^Sincronizar/ }).click()
+    await expect(g.locator('.aviso-git')).toContainText('Ya estaba al día.')
+    await win.screenshot({ path: 'test-results/d159-subido.png' })
+    await app.close()
+  } finally {
+    await rm(nube, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
+    await rm(otra, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
+  }
 })

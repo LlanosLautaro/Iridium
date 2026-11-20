@@ -677,7 +677,21 @@ export type RemotoGit =
       /** Commits de la rama que no están en el remoto, y del remoto que no se bajaron. */
       sinSubir: number
       sinBajar: number
+      /** La última vez que Iridium se puso al día con el remoto (D-159); null si todavía no lo hizo. */
+      sincronia: SincroniaGit | null
     }
+
+/**
+ * Cómo salió la última vez que Iridium trajo lo del remoto (D-159): `al-dia` (no había nada), `bajado` (trajo
+ * `bajados` commits), `separada` (esta PC y el remoto tienen commits distintos: lo junta Sincronizar), `choca` (hay
+ * cambios sin guardar en los mismos archivos), `sin-conexion` o `error`.
+ */
+export interface SincroniaGit {
+  cuando: number
+  resultado: 'al-dia' | 'bajado' | 'separada' | 'choca' | 'sin-conexion' | 'error'
+  bajados: number
+  motivo: string | null
+}
 
 export interface CommitGit {
   hash: string
@@ -869,6 +883,9 @@ export const CANALES = {
   inicializarGit: 'git:inicializar',
   cuentaGithub: 'git:cuenta-github',
   publicarGithub: 'git:publicar-github',
+  guardarGit: 'git:guardar',
+  sincronizarGit: 'git:sincronizar',
+  revisarRemoto: 'git:revisar-remoto',
   uso: 'uso:leer',
   usoCambio: 'uso:cambio',
   pedirCierre: 'app:pedir-cierre',
@@ -1078,6 +1095,12 @@ export interface ApiIridium {
   cuentaGithub(): Promise<CuentaGithub>
   /** Crea el repositorio en GitHub (privado o público), lo pone como `origin` y sube la rama (D-081). */
   publicarGithub(ruta: string, pedido: PedidoPublicar): Promise<ResultadoGit>
+  /** Commit y subir (D-159): guarda los cambios en un commit (los preparados, o todos) y, si hay remoto, lo sube. */
+  guardarGit(ruta: string, mensaje: string, subir: boolean): Promise<ResultadoGit>
+  /** Sincronizar (D-159): trae lo del remoto, lo junta con lo de esta PC y sube lo que falta. */
+  sincronizarGit(ruta: string): Promise<ResultadoGit>
+  /** Al entrar a un proyecto: si hace más de un minuto que no se miró su remoto, lo trae ya (D-159). */
+  revisarRemoto(ruta: string): Promise<void>
   /** Las skills de la PC por origen, con las copias dobles (SK-1, SK-2). */
   skills(): Promise<ListaSkills>
   /** Cómo está cada proyecto con el framework (Skills › Framework, W-13): los de afuera primero. */

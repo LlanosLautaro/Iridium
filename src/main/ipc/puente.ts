@@ -15,6 +15,7 @@ import {
   type ResultadoAbrir,
   type ResultadoEjecutar,
   type ResultadoFicha,
+  type ResultadoGit,
   type ResultadoMudanza,
   type ResultadoNuevo,
   type ResultadoPlanEliminar,
@@ -49,6 +50,7 @@ import { mapaDe } from '../app/mapa'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
+import { VigiaSincronia } from '../app/sincronia'
 import { leerSeccionSkills, proyectosConFramework, skillsDelProyecto } from '../app/skills'
 import { trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
@@ -95,6 +97,7 @@ import { leerImagenDelPortapapeles } from '../infra/portapapeles'
 import { existeCarpeta } from '../infra/raiz'
 import type { Registro } from '../infra/registro'
 import type { ArchivoSesiones } from '../infra/sesiones'
+import { guardarYSubir, sincronizar, traerDelRemoto } from '../infra/sincronia'
 import { type Vigilancia, vigilar } from '../infra/vigilancia'
 import { abrirEnVsCode } from '../infra/vscode'
 import type { Motor } from '../motor/motor'
@@ -115,6 +118,7 @@ import {
   IdScript,
   ImagenBase64,
   ImagenesAlAnotar,
+  MensajeCommit,
   Mime,
   NombreProyecto,
   NotaReabrir,
@@ -376,6 +380,21 @@ export function registrarPuente(s: Servicios): Puente {
         registrar: (t) => s.registro.escribir(t),
       })
     : null
+
+  // La sincronización con GitHub (D-159): trae sola lo que se hizo en otra PC, sin tocar donde trabaja la IA.
+  const iaEnMarcha = (ruta: string) => conversaciones.enMarcha().includes(ruta)
+  const sincronia = new VigiaSincronia({
+    proyectos: async () =>
+      ultimaLista?.tipo === 'lista'
+        ? ultimaLista.proyectos.filter((p) => !p.archivado).map((p) => p.ruta)
+        : [],
+    traer: (ruta) => traerDelRemoto(ruta),
+    ocupado: async (ruta) =>
+      iaEnMarcha(ruta) || !!armados?.armando(ruta) || (await conversaciones.usadaAfuera(ruta)),
+    ahora: Date.now,
+    registrar: (t) => s.registro.escribir(t),
+    alTraer: (ruta) => armados?.alTerminarTurno(ruta),
+  })
 
   /** Lo que la ventana mandó a guardar y todavía se está escribiendo: al cerrar se espera (D-060). */
   const enCurso = new Set<Promise<unknown>>()
@@ -748,7 +767,13 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.reabrirComentario, async (_, ruta: unknown, codigo: unknown, nota: unknown) =>
     comentarios.reabrir(await proyecto(ruta), CodigoComentario.parse(codigo), NotaReabrir.parse(nota)),
   )
-  ipcMain.handle(CANALES.git, async (_, ruta: unknown) => leerGit(await proyecto(ruta)))
+  ipcMain.handle(CANALES.git, async (_, ruta: unknown) => {
+    const carpeta = await proyecto(ruta)
+    const g = await leerGit(carpeta)
+    return g.tipo === 'ok' && g.remoto.tipo === 'remoto'
+      ? { ...g, remoto: { ...g.remoto, sincronia: sincronia.de(carpeta) } }
+      : g
+  })
   ipcMain.handle(CANALES.commit, async (_, ruta: unknown, hash: unknown) =>
     leerCommit(await proyecto(ruta), HashCommit.parse(hash)),
   )
@@ -762,6 +787,29 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.publicarGithub, async (_, ruta: unknown, pedido: unknown) =>
     publicarRepo(await proyecto(ruta), PedidoPublicar.parse(pedido), github),
   )
+  // Commit y subir, y Sincronizar (D-159): no mientras la IA trabaja en el proyecto (guardaría su trabajo a medias).
+  const ocupadaLaIa = {
+    tipo: 'error',
+    mensaje: 'La IA está trabajando en este proyecto: esperá a que termine.',
+  } as const
+  const anotarSincronia = (carpeta: string, r: ResultadoGit) => {
+    if (r.tipo === 'ok')
+      sincronia.anotar(carpeta, { cuando: Date.now(), resultado: 'al-dia', bajados: 0, motivo: null })
+    armados?.alTerminarTurno(carpeta)
+    return r
+  }
+  ipcMain.handle(CANALES.guardarGit, async (_, ruta: unknown, mensaje: unknown, subir: unknown) => {
+    const carpeta = await proyecto(ruta)
+    if (iaEnMarcha(carpeta)) return ocupadaLaIa
+    const r = await guardarYSubir(carpeta, MensajeCommit.parse(mensaje), z.boolean().parse(subir))
+    return subir ? anotarSincronia(carpeta, r) : r
+  })
+  ipcMain.handle(CANALES.sincronizarGit, async (_, ruta: unknown) => {
+    const carpeta = await proyecto(ruta)
+    if (iaEnMarcha(carpeta)) return ocupadaLaIa
+    return anotarSincronia(carpeta, await sincronizar(carpeta))
+  })
+  ipcMain.handle(CANALES.revisarRemoto, async (_, ruta: unknown) => sincronia.revisar(await proyecto(ruta)))
   ipcMain.handle(CANALES.elegirConversacion, async (_, ruta: unknown, id: unknown) =>
     conversaciones.elegir(await proyecto(ruta), IdConversacion.parse(id)),
   )
@@ -1039,6 +1087,7 @@ export function registrarPuente(s: Servicios): Puente {
   void verificarMotor()
   void arranque.iniciar()
   armados?.vigilar()
+  sincronia.vigilar()
 
   return {
     comentarios,
@@ -1057,6 +1106,7 @@ export function registrarPuente(s: Servicios): Puente {
     cerrar() {
       arranque.cerrar()
       armados?.cerrar()
+      sincronia.cerrar()
       uso.cerrar()
       conversaciones.cerrarTodo()
       vigilancia?.cerrar()

@@ -8,6 +8,7 @@ import {
   LARGO_AJUSTES,
   PROYECTOS_CON_FILTRO,
 } from '../../compartido/puente'
+import { LARGO_MENSAJE } from '../../compartido/sincronia'
 import { ESTADOS } from '../../compartido/tipos'
 import { HORA_ARRANQUE } from '../core/arranque'
 import { LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
@@ -122,6 +123,9 @@ export const HashCommit = z.string().regex(/^[0-9a-f]{4,64}$/)
 export const PedidoPublicar = z
   .object({ nombre: z.string().min(1).max(LARGO_NOMBRE_REPO), privado: z.boolean() })
   .strict()
+
+/** El mensaje de Commit y subir (D-159). */
+export const MensajeCommit = z.string().max(LARGO_MENSAJE)
 
 /** El estado elegido en el menú de la tarjeta (R-7). */
 export const EstadoFicha = z.enum(ESTADOS)

@@ -287,6 +287,7 @@ describe('leer el git de un proyecto', () => {
         sigue: 'origin/main',
         sinSubir: 1,
         sinBajar: 0,
+        sincronia: null,
       })
       expect(g.historial.map((c) => [c.mensaje, c.subido])).toEqual([
         ['dos', false],

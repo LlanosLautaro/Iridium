@@ -1,8 +1,8 @@
 // Git (H-16, D-041, Q-75): como el control de código de VS Code. A la izquierda, la rama, si está solo en la PC o
 // también en GitHub, y secciones que se pliegan: Cambios (lo sin guardar, archivo por archivo) e Historial (con los
 // commits sin subir marcados). A la derecha, lo elegido: un archivo con su antes y después, o un commit con sus
-// archivos, que muestran el antes y después al abrirlos (Q-61). Para mirar, salvo crear el repositorio y publicarlo
-// en GitHub (D-081); se relee sola mientras se mira.
+// archivos, que muestran el antes y después al abrirlos (Q-61). Además de mirar: crear el repositorio y publicarlo
+// en GitHub (D-081), y Commit y subir y Sincronizar (D-159); se relee sola mientras se mira.
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import { fechaExacta, fechaRelativa } from '../../../compartido/fechas'
 import type {
@@ -15,6 +15,7 @@ import type {
   RemotoGit,
   ResultadoGit,
 } from '../../../compartido/puente'
+import { LARGO_MENSAJE, mensajeSugerido, textoDeSincronia } from '../../../compartido/sincronia'
 import { usarEstado, vistaDe } from '../../estado'
 import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
@@ -184,7 +185,7 @@ function DetalleSinGuardar({ ruta, cambios }: { ruta: string; cambios: ArchivoGi
       <h2>Cambios sin guardar</h2>
       <div className="meta">
         {plural(cambios.length, 'archivo', 'archivos')} distintos del último commit. La IA los guarda en un
-        commit al cerrar su trabajo. Abrí uno para ver qué cambió.
+        commit al cerrar su trabajo; lo tuyo, con Commit a la izquierda. Abrí uno para ver qué cambió.
       </div>
       <ListaArchivos ruta={ruta} commit={SIN_GUARDAR} archivos={cambios} />
     </div>
@@ -304,8 +305,16 @@ function Plegable({
   )
 }
 
-/** Si está solo en la PC o también en GitHub, y qué falta subir (según la última sincronización). */
-function Remoto({ r, publicar }: { r: RemotoGit; publicar: (() => void) | null }) {
+/** Si está solo en la PC o también en GitHub, qué falta subir o bajar, y Sincronizar (D-159). */
+function Remoto({
+  r,
+  publicar,
+  sincronizar,
+}: {
+  r: RemotoGit
+  publicar: (() => void) | null
+  sincronizar: { hacer: () => void; enCurso: boolean; porQueNo: string | null }
+}) {
   if (r.tipo === 'local')
     return (
       <div className="remoto" title="El repositorio no tiene ningún remoto: no está en GitHub.">
@@ -337,6 +346,10 @@ function Remoto({ r, publicar }: { r: RemotoGit; publicar: (() => void) | null }
   if (r.sinBajar > 0)
     estado.push({ texto: `${plural(r.sinBajar, 'commit', 'commits')} para bajar`, clase: '' })
   if (estado.length === 0) estado.push({ texto: `Al día con ${donde}`, clase: 'ok' })
+  const s = r.sincronia
+  const problema =
+    s !== null && (s.resultado === 'separada' || s.resultado === 'choca' || s.resultado === 'error')
+  const flechas = `${r.sinBajar > 0 ? ` ↓${r.sinBajar}` : ''}${r.sinSubir > 0 ? ` ↑${r.sinSubir >= 1000 ? '1000+' : r.sinSubir}` : ''}`
   return (
     <div
       className="remoto"
@@ -363,7 +376,97 @@ function Remoto({ r, publicar }: { r: RemotoGit; publicar: (() => void) | null }
             </span>
           ))}
         </small>
+        {s && (
+          <small className={problema ? 'sincronia espera' : 'sincronia'} title={fechaExacta(s.cuando)}>
+            {textoDeSincronia(s, donde, fechaRelativa(s.cuando, Date.now()))}
+          </small>
+        )}
+        <button
+          type="button"
+          className="boton secundario chico publicar"
+          disabled={sincronizar.enCurso || sincronizar.porQueNo !== null}
+          aria-busy={sincronizar.enCurso}
+          title={
+            sincronizar.porQueNo ??
+            `Trae lo nuevo de ${donde}, lo junta con lo de esta PC y sube los commits que faltan.`
+          }
+          onClick={sincronizar.hacer}
+        >
+          <Icono nombre="sync" />
+          {sincronizar.enCurso ? 'Sincronizando…' : `Sincronizar${flechas}`}
+        </button>
       </div>
+    </div>
+  )
+}
+
+/**
+ * Commit y subir (D-159), como el cuadro de VS Code: el mensaje (si queda vacío, el que se propone) y un botón que
+ * guarda en un commit los preparados o, si no hay, todos los cambios, y lo sube si el repositorio está en un remoto.
+ */
+function CajaCommit({
+  ruta,
+  archivos,
+  preparados,
+  subir,
+  porQueNo,
+  terminar,
+}: {
+  ruta: string
+  archivos: ArchivoGit[]
+  preparados: boolean
+  subir: boolean
+  porQueNo: string | null
+  terminar: (r: ResultadoGit) => void
+}) {
+  const [mensaje, setMensaje] = useState('')
+  const [enCurso, setEnCurso] = useState(false)
+  const sugerido = mensajeSugerido(archivos)
+  const que = preparados
+    ? plural(archivos.length, 'archivo preparado', 'archivos preparados')
+    : plural(archivos.length, 'cambio', 'cambios')
+  const hacer = () => {
+    if (enCurso || porQueNo) return
+    setEnCurso(true)
+    void window.iridium
+      .guardarGit(ruta, mensaje.trim() || sugerido, subir)
+      .then((r) => {
+        if (r.tipo === 'ok') setMensaje('')
+        terminar(r)
+      })
+      .finally(() => setEnCurso(false))
+  }
+  return (
+    <div className="caja-commit">
+      <textarea
+        className="area"
+        rows={2}
+        maxLength={LARGO_MENSAJE}
+        aria-label="Mensaje del commit"
+        placeholder={sugerido}
+        value={mensaje}
+        onChange={(e) => setMensaje(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && e.ctrlKey) {
+            e.preventDefault()
+            hacer()
+          }
+        }}
+      />
+      <button
+        type="button"
+        className="boton principal chico"
+        disabled={enCurso || porQueNo !== null}
+        aria-busy={enCurso}
+        title={
+          porQueNo ??
+          `Guarda en un commit los ${que}${subir ? ' y lo sube' : ''}. Sin mensaje, va «${sugerido}». (Ctrl+Enter)`
+        }
+        onClick={hacer}
+      >
+        <Icono nombre={subir ? 'nube' : 'tilde'} />
+        {enCurso ? (subir ? 'Subiendo…' : 'Guardando…') : subir ? 'Commit y subir' : 'Commit'}
+      </button>
     </div>
   )
 }
@@ -404,11 +507,25 @@ function CuerpoGit({ ruta }: { ruta: string }) {
   const cambiarVista = usarEstado((s) => s.cambiarVista)
   const [g, leer] = useGit(ruta, visible)
   const [publicando, setPublicando] = useState(false)
-  const [aviso, setAviso] = useState<string | null>(null)
+  const [sincronizando, setSincronizando] = useState(false)
+  const [aviso, setAviso] = useState<{ texto: string; error: boolean } | null>(null)
+  const trabaja = usarEstado((s) => s.fichas.find((f) => f.ruta === ruta)?.estado === 'trabajando')
   const ahora = Date.now()
   const listo = (r: ResultadoGit) => {
-    if (r.tipo === 'ok') setAviso(r.aviso)
+    if (r.tipo === 'ok') setAviso(r.aviso ? { texto: r.aviso, error: false } : null)
     leer()
+  }
+  const terminar = (r: ResultadoGit) => {
+    if (r.tipo === 'ok') setAviso(r.aviso ? { texto: r.aviso, error: false } : null)
+    else setAviso({ texto: r.mensaje, error: true })
+    leer()
+  }
+  const sincronizar = () => {
+    setSincronizando(true)
+    void window.iridium
+      .sincronizarGit(ruta)
+      .then(terminar)
+      .finally(() => setSincronizando(false))
   }
 
   if (!g) return <div className="carga" aria-busy="true" />
@@ -445,6 +562,12 @@ function CuerpoGit({ ruta }: { ruta: string }) {
     />
   )
   const donde = g.remoto.tipo === 'remoto' && g.remoto.github ? 'GitHub' : 'el remoto'
+  // Commit y subir y Sincronizar esperan a la IA (guardarían su trabajo a medias) y necesitan una rama.
+  const porQueNo = trabaja
+    ? 'La IA está trabajando en este proyecto: esperá a que termine.'
+    : g.sinRama
+      ? 'No hay una rama elegida: se está mirando un commit suelto.'
+      : null
 
   return (
     <div className="partida git">
@@ -457,11 +580,28 @@ function CuerpoGit({ ruta }: { ruta: string }) {
           <b>{g.rama || 'sin commits'}</b>
           {g.sinRama && <span className="sub">sin rama</span>}
         </div>
-        <Remoto r={g.remoto} publicar={g.historial.length > 0 ? () => setPublicando(true) : null} />
+        <Remoto
+          r={g.remoto}
+          publicar={g.historial.length > 0 ? () => setPublicando(true) : null}
+          sincronizar={{ hacer: sincronizar, enCurso: sincronizando, porQueNo }}
+        />
         {aviso && (
-          <p className="aviso-git" role="status">
-            {aviso}
+          <p
+            className={aviso.error ? 'aviso-git error' : 'aviso-git'}
+            role={aviso.error ? 'alert' : 'status'}
+          >
+            {aviso.texto}
           </p>
+        )}
+        {g.cambios.length > 0 && (
+          <CajaCommit
+            ruta={ruta}
+            archivos={preparados.length > 0 ? preparados : g.cambios}
+            preparados={preparados.length > 0}
+            subir={g.remoto.tipo === 'remoto'}
+            porQueNo={porQueNo}
+            terminar={terminar}
+          />
         )}
         {preparados.length > 0 && (
           <Plegable

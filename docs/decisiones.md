@@ -3213,3 +3213,30 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** general, sin caso especial. `**Ejecutar:**` (y `**Abrir:**`) aceptan una ruta que empieza con una variable de Windows (`%LOCALAPPDATA%\…`), que Iridium completa en la PC donde corre; con ella Ejecutar abre el programa instalado y la actualización vigila ese `.exe` (si está abierta y su fecha). El script `armar` de una app así arma el instalador y lo corre sin preguntas (`… && instalador\Alfa-instalador.exe /S`). El control marca una ruta fija (con la letra del disco) en lo que abre el proyecto: no sirve en otra PC. Se marcó así la app instalada del usuario, con su commit en ese repo (solo `docs/scripts.md`).
 **Motivo:** reusa todo lo de AB-I1 y AB-I2: lo único nuevo es dónde está el `.exe`. Una variable vale en cualquier PC; una ruta fija no.
 **Consecuencias:** el framework (`SKILL.md` › Los scripts) dice cómo se marca una app instalada. Iteración AB-I3, con su prueba (Q-222). Las rutas con variable en **Abrir:**, que antes decían «No se encuentra», ahora abren.
+
+## D-159 — Iridium se mantiene al día con GitHub sola, y Git hace Commit y subir y Sincronizar
+- **Fecha:** 2026-11-20
+- **Ámbito:** general (la sección Git, H-16; hito 10)
+- **Hito o paso:** 10; a pedido del usuario
+- **Estado:** vigente (ajusta D-058 y D-081: Iridium ya no solo mira el git ni solo crea y publica el repositorio)
+
+**Contexto:** el usuario trabaja en dos PC. Un proyecto mostraba cosas que ya habían cambiado: Iridium muestra lo que hay en la carpeta, y nada traía lo que se subió desde la otra PC. Además, cuando el usuario solo responde preguntas no hay commit de la IA, y Git no tenía cómo guardarlas y subirlas, como hace VS Code.
+**Decisión:**
+1. **Al día sola:** al abrir Iridium (a los 20 segundos), cada cinco minutos y al entrar a un proyecto (si hace más de un minuto que no se miró), Iridium trae lo del remoto de cada proyecto cuya rama está en uno, de a uno. Solo lo pone encima si esta PC no tiene commits propios (`merge --ff-only`): no junta nada y no pisa cambios sin guardar (si chocan, no toca nada y lo dice). No mira un proyecto donde trabaja la IA o que se está armando. No abre la ventana para iniciar sesión: sin sesión, lo dice.
+2. **Commit y subir:** en Git, con cambios, un cuadro para el mensaje y el botón **Commit y subir** (**Commit** si el repositorio es solo local). Guarda los preparados o, si no hay, todos los cambios, como VS Code. Sin mensaje, va uno propuesto («Respuesta a Q-10», «Cambios en estado.md y trabajo.md»).
+3. **Sincronizar:** debajo de dónde está el repositorio, con lo que falta bajar y subir (↓ ↑): trae, junta lo de las dos PC con un merge y sube. Si las dos cambiaron las mismas líneas, deshace el merge y dice que se lo pida a la IA. Una rama que no está en el remoto, la sube.
+4. Commit y subir y Sincronizar esperan a que la IA termine su turno en ese proyecto.
+**Motivo:** lo que se hace en una PC tiene que verse en la otra sin pedírselo a nadie; traer solo lo que se pone encima no puede romper nada, y juntar se hace cuando el usuario lo pide. El commit desde Git es el de VS Code, que el usuario ya conoce.
+**Consecuencias:** la sesión de GitHub sigue siendo la de git (D-081). La otra PC necesita esta versión de Iridium (Publicar). H-16 suma dos criterios. Probado con repositorios de verdad (`tests/d159-sincronia.test.ts`) y con la app abierta (`i5-git.spec.ts`).
+
+## D-160 — La app instalada se pone al día en la otra PC desde sus versiones publicadas
+- **Fecha:** 2026-11-20
+- **Ámbito:** Abrir (T-87)
+- **Hito o paso:** 10; frente Abrir, paso 7; al procesar Q-223
+- **Estado:** vigente
+
+**Contexto:** en la PC con el código, Iridium arma e instala sola la app que se usa instalada (D-158). La otra PC no tiene el código: la versión nueva se publicó y se bajó a mano.
+**Opciones (Q-223):** A) que la app se actualice sola al abrirse, desde sus versiones publicadas, como Iridium con D-085 (elegida); B) que Iridium la arme también en la otra PC, con el proyecto clonado ahí; C) dejarlo a mano.
+**Decisión:** A. La app suma la pieza que se actualiza desde sus versiones publicadas en GitHub, y su armado en la PC del código la publica después de instalarla.
+**Motivo:** sirve para cualquier app del usuario y la otra PC no necesita el código ni herramientas.
+**Consecuencias:** T-87 pasa a pendiente, en la ruta de Abrir. Es una pieza para cada app de escritorio que se use en más de una PC: va también como receta del framework (frente Plantillas, D-150).

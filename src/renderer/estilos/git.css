@@ -403,3 +403,18 @@
   color: var(--texto-3);
   font-size: 12px;
 }
+
+/* Commit y subir y Sincronizar (D-159): el cuadro del mensaje, como el de VS Code, y lo que pasó con el remoto */
+.caja-commit {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--borde-suave);
+}
+.remoto small.sincronia {
+  margin-top: 2px;
+}
+.aviso-git.error {
+  color: var(--error);
+}

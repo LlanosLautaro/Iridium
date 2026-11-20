@@ -380,5 +380,13 @@ Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: D-156
 Lo que el diseño técnico dejó como «Should, más adelante»: al volver, el aviso del Arranque dice también qué apps se armaron de noche y cuáles fallaron.
 
 ## T-87 — Que la app instalada en otra PC también se ponga al día
-Estado: nueva · Frente: Abrir · Fecha: 2026-11-19 · Origen: Q-222 · Idea: IA
-La actualización automática arma e instala en la PC donde está el código; en otra PC sin el código la versión nueva se publicó y se bajó a mano. Cómo llevarla allá, Q-223.
+Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: Q-222 · Idea: IA
+La actualización automática arma e instala en la PC donde está el código; en otra PC sin el código la versión nueva se publicó y se bajó a mano. Aprobada en Q-223 (D-160): la app se actualiza sola al abrirse desde sus versiones publicadas en GitHub, como Iridium (D-085), y su armado la publica después de instalarla.
+
+## T-88 — Iridium al día con GitHub, y Commit y subir en Git
+Estado: hecho · Fecha: 2026-11-20 · Origen: D-159
+Pedido del usuario: un proyecto mostraba lo de antes de lo que se hizo en la otra PC, y Git no tenía cómo guardar y subir las respuestas. Iridium trae sola lo del remoto (al abrir, cada cinco minutos y al entrar a un proyecto) y Git suma Commit y subir y Sincronizar. Prueba en Q-224.
+
+## T-89 — Subir solas las respuestas a las preguntas
+Estado: nueva · Idea: IA · Fecha: 2026-11-20 · Origen: D-159
+Al responder una `Q-n` desde Iridium, que la respuesta se guarde en un commit y se suba sola (si el proyecto está en GitHub y la IA no trabaja en él), para que la otra PC la vea sin tocar Commit y subir.

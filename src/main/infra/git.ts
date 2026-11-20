@@ -174,6 +174,7 @@ async function remotoDe(
       sigue: rama,
       sinSubir: hashes.size,
       sinBajar: Number.isFinite(sinBajar) ? sinBajar : 0,
+      sincronia: null,
     },
     sinSubir: hashes,
   }
