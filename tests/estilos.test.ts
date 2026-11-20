@@ -176,10 +176,8 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'ajustes.css': ['ajustes-error', 'campo-ajuste', 'tono', 'ajustes'],
   'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
-  // DI-I3, tanda 6: la Bandeja pasó a las piezas; queda el texto de los documentos de Scripts (tanda 11: Docs pasó)
-  'pendientes.css': ['aviso-doc', 'doc-texto'],
-  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás; tanda 12: Archivos
-  'proyecto.css': ['script', 'aviso-doc', 'recuadro-simple', 'menu-lista', 'cab-panel', 'doc-texto'],
+  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás; tanda 12: Archivos; tanda 14: Scripts
+  'proyecto.css': ['recuadro-simple', 'menu-lista', 'cab-panel'],
   'proyectos.css': [
     'peligro',
     'aviso-grilla',
@@ -196,11 +194,11 @@ const VIEJAS_PENDIENTES: Record<string, string[]> = {
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--lateral': 1,
   '--barra': 1,
-  '--caja': 9,
+  '--caja': 7,
   '--medidor-fondo': 5,
   '--primario': 15,
-  '--primario-texto': 2,
-  '--ok': 5,
+  '--primario-texto': 1,
+  '--ok': 4,
   '--esp-sm': 4,
   '--esp-md': 3,
   '--esp-lg': 7,

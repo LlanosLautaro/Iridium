@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I8, las piezas de cada versión, probada en Q-225) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 13 probadas; los arreglos de Git esperan Q-231; vuelve por D-162) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 13 probadas; la 14, Scripts, espera Q-232; vuelve por D-162) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
@@ -42,7 +42,7 @@
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, al cerrar DI-I3, D-162) | en pausa |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Archivos y **Git** quedaron probadas (Q-228, Q-229); los comentarios de Git R-95 a R-97 (el visor solo con el archivo elegido) están arreglados y esperan Q-231. Siguen Scripts y Ajustes; la lupa para buscar un archivo, en T-90.
+**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Archivos y **Git** quedaron probadas, con su visor (Q-228, Q-229, Q-231). **Scripts** ya es la de la maqueta y espera Q-232 (la prueba). Sigue Ajustes; la lupa para buscar un archivo, en T-90.
 **Abrir** (D-153) queda en pausa con sus tres iteraciones probadas: el paso 8 y la otra PC (T-87, D-160) vuelven al cerrar DI-I3. **Git al día con GitHub** (D-159) quedó probado en las dos PC (Q-224).
 **Arranque** (D-135): la primera noche no arrancó; arreglado, espera otra noche (Q-227). Después de Diseño, Orden mide la calidad y sigue Plantillas (D-151, D-150).
 Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
@@ -56,17 +56,17 @@ Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat 
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…»
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-231 — Probá el visor de Git**
+- **Q-232 — Probá Scripts**
   Tipo: prueba · Frente: Diseño
-  Contexto: R-95 a R-97 (`modulos/diseno/estado.md` › Q-229 y los comentarios R-95 a R-97). Antes, Actualizar.
-  - [ ] Al entrar a Git, la derecha está vacía hasta que elijo un archivo
-  - [ ] Al abrir un commit del Historial, sus archivos aparecen debajo de él, a la izquierda, y al elegir uno veo su antes y después
-  - [ ] Si el archivo que miro se guarda en un commit, el visor se cierra solo
-  - [ ] Al sincronizar ya al día, solo dice «Revisado recién», sin «Al día con GitHub» ni «Ya estaba al día»
+  Contexto: la tanda 14 (`modulos/diseno/estado.md` › DI-I3, tanda 14). Antes, Actualizar.
+  - [ ] Cada script es una fila con ▷ verde a la izquierda y, debajo del nombre, el comando y para qué sirve
+  - [ ] Al tocar la fila se abre con la descripción entera, y se cierra al tocarla otra vez
+  - [ ] Ejecutar un script dice a la derecha, en verde, que se está corriendo (o que se abrió)
+  - [ ] Un script cuyo archivo no está dice «No se encuentra» en rojo y su ▷ no se puede tocar
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño, DI-I3 tanda 14: Scripts como la maqueta (procesar Q-231 si llegó).
+Diseño, DI-I3 tanda 15: Ajustes como la maqueta (procesar Q-232 si llegó).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

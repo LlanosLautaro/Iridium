@@ -1,90 +1,12 @@
 /* Los pendientes de un proyecto, en su Bandeja de entrada (04-ux.md › W-5 y W-6), con las piezas desde DI-I3, tanda 6
-   (docs/diseno/pantallas/bandeja.html). Arriba queda el texto de los documentos, que usa Scripts
-   hasta que su sección pase (Docs ya es el Texto de documento, tanda 11). */
+   (docs/diseno/pantallas/bandeja.html). */
 
-/* Texto de un documento del proyecto (citas y panel): el HTML que arma el visor */
-.doc-texto {
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--texto-2);
-  overflow-wrap: anywhere;
-}
-.doc-texto > * + * {
-  margin-top: 8px;
-}
-.doc-texto h1,
-.doc-texto h2,
-.doc-texto h3,
-.doc-texto h4,
-.doc-texto h5,
-.doc-texto h6 {
-  font: 600 14px / 1.4 var(--ui);
-  color: var(--texto);
-  margin-top: 16px;
-}
-.doc-texto h1,
-.doc-texto h2 {
-  font-size: 16px;
-}
-.doc-texto > :first-child {
-  margin-top: 0;
-}
-.doc-texto ul,
-.doc-texto ol {
-  padding-left: 18px;
-}
-.doc-texto li + li {
-  margin-top: 3px;
-}
-.doc-texto strong {
-  font-weight: 600;
-  color: var(--texto);
-}
-.doc-texto a {
-  color: var(--primario-texto);
-  text-decoration: underline;
-  text-decoration-color: var(--borde-fuerte);
-  text-underline-offset: 3px;
-}
-.doc-texto code {
-  font: 12.5px / 1.5 var(--mono);
-  color: var(--texto-2);
-}
-.doc-texto pre {
-  padding: 8px 10px;
-  background: var(--caja);
-  border-radius: var(--radio-control);
-  overflow-x: auto;
-}
-.doc-texto blockquote {
-  padding-left: 10px;
-  border-left: 2px solid var(--borde-fuerte);
-}
-.doc-texto .gp-tabla-caja {
-  overflow-x: auto;
-}
-/* En una tabla, las palabras no se cortan por la mitad: si no entra, se desplaza dentro de su recuadro (A-10) */
-.doc-texto table {
-  border-collapse: collapse;
-  font-size: var(--tam-chico);
-  overflow-wrap: normal;
-}
-.doc-texto th,
-.doc-texto td {
-  padding: 3px 8px;
-  border: 1px solid var(--borde);
-  text-align: left;
-  vertical-align: top;
-}
 /* Una casilla de un documento (`- [ ]`): se dibuja, no se marca. En Docs, la Bandeja y Scripts */
 .casilla-doc {
   list-style: none;
   margin-left: calc(-1 * var(--esp-5));
   display: flex;
   gap: var(--esp-2);
-}
-.doc-texto .casilla-doc {
-  margin-left: -18px;
 }
 .casilla-doc-caja {
   flex: none;
@@ -97,13 +19,6 @@
 .casilla-doc.hecha .casilla-doc-caja {
   background: var(--marcado);
   border-color: var(--marcado);
-}
-.doc-texto .marcada {
-  margin-left: -8px;
-  margin-right: -8px;
-  padding: 6px 8px;
-  border-radius: var(--radio-fila);
-  background: var(--sel-fondo);
 }
 
 /* El ícono de un proyecto (la barra de proyectos) y la línea de las siluetas */
@@ -415,8 +330,4 @@
   flex: 1;
   overflow-y: auto;
   padding: 14px 18px 20px;
-}
-.aviso-doc {
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
 }

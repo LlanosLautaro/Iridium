@@ -105,23 +105,6 @@
 .carga {
   flex: 1;
 }
-.aviso-doc {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding: 10px 12px;
-  border: 1px dashed var(--borde-fuerte);
-  border-radius: var(--radio-bloque);
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-  line-height: 1.5;
-}
-.aviso-doc .ic {
-  width: 14px;
-  height: 14px;
-  color: var(--texto-3);
-}
 
 /* Mapa (D-141, D-144; modulos/mapa/ux.md › W-7): la barra de frentes (Pestañas) y el camino del elegido (la pieza
    Camino, PZ-15); «Aprobado, sin lugar» y «Por empezar», Bloques con Filas. Aquí solo va cómo se acomodan. */
@@ -457,62 +440,47 @@
   flex-direction: column;
 }
 
-/* La sección Scripts: cada uno con su descripción */
+/* La sección Scripts (DI-I3, tanda 14): Filas centradas, como la maqueta; la fila entera es el botón que la abre */
 .scripts {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 32px 72px;
+  padding: var(--esp-5) var(--esp-6) var(--esp-7);
 }
 .scripts-col {
-  max-width: 780px;
-  margin: 0 auto;
-  display: grid;
-  gap: 10px;
+  max-width: var(--ancho-centrado);
+  margin-inline: auto;
 }
-.script {
-  display: grid;
-  gap: 6px;
-  padding: 10px 12px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-bloque);
-  background: var(--caja);
+.scripts .ejecutar {
+  flex: none;
+  color: var(--bien);
 }
-.script-cab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.script h4 {
+.abrir-script {
   flex: 1;
   min-width: 0;
-  font: 600 13.5px / 1.3 var(--ui);
-  color: var(--texto);
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
+.abrir-script:disabled {
+  cursor: default;
+}
+.cuerpo-script {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+/* Las descripciones de las skills del proyecto (R-8), en gris debajo del nombre */
 .script-desc {
   font-size: var(--tam-chico);
   line-height: 1.5;
   color: var(--texto-3);
-}
-.script-msg {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--tam-chico);
-  color: var(--texto-2);
-}
-.script-msg.ok {
-  color: var(--ok);
-}
-.script-msg.error {
-  color: var(--error);
-}
-/* Ejecutar en verde (R-58, R-78): es lo que se viene a hacer */
-.script .correr {
-  color: var(--bien);
-}
-.script .correr:hover {
-  color: var(--bien);
-  border-color: var(--bien);
 }
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
@@ -527,16 +495,6 @@
 }
 .menu-lista > button.conv.actual {
   background: var(--sel-fondo);
-}
-
-/* Las ideas y las skills del proyecto (R-8): como los scripts, una caja por sección o por skill */
-.seccion-ideas h4 .n {
-  margin-left: 4px;
-  color: var(--texto-3);
-  font-weight: 500;
-}
-.seccion-ideas .doc-texto {
-  font-size: 13.5px;
 }
 
 /* La carpeta simple (W-3, D-095): el recuadro punteado arriba de Archivos, como lo que todavía no está ordenado */

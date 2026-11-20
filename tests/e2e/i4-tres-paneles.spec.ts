@@ -249,14 +249,21 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
   await expect(entrada).not.toContainText('Ver con detalles')
   await win.screenshot({ path: 'test-results/i4-entrada.png' })
 
-  // Los scripts, en su sección: con su descripción y lo que falta; un botón ejecuta el script.
+  // Los scripts, en su sección, como la maqueta (DI-I3, tanda 14): una Fila por script con Ejecutar a la izquierda,
+  // lo que corre y para qué debajo, y lo que falta a la derecha; tocándola se abre con su descripción entera.
   await barra.getByRole('button', { name: 'Scripts' }).click()
   const scripts = win.locator('[data-seccion="scripts"]')
-  await expect(scripts.locator('.script h4')).toHaveText(['Dejar una marca', 'Instalar'])
-  await expect(scripts.locator('.script', { hasText: 'Instalar' })).toContainText('No se encuentra')
-  await expect(scripts.locator('.script', { hasText: 'Instalar' }).getByRole('button')).toBeDisabled()
+  await expect(scripts.locator('[data-script] .titulo-fila')).toHaveText(['Dejar una marca', 'Instalar'])
+  const instalar = scripts.locator('[data-script]', { hasText: 'Instalar' })
+  await expect(instalar.locator('.senal.rojo')).toHaveText('No se encuentra')
+  await expect(instalar.getByRole('button', { name: /^Ejecutar/ })).toBeDisabled()
+  await instalar.locator('.abrir-script').click()
+  await expect(scripts.locator('.cuerpo-fila .recuadro.error')).toContainText('No se encuentra')
   // Ejecutar va en verde (R-58, R-78): el color de lo que funciona, no el del texto.
-  const ejecutar = scripts.locator('.script', { hasText: 'Dejar una marca' }).getByRole('button')
+  const ejecutar = scripts.getByRole('button', { name: 'Ejecutar «Dejar una marca»' })
+  await expect(scripts.locator('[data-script]', { hasText: 'Dejar una marca' }).locator('.detalle')).toContainText(
+    ' · ',
+  )
   const verde = await win.evaluate(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--bien').trim(),
   )
@@ -272,8 +279,10 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
       return c
     }, verde),
   )
-  await scripts.locator('.script', { hasText: 'Dejar una marca' }).getByRole('button').click()
-  await expect(scripts.locator('.script-msg.ok')).toContainText('consola')
+  await ejecutar.click()
+  await expect(scripts.locator('[data-script] .senal.verde')).toContainText('consola')
+  await scripts.locator('[data-script]', { hasText: 'Dejar una marca' }).locator('.abrir-script').click()
+  await expect(scripts.locator('.cuerpo-fila .texto-doc')).toContainText('Escribe marca.txt')
   await expect
     .poll(async () => (await readFile(join(raiz, 'Alfa', 'marca.txt'), 'utf8').catch(() => '')).trim(), {
       timeout: 15_000,
