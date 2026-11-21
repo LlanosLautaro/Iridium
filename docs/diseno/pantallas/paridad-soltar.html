@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Soltar archivos en la conversación</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .ejecutar { flex: none; color: var(--bien); }
+  /* Paridad: las piezas son la Ficha (PZ-16) y el Menú arriba del compositor (PZ-8); la lista de «/», la línea y soltar, de la conversación (piezas.css). Acá queda solo el dibujo de la captura de muestra. */
+  .captura { width: 100%; height: 100%; display: block; background: var(--hover); }
+  .captura .c-barra { fill: var(--sel-fondo); }
+  .captura .c-linea { stroke: var(--borde-control); stroke-width: 3; stroke-linecap: round; }
+  .captura .c-boton { fill: none; stroke: var(--principal); stroke-width: 1.5; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="scripts" data-soltando="si">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Scripts</h1></div>
+  </header>
+  <div class="contenido centrado">
+    <div class="filas con-lineas">
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Abrir en modo desarrollo</span><span class="detalle">pnpm dev · arma y abre la app con los cambios en vivo</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Correr las pruebas</span><span class="detalle">pnpm test · reglas, casos de uso y disco; tarda un minuto</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Pruebas con la app abierta</span><span class="detalle">pnpm e2e · abre la app escondida con el motor falso</span></span></div>
+    </div>
+  </div>
+</main>
+<template id="conversacion" data-titulo="El armado falla en la otra PC" data-detalle="Hoy, 10:12">
+<div class="mensaje-yo">Al armar en la otra PC sale un error con el instalador. ¿Lo miras?</div>
+<div class="mensaje-ia"><div class="quien">IA</div>
+  <div class="paso"><i data-ic="ok"></i> Leí docs/scripts.md</div>
+  <div class="texto-doc conversacion"><p>Necesito ver el error completo: pégame lo que salió en la consola y, si puedes, una captura de la ventana del instalador.</p></div>
+</div>
+</template>
+<template id="compositor">
+<div class="compositor">
+  <textarea placeholder="Escribe a la IA…" aria-label="Mensaje para la IA">Ahí va el registro del instalador.</textarea>
+  <div class="pie-comp">
+    <button class="boton solo-icono chico" aria-label="Agregar" title="Agregar archivos, fotos o comandos"><i data-ic="mas"></i></button>
+    <button class="boton sin-fondo chico">Opus</button>
+    <button class="boton sin-fondo chico">Medio</button>
+    <button class="boton solo-icono chico enviar" aria-label="Enviar"><i data-ic="enviar"></i></button>
+  </div>
+</div>
+</template>
+<script src="../piezas.js"></script>
+</body>
+</html>

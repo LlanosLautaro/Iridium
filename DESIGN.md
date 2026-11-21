@@ -273,12 +273,12 @@ Esquinas de 8 px en controles y filas, 12 px en recuadros, menús, el compositor
 
 ## Components
 
-Las quince piezas, con su ficha (Grupo, Para qué, Estados) en el comentario que las encabeza en `piezas.css`; Diseño › Sistema las muestra con sus variantes. En la app, las que tienen comportamiento son componentes de `src/renderer/ui/`.
+Las dieciséis piezas, con su ficha (Grupo, Para qué, Estados) en el comentario que las encabeza en `piezas.css`; Diseño › Sistema las muestra con sus variantes. En la app, las que tienen comportamiento son componentes de `src/renderer/ui/`.
 
 ### Acciones
 - **Botón (PZ-1):** principal (verde delineado, uno por pantalla), secundario (con el borde de control), sin fondo (las acciones de una fila), peligroso (rojo, solo lo que no se deshace), chico (24 px, en una fila o un recuadro) y solo ícono (30 × 30).
 - **Campo (PZ-5):** texto, área, selector, casilla, opción e interruptor; 32 px (26 el chico). Con el foco, el borde se aclara; lo marcado, en verde. Lo escrito se guarda solo.
-- **Menú, cuadro y ventana (PZ-8):** lo que flota. El menú (también con clic derecho y con el ⋯ de una tarjeta), el menú en lista (con título y detalle, la elegida resaltada), el cuadro que confirma o pide un dato (440 px) y la ventana de Ajustes.
+- **Menú, cuadro y ventana (PZ-8):** lo que flota. El menú (también con clic derecho y con el ⋯ de una tarjeta), el menú en lista (con título y detalle, la elegida resaltada), el cuadro que confirma o pide un dato (440 px) y la ventana de Ajustes. Arriba del compositor, el menú se abre hacia arriba y, en lista, toma su ancho (el + y la lista de «/»).
 
 ### Contenido
 - **Fila (PZ-2):** un elemento de una lista; sus acciones aparecen al pasar el mouse o con el foco, y la que se viene a hacer está siempre.
@@ -287,6 +287,7 @@ Las quince piezas, con su ficha (Grupo, Para qué, Estados) en el comentario que
 - **Fila que se abre (PZ-13):** se abre en su lugar, con su contenido y sus botones (una idea).
 - **Etiqueta de enlace (PZ-14):** un enlace dentro de un texto que se escribe: ícono, nombre y sitio en gris, con borde.
 - **Camino (PZ-15):** los pasos en orden con sus ramas (el Mapa): un carril con un punto por paso y la señal a la derecha.
+- **Ficha (PZ-16):** lo que va con un mensaje, arriba del cuadro de escribir: la foto como miniatura cuadrada (56 px; 72 en un mensaje mandado), el archivo o el texto pegado con su ícono y su nombre, con borde y la ✕ para sacarlo; con borde rojo, lo que no se puede mandar.
 
 ### Avisos
 - **Recuadro (PZ-4):** lo que hay que ver aunque no se busque: aviso (ámbar), error (rojo), vacío y punteado (lo que todavía falta), con su acción si la tiene.

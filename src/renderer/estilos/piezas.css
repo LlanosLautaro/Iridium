@@ -1,4 +1,4 @@
-/* Las piezas de Iridium (PZ-1 a PZ-15, modulos/diseno/ux.md › Las piezas), pasadas al código en DI-I3: los bloques de
+/* Las piezas de Iridium (PZ-1 a PZ-16, modulos/diseno/ux.md › Las piezas), pasadas al código en DI-I3: los bloques de
    cada pieza son los de docs/diseno/piezas.css, tal cual (el control de estilos, tests/estilos.test.ts, los compara).
    Cambiar una pieza es cambiarla en la maqueta y acá en el mismo cambio. El marco y la conversación de esa hoja no
    están: son de la app (marco.css, conversacion.css). Solo usa var(--…): ningún color escrito.
@@ -169,7 +169,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 /* ───────── PZ-8 · Menú, cuadro y ventana ─────────
    Grupo: Acciones
    Para qué: lo que flota sobre la pantalla: el menú (también con clic derecho), el cuadro que confirma o pide un dato y la ventana de Ajustes. Es lo único con sombra.
-   Estados: menú, menú en lista, con atajo, opción peligrosa, opción marcada, opción apagada, cuadro, ventana. */
+   Estados: menú, menú en lista, arriba del compositor, con atajo, opción peligrosa, opción marcada, opción apagada, cuadro, ventana. */
 .menu {
   position: absolute; z-index: 20; min-width: var(--ancho-menu); padding: var(--esp-1);
   background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu);
@@ -196,6 +196,9 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .menu.lista-menu .detalle { display: block; font-size: var(--tam-chico); color: var(--texto-3); line-height: 1.4; }
 .menu.lista-menu .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; align-self: flex-start; line-height: 1.4; }
 .menu.lista-menu .actual { background: var(--sel-fondo); }
+/* Arriba del compositor (frente Paridad): el menú del + y la lista de «/» se abren hacia arriba, pegados a él; `.ancho`, de su mismo ancho. */
+.menu.arriba { left: 0; bottom: calc(100% + var(--esp-2)); }
+.menu.arriba.ancho { right: 0; width: auto; max-height: 372px; overflow: auto; }
 .velo { position: fixed; inset: 0; z-index: 30; background: var(--velo); display: grid; place-items: center; }
 .cuadro {
   width: var(--ancho-cuadro); padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);
@@ -332,6 +335,26 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .camino .plegado .punto-camino { left: 3px; width: 18px; height: 14px; margin-top: -7px; border: 0; background: var(--sel-fondo); color: var(--texto-2); font: var(--estilo-codigo); line-height: 14px; text-align: center; }
 .camino .plegado .nombre-tramo { color: var(--texto-3); }
 .camino .plegado .nombre-tramo:hover { color: var(--texto); text-decoration: none; }
+
+/* ───────── PZ-16 · Ficha ─────────
+   Grupo: Contenido
+   Para qué: lo que va con un mensaje, arriba del cuadro de escribir (frente Paridad): una foto como miniatura cuadrada;
+   un archivo o un texto pegado, con su ícono y su nombre. La ✕ lo saca; un clic lo abre. En un mensaje mandado, sin ✕
+   y con la foto un poco más grande.
+   Estados: archivo, foto, no va (borde rojo), en un mensaje mandado. */
+.fichas { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+.ficha { position: relative; display: inline-flex; align-items: center; gap: var(--esp-2); max-width: 100%; height: var(--alto-control); padding: 0 var(--esp-1) 0 var(--esp-3); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); background: none; font: var(--estilo-meta); color: var(--texto-2); cursor: pointer; }
+.ficha .ic { width: 14px; height: 14px; flex: none; }
+.ficha b { font-weight: 500; color: var(--texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ficha .quitar { display: grid; place-items: center; width: var(--alto-control-chico); height: var(--alto-control-chico); flex: none; border: 0; border-radius: var(--radio-control); background: none; color: var(--texto-3); cursor: pointer; }
+.ficha .quitar:hover { background: var(--hover); color: var(--texto); }
+.ficha.foto { width: 56px; height: 56px; padding: 0; overflow: hidden; }
+.ficha.foto img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.ficha.foto .quitar { position: absolute; top: 2px; right: 2px; background: var(--elevado); }
+.ficha.no-va { border-color: var(--error-borde); }
+.fichas.enviadas { gap: var(--esp-1); }
+.fichas.enviadas .ficha { border-color: var(--borde-control); padding-right: var(--esp-3); }
+.fichas.enviadas .ficha.foto { width: 72px; height: 72px; padding: 0; }
 
 /* ───────── Información a pedido ─────────
    Grupo: Avisos

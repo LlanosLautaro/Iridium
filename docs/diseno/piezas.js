@@ -189,6 +189,11 @@ function armarMarco() {
         </div>
       </div>`}
       <div class="menu lista-menu" id="menu-conversaciones" role="menu">${CONVERSACIONES[tipo]}</div>`
+    // Arrastrando archivos sobre la conversación (data-soltando, frente Paridad): el borde punteado y «Suelta para adjuntar».
+    if (cuerpo.dataset.soltando === 'si') {
+      aside.classList.add('soltando')
+      aside.insertAdjacentHTML('beforeend', '<div class="soltar">Suelta para adjuntar</div>')
+    }
     marco.insertBefore(aside, marco.querySelector('.estado-barra'))
   }
   propio?.remove()

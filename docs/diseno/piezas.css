@@ -1,4 +1,4 @@
-/* Las piezas de Iridium (PZ-1 a PZ-15, modulos/diseno/ux.md › Las piezas) y el marco que comparten las pantallas.
+/* Las piezas de Iridium (PZ-1 a PZ-16, modulos/diseno/ux.md › Las piezas) y el marco que comparten las pantallas.
    Cada pieza empieza con su ficha (T-62, D-117): Grupo, Para qué y Estados; Diseño › Sistema la muestra con los tokens que usa.
    Regla general: se separa con espacio y con una línea gris solo donde hace falta; el borde es del Recuadro, de los
    Campos y del botón secundario; la sombra, de lo que flota. Solo usa var(--…): ningún color escrito.
@@ -190,7 +190,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 /* ───────── PZ-8 · Menú, cuadro y ventana ─────────
    Grupo: Acciones
    Para qué: lo que flota sobre la pantalla: el menú (también con clic derecho), el cuadro que confirma o pide un dato y la ventana de Ajustes. Es lo único con sombra.
-   Estados: menú, menú en lista, con atajo, opción peligrosa, opción marcada, opción apagada, cuadro, ventana. */
+   Estados: menú, menú en lista, arriba del compositor, con atajo, opción peligrosa, opción marcada, opción apagada, cuadro, ventana. */
 .menu {
   position: absolute; z-index: 20; min-width: var(--ancho-menu); padding: var(--esp-1);
   background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu);
@@ -217,6 +217,9 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .menu.lista-menu .detalle { display: block; font-size: var(--tam-chico); color: var(--texto-3); line-height: 1.4; }
 .menu.lista-menu .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; align-self: flex-start; line-height: 1.4; }
 .menu.lista-menu .actual { background: var(--sel-fondo); }
+/* Arriba del compositor (frente Paridad): el menú del + y la lista de «/» se abren hacia arriba, pegados a él; `.ancho`, de su mismo ancho. */
+.menu.arriba { left: 0; bottom: calc(100% + var(--esp-2)); }
+.menu.arriba.ancho { right: 0; width: auto; max-height: 372px; overflow: auto; }
 .velo { position: fixed; inset: 0; z-index: 30; background: var(--velo); display: grid; place-items: center; }
 .cuadro {
   width: var(--ancho-cuadro); padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);
@@ -372,7 +375,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Grupo: Del dominio
    Para qué: hablar con la IA del proyecto, a la derecha de cada pantalla: la cabecera, los mensajes y el compositor
    con una sola línea alrededor.
-   Estados: mensaje mío, mensaje de la IA, paso, compositor con el foco. */
+   Estados: mensaje mío, mensaje de la IA, paso, compositor con el foco, la lista de «/», la línea del compositor, soltando archivos. */
 .panel-conversacion { grid-area: conversacion; display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--borde); }
 .panel-conversacion .cab-conv { display: flex; align-items: center; gap: var(--esp-2); padding: var(--esp-2) var(--esp-3) var(--esp-2) var(--esp-4); min-height: var(--alto-cabecera-conversacion); }
 .panel-conversacion .cab-conv .nombre-conv { flex: 1; min-width: 0; }
@@ -388,6 +391,23 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .compositor textarea::placeholder { color: var(--texto-3); }
 .compositor .pie-comp { display: flex; align-items: center; gap: var(--esp-1); }
 .compositor .pie-comp .enviar { margin-left: auto; }
+/* Paridad (modulos/paridad/ux.md): la lista de «/» (PZ-8 arriba y ancho), la línea arriba del cuadro y soltar archivos. */
+.compositor { position: relative; }
+.comandos .nombre-cmd { font: var(--estilo-codigo); font-size: var(--tam-base); color: var(--texto); }
+.comandos .arg { font: var(--estilo-codigo); color: var(--texto-3); margin-left: var(--esp-1); }
+.comandos .detalle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.comandos .elegida { background: var(--sel-fondo); }
+.comandos .vacia { padding: var(--esp-2); color: var(--texto-3); }
+.menu .barra-cmd { display: inline-grid; place-items: center; width: 15px; font: var(--estilo-codigo); color: var(--texto-2); }
+.linea-cmd { display: flex; align-items: center; gap: var(--esp-2); font: var(--estilo-meta); color: var(--texto-2); }
+.linea-cmd .ic { width: 14px; height: 14px; flex: none; color: var(--texto-3); }
+.linea-cmd code, .mensaje-yo code.cmd { font: var(--estilo-codigo); color: var(--texto); }
+.linea-cmd .boton { margin-left: auto; }
+.mensaje-yo .fichas.enviadas { margin-bottom: var(--esp-2); }
+.panel-conversacion { position: relative; }
+.panel-conversacion.soltando .mensajes, .panel-conversacion.soltando .compositor { opacity: .35; }
+.panel-conversacion .soltar { position: absolute; inset: var(--esp-2); z-index: 10; display: none; place-items: center; border: 2px dashed var(--borde-control); border-radius: var(--radio-bloque); color: var(--texto); font: var(--estilo-control); pointer-events: none; }
+.panel-conversacion.soltando .soltar { display: grid; }
 /* Claude abajo solo cuando falla (R-21): la señal con su ícono, que lleva a Ajustes para iniciar sesión. */
 .estado-barra .senal.rojo:hover { color: var(--error); text-decoration: underline; }
 /* ───────── PZ-15 · Camino ─────────
@@ -422,6 +442,26 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .camino .plegado .punto-camino { left: 3px; width: 18px; height: 14px; margin-top: -7px; border: 0; background: var(--sel-fondo); color: var(--texto-2); font: var(--estilo-codigo); line-height: 14px; text-align: center; }
 .camino .plegado .nombre-tramo { color: var(--texto-3); }
 .camino .plegado .nombre-tramo:hover { color: var(--texto); text-decoration: none; }
+
+/* ───────── PZ-16 · Ficha ─────────
+   Grupo: Contenido
+   Para qué: lo que va con un mensaje, arriba del cuadro de escribir (frente Paridad): una foto como miniatura cuadrada;
+   un archivo o un texto pegado, con su ícono y su nombre. La ✕ lo saca; un clic lo abre. En un mensaje mandado, sin ✕
+   y con la foto un poco más grande.
+   Estados: archivo, foto, no va (borde rojo), en un mensaje mandado. */
+.fichas { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+.ficha { position: relative; display: inline-flex; align-items: center; gap: var(--esp-2); max-width: 100%; height: var(--alto-control); padding: 0 var(--esp-1) 0 var(--esp-3); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); background: none; font: var(--estilo-meta); color: var(--texto-2); cursor: pointer; }
+.ficha .ic { width: 14px; height: 14px; flex: none; }
+.ficha b { font-weight: 500; color: var(--texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ficha .quitar { display: grid; place-items: center; width: var(--alto-control-chico); height: var(--alto-control-chico); flex: none; border: 0; border-radius: var(--radio-control); background: none; color: var(--texto-3); cursor: pointer; }
+.ficha .quitar:hover { background: var(--hover); color: var(--texto); }
+.ficha.foto { width: 56px; height: 56px; padding: 0; overflow: hidden; }
+.ficha.foto img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.ficha.foto .quitar { position: absolute; top: 2px; right: 2px; background: var(--elevado); }
+.ficha.no-va { border-color: var(--error-borde); }
+.fichas.enviadas { gap: var(--esp-1); }
+.fichas.enviadas .ficha { border-color: var(--borde-control); padding-right: var(--esp-3); }
+.fichas.enviadas .ficha.foto { width: 72px; height: 72px; padding: 0; }
 
 /* ───────── Información a pedido ─────────
    Grupo: Avisos

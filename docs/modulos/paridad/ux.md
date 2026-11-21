@@ -11,7 +11,7 @@
 - **Lo escrito no se pierde** (`04-ux.md` › Principios): los adjuntos sin mandar quedan con el texto al cambiar de proyecto o de sección, como lo escrito.
 
 ## Maquetas
-En Iridium › Diseño, grupo «Paridad (propuesta)»: `diseno/pantallas/paridad-comandos.html` (la lista de «/»), `paridad-adjuntos.html` (el menú del + y las fichas), `paridad-escondido.html` (un comando escondido escrito a mano, la opción A de Q-246) y `paridad-enviado.html` (cómo quedan en los mensajes mandados).
+En Iridium › Diseño, grupo «Paridad (propuesta)»: `diseno/pantallas/paridad-comandos.html` (la lista de «/»), `paridad-adjuntos.html` (el menú del + y las fichas), `paridad-escondido.html` (un comando escondido escrito a mano, la opción A de Q-246), `paridad-enviado.html` (cómo quedan en los mensajes mandados) y `paridad-soltar.html` (arrastrando archivos sobre la conversación, paso 6).
 
 ## Historias de usuario
 ### PA-1 — Elegir un comando con «/»
@@ -146,8 +146,8 @@ Enter con fichas ─→ el mensaje con sus adjuntos ─→ las fichas en mi mens
 ## Piezas de UI nuevas
 | Pieza | Por qué hace falta | Agregada al sistema |
 |---|---|---|
-| La ficha de adjunto (variante de la ficha con ✕ del compositor: miniatura para fotos, ícono y nombre para archivos y texto pegado; sin ✕ en un mensaje mandado) | La ficha de hoy («Sobre la skill», las citas) no tiene miniatura | no (paso 6) |
-| El menú arriba del compositor (PZ-8, en lista, pegado al compositor y de su ancho) | El menú de siempre se abre debajo del botón; en el compositor no entra | no (paso 6) |
-| El borde de soltar (la conversación con borde punteado y «Suelta para adjuntar») | No hay nada que se arrastre sobre la conversación | no (paso 6) |
+| La ficha de adjunto (variante de la ficha con ✕ del compositor: miniatura para fotos, ícono y nombre para archivos y texto pegado; sin ✕ en un mensaje mandado) | La ficha de hoy («Sobre la skill», las citas) no tiene miniatura | sí: Ficha (PZ-16); al construir, las citas y «Sobre la skill» pasan a ella |
+| El menú arriba del compositor (PZ-8, en lista, pegado al compositor y de su ancho) | El menú de siempre se abre debajo del botón; en el compositor no entra | sí: PZ-8, `.menu.arriba` y `.ancho` |
+| El borde de soltar (la conversación con borde punteado y «Suelta para adjuntar») | No hay nada que se arrastre sobre la conversación | sí: un estado de la conversación (`soltando`, de la sección, no pieza), con su maqueta `paridad-soltar.html` |
 
 El visor es el cuadro de siempre (PZ-8) con una foto o un texto adentro.

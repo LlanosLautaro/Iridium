@@ -176,6 +176,7 @@
 | D-167 | 2026-11-21 | Paridad | 10, Q-243 y Q-244 | La lista de «/» esconde los comandos que pisan a Iridium y los de la terminal | vigente |
 | D-168 | 2026-11-21 | Paridad | 10, Q-246 y Q-247 | La UX de Paridad, aprobada: un comando escondido escrito a mano no se manda y dice dónde está en Iridium | vigente |
 | D-169 | 2026-11-21 | general (Paridad) | 10; Paridad, paso 5 | Paridad: el motor dice qué sabe hacer, los adjuntos van con marcas de Iridium y las fotos pegadas en los datos | vigente |
+| D-170 | 2026-11-21 | general (Paridad) | 10; Paridad, paso 6 | La Ficha (PZ-16) y el menú arriba del compositor entran al design system | vigente |
 
 ---
 
@@ -3358,3 +3359,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** la frontera suma `capacidades()` (comandos, fotos con sus límites y la tabla de escondidos con qué pisa cada uno), `comandos(carpeta)` (sin gastar) con el evento `comandos`, y `enviar` con texto y fotos. Lo de Iridium va dentro del texto con marcas propias (`<iridium-pegado>`, `<iridium-archivos>`), que el historial reconoce; al leerlo, los comandos mandados y su respuesta se traducen. La frase de cada escondido es de Iridium, no del motor; un escondido se frena en la ventana y en la app. Un comando va primero, con las citas después y sin el aviso de «te detuve». Los adjuntos sin mandar son rutas; las fotos pegadas, archivos en `pegadas/` de los datos de Iridium; `escritos.json` pasa a la versión 2. Las fotos se leen y se achican en el proceso principal con `nativeImage`, sin dependencias nuevas. Tres iteraciones: PA-I1 (comandos), PA-I2 (archivos y fotos), PA-I3 (texto pegado). Detalle: `modulos/paridad/diseno-tecnico.md`.
 **Motivo:** todo lo de Claude queda en la frontera y lo de Iridium sirve igual con otro motor; las marcas hacen que el historial muestre lo mismo que se mandó; `escritos.json` no se llena de fotos.
 **Consecuencias:** `05-arquitectura.md` › La interfaz `Motor` y Modelo de datos, al día. Sigue el paso 6 (las tres piezas nuevas de `ux.md`). Queda para la prueba real: los límites de una foto, un comando con una foto y `commands_changed`.
+
+## D-170 — La Ficha (PZ-16) y el menú arriba del compositor entran al design system
+- **Fecha:** 2026-11-21
+- **Ámbito:** general (frente Paridad)
+- **Hito o paso:** 10; frente Paridad, paso 6 (UI)
+- **Estado:** vigente
+
+**Contexto:** la UX de Paridad (D-168) pidió tres piezas que el sistema no tenía: la ficha de adjunto con miniatura, el menú arriba del compositor y el borde de soltar archivos.
+**Decisión:** la **Ficha** es una pieza nueva, PZ-16 (archivo, foto, no va, en un mensaje mandado), en las dos hojas de piezas; al construir Paridad, «Sobre la skill…» y las citas del compositor pasan a ella. El **Menú** (PZ-8) suma abrirse arriba del compositor (`.arriba`) y tomar su ancho (`.ancho`). **Soltar** no es pieza: es un estado de la conversación (`soltando`), con su maqueta `paridad-soltar.html`. Las maquetas de Paridad ya no tienen estilos propios salvo el dibujo de la captura de muestra.
+**Motivo:** la ficha se repite (el compositor y cada mensaje mandado) y reemplaza a la de las citas; el borde de soltar solo existe en la conversación.
+**Consecuencias:** `piezas.css` (maquetas y app), `DESIGN.md`, `06-ui.md`, `modulos/diseno/ux.md` › Las piezas y el control de estilos (17 bloques, `ficha` y `fichas` reservadas), al día. Paso 6 de Paridad `hecho`; sigue la construcción, después de la tanda de la ronda de UX.
