@@ -104,6 +104,8 @@ test('el clic derecho en una tarjeta cambia el estado, archiva al instante, camb
   await beta.click({ button: 'right' })
   await menu.getByRole('menuitem', { name: 'Desarchivar' }).click()
   await expect(beta.locator('.estado-t')).toHaveText('pausado')
+  // Vuelve a su lugar entre los demás, no al final con los archivados (Q-241).
+  await expect(win.locator('.grilla .tarjeta .nombre')).toHaveText(['Alfa', 'Beta', 'Gamma'])
   await expect.poll(async () => (await leerFicha('Beta')).archivado).toBe(false)
   expect(await leerFicha('Beta')).not.toHaveProperty('archivadoEl')
   await win.getByRole('switch', { name: /Archivados/ }).click()

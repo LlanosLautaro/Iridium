@@ -48,12 +48,10 @@ Arranque (D-135) anduvo la segunda noche (Q-227). Después de Paridad, Orden mid
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-241 — Probá el estado y archivar al instante en la grilla de Proyectos**
+- **Q-242 — Probá Desarchivar otra vez**
   Tipo: prueba · Frente: Diseño
-  Contexto: `modulos/diseno/estado.md` › DI-I3, tanda 19 › Q-240. Armala con `scripts.md` › Armar la última versión y abrila.
-  - [ ] Cambiar el estado de un proyecto con el clic derecho: la tarjeta lo muestra apenas se cierra el menú, sin la espera de antes
-  - [ ] Archivar uno de prueba: la tarjeta se va al instante y no aparece ningún aviso arriba de la grilla
-  - [ ] Con Archivados prendido, Desarchivar lo devuelve al instante con su estado
+  Contexto: `modulos/diseno/estado.md` › DI-I3 › Q-241. Armala con `scripts.md` › Armar la última versión y abrila.
+  - [ ] Con Archivados prendido, Desarchivar un proyecto de prueba: vuelve al instante a su lugar entre los demás, con su estado
 
 ## Próximo paso
 El paso 8 (calidad) de Arranque: las pruebas del frente en la corrida entera, los casos raros del uso (sin período, la PC suspendida) y la accesibilidad del aviso. Después, Paridad (D-166).

@@ -1,6 +1,7 @@
 // El menú del clic derecho en una tarjeta (R-7, C-9, C-12, D-089): abrir el proyecto, en VS Code o su carpeta; pasarlo
 // al framework o ver sus avisos (OR-8, T-48); y de la ficha, el estado, archivar y el ícono; y eliminarlo, con
 // confirmación (R-10). Si el proyecto marca lo que abre, Ejecutar Alfa (frente Abrir, AB-1). En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
+import { ordenarTarjetas } from '../../../compartido/grilla'
 import { diaDe } from '../../../compartido/notas'
 import type { ListaProyectos, ResultadoFicha, TarjetaProyecto } from '../../../compartido/puente'
 import { ESTADOS, type Estado, NOMBRE_ESTADO } from '../../../compartido/tipos'
@@ -17,11 +18,12 @@ export interface AvisoGrilla {
 
 type CambioTarjeta = Partial<Pick<TarjetaProyecto, 'estado' | 'archivado' | 'archivadoEl'>>
 
-/** Le pone el cambio a la tarjeta de esa ruta en la grilla de ahora, sin esperar al disco. */
+/** Le pone el cambio a la tarjeta de esa ruta en la grilla de ahora, sin esperar al disco, y la deja en su lugar (Q-241). */
 function tocarTarjeta(ponerLista: (l: ListaProyectos) => void, ruta: string, cambio: CambioTarjeta): void {
   const lista = usarEstado.getState().lista
   if (lista?.tipo !== 'lista') return
-  ponerLista({ ...lista, proyectos: lista.proyectos.map((t) => (t.ruta === ruta ? { ...t, ...cambio } : t)) })
+  const proyectos = lista.proyectos.map((t) => (t.ruta === ruta ? { ...t, ...cambio } : t))
+  ponerLista({ ...lista, proyectos: ordenarTarjetas(proyectos) })
 }
 
 const ELEGIBLES = ESTADOS.filter((e) => e !== 'en-rescate')
