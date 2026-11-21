@@ -8,8 +8,8 @@ export function Perfil({ cambiar }: PropsSeccion) {
     <CampoTexto
       clave="nombreUsuario"
       titulo="Tu nombre"
-      ayuda="Se ve en la conversación en lugar de «Vos»."
-      sugerencia="Cómo querés que te llame"
+      ayuda="Cómo te llama la IA: se ve en la conversación en lugar de «Tú»."
+      sugerencia="Cómo quieres que te llame"
       largo={LARGO_AJUSTES.nombreUsuario}
       cambiar={cambiar}
     />

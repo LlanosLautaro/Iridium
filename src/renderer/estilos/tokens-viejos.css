@@ -3,14 +3,12 @@
    lleva la cuenta de cuántas veces se usa cada uno y no deja que crezca. Al terminar DI-I3 este archivo se borra.
    Lo verde de antes pasa a blanco: el verde es del botón principal (D-109) y de lo prendido (R-60). Lo que andaba bien deja de ser verde (D-108). */
 :root {
-  --lateral: var(--fondo);
   --barra: var(--fondo);
   --caja: var(--tarjeta);
   --medidor-fondo: var(--borde-fuerte);
   --primario: var(--texto);
   --primario-texto: var(--texto);
   --ok: var(--texto-2);
-  --esp-sm: var(--esp-2);
   --esp-md: var(--esp-3);
   --esp-lg: var(--esp-5);
   --radio-medidor: 3px;

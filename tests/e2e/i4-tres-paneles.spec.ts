@@ -261,9 +261,9 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
   await expect(scripts.locator('.cuerpo-fila .recuadro.error')).toContainText('No se encuentra')
   // Ejecutar va en verde (R-58, R-78): el color de lo que funciona, no el del texto.
   const ejecutar = scripts.getByRole('button', { name: 'Ejecutar «Dejar una marca»' })
-  await expect(scripts.locator('[data-script]', { hasText: 'Dejar una marca' }).locator('.detalle')).toContainText(
-    ' · ',
-  )
+  await expect(
+    scripts.locator('[data-script]', { hasText: 'Dejar una marca' }).locator('.detalle'),
+  ).toContainText(' · ')
   const verde = await win.evaluate(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--bien').trim(),
   )

@@ -7,6 +7,7 @@ import { tarjetaDe, usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
 import { cuandoFue } from '../../ui/tiempo'
 import type { PropsSeccion } from '../Ajustes'
+import { Ajuste } from './Ajuste'
 
 /** «Actualizada hoy a las 14:02», «Falló hoy a las 14:02», «Actualizándose…» (AB-4). */
 export function ultimaVez(a: ActualizacionProyecto): string {
@@ -29,12 +30,9 @@ export function EsteProyecto({ cambiar }: PropsSeccion) {
   if (!ruta) return null
   if (!a)
     return (
-      <div className="campo-ajuste actualizacion-proyecto">
-        <div>
-          <div className="r">Actualización automática</div>
-          <div className="d">Este proyecto no marca cómo se arma.</div>
-        </div>
-      </div>
+      <Ajuste titulo="Actualización automática" clase="actualizacion-proyecto">
+        <span className="expl">Este proyecto no marca cómo se arma.</span>
+      </Ajuste>
     )
   const prendida = !apagadas.includes(ruta)
   const actualizar = async () => {
@@ -46,58 +44,49 @@ export function EsteProyecto({ cambiar }: PropsSeccion) {
     }
   }
   return (
-    <div className="campo-ajuste actualizacion-proyecto">
-      <div>
-        <div className="r" id="ajuste-actualizacion">
-          Actualización automática
-        </div>
-        <div className="d">
-          Arma {nombre ?? 'la app'} sola cuando tiene cambios y está cerrada, sin IA y sin gastar uso.
-        </div>
-      </div>
-      <div className="control">
-        <label className="interruptor">
-          <input
-            type="checkbox"
-            role="switch"
-            aria-checked={prendida}
-            aria-labelledby="ajuste-actualizacion"
-            checked={prendida}
-            onChange={(e) =>
-              void cambiar({
-                actualizacionApagada: e.target.checked
-                  ? apagadas.filter((r) => r !== ruta)
-                  : [...apagadas, ruta],
-              })
-            }
-          />
-          {prendida ? 'Prendida' : 'Apagada'}
-        </label>
-        <div className={a.fallo ? 'd ultima fallo' : 'd ultima'}>
-          {ultimaVez(a)}
-          {a.ultimo && a.ultimo.resultado !== 'ok' && a.armando === null && (
-            <>
-              {' · '}
-              <button
-                type="button"
-                className="enlace"
-                onClick={() => void window.iridium.consolaArmado(ruta)}
-              >
-                Ver la consola
-              </button>
-            </>
-          )}
-        </div>
-        <button
-          type="button"
-          className="boton sin-fondo chico"
-          disabled={pidiendo || a.armando !== null}
-          onClick={() => void actualizar()}
-        >
-          <Icono nombre="sync" gira={a.armando !== null} />
-          Actualizar ahora
-        </button>
-      </div>
-    </div>
+    <Ajuste
+      titulo="Actualización automática"
+      detalle={`Arma ${nombre ?? 'la app'} sola cuando tiene cambios y está cerrada, sin IA y sin gastar uso`}
+      id="ajuste-actualizacion"
+      clase="actualizacion-proyecto"
+    >
+      <label className="interruptor">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-checked={prendida}
+          aria-labelledby="ajuste-actualizacion"
+          checked={prendida}
+          onChange={(e) =>
+            void cambiar({
+              actualizacionApagada: e.target.checked
+                ? apagadas.filter((r) => r !== ruta)
+                : [...apagadas, ruta],
+            })
+          }
+        />
+        {prendida ? 'Prendida' : 'Apagada'}
+      </label>
+      <span className={a.fallo ? 'expl ultima fallo' : 'expl ultima'}>
+        {ultimaVez(a)}
+        {a.ultimo && a.ultimo.resultado !== 'ok' && a.armando === null && (
+          <>
+            {' · '}
+            <button type="button" className="enlace" onClick={() => void window.iridium.consolaArmado(ruta)}>
+              Ver la consola
+            </button>
+          </>
+        )}
+      </span>
+      <button
+        type="button"
+        className="boton sin-fondo chico"
+        disabled={pidiendo || a.armando !== null}
+        onClick={() => void actualizar()}
+      >
+        <Icono nombre="sync" gira={a.armando !== null} />
+        Actualizar ahora
+      </button>
+    </Ajuste>
   )
 }

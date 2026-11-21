@@ -6,6 +6,7 @@ import { type EstilosRespuesta, LARGO_AJUSTES } from '../../../compartido/puente
 import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
 import type { PropsSeccion } from '../Ajustes'
+import { Ajuste } from './Ajuste'
 import { CampoTexto } from './CampoTexto'
 
 /** Los estilos que trae Claude Code, en castellano. Los propios se muestran con su nombre y su descripción. */
@@ -13,7 +14,7 @@ const CONOCIDOS: Record<string, { nombre: string; descripcion: string }> = {
   Concise: { nombre: 'Conciso', descripcion: 'Respuestas cortas, solo lo necesario.' },
   Proactive: { nombre: 'Proactivo', descripcion: 'Toma la iniciativa y propone lo que sigue.' },
   Explanatory: { nombre: 'Explicativo', descripcion: 'Suma el porqué de lo que hace mientras trabaja.' },
-  Learning: { nombre: 'Aprendizaje', descripcion: 'Explica y te deja partes chicas para hacer vos.' },
+  Learning: { nombre: 'Aprendizaje', descripcion: 'Explica y te deja partes chicas para hacer tú.' },
 }
 
 /** El de Claude Code: vacío, no se le pasa nada a la sesión. */
@@ -36,13 +37,15 @@ function CuentaClaude() {
   }[motor.tipo]
   const conSesion = motor.tipo === 'listo'
   return (
-    <div className="campo-ajuste cuenta-claude" data-motor={motor.tipo}>
-      <div>
-        <div className="r">Cuenta de Claude</div>
-        <div className="d">
-          {iniciando ? 'Terminá de entrar en el navegador; Iridium lo nota solo.' : texto}
-        </div>
-      </div>
+    <Ajuste
+      titulo="Cuenta de Claude"
+      detalle="La que usa Claude Code"
+      clase="cuenta-claude"
+      atributos={{ 'data-motor': motor.tipo }}
+    >
+      <span className="estado-cuenta">
+        {iniciando ? 'Termina de entrar en el navegador; Iridium lo nota solo.' : texto}
+      </span>
       <button
         type="button"
         className={`boton ${conSesion ? 'sin-fondo' : 'principal'} chico`}
@@ -52,7 +55,7 @@ function CuentaClaude() {
         <Icono nombre={iniciando ? 'sync' : 'abrir'} gira={iniciando} />
         {iniciando ? 'Esperando el navegador…' : conSesion ? 'Cambiar de cuenta' : 'Iniciar sesión'}
       </button>
-    </div>
+    </Ajuste>
   )
 }
 
@@ -66,49 +69,46 @@ function AbrirPeriodo({ cambiar }: PropsSeccion) {
   // Si cambió afuera o volvió atrás por un error, se muestra lo guardado.
   useEffect(() => setHora(ajuste.hora), [ajuste.hora])
   return (
-    <div className="campo-ajuste abrir-periodo">
-      <div>
-        <div className="r" id="ajuste-arranque">
-          Abrir el período de Claude
-        </div>
-        <div className="d">Mientras no estás, con trabajo listo</div>
-      </div>
-      <div className="control">
-        <label className="interruptor">
-          <input
-            type="checkbox"
-            role="switch"
-            aria-checked={ajuste.prendido}
-            aria-labelledby="ajuste-arranque"
-            checked={ajuste.prendido}
-            onChange={(e) => void cambiar({ arranque: { ...ajuste, prendido: e.target.checked } })}
-          />
-          {ajuste.prendido ? 'Prendido' : 'Apagado'}
-        </label>
-        <label className={ajuste.prendido ? 'hora' : 'hora apagada'}>
-          A las{' '}
-          <input
-            type="time"
-            className="campo chico"
-            value={hora}
-            disabled={!ajuste.prendido}
-            aria-label="Hora del primer arranque"
-            onChange={(e) => {
-              setHora(e.target.value)
-              if (HORA.test(e.target.value))
-                void cambiar({ arranque: { ...ajuste, hora: e.target.value } }).then((ok) => {
-                  if (!ok) setHora(usarEstado.getState().preferencias.arranque.hora)
-                })
-            }}
-          />{' '}
-          y al vencer cada período
-        </label>
-        <p className="d">
-          Sigue el proyecto que espera hace más con tus respuestas. No arranca si la semana pasó el 90 %.
-          Necesita Iridium abierta.
-        </p>
-      </div>
-    </div>
+    <Ajuste
+      titulo="Abrir el período de Claude"
+      detalle="Mientras no estás, con trabajo listo"
+      id="ajuste-arranque"
+      clase="abrir-periodo"
+    >
+      <label className="interruptor">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-checked={ajuste.prendido}
+          aria-labelledby="ajuste-arranque"
+          checked={ajuste.prendido}
+          onChange={(e) => void cambiar({ arranque: { ...ajuste, prendido: e.target.checked } })}
+        />
+        {ajuste.prendido ? 'Prendido' : 'Apagado'}
+      </label>
+      <label className={ajuste.prendido ? 'hora' : 'hora apagada'}>
+        A las{' '}
+        <input
+          type="time"
+          className="campo chico"
+          value={hora}
+          disabled={!ajuste.prendido}
+          aria-label="Hora del primer arranque"
+          onChange={(e) => {
+            setHora(e.target.value)
+            if (HORA.test(e.target.value))
+              void cambiar({ arranque: { ...ajuste, hora: e.target.value } }).then((ok) => {
+                if (!ok) setHora(usarEstado.getState().preferencias.arranque.hora)
+              })
+          }}
+        />{' '}
+        y al vencer cada período
+      </label>
+      <span className="expl">
+        Sigue el proyecto que espera hace más con tus respuestas. No arranca si la semana pasó el 90 %.
+        Necesita Iridium abierta.
+      </span>
+    </Ajuste>
   )
 }
 
@@ -154,36 +154,32 @@ export function Ia({ cambiar }: PropsSeccion) {
         largo={LARGO_AJUSTES.nombreIa}
         cambiar={cambiar}
       />
-      <div className="campo-ajuste">
-        <div>
-          <div className="r" id="ajuste-tono">
-            Tono
-          </div>
-          <div className="d">
-            Los estilos de respuesta de Claude Code. Vale para las sesiones de Iridium desde el próximo
-            mensaje; VS Code y la terminal siguen con el suyo.
-          </div>
-        </div>
-        <div />
+      <Ajuste titulo="Tono" detalle="Cómo te explica las cosas" id="ajuste-tono">
         <div className="tonos" role="radiogroup" aria-labelledby="ajuste-tono">
           {opciones.map((o) => (
-            <label key={o.id || 'normal'} className={tono === o.id ? 'tono sel' : 'tono'}>
+            <label key={o.id || 'normal'} className="opcion">
               <input
                 type="radio"
                 name="tono"
                 checked={tono === o.id}
                 onChange={() => void cambiar({ tono: o.id })}
               />
-              <span className="n">{o.nombre}</span>
-              <span className="d">{o.descripcion}</span>
+              <span>
+                {o.nombre}
+                <span className="expl">{o.descripcion}</span>
+              </span>
             </label>
           ))}
-          {estilos === undefined && <p className="d cargando">Buscando los estilos de Claude Code…</p>}
+          {estilos === undefined && <span className="expl">Buscando los estilos de Claude Code…</span>}
           {estilos === null && (
-            <p className="d">Los demás estilos aparecen cuando Claude Code esté disponible.</p>
+            <span className="expl">Los demás estilos aparecen cuando Claude Code esté disponible.</span>
           )}
         </div>
-      </div>
+        <span className="expl">
+          Los estilos de respuesta de Claude Code. Vale para las sesiones de Iridium desde el próximo mensaje;
+          VS Code y la terminal siguen con el suyo.
+        </span>
+      </Ajuste>
       <AbrirPeriodo cambiar={cambiar} />
     </>
   )

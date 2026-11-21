@@ -12,7 +12,7 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Skills › Framework | Inicio | pantallas/skills.html | 2026-11-18 15:21 |
 | Detalle de una skill | Inicio | pantallas/skill.html | 2026-11-18 15:21 |
 | Ideas | Inicio | pantallas/ideas.html | — |
-| Ajustes | Inicio | pantallas/ajustes.html | — |
+| Ajustes | Inicio | pantallas/ajustes.html | 2026-11-20 22:28 |
 | A · Notas | Ideas de un proyecto (propuesta) | pantallas/ideas-proyecto-a.html | — |
 | B · Tarjetas | Ideas de un proyecto (propuesta) | pantallas/ideas-proyecto-b.html | — |
 | C · Ideas y enlaces para revisar | Ideas de un proyecto (propuesta) | pantallas/ideas-proyecto-c.html | — |

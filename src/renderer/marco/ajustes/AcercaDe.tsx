@@ -1,5 +1,6 @@
 // Ajustes › Acerca de (CO-I5, Q-103): la versión de Iridium y cuándo se armó (modulos/compartir/ux.md › CO-5).
 import { fechaExacta } from '../../../compartido/fechas'
+import { Ajuste } from './Ajuste'
 
 export function AcercaDe() {
   return <VersionDeIridium />
@@ -13,15 +14,12 @@ function VersionDeIridium() {
   if (!desarrollo)
     detalle = `Armada el ${fechaExacta(a.fecha)}${a.mensaje ? `, con «${a.mensaje}»` : ''}${a.sinGuardar ? ' y cambios sin commitear' : ''}.`
   return (
-    <div className="campo-ajuste version-iridium">
-      <div>
-        <div className="r">Versión de Iridium</div>
-        <div className="d">{detalle}</div>
-      </div>
-      <span className="valor">
+    <Ajuste titulo="Versión" clase="version-iridium">
+      <span className="fija">
         {window.iridium.version}
         {!desarrollo && a.commit ? ` · ${a.commit}` : ''}
       </span>
-    </div>
+      <span className="expl">{detalle}</span>
+    </Ajuste>
   )
 }

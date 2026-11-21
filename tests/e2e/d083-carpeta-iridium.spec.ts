@@ -168,7 +168,7 @@ test('D-087: sin las de antes crea .iridium; con otra carpeta de proyectos, ofre
   await win.getByRole('dialog').getByRole('button', { name: 'Proyectos' }).click()
   const fila = win.getByRole('dialog', { name: 'Proyectos' }).locator('.carpeta-iridium')
   await expect(fila).toContainText('Carpeta de Iridium')
-  await expect(fila.locator('.ruta')).toHaveText(primera)
+  await expect(fila.locator('.fija')).toHaveText(primera)
   await expect(fila.getByRole('button')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/d087-ajustes.png' })
 
@@ -183,7 +183,7 @@ test('D-087: sin las de antes crea .iridium; con otra carpeta de proyectos, ofre
     .locator('.carpeta-proyectos')
     .getByRole('button', { name: 'Cambiar…' })
     .click()
-  await expect(fila.locator('.ruta')).toHaveText(join(otra, '.iridium'))
+  await expect(fila.locator('.fija')).toHaveText(join(otra, '.iridium'))
   expect((await leerConfig()).carpetaIridium).toBe(primera)
   await win.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click()
   const aviso = win.getByRole('region', { name: 'Proyectos' }).locator('.mudanza')

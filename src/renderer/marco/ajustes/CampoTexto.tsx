@@ -5,6 +5,7 @@ import type { Preferencias } from '../../../compartido/puente'
 import { usarEstado } from '../../estado'
 import { guardarLuego } from '../../ui/guardarLuego'
 import type { PropsSeccion } from '../Ajustes'
+import { Ajuste } from './Ajuste'
 
 type Clave = 'nombreUsuario' | 'nombreIa'
 
@@ -22,22 +23,15 @@ export function CampoTexto({
   useEffect(() => setTexto(guardado), [guardado])
   const id = `ajuste-${clave}`
   return (
-    <div className="campo-ajuste">
-      <div>
-        <label className="r" htmlFor={id}>
-          {titulo}
-        </label>
-        <div className="d" id={`${id}-d`}>
-          {ayuda}
-        </div>
-      </div>
+    <Ajuste titulo={titulo} detalle={ayuda} id={`${id}-t`} campo={id}>
       <input
         id={id}
+        className="campo"
         type="text"
         value={texto}
         maxLength={largo}
         placeholder={sugerencia}
-        aria-describedby={`${id}-d`}
+        aria-describedby={`${id}-t-d`}
         spellCheck={false}
         onChange={(e) => {
           const valor = e.target.value
@@ -49,6 +43,6 @@ export function CampoTexto({
           })
         }}
       />
-    </div>
+    </Ajuste>
   )
 }

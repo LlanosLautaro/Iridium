@@ -130,9 +130,9 @@ test('los nombres aparecen en la conversación y el tono llega a la sesión (AJ-
   await dialogo.getByRole('textbox', { name: 'Nombre', exact: true }).fill('Iri')
   const tonos = dialogo.getByRole('radiogroup', { name: 'Tono' })
   await expect(tonos.getByRole('radio')).toHaveCount(3)
-  await expect(tonos.locator('.tono')).toHaveText([/Normal/, /Explicativo/, /Aprendizaje/])
+  await expect(tonos.locator('.opcion')).toHaveText([/Normal/, /Explicativo/, /Aprendizaje/])
   await expect(tonos.getByRole('radio', { name: /Normal/ })).toBeChecked()
-  await tonos.locator('.tono', { hasText: 'Explicativo' }).click()
+  await tonos.locator('.opcion', { hasText: 'Explicativo' }).click()
   await expect(tonos.getByRole('radio', { name: /Explicativo/ })).toBeChecked()
   await win.screenshot({ path: 'test-results/ap1-ia.png' })
   // Se guarda solo, sin botón.

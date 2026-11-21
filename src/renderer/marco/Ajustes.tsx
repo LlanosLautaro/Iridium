@@ -1,6 +1,7 @@
-// La ventana de Ajustes (modulos/apariencia/ux.md › AJ-W1): flota sobre la app oscurecida, con las secciones a la
-// izquierda. Se abre con el ⚙ o Ctrl+, y se cierra con Esc, la ✕ o un clic afuera; lo de atrás queda como estaba.
-import { type ComponentType, type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from 'react'
+// La ventana de Ajustes (modulos/apariencia/ux.md › AJ-W1; maqueta docs/diseno/pantallas/ajustes.html): la Ventana
+// (PZ-8) sobre el velo, con las Pestañas (PZ-10) a la izquierda. Se abre con el ⚙ o Ctrl+, y se cierra con Esc, la ✕
+// o un clic afuera; lo de atrás queda como estaba.
+import { type ComponentType, type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import type { Preferencias } from '../../compartido/puente'
 import { type SeccionAjustes, usarEstado } from '../estado'
 import { Icono } from '../ui/Icono'
@@ -33,31 +34,6 @@ const SECCIONES_AJUSTES: {
   { id: 'proyectos', nombre: 'Proyectos', Vista: Proyectos },
   { id: 'acerca', nombre: 'Acerca de', Vista: AcercaDe },
 ]
-
-/** Los íconos de la navegación, como en la maqueta (`docs/ui/vista-ajustes.html`). */
-const ICONOS: Record<SeccionAjustes, ReactNode> = {
-  proyecto: <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5" />,
-  perfil: (
-    <>
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
-    </>
-  ),
-  ia: <path d="M12 3l2.2 5.3L20 9l-4.5 3.8L17 19l-5-3-5 3 1.5-6.2L4 9l5.8-.7z" />,
-  apariencia: (
-    <>
-      <circle cx="12" cy="12" r="8.5" />
-      <path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor" />
-    </>
-  ),
-  proyectos: <path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />,
-  acerca: (
-    <>
-      <circle cx="12" cy="12" r="8.5" />
-      <path d="M12 11v5M12 7.5v.5" />
-    </>
-  ),
-}
 
 const ENFOCABLES = 'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
@@ -117,14 +93,14 @@ export function Ajustes() {
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: el clic en el fondo cierra, como Esc (que sí es del teclado).
     <div
-      className="velo-dialogo ajustes-velo"
+      className="velo capa-ajustes"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) cerrarAjustes()
       }}
     >
       <div
         ref={ventana}
-        className="ajustes"
+        className="ventana ventana-ajustes"
         role="dialog"
         aria-modal="true"
         aria-labelledby="ajustes-t"
@@ -132,39 +108,39 @@ export function Ajustes() {
       >
         <nav aria-label="Secciones de Ajustes">
           <h2>Ajustes</h2>
-          {secciones.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              aria-current={s.id === actual.id ? 'page' : undefined}
-              onClick={() => abrirAjustes(s.id)}
-            >
-              <svg className="ic" viewBox="0 0 24 24" aria-hidden="true">
-                {ICONOS[s.id]}
-              </svg>
-              {s.nombre}
-            </button>
-          ))}
+          <div className="pestanas vertical">
+            {secciones.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={s.id === actual.id ? 'pestana elegida' : 'pestana'}
+                aria-current={s.id === actual.id ? 'page' : undefined}
+                onClick={() => abrirAjustes(s.id)}
+              >
+                {s.nombre}
+              </button>
+            ))}
+          </div>
         </nav>
-        <main>
+        <div className="cuerpo-ventana">
           <button
             type="button"
-            className="cerrar"
+            className="boton solo-icono cerrar-ventana"
             title="Cerrar (Esc)"
             aria-label="Cerrar"
             onClick={cerrarAjustes}
           >
             <Icono nombre="x" />
           </button>
-          <h1 id="ajustes-t">{actual.nombre}</h1>
+          <h3 id="ajustes-t">{actual.nombre}</h3>
           <Vista cambiar={cambiar} />
           {error && (
-            <p className="ajustes-error" role="alert">
+            <div className="recuadro error aviso-guardar" role="alert">
               <Icono nombre="error" />
-              No se pudo guardar; sigue como antes.
-            </p>
+              <div className="cuerpo-recuadro">No se pudo guardar; sigue como antes.</div>
+            </div>
           )}
-        </main>
+        </div>
       </div>
     </div>
   )

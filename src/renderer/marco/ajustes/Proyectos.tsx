@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
+import { Ajuste } from './Ajuste'
 
 export function Proyectos() {
   return (
@@ -18,17 +19,18 @@ export function Proyectos() {
 function CarpetaIridium() {
   const lista = usarEstado((s) => s.lista)
   return (
-    <div className="campo-ajuste carpeta-iridium">
-      <div>
-        <div className="r">Carpeta de Iridium</div>
-        <div className="d">
-          Ideas y Skills (el chat general, tus ideas y tus skills propias) viven en <code>.iridium</code>,
-          dentro de la carpeta de proyectos, como en un vault de Obsidian. Si cambiás la carpeta de proyectos,
-          Iridium ofrece traerlas.
-        </div>
-      </div>
-      <span className="ruta">{lista?.iridium.carpeta ?? 'Leyendo…'}</span>
-    </div>
+    <Ajuste
+      titulo="Carpeta de Iridium"
+      detalle="Donde viven Ideas y Skills: va con la carpeta de proyectos"
+      clase="carpeta-iridium"
+    >
+      <span className="fija">{lista?.iridium.carpeta ?? 'Leyendo…'}</span>
+      <span className="expl">
+        El chat general, tus ideas y tus skills propias viven en <code>.iridium</code>, dentro de la carpeta
+        de proyectos, como en un vault de Obsidian. Si cambias la carpeta de proyectos, Iridium ofrece
+        traerlas.
+      </span>
+    </Ajuste>
   )
 }
 
@@ -49,16 +51,18 @@ function CarpetaDeProyectos() {
   }
 
   const falta = lista?.tipo === 'error'
-  let detalle = 'Iridium muestra como proyecto cada carpeta que está adentro.'
-  if (falta) detalle = 'No se encuentra; elegí otra o conectá el disco.'
-  if (trabajando) detalle = 'Esperá a que termine la IA: trabaja en un proyecto de esta carpeta.'
+  let aviso = ''
+  if (falta) aviso = 'No se encuentra; elige otra o conecta el disco.'
+  if (trabajando) aviso = 'Espera a que termine la IA: trabaja en un proyecto de esta carpeta.'
 
   return (
-    <div className="campo-ajuste carpeta-proyectos" data-falta={falta || undefined}>
-      <div>
-        <div className="r">Carpeta de proyectos</div>
-        <div className="d">{detalle}</div>
-      </div>
+    <Ajuste
+      titulo="Carpeta de proyectos"
+      detalle="Cada carpeta que está adentro es un proyecto"
+      clase="carpeta-proyectos"
+      atributos={{ 'data-falta': falta ? '' : undefined }}
+    >
+      <span className="fija">{lista?.raiz ?? 'Leyendo…'}</span>
       <button
         type="button"
         className={`boton ${falta ? 'principal' : 'sin-fondo'} chico`}
@@ -68,7 +72,7 @@ function CarpetaDeProyectos() {
         <Icono nombre="carpeta" />
         Cambiar…
       </button>
-      <span className="ruta">{lista?.raiz ?? 'Leyendo…'}</span>
-    </div>
+      {aviso && <span className="expl">{aviso}</span>}
+    </Ajuste>
   )
 }

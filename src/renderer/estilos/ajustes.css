@@ -1,24 +1,17 @@
-/* La ventana de Ajustes (modulos/apariencia/ux.md › AJ-W1; maqueta docs/ui/vista-ajustes.html). */
+/* La ventana de Ajustes (modulos/apariencia/ux.md › AJ-W1; maqueta docs/diseno/pantallas/ajustes.html): el velo, la
+   ventana y las pestañas son piezas (PZ-8, PZ-10); acá, solo las filas «qué · control» de la maqueta. */
 .boton-ajustes {
   margin-top: auto;
   margin-bottom: var(--esp-2);
 }
 
-.ajustes-velo {
+/* Sobre los demás velos de la app (el del uso, el de los cuadros). */
+.capa-ajustes {
   z-index: 40;
 }
-.ajustes {
-  width: 860px;
-  height: 600px;
+.ventana-ajustes {
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 48px);
-  display: grid;
-  grid-template-columns: 210px 1fr;
-  background: var(--fondo);
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-tarjeta);
-  box-shadow: var(--sombra-ventana);
-  overflow: hidden;
   animation: ajustes-entra 0.18s var(--sale);
 }
 @keyframes ajustes-entra {
@@ -28,230 +21,74 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ajustes {
+  .ventana-ajustes {
     animation: none;
   }
 }
+.cuerpo-ventana h3 {
+  margin: 0 0 var(--esp-4);
+  font: var(--estilo-titulo);
+}
+.cerrar-ventana {
+  position: absolute;
+  top: var(--esp-3);
+  right: var(--esp-3);
+}
 
-.ajustes nav {
+/* Cada ajuste: a la izquierda qué es y para qué; a la derecha el control, con lo que explica debajo. */
+.ajuste {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--esp-5);
+  padding: var(--esp-4) 0;
+}
+.ajuste + .ajuste {
+  border-top: 1px solid var(--borde-suave);
+}
+.ajuste .que {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  background: var(--lateral);
-  border-right: 1px solid var(--borde);
-  padding: var(--esp-lg) var(--esp-sm);
+  gap: var(--esp-1);
 }
-.ajustes nav h2 {
-  font: 600 var(--tam-chico) / 1.4 var(--ui);
-  color: var(--texto-3);
-  margin: 0 var(--esp-sm) var(--esp-sm);
-  letter-spacing: 0.02em;
-}
-.ajustes nav button {
+.ajuste .control {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px var(--esp-sm);
-  border: 0;
-  border-radius: var(--radio-fila);
-  background: none;
-  color: var(--texto-2);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
+  flex-direction: column;
+  gap: var(--esp-2);
+  align-items: flex-start;
+  min-width: 0;
 }
-.ajustes nav button:hover {
-  background: var(--hover);
-  color: var(--texto);
-}
-.ajustes nav button[aria-current="page"] {
-  background: var(--sel-fondo);
-  color: var(--texto);
-}
-.ajustes nav .ic {
-  width: 16px;
-  height: 16px;
-}
-
-.ajustes main {
-  position: relative;
-  padding: var(--esp-lg) 28px;
-  overflow: auto;
-}
-.ajustes .cerrar {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: var(--radio-control);
-  background: none;
-  color: var(--texto-2);
-  cursor: pointer;
-}
-.ajustes .cerrar:hover {
-  background: var(--hover);
-  color: var(--texto);
-}
-.ajustes h1 {
-  font: 600 17px / 1.3 var(--ui);
-  color: var(--texto);
-  margin: 0 0 var(--esp-lg);
-}
-.ajustes .r {
+.ajuste .expl {
   display: block;
-  font-weight: 600;
-  color: var(--texto);
-}
-.ajustes .d {
-  color: var(--texto-3);
   font-size: var(--tam-chico);
-  margin-top: 2px;
-}
-
-.campo-ajuste {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: var(--esp-lg);
-  align-items: start;
-  padding: var(--esp-md) 0;
-  border-bottom: 1px solid var(--borde);
-}
-.campo-ajuste:last-of-type {
-  border-bottom: 0;
-}
-.campo-ajuste input[type="text"] {
-  width: 100%;
-  font: inherit;
-  color: var(--texto);
-  background: var(--caja);
-  border: 1px solid var(--borde-control);
-  border-radius: var(--radio-control);
-  padding: 6px 10px;
-}
-.campo-ajuste input[type="text"]::placeholder {
   color: var(--texto-3);
 }
-.campo-ajuste input[type="text"]:focus {
-  outline: none;
-  border-color: var(--primario);
-  box-shadow: 0 0 0 3px var(--seleccion);
+.ajuste .control > input[type="text"] {
+  max-width: 280px;
 }
-
-.cuenta-claude > button {
-  justify-self: end;
-}
-.carpeta-proyectos > button,
-.carpeta-iridium > button {
-  justify-self: end;
-}
-.version-iridium > .valor {
-  justify-self: end;
-  font: 400 12.5px / 1.4 var(--mono);
-  color: var(--texto-2);
-}
-.carpeta-proyectos > .ruta,
-.carpeta-iridium > .ruta {
-  grid-column: 1 / -1;
-  padding: 8px 10px;
-  border-radius: var(--radio-control);
-  background: var(--caja);
-  border: 1px solid var(--borde-suave);
-  font: 400 12.5px / 1.4 var(--mono);
+.ajuste .control > .fija {
   color: var(--texto-2);
   overflow-wrap: anywhere;
 }
-.cuenta-claude[data-motor="sin-sesion"] .r,
-.cuenta-claude[data-motor="falla"] .r {
-  color: var(--error);
+.grupo-ancho {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
 }
-
 .tonos {
-  grid-column: 1 / -1;
-  display: grid;
-  gap: 6px;
-  max-height: 280px;
-  overflow: auto;
-}
-.tono {
-  display: grid;
-  grid-template-columns: 18px 130px 1fr;
-  gap: 10px;
-  align-items: center;
-  padding: 9px 12px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio-bloque);
-  background: var(--caja);
-  cursor: pointer;
-}
-.tono:hover {
-  border-color: var(--borde-fuerte);
-}
-.tono.sel {
-  border-color: var(--primario);
-  background: var(--sel-fondo);
-}
-.tono:has(input:focus-visible) {
-  outline: 2px solid var(--primario);
-  outline-offset: 2px;
-}
-.tono input {
-  accent-color: var(--marcado);
-  margin: 0;
-}
-.tono .n {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.tono .d {
-  margin: 0;
-}
-.tonos .cargando {
-  padding: 4px 2px;
-}
-
-.ajustes .pie {
-  color: var(--texto-3);
-  font-size: var(--tam-chico);
-  margin-top: var(--esp-md);
-}
-
-.ajustes-error {
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: var(--esp-lg);
-  padding: 8px 12px;
-  border: 1px solid color-mix(in oklab, var(--error) 40%, transparent);
-  border-radius: var(--radio-bloque);
-  background: var(--elevado);
-  color: var(--texto);
-  font-size: var(--tam-chico);
-}
-.ajustes .ajustes-error .ic {
-  color: var(--error);
-}
-
-/* Al final: pisa los .d de los tonos y de la ventana. */
-.carpeta-proyectos[data-falta] .r,
-.carpeta-proyectos[data-falta] .d {
-  color: var(--error);
-}
-
-/* Abrir el período de Claude (AR-1): el interruptor, la hora y lo que hace, uno debajo del otro. */
-.abrir-periodo .control,
-.actualizacion-proyecto .control {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: var(--esp-2);
 }
+
+/* Lo que falla, en rojo: sin sesión de Claude, la carpeta que no está y la última actualización que no salió. */
+.cuenta-claude[data-motor="sin-sesion"] .estado-cuenta,
+.cuenta-claude[data-motor="falla"] .estado-cuenta,
+.carpeta-proyectos[data-falta] .control > .expl,
+.actualizacion-proyecto .ultima.fallo {
+  color: var(--error);
+}
+
 .abrir-periodo .hora {
   color: var(--texto-2);
 }
@@ -259,18 +96,13 @@
   width: auto;
   margin: 0 var(--esp-1);
 }
-.abrir-periodo .hora.apagada {
-  color: var(--texto-3);
-}
+.abrir-periodo .hora.apagada,
 .abrir-periodo .hora input:disabled {
   color: var(--texto-3);
-  cursor: default;
 }
-.abrir-periodo .control .d,
-.actualizacion-proyecto .control .d {
-  margin: 0;
-}
-/* Ajustes › Este proyecto (AB-4): la última vez, en rojo si falló. */
-.actualizacion-proyecto .ultima.fallo {
-  color: var(--error);
+
+.aviso-guardar {
+  position: sticky;
+  bottom: 0;
+  margin-top: var(--esp-4);
 }
