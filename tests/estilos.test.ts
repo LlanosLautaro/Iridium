@@ -175,22 +175,19 @@ const VIEJAS = [
 const VIEJAS_PENDIENTES: Record<string, string[]> = {
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
   // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás; tanda 12: Archivos; tanda 14: Scripts;
-  // tanda 15: Ajustes; tanda 16: la Cabecera y los cuadros
+  // tanda 15: Ajustes; tanda 16: la Cabecera y los cuadros; tanda 17: la grilla de Proyectos
   'proyecto.css': ['recuadro-simple', 'menu-lista'],
-  'proyectos.css': ['peligro', 'aviso-grilla', 'mudanza', 'aviso-fw', 'menu-contextual'],
   'uso.css': ['menu-boton', 'medidor', 'menu-lista'],
 }
 
 /** Cuántas veces se usa cada token de antes (`tokens-viejos.css`) en la app: como mucho esto. */
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--barra': 1,
-  '--caja': 4,
-  '--medidor-fondo': 4,
-  '--primario': 11,
+  '--caja': 3,
+  '--medidor-fondo': 3,
+  '--primario': 7,
   '--primario-texto': 1,
-  '--ok': 4,
-  '--esp-md': 1,
-  '--esp-lg': 2,
+  '--ok': 3,
   '--radio-medidor': 2,
   '--sombra-flotante': 1,
 }

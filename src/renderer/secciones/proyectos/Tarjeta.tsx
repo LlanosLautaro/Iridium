@@ -1,5 +1,6 @@
-// La tarjeta de un proyecto (04-ux.md › W-2, D-034): estado con ícono y palabra; la cuenta de la bandeja arriba a la
-// derecha, amarilla solo si algo frena (D-100); sin nada que responder, una marca: el tilde si todo está respondido y
+// La tarjeta de un proyecto (04-ux.md › W-2, D-034), como la maqueta (docs/diseno/pantallas/grilla.html, DI-I3 tanda 17):
+// sin relleno, una línea que se aclara al pasar el mouse; el ícono redondo sin caja y el estado con su punto debajo del
+// nombre; la cuenta de la bandeja arriba a la derecha, amarilla solo si algo frena (D-100); sin nada que responder, una marca: el tilde si todo está respondido y
 // la IA puede seguir, el círculo vacío si la bandeja está vacía o el proyecto no empezó (R-81). Con el
 // clic derecho (o la tecla de menú), sus acciones (R-7).
 import type { MouseEvent } from 'react'
@@ -10,18 +11,19 @@ import type { Estado } from '../../../compartido/tipos'
 import { usarEstado } from '../../estado'
 import { SenalSesion } from '../../marco/Marco'
 import { Cuenta } from '../../ui/Cuenta'
-import { Icono, type NombreIcono } from '../../ui/Icono'
+import { Icono } from '../../ui/Icono'
 
-const ESTADOS: Record<Estado, { nombre: string; icono: NombreIcono; clase: string }> = {
-  'en-desarrollo': { nombre: 'en desarrollo', icono: 'punto', clase: 'desarrollo' },
-  'en-uso': { nombre: 'en uso', icono: 'check', clase: '' },
-  idea: { nombre: 'idea', icono: 'idea', clase: 'tenue' },
-  pausado: { nombre: 'pausado', icono: 'pausa', clase: 'tenue' },
-  'en-rescate': { nombre: 'en rescate', icono: 'rescate', clase: '' },
-  descontinuado: { nombre: 'descontinuado', icono: 'descontinuado', clase: 'tenue' },
-  'para-eliminar': { nombre: 'para eliminar', icono: 'eliminar', clase: 'tenue' },
+/** El estado, con su punto (PZ-7): blanco lo que está en uso; en rescate, sin punto (dice a qué proyecto pasa). */
+const ESTADOS: Record<Estado, { nombre: string; punto: 'blanco' | 'gris' | null }> = {
+  'en-desarrollo': { nombre: 'en desarrollo', punto: 'gris' },
+  'en-uso': { nombre: 'en uso', punto: 'blanco' },
+  idea: { nombre: 'idea', punto: 'gris' },
+  pausado: { nombre: 'pausado', punto: 'gris' },
+  'en-rescate': { nombre: 'en rescate', punto: null },
+  descontinuado: { nombre: 'descontinuado', punto: 'gris' },
+  'para-eliminar': { nombre: 'para eliminar', punto: 'gris' },
 }
-const SIN_FICHA = { nombre: 'sin clasificar', icono: 'ficha', clase: 'tenue' } as const
+const SIN_FICHA = { nombre: 'sin clasificar', punto: null } as const
 
 export function textoPreguntas(p: TarjetaProyecto['preguntas']): string | null {
   if (p.sinResponder === 0) return null
@@ -90,12 +92,12 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
         onClick={abrir}
         onContextMenu={menu}
       >
-        <div className="cab">
-          <span className="icono vacio">
+        <div className="cab-t">
+          <span className="logo">
             <Icono nombre="ficha" />
           </span>
-          <span className="nombre">{p.nombre}</span>
-          <span className="linea2">
+          <span className="nombre-t">
+            <span className="nombre">{p.nombre}</span>
             <span className="senal rojo">
               <Icono nombre="error" />
               Ficha dañada
@@ -105,8 +107,8 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
         <p className="desc">
           El .proyecto.json no se puede usar: {p.problema}. Se muestra al final hasta que se arregle.
         </p>
-        <div className="pie">
-          <span className="hito sin">Pedile a la IA que la arregle</span>
+        <div className="pie-t">
+          <span className="linea">Pide a la IA que la arregle</span>
         </div>
       </button>
     )
@@ -120,7 +122,8 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
   // proyecto y en el nombre de la tarjeta.
   const frente = p.hito?.frente ? enQue : null
   const actualiza = actualizacion?.armando != null || actualizacion?.fallo === true
-  const conPie = frente !== null || p.framework === 'viejo' || ficha !== null || p.archivado || actualiza
+  const conSenales = p.framework === 'viejo' || ficha !== null || p.archivado || actualiza
+  const conAvisos = avisos !== null && p.framework !== null && p.framework !== 'viejo'
   // Un archivado no espera nada: sin marca.
   const marca = p.archivado ? 'cuenta' : marcaDeBandeja(p.preguntas, p.hito !== null)
   const etiqueta = [
@@ -143,73 +146,70 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
   return (
     <button
       type="button"
-      className={p.archivado ? 'tarjeta archivado' : 'tarjeta'}
+      className={p.archivado ? 'tarjeta archivada' : 'tarjeta'}
       title={etiqueta}
       aria-label={etiqueta}
       aria-haspopup="menu"
       // Los avisos del pie llevan a su lista (T-48); el resto de la tarjeta abre el proyecto. Con el teclado, la
       // lista está en el menú de la tarjeta.
-      onClick={(e) => ((e.target as Element).closest('.aviso-fw') && verAvisos ? verAvisos() : abrir())}
+      onClick={(e) => ((e.target as Element).closest('.avisos-t') && verAvisos ? verAvisos() : abrir())}
       onContextMenu={menu}
     >
-      <div className="cab">
-        <span className="icono">
-          {p.icono ? <img src={p.icono} alt="" /> : <span className="inicial">{p.inicial}</span>}
-        </span>
-        <span className="nombre">{p.nombre}</span>
-        {marca === 'cuenta' ? (
-          <Cuenta n={p.preguntas.sinResponder} frenan={p.preguntas.frenan} clase="en-tarjeta" />
-        ) : (
-          <span
-            className={`senal en-tarjeta${marca === 'respondida' ? ' blanco' : ''}`}
-            title={TEXTO_MARCA[marca]}
-            role="img"
-            aria-label={TEXTO_MARCA[marca]}
-          >
-            <Icono nombre={marca === 'respondida' ? 'tilde' : 'circulo'} />
-          </span>
-        )}
-        <span className="linea2">
-          <span className={`estado ${est.clase}`}>
-            <Icono nombre={est.icono} />
+      <div className="cab-t">
+        <span className="logo">{p.icono ? <img src={p.icono} alt="" /> : p.inicial}</span>
+        <span className="nombre-t">
+          <span className="nombre">{p.nombre}</span>
+          <span className="estado-t">
+            {est.punto && <span className={est.punto === 'blanco' ? 'punto blanco' : 'punto'} />}
             {est.nombre}
             {p.reemplazadoPor && <span className="hacia"> → {p.reemplazadoPor}</span>}
           </span>
         </span>
+        <span className="derecha-t">
+          {marca === 'cuenta' ? (
+            <Cuenta n={p.preguntas.sinResponder} frenan={p.preguntas.frenan} />
+          ) : (
+            <span
+              className={marca === 'respondida' ? 'senal blanco' : 'senal'}
+              title={TEXTO_MARCA[marca]}
+              role="img"
+              aria-label={TEXTO_MARCA[marca]}
+            >
+              <Icono nombre={marca === 'respondida' ? 'tilde' : 'circulo'} />
+            </span>
+          )}
+        </span>
       </div>
       <p className="desc">{p.descripcion}</p>
-      {conPie && (
-        <div className="pie">
+      {(frente || conSenales || conAvisos) && (
+        <div className="pie-t">
           {frente && (
-            <span className="en-que" title={frente}>
+            <span className="linea en-que" title={frente}>
               <span className="fr">{p.hito?.frente?.nombre}</span>
               {p.hito?.frente?.paso && ` · ${p.hito.frente.paso}`}
             </span>
           )}
-          {p.framework === 'viejo' && <span className="viejo">framework viejo</span>}
-          {ficha && (
-            <span className="sesion">
-              <SenalSesion ficha={ficha} sinResponder={p.preguntas.sinResponder} />
+          {conAvisos && p.framework !== null && p.framework !== 'viejo' && (
+            <span
+              className="linea senal rojo avisos-t"
+              title={`${p.framework.avisos.join('\n')}\n\nToca para ver la lista en Skills › Framework`}
+            >
+              ! {avisos}
             </span>
           )}
-          {actualiza && <SenalActualizacion a={actualizacion} />}
-          {p.archivado && (
-            <span className="archivada">
-              <Icono nombre="archivo" />
-              Archivado
+          {conSenales && (
+            <span className="linea senales-t">
+              {p.framework === 'viejo' && <span className="senal viejo">framework viejo</span>}
+              {ficha && <SenalSesion ficha={ficha} sinResponder={p.preguntas.sinResponder} />}
+              {actualiza && <SenalActualizacion a={actualizacion} />}
+              {p.archivado && (
+                <span className="senal">
+                  <Icono nombre="archivo" />
+                  Archivado
+                </span>
+              )}
             </span>
           )}
-        </div>
-      )}
-      {avisos && p.framework !== null && p.framework !== 'viejo' && (
-        <div
-          className="aviso-fw"
-          title={`${p.framework.avisos.join('\n')}\n\nTocá para ver la lista en Skills › Framework`}
-        >
-          <span className="signo" aria-hidden="true">
-            !
-          </span>
-          <span className="texto">{avisos}</span>
         </div>
       )}
     </button>

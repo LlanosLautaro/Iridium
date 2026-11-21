@@ -90,7 +90,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   await expect(grilla.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
   // No salen en la grilla: siguen funcionando como Ideas y Skills.
   await expect(grilla.locator('.tarjeta')).toHaveCount(1)
-  const aviso = grilla.locator('.mudanza')
+  const aviso = grilla.locator('.recuadro.mudar')
   await expect(aviso).toContainText('Ideas y Skills y Claude siguen donde estaban antes')
   await expect(aviso).toContainText(join(raiz, '.iridium'))
   await win.keyboard.press('Control+3')
@@ -117,7 +117,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
     dialog.showMessageBox = (async () => ({ response: 0, checkboxChecked: false })) as never
   })
   await aviso.getByRole('button', { name: 'Mover' }).click()
-  await expect(grilla.locator('.mudanza')).toContainText('Listo: se movieron a la carpeta de Iridium.')
+  await expect(grilla.locator('.recuadro.mudar')).toContainText('Listo: se movieron a la carpeta de Iridium.')
   await win.screenshot({ path: 'test-results/d083-movidas.png' })
   expect((await readdir(raiz)).sort()).toEqual(['.iridium', 'Alfa'])
   const iridium = join(raiz, '.iridium')
@@ -149,7 +149,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   // Al volver a abrir, no hay nada para mover.
   const otra = await abrir()
   await expect(otra.win.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
-  await expect(otra.win.locator('.mudanza')).toHaveCount(0)
+  await expect(otra.win.locator('.recuadro.mudar')).toHaveCount(0)
   await otra.app.close()
 })
 
@@ -186,13 +186,13 @@ test('D-087: sin las de antes crea .iridium; con otra carpeta de proyectos, ofre
   await expect(fila.locator('.fija')).toHaveText(join(otra, '.iridium'))
   expect((await leerConfig()).carpetaIridium).toBe(primera)
   await win.getByRole('dialog').getByRole('button', { name: 'Cerrar' }).click()
-  const aviso = win.getByRole('region', { name: 'Proyectos' }).locator('.mudanza')
+  const aviso = win.getByRole('region', { name: 'Proyectos' }).locator('.recuadro.mudar')
   await expect(aviso).toContainText('Ideas y Skills siguen donde estaban antes')
   await app.evaluate(({ dialog }) => {
     dialog.showMessageBox = (async () => ({ response: 0, checkboxChecked: false })) as never
   })
   await aviso.getByRole('button', { name: 'Mover' }).click()
-  await expect(win.locator('.mudanza')).toContainText('Listo: se movieron a la carpeta de Iridium.')
+  await expect(win.locator('.recuadro.mudar')).toContainText('Listo: se movieron a la carpeta de Iridium.')
   expect(await readFile(join(otra, '.iridium', 'Ideas', 'nota.md'), 'utf8')).toBe('mía\n')
   await app.close()
 })

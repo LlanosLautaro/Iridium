@@ -83,8 +83,8 @@ test.afterEach(async () => {
 test('los avisos de la tarjeta llevan a su lista en Framework; Ideas lleva a Framework (T-48, T-51)', async () => {
   const { app, win } = await abrir()
   const alfa = win.locator('.tarjeta', { hasText: 'Alfa' })
-  await expect(alfa.locator('.aviso-fw')).toHaveText('!1 aviso del framework')
-  await alfa.locator('.aviso-fw').click()
+  await expect(alfa.locator('.avisos-t')).toHaveText('! 1 aviso del framework')
+  await alfa.locator('.avisos-t').click()
   const framework = win.getByRole('region', { name: 'Framework' })
   const fila = framework.locator('li.fila[data-proyecto="Alfa"]')
   await expect(fila.getByRole('button', { name: /1 aviso del framework/ })).toHaveAttribute(

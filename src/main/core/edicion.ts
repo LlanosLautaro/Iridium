@@ -110,7 +110,7 @@ export function mezclarEdicion(
 
 /** Por qué no se puede tocar la ficha desde el menú de la tarjeta; null si se puede. */
 function sinFichaUsable(actual: LecturaMetadatos | null): string | null {
-  if (actual === null) return 'Primero elegí un estado: así se crea la ficha.'
+  if (actual === null) return 'Primero elige un estado: así se crea la ficha.'
   if (actual.tipo === 'danado') return 'La ficha está dañada: pedile a la IA que la arregle.'
   return null
 }

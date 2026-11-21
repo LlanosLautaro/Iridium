@@ -190,7 +190,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 /* ───────── PZ-8 · Menú, cuadro y ventana ─────────
    Grupo: Acciones
    Para qué: lo que flota sobre la pantalla: el menú (también con clic derecho), el cuadro que confirma o pide un dato y la ventana de Ajustes. Es lo único con sombra.
-   Estados: menú, menú en lista, con atajo, opción peligrosa, cuadro, ventana. */
+   Estados: menú, menú en lista, con atajo, opción peligrosa, opción marcada, opción apagada, cuadro, ventana. */
 .menu {
   position: absolute; z-index: 20; min-width: var(--ancho-menu); padding: var(--esp-1);
   background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu);
@@ -202,9 +202,12 @@ a.fila, .fila.se-abre { cursor: pointer; }
   background: none; border: 0; border-radius: var(--radio-control); text-align: left; text-decoration: none;
   font: var(--estilo-control); color: var(--texto); cursor: pointer;
 }
-.menu button:hover, .menu a:hover { background: var(--hover); }
+.menu button:hover, .menu a:hover, .menu button:focus-visible, .menu a:focus-visible { background: var(--hover); outline: none; }
 .menu .atajo { margin-left: auto; color: var(--texto-3); font-size: var(--tam-chico); }
 .menu .peligroso { color: var(--error); }
+.menu button:disabled { opacity: .4; cursor: default; background: none; }
+/* La marca de la opción elegida (un estado, un orden): su lugar se guarda aunque esté vacío, para que los nombres queden alineados. */
+.menu .marca { display: inline-flex; width: 15px; flex: none; }
 .menu hr { border: 0; border-top: 1px solid var(--borde); margin: var(--esp-1) 0; }
 .menu .titulo-menu { margin: 0; padding: var(--esp-2) var(--esp-2) var(--esp-1); font-size: var(--tam-chico); font-weight: 400; color: var(--texto-3); }
 .menu.lista-menu { width: var(--ancho-lista-menu); }

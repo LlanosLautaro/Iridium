@@ -101,7 +101,7 @@ test('la IA corrige lo que le devuelve el control y la tarjeta queda sin avisos'
   await win.screenshot({ path: 'test-results/or1-corrigio.png' })
 
   await win.getByRole('button', { name: /^Inicio/ }).click()
-  await expect(win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.aviso-fw')).toHaveCount(0)
+  await expect(win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.avisos-t')).toHaveCount(0)
   // Beta no pasó al framework: lo dice junto al hito, y el control no corre.
   await expect(win.locator('.tarjeta', { hasText: 'Beta' }).locator('.viejo')).toHaveText('framework viejo')
   await expect(win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.viejo')).toHaveCount(0)
@@ -118,8 +118,8 @@ test('si la IA no corrige, queda como aviso del framework en la tarjeta, sin un 
   await expect(win.locator('.control-ia')).toHaveCount(1)
 
   await win.getByRole('button', { name: /^Inicio/ }).click()
-  const aviso = win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.aviso-fw')
-  await expect(aviso).toHaveText('!1 aviso del framework')
+  const aviso = win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.avisos-t')
+  await expect(aviso).toHaveText('! 1 aviso del framework')
   await expect(aviso).toHaveAttribute('title', /docs\/estado\.md:\d+ — Q-1: falta la línea «Tipo:»/)
   await expect(win.locator('.tarjeta', { hasText: 'Alfa' })).toHaveAttribute(
     'aria-label',

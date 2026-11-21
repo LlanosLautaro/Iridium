@@ -1,5 +1,5 @@
 // El menú del clic derecho (R-7): aparece donde está el mouse (o debajo del elemento, con la tecla de menú o Mayús+F10)
-// y se ve como los menús de la app. Se cierra al elegir, al tocar afuera, con Esc, con Tab o si la ventana cambia de
+// y es el Menú de las piezas (PZ-8, DI-I3 tanda 17); fijo en la ventana y, si es largo, con barra. Se cierra al elegir, al tocar afuera, con Esc, con Tab o si la ventana cambia de
 // tamaño; al cerrarse, el foco vuelve a lo que lo abrió. Las flechas, Inicio y Fin recorren las opciones.
 import {
   type ReactNode,
@@ -99,10 +99,17 @@ export function MenuContextual({
   return (
     <div
       ref={ref}
-      className="menu-lista menu-contextual"
+      className="menu abierto"
       role="menu"
       aria-label={etiqueta}
-      style={{ left: pos.x, top: pos.y }}
+      style={{
+        position: 'fixed',
+        left: pos.x,
+        top: pos.y,
+        zIndex: 40,
+        maxHeight: `calc(100vh - ${MARGEN * 2}px)`,
+        overflowY: 'auto',
+      }}
       onKeyDown={recorrer}
       onContextMenu={(e) => e.preventDefault()}
     >

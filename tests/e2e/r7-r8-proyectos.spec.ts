@@ -94,9 +94,9 @@ test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cam
   await beta.click({ button: 'right' })
   await menu.getByRole('menuitem', { name: 'Archivar' }).click()
   await expect(beta).toHaveCount(0)
-  await expect(win.locator('.aviso-grilla')).toContainText('«Beta» archivado.')
+  await expect(win.locator('.aviso-accion')).toContainText('«Beta» archivado.')
   expect(await leerFicha('Beta')).toMatchObject({ archivado: true })
-  await win.locator('.aviso-grilla').getByRole('button', { name: 'Deshacer' }).click()
+  await win.locator('.aviso-accion').getByRole('button', { name: 'Deshacer' }).click()
   await expect(beta).toBeVisible()
   await expect.poll(async () => (await leerFicha('Beta')).archivado).toBe(false)
 
@@ -119,13 +119,13 @@ test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cam
     })) as typeof dialog.showOpenDialog
   }, logo)
   const alfa = win.locator('.tarjeta', { hasText: 'Alfa' })
-  await expect(alfa.locator('.icono img')).toHaveCount(0)
+  await expect(alfa.locator('.logo img')).toHaveCount(0)
   await alfa.click({ button: 'right' })
   await win
     .getByRole('menu', { name: 'Acciones de Alfa' })
     .getByRole('menuitem', { name: 'Cambiar ícono…' })
     .click()
-  await expect(alfa.locator('.icono img')).toHaveCount(1)
+  await expect(alfa.locator('.logo img')).toHaveCount(1)
   expect(await leerFicha('Alfa')).toMatchObject({ icono: 'logo.svg' })
 
   // Con el teclado: Mayús+F10 abre el menú en la tarjeta con el foco; Esc lo cierra y el foco vuelve a la tarjeta.
@@ -143,7 +143,7 @@ test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cam
   await alfa.click({ button: 'right' })
   await menuAlfa.getByRole('menuitem', { name: 'Abrir en VS Code' }).click()
   await expect(menuAlfa).toHaveCount(0)
-  await expect(win.locator('.aviso-grilla.error')).toHaveCount(0)
+  await expect(win.locator('.aviso-accion.error')).toHaveCount(0)
   await app.close()
 })
 
@@ -172,7 +172,7 @@ test('Eliminar pide confirmación, borra lo regenerable y manda el resto a la pa
   await dialogo.getByRole('button', { name: 'Eliminar', exact: true }).click()
   await expect(dialogo).toHaveCount(0)
   await expect(alfa).toHaveCount(0)
-  await expect(win.locator('.aviso-grilla')).toContainText('«Alfa» está en la papelera de Windows.')
+  await expect(win.locator('.aviso-accion')).toContainText('«Alfa» está en la papelera de Windows.')
   await expect(stat(join(raiz, 'Alfa'))).rejects.toThrow()
   // En la papelera, todo menos lo regenerable.
   const [enPapelera] = await readdir(join(datos, 'papelera'))

@@ -45,9 +45,9 @@ export function MenuTarjeta({
   const conAvisos = p.framework !== null && p.framework !== 'viejo' && p.framework.avisos.length > 0
   /** La ficha se toca desde acá solo si existe y está sana (el estado la crea). */
   const sinFicha = danada
-    ? 'La ficha está dañada: pedile a la IA que la arregle'
+    ? 'La ficha está dañada: pide a la IA que la arregle'
     : p.estado === null
-      ? 'Primero elegí un estado: así se crea la ficha'
+      ? 'Primero elige un estado: así se crea la ficha'
       : null
 
   const hacer = (accion: () => Promise<void>) => () => {
@@ -133,7 +133,9 @@ export function MenuTarjeta({
       {!danada && (
         <>
           <hr />
-          <h3 id="menu-estado">Estado</h3>
+          <p className="titulo-menu" id="menu-estado">
+            Estado
+          </p>
           {/* biome-ignore lint/a11y/useSemanticElements: un grupo de opciones de menú, no un formulario. */}
           <div role="group" aria-labelledby="menu-estado">
             {ELEGIBLES.map((e: Estado) => (
@@ -142,7 +144,6 @@ export function MenuTarjeta({
                 type="button"
                 role="menuitemradio"
                 aria-checked={p.estado === e}
-                className="opcion-estado"
                 onClick={hacer(() => conFicha(window.iridium.estadoProyecto(p.ruta, e)))}
               >
                 <span className="marca">{p.estado === e && <Icono nombre="check" />}</span>
@@ -174,7 +175,7 @@ export function MenuTarjeta({
         </>
       )}
       <hr />
-      <button type="button" role="menuitem" className="peligro" onClick={hacer(async () => eliminar())}>
+      <button type="button" role="menuitem" className="peligroso" onClick={hacer(async () => eliminar())}>
         <Icono nombre="eliminar" />
         Eliminar…
       </button>

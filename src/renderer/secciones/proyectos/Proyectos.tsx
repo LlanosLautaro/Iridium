@@ -27,7 +27,7 @@ function Mudanza({ lista }: { lista: ListaProyectos }) {
   const { mudanza, carpeta } = lista.iridium
   if (!mudanza)
     return resultado ? (
-      <p className="mudanza hecha" role="status">
+      <p className="recuadro mudar" role="status">
         {resultado}
       </p>
     ) : null
@@ -48,17 +48,22 @@ function Mudanza({ lista }: { lista: ListaProyectos }) {
     }
   }
   return (
-    <div className="mudanza" role="status">
-      <p>
-        <b>{nombres.join(' y ')}</b> {nombres.length > 1 ? 'siguen' : 'sigue'} donde{' '}
-        {nombres.length > 1 ? 'estaban' : 'estaba'} antes. Iridium ahora{' '}
-        {nombres.length > 1 ? 'las guarda' : 'la guarda'} en la carpeta de Iridium, dentro de tus proyectos:{' '}
-        <span className="ruta">{carpeta}</span>.{resultado && <span className="error"> {resultado}</span>}
-      </p>
-      <button type="button" className="boton principal" onClick={mover} disabled={moviendo}>
-        <Icono nombre="carpeta" />
-        {moviendo ? 'Moviendo…' : 'Mover'}
-      </button>
+    <div className="recuadro aviso mudar" role="status">
+      <Icono nombre="carpeta" />
+      <div className="cuerpo-recuadro">
+        <span>
+          <strong>{nombres.join(' y ')}</strong> {nombres.length > 1 ? 'siguen' : 'sigue'} donde{' '}
+          {nombres.length > 1 ? 'estaban' : 'estaba'} antes. Iridium ahora{' '}
+          {nombres.length > 1 ? 'las guarda' : 'la guarda'} en la carpeta de Iridium, dentro de tus proyectos:{' '}
+          <span className="fija">{carpeta}</span>.
+        </span>
+        {resultado && <span className="senal rojo">{resultado}</span>}
+        <span className="acciones-recuadro">
+          <button type="button" className="boton secundario chico" onClick={mover} disabled={moviendo}>
+            {moviendo ? 'Moviendo…' : 'Mover'}
+          </button>
+        </span>
+      </div>
     </div>
   )
 }
@@ -66,19 +71,16 @@ function Mudanza({ lista }: { lista: ListaProyectos }) {
 function Siluetas() {
   const silueta = (i: number) => (
     <div key={i} className="tarjeta silueta">
-      <div className="cab">
-        <span className="icono" />
-        <div>
-          <span className="linea" style={{ width: '60%' }} />
-          <span className="linea" style={{ width: '35%' }} />
+      <div className="cab-t">
+        <span className="logo" />
+        <div className="nombre-t">
+          <span className="barra-s" style={{ width: '60%' }} />
+          <span className="barra-s" style={{ width: '35%' }} />
         </div>
       </div>
       <div className="desc">
-        <span className="linea" />
-        <span className="linea" style={{ width: '75%' }} />
-      </div>
-      <div className="pie">
-        <span className="linea" style={{ width: '40%' }} />
+        <span className="barra-s" />
+        <span className="barra-s" style={{ width: '75%' }} />
       </div>
     </div>
   )
@@ -158,7 +160,7 @@ export function Proyectos() {
         <h2>Esta carpeta no tiene proyectos</h2>
         <p>Iridium busca proyectos en las carpetas que están dentro de:</p>
         <span className="ruta">{lista.raiz}</span>
-        <p>Creá un proyecto nuevo ahí o elegí otra carpeta de proyectos.</p>
+        <p>Crea un proyecto nuevo ahí o elige otra carpeta de proyectos.</p>
         <div className="acc">
           <button type="button" className="boton principal" onClick={() => setNuevo(true)}>
             <Icono nombre="mas" />
@@ -230,36 +232,42 @@ export function Proyectos() {
           }
         />
         <div className="lienzo">
-          {lista && <Mudanza lista={lista} />}
-          {aviso && (
-            <p
-              className={aviso.error ? 'aviso-grilla error' : 'aviso-grilla'}
-              role={aviso.error ? 'alert' : 'status'}
-            >
-              <Icono nombre={aviso.error ? 'error' : 'check'} />
-              {aviso.texto}
-              {aviso.deshacer && (
+          <div className="arriba-grilla">
+            {lista && <Mudanza lista={lista} />}
+            {aviso && (
+              <div
+                className={aviso.error ? 'recuadro error aviso-accion' : 'recuadro aviso-accion'}
+                role={aviso.error ? 'alert' : 'status'}
+              >
+                <Icono nombre={aviso.error ? 'error' : 'check'} />
+                <div className="cuerpo-recuadro">
+                  <span>{aviso.texto}</span>
+                  {aviso.deshacer && (
+                    <span className="acciones-recuadro">
+                      <button
+                        type="button"
+                        className="boton sin-fondo chico"
+                        onClick={() => {
+                          aviso.deshacer?.()
+                          setAviso(null)
+                        }}
+                      >
+                        Deshacer
+                      </button>
+                    </span>
+                  )}
+                </div>
                 <button
                   type="button"
-                  className="enlace"
-                  onClick={() => {
-                    aviso.deshacer?.()
-                    setAviso(null)
-                  }}
+                  className="boton solo-icono chico"
+                  aria-label="Cerrar el aviso"
+                  onClick={() => setAviso(null)}
                 >
-                  Deshacer
+                  <Icono nombre="x" />
                 </button>
-              )}
-              <button
-                type="button"
-                className="boton solo-icono"
-                aria-label="Cerrar el aviso"
-                onClick={() => setAviso(null)}
-              >
-                <Icono nombre="x" />
-              </button>
-            </p>
-          )}
+              </div>
+            )}
+          </div>
           {contenido}
         </div>
         {menu && (

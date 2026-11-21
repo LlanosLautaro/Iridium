@@ -110,7 +110,7 @@ test('dos proyectos trabajan a la vez y cambiar entre ellos no corta nada (H-2, 
 
   await win.keyboard.press('Control+1')
   // En la grilla, la tarjeta muestra el mismo estado que la ficha (H-2).
-  await expect(win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.sesion')).toContainText('Trabajando')
+  await expect(win.locator('.tarjeta', { hasText: 'Alfa' }).locator('.senales-t')).toContainText('Trabajando')
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   await expect(win.locator('.turno')).toHaveCount(0)
   await campo.fill('Algo lento en Beta')
