@@ -112,9 +112,15 @@ export function ListaPendientes({
             <Filtros filtros={filtros} elegido={elegido} elegir={setFiltro} etiqueta="Filtrar por frente" />
           )
         }
-        vacia={vacia && 'Nada en tu bandeja. Cuando la IA necesite algo de ti, aparece aquí.'}
       />
       <div className="pendientes">
+        {/* Vacía, en la misma columna que las preguntas, como el vacío de Revisión (T-108) */}
+        {vacia && (
+          <div className="recuadro vacio">
+            <strong>Nada en tu bandeja</strong>
+            <span>Cuando la IA necesite algo de ti, aparece aquí.</span>
+          </div>
+        )}
         {grupos.map((g) => (
           <section key={g.titulo} className="bloque grupo-q" aria-label={g.titulo}>
             <h2 className="bloque-titulo">

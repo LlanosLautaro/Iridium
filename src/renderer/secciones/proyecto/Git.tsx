@@ -314,6 +314,39 @@ function Grupo({
   )
 }
 
+/** Mientras lee (T-103): la forma del panel, la rama, Cambios e Historial, como las siluetas de las demás secciones. */
+function CargandoGit() {
+  const lineas = (anchos: number[]) =>
+    anchos.map((w, i) => (
+      // biome-ignore lint/suspicious/noArrayIndexKey: las siluetas no cambian de lugar
+      <div key={i} className="git-silueta">
+        <span className="linea-silueta" style={{ width: `${w}%` }} />
+      </div>
+    ))
+  return (
+    <div className="git-cols">
+      <nav className="git-panel" aria-label="Git del proyecto" aria-busy="true">
+        <div className="git-remoto">{lineas([45])}</div>
+        {[
+          { titulo: 'Cambios', anchos: [70, 55, 62] },
+          { titulo: 'Historial', anchos: [85, 72, 90, 64, 78, 58] },
+        ].map((x) => (
+          <section key={x.titulo} className={x.titulo === 'Historial' ? 'git-grupo al-pie' : 'git-grupo'}>
+            <h3>
+              <span className="git-pliega">
+                <Icono nombre="chev" />
+                <span className="t">{x.titulo}</span>
+              </span>
+            </h3>
+            {lineas(x.anchos)}
+          </section>
+        ))}
+      </nav>
+      <div className="git-visor" />
+    </div>
+  )
+}
+
 /** Arriba del panel: si está solo en la PC o también en GitHub, qué falta subir o bajar, y Sincronizar (D-159). */
 function Remoto({
   r,
@@ -557,7 +590,7 @@ function CuerpoGit({ ruta, g, leer }: { ruta: string; g: GitProyecto | null; lee
       .finally(() => setSincronizando(false))
   }
 
-  if (!g) return <div className="carga" aria-busy="true" />
+  if (!g) return <CargandoGit />
   if (g.tipo === 'sin-git') return <SinRepositorio ruta={ruta} listo={listo} />
   if (g.tipo === 'sin-programa')
     return (

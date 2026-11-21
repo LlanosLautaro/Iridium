@@ -1,6 +1,6 @@
 // Ajustes › Este proyecto (frente Abrir, AB-4; `modulos/abrir/ux.md` › Ajustes del proyecto): solo dentro de un
 // proyecto. La actualización automática: el interruptor, la última vez y Actualizar ahora; si el proyecto no marca
-// cómo se arma, una línea gris.
+// cómo se arma, para qué sirve y que su IA lo puede preparar (T-106).
 import { useState } from 'react'
 import type { ActualizacionProyecto } from '../../../compartido/puente'
 import { tarjetaDe, usarEstado } from '../../estado'
@@ -31,7 +31,10 @@ export function EsteProyecto({ cambiar }: PropsSeccion) {
   if (!a)
     return (
       <Ajuste titulo="Actualización automática" clase="actualizacion-proyecto">
-        <span className="expl">Este proyecto no marca cómo se arma.</span>
+        <span className="expl">
+          Para las apps de escritorio: Iridium las arma solas cuando tienen cambios y están cerradas. Este
+          proyecto todavía no está preparado; pídeselo a su IA («prepara cómo se arma la app»).
+        </span>
       </Ajuste>
     )
   const prendida = !apagadas.includes(ruta)

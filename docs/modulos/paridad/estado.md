@@ -13,13 +13,13 @@
 | 4. UX | hecho (Q-246, Q-247, D-168) | `ux.md` |
 | 5. Diseño técnico | hecho (D-169) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (D-170) | `06-ui.md` y `diseno/piezas.css` |
-| 7. Construcción | pendiente (después de la tanda de la ronda de UX) | este archivo |
+| 7. Construcción | en curso (sigue PA-I1) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Definición aprobada e investigación hecha (2026-11-21): los cuatro pedidos entran como Must y todo lo del motor pasa por su frontera; la lista de «/» esconde los comandos que pisan a Iridium y los de la terminal (D-167). La ronda de UX (T-100) ya está; sus `pendiente` (T-101, T-103, T-104, T-106 a T-108, T-110) van en una tanda antes de construir Paridad.
-La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium. Diseño técnico cerrado (D-169): el motor dice qué sabe hacer (comandos, fotos, escondidos), los adjuntos viajan con marcas de Iridium que el historial reconoce y las fotos pegadas se guardan en los datos de Iridium. Piezas en el sistema (D-170): la Ficha (PZ-16), el menú arriba del compositor y el estado de soltar, con su maqueta. Antes de construir, la tanda de la ronda de UX; después, PA-I1.
+Definición aprobada e investigación hecha (2026-11-21): los cuatro pedidos entran como Must y todo lo del motor pasa por su frontera; la lista de «/» esconde los comandos que pisan a Iridium y los de la terminal (D-167). La ronda de UX (T-100) y su tanda ya están (2026-11-21).
+La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium. Diseño técnico cerrado (D-169): el motor dice qué sabe hacer (comandos, fotos, escondidos), los adjuntos viajan con marcas de Iridium que el historial reconoce y las fotos pegadas se guardan en los datos de Iridium. Piezas en el sistema (D-170): la Ficha (PZ-16), el menú arriba del compositor y el estado de soltar, con su maqueta. Sigue PA-I1, los comandos con «/».
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -55,7 +55,8 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - 2026-11-21 — Q-246 y Q-247 respondidas: la UX aprobada como está, y un comando escondido escrito a mano no se manda (D-168).
 - 2026-11-21 — Diseño técnico (D-169): `capacidades`, `comandos` y `enviar` con fotos en la frontera; las marcas `iridium-*` para el texto pegado y los archivos; el historial traduce los comandos y su respuesta (visto en un historial real); `escritos.json` 2 y `pegadas/`; las fotos se achican con `nativeImage`. Tres iteraciones, PA-I1 a PA-I3.
 - 2026-11-21 — Paso 6 (D-170): la Ficha (PZ-16) en las dos hojas de piezas, el menú arriba del compositor en PZ-8 y el estado de soltar en la conversación, con la maqueta `paridad-soltar.html`; las maquetas de Paridad, sin estilos propios. Capturas de las cinco revisadas; pruebas, lint y control en verde.
+- 2026-11-21 — La tanda de la ronda de UX hecha (T-101 a T-110, en `trabajo.md`), con su prueba en Q-248: la construcción queda libre.
 
 ## Próximo paso
-La tanda de la ronda de UX (T-101, T-103, T-104, T-106 a T-108 y T-110, en `trabajo.md`) y después PA-I1, los comandos con «/» (`diseno-tecnico.md` › Iteraciones y Procesos centrales › Elegir un comando).
-**Leer antes:** `trabajo.md` › T-101 a T-110 y `10-operacion.md` › Rondas de UX; para PA-I1, `diseno-tecnico.md` y `ux.md` › PA-1 y PA-6.
+Construir PA-I1, los comandos con «/» (`diseno-tecnico.md` › Iteraciones y Procesos centrales › Elegir un comando).
+**Leer antes:** `diseno-tecnico.md` y `ux.md` › PA-1 y PA-6.

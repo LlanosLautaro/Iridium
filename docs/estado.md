@@ -39,19 +39,27 @@
 | Arranque (`modulos/arranque/estado.md`) | sección | en operación (con el hito 10; probada en Q-227, calidad el 2026-11-21) | hecho |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Paridad, Orden y Abrir, D-166; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, después de Paridad y Orden, D-166) | en pausa |
-| Paridad (`modulos/paridad/estado.md`) | sección | 7. Construcción (UI hecha, D-170; antes, la tanda de la ronda de UX) | en curso |
+| Paridad (`modulos/paridad/estado.md`) | sección | 7. Construcción (UI hecha, D-170; sigue PA-I1) | en curso |
 
 ## En qué estamos ahora
 **Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
-**Ronda de UX 1 hecha** (2026-11-21, T-100): diez hallazgos, T-101 a T-110, sobre todo de un lugar y un nombre para cada cosa (`10-operacion.md` › Rondas de UX). Arreglado en el momento el aviso falso de carpeta faltante al arrancar; `scripts.md` quedó en ocho (probado en Q-245). Los `pendiente` van en una tanda antes de construir Paridad; los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
-**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168) y el diseño técnico, cerrado (D-169): tres iteraciones, PA-I1 (comandos), PA-I2 (archivos y fotos) y PA-I3 (texto pegado). La UI también (D-170): la Ficha (PZ-16) y el menú arriba del compositor entran al design system. Sigue la tanda de la ronda de UX y después PA-I1. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
+**Ronda de UX 1 hecha** (2026-11-21, T-100) **y su tanda también**: el chat sin conversación ya no muestra un título cortado (T-101), Git con siluetas al leer (T-103), Acerca de con una frase (T-104), Este proyecto en palabras del usuario (T-106), `04-ux.md` al día con la app (T-107), la Bandeja vacía en su columna (T-108) y los avisos de la esquina medidos juntos (T-110), que encontró los botones de un aviso desarmados: arreglado. Tu prueba, Q-248 (la tanda de la ronda). Los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
+**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168) y el diseño técnico, cerrado (D-169): tres iteraciones, PA-I1 (comandos), PA-I2 (archivos y fotos) y PA-I3 (texto pegado). La UI también (D-170): la Ficha (PZ-16) y el menú arriba del compositor entran al design system. Sigue PA-I1. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-(ninguna)
+- **Q-248 — Probá la tanda de la ronda de UX**
+  Tipo: prueba · Frente: Orden
+  Contexto: `10-operacion.md` › Rondas de UX; los cambios, en `trabajo.md` › T-101 a T-110. Con la app armada (`scripts.md` › Armar la última versión) o en modo desarrollo:
+  - [ ] En un proyecto sin conversación, la cabecera del chat no muestra un título cortado: solo el historial, Nueva y Continuar
+  - [ ] Git de este proyecto muestra líneas grises con la forma del panel mientras lee, no un hueco
+  - [ ] Ajustes › Acerca de muestra la fecha y una frase del commit; el mensaje entero aparece al pasar el mouse
+  - [ ] En un proyecto sin la marca de armar, Ajustes › Este proyecto explica para qué sirve y que su IA lo prepara
+  - [ ] La Bandeja de un proyecto sin preguntas dice «Nada en tu bandeja» en la columna del medio, no pegado a la izquierda
+  - [ ] El aviso de un proyecto que terminó en otra pestaña tiene Abrir y Responder en una fila, a la derecha
 
 ## Próximo paso
-La tanda de la ronda de UX (T-101, T-103, T-104, T-106 a T-108 y T-110) y después PA-I1, los comandos con «/».
+Construir PA-I1, los comandos con «/» (Paridad).
 **Leer antes:** `modulos/paridad/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados

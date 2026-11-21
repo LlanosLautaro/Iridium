@@ -117,6 +117,16 @@
 .git-arbol {
   padding: 0 var(--esp-2);
 }
+/* Mientras lee (T-103): una línea gris por renglón, con el alto de un nodo */
+.git-silueta {
+  display: flex;
+  align-items: center;
+  height: var(--alto-nodo);
+  padding: 0 var(--esp-3) 0 var(--esp-6);
+}
+.git-remoto .git-silueta {
+  padding: 0;
+}
 .git-nodo {
   --nivel: 1;
   width: 100%;

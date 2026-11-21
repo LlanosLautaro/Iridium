@@ -284,7 +284,7 @@
   font-size: var(--tam-chico);
   color: var(--texto-2);
 }
-.aviso-flotante .acc {
+.aviso-flotante .pie {
   grid-column: 2 / 4;
   display: flex;
   justify-content: flex-end;

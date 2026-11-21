@@ -166,7 +166,9 @@ test('Ajustes › Este proyecto: el interruptor se recuerda y sin script de arma
     .getByRole('button', { name: 'Ajustes' })
     .click()
   await expect(
-    win.getByRole('dialog', { name: 'Este proyecto' }).getByText('Este proyecto no marca cómo se arma.'),
+    win
+      .getByRole('dialog', { name: 'Este proyecto' })
+      .getByText('Este proyecto todavía no está preparado', { exact: false }),
   ).toBeVisible()
   await app.close()
 })

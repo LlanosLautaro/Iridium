@@ -884,7 +884,9 @@ export function Conversacion({
         ? 'Skills y configuración de Claude'
         : general
           ? 'Ideas y proyectos'
-          : 'Sin conversación todavía'
+          : // Sin conversación, sin título (T-101): el cuerpo ya dice qué hace Continuar, y al lado de los botones
+            // «Sin conversación todavía» quedaba cortado.
+            null
   // Sin ruido (D-108): debajo del título, cuándo fue y si se empezó en VS Code o la empezó el arranque del período
   // (AR-2); lo demás lo dice la conversación.
   const subtitulo =
@@ -902,7 +904,7 @@ export function Conversacion({
     <>
       <div className="cab-conv">
         <div className="nombre-conv">
-          <b title={titulo}>{titulo}</b>
+          {titulo && <b title={titulo}>{titulo}</b>}
           {subtitulo && <span title={subtitulo}>{subtitulo}</span>}
         </div>
         <Anteriores ruta={ruta} actual={enBlanco ? null : (c?.id ?? null)} trabajando={trabajando} />
