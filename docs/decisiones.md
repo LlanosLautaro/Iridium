@@ -3307,3 +3307,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** se abre el frente **Paridad** (sección, prefijo `PA`), `pendiente` en el paso 1 (propuesta). Lo que el chat ofrece se escribe en palabras de Iridium y pasa por la frontera del motor (D-007, D-025): el compositor arma «texto + adjuntos» y le pregunta al motor qué sabe hacer (qué comandos tiene, si acepta imágenes); la frontera lo traduce a Claude. Un motor que no tenga algo, no lo muestra.
 **Motivo:** es lo que más se usa todos los días y lo que más se nota que falta. Escribirlo contra la frontera deja la puerta abierta a otros agentes sin programarlos ahora.
 **Consecuencias:** `modulos/paridad/`; T-96 `pendiente` en este frente. Cuándo empieza y qué entra, en Q-237 a Q-239.
+
+## D-166 — Paridad va después de DI-I3, con los cuatro pedidos y Capacidades como su segunda parte
+- **Fecha:** 2026-11-21
+- **Ámbito:** frentes Paridad, Capacidades, Orden, Abrir y Plantillas
+- **Hito o paso:** 10, Q-237 a Q-239
+- **Estado:** vigente (cambia el orden de D-151 y D-162; Capacidades deja de ser un frente aparte, D-102)
+
+**Contexto:** con el frente Paridad abierto (D-165) quedaban cuándo empieza, qué entra del chat de Claude además de lo pedido y si Capacidades (T-28: plugins, usar la PC y el navegador desde las sesiones) va junto o aparte.
+**Decisión:** Paridad empieza al cerrar DI-I3, antes del paso 8 de Orden, el de Abrir y Plantillas (Q-237, A). Entran solo los cuatro pedidos: comandos con «/», adjuntar con el +, pegar fotos y el texto largo como archivo; mencionar archivos con «@» y dictar con el micrófono quedan como ideas (Q-238, A: T-97 y T-98). Capacidades entra en Paridad como su segunda parte, después de los cuatro (Q-239, B).
+**Motivo:** es lo que más se usa todos los días. El usuario prefirió tener en un solo frente todo lo que separa a Iridium de Claude, el chat y lo que pueden hacer las sesiones.
+**Consecuencias:** la fila Capacidades sale de `estado.md` › Módulos; T-28 pasa al frente Paridad. La ruta de Paridad suma la segunda parte. La fila después de DI-I3: Paridad, Orden (paso 8), Abrir (paso 8 y T-87), Plantillas.

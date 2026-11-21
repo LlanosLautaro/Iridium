@@ -7,7 +7,7 @@
 ## Progreso
 | Paso | Estado | Documento |
 |---|---|---|
-| 1. Propuesta | en curso (espera Q-237 a Q-239) | `propuesta.md` |
+| 1. Propuesta | hecho (Q-237 a Q-239, D-166) | `propuesta.md` |
 | 2. Definición | pendiente | `definicion.md` |
 | 3. Investigación | pendiente (qué deja hacer el motor: comandos, imágenes, archivos) | `investigacion.md` |
 | 4. UX | pendiente | `ux.md` |
@@ -18,15 +18,17 @@
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Frente abierto el 2026-11-21 a pedido del usuario (D-165, T-96): el chat de Iridium con lo que tiene el de Claude, escrito contra la frontera del motor para que más adelante pueda entrar otro agente. La propuesta está escrita; cuándo empieza y qué entra esperan Q-237 a Q-239.
+Frente abierto el 2026-11-21 a pedido del usuario (D-165, T-96): el chat de Iridium con lo que tiene el de Claude, escrito contra la frontera del motor para que más adelante pueda entrar otro agente. La propuesta está hecha (D-166): empieza al cerrar DI-I3, con los cuatro pedidos; «@» y el micrófono quedan como ideas (T-97, T-98) y Capacidades (T-28) es su segunda parte.
 
 ## Ruta
-- [ ] Elegir qué del chat de Claude entra y cuándo (Q-238)
+- [x] Elegir qué del chat de Claude entra y cuándo (D-166)
 - [ ] Ver qué deja hacer el motor: comandos, fotos y archivos
 - [ ] Escribir «/» y elegir un comando
 - [ ] Adjuntar archivos y fotos con el + o arrastrándolos (T-96)
 - [ ] Pegar una foto en el chat
 - [ ] Que un texto largo pegado vaya como archivo
+- [ ] Usar los plugins de Claude Code desde las sesiones (T-28)
+- [ ] Usar la PC y el navegador desde las sesiones (T-28)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -42,5 +44,5 @@ Frente abierto el 2026-11-21 a pedido del usuario (D-165, T-96): el chat de Irid
 (Todavía ninguna.)
 
 ## Próximo paso
-Con Q-237 a Q-239 respondidas: la definición (`definicion.md`) con lo que entra y la investigación de lo que deja hacer el motor (un spike).
+Al cerrar DI-I3 (D-166): la definición (`definicion.md`) con lo que entra y la investigación de lo que deja hacer el motor (un spike).
 **Leer antes:** `propuesta.md` y `05-arquitectura.md` › La interfaz `Motor`.

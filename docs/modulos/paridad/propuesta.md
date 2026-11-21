@@ -37,4 +37,4 @@ Lo pidió el usuario (D-165): es lo que más se nota todos los días. El composi
 - **Abrir la terminal de Claude Code** para lo que falta: rompe el «todo en un lugar» de Iridium.
 
 ## Decisión
-Seguir (D-165). Cuándo empieza y qué entra: Q-237 a Q-239.
+Seguir (D-165). Empieza al cerrar DI-I3, con los cuatro pedidos; Capacidades (T-28) es su segunda parte; «@» y el micrófono, ideas (D-166).

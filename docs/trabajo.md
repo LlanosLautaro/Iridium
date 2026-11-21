@@ -120,8 +120,8 @@ Estado: hecho · Fecha: 2026-10-30
 La ventana de Ajustes (D-065).
 
 ## T-28 — Más capacidades de Claude
-Estado: pendiente · Fecha: 2026-10-30
-Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Es el frente Capacidades, en espera detrás de Diseño (D-102).
+Estado: pendiente · Frente: Paridad · Fecha: 2026-10-30
+Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Era el frente Capacidades (D-102); desde D-166 es la segunda parte de Paridad.
 
 ## T-29 — Mantenimiento: subir los parches
 Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
@@ -416,3 +416,11 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-21
 ## T-96 — una muestra de como se ve el chat de Claude desktop, el + despliega esas opciones, el resto nosotros lo tenemos parecido.
 Estado: pendiente · Frente: Paridad · Idea: usuario · Fecha: 2026-11-21 · Origen: D-165
 Es la base del frente Paridad: el + del compositor con Agregar archivos o fotos (Ctrl+U) y Comandos de barra, y «/» para los comandos (`modulos/paridad/propuesta.md`).
+
+## T-97 — Mencionar un archivo con «@» en el chat
+Estado: nueva · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
+Como en Claude para VS Code: escribir «@» abre la lista de archivos del proyecto y el elegido viaja con el mensaje. Quedó fuera de la primera parte de Paridad (D-166).
+
+## T-98 — Dictar un mensaje con el micrófono
+Estado: nueva · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
+Un botón en el compositor para dictar en vez de escribir. Quedó fuera de la primera parte de Paridad (D-166).
