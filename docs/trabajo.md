@@ -424,3 +424,7 @@ Como en Claude para VS Code: escribir «@» abre la lista de archivos del proyec
 ## T-98 — Dictar un mensaje con el micrófono
 Estado: descartado · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
 Repetida: el dictado ya estaba como T-57 (de Capacidades, que ahora es Paridad, D-166).
+
+## T-99 — La extensión de la Revisión, al negro
+Estado: nueva · Frente: Diseño · Idea: IA · Fecha: 2026-11-21 · Origen: cierre de DI-I3
+Lo que la extensión dibuja sobre otra app (el aviso del modo comentar, el resaltado, la tarjeta del comentario) sigue con el aspecto de antes: Chakra Petch, JetBrains Mono y el verde con tinte (`extension/src/selector/estilos.ts`, con las fuentes en `extension/fuentes/`). Pasarlo a los tokens del negro y a la letra del sistema, con el paso 8 de Diseño.

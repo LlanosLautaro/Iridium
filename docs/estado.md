@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I8, las piezas de cada versión, probada en Q-225) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 19 probadas, falta escribir el diseño desde lo construido; vuelve por D-162) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 hecha el 2026-11-21; DI-I4 y el paso 8, más adelante) | en pausa |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va después de Paridad, D-166) | en pausa |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
@@ -42,17 +42,17 @@
 | Paridad (`modulos/paridad/estado.md`) | sección | 2. Definición (empieza al cerrar DI-I3; Capacidades, T-28, es su segunda parte, D-166) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasaron a las piezas, tanda por tanda; no queda nada del estilo de antes. La tanda 19 (el ⋯ y «archivado el …» en la tarjeta, el español neutro y la lupa de Archivos) quedó probada en Q-240; con ella, archivar ya no deja aviso y el estado cambia en la tarjeta al instante. Después se cierra DI-I3.
-**Sigue Paridad** (D-165; D-166, después de DI-I3): el chat con «/», adjuntos, fotos pegadas y el texto largo como archivo, contra la frontera del motor; su segunda parte es Capacidades (T-28).
-**Arranque** (D-135) anduvo la segunda noche (Q-227); su paso 8 va al cerrar DI-I3. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
-Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito) y T-95 (plugins por proyecto). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
+**Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho. Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
+**Ahora: el paso 8 de Arranque** (D-162, al cerrar DI-I3), y después **Paridad** (D-165, D-166): el chat con «/», adjuntos, fotos pegadas y el texto largo como archivo, contra la frontera del motor; su segunda parte es Capacidades (T-28).
+Arranque (D-135) anduvo la segunda noche (Q-227). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
+Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
 (ninguna)
 
 ## Próximo paso
-Cerrar DI-I3: `DESIGN.md` y `06-ui.md` reescritos desde lo construido; después, Paridad (D-166).
-**Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
+El paso 8 (calidad) de Arranque: las pruebas del frente en la corrida entera, los casos raros del uso (sin período, la PC suspendida) y la accesibilidad del aviso. Después, Paridad (D-166).
+**Leer antes:** `modulos/arranque/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

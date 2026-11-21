@@ -168,226 +168,161 @@ components:
 
 # Design System: Iridium
 
-> **Desde el 2026-11-13 (DI-I3, D-104) rige el negro, único tema.** Los tokens que usa la app son los de `docs/diseno/tokens.css` y las piezas, las de `docs/diseno/piezas.css` (frente Diseño). Los tokens de arriba (frontmatter) y `.impeccable/design.json` salen de ahí desde el 2026-11-18. El texto de abajo todavía describe el sistema de antes (Iridium verde y Carbón): se reescribe desde lo construido al cerrar DI-I3.
-
-> El nombre es Iridium (D-033). Fuente de los tokens: `docs/ui/vista-proyecto.html`, la primera superficie construida y revisada.
+> Escrito desde lo construido al cerrar DI-I3 (2026-11-21). Lo que manda es el código: los tokens de `docs/diseno/tokens.css` (la app lo importa tal cual, D-121) y las piezas de `docs/diseno/piezas.css`, que la app tiene en `src/renderer/estilos/piezas.css`, cada una con su ficha (D-117). El frontmatter y `.impeccable/design.json` salen de ahí. El sistema de antes (Iridium verde y Carbón, Chakra Petch) quedó en el historial de git; su historia, en `docs/06-ui.md`.
 
 ## Overview
 
-**Creative North Star: "La consola de fósforo que se lee como un libro"**
+**Creative North Star: «Negro, quieto, y el color solo cuando dice algo»**
 
-Casi negro con tinte verde, una sola luz de fósforo y la conversación en el centro. Es una consola, pero no se disfraza de terminal: nada de mayúsculas, rayas ni brillo en las superficies. Se lee tranquilo, como un texto largo (D-029).
+Un solo tema, negro puro (D-103, D-104). Las secciones se apoyan directo en el negro, sin tarjetas de fondo: se separan con espacio y, donde hace falta, con una línea apenas visible. El texto va en tres grises neutros, sin tinte. Lo activo y lo elegido van en blanco; lo prendido, en verde.
 
-La forma es la de VS Code (D-031): barra de actividad a la izquierda, sesiones como pestañas, área principal grande, panel que se despliega y barra de estado abajo. Casi todo es gris verdoso. El color aparece solo para avisar algo, y siempre con ícono y palabra.
-
-El estilo es F4 (D-032): esquinas redondeadas, tarjetas suaves con fondo apenas teñido y medidores finos. Los medidores son lo único que brilla.
+La forma es la de VS Code (D-031, D-041): arriba la barra de proyectos, a la izquierda la de secciones, a la derecha la conversación y abajo una barra de estado fina. Ajustes es la pantalla de referencia (R-34): las demás se miran contra ella.
 
 **Key Characteristics:**
-- Solo oscuro. No hay tema claro. Dos temas: este, **Iridium**, y **Carbón** (abajo, «Themes»; D-066).
-- Tres señales y nada más: verde (activo, hecho, foco), ámbar (frena: sin el usuario no se sigue), rojo (error). Lo que espera al usuario sin frenar va en gris (D-100).
-- Chakra Petch para todo lo que se lee; JetBrains Mono solo para códigos y números.
-- Densidad de herramienta de escritorio: base de 13,5 px, lectura de 15 px.
-- Profundidad por tono, no por sombra.
-
-## Themes
-
-Los tokens de este documento son los del tema **Iridium**, el de siempre. **Carbón** (D-066) es el mismo sistema con otros valores, en `docs/ui/tokens.css` bajo `:root[data-tema="carbon"]`:
-- Neutros casi negros sin tinte (fondo `#111113`, lateral `#0d0d0f`, barra `#0a0a0b`, elevado `#18181b`); texto `#e4e4e7`, `#a9aab1` y `#8b8c94`.
-- Lo activo y el foco en **Azul Apagado** (`#6c9eff`) en lugar del Verde Fósforo; «hecho» en verde suave (`#5fbf8a`); ámbar `#e0a84a` y rojo `#ef6a62`.
-- Letra del sistema (Segoe UI) para leer, base de 13 px y lectura de 14,5 px; JetBrains Mono igual.
-- Las mismas reglas: tres señales, color solo para avisar, profundidad por tono.
-Un tema nuevo es otro bloque de tokens con su tabla de contraste en `06-ui.md`; ninguna pantalla usa colores sueltos.
+- Un solo tema oscuro, negro sin acento. No hay tema claro ni selector de tema.
+- Un solo color de acción: el verde del botón principal, uno por pantalla (D-109, D-120).
+- El color informa: ámbar lo que espera al usuario, rojo un error, verde lo prendido y lo que anda, azul los enlaces, y los colores del código y de Git (D-124).
+- Sin ruido: lo que anda bien no se anuncia; un estado aparece cuando falla (D-108).
+- La letra del sistema (Segoe UI Variable) para todo; Cascadia Mono solo para códigos y números.
+- Español neutro en todos los textos de la app (D-110).
 
 ## Colors
 
-Una familia de casi negros verdosos, grises salvia para el texto y tres señales saturadas que se usan poco.
+Negro puro, cuatro superficies casi negras, cuatro líneas y tres grises de texto. El color se usa poco y siempre dice algo.
 
 ### Primary
-- **Verde Fósforo** (primario): lo activo y el foco. Pestaña activa, ícono activo de la barra, miga actual, nombre de la IA, chip «Trabajando», «hecho» en el mapa, borde del compositor con foco, contorno de foco, el tirador al arrastrar y el relleno de los medidores. Nunca es fondo de un botón.
-- **Fósforo Claro** (primario-texto): solo el código en línea dentro de la conversación.
+- **Verde de acción** (`principal`): la letra y el borde del botón principal y nada más; quieto va sobre el negro y al pasar el mouse se ilumina (`principal-hover`, `principal-fondo`). Uno por pantalla; la excepción es el Enviar de cada pregunta de la Bandeja (R-73).
+- **Verde marcado** (`marcado`): lo prendido (casillas, opciones, interruptores). No es un color de acción.
 
 ### Secondary
-- **Ámbar de Espera** (espera): solo lo que frena (D-100). Chip «Frena», la cuenta con «!» cuando algo frena y el medidor que se acerca al límite. Las cuentas que no frenan van en gris y ningún botón es ámbar.
-- **Ámbar Hundido** (espera-borde): borde del aviso flotante. La pregunta que frena lleva el borde entero en ámbar al 55 %.
-- **Fondo de Pedido** (espera-fondo): fondo apenas teñido de la pregunta que frena.
+- **Ámbar** (`espera`, con `espera-fondo` y `espera-borde`): lo que espera al usuario: la cuenta de preguntas, una prueba pendiente, el aviso que pide algo.
+- **Amarillo de la recomendada** (`recomendada`): solo la estrella de la opción recomendada en una pregunta (R-85).
 
 ### Tertiary
-- **Rojo Señal** (error): solo errores, en chip con ícono y palabra.
+- **Rojo** (`error`, con `error-fondo` y `error-borde`): un error y lo que borra (el aviso de error, Eliminar).
+- **Verde de lo que anda** (`bien`): los medidores con margen (se ponen ámbar y rojo al llenarse, R-56), la señal de Trabajando y el tilde de lo que funciona.
+- **Azul de enlace** (`enlace`): un enlace dentro de un texto (Q-171).
+- **El código y Git:** `cod-*` para un bloque de código y las diferencias; `git-*` para las letras de VS Code (M, A/U, D).
 
 ### Neutral
-- **Negro Fósforo** (fondo): la conversación y la pestaña activa.
-- **Negro Lateral** (lateral): barra de actividad y panel derecho; un paso más oscuro que el fondo.
-- **Negro Barra** (barra): barra de sesiones y barra de estado, lo más oscuro.
-- **Superficie Elevada** (elevado): el aviso flotante y el fondo del código en línea.
-- **Fondo del Compositor** (caja): la tarjeta donde se escribe.
-- **Velo de Hover** (hover): fondo de hover en pestañas, botones de ícono y nodos.
-- **Fondo de Selección** (sel-fondo): el nodo seleccionado del mapa.
-- **Canal del Medidor** (medidor-fondo): la pista vacía de los medidores.
-- **Borde Verdoso** (borde): divisiones del marco (actividad, pestañas, barra de estado, tirador).
-- **Borde Susurro** (borde-suave): divisiones internas (migas, cabecera del panel, entre turnos).
-- **Borde Firme** (borde-fuerte): botones secundarios, compositor, barra de scroll y subrayado de enlaces de código.
-- **Borde de Campo** (borde-control): el borde de los campos de texto chicos (notas, «Otro»), que tiene que verse como campo: 3,4:1 sobre el fondo.
-- **Blanco Ceniza Verde** (texto): texto principal.
-- **Gris Salvia** (texto-2): texto secundario, autor «Vos», nodos del mapa, docs.
-- **Gris Liquen** (texto-3): lo terciario: horas, íconos en reposo, ayudas, placeholder.
-- **Tinta sobre Color** (sobre-color): texto sobre un fondo lleno: el botón principal claro.
-- **Selección Fósforo** (seleccion): la selección de texto, verde al 27 %.
-- **Cadena de Código** (cod-cadena): solo en el visor de Archivos, las cadenas y los números del código (D-042). Los comentarios van en gris liquen y las palabras clave en verde texto; no es un color de estado.
+- **Fondo** (`fondo`, `#000`): toda la app.
+- **Elevado** (`elevado`): lo que flota o se separa: menús, cuadros, ventanas, el ícono de una fila.
+- **Tarjeta** (`tarjeta`): un bloque de código.
+- **Hover** y **Elegido** (`hover`, `sel-fondo`): el fondo al pasar el mouse y el de la fila, la pestaña o la opción elegida.
+- **Velo** (`velo`): detrás de un cuadro abierto.
+- **Líneas:** `borde` (la común), `borde-suave` (entre filas), `borde-fuerte` (lo que tiene que verse sobre el negro: el compositor, las citas, la barra de desplazamiento) y `borde-control` (lo que se toca: campos, casillas, el botón secundario).
+- **Texto:** `texto` (lo que se lee), `texto-2` (lo secundario, los íconos, los botones sin fondo), `texto-3` (lo de apoyo: fechas, cuentas, títulos de bloque; el más tenue que pasa AA) y `texto-apagado` (lo deshabilitado; nunca texto que haya que leer).
 
 ### Named Rules
-**The Color Avisa Rule.** El color solo señala estado: verde activo, ámbar frena, rojo error. Todo lo demás es gris verdoso (D-031, D-100).
+**The Un Verde Rule.** El verde del botón principal es el único color de acción, y hay uno por pantalla como mucho (D-109). Lo activo y lo elegido van en blanco, no en verde.
 
-**The Ícono y Palabra Rule.** Ningún estado va solo con color: cada chip y cada nodo lleva ícono y palabra («Trabajando», «2 preguntas», «Error», «pendiente»).
+**The Color Informa Rule.** El color está donde informa: medidores, enlaces, código, Git, ámbar y rojo (D-124). Nunca de adorno.
 
-**The Ámbar Frena Rule.** El ámbar es solo para lo que frena: sin la respuesta del usuario, la IA no sigue. Lo que espera sin frenar (una cuenta, una pregunta, una prueba) va en gris (D-100).
+**The Sin Ruido Rule.** No se muestra lo que no ayuda a decidir: ni la cuenta total al lado de un título, ni la hora, ni «todo bien». La cuenta que queda es la de lo que espera al usuario (D-108).
 
-**The Botón Claro Rule.** El botón principal es claro y sin color (fondo del texto principal, tinta sobre color): pide sin avisar. Ni ámbar, que avisa, ni verde, que marca (D-100).
+**The Ningún Color Escrito Rule.** Las secciones solo usan `var(--…)`; el control de estilos (`tests/estilos.test.ts`) marca un color escrito o una pieza rehecha en una sección.
 
 ## Typography
 
-**Display Font:** no hay. El título más grande mide 16 px.
-**Body Font:** Chakra Petch (con Segoe UI, sans-serif), autoalojada en 400, 500, 600 y 700.
-**Label/Mono Font:** JetBrains Mono (con Consolas, monospace), variable 100–800.
+**Body Font:** Segoe UI Variable Text (con Segoe UI y system-ui): la del sistema, sin fuentes propias.
+**Mono Font:** Cascadia Mono (con Consolas): solo códigos (D-n, Q-n), rutas, valores y números en columna.
 
-**Character:** Chakra Petch da el aire de centro de mando sin gritar; en minúscula y a buen interlineado se lee como prosa. JetBrains Mono queda para lo que es dato: códigos, horas, porcentajes, rutas.
+**Character:** la letra de Windows, para que Iridium se lea como una herramienta de la PC y no como un disfraz. Cinco tamaños y nueve estilos con nombre (`--estilo-*`, D-116), que se usan con `font: var(--estilo-…)`.
 
 ### Hierarchy
-- **Título** (600, 16 px, 1,4): la pregunta de la tarjeta del pedido y los títulos de un doc.
-- **Lectura** (400, 15 px, 1,65): el texto de la conversación, máximo 72ch.
-- **Base** (400, 13,5 px, 1,5): todo el marco; nodos del mapa y docs del panel. Números tabulares en todo el body.
-- **Etiqueta** (600, 12,5 px, 0,02em): chips, botones (13 px), pestañas del panel, autor del turno (13 px), sección del mapa. Sin mayúsculas.
-- **Chico** (400, 12,5 px): migas, barra de estado, ayudas, lista de herramientas.
-- **Mono** (400, 12,5 px): código en línea y citas como `archivo.md › Título`.
-- **Mono dato** (500, 12 px, 1): horas, porcentajes, numeración del mapa, códigos Q-n (700), contador (700, 11 px).
+- **Documento** (600, 22 px, 1,25): el título de un documento, uno por página.
+- **Título** (600, 17 px, 1,35): el título de una sección o un cuadro y los subtítulos de un documento.
+- **Lectura** (400, 15 px, 1,65): el cuerpo de un documento, hasta 760 px de ancho.
+- **Cuerpo** (400, 13,5 px, 1,5): el texto de la interfaz: filas, mensajes, el compositor.
+- **Botón** (500, 13,5 px) y **Control** (400, 13,5 px): botones; campos, opciones de menú y pestañas.
+- **Rótulo** (500, 12,5 px): los títulos de bloque, en el gris de apoyo, con la cuenta al lado.
+- **Meta** (400, 12,5 px): lo que acompaña: el detalle de una fila, fechas, la barra de abajo.
+- **Código** (400, 12,5 px, mono): códigos, cuentas y números en columna.
 
 ### Named Rules
-**The Dos Letras Rule.** Chakra Petch para leer, JetBrains Mono solo para códigos y números. No se suma otra familia.
+**The Sin Mayúsculas Rule.** Nada en mayúsculas sostenidas. Un solo estilo de título de bloque: gris, chico, con la cuenta al lado.
 
-**The Minúscula Rule.** Nada en mayúsculas sostenidas. Las etiquetas se distinguen por peso (600) y un tracking leve (0,02em), no por versalitas.
+**The Mono Es Dato Rule.** La mono es para lo que es dato; la prosa, nunca.
 
 ## Layout
 
-Grilla de app de escritorio fija en la ventana, sin scroll de página. Ancho mínimo 1024 px; probada de 1280 a 1920.
+App de escritorio sin scroll de página; cada zona desplaza lo suyo. Las medidas que se repiten son tokens (`--alto-*`, `--ancho-*`, D-119), y el control avisa de una repetida a mano.
 
-- Columnas: barra de actividad de 52 px y el resto.
-- Filas: barra de sesiones de 40 px, trabajo, barra de estado de 28 px (ocupa todo el ancho).
-- Migas y cabecera del panel: 38 px.
-- La conversación va centrada a 780 px como máximo, con 32 px a los costados. El último turno se apoya sobre el compositor: el hilo arranca abajo.
-- El panel derecho mide 340 px por defecto; se arrastra entre 260 px y el 60 %, también con flechas (20 px, 60 px con Shift). Se abre y cierra con Ctrl+B y se intercambia con la conversación sin cambiar la jerarquía.
-- El área principal no baja de 420 px.
-- Con el panel cerrado y un aviso a la vista, la columna se corre para dejarle 340 px libres al aviso.
+- **El marco:** la barra de proyectos arriba (36 px, con el inicio y los botones de Windows a la derecha), la barra de secciones a la izquierda (48 px), la conversación a la derecha (360 px de entrada, con un divisor que la ensancha) y la barra de estado abajo (26 px).
+- **Una sección:** la Cabecera (PZ-9) arriba y el contenido con su margen. Lo que se lee va centrado hasta 760 px; las listas centradas, hasta 820 px; las de renglones largos, hasta 1080 px.
+- **Con columna:** Docs y Archivos llevan el árbol a la izquierda (240 px); Git, su panel de 340 px, como VS Code.
+- **Ajustes:** una ventana de 860 × 600 px con las pestañas a la izquierda (200 px).
 
-Ritmo: 4, 8, 14, 20 y 32 px. Los turnos separan 14 px arriba y abajo con una línea suave entre ellos. Los grupos internos usan 6 a 10 px.
+Ritmo: 4, 8, 12, 16, 24, 32 y 48 px (`--esp-1` a `--esp-7`), cada uno con su uso escrito en `tokens.css`.
 
 ## Elevation & Depth
 
-Plana y por tono. La profundidad sale de tres negros escalonados (barra, lateral, fondo) y de bordes verdosos de un píxel. Solo lleva sombra lo que flota sobre la interfaz (el aviso, los menús y diálogos, la ventana de Ajustes), y hay un solo brillo, el de los medidores.
+Plana. No hay fondos de tarjeta ni tonos escalonados: todo se apoya en el negro, y lo que separa es el espacio y una línea de 1 px. Solo lleva sombra lo que flota.
 
 ### Shadow Vocabulary
-- **Flotante** (`--sombra-flotante`, `0 6px 14px oklch(0 0 0 / .5)`): el aviso abajo a la derecha y lo que la Revisión pone sobre una app ajena.
-- **Menú** (`--sombra-menu`, `0 10px 28px oklch(0 0 0 / .55)`): los menús que se despliegan y los diálogos de confirmación.
-- **Ventana** (`--sombra-ventana`, `0 24px 64px oklch(0 0 0 / .6)`): la ventana de Ajustes, sobre el fondo velado.
-- **Brillo de medidor** (`box-shadow: 0 0 8px <color del medidor>`): el relleno de cada medidor de la barra de estado, en el color de su señal.
-- Los anillos de foco y de selección (`0 0 0 1px` o `3px` de color) no son sombras: marcan, no elevan.
-
-Radios: siempre uno de `rounded` (`--radio-…`). Las marcas finitas (la línea de la pestaña activa, la del Mapa) usan el de medidor; un círculo, 50 %.
+- **Menú** (`--sombra-menu`): menús y listas que se abren, con un anillo de `borde-fuerte`.
+- **Ventana** (`--sombra-ventana`): cuadros y la ventana de Ajustes, sobre el velo.
+- **Brillo del medidor:** el relleno de cada medidor del uso, en su color. Es el único brillo.
 
 ### Named Rules
-**The Solo los Medidores Brillan Rule.** Ningún fondo, tarjeta, texto ni botón lleva brillo. El resplandor es exclusivo del relleno de los medidores (D-032).
+**The Solo Flota Rule.** La sombra es de lo que flota; el borde, del Recuadro, de los Campos y del botón secundario. Nunca un bloque dentro de otro ni una caja dentro de un recuadro.
 
 ## Shapes
 
-Esquinas redondeadas y discretas. Controles a 5 px (botones, chips, botón de ícono, contador). Tarjetas a 10 px (pedido, compositor, aviso). Medidores a 3 px. El chip de las migas pasa a píldora (11 px) y el nodo seleccionado del mapa a 6 px, con margen de 6 px a los lados. Bordes de 1 px; los indicadores de activo son barras de 2 px (a la izquierda en la actividad, arriba en la pestaña de sesión, abajo en las pestañas del panel). Íconos de trazo, 1,6 de grosor, puntas redondas, de 12 a 21 px.
+Esquinas de 8 px en controles y filas, 12 px en recuadros, menús, el compositor y los bloques de código, y 16 px en cuadros y ventanas; lo redondo (interruptores, la «i», la barra de desplazamiento), en píldora. Bordes de 1 px. Íconos de trazo, propios (`src/renderer/ui/Icono.tsx`).
 
 ## Components
 
-### Buttons
-Compactos y de escritorio.
-- **Shape:** control (5 px), 30 px de alto, 14 px a los costados, etiqueta de 13 px.
-- **Primario:** claro, sin color: fondo del texto principal con tinta sobre color (D-100). Es la acción principal de la pantalla («Enviar», «Responder», «Responder en otra app»). Hover: brillo al 110 %.
-- **Secundario:** sin fondo, borde firme, texto gris salvia. Hover: texto principal y borde gris liquen. «Detener» es secundario con ícono cuadrado relleno.
-- **Botón de ícono:** 30 × 30, gris liquen; hover con velo y texto principal; presionado, en verde.
-- **Foco:** contorno de 1 px en verde, hacia adentro.
+Las quince piezas, con su ficha (Grupo, Para qué, Estados) en el comentario que las encabeza en `piezas.css`; Diseño › Sistema las muestra con sus variantes. En la app, las que tienen comportamiento son componentes de `src/renderer/ui/`.
 
-### Chips
-- **Style:** sin fondo, 20 px de alto, borde de 1 px del color del texto al 45 %, ícono de 12 px más palabra, etiqueta de 12,5 px.
-- **Estados:** trabaja (verde, ícono que gira), espera (gris), frena (ámbar), error (rojo), ok (verde). En las migas el chip es píldora y es un botón que lleva a Pendientes.
+### Acciones
+- **Botón (PZ-1):** principal (verde delineado, uno por pantalla), secundario (con el borde de control), sin fondo (las acciones de una fila), peligroso (rojo, solo lo que no se deshace), chico (24 px, en una fila o un recuadro) y solo ícono (30 × 30).
+- **Campo (PZ-5):** texto, área, selector, casilla, opción e interruptor; 32 px (26 el chico). Con el foco, el borde se aclara; lo marcado, en verde. Lo escrito se guarda solo.
+- **Menú, cuadro y ventana (PZ-8):** lo que flota. El menú (también con clic derecho y con el ⋯ de una tarjeta), el menú en lista (con título y detalle, la elegida resaltada), el cuadro que confirma o pide un dato (440 px) y la ventana de Ajustes.
 
-### Cards / Containers
-- **Pedido (Q-n):** tarjeta (10 px), con borde firme; la que frena, con el fondo de pedido y el borde entero en ámbar al 55 % (D-100); 14 × 16 px de relleno, máximo 72ch. Adentro: código Q-n en mono 700 con su chip, la pregunta en título, el contexto citado en chico y las acciones.
-- **Aviso:** 320 px, fijo abajo a la derecha, superficie elevada, borde ámbar hundido, sombra flotante. Entra subiendo 8 px en 0,3 s con medio segundo de demora. Se cierra con Esc.
+### Contenido
+- **Fila (PZ-2):** un elemento de una lista; sus acciones aparecen al pasar el mouse o con el foco, y la que se viene a hacer está siempre.
+- **Bloque (PZ-3):** agrupa bajo un título gris y chico, con la cuenta. Nunca uno dentro de otro.
+- **Texto de documento (PZ-12):** un markdown para leer (Docs, la Bandeja, las respuestas de la IA); tablas con línea solo entre filas y enlaces en azul.
+- **Fila que se abre (PZ-13):** se abre en su lugar, con su contenido y sus botones (una idea).
+- **Etiqueta de enlace (PZ-14):** un enlace dentro de un texto que se escribe: ícono, nombre y sitio en gris, con borde.
+- **Camino (PZ-15):** los pasos en orden con sus ramas (el Mapa): un carril con un punto por paso y la señal a la derecha.
 
-### Inputs / Fields
-- **Compositor:** tarjeta (10 px), fondo del compositor, borde firme. Adentro, un signo `>` en mono verde, el área de texto de 14 px con cursor verde y una fila con la ayuda y las acciones (Detener, Enviar).
-- **Foco:** todo el borde de la tarjeta pasa a verde. El área de texto no tiene contorno propio.
+### Avisos
+- **Recuadro (PZ-4):** lo que hay que ver aunque no se busque: aviso (ámbar), error (rojo), vacío y punteado (lo que todavía falta), con su acción si la tiene.
+- **Cuenta y señal (PZ-7):** un número o una marca chica, sin píldora: ámbar lo que frena, rojo lo que falla, verde lo que anda, blanco lo que está listo. Si nada falla, no se muestra.
 
-### Navigation
-- **Barra de actividad:** íconos de 21 px en gris liquen; el activo en verde con barra de 2 px a la izquierda; contador abajo a la derecha del ícono, en gris, y en ámbar con «!» cuando algo frena (D-100).
-- **Barra de título (D-041):** 36 px en negro barra, sin el marco de Windows. A la izquierda, el botón de inicio (la marca en verde, con el contador: gris, o ámbar con «!» si algo frena); después las pestañas; el espacio libre arrastra la ventana; a la derecha, los tres botones que dibuja Windows del mismo color.
-- **Pestañas de sesión:** sobre negro barra, nombre en 600 y chip de estado. La activa toma el fondo y una barra verde de 2 px arriba. Botón de cerrar de 20 px. El proyecto abierto sin sesión también tiene su pestaña, sin chip.
-- **Cabecera del proyecto:** 40 px; el nombre en 600, el hito en gris liquen y el chip de las preguntas (gris, o ámbar si alguna frena), que lleva a Pendientes.
-- **Divisor de la conversación:** 5 px entre la vista y la conversación; al pasar, arrastrar o enfocarlo se tiñe de verde.
-- **Menús (Docs, conversaciones anteriores):** superficie elevada, borde firme, sombra y radio de bloque; la opción actual en verde.
-- **Barra de estado:** chico, gris salvia; el estado de la IA a la izquierda, los medidores a la derecha.
+### Navegación
+- **Cabecera de sección (PZ-9):** el título con su cuenta, sus acciones a la derecha (una principal como mucho) y los filtros debajo.
+- **Filtros (PZ-6):** acotan una lista; cada uno con su cuenta.
+- **Pestañas (PZ-10):** entre vistas de un mismo lugar; también verticales (Ajustes) y con números (los hitos del Mapa).
+- **Árbol (PZ-11):** carpetas y archivos con la letra de Git a la derecha; los nodos, de 26 px.
 
-### Medidor
-Pista de 72 × 6 px en canal del medidor, relleno en verde (o ámbar cerca del límite) con su brillo, y el porcentaje en mono dato. Contexto, ventana de 5 horas y semana.
-
-### Mapa del plan
-Nodos de 27 px en base 13 px: chevron, número en mono (dos cifras), nombre y, a la derecha, la palabra de estado con su ícono. El hito actual en 600. El nodo en que trabaja la IA va seleccionado. El chevron gira 90° en 0,12 s al abrir.
-
-### Turno de conversación
-Autor en etiqueta de 13 px («Vos» gris salvia, «IA» verde) con la hora en mono a la derecha. Las herramientas usadas quedan plegadas en una línea chica con chevron. Lo que hace ahora la IA va en verde con el ícono que gira.
-
-### Revisión de la app (módulo, D-046)
-Lo que dibuja la extensión vive dentro de una app ajena (en un shadow root): lleva sus propias letras y colores, los de Iridium, y no hereda nada de la página. Prototipo: `docs/ui/vista-revision.html`.
-- **Sin barra sobre la app (D-049):** nada fijo ocupa lugar de la página mientras se comenta.
-- **Aviso del modo comentar:** abajo a la derecha, negro barra, borde firme, radio de tarjeta y sombra flotante. Un punto verde (gris liquen si Iridium no responde o no sabe el proyecto), «Comentando en otra app» en 600 y abajo, en chico gris liquen, `Alt+↑` y «F8 o Esc para salir». Aparece al entrar, sube 6 px y se va solo a los 2,2 s; no se repinta con el mouse y no recibe clics.
-- **Resaltado de elemento:** borde de 1,5 px en verde con radio de 4 px y un velo verde al 9 %, a 3 px del elemento; sigue al mouse en 0,09 s. Elegido: 2 px y velo al 5 %. Es el único lugar donde el verde va sobre otra interfaz.
-- **Etiqueta del resaltado:** 22 px, negro barra, borde verde al 45 %, mono 12 px: componente en gris salvia, `›` en gris liquen y la etiqueta HTML en fósforo claro 600. Arriba del elemento; abajo si no entra.
-- **Tarjeta del comentario:** 380 px, fondo del compositor, borde firme, radio de tarjeta y la sombra flotante (la segunda cosa que flota: se apoya sobre una app ajena). Cabecera en mono 12 px (componente › etiqueta · archivo:línea), a la derecha el proyecto como botón chico en 600 con chevron (cambia de proyecto) y × para cerrar; el campo como el del compositor (`>` verde, 14 px, cursor verde); pie con la ayuda en chico y dos botones chicos: **Enviar ahora** secundario con flecha y **Dejar** con el estilo de **Seguí** (borde y texto verdes), porque es la acción común y no responde a una pregunta (no va en ámbar). Con foco, el borde se tiñe de verde. Confirmación: ícono verde, el resultado en 600 y el detalle en chico; se cierra sola al segundo salvo «sin sesión». Entra subiendo 4 px en 0,18 s.
-- **Botón de la extensión:** la marca de Iridium en verde; la cola es un número en mono 700 sobre gris salvia (no ámbar: espera a Iridium, no al usuario).
-- **Fila de comentario:** botón de ancho completo, radio de fila, hover con velo. Captura de 112 × 70 con radio de control y borde; el texto en 14 px a dos líneas; abajo, archivo y línea en mono gris salvia; a la derecha la fecha y `R-n` en mono dato. Los cerrados llevan el chip verde «cerrado» con cuándo y una línea de lo que hizo la IA con ícono verde. Los anotados (D-088), el chip gris «anotado» con ícono de documento, cuándo, y la línea de dónde quedó con el ícono en gris salvia. Reabierto: ícono y palabra en gris salvia. Sin captura: recuadro punteado con ícono y «sin captura». Ilegible: fila punteada con el aviso en rojo.
-- **Ícono Revisión:** globo de comentario con un punto de mira en la esquina, mismo trazo que los demás. Su contador va en gris (borde firme con texto principal), no en ámbar: los abiertos esperan a la IA.
-- **Grupos Abiertos y Cerrados:** dos botones en un marco de borde firme; el elegido con fondo de selección; el número en mono.
-- **Comentario en la conversación:** dentro del turno de «Vos», un bloque con borde firme y radio de bloque; cabecera en fondo del compositor con el ícono, `R-n` en mono 700 y archivo:línea; abajo la captura de 72 × 46 y el texto en 14 px. Todo el bloque es un botón que abre el comentario.
-
-### Skills (módulo, D-068)
-Pantalla SK-W1 (`docs/modulos/skills/ux.md`): la columna de Pendientes (264 px de entrada; su borde derecho se arrastra entre 200 y 640 px y se recuerda, R-6), el detalle y el chat de `Skills` con su divisor. Estilos en `src/renderer/estilos/skills.css`.
-- **Ícono Skills:** un destello de cuatro puntas (✦), mismo trazo que los demás; tercero de la barra del inicio, `Ctrl+3`, sin contador.
-- **Grupo plegable:** título de 30 px en 600 chico gris liquen, con el chevrón de 12 px (gira 90° al abrir, en la curva de salida; quieto con movimiento reducido) y el número en mono a la derecha; una línea suave arriba lo separa del anterior. Los de afuera empiezan plegados si pasan de 10. Cada fila tiene dos líneas: el nombre en 13 px y la primera línea de qué hace en 12 px gris liquen, las dos cortadas con «…»; elegida, fondo de selección y radio de fila. Lo que está dos veces o tiene el enlace roto lleva el ⚠ gris de 13 px antes del nombre (no frena nada: el ámbar es solo para lo que frena, D-100).
-- **Aviso del detalle:** bloque (8 px) en la caja con el borde fuerte, 12 × 14 px de relleno y máximo 68ch: arriba el ⚠ y el título en 600 del color del texto, el texto en 13 px gris salvia (rutas en mono) y a la derecha un botón secundario chico («Pedir que la saquen», «Pedir que lo arreglen») que escribe el pedido en el chat sin enviarlo. No flota ni se va solo: es parte del detalle.
-- **«Sobre la skill …»:** etiqueta de 22 px arriba del área de texto del compositor, borde firme, superficie elevada y radio de control, texto chico gris liquen con el nombre en 600 gris salvia y una ✕ de 18 px. El mensaje sale con «Sobre la skill nombre:» al principio; con la ✕, tal cual.
-- **Archivos de la skill (Q-95):** debajo de la cabecera del detalle, el árbol y el visor de Archivos (H-15) sin cambios, con el árbol más angosto (170–210 px). Arriba del árbol, la entrada **Resumen** (✦, o ⚠ si la skill tiene un aviso) muestra los avisos y la descripción; abajo, el título ARCHIVOS y la carpeta de la skill. El visor es de solo lectura y sin «Ver en Docs». Cada skill recuerda su archivo y sus carpetas abiertas mientras Iridium está abierto.
-- **Framework (W-13):** la primera entrada de la columna, con la cuenta de los de afuera en mono gris (no ámbar). Su panel lleva la cabecera común con los filtros Todos, Fuera del framework y Carpetas.
-- **Fila de proyecto de Framework:** reusa la tarjeta chica de proyecto: en una lista con borde y radio de tarjeta, el ícono de 26 px, el nombre en 600 y cómo está en chico gris liquen («framework viejo · fecha», «carpeta simple», «al día · fecha»); con avisos, «! N avisos del framework» subrayado de puntos, con el «!» en un círculo gris como en la tarjeta, que despliega debajo la lista en mono 12 px sobre la caja. A la derecha **Pasar al framework** (secundario chico; su título dice que gasta uso) o, mientras pasa, el chip «Pasando al framework…» con el ícono que gira y **Ver la conversación**. Con la IA ocupada, el botón apagado. Los que están al día no llevan botón.
-
-### Ideas (módulo Inicio)
-Pantalla IN-W1 (`docs/modulos/inicio/ux.md`): se arma con las piezas de Skills (la columna con grupos plegables, su borde que se arrastra con su propio ancho, el detalle y el chat general con su divisor). Estilos propios en `src/renderer/estilos/ideas.css`.
-- **Ícono Ideas:** una lamparita con tres rayos cortos arriba, mismo trazo que los demás; cuarto de la barra del inicio, `Ctrl+4`, sin contador. (La lamparita sin rayos sigue siendo el estado «idea» de una tarjeta.)
-- **Título de la columna:** «Ideas» y, en mono gris liquen, «N sin integrar»; a la derecha, **Abrir como proyecto** como botón de ícono de 26 px (la flecha que sale de un cuadro), el mismo que lleva la columna de Skills.
-- **Fila de idea:** la de Skills: el título en 13 px y, debajo, la fecha corta y los proyectos que toca en 12 px gris liquen. Integradas empieza plegada.
-- **Detalle:** el título entero en 600 17 px (corta en varias líneas, no con «…»), debajo la sección en singular y la fecha larga; el cuerpo como en Docs en gris salvia, a 68ch. Abajo, separadas por una línea suave, las filas **Toca a** (los proyectos como enlaces en verde con subrayado punteado; el que no existe, texto común) y **Fue a**.
-- **«Sobre la idea «…»»:** la etiqueta de «Sobre la skill …», con el título entre comillas.
+### De una sección
+Lo que es solo de una sección va en su hoja de estilos y se arma con los tokens; un botón, una fila o un recuadro rehechos ahí son un error que marca el control.
+- **Tarjeta de proyecto** (Proyectos): sin relleno, con una línea que se aclara al pasar el mouse; el ícono redondo, el nombre y el estado con su punto; al pie, el frente, los avisos del framework en rojo y las Señales. Al pasar el mouse, el ⋯ con el menú del clic derecho. Una archivada va más tenue y dice desde cuándo («archivado el 12 oct»). El estado y archivar se ven en la tarjeta al instante y vuelven atrás solo si fallan (Q-240).
+- **La conversación:** la cabecera con su nombre, las anteriores, Nueva y Continuar; los mensajes con el Texto de documento y el compositor con una sola línea alrededor.
+- **Medidores del uso** (barra de estado): finos, en verde, ámbar o rojo según cuánto queda, con su brillo; su detalle es un Menú.
+- **El visor de código** (Archivos, Git): los números de línea apagados, los colores `cod-*` y las diferencias con fondo verde o rojo.
+- **La Revisión sobre otra app** (la extensión): todavía con el aspecto de antes (Chakra Petch y el verde con tinte); pasarla al negro es T-99.
 
 ### Movimiento
-Una sola curva de salida, `cubic-bezier(.16, 1, .3, 1)`. El panel entra en 0,2 s desde 12 px a la derecha. El ícono de trabajo gira cada 1,4 s. Con movimiento reducido, todo queda quieto.
+Una sola curva de salida, `--sale` (`cubic-bezier(.16, 1, .3, 1)`), para todo lo que aparece o se mueve. Con movimiento reducido, todo queda quieto.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** usar el verde fósforo solo para lo activo, lo hecho y el foco.
-- **Do** poner en ámbar solo lo que frena, y en gris lo que espera sin frenar; el botón principal, claro (D-100).
-- **Do** acompañar cada estado con ícono y palabra.
-- **Do** separar superficies por tono (barra, lateral, fondo) y bordes de 1 px.
-- **Do** escribir códigos, horas y porcentajes en JetBrains Mono, y todo lo demás en Chakra Petch.
-- **Do** mantener la lectura a 15 px con interlineado 1,65 y no más de 72ch.
-- **Do** dejar foco visible en todo: contorno verde de 1 px.
+- **Do** usar un solo botón principal por pantalla; las acciones de una fila, sin fondo.
+- **Do** separar con espacio y, donde haga falta, con una línea; el borde, solo del Recuadro, los Campos y el botón secundario.
+- **Do** poner el color solo donde informa (medidores, enlaces, código, Git, ámbar y rojo).
+- **Do** elegir un token por lo que dice su uso en `tokens.css`, no por cómo se ve.
+- **Do** dibujar el foco solo con el teclado (`:focus-visible`).
+- **Do** escribir los textos en español neutro, de «tú» (D-110).
 
 ### Don't:
-- **Don't** poner brillo en fondos, tarjetas, textos ni botones: solo en el relleno de los medidores (D-032).
-- **Don't** usar mayúsculas sostenidas, rayas de monitor ni otros disfraces de terminal.
-- **Don't** usar el color como decoración ni como único portador de un estado (D-031).
-- **Don't** agregar un tema claro (D-029).
-- **Don't** sumar familias tipográficas ni usar la mono para la prosa.
-- **Don't** usar sombras para dar profundidad: solo las tres de Shadow Vocabulary, en lo que flota.
+- **Don't** escribir un color ni rehacer una pieza en una sección: el control lo marca.
+- **Don't** poner un bloque dentro de otro ni una caja dentro de un recuadro.
+- **Don't** anunciar lo que anda bien ni mostrar cuentas que no esperan al usuario (D-108).
+- **Don't** usar mayúsculas sostenidas ni la mono para la prosa.
+- **Don't** poner sombra a lo que no flota ni brillo fuera de los medidores.
+- **Don't** sumar un tema ni un segundo color de acción (D-104, D-109).
