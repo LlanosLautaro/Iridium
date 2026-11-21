@@ -161,6 +161,15 @@
         ],
         "createdAt": "2026-11-16T14:25:01.160Z",
         "reason": "Iridium design system: type sizes come from docs/diseno/tokens.css, the sober scale approved by the user for the whole app (D-104, D-108; DI-I2 approved in Q-154/Q-157); a mockup must not deviate from it"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/paridad-adjuntos.html"
+        ],
+        "createdAt": "2026-11-21T19:38:20.394Z",
+        "reason": "Claude triage: the flagged spans are photo thumbnails (.ficha.foto) whose image fills the bordered frame by design; they contain no text"
       }
     ]
   }
