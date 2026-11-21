@@ -21,6 +21,8 @@ export interface TarjetaProyecto {
   estado: Estado | null
   descripcion: string
   archivado: boolean
+  /** El día en que se archivó desde Iridium (AAAA-MM-DD); null si no se sabe. */
+  archivadoEl?: string | null
   /** Proyecto que lo reemplaza (solo En rescate). */
   reemplazadoPor: string | null
   /** El ícono como dirección `data:` (la ventana no lee el disco); null = sin ícono. */
@@ -638,6 +640,11 @@ export interface NodoArchivo {
 
 export type CarpetaArchivos = { tipo: 'ok'; hijos: NodoArchivo[] } | { tipo: 'error'; mensaje: string }
 
+/** Todos los archivos del proyecto, para buscarlos por nombre (T-90); `cortada` si eran demasiados. */
+export type ListaArchivos =
+  | { tipo: 'ok'; rutas: string[]; cortada: boolean }
+  | { tipo: 'error'; mensaje: string }
+
 /** Lo que muestra el visor de Archivos: solo lectura (H-15). */
 export type ContenidoArchivo =
   /** Cada línea en HTML seguro con sus colores. `documento`: un `.md` que también se abre en Docs. */
@@ -862,6 +869,7 @@ export const CANALES = {
   docsCambiaron: 'docs:cambiaron',
   mapa: 'proyecto:mapa',
   carpeta: 'archivos:carpeta',
+  listaArchivos: 'archivos:lista',
   archivo: 'archivos:archivo',
   conversacionesAnteriores: 'conversacion:lista',
   elegirConversacion: 'conversacion:elegir',
@@ -1056,6 +1064,8 @@ export interface ApiIridium {
   mapa(ruta: string): Promise<MapaProyecto>
   /** Lo que hay en una carpeta del proyecto (`''` = la raíz), sin `node_modules` ni `.git`. */
   carpeta(ruta: string, carpeta: string): Promise<CarpetaArchivos>
+  /** Todos los archivos del proyecto, sin `node_modules` ni `.git`, para buscar uno por su nombre (T-90). */
+  listaArchivos(ruta: string): Promise<ListaArchivos>
   archivo(ruta: string, archivo: string): Promise<ContenidoArchivo>
   /** Las conversaciones guardadas del proyecto, la más nueva primero (H-17). */
   conversacionesAnteriores(ruta: string): Promise<ConversacionAnterior[]>

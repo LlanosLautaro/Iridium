@@ -520,15 +520,15 @@ function AccesoVersionesGithub() {
   }
   const sinPermiso = a === 'sin-permiso'
   const ayuda = sinPermiso
-    ? 'Tu cuenta de GitHub no tiene acceso a Iridium: pedile a quien te lo pasó que te invite, aceptá la invitación y tocá Probar de nuevo.'
-    : 'Iridium baja sus versiones nuevas de GitHub: iniciá sesión una vez con la cuenta que invitaron.'
+    ? 'Tu cuenta de GitHub no tiene acceso a Iridium: pídele a quien te lo pasó que te invite, acepta la invitación y toca Probar de nuevo.'
+    : 'Iridium baja sus versiones nuevas de GitHub: inicia sesión una vez con la cuenta que invitaron.'
   return (
     <span className="it acceso-versiones" title={error ?? ayuda}>
       <span className={`senal ${error ? 'rojo' : 'ambar'}`}>
         <Icono nombre={error ? 'error' : 'espera'} />
         {sinPermiso
           ? 'Sin acceso a las versiones nuevas'
-          : 'Para recibir versiones nuevas, iniciá sesión en GitHub'}
+          : 'Para recibir versiones nuevas, inicia sesión en GitHub'}
       </span>
       <button type="button" className="senal" disabled={entrando} title={ayuda} onClick={() => void entrar()}>
         <Icono nombre={entrando ? 'sync' : 'reintentar'} gira={entrando} />

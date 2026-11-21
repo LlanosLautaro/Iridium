@@ -122,7 +122,7 @@ export async function sincronizar(ruta: string): Promise<ResultadoGit> {
     if (!nombre) return mal('El proyecto no está en GitHub ni en otro remoto.')
     const rama = (await correr(ruta, ['branch', '--show-current'], false)).texto.trim()
     if (!rama)
-      return mal('No hay una rama elegida (se está mirando un commit suelto): pedile a la IA que lo arregle.')
+      return mal('No hay una rama elegida (se está mirando un commit suelto): pídele a la IA que lo arregle.')
     if (!(await sigueAlRemoto(ruta))) {
       const r = await correr(ruta, ['push', '--quiet', '-u', nombre, `HEAD:refs/heads/${rama}`], true)
       return r.codigo === 0 ? bien(`La rama ${rama} quedó subida.`) : mal(motivoDeRed(r.error).motivo)
@@ -166,7 +166,7 @@ export async function guardarYSubir(ruta: string, mensaje: string, subir: boolea
   try {
     if (!(await tieneRepo(ruta))) return mal('El proyecto no tiene git.')
     const texto = mensaje.trim()
-    if (!texto) return mal('Escribí qué cambió.')
+    if (!texto) return mal('Escribe qué cambió.')
     const preparados = await correr(ruta, ['diff', '--cached', '--quiet'], false)
     if (preparados.codigo === 0) {
       const todo = await correr(ruta, ['add', '--all'], false)

@@ -35,7 +35,7 @@ describe('validarEdicion', () => {
   it('la descripción es obligatoria y entra en 180 caracteres (D-010)', () => {
     expect(validarEdicion(datos({ descripcion: '  ' }), 'Nuevo', OTROS)).toMatchObject({
       ok: false,
-      errores: { descripcion: 'Escribí una descripción corta.' },
+      errores: { descripcion: 'Escribe una descripción corta.' },
     })
     expect(validarEdicion(datos({ descripcion: 'x'.repeat(180) }), 'Nuevo', OTROS).ok).toBe(true)
     expect(validarEdicion(datos({ descripcion: 'x'.repeat(181) }), 'Nuevo', OTROS).ok).toBe(false)
@@ -141,17 +141,35 @@ describe('cambiarEstado (menú)', () => {
 describe('cambiarArchivado (D-004)', () => {
   it('solo cambia archivado y conserva el resto', () => {
     const actual = leerMetadatos(JSON.stringify({ version: 1, estado: 'en-uso', descripcion: 'x', extra: 1 }))
-    expect(cambiarArchivado(actual, true)).toMatchObject({
+    expect(cambiarArchivado(actual, true, '2026-11-21')).toMatchObject({
       archivado: true,
+      archivadoEl: '2026-11-21',
       estado: 'en-uso',
       descripcion: 'x',
       otros: { extra: 1 },
     })
   })
 
+  it('guarda el día al archivar y lo saca al desarchivar; la ficha sin archivar no lo escribe (T-58)', () => {
+    const archivada = cambiarArchivado(leerMetadatos('{"version":1,"estado":"idea"}'), true, '2026-10-12')
+    if (typeof archivada === 'string') throw new Error(archivada)
+    const texto = serializarMetadatos(archivada)
+    expect(JSON.parse(texto)).toMatchObject({ archivado: true, archivadoEl: '2026-10-12' })
+    expect(leerMetadatos(texto)).toMatchObject({ tipo: 'ok', metadatos: { archivadoEl: '2026-10-12' } })
+    const vuelta = cambiarArchivado(leerMetadatos(texto), false, '2026-11-21')
+    if (typeof vuelta === 'string') throw new Error(vuelta)
+    expect(vuelta.archivadoEl).toBeNull()
+    expect(serializarMetadatos(vuelta)).not.toContain('archivadoEl')
+  })
+
+  it('una fecha mal escrita se ignora sin dañar la ficha', () => {
+    const l = leerMetadatos('{"version":1,"estado":"idea","archivado":true,"archivadoEl":"ayer"}')
+    expect(l).toMatchObject({ tipo: 'ok', metadatos: { archivado: true, archivadoEl: null } })
+  })
+
   it('un proyecto sin datos válidos se clasifica primero', () => {
-    expect(typeof cambiarArchivado(null, true)).toBe('string')
-    expect(typeof cambiarArchivado(leerMetadatos('{ roto'), true)).toBe('string')
+    expect(typeof cambiarArchivado(null, true, '2026-11-21')).toBe('string')
+    expect(typeof cambiarArchivado(leerMetadatos('{ roto'), true, '2026-11-21')).toBe('string')
   })
 })
 

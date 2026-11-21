@@ -16,7 +16,7 @@ describe('problemaNombreProyecto', () => {
   })
 
   it('rechaza el nombre vacío', () => {
-    expect(problemaNombreProyecto('   ', [])).toBe('Escribí un nombre.')
+    expect(problemaNombreProyecto('   ', [])).toBe('Escribe un nombre.')
   })
 
   it('rechaza los caracteres que Windows no permite', () => {

@@ -47,9 +47,9 @@ export function motivoDeRed(error: string): { resultado: 'sin-conexion' | 'error
 /** Lo que contestó git al juntar lo del remoto con lo de esta PC. */
 export function motivoAlJuntar(error: string): string {
   if (/would be overwritten|untracked working tree files/i.test(error))
-    return 'Hay cambios sin guardar en los mismos archivos que trae el remoto: hacé el commit primero y volvé a sincronizar.'
+    return 'Hay cambios sin guardar en los mismos archivos que trae el remoto: haz el commit primero y vuelve a sincronizar.'
   if (/conflict/i.test(error))
-    return 'Esta PC y el remoto cambiaron las mismas líneas: no se juntó nada. Pedile a la IA que los junte.'
+    return 'Esta PC y el remoto cambiaron las mismas líneas: no se juntó nada. Pídele a la IA que los junte.'
   return (
     error
       .trim()
@@ -61,9 +61,9 @@ export function motivoAlJuntar(error: string): string {
 /** Lo que contestó git al hacer el commit. */
 export function motivoAlGuardar(error: string): string {
   if (/please tell me who you are|empty ident|user\.email/i.test(error))
-    return 'Git no sabe tu nombre en esta PC: pedile a la IA que lo configure (git config user.name y user.email).'
+    return 'Git no sabe tu nombre en esta PC: pídele a la IA que lo configure (git config user.name y user.email).'
   if (/index\.lock/i.test(error))
-    return 'Otro programa está usando git en este proyecto (quizás la IA): probá de nuevo en un momento.'
+    return 'Otro programa está usando git en este proyecto (quizás la IA): prueba de nuevo en un momento.'
   if (/nothing to commit|no changes added/i.test(error)) return 'No hay cambios para guardar.'
   return (
     error

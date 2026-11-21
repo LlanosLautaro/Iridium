@@ -394,7 +394,7 @@ Usarla.
     await app.close()
   })
 
-  test('Empezar este frente: la ✕ saca la cita; al enviar va «Empezá el frente» con lo escrito (MA-7)', async () => {
+  test('Empezar este frente: la ✕ saca la cita; al enviar va «Empieza el frente» con lo escrito (MA-7)', async () => {
     const { app, win } = await abrir()
     await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
     const mapa = await alMapa(win)
@@ -406,11 +406,11 @@ Usarla.
     await win.getByRole('button', { name: 'Quitar la cita Exportar' }).click()
     await expect(citas).toHaveCount(0)
     await empezar.click()
-    await expect(win.locator('.hilo')).not.toContainText('Empezá el frente Exportar')
+    await expect(win.locator('.hilo')).not.toContainText('Empieza el frente Exportar')
     const mensaje = win.getByRole('textbox', { name: 'Mensaje para la IA' })
     await mensaje.fill('Primero el PDF')
     await mensaje.press('Enter')
-    await expect(win.locator('.hilo')).toContainText('Empezá el frente Exportar')
+    await expect(win.locator('.hilo')).toContainText('Empieza el frente Exportar')
     await expect(win.locator('.hilo')).toContainText('Primero el PDF')
     await expect(citas).toHaveCount(0)
     // Se cierra con la conversación quieta: después del turno, el que le devuelve el control (la muestra tiene avisos).

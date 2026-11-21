@@ -14,7 +14,7 @@ const RESERVADOS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i
  */
 export function problemaNombreProyecto(nombre: string, existentes: readonly string[]): string | null {
   const n = nombre.trim()
-  if (n.length === 0) return 'Escribí un nombre.'
+  if (n.length === 0) return 'Escribe un nombre.'
   if (n.length > LIMITE_NOMBRE_PROYECTO) return `Hasta ${LIMITE_NOMBRE_PROYECTO} caracteres.`
   if (CARACTERES_PROHIBIDOS.test(n)) return 'No puede tener ninguno de estos caracteres: < > : " / \\ | ? *'
   if (n.startsWith('.')) return 'No puede empezar con punto: el gestor ignora esas carpetas.'

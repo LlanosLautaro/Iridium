@@ -47,7 +47,7 @@ export const reglaTrabajo: Regla = (a) => {
         regla: 'trabajo',
         archivo: d.ruta,
         linea: null,
-        texto: `la nota no tiene su T-${Number(m[1])} en \`docs/trabajo.md\`: si lo renumeraste, renombrá la nota y su carpeta de imágenes`,
+        texto: `la nota no tiene su T-${Number(m[1])} en \`docs/trabajo.md\`: si lo renumeraste, renombra la nota y su carpeta de imágenes`,
       })
   }
   return avisos

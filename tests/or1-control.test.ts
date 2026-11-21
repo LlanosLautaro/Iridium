@@ -249,7 +249,7 @@ Estado: nueva · Idea: enlace · Enlace: https://github.com/x/y
       'trabajo: T-3: «Idea: alguien» no se entiende (usuario, IA o enlace)',
       'trabajo: T-4: un enlace para revisar lleva «Enlace: https://…» en su línea de datos',
       'trabajo: T-5: un enlace para revisar lleva «Enlace: https://…» en su línea de datos',
-      'trabajo: la nota no tiene su T-9 en `docs/trabajo.md`: si lo renumeraste, renombrá la nota y su carpeta de imágenes',
+      'trabajo: la nota no tiene su T-9 en `docs/trabajo.md`: si lo renumeraste, renombra la nota y su carpeta de imágenes',
     ])
   })
 
@@ -314,7 +314,7 @@ Estado: hecho · Fecha: 2026-11-06
       ['docs/revision/R-13.md', 'R-13'],
     ])
     expect(avisos[0]?.texto).toContain('sin su `T-n`')
-    expect(avisos[1]?.texto).toContain('T-3 ya está hecho: cerralo')
+    expect(avisos[1]?.texto).toContain('T-3 ya está hecho: ciérralo')
     expect(avisos[2]?.texto).toContain('T-4 ya está hecho')
   })
 

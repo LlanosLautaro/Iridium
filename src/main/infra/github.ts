@@ -122,7 +122,7 @@ async function api(c: Credencial, ruta: string, cuerpo?: unknown): Promise<Respo
 async function rechazada(c: Credencial): Promise<never> {
   await recordar(c, false)
   throw new ErrorGithub(
-    'GitHub no aceptó la sesión guardada. Probá de nuevo: se abre la ventana para iniciarla.',
+    'GitHub no aceptó la sesión guardada. Prueba de nuevo: se abre la ventana para iniciarla.',
   )
 }
 
@@ -150,7 +150,7 @@ export function githubReal(): Github {
       })
       if (r.status === 401) await rechazada(c)
       if (r.status === 422)
-        throw new ErrorGithub(`Ya tenés un repositorio que se llama «${pedido.nombre}» en GitHub.`)
+        throw new ErrorGithub(`Ya tienes un repositorio que se llama «${pedido.nombre}» en GitHub.`)
       if (r.status === 403)
         throw new ErrorGithub('La sesión de GitHub no tiene permiso para crear repositorios.')
       if (!r.ok) throw new ErrorGithub(`GitHub respondió con un error (${r.status}).`)
@@ -170,7 +170,7 @@ export function githubFalso(carpeta = join(tmpdir(), 'iridium-github-falso')): G
     },
     async crear(pedido) {
       if (pedido.nombre === 'existe')
-        throw new ErrorGithub(`Ya tenés un repositorio que se llama «${pedido.nombre}» en GitHub.`)
+        throw new ErrorGithub(`Ya tienes un repositorio que se llama «${pedido.nombre}» en GitHub.`)
       const destino = join(carpeta, `${pedido.nombre}.git`)
       await rm(destino, { recursive: true, force: true })
       await git(tmpdir(), ['init', '-q', '--bare', destino])
@@ -234,7 +234,7 @@ export async function inicializarRepo(proyecto: string): Promise<ResultadoGit> {
       const m = motivo(e)
       if (/user\.(name|email)|identity|tell me who you are/i.test(m))
         return error(
-          'El repositorio quedó creado, pero git no sabe con qué nombre firmar los commits. Pedile a Claude que lo configure y que haga el primer commit.',
+          'El repositorio quedó creado, pero git no sabe con qué nombre firmar los commits. Pídele a Claude que lo configure y que haga el primer commit.',
         )
       return error(`El repositorio quedó creado, pero no se pudo hacer el primer commit: ${m}`)
     }
@@ -269,7 +269,7 @@ export async function publicarRepo(
       await git(proyecto, [...desvio, 'push', '-q', '-u', 'origin', 'HEAD'])
     } catch (e) {
       return error(
-        `El repositorio se creó en GitHub (${r.web}), pero no se pudo subir: ${motivo(e)}. Pedile a Claude que lo suba.`,
+        `El repositorio se creó en GitHub (${r.web}), pero no se pudo subir: ${motivo(e)}. Pídele a Claude que lo suba.`,
       )
     }
     return { tipo: 'ok', aviso: null, web: r.web }

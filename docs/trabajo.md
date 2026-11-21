@@ -219,8 +219,8 @@ La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva
 Estado: pendiente · Idea: IA · Fecha: 2026-11-07
 
 ## T-53 — La captura del detalle de Ideas no sale en auditoria-ux.ts
-Estado: pendiente · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
-`11-ideas-detalle` se queda esperando un clic (30 s) y no saca la pantalla, en los dos temas. Se arregla con la página de antes y después de DI-I1, que necesita las 30.
+Estado: hecho · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
+`11-ideas-detalle` se queda esperando un clic (30 s) y no saca la pantalla, en los dos temas. Se arregla con la página de antes y después de DI-I1, que necesita las 30. Hecho el 2026-11-21 con la tanda 19: el detalle sale del proyecto y los selectores viejos de la herramienta, al día (31 pantallas sin fallas).
 
 ## T-54 — Cinco pruebas con la app abierta quedaron viejas
 Estado: hecho · Frente: Orden · Fecha: 2026-11-08 · Origen: DI-I1 (`test-results/e2e-completo.log`)
@@ -228,20 +228,20 @@ Fallan igual en el commit anterior a DI-I1 (79d8c59), así que no son de Diseño
 Hecho el 2026-11-15 con DI-I3 tanda 7: dos pruebas al día (sin framework no hay Docs ni Revisión, D-095) y un error de la app corregido (las palabras de una tabla se cortaban por letra y la tabla nunca se desplazaba, A-10). Detalle en `modulos/diseno/estado.md` › tanda 7.
 
 ## T-55 — Diagramas que dibuja la IA, con recorrido paso a paso
-Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
+Estado: nueva · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
 La IA escribe un bloque de datos (nodos, flechas, pasos) y Iridium dibuja un diagrama: pasar el mouse resalta lo conectado, un clic muestra el detalle y un recorrido explica una cosa por vez. En el chat, en los documentos y en los resúmenes de hito. Solo datos, sin código.
 
 ## T-56 — La prueba visible de lo hecho
-Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
+Estado: nueva · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
 Lo que la IA produce mientras trabaja (capturas, resultados de pruebas) aparece en vivo y lo mejor queda adjunto a la iteración o a la `Q-n` de prueba como evidencia.
 
 ## T-57 — Dictado
-Estado: nueva · Frente: Capacidades · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Orca)
+Estado: nueva · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Orca)
 Un atajo y se habla: el texto entra al mensaje para la IA. Para dirigir con ideas sueltas.
 
 ## T-58 — Lo que DI-I3 cambia en la app además de pasar las piezas
-Estado: pendiente · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-28, R-29, R-38, D-108 a D-111
-Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3), la sección Trabajo de un proyecto, Ideas como bloc de notas (D-112) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas. La barra de abajo quedó hecha en la tanda 3 (2026-11-14); la Bandeja de todos y Trabajo salieron en la tanda 4 (2026-11-14). «Guardar a medias» y «Se guarda en respuestas/…» salieron con la Bandeja en la tanda 6 (2026-11-15). Ideas como bloc de notas quedó en la tanda 8 (2026-11-16, D-126). Queda el español neutro, con la tanda de cada sección. De la grilla (tanda 17, 2026-11-21), lo que la maqueta suma y la app no tiene: el botón ⋯ de la tarjeta al pasar el mouse y «archivado el …» con la fecha.
+Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-28, R-29, R-38, D-108 a D-111
+Sacar la sección Bandeja de todos (D-111; Skills pasa a Ctrl+2 e Ideas a Ctrl+3), la sección Trabajo de un proyecto, Ideas como bloc de notas (D-112) y «Guardar a medias» (lo escrito ya se guarda solo); pasar todos los textos de la app a español neutro, también los que no están en las maquetas (errores, avisos, cuadros; D-110); la barra de abajo sin Claude, sesiones ni hora (D-108). Va con DI-I3 porque ahí se rehacen esas pantallas. La barra de abajo quedó hecha en la tanda 3 (2026-11-14); la Bandeja de todos y Trabajo salieron en la tanda 4 (2026-11-14). «Guardar a medias» y «Se guarda en respuestas/…» salieron con la Bandeja en la tanda 6 (2026-11-15). Ideas como bloc de notas quedó en la tanda 8 (2026-11-16, D-126). Queda el español neutro, con la tanda de cada sección. De la grilla (tanda 17, 2026-11-21), lo que la maqueta suma y la app no tiene: el botón ⋯ de la tarjeta al pasar el mouse y «archivado el …» con la fecha. Hecho el 2026-11-21 con la tanda 19: el ⋯, «archivado el …» (con `archivadoEl` en la ficha) y el español neutro en los errores y avisos que faltaban.
 
 ## T-59 — Rehacer Trabajo e Ideas
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-09 · Origen: R-40, Q-155
@@ -392,8 +392,8 @@ Estado: nueva · Idea: IA · Fecha: 2026-11-20 · Origen: D-159
 Al responder una `Q-n` desde Iridium, que la respuesta se guarde en un commit y se suba sola (si el proyecto está en GitHub y la IA no trabaja en él), para que la otra PC la vea sin tocar Commit y subir.
 
 ## T-90 — Buscar un archivo en Archivos
-Estado: pendiente · Frente: Diseño · Fecha: 2026-11-20 · Origen: DI-I3 (tanda 12) · Idea: IA
-La maqueta de Archivos (`docs/diseno/pantallas/archivos.html`) tiene una lupa en la cabecera: buscar un archivo del proyecto por su nombre. Es una función nueva (hoy no hay cómo buscar), así que la tanda 12 pasó la sección sin ella; va al cerrar DI-I3, con lo que el rediseño cambia además de las piezas (T-58).
+Estado: hecho · Frente: Diseño · Fecha: 2026-11-20 · Origen: DI-I3 (tanda 12) · Idea: IA
+La maqueta de Archivos (`docs/diseno/pantallas/archivos.html`) tiene una lupa en la cabecera: buscar un archivo del proyecto por su nombre. Es una función nueva (hoy no hay cómo buscar), así que la tanda 12 pasó la sección sin ella; va al cerrar DI-I3, con lo que el rediseño cambia además de las piezas (T-58). Hecho el 2026-11-21 con la tanda 19: la lupa cambia el árbol por la búsqueda.
 
 ## T-91 — Las pruebas corren solas después de cada turno
 Estado: descartado (D-163: la verificación final encuentra algo casi la mitad de las veces) · Idea: usuario · Fecha: 2026-11-20 · Origen: el chat del 2026-11-20
@@ -422,5 +422,5 @@ Estado: nueva · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-2
 Como en Claude para VS Code: escribir «@» abre la lista de archivos del proyecto y el elegido viaja con el mensaje. Quedó fuera de la primera parte de Paridad (D-166).
 
 ## T-98 — Dictar un mensaje con el micrófono
-Estado: nueva · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
-Un botón en el compositor para dictar en vez de escribir. Quedó fuera de la primera parte de Paridad (D-166).
+Estado: descartado · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
+Repetida: el dictado ya estaba como T-57 (de Capacidades, que ahora es Paridad, D-166).

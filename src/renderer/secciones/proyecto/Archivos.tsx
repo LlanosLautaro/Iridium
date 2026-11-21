@@ -3,8 +3,10 @@
 // lectura: texto con colores y números de línea, imágenes, y lo que no se puede mostrar lo dice. La ruta del archivo va
 // en la Cabecera, con Abrir en VS Code; un `.md` de los documentos también se abre en Docs. Cada proyecto recuerda el
 // archivo y las carpetas abiertas. El árbol y el visor reciben de dónde leer: Skills los usa con la carpeta de una skill.
+// La lupa de la Cabecera busca un archivo por su nombre en lugar del árbol (T-90).
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { CarpetaArchivos, ContenidoArchivo } from '../../../compartido/puente'
+import { buscarArchivos } from '../../../compartido/buscar-archivos'
+import type { CarpetaArchivos, ContenidoArchivo, ListaArchivos } from '../../../compartido/puente'
 import { fichaDe, rutaGeneral, rutaSkills, tarjetaDe, usarEstado, vistaDe } from '../../estado'
 import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
@@ -264,6 +266,113 @@ export function VisorArchivo({
   )
 }
 
+/** Las carpetas que hay que abrir para ver un archivo en el árbol: `a/b/c.ts` → `a` y `a/b`. */
+export function carpetasDe(archivo: string): string[] {
+  const partes = archivo.split('/').slice(0, -1)
+  return partes.map((_, i) => partes.slice(0, i + 1).join('/'))
+}
+
+/**
+ * Buscar un archivo (T-90): el campo arriba y, en lugar del árbol, los que coinciden con su carpeta en gris. Las flechas
+ * recorren la lista, Enter abre el marcado y Esc vuelve al árbol.
+ */
+function BuscarArchivo({
+  ruta,
+  elegir,
+  cerrar,
+}: {
+  ruta: string
+  elegir: (archivo: string) => void
+  cerrar: () => void
+}) {
+  const [lista, setLista] = useState<ListaArchivos | null>(null)
+  const [texto, setTexto] = useState('')
+  const [marcado, setMarcado] = useState(0)
+  useEffect(() => {
+    let vigente = true
+    void window.iridium.listaArchivos(ruta).then((l) => vigente && setLista(l))
+    return () => {
+      vigente = false
+    }
+  }, [ruta])
+  const hallados = useMemo(
+    () => (lista?.tipo === 'ok' ? buscarArchivos(lista.rutas, texto) : []),
+    [lista, texto],
+  )
+  let nota: string | null = null
+  if (!lista) nota = 'Leyendo…'
+  else if (lista.tipo === 'error') nota = lista.mensaje
+  else if (texto.trim() === '') nota = 'Escribe parte del nombre.'
+  else if (hallados.length === 0) nota = 'Ningún archivo se llama así.'
+  return (
+    <div className="archivos-buscar">
+      <input
+        className="campo chico"
+        // biome-ignore lint/a11y/noAutofocus: se abre con la lupa para escribir enseguida.
+        autoFocus
+        placeholder="Buscar un archivo…"
+        aria-label="Buscar un archivo por su nombre"
+        value={texto}
+        onChange={(e) => {
+          setTexto(e.target.value)
+          setMarcado(0)
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') cerrar()
+          else if (e.key === 'ArrowDown') setMarcado((m) => Math.min(m + 1, hallados.length - 1))
+          else if (e.key === 'ArrowUp') setMarcado((m) => Math.max(m - 1, 0))
+          else if (e.key === 'Enter' && hallados[marcado]) elegir(hallados[marcado])
+          else return
+          e.preventDefault()
+        }}
+      />
+      {nota !== null && (
+        <div className={lista?.tipo === 'error' ? 'archivos-nota error' : 'archivos-nota'}>{nota}</div>
+      )}
+      <div className="arbol" role="listbox" aria-label="Archivos que coinciden">
+        {hallados.map((h, i) => {
+          const barra = h.lastIndexOf('/')
+          return (
+            <button
+              key={h}
+              type="button"
+              role="option"
+              aria-selected={i === marcado}
+              className={i === marcado ? 'nodo elegido' : 'nodo'}
+              title={h}
+              onMouseEnter={() => setMarcado(i)}
+              onClick={() => elegir(h)}
+            >
+              <Icono nombre={/\.(png|jpe?g|gif|webp|avif|bmp|ico|svg)$/i.test(h) ? 'imagen' : 'archivo'} />
+              <span className="archivos-nombre">{h.slice(barra + 1)}</span>
+              {barra > 0 && <span className="archivos-donde">{h.slice(0, barra)}</span>}
+            </button>
+          )
+        })}
+      </div>
+      {lista?.tipo === 'ok' && lista.cortada && (
+        <div className="archivos-nota">Busca entre los primeros {lista.rutas.length} archivos.</div>
+      )}
+    </div>
+  )
+}
+
+/** La lupa de la Cabecera: abre y cierra la búsqueda. */
+function Lupa({ buscando, alternar }: { buscando: boolean; alternar: () => void }) {
+  return (
+    <button
+      type="button"
+      className="boton solo-icono"
+      aria-label="Buscar un archivo"
+      aria-pressed={buscando}
+      title="Buscar un archivo por su nombre"
+      onClick={alternar}
+    >
+      <Icono nombre="busca" />
+    </button>
+  )
+}
+
 /** Las letras de Git (las de VS Code) de lo cambiado sin guardar, para el árbol de un proyecto. */
 function useMarcasGit(ruta: string): ReadonlyMap<string, MarcaArbol> {
   const [g] = useGit(ruta, true)
@@ -357,11 +466,13 @@ function ConArchivo({
   fuente,
   archivo,
   arbol,
+  lupa,
 }: {
   ruta: string
   fuente: FuenteArchivos
   archivo: string
   arbol: ReactNode
+  lupa: ReactNode
 }) {
   const linea = usarEstado((s) => vistaDe(s.vistas, ruta).linea)
   const atras = usarEstado((s) => vistaDe(s.vistas, ruta).atras.length)
@@ -412,6 +523,7 @@ function ConArchivo({
               Abrir en VS Code
             </button>
             {atras > 0 && <BotonAtras ruta={ruta} />}
+            {lupa}
           </>
         }
       />
@@ -450,11 +562,37 @@ export function Archivos({ ruta }: { ruta: string }) {
     elegido: archivo,
     elegir: (a) => cambiarVista(ruta, { archivo: a, linea: null }),
   }
-  const arbol = <ArbolArchivos fuente={fuente} eleccion={eleccion} marcas={marcas} />
-  if (archivo) return <ConArchivo ruta={ruta} fuente={fuente} archivo={archivo} arbol={arbol} />
+  const [buscando, setBuscando] = useState(false)
+  const arbol = buscando ? (
+    <BuscarArchivo
+      ruta={ruta}
+      cerrar={() => setBuscando(false)}
+      elegir={(a) => {
+        // El elegido queda a la vista en el árbol, con sus carpetas abiertas.
+        cambiarVista(ruta, {
+          archivo: a,
+          linea: null,
+          carpetas: [...new Set([...carpetas, ...carpetasDe(a)])],
+        })
+        setBuscando(false)
+      }}
+    />
+  ) : (
+    <ArbolArchivos fuente={fuente} eleccion={eleccion} marcas={marcas} />
+  )
+  const lupa = <Lupa buscando={buscando} alternar={() => setBuscando((b) => !b)} />
+  if (archivo) return <ConArchivo ruta={ruta} fuente={fuente} archivo={archivo} arbol={arbol} lupa={lupa} />
   return (
     <>
-      <Cabecera titulo="Archivos" acciones={atras > 0 && <BotonAtras ruta={ruta} />} />
+      <Cabecera
+        titulo="Archivos"
+        acciones={
+          <>
+            {atras > 0 && <BotonAtras ruta={ruta} />}
+            {lupa}
+          </>
+        }
+      />
       <Cuerpo ruta={ruta} arbol={arbol}>
         <div className="archivos-visor">
           <div className="archivos-aviso">

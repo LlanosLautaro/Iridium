@@ -30,7 +30,7 @@ export const reglaRevision: Regla = (a) => {
     const hecho = suyos.find((i) => i.estado === 'hecho')
     if (hecho)
       av(
-        `${hecho.codigo} ya está hecho: cerralo (Estado \`cerrado\` y «- AAAA-MM-DD HH:MM — cerrado por la IA: qué se hizo»)`,
+        `${hecho.codigo} ya está hecho: ciérralo (Estado \`cerrado\` y «- AAAA-MM-DD HH:MM — cerrado por la IA: qué se hizo»)`,
       )
   }
   return avisos

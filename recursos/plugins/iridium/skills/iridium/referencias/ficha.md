@@ -10,6 +10,7 @@ El formato de `.proyecto.json` está en `SKILL.md` › La ficha. Acá, cómo se 
 | `etiquetas` | De 1 a 4, en minúscula y singular, hasta 24 caracteres cada una. Ver «Etiquetas». |
 | `estado` | Ver «El estado». |
 | `archivado` | `true` la saca de la grilla a «Archivados». No cambia el estado ni toca la carpeta. |
+| `archivadoEl` | Opcional: el día (`AAAA-MM-DD`) en que se archivó desde Iridium; la tarjeta dice «archivado el 12 oct». Lo escribe y lo saca Iridium; si falta o no es una fecha, dice «archivado». |
 | `reemplazadoPor` | Solo con `en-rescate`: la carpeta del proyecto que lo reemplaza, que tiene que existir. Con cualquier otro estado, `null`. |
 
 Al editar, cambiá solo lo necesario: conservá los campos que no conozcas y el orden. JSON válido, con 2 espacios de sangría, UTF-8 sin BOM; después de escribirlo, comprobá que se lee.

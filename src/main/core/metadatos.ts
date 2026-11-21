@@ -13,6 +13,8 @@ export interface Metadatos {
   /** Ruta relativa a la carpeta del proyecto; null = ícono genérico. */
   icono: string | null
   archivado: boolean
+  /** El día en que se archivó desde Iridium (AAAA-MM-DD, T-58); null si no está archivado o se archivó a mano. */
+  archivadoEl?: string | null
   reemplazadoPor: string | null
   /** Campos que esta versión no conoce: se conservan tal cual al guardar (RNF-3). */
   otros: Record<string, unknown>
@@ -27,6 +29,7 @@ const CAMPOS_CONOCIDOS = new Set([
   'etiquetas',
   'icono',
   'archivado',
+  'archivadoEl',
   'reemplazadoPor',
 ])
 
@@ -68,6 +71,12 @@ export function leerMetadatos(texto: string): LecturaMetadatos {
   const archivado = o.archivado ?? false
   if (typeof archivado !== 'boolean') return danado('"archivado" no es verdadero o falso')
 
+  // La fecha es un dato de más: si no es una fecha, se ignora en vez de dañar la ficha.
+  const archivadoEl =
+    archivado && typeof o.archivadoEl === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(o.archivadoEl)
+      ? o.archivadoEl
+      : null
+
   const reemplazadoPor = o.reemplazadoPor ?? null
   if (reemplazadoPor !== null && typeof reemplazadoPor !== 'string')
     return danado('"reemplazadoPor" no es texto')
@@ -84,6 +93,7 @@ export function leerMetadatos(texto: string): LecturaMetadatos {
       etiquetas: limpiarEtiquetas(etiquetas),
       icono: icono === null || icono.trim() === '' ? null : icono.trim(),
       archivado,
+      archivadoEl,
       reemplazadoPor: reemplazadoPor === null || reemplazadoPor.trim() === '' ? null : reemplazadoPor.trim(),
       otros,
     },

@@ -175,7 +175,7 @@ export class VigiaVersionGithub {
           tipo: 'error',
           mensaje:
             this.acceso === 'sin-permiso'
-              ? 'Esa cuenta de GitHub no tiene acceso a Iridium: pedile a quien te lo pasó que te invite.'
+              ? 'Esa cuenta de GitHub no tiene acceso a Iridium: pídele a quien te lo pasó que te invite.'
               : 'No se inició la sesión en GitHub.',
         }
   }

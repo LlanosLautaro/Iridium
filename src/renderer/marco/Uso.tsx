@@ -74,7 +74,7 @@ function Ritmo({ r, semana }: { r: RitmoSemana; semana: VentanaUso }) {
         Vas usando unos <b>{pc(r.porDia)} por día</b> (el ritmo parejo es {pc(r.parejo)}).{' '}
         {alcanza ? (
           <>
-            A este ritmo llegás al reinicio: quedan {pc(queda)} para {duracionDias(r.diasQuedan)}, hasta{' '}
+            A este ritmo llegas al reinicio: quedan {pc(queda)} para {duracionDias(r.diasQuedan)}, hasta{' '}
             {pc(r.alcanzaPorDia)} por día.
           </>
         ) : (
@@ -118,8 +118,8 @@ export function UsoEnLaBarra() {
       clase="uso"
       titulo={
         agotada
-          ? 'Se agotó el uso de la suscripción: tocá para ver cuándo se libera'
-          : 'Uso de la suscripción: tocá para ver cuándo se libera y si el ritmo alcanza'
+          ? 'Se agotó el uso de la suscripción: toca para ver cuándo se libera'
+          : 'Uso de la suscripción: toca para ver cuándo se libera y si el ritmo alcanza'
       }
       boton={
         <>

@@ -283,7 +283,7 @@ La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, d
 
 - Obligatorios: `version` (1) y `estado`, uno de `idea`, `en-desarrollo`, `en-uso`, `pausado`, `descontinuado`, `en-rescate`, `para-eliminar` (decide el grupo de la grilla). `nombre` es opcional: el nombre visible si no es el de la carpeta.
 - `icono`: ruta relativa dentro del proyecto (svg, png, jpg, webp, gif, ico), nunca absoluta ni con `..`; `null` es el genérico. De costumbre, un `.proyecto-icono.svg` con el estilo de `referencias/iconos.md`.
-- `reemplazadoPor`: la carpeta del proyecto que lo reemplaza, o `null`. Los campos que no conozcas, dejalos como están.
+- `reemplazadoPor`: la carpeta del proyecto que lo reemplaza, o `null`. `archivadoEl` (opcional, `AAAA-MM-DD`) lo escribe Iridium al archivar y lo saca al desarchivar: no lo escribas vos. Los campos que no conozcas, dejalos como están.
 - El usuario cambia `estado`, `archivado` e `icono` desde el menú de la tarjeta: releé la ficha antes de tocarla. Al cerrar un hito, revisá que el estado y la descripción sigan siendo ciertos.
 - Cómo se llena cada campo (la descripción, las etiquetas, qué estado sigue al hito y cuáles decide el usuario) y el repaso de todos los proyectos: `referencias/ficha.md`.
 

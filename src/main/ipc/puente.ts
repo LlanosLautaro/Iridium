@@ -64,7 +64,7 @@ import {
   instruccionRevision,
 } from '../core/sesiones'
 import { leerScripts, RUTA_SCRIPTS } from '../core/visor/scripts'
-import { enElProyecto, leerArchivo, leerCarpeta } from '../infra/archivos'
+import { enElProyecto, leerArchivo, leerCarpeta, listarArchivos } from '../infra/archivos'
 import {
   type ArchivoArmados,
   abiertaAhora,
@@ -699,6 +699,7 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.carpeta, async (_, ruta: unknown, carpeta: unknown) =>
     leerCarpeta(await proyecto(ruta), RutaArchivo.parse(carpeta)),
   )
+  ipcMain.handle(CANALES.listaArchivos, async (_, ruta: unknown) => listarArchivos(await proyecto(ruta)))
   ipcMain.handle(CANALES.archivo, async (_, ruta: unknown, archivo: unknown) =>
     leerArchivo(await proyecto(ruta), RutaArchivo.parse(archivo)),
   )
@@ -997,7 +998,7 @@ export function registrarPuente(s: Servicios): Puente {
     const plan = planes.get(r)
     planes.delete(r)
     if (!plan)
-      return { tipo: 'error', mensaje: 'Primero hay que revisar la carpeta: volvé a elegir Eliminar.' }
+      return { tipo: 'error', mensaje: 'Primero hay que revisar la carpeta: vuelve a elegir Eliminar.' }
     if (trabajando(r))
       return { tipo: 'error', mensaje: 'La IA de ese proyecto está trabajando: frenala primero.' }
     const prueba = process.env.IRIDIUM_PAPELERA
@@ -1024,7 +1025,7 @@ export function registrarPuente(s: Servicios): Puente {
     if (pares.some((p) => conversaciones.enMarcha().includes(p.origen)))
       return {
         tipo: 'error',
-        mensaje: 'La IA está trabajando en esa carpeta: esperá a que termine y probá de nuevo.',
+        mensaje: 'La IA está trabajando en esa carpeta: espera a que termine y prueba de nuevo.',
       }
     const avisos: string[] = []
     let movidas = 0

@@ -33,18 +33,18 @@ export function validarEdicion(
   const errores: ErroresEdicion = {}
 
   const descripcion = datos.descripcion.trim().replace(/\s+/g, ' ')
-  if (descripcion === '') errores.descripcion = 'Escribí una descripción corta.'
+  if (descripcion === '') errores.descripcion = 'Escribe una descripción corta.'
   else if ([...descripcion].length > LIMITE_DESCRIPCION) {
     errores.descripcion = `Tiene que entrar en ${LIMITE_DESCRIPCION} caracteres.`
   }
 
-  if (!(ESTADOS as readonly string[]).includes(datos.estado)) errores.estado = 'Elegí un estado.'
+  if (!(ESTADOS as readonly string[]).includes(datos.estado)) errores.estado = 'Elige un estado.'
 
   let reemplazadoPor: string | null = null
   if (datos.estado === 'en-rescate') {
     const elegido = datos.reemplazadoPor?.trim() ?? ''
     const existente = otros.find((o) => mismoNombre(o, elegido))
-    if (elegido === '') errores.reemplazadoPor = 'Elegí qué proyecto lo reemplaza.'
+    if (elegido === '') errores.reemplazadoPor = 'Elige qué proyecto lo reemplaza.'
     else if (mismoNombre(elegido, nombre)) errores.reemplazadoPor = 'No puede reemplazarse a sí mismo.'
     else if (!existente) errores.reemplazadoPor = 'Ese proyecto no está en la carpeta raíz.'
     else reemplazadoPor = existente
@@ -78,6 +78,7 @@ export function camposDesconocidos(texto: string | null): Record<string, unknown
       'etiquetas',
       'icono',
       'archivado',
+      'archivadoEl',
       'reemplazadoPor',
     ])
     return Object.fromEntries(Object.entries(json).filter(([k]) => !conocidos.has(k)))
@@ -103,6 +104,7 @@ export function mezclarEdicion(
     etiquetas: datos.etiquetas,
     icono: datos.icono,
     archivado: previos?.archivado ?? false,
+    archivadoEl: previos?.archivadoEl ?? null,
     reemplazadoPor: datos.estado === 'en-rescate' ? datos.reemplazadoPor : null,
     otros: previos ? previos.otros : camposDesconocidos(textoActual),
   }
@@ -111,7 +113,7 @@ export function mezclarEdicion(
 /** Por qué no se puede tocar la ficha desde el menú de la tarjeta; null si se puede. */
 function sinFichaUsable(actual: LecturaMetadatos | null): string | null {
   if (actual === null) return 'Primero elige un estado: así se crea la ficha.'
-  if (actual.tipo === 'danado') return 'La ficha está dañada: pedile a la IA que la arregle.'
+  if (actual.tipo === 'danado') return 'La ficha está dañada: pídele a la IA que la arregle.'
   return null
 }
 
@@ -120,7 +122,7 @@ function sinFichaUsable(actual: LecturaMetadatos | null): string | null {
  * una dañada no se toca. En rescate no: necesita decir qué proyecto lo reemplaza (se le pide a la IA).
  */
 export function cambiarEstado(actual: LecturaMetadatos | null, estado: Estado): Metadatos | string {
-  if (estado === 'en-rescate') return 'En rescate necesita decir qué proyecto lo reemplaza: pedíselo a la IA.'
+  if (estado === 'en-rescate') return 'En rescate necesita decir qué proyecto lo reemplaza: pídeselo a la IA.'
   if (actual === null)
     return {
       version: VERSION_ESQUEMA,
@@ -137,12 +139,16 @@ export function cambiarEstado(actual: LecturaMetadatos | null, estado: Estado): 
 }
 
 /**
- * Archivar o restaurar (D-004, historia 6): solo cambia `archivado`, no toca la carpeta ni el resto de los datos.
- * Un proyecto sin ficha elige primero su estado.
+ * Archivar o restaurar (D-004, historia 6): solo cambia `archivado` y el día en que se archivó (`hoy`, AAAA-MM-DD,
+ * T-58), no toca la carpeta ni el resto de los datos. Un proyecto sin ficha elige primero su estado.
  */
-export function cambiarArchivado(actual: LecturaMetadatos | null, archivado: boolean): Metadatos | string {
+export function cambiarArchivado(
+  actual: LecturaMetadatos | null,
+  archivado: boolean,
+  hoy: string,
+): Metadatos | string {
   if (actual?.tipo !== 'ok') return sinFichaUsable(actual) ?? ''
-  return { ...actual.metadatos, archivado }
+  return { ...actual.metadatos, archivado, archivadoEl: archivado ? hoy : null }
 }
 
 /** El ícono de la ficha (R-7): una imagen de la carpeta del proyecto, ya convertida en ruta relativa (D-009). */
@@ -163,6 +169,8 @@ export function serializarMetadatos(m: Metadatos): string {
     etiquetas: conocidos.etiquetas,
     icono: conocidos.icono,
     archivado: conocidos.archivado,
+    // Solo en un archivado con fecha: las fichas de siempre no cambian.
+    ...(conocidos.archivado && conocidos.archivadoEl ? { archivadoEl: conocidos.archivadoEl } : {}),
     reemplazadoPor: conocidos.reemplazadoPor,
     ...otros,
   }

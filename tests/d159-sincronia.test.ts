@@ -47,9 +47,9 @@ describe('reglas de la sincronización', () => {
       'sesión de GitHub',
     )
     expect(motivoAlJuntar('error: Your local changes to the following files would be overwritten')).toContain(
-      'hacé el commit primero',
+      'haz el commit primero',
     )
-    expect(motivoAlJuntar('CONFLICT (content): Merge conflict in a.md')).toContain('Pedile a la IA')
+    expect(motivoAlJuntar('CONFLICT (content): Merge conflict in a.md')).toContain('Pídele a la IA')
     expect(motivoAlGuardar('*** Please tell me who you are.')).toContain('no sabe tu nombre')
     const s: SincroniaGit = { cuando: 0, resultado: 'bajado', bajados: 2, motivo: null }
     expect(textoDeSincronia(s, 'GitHub', 'hace 2 min')).toBe('Trajo 2 commits de GitHub hace 2 min')
@@ -171,7 +171,7 @@ describe('con repositorios de verdad', () => {
     await commit(estaPc, 'docs/estado.md', 'de esta\n', 'Esta')
     const r = await sincronizar(estaPc)
     expect(r.tipo).toBe('error')
-    expect(r.tipo === 'error' && r.mensaje).toContain('Pedile a la IA')
+    expect(r.tipo === 'error' && r.mensaje).toContain('Pídele a la IA')
     expect(existsSync(join(estaPc, '.git', 'MERGE_HEAD'))).toBe(false)
     expect(git(estaPc, 'status', '--porcelain')).toBe('')
     expect(await estado()).toBe('de esta\n')

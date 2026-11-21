@@ -95,10 +95,29 @@ test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cam
   await menu.getByRole('menuitem', { name: 'Archivar' }).click()
   await expect(beta).toHaveCount(0)
   await expect(win.locator('.aviso-accion')).toContainText('«Beta» archivado.')
-  expect(await leerFicha('Beta')).toMatchObject({ archivado: true })
+  expect(await leerFicha('Beta')).toMatchObject({
+    archivado: true,
+    archivadoEl: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+  })
+  // Con los archivados a la vista, la tarjeta dice desde cuándo en lugar del estado (T-58).
+  await win.getByRole('switch', { name: /Archivados/ }).click()
+  await expect(beta.locator('.estado-t')).toHaveText('archivado hoy')
+  await win.getByRole('switch', { name: /Archivados/ }).click()
   await win.locator('.aviso-accion').getByRole('button', { name: 'Deshacer' }).click()
   await expect(beta).toBeVisible()
   await expect.poll(async () => (await leerFicha('Beta')).archivado).toBe(false)
+  expect(await leerFicha('Beta')).not.toHaveProperty('archivadoEl')
+
+  // El ⋯ aparece al pasar el mouse y abre el mismo menú (T-58).
+  const mas = beta.locator('.mas-t')
+  await expect(mas).toHaveCSS('opacity', '0')
+  await beta.hover()
+  await expect(mas).toHaveCSS('opacity', '1')
+  await win.screenshot({ path: join(SALIDA, 't58-mas.png') })
+  await mas.click()
+  await expect(menu).toBeVisible()
+  await win.keyboard.press('Escape')
+  await expect(menu).toHaveCount(0)
 
   // Sin ficha: archivar e ícono esperan a que tenga estado; elegir uno la crea.
   const gamma = win.locator('.tarjeta', { hasText: 'Gamma' })

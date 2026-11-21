@@ -32,7 +32,7 @@ async function validar(raiz: string, ruta: string, rutaAbierta: string | undefin
   if (estaAbierto(proyecto.ruta, rutaAbierta)) {
     return {
       ok: false as const,
-      mensaje: 'No se puede eliminar el proyecto abierto en esta ventana. Abrí otro y volvé a intentarlo.',
+      mensaje: 'No se puede eliminar el proyecto abierto en esta ventana. Abre otro y vuelve a intentarlo.',
     }
   }
   return { ok: true as const, proyecto }

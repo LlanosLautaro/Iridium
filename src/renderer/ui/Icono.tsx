@@ -88,6 +88,14 @@ const TRAZOS = {
       <path d="M12 16h.01" />
     </>
   ),
+  // El ⋯ de «Más» (la tarjeta de la grilla, DI-I3).
+  puntos: (
+    <>
+      <circle cx="6" cy="12" r="1" />
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="18" cy="12" r="1" />
+    </>
+  ),
   punto: <circle cx="12" cy="12" r="4" fill="currentColor" />,
   idea: (
     <>

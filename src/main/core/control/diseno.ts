@@ -124,7 +124,7 @@ export const reglaDiseno: Regla = (a) => {
         av(
           t.ruta,
           r.linea,
-          `«${r.valor.slice(0, 60)}» sale de \`docs/diseno/\`: usá una ruta relativa dentro de la carpeta`,
+          `«${r.valor.slice(0, 60)}» sale de \`docs/diseno/\`: usa una ruta relativa dentro de la carpeta`,
         )
       else if (!d.existentes.has(destino)) av(t.ruta, r.linea, `«${r.valor.slice(0, 60)}» no existe`)
     }
@@ -134,7 +134,7 @@ export const reglaDiseno: Regla = (a) => {
         av(
           t.ruta,
           c.linea,
-          `color escrito (${c.valor}): usá un token, \`var(--…)\`, para que cambiar \`tokens.css\` cambie todas`,
+          `color escrito (${c.valor}): usa un token, \`var(--…)\`, para que cambiar \`tokens.css\` cambie todas`,
         )
   }
 
@@ -179,7 +179,7 @@ export const reglaDiseno: Regla = (a) => {
         av(
           'piezas.css',
           linea,
-          `\`var(${n})\` no está en \`tokens.css\`: sumalo con su uso o usá uno que exista`,
+          `\`var(${n})\` no está en \`tokens.css\`: súmalo con su uso o usa uno que exista`,
         )
       }
     }
@@ -192,8 +192,8 @@ export const reglaDiseno: Regla = (a) => {
         r.lineas[0] ?? null,
         `\`${r.valor}\` escrito a mano en ${r.lineas.length} reglas (líneas ${r.lineas.join(', ')}): ${
           token
-            ? `usá \`var(${token.nombre})\``
-            : 'hacelo una medida fija en `tokens.css` (`--alto-…` o `--ancho-…`, con su uso) y usala'
+            ? `usa \`var(${token.nombre})\``
+            : 'hazlo una medida fija en `tokens.css` (`--alto-…` o `--ancho-…`, con su uso) y úsala'
         }`,
       )
     }

@@ -32,6 +32,6 @@ export async function cambiarConCuidado<T>(
   }
   return {
     tipo: 'error',
-    mensaje: `${archivo} cambió ${INTENTOS_TRABAJO} veces mientras se escribía (la IA lo está usando). Probá de nuevo en un momento.`,
+    mensaje: `${archivo} cambió ${INTENTOS_TRABAJO} veces mientras se escribía (la IA lo está usando). Prueba de nuevo en un momento.`,
   }
 }

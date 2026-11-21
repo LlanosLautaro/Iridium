@@ -76,7 +76,7 @@ describe('anotar con imágenes pegadas en el campo', () => {
     const r = await anotarIdea(alfa, 'https://github.com/alfa/beluga', HOY, [imagen])
     expect(r).toEqual({
       tipo: 'error',
-      mensaje: 'un enlace no lleva imágenes: anotá el enlace solo y la imagen en una idea',
+      mensaje: 'un enlace no lleva imágenes: anota el enlace solo y la imagen en una idea',
     })
     expect(await trabajo()).toBe(antes)
   })

@@ -128,7 +128,7 @@ describe('crear el repositorio y publicarlo', () => {
       tipo: 'error',
     })
     expect(await publicarRepo(raiz, { nombre: 'existe', privado: false }, github)).toMatchObject({
-      mensaje: 'Ya tenés un repositorio que se llama «existe» en GitHub.',
+      mensaje: 'Ya tienes un repositorio que se llama «existe» en GitHub.',
     })
     // Lo que falló no dejó un remoto a medias.
     expect(git('remote')).toBe('')

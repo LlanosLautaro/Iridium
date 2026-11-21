@@ -320,6 +320,26 @@
 .archivos-nota.error {
   color: var(--error);
 }
+/* Buscar un archivo (T-90): el campo arriba del lugar del árbol y la carpeta de cada uno en gris */
+.archivos-buscar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+.archivos-buscar > input {
+  margin: 0 var(--esp-2);
+}
+.archivos-buscar .archivos-nota {
+  padding-left: var(--esp-2);
+}
+.archivos-donde {
+  margin-left: auto;
+  padding-left: var(--esp-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: var(--estilo-meta);
+  color: var(--texto-3);
+}
 .archivos-ruta {
   font: var(--estilo-codigo);
 }

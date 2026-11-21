@@ -34,6 +34,7 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
     estado: null,
     descripcion: '',
     archivado: false,
+    archivadoEl: null,
     reemplazadoPor: null,
     icono: d.icono,
     problema: null,
@@ -64,6 +65,7 @@ export function armarTarjeta(d: DatosProyecto): TarjetaProyecto {
     estado: m.estado,
     descripcion: m.descripcion,
     archivado: m.archivado,
+    archivadoEl: m.archivadoEl ?? null,
     reemplazadoPor: m.estado === 'en-rescate' ? m.reemplazadoPor : null,
   }
 }

@@ -78,6 +78,7 @@ const api: ApiIridium = {
   alCambiarDocs: (f) => escuchar<string>(CANALES.docsCambiaron, f),
   mapa: (ruta) => ipcRenderer.invoke(CANALES.mapa, ruta),
   carpeta: (ruta, carpeta) => ipcRenderer.invoke(CANALES.carpeta, ruta, carpeta),
+  listaArchivos: (ruta) => ipcRenderer.invoke(CANALES.listaArchivos, ruta),
   archivo: (ruta, archivo) => ipcRenderer.invoke(CANALES.archivo, ruta, archivo),
   conversacionesAnteriores: (ruta) => ipcRenderer.invoke(CANALES.conversacionesAnteriores, ruta),
   elegirConversacion: (ruta, id) => ipcRenderer.invoke(CANALES.elegirConversacion, ruta, id),

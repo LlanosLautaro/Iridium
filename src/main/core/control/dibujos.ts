@@ -35,7 +35,7 @@ export const reglaDibujos: Regla = (a) => {
             regla: 'dibujos',
             archivo: d.ruta,
             linea: inicio + 1,
-            texto: `el dibujo usa ${[...malos].join(' ')}, que no está en la letra de ancho fijo: usá una figura (■ ● ▶ ✓…) o una palabra entre corchetes`,
+            texto: `el dibujo usa ${[...malos].join(' ')}, que no está en la letra de ancho fijo: usa una figura (■ ● ▶ ✓…) o una palabra entre corchetes`,
           })
       }
       inicio = -1

@@ -15,7 +15,7 @@ const completo = {
 describe('leerMetadatos', () => {
   it('lee el ejemplo de 05-arquitectura.md', () => {
     const r = leerMetadatos(JSON.stringify(completo))
-    expect(r).toEqual({ tipo: 'ok', metadatos: { ...completo, otros: {} } })
+    expect(r).toEqual({ tipo: 'ok', metadatos: { ...completo, archivadoEl: null, otros: {} } })
   })
 
   it('acepta los siete estados, incluido Idea (D-017)', () => {
@@ -43,6 +43,7 @@ describe('leerMetadatos', () => {
         etiquetas: [],
         icono: null,
         archivado: false,
+        archivadoEl: null,
         reemplazadoPor: null,
         otros: {},
       },

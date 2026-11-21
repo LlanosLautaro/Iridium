@@ -39,7 +39,7 @@ export function Ideas() {
                     <strong>No está la carpeta Ideas</strong>
                     <span>
                       Iridium guarda las ideas sueltas en la carpeta <code>{CARPETA_GENERAL}</code> de{' '}
-                      <code>.iridium</code>, en tu carpeta de proyectos, y no pudo crearla. Revisá esa carpeta
+                      <code>.iridium</code>, en tu carpeta de proyectos, y no pudo crearla. Revisa esa carpeta
                       en Ajustes › Proyectos.
                     </span>
                   </div>

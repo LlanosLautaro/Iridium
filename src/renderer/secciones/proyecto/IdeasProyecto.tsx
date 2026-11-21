@@ -237,7 +237,7 @@ export function IdeasProyecto({
     if (abierta && texto !== null && ideaAbierta?.de === 'usuario') {
       noGuardar(claveGuardar(ruta, abierta))
       if (!texto.split(/\r?\n/)[0]?.trim()) {
-        setFallo({ titulo: 'La idea necesita un título', mensaje: 'Escribilo en la primera línea.' })
+        setFallo({ titulo: 'La idea necesita un título', mensaje: 'Escríbelo en la primera línea.' })
         return false
       }
       if (!(await guardar(abierta, texto))) return false
@@ -699,7 +699,7 @@ export function IdeasProyecto({
                 ref={campo}
                 className="campo idp-campo"
                 rows={1}
-                placeholder="Una idea, o pegá un enlace o una imagen…"
+                placeholder="Una idea, o pega un enlace o una imagen…"
                 aria-label="Anotar una idea o un enlace"
                 value={escrito}
                 onChange={(e) => setEscrito(e.target.value)}
@@ -785,7 +785,7 @@ export function IdeasProyecto({
 
           {ideas.length === 0 ? (
             <p className="idp-vacio">
-              Todavía no hay ideas. Escribí una arriba o pegá un enlace para revisar.
+              Todavía no hay ideas. Escribe una arriba o pega un enlace para revisar.
             </p>
           ) : grupos.length === 0 ? (
             <p className="idp-vacio">{SIN_NADA[filtro]}</p>

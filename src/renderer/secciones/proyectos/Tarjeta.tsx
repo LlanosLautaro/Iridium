@@ -2,10 +2,12 @@
 // sin relleno, una línea que se aclara al pasar el mouse; el ícono redondo sin caja y el estado con su punto debajo del
 // nombre; la cuenta de la bandeja arriba a la derecha, amarilla solo si algo frena (D-100); sin nada que responder, una marca: el tilde si todo está respondido y
 // la IA puede seguir, el círculo vacío si la bandeja está vacía o el proyecto no empezó (R-81). Con el
-// clic derecho (o la tecla de menú), sus acciones (R-7).
+// clic derecho (o la tecla de menú), o con el ⋯ que aparece al pasar el mouse, sus acciones (R-7, T-58). Una archivada dice
+// desde cuándo en lugar del estado: «archivado el 12 oct».
 import type { MouseEvent } from 'react'
 import { marcaDeBandeja, TEXTO_MARCA, textoDeCuenta } from '../../../compartido/cuentas'
 import { textoFrente } from '../../../compartido/en-que'
+import { diaCorto } from '../../../compartido/fechas'
 import type { ActualizacionProyecto, FichaSesion, TarjetaProyecto } from '../../../compartido/puente'
 import type { Estado } from '../../../compartido/tipos'
 import { usarEstado } from '../../estado'
@@ -49,8 +51,8 @@ interface Props {
   abrir: () => void
   /** Tocar «! N avisos del framework»: la lista en Skills › Framework (T-48). */
   verAvisos?: () => void
-  /** El clic derecho: abre el menú de la tarjeta (R-7). */
-  menu?: (e: MouseEvent<HTMLButtonElement>) => void
+  /** El clic derecho o el ⋯: abre el menú de la tarjeta (R-7). */
+  menu?: (e: MouseEvent<HTMLElement>) => void
 }
 
 const PALABRA_SESION = {
@@ -79,6 +81,13 @@ export function SenalActualizacion({ a }: { a: ActualizacionProyecto | undefined
       </span>
     )
   return null
+}
+
+/** «archivado el 12 oct» (como la maqueta archivados.html); «archivado» si se archivó a mano o antes de guardar el día. */
+export function archivadoDesde(dia: string | null | undefined, hoy = new Date()): string {
+  if (!dia) return 'archivado'
+  const corto = diaCorto(dia, hoy)
+  return corto === 'hoy' || corto === 'ayer' ? `archivado ${corto}` : `archivado el ${corto}`
 }
 
 export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
@@ -122,7 +131,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
   // proyecto y en el nombre de la tarjeta.
   const frente = p.hito?.frente ? enQue : null
   const actualiza = actualizacion?.armando != null || actualizacion?.fallo === true
-  const conSenales = p.framework === 'viejo' || ficha !== null || p.archivado || actualiza
+  const conSenales = p.framework === 'viejo' || ficha !== null || actualiza
   const conAvisos = avisos !== null && p.framework !== null && p.framework !== 'viejo'
   // Un archivado no espera nada: sin marca.
   const marca = p.archivado ? 'cuenta' : marcaDeBandeja(p.preguntas, p.hito !== null)
@@ -138,7 +147,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
     ficha && PALABRA_SESION[ficha.estado],
     actualizacion?.armando != null && 'actualizando',
     actualizacion?.fallo && 'no se pudo actualizar',
-    p.archivado && 'archivado',
+    p.archivado && archivadoDesde(p.archivadoEl),
   ]
     .filter(Boolean)
     .join(' · ')
@@ -160,9 +169,15 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
         <span className="nombre-t">
           <span className="nombre">{p.nombre}</span>
           <span className="estado-t">
-            {est.punto && <span className={est.punto === 'blanco' ? 'punto blanco' : 'punto'} />}
-            {est.nombre}
-            {p.reemplazadoPor && <span className="hacia"> → {p.reemplazadoPor}</span>}
+            {p.archivado ? (
+              archivadoDesde(p.archivadoEl)
+            ) : (
+              <>
+                {est.punto && <span className={est.punto === 'blanco' ? 'punto blanco' : 'punto'} />}
+                {est.nombre}
+                {p.reemplazadoPor && <span className="hacia"> → {p.reemplazadoPor}</span>}
+              </>
+            )}
           </span>
         </span>
         <span className="derecha-t">
@@ -176,6 +191,21 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
               aria-label={TEXTO_MARCA[marca]}
             >
               <Icono nombre={marca === 'respondida' ? 'tilde' : 'circulo'} />
+            </span>
+          )}
+          {menu && (
+            // Dentro del botón de la tarjeta no puede ir otro botón: es un atajo del mouse; con el teclado, la tecla de
+            // menú abre lo mismo.
+            <span
+              className="boton solo-icono chico mas-t"
+              aria-hidden="true"
+              title="Más"
+              onClick={(e) => {
+                e.stopPropagation()
+                menu(e)
+              }}
+            >
+              <Icono nombre="puntos" />
             </span>
           )}
         </span>
@@ -202,12 +232,6 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
               {p.framework === 'viejo' && <span className="senal viejo">framework viejo</span>}
               {ficha && <SenalSesion ficha={ficha} sinResponder={p.preguntas.sinResponder} />}
               {actualiza && <SenalActualizacion a={actualizacion} />}
-              {p.archivado && (
-                <span className="senal">
-                  <Icono nombre="archivo" />
-                  Archivado
-                </span>
-              )}
             </span>
           )}
         </div>

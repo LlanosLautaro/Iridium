@@ -55,7 +55,7 @@ function nombreModelo(m: ModeloIa, modelos: readonly ModeloIa[]): string {
 
 function descripcionModelo(m: ModeloIa): string {
   if (m.id !== 'default') return m.descripcion
-  return 'El que usa Claude Code si no elegís otro'
+  return 'El que usa Claude Code si no eliges otro'
 }
 
 function useAjuste(ruta: string) {

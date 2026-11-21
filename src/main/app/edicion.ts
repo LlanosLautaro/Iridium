@@ -2,6 +2,7 @@
 // Casos de uso de edición (historia 4): guardar el formulario y el cambio rápido de estado.
 
 import type { DatosEdicion, ErroresFormulario, Estado } from '../../compartido/tipos'
+import { fechaDelDia } from '../core/creacion'
 import {
   cambiarArchivado,
   cambiarEstado,
@@ -97,7 +98,9 @@ export function cambiarEstadoProyecto(raiz: string, ruta: string, estado: Estado
 
 /** Archivar (true) o restaurar / deshacer (false). La carpeta no se mueve (D-004). */
 export function archivarProyecto(raiz: string, ruta: string, archivado: boolean): Promise<ResultadoSimple> {
-  return modificarProyecto(raiz, ruta, (actual) => cambiarArchivado(actual, archivado))
+  return modificarProyecto(raiz, ruta, (actual) =>
+    cambiarArchivado(actual, archivado, fechaDelDia(new Date())),
+  )
 }
 
 /** El ícono de la ficha (R-7): la imagen elegida en el cuadro, que tiene que estar dentro de la carpeta del proyecto. */

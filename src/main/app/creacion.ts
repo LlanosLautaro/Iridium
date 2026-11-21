@@ -48,7 +48,7 @@ export async function crearProyecto(
     } catch {
       return {
         ok: false,
-        mensaje: 'No encuentro las plantillas del framework: probá armar Iridium de nuevo.',
+        mensaje: 'No encuentro las plantillas del framework: prueba armar Iridium de nuevo.',
       }
     }
   }

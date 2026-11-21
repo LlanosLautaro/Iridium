@@ -99,7 +99,7 @@ test.afterAll(async () => {
 test('sin sesión de GitHub avisa abajo, con Iniciar sesión, y no ofrece Armar (Q-123)', async () => {
   const { app, win } = await abrir(null)
   const aviso = win.locator('.acceso-versiones')
-  await expect(aviso).toContainText('Para recibir versiones nuevas, iniciá sesión en GitHub')
+  await expect(aviso).toContainText('Para recibir versiones nuevas, inicia sesión en GitHub')
   await expect(aviso.getByRole('button', { name: 'Iniciar sesión' })).toBeVisible()
   await expect(win.getByRole('button', { name: 'Armar' })).toHaveCount(0)
   await win.screenshot({ path: 'test-results/d085-sin-sesion.png' })

@@ -83,8 +83,9 @@ await paso('arranque', () => win.waitForSelector('.tarjeta', { timeout: 60_000 }
 await paso('grilla', () =>
   win.waitForSelector('[data-motor]:not([data-motor="verificando"])', { state: 'attached', timeout: 30_000 }),
 )
-await paso('grilla-archivados', () => win.click('.interruptor-arch'))
-await win.click('.interruptor-arch').catch(() => {})
+const archivados = win.getByRole('switch', { name: /Archivados/ })
+await paso('grilla-archivados', () => archivados.click())
+await archivados.click().catch(() => {})
 await paso('tarjeta-menu', () => win.locator('.tarjeta').first().click({ button: 'right' }))
 await win.keyboard.press('Escape')
 await paso('nuevo-proyecto', () => win.getByRole('button', { name: 'Nuevo proyecto' }).click())
@@ -106,12 +107,20 @@ for (const [nombre, atajo] of [
 }
 await paso('skills-detalle', async () => {
   await win.keyboard.press('Control+2')
-  await win.locator('.sk-columna .sk-fila').first().click()
+  // La primera skill de la lista; sin skills, el Framework (que va primero).
+  const skill = win.locator('.sk-columna .fila:not(.sk-framework)')
+  await ((await skill.count()) > 0 ? skill.first() : win.locator('.sk-columna .sk-framework')).click()
 })
-await paso('ideas-detalle', async () => {
-  await win.keyboard.press('Control+3')
-  await win.locator('.id-columna .sk-fila').first().click()
-})
+// La primera idea que se abre en el lugar (los enlaces no se abren: se revisan), T-53. Sin ideas sueltas no hay
+// detalle: el del proyecto sale después, en su sección Ideas.
+const abrirIdea = async () => {
+  const idea = win.locator('.idp-abrir[aria-expanded]')
+  await idea.first().waitFor({ timeout: 5000 })
+  await idea.first().click()
+}
+await win.keyboard.press('Control+3')
+if ((await win.locator('.idp-abrir[aria-expanded]').count()) > 0) await paso('ideas-detalle', abrirIdea)
+else console.log('sin ideas sueltas: el detalle sale en el proyecto')
 
 // Ajustes, cada sección.
 await paso('ajustes', () => win.keyboard.press('Control+,'))
@@ -135,7 +144,8 @@ const ESTE = '.tarjeta[title^="Iridium ·"], .tarjeta[title^="Centro de Desarrol
 await win.keyboard.press('Control+1')
 await paso('proyecto-entrada', async () => {
   await win.locator(ESTE).first().click()
-  await win.waitForSelector('[data-seccion="pendientes"]', { timeout: 30_000 })
+  // Abre en la última sección que se miró (el Mapa, la Bandeja…).
+  await win.waitForSelector('[data-seccion]', { timeout: 30_000 })
   await win.waitForTimeout(1000)
 })
 const secciones = await win
@@ -153,6 +163,11 @@ for (const s of secciones) {
     await win.waitForTimeout(1000)
   })
 }
+await paso('proyecto-ideas-detalle', async () => {
+  await win.keyboard.press('Escape') // la última sección puede ser un cuadro (Ajustes)
+  await delProyecto('Ideas').click()
+  await abrirIdea()
+})
 await paso('proyecto-ancho-chico', async () => {
   await win.keyboard.press('Escape')
   await delProyecto(secciones[0] ?? 'Pendientes y scripts').click()

@@ -119,7 +119,7 @@ export class DocumentosProyecto {
         if (actual && actual.modificado === modificado && (actual.error === null || grande)) return
         cambiadas.push(ruta)
         if (grande) {
-          const error = `pesa ${tamanoLegible(bytes)}, es muy grande para mostrarlo en Docs. Abrilo con su programa si lo necesitás.`
+          const error = `pesa ${tamanoLegible(bytes)}, es muy grande para mostrarlo en Docs. Ábrelo con su programa si lo necesitas.`
           this.docs.set(ruta, { texto: null, error, modificado })
           return
         }
@@ -632,7 +632,7 @@ export function motivo(e: unknown): string {
   const codigo = (e as NodeJS.ErrnoException)?.code
   switch (codigo) {
     case 'EBUSY':
-      return 'el archivo está bloqueado por otro programa (EBUSY). Probá de nuevo en un momento.'
+      return 'el archivo está bloqueado por otro programa (EBUSY). Prueba de nuevo en un momento.'
     case 'EACCES':
     case 'EPERM':
       return `no hay permiso para usar el archivo (${codigo}).`

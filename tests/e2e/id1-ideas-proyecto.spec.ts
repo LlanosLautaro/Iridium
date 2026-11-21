@@ -305,7 +305,7 @@ test('Ideas vacía: la línea de para qué es, sin grupos', async () => {
       .click()
     const ideas = win.locator('[data-seccion="ideas"]')
     await expect(ideas).toContainText(
-      'Todavía no hay ideas. Escribí una arriba o pegá un enlace para revisar.',
+      'Todavía no hay ideas. Escribe una arriba o pega un enlace para revisar.',
     )
     await expect(ideas.locator('.bloque-titulo')).toHaveCount(0)
   } finally {

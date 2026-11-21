@@ -104,6 +104,13 @@
   gap: var(--esp-2);
   align-items: center;
 }
+/* El ⋯ aparece al pasar el mouse, como la maqueta (T-58). */
+.tarjeta .mas-t {
+  opacity: 0;
+}
+.tarjeta:hover .mas-t {
+  opacity: 1;
+}
 .tarjeta .desc {
   margin: 0;
   color: var(--texto-2);

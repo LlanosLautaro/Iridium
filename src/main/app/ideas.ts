@@ -176,7 +176,7 @@ export async function anotarIdea(
   if (a.tipo === 'enlace' && imagenes.length)
     return {
       tipo: 'error',
-      mensaje: 'un enlace no lleva imágenes: anotá el enlace solo y la imagen en una idea',
+      mensaje: 'un enlace no lleva imágenes: anota el enlace solo y la imagen en una idea',
     }
   const mala = imagenes.find((i) => !TIPOS_IMAGEN[i.mime])
   if (mala)

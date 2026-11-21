@@ -320,6 +320,27 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
   await expect(win.locator('[data-seccion="docs"] .docs-ruta')).toHaveText('decisiones.md')
   await win.keyboard.press('Alt+ArrowLeft')
   await expect(archivos.locator('.archivos-ruta')).toHaveText('docs/decisiones.md')
+
+  // La lupa busca un archivo por su nombre (T-90): Enter abre el primero y lo deja a la vista en el árbol.
+  await archivos.locator('.nodo', { hasText: 'docs' }).first().click()
+  await archivos.locator('.nodo', { hasText: 'src' }).click()
+  await archivos.getByRole('button', { name: 'Buscar un archivo' }).click()
+  const buscar = archivos.getByRole('textbox', { name: 'Buscar un archivo por su nombre' })
+  await expect(buscar).toBeFocused()
+  await expect(archivos.locator('.archivos-buscar')).toContainText('Escribe parte del nombre.')
+  await buscar.fill('APP')
+  await expect(archivos.getByRole('option')).toHaveText(['app.tssrc'])
+  await win.screenshot({ path: 'test-results/t90-buscar.png' })
+  await buscar.fill('no hay tal cosa')
+  await expect(archivos.locator('.archivos-buscar')).toContainText('Ningún archivo se llama así.')
+  await buscar.fill('app')
+  await buscar.press('Enter')
+  await expect(archivos.locator('.archivos-ruta')).toHaveText('src/app.ts')
+  await expect(archivos.locator('.nodo.elegido')).toHaveText('app.ts')
+  // Esc vuelve al árbol sin elegir.
+  await archivos.getByRole('button', { name: 'Buscar un archivo' }).click()
+  await archivos.getByRole('textbox', { name: 'Buscar un archivo por su nombre' }).press('Escape')
+  await expect(archivos.locator('.archivos-buscar')).toHaveCount(0)
   await app.close()
 })
 

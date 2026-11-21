@@ -1,8 +1,9 @@
 // Disco de Archivos (H-15): lo que hay en una carpeta del proyecto y el contenido de un archivo, solo lectura.
 // La ventana nombra rutas relativas; acá se comprueba que, siguiendo los enlaces simbólicos, no salgan del proyecto.
+import type { Dirent } from 'node:fs'
 import { open, readdir, realpath, stat } from 'node:fs/promises'
 import { join, relative, sep } from 'node:path'
-import type { CarpetaArchivos, ContenidoArchivo, NodoArchivo } from '../../compartido/puente'
+import type { CarpetaArchivos, ContenidoArchivo, ListaArchivos, NodoArchivo } from '../../compartido/puente'
 import {
   CARPETAS_OCULTAS,
   colorear,
@@ -58,6 +59,42 @@ export async function leerCarpeta(proyecto: string, carpeta: string): Promise<Ca
   } catch (e) {
     if ((e as NodeJS.ErrnoException)?.code === 'ENOENT')
       return { tipo: 'error', mensaje: 'La carpeta ya no existe.' }
+    return { tipo: 'error', mensaje: motivo(e) }
+  }
+}
+
+/** Más archivos que esto no se juntan para buscar: un proyecto con tantos ya avisa que la lista quedó corta. */
+export const LIMITE_LISTA = 20000
+
+/**
+ * Todos los archivos del proyecto, para buscarlos por nombre (T-90): sin `node_modules` ni `.git` y sin entrar en los
+ * enlaces a carpetas (pueden dar la vuelta). `cortada`: hay más de los que se juntaron.
+ */
+export async function listarArchivos(proyecto: string): Promise<ListaArchivos> {
+  try {
+    const base = await realpath(proyecto)
+    const rutas: string[] = []
+    const pendientes = ['']
+    while (pendientes.length > 0) {
+      const carpeta = pendientes.shift() as string
+      let entradas: Dirent[]
+      try {
+        entradas = await readdir(join(base, ...carpeta.split('/').filter(Boolean)), { withFileTypes: true })
+      } catch {
+        continue
+      }
+      for (const e of entradas) {
+        const ruta = carpeta === '' ? e.name : `${carpeta}/${e.name}`
+        if (e.isDirectory()) {
+          if (!CARPETAS_OCULTAS.has(e.name)) pendientes.push(ruta)
+        } else if (e.isFile() || e.isSymbolicLink()) {
+          if (rutas.length >= LIMITE_LISTA) return { tipo: 'ok', rutas, cortada: true }
+          rutas.push(ruta)
+        }
+      }
+    }
+    return { tipo: 'ok', rutas, cortada: false }
+  } catch (e) {
     return { tipo: 'error', mensaje: motivo(e) }
   }
 }

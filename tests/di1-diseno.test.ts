@@ -321,7 +321,7 @@ describe('el control de docs/diseno/', () => {
       '/* Fondo\n   Para qué: el fondo. */\nbody { background: var(--fondo); color: var(--tinta); --nivel: 1; padding: var(--nivel); margin: var(--otro, 0); }'
     expect(control(diseno({ ...BIEN, 'piezas.css': piezas }))).toEqual([
       'docs/diseno/piezas.css:1 la ficha de «Fondo» no tiene `Grupo:` (acciones, navegación, avisos…)',
-      'docs/diseno/piezas.css:3 `var(--tinta)` no está en `tokens.css`: sumalo con su uso o usá uno que exista',
+      'docs/diseno/piezas.css:3 `var(--tinta)` no está en `tokens.css`: súmalo con su uso o usa uno que exista',
     ])
   })
   it('4: una medida fija que no es una sola medida (T-63)', () => {
@@ -353,8 +353,8 @@ describe('el control de docs/diseno/', () => {
 .j { width: 28px; } .k { height: 28px; }
 .l { margin: 30px; }`
     expect(control(diseno({ ...BIEN, 'tokens.css': tokens, 'piezas.css': piezas }))).toEqual([
-      'docs/diseno/piezas.css:4 `30px` escrito a mano en 3 reglas (líneas 4, 5, 6): usá `var(--alto-control)`',
-      'docs/diseno/piezas.css:7 `48px` escrito a mano en 3 reglas (líneas 7, 8, 9): hacelo una medida fija en `tokens.css` (`--alto-…` o `--ancho-…`, con su uso) y usala',
+      'docs/diseno/piezas.css:4 `30px` escrito a mano en 3 reglas (líneas 4, 5, 6): usa `var(--alto-control)`',
+      'docs/diseno/piezas.css:7 `48px` escrito a mano en 3 reglas (líneas 7, 8, 9): hazlo una medida fija en `tokens.css` (`--alto-…` o `--ancho-…`, con su uso) y úsala',
     ])
     expect(medidasRepetidas('.a { width: 30px }', 1)).toEqual([])
   })
@@ -381,11 +381,11 @@ describe('el control de docs/diseno/', () => {
         }),
       ),
     ).toEqual([
-      'docs/diseno/piezas.css:3 color escrito (hsl()): usá un token, `var(--…)`, para que cambiar `tokens.css` cambie todas',
+      'docs/diseno/piezas.css:3 color escrito (hsl()): usa un token, `var(--…)`, para que cambiar `tokens.css` cambie todas',
       'docs/diseno/pantallas/a.html:2 «https://x.invalid/a.png» es de la red: las maquetas son todo local (letras del sistema o archivos de `docs/diseno/`)',
-      'docs/diseno/pantallas/a.html:3 «../../estado.md» sale de `docs/diseno/`: usá una ruta relativa dentro de la carpeta',
+      'docs/diseno/pantallas/a.html:3 «../../estado.md» sale de `docs/diseno/`: usa una ruta relativa dentro de la carpeta',
       'docs/diseno/pantallas/a.html:4 «../logo.png» no existe',
-      'docs/diseno/pantallas/a.html:6 color escrito (#f00): usá un token, `var(--…)`, para que cambiar `tokens.css` cambie todas',
+      'docs/diseno/pantallas/a.html:6 color escrito (#f00): usa un token, `var(--…)`, para que cambiar `tokens.css` cambie todas',
     ])
   })
   it('7: una dirección con otras variables y versiones de una maqueta que no existe', () => {

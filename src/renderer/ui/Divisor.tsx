@@ -86,7 +86,7 @@ function Borde({
       className={clase}
       role="separator"
       tabIndex={0}
-      title={`Arrastrá para cambiar el ancho de ${nombre} (doble clic: el de entrada)`}
+      title={`Arrastra para cambiar el ancho de ${nombre} (doble clic: el de entrada)`}
       aria-orientation="vertical"
       aria-label={`Ancho de ${nombre} (flechas para cambiarlo)`}
       aria-valuemin={limites.minimo}

@@ -39,7 +39,7 @@ export async function ejecutarProyecto(p: Proyecto): Promise<void> {
       poner({
         ruta: p.ruta,
         titulo: `${p.nombre} todavía no está armada`,
-        detalle: r.armar ? null : 'Pedile a la IA del proyecto que la arme.',
+        detalle: r.armar ? null : 'Pídele a la IA del proyecto que la arme.',
         error: false,
         armar: r.armar,
       })

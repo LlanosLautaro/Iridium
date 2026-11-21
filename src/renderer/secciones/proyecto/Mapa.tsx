@@ -177,7 +177,7 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
         {pestanas.length > 1 && <BarraFrentes pestanas={pestanas} elegida={elegida} elegir={elegir} />}
         {todosArchivados ? (
           <p className="gris-mapa">
-            Todos los frentes están archivados: ninguno tiene nada por hacer. Prendé «Archivados» para verlos.
+            Todos los frentes están archivados: ninguno tiene nada por hacer. Activa «Archivados» para verlos.
           </p>
         ) : elegida === POR_EMPEZAR ? (
           <PorEmpezar ruta={ruta} m={m} />
@@ -358,7 +358,7 @@ function PorEmpezar({ ruta, m }: { ruta: string; m: MapaLeido }) {
                     clave: `frente:${f.nombre}`,
                     tipo: 'Frente',
                     nombre: f.nombre,
-                    texto: `Empezá el frente ${f.nombre}`,
+                    texto: `Empieza el frente ${f.nombre}`,
                   })
                 }
               >
