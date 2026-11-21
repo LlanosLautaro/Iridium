@@ -42,16 +42,13 @@
 | Paridad (`modulos/paridad/estado.md`) | sección | 2. Definición (empieza al cerrar DI-I3; Capacidades, T-28, es su segunda parte, D-166) | pendiente |
 
 ## En qué estamos ahora
-**Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho. Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
+**Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
 **Ahora: el paso 8 de Arranque** (D-162, al cerrar DI-I3), y después **Paridad** (D-165, D-166): el chat con «/», adjuntos, fotos pegadas y el texto largo como archivo, contra la frontera del motor; su segunda parte es Capacidades (T-28).
 Arranque (D-135) anduvo la segunda noche (Q-227). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-242 — Probá Desarchivar otra vez**
-  Tipo: prueba · Frente: Diseño
-  Contexto: `modulos/diseno/estado.md` › DI-I3 › Q-241. Armala con `scripts.md` › Armar la última versión y abrila.
-  - [ ] Con Archivados prendido, Desarchivar un proyecto de prueba: vuelve al instante a su lugar entre los demás, con su estado
+(ninguna)
 
 ## Próximo paso
 El paso 8 (calidad) de Arranque: las pruebas del frente en la corrida entera, los casos raros del uso (sin período, la PC suspendida) y la accesibilidad del aviso. Después, Paridad (D-166).

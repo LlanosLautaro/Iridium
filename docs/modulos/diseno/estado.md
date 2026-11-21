@@ -70,6 +70,7 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 
 ## Log de iteraciones
 ### DI-I3 — 2026-11-21 — cierre: el diseño escrito desde lo construido
+- **Q-242:** todo bien: Desarchivar vuelve al instante a su lugar entre los demás, con su estado. El pedido de Q-240 queda probado entero.
 - **Q-241:** el estado y archivar, al instante; Desarchivar todavía tardaba. La tarjeta cambiaba enseguida, pero se quedaba al final con los archivados hasta que llegaba la grilla leída del disco. Arreglo: el orden de la grilla pasa a `compartido/grilla.ts` y la ventana reordena al cambiar la tarjeta, así vuelve a su lugar en el momento. `r7-r8-proyectos` lo comprueba; Vitest (910), Playwright de Proyectos (5), typecheck y lint en verde. Q-242: la prueba.
 - **`DESIGN.md`:** el texto de abajo del frontmatter, reescrito desde `tokens.css` y las fichas de `piezas.css`: el negro sin acento, el verde como único color de acción, el color donde informa, la letra del sistema, el marco y sus medidas, las sombras de lo que flota, las quince piezas por grupo, lo que es de cada sección y las reglas (sin ruido, ningún color escrito). El frontmatter ya estaba al día (2026-11-18).
 - **`06-ui.md`:** la dirección de hoy, la historia de las anteriores con su porqué (la consola de fósforo, Carbón, el frente Diseño y DI-I3), dónde están las pantallas (`docs/diseno/`), el contraste medido de nuevo y el portón.
