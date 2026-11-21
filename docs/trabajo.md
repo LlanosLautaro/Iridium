@@ -372,8 +372,8 @@ Estado: pendiente · Fecha: 2026-11-19 · Origen: R-92
 En la conversación de un proyecto, la IA terminó su turno con algo corriendo de fondo («Quedo a la espera del resultado de las pruebas») y la pestaña no la marcó «esperando lo que dejó de fondo» (T-65); al rato retomó sola. Parece que Iridium perdió el rastro de lo que corría de fondo. Reproducir con el motor falso («de fondo») y con un caso real: varias tareas de fondo, o una que se corta.
 
 ## T-85 — «Respondida, sin procesar» en verde
-Estado: pendiente · Fecha: 2026-11-19 · Origen: R-93
-En la Bandeja de entrada, la Señal «Respondida, sin procesar» de una pregunta va en verde (`--bien`), como lo que ya está hecho del lado del usuario. Revisar que no choque con D-108 (sin ruido) ni con la Señal en la tarjeta.
+Estado: hecho · Fecha: 2026-11-19 · Origen: R-93
+En la Bandeja de entrada, la Señal «Respondida, sin procesar» de una pregunta va en verde (`--bien`), como lo que ya está hecho del lado del usuario. Revisar que no choque con D-108 (sin ruido) ni con la Señal en la tarjeta. Hecho el 2026-11-21: la Señal va en verde, también «Postergada, sin procesar» (el usuario ya hizo su parte); sin ruido, porque es una sola Señal por pregunta.
 
 ## T-86 — El aviso «Mientras no estabas» suma las apps que se armaron solas
 Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: D-156

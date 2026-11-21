@@ -378,7 +378,7 @@ export function Pendiente({
           </span>
         )}
         {p.estado === 'respondida' && (
-          <span className="senal">
+          <span className="senal verde">
             <Icono nombre="check" />
             {p.postergada ? 'Postergada, sin procesar' : 'Respondida, sin procesar'}
           </span>
