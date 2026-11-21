@@ -43,16 +43,12 @@
 
 ## En qué estamos ahora
 **Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
-**Ronda de UX 1 hecha** (2026-11-21, T-100): diez hallazgos, T-101 a T-110, sobre todo de un lugar y un nombre para cada cosa (`10-operacion.md` › Rondas de UX). Arreglado en el momento el aviso falso de carpeta faltante al arrancar; `scripts.md` quedó en ocho. Los `pendiente` van en una tanda antes de construir Paridad; los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
+**Ronda de UX 1 hecha** (2026-11-21, T-100): diez hallazgos, T-101 a T-110, sobre todo de un lugar y un nombre para cada cosa (`10-operacion.md` › Rondas de UX). Arreglado en el momento el aviso falso de carpeta faltante al arrancar; `scripts.md` quedó en ocho (probado en Q-245). Los `pendiente` van en una tanda antes de construir Paridad; los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
 **Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244) y la lista de «/» sin los comandos que pisan a Iridium ni los de la terminal (Q-243, D-167). Sigue su UX. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-245 — Probá el arranque sin el aviso falso y los scripts de Iridium**
-  Tipo: prueba
-  Contexto: con la versión nueva (**Actualizar** en la barra de abajo). Ronda de UX 1, `10-operacion.md` › Rondas de UX.
-  - [ ] Al abrir Iridium, mientras aparecen las tarjetas, el chat de la derecha no dice que no pudo crear la carpeta Ideas
-  - [ ] En Iridium › Scripts hay ocho: ya no están los cinco «Ver…» de Orden y de los prototipos ni «Cerrar la sesión de Claude»
+(ninguna)
 
 ## Próximo paso
 La UX de Paridad (`ux.md`): la lista de «/», el menú del +, las fichas de los adjuntos y cómo se ven en los mensajes mandados; qué pasa si se escribe a mano un comando escondido (D-167).

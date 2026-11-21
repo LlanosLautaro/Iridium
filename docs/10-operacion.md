@@ -59,7 +59,7 @@ Cada ronda revisa toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra
 
 | Fecha | Qué la disparó | Hallazgos |
 |---|---|---|
-| 2026-11-21 | Arranque pasó a `hecho` (T-100) | T-101 a T-110. Arreglado en el momento: al arrancar, el chat general, Ideas y el chat de Skills decían que no se pudo crear su carpeta mientras se leía la carpeta de proyectos. |
+| 2026-11-21 | Arranque pasó a `hecho` (T-100) | T-101 a T-110. Arreglado en el momento: al arrancar, el chat general, Ideas y el chat de Skills decían que no se pudo crear su carpeta mientras se leía la carpeta de proyectos. Probado en Q-245 (todo bien, también `scripts.md` en ocho). |
 
 **Ronda 1 (2026-11-21).** 31 capturas a 1440×900 y 1024×700, con los proyectos reales y el motor falso. Lo que más se repite no es de aspecto, que DI-I3 acaba de dejar parejo, sino de **un lugar y un nombre para cada cosa**: el ancho de lectura en dos lugares (T-102), las carpetas de Docs con dos clases de nombre (T-105), textos con la palabra del framework (T-106) y `04-ux.md` atrasado frente a la app (T-107). Después, estados de carga y vacío que no siguen a los demás (T-103, T-108) y textos que se cortan o sobran (T-101, T-104). El rojo de «Rechazada» choca con la regla del color (T-109). Los cuatro comentarios anotados (R-64, R-90, R-92, R-93) no forman un patrón: son ajustes sueltos que ya tienen su `T-n`. No se pudo mirar si los avisos de la esquina se pisan (T-110). La crítica se hizo a mano contra los principios, sin correr `impeccable`.
 
