@@ -175,6 +175,7 @@
 | D-166 | 2026-11-21 | Paridad, Orden, Abrir, Plantillas | 10, Q-237 a Q-239 | Paridad va después de DI-I3, con los cuatro pedidos y Capacidades como su segunda parte | vigente |
 | D-167 | 2026-11-21 | Paridad | 10, Q-243 y Q-244 | La lista de «/» esconde los comandos que pisan a Iridium y los de la terminal | vigente |
 | D-168 | 2026-11-21 | Paridad | 10, Q-246 y Q-247 | La UX de Paridad, aprobada: un comando escondido escrito a mano no se manda y dice dónde está en Iridium | vigente |
+| D-169 | 2026-11-21 | general (Paridad) | 10; Paridad, paso 5 | Paridad: el motor dice qué sabe hacer, los adjuntos van con marcas de Iridium y las fotos pegadas en los datos | vigente |
 
 ---
 
@@ -3346,3 +3347,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** la UX queda aprobada como está (Q-247, A). Un comando escondido escrito a mano no se manda: una línea arriba del cuadro dice dónde está eso en Iridium y, si hay, el botón que lo hace («`/clear`: en Iridium, otra conversación se empieza con Nueva»); Enter no hace nada mientras está la línea (Q-246, A).
 **Motivo:** la barra de Iridium nunca muestra algo falso y la línea enseña dónde está cada cosa; Iridium no tiene que traducir comandos ni seguir una conversación que empezó Claude.
 **Consecuencias:** paso 4 de Paridad `hecho`; `04-ux.md` › W-12 suma el +, la lista de «/» y los adjuntos. Sigue el diseño técnico, con la lista de escondidos y su línea del lado del motor (D-165).
+
+## D-169 — Paridad: el motor dice qué sabe hacer, los adjuntos van con marcas de Iridium y las fotos pegadas en los datos
+- **Fecha:** 2026-11-21
+- **Ámbito:** general (frente Paridad)
+- **Hito o paso:** 10; frente Paridad, paso 5 (Diseño técnico)
+- **Estado:** vigente
+
+**Contexto:** la definición (D-167) y la UX (D-168) estaban aprobadas; faltaba cómo se construye: qué pide Iridium a la frontera del motor, cómo viajan y se guardan los adjuntos y cómo se leen del historial.
+**Decisión:** la frontera suma `capacidades()` (comandos, fotos con sus límites y la tabla de escondidos con qué pisa cada uno), `comandos(carpeta)` (sin gastar) con el evento `comandos`, y `enviar` con texto y fotos. Lo de Iridium va dentro del texto con marcas propias (`<iridium-pegado>`, `<iridium-archivos>`), que el historial reconoce; al leerlo, los comandos mandados y su respuesta se traducen. La frase de cada escondido es de Iridium, no del motor; un escondido se frena en la ventana y en la app. Un comando va primero, con las citas después y sin el aviso de «te detuve». Los adjuntos sin mandar son rutas; las fotos pegadas, archivos en `pegadas/` de los datos de Iridium; `escritos.json` pasa a la versión 2. Las fotos se leen y se achican en el proceso principal con `nativeImage`, sin dependencias nuevas. Tres iteraciones: PA-I1 (comandos), PA-I2 (archivos y fotos), PA-I3 (texto pegado). Detalle: `modulos/paridad/diseno-tecnico.md`.
+**Motivo:** todo lo de Claude queda en la frontera y lo de Iridium sirve igual con otro motor; las marcas hacen que el historial muestre lo mismo que se mandó; `escritos.json` no se llena de fotos.
+**Consecuencias:** `05-arquitectura.md` › La interfaz `Motor` y Modelo de datos, al día. Sigue el paso 6 (las tres piezas nuevas de `ux.md`). Queda para la prueba real: los límites de una foto, un comando con una foto y `commands_changed`.

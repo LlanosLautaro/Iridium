@@ -11,15 +11,15 @@
 | 2. Definición | hecho (Q-243, Q-244, D-167) | `definicion.md` |
 | 3. Investigación | hecho (spike S-5) | `investigacion.md` |
 | 4. UX | hecho (Q-246, Q-247, D-168) | `ux.md` |
-| 5. Diseño técnico | en curso | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | pendiente | — |
+| 5. Diseño técnico | hecho (D-169) | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | en curso | `06-ui.md` y `diseno/piezas.css` |
 | 7. Construcción | pendiente | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
 Definición aprobada e investigación hecha (2026-11-21): los cuatro pedidos entran como Must y todo lo del motor pasa por su frontera; la lista de «/» esconde los comandos que pisan a Iridium y los de la terminal (D-167). La ronda de UX (T-100) ya está; sus `pendiente` (T-101, T-103, T-104, T-106 a T-108, T-110) van en una tanda antes de construir Paridad.
-La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium. Sigue el diseño técnico.
+La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium. Diseño técnico cerrado (D-169): el motor dice qué sabe hacer (comandos, fotos, escondidos), los adjuntos viajan con marcas de Iridium que el historial reconoce y las fotos pegadas se guardan en los datos de Iridium. Sigue el paso 6: las tres piezas nuevas.
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -34,7 +34,8 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
 |---|---|---|---|
-| `05-arquitectura.md` › La interfaz `Motor` | `enviar` con adjuntos y lo que sabe hacer cada motor (comandos, imágenes) | D-165 | no (paso 5) |
+| `05-arquitectura.md` › La interfaz `Motor` | `enviar` con fotos, `capacidades`, `comandos` y su evento; el historial con comandos y fotos | D-165, D-169 | sí |
+| `05-arquitectura.md` › Modelo de datos | `escritos.json` con adjuntos, `pegadas/` y `comandosRecientes` | D-169 | sí |
 | `02-definicion.md` › Catálogo de casos de uso y Glosario | C-64 a C-67; adjunto, texto pegado y comando | D-165 | sí |
 | `05-arquitectura.md` › Spikes | S-5 | D-165 | sí |
 | `04-ux.md` › W-12 — La conversación | El + en el pie, la lista de «/», las fichas de los adjuntos y cómo se ven en los mensajes | D-168 | sí |
@@ -43,13 +44,17 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
+| PA-I1 | Los comandos con «/» | pendiente |
+| PA-I2 | Archivos y fotos | pendiente |
+| PA-I3 | El texto largo pegado | pendiente |
 
 ## Log de iteraciones
 - 2026-11-21 — Definición e investigación. El spike S-5 respondió lo del motor: la lista de comandos sale sin gastar, un comando es un mensaje que empieza con «/», la foto viaja dentro del mensaje y queda en el historial, el archivo como su ruta. `definicion.md` con los cuatro pedidos como Must; qué comandos esconder (Q-243) y el visto bueno (Q-244) quedan para el usuario.
 - 2026-11-21 — Q-243 y Q-244 respondidas: la lista de «/» esconde los que pisan a Iridium y los de la terminal, y la definición queda aprobada (D-167).
 - 2026-11-21 — UX escrita: la lista de «/» arriba del compositor, el + primero en el pie, las fichas arriba del cuadro (miniatura para las fotos), el texto pegado desde 40 líneas o 2.000 caracteres, el visor y cómo quedan en los mensajes mandados. Cuatro maquetas (`diseno/pantallas/paridad-*.html`); `piezas.js` acepta un compositor propio en una maqueta. Q-246 y Q-247.
 - 2026-11-21 — Q-246 y Q-247 respondidas: la UX aprobada como está, y un comando escondido escrito a mano no se manda (D-168).
+- 2026-11-21 — Diseño técnico (D-169): `capacidades`, `comandos` y `enviar` con fotos en la frontera; las marcas `iridium-*` para el texto pegado y los archivos; el historial traduce los comandos y su respuesta (visto en un historial real); `escritos.json` 2 y `pegadas/`; las fotos se achican con `nativeImage`. Tres iteraciones, PA-I1 a PA-I3.
 
 ## Próximo paso
-El diseño técnico (`diseno-tecnico.md`): `enviar` con adjuntos y lo que sabe hacer cada motor (comandos, cuáles esconde y su línea, fotos y su tamaño) en `05-arquitectura.md` › La interfaz `Motor`; cómo se guardan los adjuntos sin mandar y cómo se leen del historial.
-**Leer antes:** `ux.md`, `investigacion.md`, `05-arquitectura.md` › La interfaz `Motor` y `research/comandos-y-adjuntos-del-motor.md`.
+El paso 6 (UI): las tres piezas nuevas de `ux.md` › Piezas de UI nuevas (la ficha de adjunto con miniatura, el menú arriba del compositor y el borde de soltar) en `diseno/piezas.css` y `06-ui.md`, sacadas de las maquetas de Paridad. Después, la tanda de la ronda de UX (T-101, T-103, T-104, T-106 a T-108, T-110) y PA-I1.
+**Leer antes:** `ux.md` › Piezas de UI nuevas, `diseno-tecnico.md` › Iteraciones y `06-ui.md`.
