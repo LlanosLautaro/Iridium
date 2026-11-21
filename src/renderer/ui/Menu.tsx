@@ -17,6 +17,7 @@ export function Menu({
   clase,
   claseBoton = 'boton sin-fondo chico',
   enLista = false,
+  claseLista,
   deshabilitado,
   alAbrir,
   children,
@@ -29,6 +30,8 @@ export function Menu({
   claseBoton?: string
   /** El menú en lista (PZ-8): cada opción con título y detalle, como las conversaciones. */
   enLista?: boolean
+  /** Más clases de la lista: `arriba`, para abrirla hacia arriba (el + del compositor, PZ-8). */
+  claseLista?: string
   deshabilitado?: boolean
   alAbrir?: () => void
   children: (cerrar: () => void) => ReactNode
@@ -120,7 +123,7 @@ export function Menu({
       {abierto && (
         <div
           ref={lista}
-          className={enLista ? 'menu abierto lista-menu' : 'menu abierto'}
+          className={['menu abierto', enLista && 'lista-menu', claseLista].filter(Boolean).join(' ')}
           role="menu"
           onKeyDown={recorrer}
         >

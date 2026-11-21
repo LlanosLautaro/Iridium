@@ -193,6 +193,8 @@ function crearMotor(): Motor {
     const periodoCerrado = process.env.IRIDIUM_FALSO_PERIODO === 'cerrado'
     return crearMotorFalso({
       pasoMs,
+      // IRIDIUM_FALSO_COMANDOS=no: un motor sin comandos con «/» (PA-6).
+      ...(process.env.IRIDIUM_FALSO_COMANDOS === 'no' ? { comandos: false } : {}),
       ...(periodoCerrado
         ? {
             uso: {

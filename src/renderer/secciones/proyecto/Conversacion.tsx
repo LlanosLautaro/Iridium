@@ -13,6 +13,15 @@ import {
   useState,
 } from 'react'
 import { type Cita, leerCitas, mensajeConCitas } from '../../../compartido/citas'
+import {
+  type ComandoMotor,
+  comandoDe,
+  comandoPrimero,
+  conComando,
+  consultaDe,
+  escondidoDe,
+  filtrarComandos,
+} from '../../../compartido/comandos'
 import { leerMensaje, type MensajeComentario } from '../../../compartido/mensaje-revision'
 import {
   CONTEXTO_ALTO,
@@ -27,6 +36,7 @@ import { Icono } from '../../ui/Icono'
 import { Menu } from '../../ui/Menu'
 import { cuandoFue, cuandoSera, hora, pc } from '../../ui/tiempo'
 import { MedidorContexto, ModeloYEsfuerzo } from './AjustesIa'
+import { idOpcion, LineaEscondido, ListaComandos, useCapacidades, useListaComandos } from './Comandos'
 import { tocarEnlace } from './enlaces'
 import { Captura } from './Revision'
 
@@ -472,6 +482,27 @@ function TarjetaComentario({ ruta, com }: { ruta: string; com: MensajeComentario
 function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; quien: string }) {
   const com = leerMensaje(texto)
   if (com) return <TarjetaComentario ruta={ruta} com={com} />
+  // Un comando (PA-5): el comando en la letra de los códigos, lo que se le escribió y, después, lo citado.
+  if (comandoDe(texto)) {
+    const [linea = '', ...resto] = texto.trim().split(/\n{2,}/)
+    const cmd = comandoDe(linea)
+    const { citas: citadas, texto: escrito } = leerCitas(resto.join('\n\n'))
+    return (
+      <div className="mensaje-yo con-citas" title={quien}>
+        <p>
+          <code className="cmd">/{cmd?.nombre}</code>
+          {cmd?.resto && ` ${cmd.resto}`}
+        </p>
+        {citadas.map((c, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
+          <p key={i} className="citado-en-mensaje">
+            {c}
+          </p>
+        ))}
+        {escrito.trim() && <p>{escrito}</p>}
+      </div>
+    )
+  }
   // Lo citado al enviar (Q-182) se ve como cita, arriba de lo escrito.
   const { citas, texto: escrito } = leerCitas(texto)
   if (!citas.length)
@@ -756,6 +787,31 @@ export function Conversacion({
   // El cuadro crece con lo que se escribe (hasta un tope, después se desplaza) y vuelve a una línea al enviar.
   const caja = useRef<HTMLTextAreaElement>(null)
   useAltoDelTexto(caja, texto, 0)
+  // Los comandos con «/» (PA-1): la lista va mientras el cursor está en el comando del principio; Esc la cierra hasta
+  // que cambie lo escrito. Un comando escondido escrito a mano no se manda y dice dónde está eso (D-168).
+  const capacidades = useCapacidades()
+  const [cursor, setCursor] = useState<number | null>(null)
+  const [cerradaCon, setCerradaCon] = useState<string | null>(null)
+  const escondido = capacidades ? escondidoDe(texto, capacidades.escondidos) : null
+  const consulta =
+    capacidades?.comandos && !escondido && cerradaCon !== texto
+      ? consultaDe(texto, cursor ?? texto.length)
+      : null
+  const estadoComandos = useListaComandos(ruta, consulta !== null)
+  const grupos = useMemo(
+    () =>
+      estadoComandos.tipo === 'lista'
+        ? filtrarComandos(estadoComandos.comandos, consulta ?? '', estadoComandos.recientes)
+        : [],
+    [estadoComandos, consulta],
+  )
+  const opciones = useMemo(() => grupos.flatMap((g) => g.comandos), [grupos])
+  const [marcado, setMarcado] = useState<string | null>(null)
+  // Al abrir o al cambiar lo que se busca, la primera marcada; si la lista se puso al día, la marcada sigue si está.
+  const marcada = opciones.some((c) => c.nombre === marcado) ? marcado : (opciones[0]?.nombre ?? null)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: lo que se busca cambió: la marca vuelve a la primera.
+  useEffect(() => setMarcado(null), [consulta])
+  const listaAbierta = consulta !== null
   const trabajando = ficha?.estado === 'trabajando'
   const esperandoFondo = !trabajando && (ficha?.fondo?.length ?? 0) > 0
   const enBlanco = pidioEnBlanco && !trabajando
@@ -814,12 +870,58 @@ export function Conversacion({
   }
   // Las citas van al principio del mensaje (Q-182); sin nada escrito, salen solas.
   const sinNada = texto.trim() === '' && citas.length === 0
-  const mensaje = () => mensajeConCitas(citas, sobre && texto.trim() ? `${sobreQue(sobre)}: ${texto}` : texto)
+  // Con un comando, el comando va primero y lo citado y «Sobre la skill…» después (D-169 › 7).
+  const mensaje = () =>
+    comandoPrimero(texto, mensajeConCitas(citas, sobre ? sobreQue(sobre) : ''), () =>
+      mensajeConCitas(citas, sobre && texto.trim() ? `${sobreQue(sobre)}: ${texto}` : texto),
+    )
   const enviar = () => {
-    if (sinNada || enviando) return
+    if (sinNada || enviando || escondido) return
     void seguir({ texto: mensaje() })
   }
+  /** Elegir un comando no lo manda: queda «/nombre » con el cursor para escribirle lo que pida (PA-1). */
+  const elegirComando = (c: ComandoMotor) => {
+    const nuevo = conComando(texto, c.nombre)
+    setTexto(nuevo.texto)
+    setCursor(nuevo.cursor)
+    requestAnimationFrame(() => {
+      caja.current?.focus()
+      caja.current?.setSelectionRange(nuevo.cursor, nuevo.cursor)
+    })
+  }
+  /** El + › Comandos: la «/» al principio y la lista abierta. */
+  const abrirComandos = () => {
+    const nuevo = texto.startsWith('/') ? texto : `/${texto ? ` ${texto}` : ''}`
+    setTexto(nuevo)
+    setCursor(1)
+    setCerradaCon(null)
+    requestAnimationFrame(() => {
+      caja.current?.focus()
+      caja.current?.setSelectionRange(1, 1)
+    })
+  }
   const alTeclado = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (listaAbierta && !e.nativeEvent.isComposing) {
+      const i = opciones.findIndex((c) => c.nombre === marcada)
+      const n = opciones.length
+      if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && n > 0) {
+        e.preventDefault()
+        const j = e.key === 'ArrowDown' ? (i + 1) % n : (i - 1 + n) % n
+        setMarcado(opciones[j]?.nombre ?? null)
+        return
+      }
+      const elegida = opciones[i]
+      if (((e.key === 'Enter' && !e.shiftKey) || e.key === 'Tab') && elegida) {
+        e.preventDefault()
+        elegirComando(elegida)
+        return
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setCerradaCon(texto)
+        return
+      }
+    }
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault()
       enviar()
@@ -1002,6 +1104,30 @@ export function Conversacion({
 
       {/* Una sola línea alrededor (la pieza de las maquetas): lo escrito arriba, el pie abajo. */}
       <div className="compositor">
+        {listaAbierta && (
+          <ListaComandos
+            estado={estadoComandos}
+            grupos={grupos}
+            consulta={consulta ?? ''}
+            marcado={marcada}
+            alElegir={elegirComando}
+            alMarcar={setMarcado}
+          />
+        )}
+        {escondido && (
+          <LineaEscondido
+            nombre={escondido.nombre}
+            pisa={escondido.pisa}
+            nueva={
+              enviando || trabajando
+                ? null
+                : () => {
+                    setTexto('')
+                    nueva()
+                  }
+            }
+          />
+        )}
         {sobre && (
           <div className="sobre-skill">
             <span title={`El mensaje sale con «${sobreQue(sobre)}:» al principio`}>
@@ -1043,11 +1169,45 @@ export function Conversacion({
           placeholder={trabajando ? 'Suma algo a lo que está haciendo…' : 'Escribe a la IA…'}
           aria-label="Mensaje para la IA"
           value={texto}
-          onChange={(e) => setTexto(e.target.value)}
+          onChange={(e) => {
+            setTexto(e.target.value)
+            setCursor(e.target.selectionStart)
+          }}
+          onSelect={(e) => setCursor(e.currentTarget.selectionStart)}
           onKeyDown={alTeclado}
+          {...(listaAbierta
+            ? {
+                'aria-controls': 'lista-comandos',
+                ...(marcada ? { 'aria-activedescendant': idOpcion(marcada) } : {}),
+              }
+            : {})}
         />
         {/* El pie se parte en dos renglones si no entra: Detener nunca tapa el medidor del contexto. */}
         <div className="pie-comp">
+          {capacidades?.comandos && (
+            <Menu
+              boton={<Icono nombre="mas" />}
+              titulo="Agregar comandos"
+              claseBoton="boton solo-icono chico"
+              clase="del-compositor"
+              claseLista="arriba"
+            >
+              {(cerrar) => (
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    cerrar()
+                    abrirComandos()
+                  }}
+                >
+                  <span className="barra-cmd">/</span>
+                  Comandos
+                  <span className="atajo">/</span>
+                </button>
+              )}
+            </Menu>
+          )}
           <ModeloYEsfuerzo ruta={ruta} />
           {hayConversacion && c?.contexto && <MedidorContexto contexto={c.contexto} />}
           <div className="enviar">
@@ -1071,7 +1231,7 @@ export function Conversacion({
               className="boton solo-icono chico"
               title="Enviar (Enter; Shift+Enter, salto de línea)"
               aria-label="Enviar"
-              disabled={sinNada || enviando}
+              disabled={sinNada || enviando || escondido !== null}
               onClick={enviar}
             >
               <Icono nombre="flecha" />

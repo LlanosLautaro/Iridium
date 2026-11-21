@@ -88,7 +88,7 @@ Cambios al modelo general: en `05-arquitectura.md` (La interfaz `Motor` y Modelo
 5. Al mandar, la ventana borra lo escrito y sus fichas; la pegada queda en `pegadas/` hasta la limpieza del próximo arranque (la foto ya está en el historial de Claude).
 
 ### Leer una conversación (PA-5)
-1. `mensajesDeHistorial`: antes de sacar las marcas internas, `<command-name>`/`<command-args>` se vuelven «/nombre args»; `<local-command-stdout>` (si no está vacío) es un mensaje de la IA; las marcas `iridium-*` se dejan; los bloques de imagen pasan a `fotos`.
+1. `mensajesDeHistorial`: antes de sacar las marcas internas, `<command-name>`/`<command-args>` se vuelven «/nombre args»; `<local-command-stdout>` (si no está vacío) es un mensaje de la IA (Claude Code lo guarda en una línea de sistema que `getSessionMessages` no devuelve: se lee del `.jsonl` y va después de su comando, PA-I1); las marcas `iridium-*` se dejan; los bloques de imagen pasan a `fotos`.
 2. `entradaDe` usa `leerAdjuntos` para separar los pegados y los archivos del texto, y suma las fotos como `data:`.
 
 ## Seguridad

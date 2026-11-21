@@ -13,18 +13,19 @@
 | 4. UX | hecho (Q-246, Q-247, D-168) | `ux.md` |
 | 5. Diseño técnico | hecho (D-169) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (D-170) | `06-ui.md` y `diseno/piezas.css` |
-| 7. Construcción | en curso (sigue PA-I1) | este archivo |
+| 7. Construcción | en curso (PA-I1 hecha, prueba en Q-250; sigue PA-I2) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
 Definición aprobada e investigación hecha (2026-11-21): los cuatro pedidos entran como Must y todo lo del motor pasa por su frontera; la lista de «/» esconde los comandos que pisan a Iridium y los de la terminal (D-167). La ronda de UX (T-100) y su tanda ya están (2026-11-21).
-La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium. Diseño técnico cerrado (D-169): el motor dice qué sabe hacer (comandos, fotos, escondidos), los adjuntos viajan con marcas de Iridium que el historial reconoce y las fotos pegadas se guardan en los datos de Iridium. Piezas en el sistema (D-170): la Ficha (PZ-16), el menú arriba del compositor y el estado de soltar, con su maqueta. Sigue PA-I1, los comandos con «/».
+La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium. Diseño técnico cerrado (D-169): el motor dice qué sabe hacer (comandos, fotos, escondidos), los adjuntos viajan con marcas de Iridium que el historial reconoce y las fotos pegadas se guardan en los datos de Iridium. Piezas en el sistema (D-170): la Ficha (PZ-16), el menú arriba del compositor y el estado de soltar, con su maqueta.
+**PA-I1 hecha** (2026-11-21): «/» abre la lista arriba del compositor, elegir no manda, los usados hace poco van primero, un escondido escrito a mano no se manda y dice dónde está eso en Iridium, el + tiene Comandos y la lista se pone al día cuando la IA descubre una skill. Tu prueba, Q-250. Sigue PA-I2, archivos y fotos.
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
 - [x] Ver qué deja hacer el motor: comandos, fotos y archivos (S-5)
-- [ ] Escribir «/» y elegir un comando (D-167)
+- [x] Escribir «/» y elegir un comando (D-167; PA-I1)
 - [ ] Adjuntar archivos y fotos con el + o arrastrándolos (T-96)
 - [ ] Pegar una foto en el chat
 - [ ] Que un texto largo pegado vaya como archivo
@@ -44,7 +45,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| PA-I1 | Los comandos con «/» | pendiente |
+| PA-I1 | Los comandos con «/» | hecha (prueba del usuario en Q-250) |
 | PA-I2 | Archivos y fotos | pendiente |
 | PA-I3 | El texto largo pegado | pendiente |
 
@@ -56,7 +57,8 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - 2026-11-21 — Diseño técnico (D-169): `capacidades`, `comandos` y `enviar` con fotos en la frontera; las marcas `iridium-*` para el texto pegado y los archivos; el historial traduce los comandos y su respuesta (visto en un historial real); `escritos.json` 2 y `pegadas/`; las fotos se achican con `nativeImage`. Tres iteraciones, PA-I1 a PA-I3.
 - 2026-11-21 — Paso 6 (D-170): la Ficha (PZ-16) en las dos hojas de piezas, el menú arriba del compositor en PZ-8 y el estado de soltar en la conversación, con la maqueta `paridad-soltar.html`; las maquetas de Paridad, sin estilos propios. Capturas de las cinco revisadas; pruebas, lint y control en verde.
 - 2026-11-21 — La tanda de la ronda de UX hecha (T-101 a T-110, en `trabajo.md`), con su prueba en Q-248: la construcción queda libre.
+- 2026-11-21 — PA-I1 construida. La frontera dice qué sabe hacer (`capacidades`), da la lista sin gastar (`comandos`, con el real: 86 en 2 s, los escondidos de D-167) y avisa `commands_changed`; la app la recuerda 10 minutos por carpeta y guarda los cinco usados hace poco. La ventana: la lista arriba del compositor (filtro por nombre, otro nombre y después de los dos puntos de un complemento; flechas, Enter, Tab, Esc), la línea de un escondido con Nueva cuando corresponde, el + con Comandos y el comando mandado en la letra de los códigos. Un comando va primero, con lo citado después, y sin el aviso de «te detuve», que queda para el próximo mensaje (la prueba encontró que se perdía al terminar el turno del comando: arreglado). Al reabrir, el comando vuelve a ser «/nombre lo escrito» y su respuesta, que Claude Code guarda en una línea que el SDK no devuelve, se lee del `.jsonl`. El motor falso tiene comandos (y `IRIDIUM_FALSO_COMANDOS=no`). Vitest (20 nuevas) y Playwright (4 nuevas) en verde. Q-250: la prueba.
 
 ## Próximo paso
-Construir PA-I1, los comandos con «/» (`diseno-tecnico.md` › Iteraciones y Procesos centrales › Elegir un comando).
-**Leer antes:** `diseno-tecnico.md` y `ux.md` › PA-1 y PA-6.
+Construir PA-I2, archivos y fotos (`diseno-tecnico.md` › Iteraciones y Procesos centrales › Mandar con adjuntos): el + suma «Agregar archivos o fotos».
+**Leer antes:** `diseno-tecnico.md` y `ux.md` › PA-2, PA-3, PA-5 y PA-6.

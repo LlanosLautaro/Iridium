@@ -4,6 +4,7 @@ import { basename, dirname, join, normalize } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { z } from 'zod'
 import { actualizarSolo } from '../../compartido/actualizar'
+import { sumarReciente } from '../../compartido/comandos'
 import {
   type AccesoVersiones,
   CANALES,
@@ -27,6 +28,7 @@ import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/
 import type { PlanEliminacion } from '../../compartido/tipos'
 import { planDeArmado, VigiaArmados } from '../app/abrir'
 import { Arranque, candidatosDe } from '../app/arranque'
+import { Comandos } from '../app/comandos'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
 import { crearProyecto } from '../app/creacion'
@@ -413,9 +415,23 @@ export function registrarPuente(s: Servicios): Puente {
     ultimaConexion: s.ultimaConexionExtension,
   })
 
+  // La lista de «/» de cada carpeta (PA-1): se recuerda 10 minutos y una sesión la pone al día.
+  const comandos = new Comandos({
+    motor: s.motor,
+    recientes: async () => (await s.config.leer()).comandosRecientes,
+    alCambio: (ruta, lista) => enviar(CANALES.comandosCambio, { ruta, comandos: lista }),
+  })
+
   const conversaciones = new Conversaciones({
     motor: s.motor,
     registro: s.sesiones,
+    alComandos: (ruta, lista) => comandos.poner(ruta, lista),
+    alComando: (nombre) =>
+      void guardando(async () =>
+        s.config.guardar({
+          comandosRecientes: sumarReciente((await s.config.leer()).comandosRecientes, nombre),
+        }),
+      ).catch(() => {}),
     preguntas: leerPreguntasAbiertas,
     alCambio: (c) => {
       enviar(CANALES.conversacionCambio, c)
@@ -669,6 +685,8 @@ export function registrarPuente(s: Servicios): Puente {
     })
   })
   ipcMain.handle(CANALES.detener, async (_, ruta: unknown) => conversaciones.detener(await proyecto(ruta)))
+  ipcMain.handle(CANALES.capacidades, () => s.motor.capacidades())
+  ipcMain.handle(CANALES.comandos, async (_, ruta: unknown) => comandos.de(await proyecto(ruta)))
   ipcMain.handle(CANALES.cerrarFicha, async (_, ruta: unknown) =>
     conversaciones.cerrarFicha(await proyecto(ruta)),
   )

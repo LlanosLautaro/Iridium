@@ -256,6 +256,13 @@ const TRAZOS = {
       <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
     </>
   ),
+  /** Una línea que explica algo (la de un comando escondido, PA-1): como la de las maquetas. */
+  info: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 11v5M12 8h.01" />
+    </>
+  ),
   duda: (
     <>
       <circle cx="12" cy="12" r="9" />

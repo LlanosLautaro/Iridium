@@ -19,7 +19,9 @@ import {
   type SDKMessage,
   type SDKUserMessage,
   type SessionMessage,
+  type SlashCommand,
 } from '@anthropic-ai/claude-agent-sdk'
+import type { CapacidadesMotor, ComandoMotor, Pisa } from '../../compartido/comandos'
 // Solo tipos de la app: así las herramientas de `tools/` cargan este archivo sin compilar.
 import type {
   AjusteIa,
@@ -31,6 +33,7 @@ import type {
   ReintentoSesion,
   VentanaUso,
 } from '../../compartido/puente'
+import { carpetaDeConversaciones } from '../core/carpeta-iridium'
 import { moverConversaciones } from '../infra/carpeta-iridium'
 import type { FallaMotor, MensajeMotor, Motor, SesionMotor, UsoMotor } from './motor'
 
@@ -276,6 +279,61 @@ export function tokensDeHistorial(
   return encontrado && { ...encontrado, cacheMs: null }
 }
 
+/**
+ * Los comandos de Claude Code que la lista de «/» esconde (D-167), con qué pisa cada uno; también por sus otros
+ * nombres. Se revisa al subir el SDK (`research/comandos-y-adjuntos-del-motor.md` › 2): los que cambian el modelo, el
+ * esfuerzo, el tono o la conversación por fuera de Iridium, los que Iridium ya muestra y los que solo sirven en la
+ * terminal.
+ */
+export const ESCONDIDOS: Readonly<Record<string, Pisa>> = {
+  model: 'modelo',
+  fast: 'modelo',
+  effort: 'esfuerzo',
+  'output-style': 'tono',
+  clear: 'conversacion',
+  reset: 'conversacion',
+  new: 'conversacion',
+  context: 'contexto',
+  usage: 'uso',
+  cost: 'uso',
+  stats: 'uso',
+  color: 'terminal',
+  focus: 'terminal',
+  heapdump: 'terminal',
+  '__remote-workflow': 'terminal',
+  'workflow-launch-exec': 'terminal',
+}
+
+/** Las fotos que recibe Claude dentro del mensaje (S-5; los límites, a confirmar con una captura real). */
+const FOTOS: NonNullable<CapacidadesMotor['fotos']> = {
+  medios: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+  maxBytes: 5 * 2 ** 20,
+  maxLado: 8000,
+}
+
+/**
+ * La lista de comandos de Claude Code en palabras de Iridium: de dónde sale cada uno y si se esconde. Solo se esconden
+ * los suyos (`builtin`), no una skill o un complemento con el mismo nombre. La descripción de un complemento llega con
+ * su nombre adelante («(engineering) …»): ese nombre va aparte.
+ */
+export function comandosDe(lista: readonly SlashCommand[]): ComandoMotor[] {
+  return lista.map((c) => {
+    const complemento = !c.builtin && c.name.includes(':') ? c.name.slice(0, c.name.indexOf(':')) : null
+    const marca = complemento ? `(${complemento})` : null
+    const descripcion =
+      marca && c.description.startsWith(marca) ? c.description.slice(marca.length) : c.description
+    return {
+      nombre: c.name,
+      otrosNombres: c.aliases ?? [],
+      argumentos: c.argumentHint.trim() || null,
+      descripcion: descripcion.trim(),
+      origen: c.builtin ? 'motor' : complemento ? 'complemento' : 'skill',
+      complemento,
+      escondido: c.builtin ? (ESCONDIDOS[c.name.toLowerCase()] ?? null) : null,
+    }
+  })
+}
+
 /** Lo que el usuario no escribió: avisos del sistema, archivos abiertos en el editor, comandos. */
 const BLOQUE_INTERNO = /<([a-z][\w-]*)(?:\s[^>]*)?>[\s\S]*?<\/\1>/gi
 const DETENIDA = /^\[Request interrupted by user[^\]]*\]$/
@@ -354,16 +412,39 @@ export function describirHerramienta(
   }
 }
 
+/** Un comando mandado, como lo guarda Claude Code: `<command-name>/compact</command-name>` y `<command-args>`. */
+const COMANDO_GUARDADO = /<command-name>\s*\/?([^<\s]+)\s*<\/command-name>/
+const ARGUMENTOS_GUARDADOS = /<command-args>([\s\S]*?)<\/command-args>/
+/** Lo que respondió un comando de Claude Code sin el modelo (`/context`, `/usage`). */
+const SALIDA_COMANDO = /<local-command-stdout>([\s\S]*?)<\/local-command-stdout>/
+
+/** Un comando mandado vuelve a ser lo que se escribió, «/nombre lo que sigue» (PA-5); null si no es un comando. */
+export function comandoGuardado(texto: string): string | null {
+  const nombre = COMANDO_GUARDADO.exec(texto)?.[1]
+  if (!nombre) return null
+  const argumentos = ARGUMENTOS_GUARDADOS.exec(texto)?.[1]?.trim()
+  return argumentos ? `/${nombre} ${argumentos}` : `/${nombre}`
+}
+
+/** Lo que respondió un comando, en Markdown; null si no hay o vino vacío. */
+export function salidaDeComando(texto: string): string | null {
+  const salida = SALIDA_COMANDO.exec(texto)?.[1]?.trim()
+  return salida ? salida : null
+}
+
 /** Lo que escribió el usuario, sin lo que agrega Claude Code; null si no queda nada (resultados de herramientas). */
 export function textoDeUsuario(contenido: unknown): MensajeMotor | null {
   const partes = bloques(contenido)
   if (partes.some((b) => b.type === 'tool_result')) return null
-  const texto = partes
-    .flatMap((b) =>
-      b.type === 'text' && typeof b.text === 'string' ? [b.text.replace(BLOQUE_INTERNO, '')] : [],
-    )
+  const crudo = partes
+    .flatMap((b) => (b.type === 'text' && typeof b.text === 'string' ? [b.text] : []))
     .join('\n')
-    .trim()
+  // Un comando que se mandó y lo que respondió sin el modelo, antes de sacar lo que agrega Claude Code (PA-5).
+  const comando = comandoGuardado(crudo)
+  if (comando) return { tipo: 'usuario', texto: comando, cuando: null }
+  const salida = salidaDeComando(crudo)
+  if (salida) return { tipo: 'ia', texto: salida, cuando: null, final: true }
+  const texto = crudo.replace(BLOQUE_INTERNO, '').trim()
   if (texto === '') return null
   if (DETENIDA.test(texto)) return { tipo: 'detenida' }
   return { tipo: 'usuario', texto, cuando: null }
@@ -391,8 +472,35 @@ function terminoDeResponder(mensaje: unknown): boolean {
   return (mensaje as { stop_reason?: unknown } | null)?.stop_reason === 'end_turn'
 }
 
-/** Una conversación guardada, en mensajes de la app. Lo de los agentes (subconversaciones) no se muestra. */
-export function mensajesDeHistorial(historial: readonly SessionMessage[], carpeta: string): MensajeMotor[] {
+/**
+ * Lo que respondieron los comandos de una conversación guardada, por el mensaje del comando: Claude Code lo guarda en
+ * una línea de sistema (`local_command`) que el SDK no devuelve con los mensajes. Se lee del `.jsonl`.
+ */
+export function salidasDeComandos(jsonl: string): Map<string, string> {
+  const salidas = new Map<string, string>()
+  for (const linea of jsonl.split('\n')) {
+    if (!linea.includes('local-command-stdout')) continue
+    try {
+      const l = JSON.parse(linea) as { type?: unknown; parentUuid?: unknown; content?: unknown }
+      if (l.type !== 'system' || typeof l.parentUuid !== 'string' || typeof l.content !== 'string') continue
+      const salida = salidaDeComando(l.content)
+      if (salida) salidas.set(l.parentUuid, salida)
+    } catch {
+      // Una línea a medio escribir: se saltea.
+    }
+  }
+  return salidas
+}
+
+/**
+ * Una conversación guardada, en mensajes de la app. Lo de los agentes (subconversaciones) no se muestra. `salidas`: lo
+ * que respondió cada comando sin el modelo, por el id del mensaje del comando.
+ */
+export function mensajesDeHistorial(
+  historial: readonly SessionMessage[],
+  carpeta: string,
+  salidas: ReadonlyMap<string, string> = new Map(),
+): MensajeMotor[] {
   const salida: MensajeMotor[] = []
   for (const m of historial) {
     if (m.parent_tool_use_id !== null) continue
@@ -400,10 +508,24 @@ export function mensajesDeHistorial(historial: readonly SessionMessage[], carpet
     if (m.type === 'user') {
       const u = textoDeUsuario(contenido)
       if (u) salida.push(u)
+      const respuesta = salidas.get(m.uuid)
+      if (respuesta) salida.push({ tipo: 'ia', texto: respuesta, cuando: null, final: true })
     } else if (m.type === 'assistant')
       salida.push(...mensajesDeIa(contenido, carpeta, null, terminoDeResponder(m.message)))
   }
   return salida
+}
+
+/** El `.jsonl` de una conversación guardada; vacío si no se encuentra (D-083: `projects\<ruta con guiones>`). */
+async function leerJsonl(carpeta: string, id: string): Promise<string> {
+  const proyectos = join(process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), '.claude'), 'projects')
+  try {
+    const buscada = carpetaDeConversaciones(carpeta).toLowerCase()
+    const nombre = (await readdir(proyectos)).find((n) => n.toLowerCase() === buscada)
+    return nombre ? await readFile(join(proyectos, nombre, `${id}.jsonl`), 'utf8') : ''
+  } catch {
+    return ''
+  }
 }
 
 /** Un aviso de reintento de Claude Code (`api_retry`) en palabras de la app (Defecto 10). */
@@ -547,6 +669,24 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
     return v
   }
   return {
+    capacidades: () => ({ comandos: true, fotos: FOTOS, escondidos: { ...ESCONDIDOS } }),
+
+    async comandos(carpeta) {
+      // Como una conversación de esa carpeta (sus ajustes y los complementos de Iridium), sin mandar nada.
+      const lista = await sinMensajes(
+        {
+          cwd: carpeta,
+          settingSources: ['user', 'project', 'local'],
+          ...(opciones.plugins?.length
+            ? { plugins: opciones.plugins.map((path) => ({ type: 'local' as const, path })) }
+            : {}),
+          ...ejecutable,
+        },
+        (s) => s.supportedCommands(),
+      )
+      return comandosDe(lista)
+    },
+
     async verificar() {
       // R-5: lo de la cuenta solo no alcanza para saber si hay sesión; `auth status` corre a la par.
       const conSesion = (async () => {
@@ -761,6 +901,9 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
                 setTimeout(() => {
                   if (esperandoFondo && !turnoAbierto) terminarEntrada()
                 }, ESPERA_RETOMA_MS).unref?.()
+            } else if (m.type === 'system' && m.subtype === 'commands_changed') {
+              // Descubrió skills mientras trabajaba: la lista entera, que reemplaza a la de antes (PA-1).
+              alEvento({ tipo: 'comandos', comandos: comandosDe(m.commands) })
             } else if (m.type === 'system' && m.subtype === 'api_retry') {
               // Claude Code no llega a Claude y reintenta solo: sin esto, la sesión parece colgada (Defecto 10).
               reintento = reintentoDe(m)
@@ -891,7 +1034,11 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
     },
 
     async mensajes(carpeta, id) {
-      return mensajesDeHistorial(await getSessionMessages(id, { dir: carpeta }), carpeta)
+      const [historial, jsonl] = await Promise.all([
+        getSessionMessages(id, { dir: carpeta }),
+        leerJsonl(carpeta, id),
+      ])
+      return mensajesDeHistorial(historial, carpeta, salidasDeComandos(jsonl))
     },
 
     // Claude Code las guarda en `.claude\projects\<ruta con guiones>` (D-083).

@@ -441,3 +441,68 @@
     transition: none;
   }
 }
+
+/* Paridad (modulos/paridad/ux.md, maquetas paridad-comandos.html y paridad-escondido.html): la lista de «/» y el menú
+   del + se abren arriba del compositor (PZ-8 `.arriba`; la lista, `.ancho`, de su mismo ancho); la línea de un comando
+   escondido va arriba del cuadro; un comando mandado, en la letra de los códigos. */
+.compositor {
+  position: relative;
+}
+/* El menú del + se ubica contra el compositor, no contra el botón: así queda pegado arriba de él. */
+.con-menu.del-compositor {
+  position: static;
+}
+.con-menu > .arriba {
+  top: auto;
+}
+.comandos .nombre-cmd {
+  font: var(--estilo-codigo);
+  font-size: var(--tam-base);
+  color: var(--texto);
+}
+.comandos .arg {
+  font: var(--estilo-codigo);
+  color: var(--texto-3);
+  margin-left: var(--esp-1);
+}
+.comandos .detalle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.comandos .elegida {
+  background: var(--sel-fondo);
+}
+.comandos .vacia {
+  margin: 0;
+  padding: var(--esp-2);
+  color: var(--texto-3);
+}
+.barra-cmd {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  font: var(--estilo-codigo);
+  color: var(--texto-2);
+}
+.linea-cmd {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  font: var(--estilo-meta);
+  color: var(--texto-2);
+}
+.linea-cmd > .ic:first-child {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--texto-3);
+}
+.linea-cmd code,
+.mensaje-yo code.cmd {
+  font: var(--estilo-codigo);
+  color: var(--texto);
+}
+.linea-cmd > button:last-child {
+  margin-left: auto;
+}

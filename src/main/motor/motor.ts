@@ -1,5 +1,7 @@
 // La interfaz `Motor` (D-025, 05-arquitectura.md › La interfaz `Motor`): lo que la app le pide al motor, en
 // palabras de la app. Nada fuera de `motor/` conoce los tipos del SDK.
+
+import { type CapacidadesMotor, type ComandoMotor, comandoDe, type Pisa } from '../../compartido/comandos'
 import type {
   AjusteIa,
   ContextoConversacion,
@@ -73,6 +75,8 @@ export type EventoMotor =
   | { tipo: 'retoma' }
   /** La sesión se cerró: al terminar el turno sin nada en cola ni de fondo, o porque falló. */
   | { tipo: 'cerrada' }
+  /** La lista de comandos de la carpeta cambió mientras trabajaba (una skill nueva): la lista entera (PA-1). */
+  | { tipo: 'comandos'; comandos: ComandoMotor[] }
 
 /** Lo que se sabe al abrir la app, sin mandar mensajes: la cuenta, los modelos y el uso. */
 export interface VerificacionMotor {
@@ -80,7 +84,7 @@ export interface VerificacionMotor {
   uso: UsoMotor | null
 }
 
-export type { ModeloIa }
+export type { CapacidadesMotor, ComandoMotor, ModeloIa }
 
 export interface ConversacionGuardada {
   id: string
@@ -116,6 +120,13 @@ export interface SesionMotor {
 }
 
 export interface Motor {
+  /** Qué sabe hacer el motor (comandos, fotos y los comandos escondidos), sin gastar (D-169 › 1). */
+  capacidades(): CapacidadesMotor
+  /**
+   * Los comandos con «/» de una carpeta (con los ajustes del usuario, del proyecto y los complementos de Iridium), sin
+   * mandar mensajes; falla si no se pudieron leer.
+   */
+  comandos(carpeta: string): Promise<ComandoMotor[]>
   /** Que Claude Code tenga sesión iniciada y use la suscripción, sin mandar mensajes al modelo; y el uso. */
   verificar(): Promise<VerificacionMotor>
   /**
@@ -152,6 +163,8 @@ export interface OpcionesFalso {
   alTurno?: (carpeta: string, texto: string) => Promise<void>
   /** El modelo y el esfuerzo con los que se abre cada sesión o se cambian (para las pruebas). */
   alAjuste?: (carpeta: string, ajuste: AjusteIa) => void
+  /** false: un motor sin comandos con «/» (PA-6). */
+  comandos?: boolean
 }
 
 /** Los estilos que trae Claude Code (los nombres que usa él), como los informa el motor real. */
@@ -190,6 +203,81 @@ export const MODELOS_FALSOS: ModeloIa[] = [
     esfuerzoPredeterminado: null,
   },
 ]
+
+const motorFalso = (
+  nombre: string,
+  descripcion: string,
+  extra: Partial<Omit<ComandoMotor, 'nombre' | 'descripcion'>> = {},
+): ComandoMotor => ({
+  nombre,
+  otrosNombres: [],
+  argumentos: null,
+  descripcion,
+  origen: 'motor',
+  complemento: null,
+  escondido: null,
+  ...extra,
+})
+
+/**
+ * Los comandos del motor falso: unos del motor (con escondidos y otros nombres), uno de una skill propia y dos de
+ * complementos, como los da el real (`research/comandos-y-adjuntos-del-motor.md`).
+ */
+export const COMANDOS_FALSOS: ComandoMotor[] = [
+  motorFalso('compact', 'Free up context by summarizing the conversation so far', {
+    argumentos: '<optional custom summarization instructions>',
+  }),
+  motorFalso('context', 'Show current context usage', { escondido: 'contexto' }),
+  motorFalso('model', 'Set the AI model for Claude Code', { argumentos: '<model>', escondido: 'modelo' }),
+  motorFalso('clear', 'Start a new session with empty context', {
+    argumentos: '[name]',
+    otrosNombres: ['reset', 'new'],
+    escondido: 'conversacion',
+  }),
+  motorFalso('usage', 'Show session cost, plan usage, and what is contributing to your limits', {
+    otrosNombres: ['cost', 'stats'],
+    escondido: 'uso',
+  }),
+  motorFalso('color', 'Set the prompt bar color for this session', {
+    argumentos: '[red|blue|green]',
+    escondido: 'terminal',
+  }),
+  motorFalso('recap', 'Generate a one-line session recap now'),
+  motorFalso('rename', 'Rename the current conversation', { argumentos: '[name]', otrosNombres: ['name'] }),
+  motorFalso('code-review', 'Review the current diff for correctness bugs', {
+    argumentos: '[low|medium|high]',
+  }),
+  motorFalso('init', 'Initialize a new CLAUDE.md file with codebase documentation'),
+  motorFalso('mi-skill', 'Una skill propia de prueba', { origen: 'skill' }),
+  motorFalso('engineering:debug', 'Structured debugging session — reproduce, isolate, diagnose, and fix', {
+    argumentos: '<error message or problem description>',
+    origen: 'complemento',
+    complemento: 'engineering',
+  }),
+  motorFalso('design:ux-copy', 'Write or review UX copy — microcopy, error messages, empty states', {
+    argumentos: '<context or copy to review>',
+    otrosNombres: ['ux-copy'],
+    origen: 'complemento',
+    complemento: 'design',
+  }),
+]
+
+/** La skill que «descubre» el motor falso con un mensaje que dice «skill nueva» (el evento `comandos`, PA-1). */
+export const SKILL_NUEVA_FALSA: ComandoMotor = motorFalso(
+  'skill-nueva',
+  'Una skill que apareció mientras trabajaba',
+  {
+    origen: 'skill',
+  },
+)
+
+/** Los escondidos de una lista, por su nombre y sus otros nombres (D-169 › 3). */
+export function escondidosDe(lista: readonly ComandoMotor[]): Record<string, Pisa> {
+  const salida: Record<string, Pisa> = {}
+  for (const c of lista)
+    if (c.escondido) for (const n of [c.nombre, ...c.otrosNombres]) salida[n.toLowerCase()] = c.escondido
+  return salida
+}
 
 /** Cuántas veces reintenta el motor falso sin red antes de cortar (el real, 10). */
 const REINTENTOS_FALSOS = 3
@@ -254,7 +342,26 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
 
   /** Sin sesión hasta que se inicia (CO-I1). */
   let estadoFijo = o.estado
+  /** La lista de comandos: crece con la skill nueva de un mensaje que la nombra. */
+  let comandos = [...COMANDOS_FALSOS]
+  const conComandos = o.comandos ?? true
   return {
+    capacidades: () => ({
+      comandos: conComandos,
+      fotos: {
+        medios: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+        maxBytes: 5 * 2 ** 20,
+        maxLado: 8000,
+      },
+      escondidos: conComandos ? escondidosDe(comandos) : {},
+    }),
+
+    async comandos() {
+      if (!conComandos) return []
+      await new Promise((listo) => setTimeout(listo, paso))
+      return [...comandos]
+    },
+
     verificar: async () => {
       const estado = estadoFijo ?? { tipo: 'listo', suscripcion: 'max', modelos: MODELOS_FALSOS }
       // Sin sesión iniciada, Claude Code no dice el uso.
@@ -307,24 +414,46 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
       const turno = (texto: string) => {
         const ms = /lento/i.test(texto) ? paso * 10 : paso
         const falla = fallaDe(texto)
-        const pasos: (() => void | Promise<void>)[] = [
-          () => emitir({ tipo: 'herramienta', accion: 'Leyó', objeto: 'docs/estado.md' }),
-          () =>
-            emitir({
-              tipo: 'ia',
-              // Con un tono elegido, la IA falsa lo dice: así las pruebas ven que llegó a la sesión (AJ-3).
-              texto: `Leí \`docs/estado.md\`. Sigo con el **próximo paso**.${tono ? ` (Estilo: ${tono}.)` : ''}`,
-              cuando: Date.now(),
-            }),
-          async () => {
-            await o.alTurno?.(carpeta, texto)
-            emitir({ tipo: 'herramienta', accion: 'Editó', objeto: 'docs/estado.md' })
-          },
-          () =>
-            emitir({ tipo: 'ia', texto: 'Listo: dejé el estado al día.', cuando: Date.now(), final: true }),
-        ]
+        // «skill nueva»: mientras trabaja descubre una skill y avisa la lista entera, como el real (`commands_changed`).
+        if (/skill nueva/i.test(texto) && !comandos.includes(SKILL_NUEVA_FALSA)) {
+          comandos = [...comandos, SKILL_NUEVA_FALSA]
+          alEvento({ tipo: 'comandos', comandos: [...comandos] })
+        }
+        // Un comando lo responde el motor de una (la IA falsa dice cuál recibió y con qué va); sin herramientas.
+        const comando = conComandos ? comandoDe(texto) : null
+        const pasos: (() => void | Promise<void>)[] = comando
+          ? [
+              () =>
+                emitir({
+                  tipo: 'ia',
+                  texto: `Recibí el comando \`/${comando.nombre}\`${comando.resto ? ` con: ${comando.resto}` : ''}.`,
+                  cuando: Date.now(),
+                  final: true,
+                }),
+            ]
+          : [
+              () => emitir({ tipo: 'herramienta', accion: 'Leyó', objeto: 'docs/estado.md' }),
+              () =>
+                emitir({
+                  tipo: 'ia',
+                  // Con un tono elegido, la IA falsa lo dice: así las pruebas ven que llegó a la sesión (AJ-3).
+                  texto: `Leí \`docs/estado.md\`. Sigo con el **próximo paso**.${tono ? ` (Estilo: ${tono}.)` : ''}`,
+                  cuando: Date.now(),
+                }),
+              async () => {
+                await o.alTurno?.(carpeta, texto)
+                emitir({ tipo: 'herramienta', accion: 'Editó', objeto: 'docs/estado.md' })
+              },
+              () =>
+                emitir({
+                  tipo: 'ia',
+                  texto: 'Listo: dejé el estado al día.',
+                  cuando: Date.now(),
+                  final: true,
+                }),
+            ]
         // R-72: un hook de fin de turno que le pide algo más a la IA: responde, sigue con una herramienta y responde de nuevo.
-        if (/hook/i.test(texto))
+        if (!comando && /hook/i.test(texto))
           pasos.splice(
             pasos.length - 1,
             0,
@@ -484,6 +613,10 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
 /** Un motor que no puede arrancar (no se encuentra Claude Code): todo lo que se le pide falla con el motivo. */
 export function crearMotorQueFalla(motivo: string): Motor {
   return {
+    capacidades: () => ({ comandos: false, fotos: null, escondidos: {} }),
+    comandos: async () => {
+      throw new Error(motivo)
+    },
     verificar: async () => ({ estado: { tipo: 'falla', motivo }, uso: null }),
     iniciarSesion: async () => {},
     uso: async () => null,

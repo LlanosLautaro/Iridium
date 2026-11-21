@@ -4,6 +4,7 @@ import { mkdir } from 'node:fs/promises'
 import { dirname } from 'node:path'
 import { z } from 'zod'
 import { ANCHO_CONVERSACION, migrarAnchos, PROYECTOS_CON_ANCHO } from '../../compartido/ancho-conversacion'
+import { RECIENTES } from '../../compartido/comandos'
 import {
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
@@ -111,6 +112,8 @@ const Config = z.object({
   abrirDeFondo: z.number().nullable().catch(null),
   /** Los proyectos con la actualización automática apagada (frente Abrir, D-154); si falta o está roto, ninguno. */
   actualizacionApagada: z.array(z.string().min(1).max(1024)).max(500).catch([]),
+  /** Los comandos con «/» usados hace poco, de todas las conversaciones (frente Paridad, PA-1); el más nuevo primero. */
+  comandosRecientes: z.array(z.string().min(1).max(200)).max(RECIENTES).catch([]),
 })
 export type Config = z.infer<typeof Config>
 
@@ -133,6 +136,7 @@ const PREDETERMINADA: Config = {
   ventana: null,
   abrirDeFondo: null,
   actualizacionApagada: [],
+  comandosRecientes: [],
 }
 
 export function preferenciasDe(c: Config): Preferencias {

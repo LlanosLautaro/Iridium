@@ -2,6 +2,7 @@
 // (H-14) y una sesión por proyecto que sigue aunque no esté a la vista (H-2, H-6, D-015). Recibe el motor y el
 // registro de sesiones de afuera: así se prueba con el motor falso.
 import { basename } from 'node:path'
+import { type ComandoMotor, comandoDe, escondidoDe } from '../../compartido/comandos'
 import type {
   AjusteIa,
   CambioConversacion,
@@ -68,6 +69,10 @@ export interface DependenciasConversacion {
    * chat general, el de Skills). Sin esto, no hay control.
    */
   control?: (ruta: string) => Promise<Aviso[] | null>
+  /** Una sesión avisó que cambió la lista de comandos de su carpeta (PA-1). */
+  alComandos?: (ruta: string, comandos: ComandoMotor[]) => void
+  /** Se mandó un comando: va a los usados hace poco (PA-1). */
+  alComando?: (nombre: string) => void
   /** Una línea para el registro del día (errores del motor; nunca el texto de la conversación). */
   registrar?: (texto: string) => void
   ahora?: () => number
@@ -89,6 +94,8 @@ interface Proyecto {
   entradas: Entrada[]
   /** El último turno lo cortó el usuario: el próximo mensaje se lo avisa a la IA. */
   detenida: boolean
+  /** El turno en marcha es solo de comandos: al terminar, el aviso de «te detuve» sigue pendiente (D-169 › 7). */
+  soloComandos: boolean
   sesion: SesionMotor | null
   ficha: FichaSesion | null
   /** Las preguntas sin responder cuando empezó a trabajar: al terminar, las nuevas son las que dejó. */
@@ -140,6 +147,7 @@ export class Conversaciones {
         usoCentro: null,
         entradas: [],
         detenida: false,
+        soloComandos: false,
         sesion: null,
         ficha: null,
         antes: new Set(),
@@ -375,6 +383,9 @@ export class Conversaciones {
   seguir(ruta: string, pedido: PedidoSeguir, opciones: { arranque?: number } = {}): Promise<void> {
     const p = this.proyecto(ruta)
     return this.enFila(p, async () => {
+      const capacidades = this.d.motor.capacidades()
+      // Un comando escondido no se manda (D-168): la ventana ya lo frenó y dijo dónde está eso en Iridium.
+      if (pedido.texto && escondidoDe(pedido.texto, capacidades.escondidos)) return
       let reiniciar = false
       if (pedido.nueva) {
         if (this.trabajando(p)) return
@@ -422,16 +433,22 @@ export class Conversaciones {
           return
         }
       }
-      const mensaje = mensajeParaLaIa(texto, p.detenida)
-      if (p.id && p.detenida)
-        await this.d.registro.guardar(p.id, this.resumenInicial(p, 'afuera'), { detenida: false })
-      p.detenida = false
+      // Un comando va primero, sin el aviso de «te detuve»: ese queda para el próximo mensaje que no lo sea (D-169 › 7).
+      const comando = capacidades.comandos ? comandoDe(texto) : null
+      const mensaje = comando ? texto : mensajeParaLaIa(texto, p.detenida)
+      if (!comando) {
+        if (p.id && p.detenida)
+          await this.d.registro.guardar(p.id, this.resumenInicial(p, 'afuera'), { detenida: false })
+        p.detenida = false
+      }
+      p.soloComandos = comando !== null && (!this.trabajando(p) || p.soloComandos)
       if (!this.trabajando(p)) {
         p.antes = new Set((await this.d.preguntas(ruta)).map((q) => q.codigo))
         p.ficha = { ruta, estado: 'trabajando', preguntas: [], motivo: null }
       }
       p.envios++
       this.emitir(p, [{ tipo: 'usuario', id: this.id(), texto, cuando: this.ahora() }], reiniciar)
+      if (comando) this.d.alComando?.(comando.nombre)
 
       await this.mandar(p, mensaje)
     })
@@ -583,6 +600,9 @@ export class Conversaciones {
         return
       case 'uso':
         this.d.alUso?.(e.uso)
+        return
+      case 'comandos':
+        this.d.alComandos?.(p.ruta, e.comandos)
         return
       case 'fondo':
         p.fondo = e.tareas
@@ -762,7 +782,10 @@ export class Conversaciones {
     p.usoCentro = fin
     // Ya es la última del proyecto: no hace falta seguir eligiéndola.
     p.elegida = null
-    p.detenida = resultado === 'detenida'
+    // Un turno de comandos no le avisó a la IA que se la detuvo: el aviso queda para el próximo mensaje.
+    p.detenida = resultado === 'detenida' || (p.detenida && p.soloComandos)
+    p.soloComandos = false
+    const detenida = p.detenida
     const ficha = p.ficha
     const id = p.id
     const guardar = (async () => {
@@ -774,7 +797,7 @@ export class Conversaciones {
       if (id)
         await this.d.registro.guardar(id, this.resumenInicial(p, 'iridium'), {
           ultimoUso: fin,
-          detenida: resultado === 'detenida',
+          detenida,
           ultimoEstado: resultado === 'ok' ? 'terminada' : resultado,
           preguntas: nuevas.map((q) => q.codigo),
         })

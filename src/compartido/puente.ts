@@ -2,6 +2,7 @@
 // pedidos y eventos. Los tipos los ven los dos lados; lo que llega desde la ventana se valida en `main/ipc/`.
 
 import type { AnchosConversacion } from './ancho-conversacion'
+import type { CapacidadesMotor, ComandoMotor, ListaComandos } from './comandos'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
 import type { EstadoDesdeIdeas, IdeasDeProyecto, NotaIdea, ResultadoIdea } from './ideas'
 import type { ImagenDelPortapapeles, ImagenPegada } from './notas'
@@ -861,6 +862,9 @@ export const CANALES = {
   detener: 'conversacion:detener',
   cerrarFicha: 'conversacion:cerrar-ficha',
   conversacionCambio: 'conversacion:cambio',
+  comandos: 'conversacion:comandos',
+  comandosCambio: 'conversacion:comandos-cambio',
+  capacidades: 'motor:capacidades',
   pendientes: 'pendientes:proyecto',
   responder: 'pendientes:responder',
   aMedias: 'pendientes:a-medias',
@@ -1045,6 +1049,12 @@ export interface ApiIridium {
   /** Cierra la ficha de una sesión terminada o con error; la conversación queda. */
   cerrarFicha(ruta: string): Promise<void>
   alCambiarConversacion(escuchar: (cambio: CambioConversacion) => void): () => void
+  /** Qué sabe hacer el motor (los comandos, las fotos y los comandos escondidos), sin gastar (PA-6). */
+  capacidadesMotor(): Promise<CapacidadesMotor>
+  /** La lista de «/» de un proyecto, con los usados hace poco (PA-1), sin gastar. */
+  comandos(ruta: string): Promise<ListaComandos>
+  /** La lista de un proyecto cambió mientras la IA trabajaba (una skill nueva). */
+  alCambiarComandos(escuchar: (cambio: { ruta: string; comandos: ComandoMotor[] }) => void): () => void
   /** Los pendientes de un proyecto con su contexto (H-9). */
   pendientes(ruta: string): Promise<PendientesProyecto>
   /** Escribe `docs/respuestas/Q-n.md` (H-10, H-11). */
