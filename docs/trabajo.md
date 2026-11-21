@@ -412,3 +412,7 @@ Hoy un documento largo (como la clasificación MoSCoW de un hito 2) solo se pued
 
 ## T-95 — plugins por proyecto, similares a los mods de claude desktop
 Estado: nueva · Idea: usuario · Fecha: 2026-11-21
+
+## T-96 — una muestra de como se ve el chat de Claude desktop, el + despliega esas opciones, el resto nosotros lo tenemos parecido.
+Estado: pendiente · Frente: Paridad · Idea: usuario · Fecha: 2026-11-21 · Origen: D-165
+Es la base del frente Paridad: el + del compositor con Agregar archivos o fotos (Ctrl+U) y Comandos de barra, y «/» para los comandos (`modulos/paridad/propuesta.md`).

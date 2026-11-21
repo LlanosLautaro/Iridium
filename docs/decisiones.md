@@ -3285,3 +3285,25 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** no se hace. La IA sigue verificando antes de hacer el commit, subir y dejar la prueba. Ordenar cómo corre las pruebas (un comando de cierre, sin segundo plano) queda como idea aparte, T-92, para aprobar o rechazar.
 **Motivo:** el usuario prefirió dejarlo como está. Con la idea, el commit, la subida y la prueba saldrían antes de saber si funciona, casi la mitad de las veces con algo roto, por un ahorro de 2–5 % de los pasos.
 **Consecuencias:** T-91 `descartado`; T-92 `nueva`.
+
+## D-164 — El detalle del uso es solo el uso
+- **Fecha:** 2026-11-21
+- **Ámbito:** frentes Arranque y Diseño
+- **Hito o paso:** 10, R-99 y R-100
+- **Estado:** vigente (cambia AR-2 y AR-3 de `modulos/arranque/ux.md`)
+
+**Contexto:** el detalle del uso (abajo a la derecha) mostraba, además de las dos ventanas y el ritmo, el último arranque con sus anteriores de la semana y la nota «Lo usan todas las sesiones juntas. Leído recién.». El usuario los marcó con F8: «esto está demás» y «slop».
+**Decisión:** el detalle muestra la ventana de 5 horas, la semana y el ritmo. Lo que hizo el arranque queda en el aviso al volver (con «y N más», que ahora despliega los demás en el mismo aviso), en la pestaña y en la línea de la conversación.
+**Motivo:** el pedido del usuario; el arranque ya se ve en tres lugares.
+**Consecuencias:** fuera la línea del arranque y la nota; los criterios de AR-2 y AR-3 sobre el detalle del uso quedan sacados.
+
+## D-165 — El frente Paridad: el chat de Iridium como el de Claude, sin atarlo a Claude
+- **Fecha:** 2026-11-21
+- **Ámbito:** general (frente Paridad y la frontera del motor)
+- **Hito o paso:** 10, a pedido del usuario (T-96)
+- **Estado:** vigente
+
+**Contexto:** el usuario pidió un frente para que el chat de Iridium tenga lo que tiene el de Claude: comandos con «/», adjuntar archivos y fotos, pegar fotos y que un texto largo pegado vaya como archivo (T-96, con la captura del + de Claude). Pidió además no integrarlo tan a fondo: más adelante podrían entrar Codex u otros agentes, sin programarlo ahora.
+**Decisión:** se abre el frente **Paridad** (sección, prefijo `PA`), `pendiente` en el paso 1 (propuesta). Lo que el chat ofrece se escribe en palabras de Iridium y pasa por la frontera del motor (D-007, D-025): el compositor arma «texto + adjuntos» y le pregunta al motor qué sabe hacer (qué comandos tiene, si acepta imágenes); la frontera lo traduce a Claude. Un motor que no tenga algo, no lo muestra.
+**Motivo:** es lo que más se usa todos los días y lo que más se nota que falta. Escribirlo contra la frontera deja la puerta abierta a otros agentes sin programarlos ahora.
+**Consecuencias:** `modulos/paridad/`; T-96 `pendiente` en este frente. Cuándo empieza y qué entra, en Q-237 a Q-239.

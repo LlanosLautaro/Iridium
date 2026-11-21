@@ -51,8 +51,8 @@ arranque: { prendido: false, hora: "03:00" }
 
 **La ventana:**
 - Ajustes › IA (`marco/ajustes/`): el interruptor y la hora (`type="time"`), con la maqueta `diseno/pantallas/ajustes.html`.
-- El detalle del uso (`marco/Uso.tsx`): la línea «Último arranque: …» o por qué no arrancó, con Abrir, y los de la semana al tocarla.
-- El aviso al volver (`marco/Avisos.tsx`): la variante que no se va sola, con un renglón por arranque (Abrir en cada uno, la cuenta en ámbar si dejó una pregunta que frena) y Listo; con más de cuatro, «y N más», que abre el detalle del uso. Es un estado de la pieza Aviso: se suma a su ficha en `piezas.css` (por eso el paso 6, UI, se descarta).
+- ~~El detalle del uso (`marco/Uso.tsx`): la línea «Último arranque: …»~~ Sacado por R-99 (D-164).
+- El aviso al volver (`marco/Avisos.tsx`): la variante que no se va sola, con un renglón por arranque (Abrir en cada uno, la cuenta en ámbar si dejó una pregunta que frena) y Listo; con más de cuatro, «y N más», que despliega los demás en el mismo aviso (D-164). Es un estado de la pieza Aviso: se suma a su ficha en `piezas.css` (por eso el paso 6, UI, se descarta).
 - La conversación (`secciones/proyecto/Conversacion.tsx`): la línea de debajo del título con «la empezó Iridium a las 3:02 para abrir el período».
 
 ## Probar sin esperar a las 3

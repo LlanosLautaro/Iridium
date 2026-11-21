@@ -34,9 +34,3 @@ export function porQueNo(r: RenglonArranqueVista): string {
 export function horaCorta(ms: number): string {
   return new Date(ms).toDateString() === new Date().toDateString() ? hora(ms) : cuandoFue(ms)
 }
-
-/** «Hoy a las 03:00 no había respuestas tuyas esperando», para el detalle del uso. */
-export function cuandoYPorQue(r: RenglonArranqueVista): string {
-  const c = cuandoFue(r.cuando)
-  return `${c[0]?.toUpperCase()}${c.slice(1)} ${porQueNo(r)}`
-}

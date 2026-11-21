@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I8, las piezas de cada versión, probada en Q-225) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 17 probadas; la 18, los menús, espera Q-236; vuelve por D-162) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 18 probadas; vuelve por D-162) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
@@ -40,25 +40,31 @@
 | Arranque (`modulos/arranque/estado.md`) | sección | 8. Calidad (AR-I1 y AR-I2 probadas en Q-227; el paso 8 va al cerrar DI-I3, D-162) | en pausa |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Diseño y Orden, D-151; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, al cerrar DI-I3, D-162) | en pausa |
+| Paridad (`modulos/paridad/estado.md`) | sección | 1. Propuesta (el chat como el de Claude, D-165; espera Q-237 a Q-239) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasaron a las piezas, tanda por tanda; la grilla de Proyectos quedó probada (Q-235). **Los menús de la barra y del uso** (el uso, las conversaciones anteriores, el modelo, el esfuerzo, «En esta página») ya son el Menú de la maqueta y esperan Q-236; con ellos no queda nada del estilo de antes. Falta lo que no son piezas (T-58, T-90, T-53) y cerrar DI-I3.
+**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasaron a las piezas, tanda por tanda; los menús de la barra y del uso quedaron probados (Q-236) y no queda nada del estilo de antes; el detalle del uso, sin el arranque ni la nota (R-99, R-100, D-164). Falta lo que no son piezas (T-58, T-90, T-53) y cerrar DI-I3.
+**Frente nuevo: Paridad** (D-165, T-96): el chat con «/», adjuntos, fotos pegadas y el texto largo como archivo, escrito contra la frontera del motor para que más adelante entre otro agente. Cuándo y qué entra, Q-237 a Q-239.
 **Arranque** (D-135) anduvo la segunda noche (Q-227); su paso 8 va al cerrar DI-I3, junto con el de **Abrir** (T-87, D-160). Después de Diseño, Orden mide la calidad y sigue Plantillas (D-151, D-150).
 Ideas sin evaluar: T-76, T-78, T-89, T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito) y T-95 (plugins por proyecto). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-236 — Probá los menús de la barra y del uso**
-  Tipo: prueba · Frente: Diseño
-  Contexto: la tanda 18 (`modulos/diseno/estado.md` › DI-I3, tanda 18). Antes, Actualizar. Los menús quedan sin borde, con sombra y el título en gris, como el del clic derecho.
-  - [ ] Tocando el uso (abajo a la derecha) se abre el detalle hacia arriba, con sus barras de color y el último arranque
-  - [ ] El reloj de la conversación abre las anteriores: cada una con su título, de dónde es y la fecha a la derecha; la abierta, resaltada
-  - [ ] El modelo y el esfuerzo (abajo del compositor) abren la lista con la descripción en gris y el elegido resaltado; elegir otro lo cambia
-  - [ ] El contexto (el círculo) abre su detalle y en Docs «En esta página» lleva a una sección
-  - [ ] Las flechas recorren cada menú y Esc lo cierra
+- **Q-237 — ¿Cuándo empieza el frente Paridad (el chat como el de Claude)?**
+  Tipo: decisión · Frente: Paridad
+  Contexto: `modulos/paridad/propuesta.md`. Diseño está por cerrar DI-I3; después venían el paso 8 de Orden, el de Abrir y Plantillas (D-151, D-162).
+  Opciones: A) Al cerrar DI-I3, antes que Orden, Abrir y Plantillas (recomendada: es lo que más usás todos los días y el compositor ya quedó con las piezas) · B) Ahora, con Diseño en pausa · C) Después de Orden y Plantillas, en la fila
+- **Q-238 — ¿Qué entra del chat de Claude, además de lo que pediste?**
+  Tipo: decisión · Frente: Paridad
+  Contexto: pediste comandos con «/», adjuntar con el +, pegar fotos y el texto largo como archivo (`modulos/paridad/propuesta.md` › Qué problema resuelve). Claude tiene además mencionar un archivo con «@» (VS Code) y dictar con el micrófono.
+  Opciones: A) Solo esos cuatro; lo demás, como ideas (recomendada: el frente queda chico y sale antes) · B) Los cuatro y mencionar archivos con «@» · C) Los cuatro, «@» y dictar con el micrófono
+- **Q-239 — Capacidades (plugins, usar la PC, el navegador): ¿junto con Paridad o aparte?**
+  Tipo: decisión · Frente: Paridad
+  Contexto: Capacidades (T-28) es otro frente en espera desde D-102: lo que pueden hacer las sesiones, no el chat.
+  Opciones: A) Aparte, como está (recomendada: Paridad queda chica y se prueba por partes) · B) Dentro de Paridad, como su segunda parte
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño, DI-I3: lo que queda además de las piezas (T-58, T-90, T-53) y cerrar la iteración (procesar Q-236 si llegó).
+Diseño, DI-I3: lo que queda además de las piezas (T-58, T-90, T-53) y cerrar la iteración; si llegaron Q-237 a Q-239, procesarlas y ubicar Paridad en la fila.
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

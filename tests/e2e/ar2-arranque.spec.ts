@@ -67,7 +67,7 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
 })
 
-test('al volver, el aviso con lo que hizo mientras no estabas; el detalle del uso con la semana; Listo no lo repite (AR-3, AR-4)', async () => {
+test('al volver, el aviso con lo que hizo mientras no estabas; «y N más» despliega el resto; Listo no lo repite (AR-3, AR-4)', async () => {
   await proyecto('Alfa')
   const alfa = join(raiz, 'Alfa')
   const ahora = Date.now()
@@ -140,15 +140,12 @@ test('al volver, el aviso con lo que hizo mientras no estabas; el detalle del us
   await expect(aviso).toBeVisible()
   await win.screenshot({ path: 'test-results/ar2-aviso.png' })
 
-  // «y 1 más» abre el detalle del uso: lo último y los anteriores de la semana.
+  // «y 1 más» despliega el que faltaba en el mismo aviso (R-99: el detalle del uso ya no tiene el arranque).
+  await expect(aviso.locator('.renglones-arranque li')).toHaveCount(4)
   await aviso.getByRole('button', { name: 'y 1 más' }).click()
-  const detalle = win.locator('.detalle-uso')
-  await expect(detalle).toContainText(/Último arranque: Alfa, (hoy|ayer) a las/) // una hora antes: después de medianoche es «ayer»
-  await detalle.getByRole('button', { name: 'Los 6 anteriores de la semana' }).click()
-  await expect(detalle).toContainText('no había respuestas tuyas esperando')
-  await expect(detalle).toContainText('el período ya estaba abierto')
-  await win.screenshot({ path: 'test-results/ar2-detalle-uso.png' })
-  await win.keyboard.press('Escape')
+  await expect(aviso.locator('.renglones-arranque li')).toHaveCount(5)
+  await expect(aviso.getByRole('button', { name: 'y 1 más' })).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/ar2-aviso-todas.png' })
 
   // Abrir lleva al proyecto.
   await aviso.getByRole('button', { name: 'Abrir' }).click()
@@ -170,7 +167,7 @@ test('al volver, el aviso con lo que hizo mientras no estabas; el detalle del us
   await otra.app.close()
 })
 
-test('con el usuario delante no hay aviso: la conversación dice que la empezó Iridium y el uso, el último arranque (AR-2)', async () => {
+test('con el usuario delante no hay aviso y la conversación dice que la empezó Iridium (AR-2)', async () => {
   await proyecto('Alfa')
   await writeFile(
     join(datos, 'config.json'),
@@ -188,8 +185,10 @@ test('con el usuario delante no hay aviso: la conversación dice que la empezó 
   await expect(win.getByRole('status', { name: 'Lo que hizo Iridium mientras no estabas' })).toHaveCount(0)
   await win.screenshot({ path: 'test-results/ar2-conversacion.png' })
 
+  // R-99, R-100: el detalle del uso es solo el uso, sin el arranque ni la nota de abajo.
   await win.locator('.con-menu.uso > button').click()
-  await expect(win.locator('.detalle-uso')).toContainText('Último arranque: Alfa, hoy a las')
-  await expect(win.locator('.detalle-uso')).toContainText('terminó')
+  await expect(win.locator('.detalle-uso')).toContainText('Ventana de 5 horas')
+  await expect(win.locator('.detalle-uso')).not.toContainText('arranque')
+  await expect(win.locator('.detalle-uso')).not.toContainText('Lo usan todas las sesiones')
   await app.close()
 })

@@ -98,41 +98,6 @@
 .ritmo[data-alcanza="no"] {
   --icono-ritmo: var(--espera);
 }
-/* AR-2, AR-3: el arranque del período, debajo de la ventana de 5 horas */
-.arranque-uso {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 2px 8px;
-  padding: 0 8px 8px;
-  font-size: var(--tam-chico);
-  color: var(--texto-2);
-}
-.arranque-uso .que.sola {
-  grid-column: 1 / -1;
-}
-.arranque-uso .semana-arranque {
-  grid-column: 1 / -1;
-  justify-self: start;
-}
-.arranque-uso ul {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 2px 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.arranque-uso li {
-  display: contents;
-}
-.detalle-uso > .nota {
-  padding: 4px 8px 0;
-  font-size: 12px;
-}
-
 /* Q-77: el contexto es un círculo que se llena en el sentido del reloj, con los tokens y lo que le queda a la caché */
 .medidor-ctx {
   display: inline-flex;

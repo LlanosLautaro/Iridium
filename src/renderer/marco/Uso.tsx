@@ -1,13 +1,11 @@
 // El uso de la suscripción en la barra de estado (H-12, D-045): la ventana de 5 horas y la semana con medidores finos
 // (D-032). Tocándolos se despliega el detalle (R-1): cuándo se libera cada una y si el ritmo alcanza hasta el reinicio.
-import { type CSSProperties, useState } from 'react'
-import { fechaRelativa } from '../../compartido/fechas'
-import type { RenglonArranqueVista, RitmoSemana, UsoSuscripcion, VentanaUso } from '../../compartido/puente'
+import type { CSSProperties } from 'react'
+import type { RitmoSemana, UsoSuscripcion, VentanaUso } from '../../compartido/puente'
 import { usarEstado } from '../estado'
 import { Icono } from '../ui/Icono'
 import { Menu } from '../ui/Menu'
-import { cuandoFue, cuandoSera, duracionDias, pc } from '../ui/tiempo'
-import { cuandoYPorQue, queDejo } from './arranque'
+import { cuandoSera, duracionDias, pc } from '../ui/tiempo'
 
 /** Desde acá el medidor se marca en naranja, y desde USO_CRITICO en rojo (Q-77). */
 export const USO_ALTO = 75
@@ -90,89 +88,11 @@ function Ritmo({ r, semana }: { r: RitmoSemana; semana: VentanaUso }) {
   )
 }
 
-/** Un momento del arranque en el detalle: «Último arranque: Alfa, hoy a las 03:02 · terminó» con Abrir, o por qué no. */
-function MomentoArranque({
-  r,
-  ultimo,
-  cerrar,
-}: {
-  r: RenglonArranqueVista
-  ultimo: boolean
-  cerrar: () => void
-}) {
-  const abrirProyecto = usarEstado((s) => s.abrirProyecto)
-  if (!r.proyecto) return <span className="que sola">{cuandoYPorQue(r)}</span>
-  const p = r.proyecto
-  return (
-    <>
-      <span className="que">
-        {ultimo ? 'Último arranque: ' : ''}
-        {p.nombre}, {cuandoFue(r.cuando)} ·{' '}
-        <span className={p.frenan > 0 ? 'cuenta frena' : undefined}>{queDejo(p)}</span>
-      </span>
-      <button
-        type="button"
-        className="boton sin-fondo chico"
-        onClick={() => {
-          cerrar()
-          abrirProyecto(p.ruta)
-        }}
-      >
-        Abrir
-      </button>
-    </>
-  )
-}
-
-/**
- * Debajo de la ventana de 5 horas, con el arranque prendido (AR-2, AR-3): lo último que pasó o, sin nada todavía, el
- * próximo. Tocándola se despliegan los de la semana, el más nuevo arriba.
- */
-function ArranqueEnElUso({ cerrar }: { cerrar: () => void }) {
-  const a = usarEstado((s) => s.arranque)
-  const [semana, setSemana] = useState(false)
-  if (!a?.prendido) return null
-  const [ultimo, ...antes] = a.semana
-  if (!ultimo)
-    return (
-      <div className="arranque-uso">
-        <span className="que sola">
-          Arranque prendido: el próximo, {a.proximo !== null ? cuandoSera(a.proximo) : 'sin fecha todavía'}.
-        </span>
-      </div>
-    )
-  return (
-    <div className="arranque-uso">
-      <MomentoArranque r={ultimo} ultimo cerrar={cerrar} />
-      {antes.length > 0 && (
-        <button
-          type="button"
-          className="boton sin-fondo chico semana-arranque"
-          aria-expanded={semana}
-          onClick={() => setSemana(!semana)}
-        >
-          {semana ? 'Ocultar los anteriores' : `Los ${antes.length} anteriores de la semana`}
-        </button>
-      )}
-      {semana && (
-        <ul>
-          {antes.map((r) => (
-            <li key={r.cuando}>
-              <MomentoArranque r={r} ultimo={false} cerrar={cerrar} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  )
-}
-
-function Detalle({ uso, cerrar }: { uso: UsoSuscripcion; cerrar: () => void }) {
+function Detalle({ uso }: { uso: UsoSuscripcion }) {
   return (
     <div className="detalle-uso">
       <h4 className="titulo-menu">Uso de la suscripción</h4>
       <Ventana titulo="Ventana de 5 horas" v={uso.cincoHoras} />
-      <ArranqueEnElUso cerrar={cerrar} />
       <Ventana titulo="Semana" v={uso.semana} />
       {uso.ritmo && uso.semana && (
         <>
@@ -180,7 +100,6 @@ function Detalle({ uso, cerrar }: { uso: UsoSuscripcion; cerrar: () => void }) {
           <Ritmo r={uso.ritmo} semana={uso.semana} />
         </>
       )}
-      <p className="nota">Lo usan todas las sesiones juntas. Leído {fechaRelativa(uso.leido, Date.now())}.</p>
     </div>
   )
 }
@@ -210,7 +129,7 @@ export function UsoEnLaBarra() {
         </>
       }
     >
-      {(cerrar) => <Detalle uso={uso} cerrar={cerrar} />}
+      {() => <Detalle uso={uso} />}
     </Menu>
   )
 }

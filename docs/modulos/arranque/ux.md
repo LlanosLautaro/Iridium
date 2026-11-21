@@ -20,11 +20,11 @@ Como usuario quiero que Iridium abra el período de Claude mientras no estoy, pa
 Como usuario quiero ver, al sentarme, qué proyecto se trabajó de noche y qué dejó.
 - [ ] El proyecto arrancado tiene su pestaña arriba, con ✓ (terminó sin ver) o con su cuenta de la Bandeja si dejó preguntas, como cualquier sesión.
 - [ ] Al abrirla, debajo del título de la conversación (donde dice cuándo fue y si se empezó en VS Code, D-108): «Hoy · la empezó Iridium a las 3:02 para abrir el período». El primer mensaje es «Continúa con el proyecto.», como si lo hubiera tocado yo.
-- [ ] En el detalle del uso, debajo de la ventana de 5 horas: «Último arranque: Alfa, hoy a las 3:02 · Abrir».
+- [-] En el detalle del uso, debajo de la ventana de 5 horas: «Último arranque: Alfa, hoy a las 3:02 · Abrir». (Sacado por R-99, D-164: el detalle del uso es solo el uso.)
 
 ### AR-3 — Saber por qué no arrancó
 Como usuario quiero saber si no hizo nada y por qué, sin buscar.
-- [ ] En el detalle del uso, la misma línea dice lo último que pasó: «A las 3:00 no había respuestas tuyas esperando», «A las 3:00 el período ya estaba abierto», «A las 8:05 no arrancó: la semana pasó el 90 %».
+- [-] (Sacado por R-99, D-164.) En el detalle del uso, la misma línea dice lo último que pasó: «A las 3:00 no había respuestas tuyas esperando», «A las 3:00 el período ya estaba abierto», «A las 8:05 no arrancó: la semana pasó el 90 %».
 - [ ] Si arrancó y la sesión falló (sin red, sesión de Claude vencida), la pestaña queda con ✕ y su error, como cualquier sesión; no lo vuelve a intentar hasta el próximo momento.
 
 ### AR-4 — El aviso al volver
@@ -63,6 +63,8 @@ El usuario vuelve a la PC   →  el aviso con lo que hizo desde la última vez (
 - Se guarda solo, como los demás ajustes. Error al guardar: el aviso de siempre de la ventana (`apariencia/ux.md` › Flujos).
 
 ### El detalle del uso, con el arranque
+> Sacado el 2026-11-21 (R-99, D-164): el detalle del uso es solo el uso. Lo que hizo el arranque se ve en el aviso al volver, en la pestaña y en la conversación.
+
 ```
 ┌ Uso de la suscripción ─────────────────────┐
 │ 5 h   34 %   Se libera hoy a las 8:02.     │

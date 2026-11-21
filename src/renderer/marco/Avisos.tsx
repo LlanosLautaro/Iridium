@@ -118,9 +118,10 @@ function FilaArranque({ r }: { r: RenglonArranqueVista }) {
  */
 function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
   const [cerrado, setCerrado] = useState<number | null>(null)
+  const [todas, setTodas] = useState(false)
   const ultimo = filas.at(-1)
   if (!ultimo || (cerrado !== null && cerrado >= ultimo.cuando)) return null
-  const mostradas = filas.slice(-FILAS_ARRANQUE)
+  const mostradas = todas ? filas : filas.slice(-FILAS_ARRANQUE)
   const resto = filas.length - mostradas.length
   // Rojo si una conversación falló; ámbar si dejó preguntas o algo no arrancó.
   const falla = filas.some((r) => r.proyecto?.estado === 'error')
@@ -140,12 +141,12 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
         ))}
       </ul>
       <div className="pie">
-        {resto > 0 && (
+        {resto > 0 && !todas && (
           <button
             type="button"
             className="boton sin-fondo chico"
-            // El detalle del uso tiene los de la semana: se abre como si se tocara el uso de la barra.
-            onClick={() => document.querySelector<HTMLButtonElement>('.con-menu.uso > button')?.click()}
+            // R-99: los demás se despliegan en el mismo aviso (el detalle del uso ya no los tiene).
+            onClick={() => setTodas(true)}
           >
             y {resto} más
           </button>
