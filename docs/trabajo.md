@@ -428,3 +428,7 @@ Repetida: el dictado ya estaba como T-57 (de Capacidades, que ahora es Paridad, 
 ## T-99 — La extensión de la Revisión, al negro
 Estado: nueva · Frente: Diseño · Idea: IA · Fecha: 2026-11-21 · Origen: cierre de DI-I3
 Lo que la extensión dibuja sobre otra app (el aviso del modo comentar, el resaltado, la tarjeta del comentario) sigue con el aspecto de antes: Chakra Petch, JetBrains Mono y el verde con tinte (`extension/src/selector/estilos.ts`, con las fuentes en `extension/fuentes/`). Pasarlo a los tokens del negro y a la letra del sistema, con el paso 8 de Diseño.
+
+## T-100 — Ronda de UX al cerrar Arranque
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-21 · Origen: D-096 (Arranque pasó a `hecho`)
+Toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los principios de `06-ui.md`, como dice `referencias/ronda-ux.md`. DI-I3 acaba de pasar cada pantalla al negro, así que la ronda mira sobre todo lo que no es aspecto: un solo lugar para cada cosa, los mismos nombres, avisos que se pisan (el de Arranque, el de Ejecutar y los de las conversaciones comparten la esquina). Va antes de construir Paridad (su definición y el spike pueden ir antes). Se registra en `10-operacion.md` › Rondas de UX.

@@ -167,6 +167,115 @@ test('al volver, el aviso con lo que hizo mientras no estabas; «y N más» desp
   await otra.app.close()
 })
 
+test('el aviso al volver se usa con el teclado, cada botón dice qué hace y el texto se lee (paso 8)', async () => {
+  await proyecto('Alfa')
+  await proyecto('Beta')
+  const ahora = Date.now()
+  const arranco = (nombre: string, horas: number) => ({
+    cuando: ahora - horas * HORA,
+    momento: 'hora',
+    resultado: 'arranco',
+    proyecto: { ruta: join(raiz, nombre), nombre, preguntas: ['Q-1'] },
+    sinUsarIridium: 6 * 3600,
+  })
+  await writeFile(
+    join(datos, 'config.json'),
+    JSON.stringify({ version: 1, raiz, arranque: { prendido: true, hora: '03:00' } }),
+  )
+  // Alfa terminó y dejó una pregunta; Beta no llegó a empezar (sin conversación guardada: falló, en rojo); uno no
+  // arrancó por la semana (en ámbar).
+  await writeFile(
+    join(datos, 'arranques.json'),
+    JSON.stringify({
+      version: 1,
+      vistoHasta: null,
+      programado: null,
+      momentos: [
+        { cuando: ahora - 3 * HORA, momento: 'vencimiento', resultado: 'semana', sinUsarIridium: 6 * 3600 },
+        arranco('Beta', 2),
+        arranco('Alfa', 1),
+      ],
+    }),
+  )
+  await writeFile(
+    join(datos, 'sesiones.json'),
+    JSON.stringify({
+      version: 1,
+      conversaciones: {
+        'conv-alfa': {
+          ruta: join(raiz, 'Alfa'),
+          empezadaEn: 'iridium',
+          ultimoUso: ahora - HORA + 60_000,
+          detenida: false,
+          ultimoEstado: 'terminada',
+          preguntas: ['Q-1'],
+          arranque: ahora - HORA,
+        },
+      },
+    }),
+  )
+  const { win } = await abrir()
+  const aviso = win.getByRole('status', { name: 'Lo que hizo Iridium mientras no estabas' })
+  await expect(aviso).toBeVisible()
+  await expect(aviso.locator('.fallo')).toHaveCount(1)
+  // Se mide con la entrada del aviso terminada.
+  await aviso.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)))
+
+  // Cada Abrir dice de qué proyecto es.
+  await expect(aviso.getByRole('button', { name: 'Abrir Alfa' })).toBeVisible()
+  await expect(aviso.getByRole('button', { name: 'Abrir Beta' })).toBeVisible()
+
+  // Con Tab se llega a sus tres botones, con el foco a la vista.
+  const visitados: string[] = []
+  for (let i = 0; i < 80 && visitados.length < 3; i++) {
+    await win.keyboard.press('Tab')
+    const foco = await win.evaluate(() => {
+      const el = document.activeElement as HTMLElement | null
+      if (!el?.closest('.aviso-flotante.fijo')) return null
+      const e = getComputedStyle(el)
+      const visible =
+        (e.outlineStyle !== 'none' && Number.parseFloat(e.outlineWidth) > 0) || e.boxShadow !== 'none'
+      return { nombre: el.getAttribute('aria-label') ?? el.textContent?.trim() ?? '', visible }
+    })
+    if (!foco || visitados.includes(foco.nombre)) continue
+    expect(foco.visible, `foco visible en ${foco.nombre}`).toBe(true)
+    visitados.push(foco.nombre)
+  }
+  expect(visitados).toEqual(['Abrir Beta', 'Abrir Alfa', 'Listo'])
+
+  // El contraste de cada texto contra el fondo del aviso (WCAG AA, 4,5:1).
+  const bajos = await aviso.evaluate((raizAviso) => {
+    const rgb = (c: string) => (c.match(/[\d.]+/g) ?? []).map(Number)
+    const lum = ([r, g, b]: number[]) => {
+      const f = (v: number) => {
+        const s = v / 255
+        return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
+      }
+      return 0.2126 * f(r ?? 0) + 0.7152 * f(g ?? 0) + 0.0722 * f(b ?? 0)
+    }
+    const fondo = (el: Element | null): number[] => {
+      for (let e = el; e; e = e.parentElement) {
+        const c = rgb(getComputedStyle(e).backgroundColor)
+        if ((c[3] ?? 1) > 0.95) return c
+      }
+      return [0, 0, 0]
+    }
+    const res: string[] = []
+    for (const el of raizAviso.querySelectorAll<HTMLElement>('*')) {
+      const propio = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent?.trim())
+      if (!propio) continue
+      const a = lum(rgb(getComputedStyle(el).color))
+      const b = lum(fondo(el))
+      const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
+      if (ratio < 4.5) res.push(`${el.textContent?.trim()}: ${ratio.toFixed(2)}`)
+    }
+    return res
+  })
+  expect(bajos).toEqual([])
+  await aviso.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)))
+  await win.screenshot({ path: 'test-results/ar-calidad-aviso.png' })
+})
+
 test('con el usuario delante no hay aviso y la conversación dice que la empezó Iridium (AR-2)', async () => {
   await proyecto('Alfa')
   await writeFile(

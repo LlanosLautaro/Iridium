@@ -36,23 +36,23 @@
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va después de Paridad, D-166) | en pausa |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
-| Arranque (`modulos/arranque/estado.md`) | sección | 8. Calidad (AR-I1 y AR-I2 probadas en Q-227; el paso 8 va al cerrar DI-I3, D-162) | en pausa |
+| Arranque (`modulos/arranque/estado.md`) | sección | en operación (con el hito 10; probada en Q-227, calidad el 2026-11-21) | hecho |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Paridad, Orden y Abrir, D-166; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, después de Paridad y Orden, D-166) | en pausa |
-| Paridad (`modulos/paridad/estado.md`) | sección | 2. Definición (empieza al cerrar DI-I3; Capacidades, T-28, es su segunda parte, D-166) | pendiente |
+| Paridad (`modulos/paridad/estado.md`) | sección | 2. Definición (empieza ahora, cerrados DI-I3 y Arranque; Capacidades, T-28, es su segunda parte, D-166) | en curso |
 
 ## En qué estamos ahora
 **Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
-**Ahora: el paso 8 de Arranque** (D-162, al cerrar DI-I3), y después **Paridad** (D-165, D-166): el chat con «/», adjuntos, fotos pegadas y el texto largo como archivo, contra la frontera del motor; su segunda parte es Capacidades (T-28).
-Arranque (D-135) anduvo la segunda noche (Q-227). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
+**Arranque, completo** (2026-11-21): el paso 8 sumó cinco casos raros con prueba (sin período, sin reintentar en bucle, la PC dormida) y arregló el nombre de los Abrir del aviso para el lector de pantalla. Toca la ronda de UX (D-096, T-100), antes de construir Paridad.
+**Ahora: Paridad** (D-165, D-166): el chat con «/», adjuntos, fotos pegadas y el texto largo como archivo, contra la frontera del motor; su segunda parte es Capacidades (T-28). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
 (ninguna)
 
 ## Próximo paso
-El paso 8 (calidad) de Arranque: las pruebas del frente en la corrida entera, los casos raros del uso (sin período, la PC suspendida) y la accesibilidad del aviso. Después, Paridad (D-166).
-**Leer antes:** `modulos/arranque/estado.md` › Próximo paso y lo que pide.
+Paridad, paso 2: la definición (`modulos/paridad/definicion.md`) con lo que entra, y el spike de lo que deja hacer el motor (comandos, fotos, archivos). La ronda de UX (T-100) va antes de construir.
+**Leer antes:** `modulos/paridad/estado.md`, su `propuesta.md` y `05-arquitectura.md` › La interfaz `Motor`.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

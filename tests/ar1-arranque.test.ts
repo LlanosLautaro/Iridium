@@ -320,6 +320,74 @@ describe('el arranque', () => {
   })
 })
 
+describe('los casos raros (paso 8)', () => {
+  it('sin período: el uso sin ventana de 5 horas o con un vencimiento pasado arranca a la hora', async () => {
+    const sinVentana: UsoSuscripcion = { ...uso(null), cincoHoras: null }
+    expect(bloqueo(sinVentana, NOCHE)).toBeNull()
+    expect(proximoMomento(PRENDIDO, sinVentana, NOCHE)).toEqual({ cuando: A_LAS_3, momento: 'hora' })
+    const { a, arrancados } = armar({ usoActual: () => sinVentana, leerUso: async () => sinVentana })
+    await a.iniciar()
+    await vi.advanceTimersByTimeAsync(A_LAS_3 - NOCHE)
+    expect(arrancados).toHaveLength(1)
+    a.cerrar()
+  })
+
+  it('si no pudo, no reintenta en bucle: el próximo es el del día siguiente', async () => {
+    let intentos = 0
+    const { a, arrancados, archivo } = armar({
+      sesionLista: async () => {
+        intentos++
+        return false
+      },
+    })
+    await a.iniciar()
+    await vi.advanceTimersByTimeAsync(A_LAS_3 - NOCHE)
+    await vi.waitFor(() => expect(a.proximo()?.cuando).toBe(A_LAS_3 + DIA))
+    await vi.advanceTimersByTimeAsync(6 * HORA)
+    expect(intentos).toBe(1)
+    expect(arrancados).toEqual([])
+    expect((await archivo.leer()).momentos.map((m) => m.resultado)).toEqual(['sin-sesion'])
+    a.cerrar()
+  })
+
+  it('dormida a la hora y al vencimiento: al despertar, uno solo', async () => {
+    const { a, arrancados, ponerUso } = armar()
+    ponerUso(uso(NOCHE + HORA))
+    await a.iniciar()
+    expect(a.proximo()?.momento).toBe('vencimiento')
+    a.alSuspender()
+    vi.setSystemTime(A_LAS_3 + 2 * HORA)
+    ponerUso(uso(null))
+    await Promise.all([a.alDespertar(), a.alDespertar()])
+    expect(arrancados).toHaveLength(1)
+    // El siguiente, al vencer el período que abrió; ni la hora ni el vencimiento perdidos se repiten.
+    await vi.waitFor(() => expect(a.proximo()?.cuando).toBe(A_LAS_3 + 7 * HORA + DESPUES_DEL_VENCIMIENTO_MS))
+    a.cerrar()
+  })
+
+  it('al despertar con un período abierto (lo abrió el usuario en otro lado) no arranca', async () => {
+    const { a, arrancados, archivo, ponerUso } = armar()
+    await a.iniciar()
+    a.alSuspender()
+    vi.setSystemTime(A_LAS_3 + HORA)
+    ponerUso(uso(A_LAS_3 + 3 * HORA))
+    await a.alDespertar()
+    expect(arrancados).toEqual([])
+    expect((await archivo.leer()).momentos.at(-1)?.resultado).toBe('periodo-abierto')
+    a.cerrar()
+  })
+
+  it('una suspensión que Windows no avisó se nota en a lo sumo 15 minutos', async () => {
+    const { a, arrancados } = armar()
+    await a.iniciar()
+    // El reloj salta sin que corra ningún temporizador (y sin alSuspender ni alDespertar).
+    vi.setSystemTime(A_LAS_3 + HORA)
+    await vi.advanceTimersByTimeAsync(15 * MIN)
+    expect(arrancados).toHaveLength(1)
+    a.cerrar()
+  })
+})
+
 describe('arranques.json', () => {
   it('roto o sin archivo, vacío; guarda solo los últimos 7 días', async () => {
     const ruta = join(datos, 'arranques.json')

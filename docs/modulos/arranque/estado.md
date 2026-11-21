@@ -14,11 +14,11 @@
 | 5. Diseño técnico | hecho (D-149) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (sin piezas nuevas: el aviso fijo es un estado de la pieza Aviso, D-149) | — |
 | 7. Construcción | hecho (AR-I1 y AR-I2; la primera noche no arrancó, arreglado; la segunda, probada en Q-227) | este archivo |
-| 8. Calidad | pendiente (al cerrar DI-I3, como Abrir, D-162) | este archivo |
-| 9. Lanzamiento | pendiente | este archivo |
+| 8. Calidad | hecho (2026-11-21: los casos raros del uso con prueba y el aviso con el teclado y el lector de pantalla; ver Calidad) | este archivo |
+| 9. Lanzamiento | hecho (entra con Armar, como cada versión) | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso al volver, el detalle del uso y la línea de la conversación). La primera noche (Q-210, 2026-11-20) no arrancó: a las 03:00 el período seguía abierto y, al vencer, el momento de 5 minutos después se perdía. Arreglado ese día; la segunda noche anduvo (Q-227, 2026-11-21). El paso 8 va al cerrar DI-I3, como el de Abrir (D-162).
+Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso al volver, el detalle del uso y la línea de la conversación). La primera noche (Q-210, 2026-11-20) no arrancó: a las 03:00 el período seguía abierto y, al vencer, el momento de 5 minutos después se perdía. Arreglado ese día; la segunda noche anduvo (Q-227, 2026-11-21). **Frente completo (2026-11-21):** la calidad está en la sección Calidad.
 
 ## Ruta
 - [x] Decidir cómo se arranca el período (con trabajo real, desde Iridium)
@@ -29,7 +29,7 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - [x] Contar qué arrancó o por qué no pudo: el aviso al volver, la pestaña y el detalle del uso (AR-I2)
 - [x] Arrancar también al vencer el período que estaba abierto a la hora elegida (Q-210)
 - [x] Probarlo una noche con Iridium abierta (Q-227)
-- [ ] Medir su calidad (paso 8)
+- [x] Medir su calidad (paso 8)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -68,6 +68,16 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - **Q-227:** todo bien: el aviso «Mientras no estabas», Abrir y Listo, la línea de la conversación, «Último arranque» en el uso y el aviso que no vuelve.
 - **El registro** (`arranques.json`) lo confirma: a la hora elegida el período estaba abierto y arrancó 5 minutos después del vencimiento, con el proyecto que esperaba. El paso 7 queda hecho.
 
+## Calidad (paso 8, 2026-11-21)
+**Historias.** Cada criterio de la definición tiene su prueba: los dos momentos, el que espera hace más, Nueva con «Continúa con el proyecto.», el tope de la semana, la PC dormida, lo que cuenta (el aviso al volver, el detalle del uso y la línea de la conversación) y apagado sin nada programado. Lo que solo se ve con el uso real (qué informa el uso sin un período abierto y que arranque de verdad de noche) lo probó el usuario en Q-210 y Q-227.
+
+**Casos raros.** `tests/ar1-arranque.test.ts` › los casos raros (paso 8) suma cinco: sin período (el uso sin ventana de 5 horas o con un vencimiento pasado) arranca a la hora; si no pudo, no reintenta en bucle (un solo intento y el próximo es el del día siguiente); dormida a la hora y al vencimiento, al despertar uno solo, aunque el aviso de despertar llegue dos veces; al despertar con un período que abrió el usuario en otro lado, no arranca; y una suspensión que Windows no avisó se nota en 15 minutos como mucho. Todos pasaron sin cambiar el motor.
+
+**Accesibilidad y UI.** El aviso «Mientras no estabas» es una región de estado con nombre (el lector lo anuncia sin interrumpir) y no se va solo. **Encontrado y arreglado:** sus botones Abrir se llamaban todos igual para el lector de pantalla; ahora dicen de qué proyecto son («Abrir Alfa»). Con Tab se llega a Abrir de cada renglón y a Listo, con el foco a la vista; todo su texto pasa el contraste AA, también el rojo de «falló» y el ámbar. Cosmético, arreglado: en un renglón que no arrancó la hora no usaba la letra de las demás. Lo comprueba `tests/e2e/ar2-arranque.spec.ts` › el aviso al volver se usa con el teclado (captura `test-results/ar-calidad-aviso.png`).
+
+**Seguridad (P2).** Nada nuevo sale de la PC: usa la cuenta y el motor de siempre; desde la ventana solo llega una hora válida (`HH:MM`) y `arranques.json` roto se lee vacío.
+
+**Verificado:** `pnpm test` (915 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` entero (146 pasan).
+
 ## Próximo paso
-Paso 8 (calidad) al cerrar DI-I3, junto con el de Abrir (D-162): las pruebas del frente en la corrida entera, los casos raros del uso (sin período, la PC suspendida) y la accesibilidad del aviso.
-**Leer antes:** este archivo › Log de iteraciones; `docs/08-calidad.md` › lo que mide cada frente.
+Frente completo. Lo que salga del uso va a `trabajo.md` con `Frente: Arranque`.

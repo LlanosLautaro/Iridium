@@ -44,5 +44,5 @@ Frente abierto el 2026-11-21 a pedido del usuario (D-165, T-96): el chat de Irid
 (Todavía ninguna.)
 
 ## Próximo paso
-Al cerrar DI-I3 (D-166): la definición (`definicion.md`) con lo que entra y la investigación de lo que deja hacer el motor (un spike).
+Ahora (DI-I3 y Arranque, cerrados; D-166): la definición (`definicion.md`) con lo que entra y la investigación de lo que deja hacer el motor (un spike).
 **Leer antes:** `propuesta.md` y `05-arquitectura.md` › La interfaz `Motor`.

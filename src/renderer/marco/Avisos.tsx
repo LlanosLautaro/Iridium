@@ -94,7 +94,7 @@ function FilaArranque({ r }: { r: RenglonArranqueVista }) {
   if (!r.proyecto)
     return (
       <li className="sin-arrancar">
-        {horaCorta(r.cuando)} {porQueNo(r)}
+        <span className="cuando">{horaCorta(r.cuando)}</span> {porQueNo(r)}
       </li>
     )
   const p = r.proyecto
@@ -105,7 +105,13 @@ function FilaArranque({ r }: { r: RenglonArranqueVista }) {
       <span className={p.frenan > 0 ? 'cuenta frena' : p.estado === 'error' ? 'fallo' : undefined}>
         {queDejo(p)}
       </span>
-      <button type="button" className="boton sin-fondo chico" onClick={() => abrirProyecto(p.ruta)}>
+      <button
+        type="button"
+        className="boton sin-fondo chico"
+        // Un Abrir por renglón: el lector de pantalla dice cuál.
+        aria-label={`Abrir ${p.nombre}`}
+        onClick={() => abrirProyecto(p.ruta)}
+      >
         Abrir
       </button>
     </li>
