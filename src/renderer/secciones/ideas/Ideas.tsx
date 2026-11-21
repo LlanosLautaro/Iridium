@@ -28,6 +28,8 @@ export function Ideas() {
             inicio
             acciones={<AbrirComoProyecto abrir={() => abrirProyecto(rutaIdeas)} carpeta="Ideas" />}
           />
+        ) : !lista ? (
+          <Cabecera nivel={1} titulo="Ideas" />
         ) : (
           <>
             <Cabecera nivel={1} titulo="Ideas" />

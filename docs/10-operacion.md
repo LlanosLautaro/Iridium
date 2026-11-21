@@ -54,6 +54,15 @@ Problemas, de más a menos grave:
 
 Qué haría falta (Q-131; desde D-091, dentro del frente Orden): un solo formato (el de `ideas.md`: título con fecha, `Toca a`, `→`, y un estado: nueva · aceptada · hecha · descartada), un solo lugar por proyecto que no cambie con el hito, anotar sin la IA y ver las de todos juntas.
 
+## Rondas de UX
+Cada ronda revisa toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los principios de `06-ui.md` (D-096, `referencias/ronda-ux.md`).
+
+| Fecha | Qué la disparó | Hallazgos |
+|---|---|---|
+| 2026-11-21 | Arranque pasó a `hecho` (T-100) | T-101 a T-110. Arreglado en el momento: al arrancar, el chat general, Ideas y el chat de Skills decían que no se pudo crear su carpeta mientras se leía la carpeta de proyectos. |
+
+**Ronda 1 (2026-11-21).** 31 capturas a 1440×900 y 1024×700, con los proyectos reales y el motor falso. Lo que más se repite no es de aspecto, que DI-I3 acaba de dejar parejo, sino de **un lugar y un nombre para cada cosa**: el ancho de lectura en dos lugares (T-102), las carpetas de Docs con dos clases de nombre (T-105), textos con la palabra del framework (T-106) y `04-ux.md` atrasado frente a la app (T-107). Después, estados de carga y vacío que no siguen a los demás (T-103, T-108) y textos que se cortan o sobran (T-101, T-104). El rojo de «Rechazada» choca con la regla del color (T-109). Los cuatro comentarios anotados (R-64, R-90, R-92, R-93) no forman un patrón: son ajustes sueltos que ya tienen su `T-n`. No se pudo mirar si los avisos de la esquina se pisan (T-110). La crítica se hizo a mano contra los principios, sin correr `impeccable`.
+
 ## Trabajo
 Las ideas y los pendientes están en `trabajo.md`. La prioridad (Must, Should, Could) va en el texto de cada `T-n`; los frentes en espera, Diseño y Capacidades, son T-5 y T-28.
 

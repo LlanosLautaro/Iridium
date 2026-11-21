@@ -39,27 +39,24 @@
 | Arranque (`modulos/arranque/estado.md`) | sección | en operación (con el hito 10; probada en Q-227, calidad el 2026-11-21) | hecho |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Paridad, Orden y Abrir, D-166; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, después de Paridad y Orden, D-166) | en pausa |
-| Paridad (`modulos/paridad/estado.md`) | sección | 2. Definición (escrita, espera Q-243 y Q-244; la investigación, hecha con el spike S-5) | en curso |
+| Paridad (`modulos/paridad/estado.md`) | sección | 4. UX (definición aprobada, D-167; la investigación, hecha con el spike S-5) | en curso |
 
 ## En qué estamos ahora
 **Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
-**Arranque, completo** (2026-11-21): el paso 8 sumó cinco casos raros con prueba (sin período, sin reintentar en bucle, la PC dormida) y arregló el nombre de los Abrir del aviso para el lector de pantalla. Toca la ronda de UX (D-096, T-100), antes de construir Paridad.
-**Ahora: Paridad** (D-165, D-166): definición e investigación hechas (2026-11-21). El spike S-5 mostró que la lista de comandos sale sin gastar, que una foto viaja dentro del mensaje y queda en el historial, y que un archivo va como su ruta. Esperan Q-243 y Q-244; mientras, la ronda de UX (T-100). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
+**Ronda de UX 1 hecha** (2026-11-21, T-100): diez hallazgos, T-101 a T-110, sobre todo de un lugar y un nombre para cada cosa (`10-operacion.md` › Rondas de UX). Arreglado en el momento el aviso falso de carpeta faltante al arrancar; `scripts.md` quedó en ocho. Los `pendiente` van en una tanda antes de construir Paridad; los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
+**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244) y la lista de «/» sin los comandos que pisan a Iridium ni los de la terminal (Q-243, D-167). Sigue su UX. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-243 — ¿Qué comandos muestra la lista de «/»?**
-  Tipo: decisión · Frente: Paridad
-  Contexto: `research/comandos-y-adjuntos-del-motor.md` › 2. Mandar un comando. En esta PC hay 86: 53 de Claude Code y 33 de skills y complementos. Algunos de Claude Code repiten lo que Iridium ya tiene en la barra (`/model`, `/effort`, `/output-style`, `/clear`, `/context`, `/usage`): usados desde el chat, cambian el modelo o la conversación sin que Iridium se entere. Otros no sirven fuera de la terminal (`/color`, `/focus`, `/heapdump`).
-  Opciones: A) Todos menos esos dos grupos (recomendada: lo que queda funciona y la barra de Iridium no muestra algo falso) · B) Todos, como en Claude (Iridium sigue los cambios de modelo y de conversación que hagan; más trabajo y dos lugares para lo mismo) · C) Solo los de skills y complementos
-- **Q-244 — ¿Aprobás la definición de Paridad?**
-  Tipo: decisión · Frente: Paridad
-  Contexto: `modulos/paridad/definicion.md`. Entran los cuatro pedidos como Must: «/» con su lista, el + con Ctrl+U y arrastrar, pegar una captura y el texto largo como «Texto pegado, N líneas». Las fotos viajan dentro del mensaje y se ven en la conversación también al volver a abrirla; los archivos, como su ruta (no se copian). Quedan afuera «@» (T-97), el micrófono (T-57), los conectores y Capacidades (T-28), que se define al terminar esta parte.
-  Opciones: A) Sí, seguí con la UX (recomendada) · B) Cambiar algo (decí qué)
+- **Q-245 — Probá el arranque sin el aviso falso y los scripts de Iridium**
+  Tipo: prueba
+  Contexto: con la versión nueva (**Actualizar** en la barra de abajo). Ronda de UX 1, `10-operacion.md` › Rondas de UX.
+  - [ ] Al abrir Iridium, mientras aparecen las tarjetas, el chat de la derecha no dice que no pudo crear la carpeta Ideas
+  - [ ] En Iridium › Scripts hay ocho: ya no están los cinco «Ver…» de Orden y de los prototipos ni «Cerrar la sesión de Claude»
 
 ## Próximo paso
-La ronda de UX al cerrar Arranque (T-100), mientras esperan Q-243 y Q-244 de Paridad; con esas respuestas, la UX de Paridad (`modulos/paridad/estado.md` › Próximo paso).
-**Leer antes:** `trabajo.md` › T-100 y la referencia del framework `recursos/plugins/iridium/skills/iridium/referencias/ronda-ux.md` (la ronda se registra en una sección nueva de `10-operacion.md`).
+La UX de Paridad (`ux.md`): la lista de «/», el menú del +, las fichas de los adjuntos y cómo se ven en los mensajes mandados; qué pasa si se escribe a mano un comando escondido (D-167).
+**Leer antes:** `modulos/paridad/estado.md`, `modulos/paridad/definicion.md`, `modulos/paridad/investigacion.md` y `04-ux.md` › W-12 — La conversación.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

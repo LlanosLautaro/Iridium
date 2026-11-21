@@ -430,5 +430,46 @@ Estado: nueva · Frente: Diseño · Idea: IA · Fecha: 2026-11-21 · Origen: cie
 Lo que la extensión dibuja sobre otra app (el aviso del modo comentar, el resaltado, la tarjeta del comentario) sigue con el aspecto de antes: Chakra Petch, JetBrains Mono y el verde con tinte (`extension/src/selector/estilos.ts`, con las fuentes en `extension/fuentes/`). Pasarlo a los tokens del negro y a la letra del sistema, con el paso 8 de Diseño.
 
 ## T-100 — Ronda de UX al cerrar Arranque
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-21 · Origen: D-096 (Arranque pasó a `hecho`)
+Estado: hecho · Frente: Orden · Fecha: 2026-11-21 · Origen: D-096 (Arranque pasó a `hecho`)
 Toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los principios de `06-ui.md`, como dice `referencias/ronda-ux.md`. DI-I3 acaba de pasar cada pantalla al negro, así que la ronda mira sobre todo lo que no es aspecto: un solo lugar para cada cosa, los mismos nombres, avisos que se pisan (el de Arranque, el de Ejecutar y los de las conversaciones comparten la esquina). Va antes de construir Paridad (su definición y el spike pueden ir antes). Se registra en `10-operacion.md` › Rondas de UX.
+Hecha el 2026-11-21 (ronda 1): T-101 a T-110; el aviso falso del chat general al arrancar se arregló en el momento.
+
+## T-101 — El título de la conversación se corta
+Estado: pendiente · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+La cabecera del chat junta el título, el historial, Nueva y Continuar en 360 px: «Sin conversación todavía» queda «Sin conversaci…» y, en una ventana de 1024, «Sin c…». Se lee como algo roto. Que el título entre (otra línea, o sin título cuando no hay conversación, porque el cuerpo ya lo explica).
+
+## T-102 — El ancho de lectura, en un solo lugar
+Estado: nueva · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Angosto · Normal · Ancho está en la cabecera de Docs y en Ajustes › Apariencia, que queda con solo eso desde que hay un tema (D-104). Propuesta: dejarlo en Docs, donde se usa, y sacar Apariencia de Ajustes hasta que tenga algo propio.
+
+## T-103 — Git en blanco mientras lee
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+En un repo grande (este, unos 3 s) la sección Git queda vacía debajo del título hasta que llega todo. Las demás secciones muestran siluetas mientras cargan (W-2, W-5, W-13): Git también, con la forma de la rama, Cambios e Historial.
+
+## T-104 — Acerca de muestra el commit entero
+Estado: pendiente · Frente: Apariencia y ajustes · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Ajustes › Acerca de copia el mensaje completo del último commit (doce líneas con códigos). CO-5 pide la versión, su commit y cuándo se armó: la fecha y la primera frase del mensaje, con el resto al pasar el mouse.
+
+## T-105 — Docs: los archivos de la raíz mezclados con los de docs/
+Estado: nueva · Idea: IA · Frente: Diseño · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+La lista de Docs pone `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md` y el `README.md` de la raíz entre los de `docs/`: quedan dos «README.md» iguales. Además, unas carpetas tienen nombre para el usuario (Hitos, Frentes) y otras el de la carpeta (diseno, ideas, research, revision). Propuesta: los de la raíz en un grupo aparte («Del proyecto») y todas las carpetas con nombre (Diseño, Ideas, Investigación, Revisión).
+
+## T-106 — «Este proyecto no marca cómo se arma»
+Estado: pendiente · Frente: Abrir · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Ajustes › Este proyecto, en uno sin la marca `armar`, dice solo «Este proyecto no marca cómo se arma.»: es la palabra del framework, no la del usuario. Que diga para qué es la actualización automática (las apps de escritorio que la IA dejó listas para armarse solas) y que la IA del proyecto lo puede preparar.
+
+## T-107 — 04-ux.md se quedó atrás de la app
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Lo que el documento dice y la app ya no hace: W-1 (la barra de estado con la cuenta y el hito; hoy solo el uso, D-108), W-2 (los filtros por estado, Carpetas y Abrir como proyecto en la cabecera; la tarjeta con el hito), W-5 y W-12 con voseo y «Seguí» (hoy «Continuar», en español neutro, D-110), W-17 (Apariencia con los temas; hoy uno solo, D-104, y el ancho de lectura) y los atajos. Corregirlo desde lo construido, como se hizo con `06-ui.md` al cerrar DI-I3.
+
+## T-108 — La Bandeja vacía empieza en otro lugar que la llena
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Con preguntas, la lista de la Bandeja va en la columna centrada (como el Mapa y Scripts); vacía, «Nada en tu bandeja…» queda pegado a la izquierda, debajo del título. En Revisión, el vacío sí va en la columna. Que el vacío de la Bandeja use la misma columna.
+
+## T-109 — «Rechazada» en rojo, que es el color de los errores
+Estado: nueva · Idea: IA · Frente: Ideas · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+En Ideas, una idea rechazada lleva «Rechazada» en rojo (Q-175). `06-ui.md` deja el rojo para un error, y en una lista larga las rechazadas llaman más la atención que las que esperan. Propuesta: la palabra en gris, con el título apagado como ahora; el verde de Aprobada queda.
+
+## T-110 — Mirar los avisos juntos en la esquina
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+La ronda no pudo ver si los avisos de Arranque, de Ejecutar y de las conversaciones se pisan: `tools/auditoria-ux.ts` no los provoca. Sumarle un paso que los muestre a la vez (con el motor falso y `IRIDIUM_ARRANQUE_EN`) y mirar que se apilen sin taparse ni taparle el cuadro al chat.

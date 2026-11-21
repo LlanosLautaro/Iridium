@@ -169,6 +169,11 @@
 | D-160 | 2026-11-20 | Abrir (T-87) | 10; frente Abrir, paso 7 (Q-223) | La app instalada se pone al día en la otra PC desde sus versiones publicadas | vigente |
 | D-161 | 2026-11-20 | Compartir (T-37) | 10; frente Compartir, a pedido del usuario | Cada versión publicada trae sus piezas: las copias bajan solo la app si Electron y Claude Code no cambiaron | vigente |
 | D-162 | 2026-11-20 | frentes Diseño y Abrir | 10, a pedido del usuario | Diseño vuelve antes del paso 8 de Abrir | vigente (cambia el orden de D-153) |
+| D-163 | 2026-11-21 | general | 10, Q-230 | Las pruebas no corren solas después de cada turno | vigente |
+| D-164 | 2026-11-21 | frentes Arranque y Diseño | 10, R-99 y R-100 | El detalle del uso es solo el uso | vigente |
+| D-165 | 2026-11-21 | general (Paridad) | 10, a pedido del usuario (T-96) | El frente Paridad: el chat de Iridium como el de Claude, sin atarlo a Claude | vigente |
+| D-166 | 2026-11-21 | Paridad, Orden, Abrir, Plantillas | 10, Q-237 a Q-239 | Paridad va después de DI-I3, con los cuatro pedidos y Capacidades como su segunda parte | vigente |
+| D-167 | 2026-11-21 | Paridad | 10, Q-243 y Q-244 | La lista de «/» esconde los comandos que pisan a Iridium y los de la terminal | vigente |
 
 ---
 
@@ -3318,3 +3323,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** Paridad empieza al cerrar DI-I3, antes del paso 8 de Orden, el de Abrir y Plantillas (Q-237, A). Entran solo los cuatro pedidos: comandos con «/», adjuntar con el +, pegar fotos y el texto largo como archivo; mencionar archivos con «@» y dictar con el micrófono quedan como ideas (Q-238, A: T-97; el dictado ya era T-57). Capacidades entra en Paridad como su segunda parte, después de los cuatro (Q-239, B).
 **Motivo:** es lo que más se usa todos los días. El usuario prefirió tener en un solo frente todo lo que separa a Iridium de Claude, el chat y lo que pueden hacer las sesiones.
 **Consecuencias:** la fila Capacidades sale de `estado.md` › Módulos; T-28 pasa al frente Paridad. La ruta de Paridad suma la segunda parte. La fila después de DI-I3: Paridad, Orden (paso 8), Abrir (paso 8 y T-87), Plantillas.
+
+## D-167 — La lista de «/» esconde los comandos que pisan a Iridium y los de la terminal
+- **Fecha:** 2026-11-21
+- **Ámbito:** frente Paridad
+- **Hito o paso:** 10, Q-243 y Q-244
+- **Estado:** vigente
+
+**Contexto:** el spike S-5 mostró que el motor da 86 comandos: 53 de Claude Code y 33 de skills y complementos (`research/comandos-y-adjuntos-del-motor.md` › 2. Mandar un comando). Algunos de Claude Code cambian lo que la barra de Iridium muestra (el modelo, el esfuerzo, el tono, la conversación) y otros solo tienen sentido en la terminal.
+**Decisión:** la lista de «/» muestra todos menos dos grupos (Q-243, A): los que pisan lo que Iridium maneja (`/model`, `/effort`, `/fast`, `/output-style`, `/clear`, `/context`, `/usage`) y los que no sirven fuera de la terminal o están retirados (`/color`, `/focus`, `/heapdump`, `/__remote-workflow`, `/workflow-launch-exec`, `/agents`, `/extra-usage`). Quién esconde qué lo dice el motor, no el compositor (D-165). Con eso, la definición de Paridad queda aprobada tal como está (Q-244, A).
+**Motivo:** lo que queda funciona y la barra de Iridium no muestra algo falso; cada cosa se cambia en un solo lugar.
+**Consecuencias:** paso 2 de Paridad `hecho`; sigue la UX, que decide qué pasa si uno de los escondidos se escribe a mano.

@@ -21,6 +21,7 @@ import { FRAMEWORK, ListaDeSkills, plegadosAlEmpezar, SiluetasLista } from './Li
 function ChatSkills({ sobre }: { sobre: { nombre: string; quitar: () => void } | null }) {
   const lista = usarEstado((s) => s.lista)
   const p = tarjetaDe(lista, rutaSkills(lista))
+  if (!lista) return null
   if (!p)
     return (
       <div className="chat-falta" role="note">

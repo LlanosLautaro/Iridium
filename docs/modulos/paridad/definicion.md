@@ -1,7 +1,7 @@
 # Definición del módulo: Paridad
 
 **Fecha:** 2026-11-21
-**Estado:** propuesta, espera Q-243 (qué comandos muestra «/») y Q-244 (el visto bueno)
+**Estado:** aprobada (Q-244, D-167)
 **Base:** `propuesta.md`, D-165 y D-166 (los cuatro pedidos; Capacidades, T-28, es la segunda parte) y lo que mostró el spike S-5 (`investigacion.md`).
 
 ## Objetivo del módulo
@@ -21,7 +21,7 @@ Que el chat de Iridium tenga lo que el usuario da por sentado en el de Claude: *
   - «/» al principio del mensaje abre la lista, arriba del compositor: el comando, qué se le escribe después y para qué sirve; los de skills y complementos dicen de dónde salen.
   - Se filtra escribiendo, se recorre con las flechas, se elige con Enter, Tab o un clic; Escape la cierra. Elegido, queda escrito en el cuadro para sumarle lo que pida antes de mandar.
   - La lista la da el motor, sin gastar uso, y se refresca si cambia durante la sesión.
-  - Qué comandos de Claude Code se esconden: Q-243.
+  - Se esconden los de Claude Code que pisan lo que maneja Iridium (el modelo, el esfuerzo, el tono, la conversación, el uso) y los que solo sirven en la terminal (D-167). Qué pasa si se escribe uno a mano, en la UX.
 - **El +** (C-65): abre un menú con «Agregar archivos o fotos» (Ctrl+U) y «Comandos» (abre la misma lista de «/»).
 - **Adjuntar archivos y fotos** (C-65):
   - Con el + o Ctrl+U (el selector de Windows, varios a la vez) o arrastrándolos al chat.
@@ -73,4 +73,4 @@ Respondidas en el spike S-5 (`investigacion.md`):
 - [x] Perfil revisado: sigue P2
 - [x] Términos nuevos en el glosario general
 - [x] ¿Requirió cambios en los documentos generales? Sí: los casos C-64 a C-67 en `02-definicion.md` › Catálogo de casos de uso y los términos en su glosario (aplicados)
-- [ ] Visto bueno del usuario (Q-244)
+- [x] Visto bueno del usuario (Q-244, D-167)
