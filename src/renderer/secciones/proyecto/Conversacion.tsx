@@ -13,7 +13,7 @@ import {
   useState,
 } from 'react'
 import { type Cita, leerCitas, mensajeConCitas } from '../../../compartido/citas'
-import { leerMensaje } from '../../../compartido/mensaje-revision'
+import { leerMensaje, type MensajeComentario } from '../../../compartido/mensaje-revision'
 import {
   CONTEXTO_ALTO,
   type ConversacionAnterior,
@@ -37,8 +37,8 @@ const posiciones = new Map<string, { arriba: number; alFinal: boolean }>()
 function primerMensaje(entradas: readonly Entrada[]): string | null {
   const e = entradas.find((x) => x.tipo === 'usuario')
   if (e?.tipo !== 'usuario') return null
-  const com = leerMensaje(e.texto)
   const sinCitas = leerCitas(e.texto)
+  const com = leerMensaje(e.texto) ?? (sinCitas.citas[0] ? leerMensaje(sinCitas.citas[0]) : null)
   const texto = com
     ? `${com.codigo}: ${com.texto}`
     : sinCitas.texto.trim() || sinCitas.citas.join(' ') || e.texto
@@ -439,31 +439,9 @@ function Tramo({ entradas, ruta, enCurso }: { entradas: EntradaIa[]; ruta: strin
   )
 }
 
-/** Lo que escribió el usuario; un comentario de la Revisión enviado se ve como tarjeta que lo abre (W-R4). */
-function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; quien: string }) {
+/** Un comentario de la Revisión en el hilo: una tarjeta que lo abre (W-R4). */
+function TarjetaComentario({ ruta, com }: { ruta: string; com: MensajeComentario }) {
   const abrirComentario = usarEstado((s) => s.abrirComentario)
-  const com = leerMensaje(texto)
-  if (!com) {
-    // Lo citado al enviar (Q-182) se ve como cita, arriba de lo escrito.
-    const { citas, texto: escrito } = leerCitas(texto)
-    if (!citas.length)
-      return (
-        <p className="mensaje-yo" title={quien}>
-          {texto}
-        </p>
-      )
-    return (
-      <div className="mensaje-yo con-citas" title={quien}>
-        {citas.map((c, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
-          <p key={i} className="citado-en-mensaje">
-            {c}
-          </p>
-        ))}
-        {escrito.trim() && <p>{escrito}</p>}
-      </div>
-    )
-  }
   return (
     <button
       type="button"
@@ -484,6 +462,47 @@ function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; qu
         <span className="txt">{com.texto}</span>
       </span>
     </button>
+  )
+}
+
+/**
+ * Lo que escribió el usuario. Un comentario de la Revisión, enviado desde la extensión o citado desde la sección
+ * (R-101), se ve como tarjeta; lo demás citado, como cita arriba de lo escrito.
+ */
+function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; quien: string }) {
+  const com = leerMensaje(texto)
+  if (com) return <TarjetaComentario ruta={ruta} com={com} />
+  // Lo citado al enviar (Q-182) se ve como cita, arriba de lo escrito.
+  const { citas, texto: escrito } = leerCitas(texto)
+  if (!citas.length)
+    return (
+      <p className="mensaje-yo" title={quien}>
+        {texto}
+      </p>
+    )
+  const comentarios = citas.map((c) => leerMensaje(c))
+  const otras = citas.filter((_, i) => !comentarios[i])
+  return (
+    <>
+      {comentarios.map((c) => c && <TarjetaComentario key={c.codigo} ruta={ruta} com={c} />)}
+      {otras.length > 0 ? (
+        <div className="mensaje-yo con-citas" title={quien}>
+          {otras.map((c, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
+            <p key={i} className="citado-en-mensaje">
+              {c}
+            </p>
+          ))}
+          {escrito.trim() && <p>{escrito}</p>}
+        </div>
+      ) : (
+        escrito.trim() && (
+          <p className="mensaje-yo" title={quien}>
+            {escrito}
+          </p>
+        )
+      )}
+    </>
   )
 }
 
@@ -874,6 +893,8 @@ export function Conversacion({
     </div>
   )
 
+  // Un proyecto sin conversación ya está en blanco: Nueva no haría nada, y sin él el título entra entero (Q-248).
+  const sinConversacion = !enBlanco && !hayConversacion && chat !== 'skills' && !general
   const titulo = enBlanco
     ? 'Conversación nueva'
     : hayConversacion
@@ -884,9 +905,8 @@ export function Conversacion({
         ? 'Skills y configuración de Claude'
         : general
           ? 'Ideas y proyectos'
-          : // Sin conversación, sin título (T-101): el cuerpo ya dice qué hace Continuar, y al lado de los botones
-            // «Sin conversación todavía» quedaba cortado.
-            null
+          : // Sin conversación (T-101, Q-248): un título corto; «Sin conversación todavía» quedaba cortado.
+            'Nueva conversación'
   // Sin ruido (D-108): debajo del título, cuándo fue y si se empezó en VS Code o la empezó el arranque del período
   // (AR-2); lo demás lo dice la conversación.
   const subtitulo =
@@ -908,20 +928,22 @@ export function Conversacion({
           {subtitulo && <span title={subtitulo}>{subtitulo}</span>}
         </div>
         <Anteriores ruta={ruta} actual={enBlanco ? null : (c?.id ?? null)} trabajando={trabajando} />
-        <button
-          type="button"
-          className="boton sin-fondo chico"
-          disabled={enviando || trabajando || enBlanco}
-          title={
-            general
-              ? 'Abrir una conversación en blanco: empieza con lo que le escribas'
-              : 'Abrir una conversación en blanco: empieza con lo que le escribas, o con Continuar'
-          }
-          onClick={nueva}
-        >
-          <Icono nombre="mas" />
-          Nueva
-        </button>
+        {!sinConversacion && (
+          <button
+            type="button"
+            className="boton sin-fondo chico"
+            disabled={enviando || trabajando || enBlanco}
+            title={
+              general
+                ? 'Abrir una conversación en blanco: empieza con lo que le escribas'
+                : 'Abrir una conversación en blanco: empieza con lo que le escribas, o con Continuar'
+            }
+            onClick={nueva}
+          >
+            <Icono nombre="mas" />
+            Nueva
+          </button>
+        )}
         {!general && !simple && (
           <button
             type="button"

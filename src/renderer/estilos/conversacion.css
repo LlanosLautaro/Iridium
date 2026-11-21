@@ -56,6 +56,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  gap: var(--esp-2);
 }
 .mensaje-yo {
   max-width: 85%;

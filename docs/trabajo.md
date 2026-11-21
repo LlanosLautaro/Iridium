@@ -440,6 +440,8 @@ La cabecera del chat junta el título, el historial, Nueva y Continuar en 360 px
 
 Hecho el 2026-11-21: sin conversación, la cabecera va sin título (el cuerpo ya explica qué hace Continuar). Bajar los botones a otra línea se probó y no va: la cabecera del chat tiene que medir lo mismo que la de la sección.
 
+Q-248 pidió que diga «Nueva conversación» (2026-11-21): dice eso, y sin conversación no muestra el botón Nueva, que no hacía nada (el chat ya está en blanco); así el título entra entero a 1440 y a 1024.
+
 ## T-102 — El ancho de lectura, en un solo lugar
 Estado: nueva · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 Angosto · Normal · Ancho está en la cabecera de Docs y en Ajustes › Apariencia, que queda con solo eso desde que hay un tema (D-104). Propuesta: dejarlo en Docs, donde se usa, y sacar Apariencia de Ajustes hasta que tenga algo propio.

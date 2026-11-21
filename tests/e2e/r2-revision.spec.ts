@@ -215,9 +215,21 @@ test('Mandar a la IA desde Revisión, la IA lo cierra y pasa a Hechos; se reabre
   // Atrás vuelve un paso: de R-2 (abierto desde la conversación) a R-1, que se miraba antes.
   await seccion().getByRole('button', { name: 'Atrás' }).click()
   await expect(seccion().locator('.rv-barra .rv-codigo')).toHaveText('R-1')
+  // R-101: queda citado arriba del campo, sin enviar, y el botón sigue ahí; sale con lo escrito, como tarjeta.
+  const citas = win.locator('.compositor .citado')
   await seccion().getByRole('button', { name: 'Mandar a la IA' }).click()
-  await expect(seccion().locator('.rv-barra')).toContainText('enviado a la sesión de Alfa')
+  await expect(citas).toHaveCount(1)
+  await expect(citas).toContainText('Comentario R-1 ·')
+  await expect(win.locator('.hilo .msg-com')).toHaveCount(1)
+  await expect(seccion().getByRole('button', { name: 'Mandar a la IA' })).toBeVisible()
+  await win.screenshot({ path: join(SALIDA, 'revision-r101-citado.png') })
+  const mensaje = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await mensaje.fill('Fijate también en el celular')
+  await mensaje.press('Enter')
   await expect(win.locator('.hilo .msg-com')).toHaveCount(2)
+  await expect(win.locator('.hilo')).toContainText('Fijate también en el celular')
+  await expect(citas).toHaveCount(0)
+  expect(await readFile(join(revisionAlfa(), 'R-1.md'), 'utf8')).not.toContain('enviado a la sesión')
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })).not.toContainText('Trabajando', {
     timeout: 15_000,
   })

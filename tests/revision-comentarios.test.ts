@@ -5,7 +5,8 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { armarMensaje, leerMensaje } from '../src/compartido/mensaje-revision'
+import { leerCitas, mensajeConCitas } from '../src/compartido/citas'
+import { armarMensaje, citaComentario, leerMensaje } from '../src/compartido/mensaje-revision'
 import type { PedidoComentario } from '../src/compartido/revision'
 import { Conversaciones } from '../src/main/app/conversacion'
 import { contarRevisionAbiertos, leerPreguntasAbiertas } from '../src/main/app/proyectos'
@@ -118,6 +119,27 @@ describe('El mensaje para la IA (W-R4)', () => {
     expect(leerMensaje(m)).toEqual({ codigo: 'R-2', texto: 'no anda', archivo: null })
     expect(leerMensaje('Seguí con el proyecto.')).toBeNull()
     expect(leerMensaje('[Comentario de algo]')).toBeNull()
+  })
+
+  test('Mandar a la IA lo cita en la conversación (R-101): sale con lo escrito y el hilo lo reconoce', () => {
+    const cita = citaComentario({
+      codigo: 'R-7',
+      texto: 'el título tiene que ir en negrita\ny más grande',
+      archivo: { ruta: 'src/Tarjeta.jsx', linea: 6 },
+      pagina: null,
+      conCaptura: true,
+      maqueta: null,
+    })
+    expect(cita).toMatchObject({ clave: 'comentario:R-7', tipo: 'Comentario' })
+    expect(cita.nombre).toBe('R-7 · el título tiene que ir en negrita')
+    expect(cita.texto).toContain('Captura: docs/revision/R-7.png')
+    const { citas, texto } = leerCitas(mensajeConCitas([cita], 'Mirá también el color'))
+    expect(texto).toBe('Mirá también el color')
+    expect(leerMensaje(citas[0] ?? '')).toEqual({
+      codigo: 'R-7',
+      texto: 'el título tiene que ir en negrita\ny más grande',
+      archivo: { ruta: 'src/Tarjeta.jsx', linea: 6 },
+    })
   })
 
   test('la instrucción de la sesión cuenta los abiertos y dice cómo cerrarlos', () => {

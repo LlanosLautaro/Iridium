@@ -1,11 +1,12 @@
 // Revisión (modulos/revision/ux.md › W-R3, H-R5, H-R7; DI-I3, tanda 10: las maquetas revision.html y
 // revision-vacia.html): los comentarios que el usuario dejó sobre la app, en Nuevos, Anotados (R-9: quedaron en un plan,
 // sin hacer), Hechos y Todos, del más nuevo al más viejo. Cada uno es una Fila con su captura; uno nuevo o anotado se
-// puede mandar a la IA desde la fila. Uno elegido se ve entero: la captura grande, el texto, las pistas y su historia;
+// puede mandar a la IA desde la fila: queda citado en la conversación, sin enviar (R-101). Uno elegido se ve entero: la captura grande, el texto, las pistas y su historia;
 // uno hecho se puede Reabrir con una nota. La lista se relee sola cuando la IA cierra uno.
 // Nada se borra desde acá.
 import { useCallback, useEffect, useState } from 'react'
-import type { ListaComentarios, ResultadoEnvio, VistaComentario } from '../../../compartido/puente'
+import { citaComentario } from '../../../compartido/mensaje-revision'
+import type { ListaComentarios, VistaComentario } from '../../../compartido/puente'
 import { usarEstado, vistaDe } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
@@ -119,74 +120,26 @@ function Estado({ c, conFecha = false }: { c: VistaComentario; conFecha?: boolea
   )
 }
 
-/** Mandar el comentario a la sesión del proyecto: si la IA trabaja, entra en su turno. */
-function useMandar(ruta: string, codigo: string) {
-  const [envio, setEnvio] = useState<ResultadoEnvio | 'enviando' | null>(null)
-  const mandar = async () => {
-    setEnvio('enviando')
-    setEnvio(await window.iridium.enviarComentario(ruta, codigo).catch(() => 'no-existe' as const))
-  }
-  return { envio, mandar, reiniciar: () => setEnvio(null) }
-}
-
-/** Lo que pasó al mandarlo, como señal; o el botón, si todavía no se mandó (o falló). */
-function Mandar({
-  envio,
-  mandar,
-  nombre,
-}: {
-  envio: ResultadoEnvio | 'enviando' | null
-  mandar: () => void
-  nombre: string
-}) {
-  if (envio === 'enviado')
-    return (
-      <span className="senal verde" role="status">
-        <Icono nombre="check" />
-        enviado a la sesión de {nombre}
-      </span>
-    )
-  if (envio === 'sin-sesion')
-    return (
-      <span className="senal" role="status">
-        <Icono nombre="espera" />
-        sin sesión abierta: la IA lo ve al empezar
-      </span>
-    )
+/**
+ * Mandar a la IA (R-101): el comentario queda citado arriba del campo de la conversación, como una idea; sale con lo
+ * que escriba el usuario, o solo. No se envía en el acto ni queda marcado: se puede volver a citar siempre.
+ */
+function Mandar({ ruta, c }: { ruta: string; c: VistaComentario }) {
+  const citar = usarEstado((s) => s.citar)
   return (
-    <>
-      {envio === 'no-existe' && (
-        <span className="senal rojo" role="alert">
-          <Icono nombre="error" />
-          no se pudo enviar
-        </span>
-      )}
-      <button
-        type="button"
-        className="boton sin-fondo chico"
-        disabled={envio === 'enviando'}
-        title="Mandarlo a la sesión de este proyecto: si la IA trabaja, entra en su turno"
-        onClick={mandar}
-      >
-        Mandar a la IA
-      </button>
-    </>
+    <button
+      type="button"
+      className="boton sin-fondo chico"
+      title="Queda citado en la conversación, sin enviar"
+      onClick={() => citar(ruta, citaComentario(c))}
+    >
+      Mandar a la IA
+    </button>
   )
 }
 
-function Fila({
-  ruta,
-  c,
-  nombre,
-  conEstado,
-}: {
-  ruta: string
-  c: VistaComentario
-  nombre: string
-  conEstado: boolean
-}) {
+function Fila({ ruta, c, conEstado }: { ruta: string; c: VistaComentario; conEstado: boolean }) {
   const abrirComentario = usarEstado((s) => s.abrirComentario)
-  const { envio, mandar } = useMandar(ruta, c.codigo)
   const cerrado = c.estado === 'cerrado'
   return (
     <li className="fila se-abre rv-fila" data-codigo={c.codigo}>
@@ -219,8 +172,8 @@ function Fila({
       </button>
       {conEstado && <Estado c={c} />}
       {!cerrado && (
-        <span className={envio ? 'acciones siempre' : 'acciones'}>
-          <Mandar envio={envio} mandar={() => void mandar()} nombre={nombre} />
+        <span className="acciones">
+          <Mandar ruta={ruta} c={c} />
         </span>
       )}
     </li>
@@ -387,17 +340,15 @@ const ICONO_HISTORIA = (t: string) =>
           ? 'enviar'
           : 'circulo'
 
-function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre: string }) {
+function Detalle({ ruta, c }: { ruta: string; c: VistaComentario }) {
   const abrirArchivo = usarEstado((s) => s.abrirArchivo)
   const abrirMaqueta = usarEstado((s) => s.abrirMaqueta)
   const [reabriendo, setReabriendo] = useState(false)
-  const { envio, mandar, reiniciar } = useMandar(ruta, c.codigo)
   const cerrado = c.estado === 'cerrado'
   // Si cambia de estado (la IA lo cerró, o se reabrió), las acciones vuelven a empezar.
   // biome-ignore lint/correctness/useExhaustiveDependencies: se reinicia solo cuando cambia el estado.
   useEffect(() => {
     setReabriendo(false)
-    reiniciar()
   }, [c.estado])
   return (
     <div className="rv-detalle">
@@ -412,7 +363,7 @@ function Detalle({ ruta, c, nombre }: { ruta: string; c: VistaComentario; nombre
               Reabrir
             </button>
           )}
-          {!cerrado && <Mandar envio={envio} mandar={() => void mandar()} nombre={nombre} />}
+          {!cerrado && <Mandar ruta={ruta} c={c} />}
         </div>
       </div>
       <div className="rv-cuerpo">
@@ -523,9 +474,6 @@ function Cargando() {
 
 export function Revision({ ruta }: { ruta: string }) {
   const elegido = usarEstado((s) => vistaDe(s.vistas, ruta).comentario)
-  const nombre = usarEstado((s) =>
-    s.lista?.tipo === 'lista' ? (s.lista.proyectos.find((p) => p.ruta === ruta)?.nombre ?? '') : '',
-  )
   const [l, setL] = useState<ListaComentarios | null>(() => leidas.get(ruta) ?? null)
   const [grupo, setGrupo] = useState('nuevos')
   const leer = useCallback(() => {
@@ -557,7 +505,7 @@ export function Revision({ ruta }: { ruta: string }) {
 
   if (elegido) {
     const c = l.comentarios.find((x) => x.codigo === elegido)
-    if (c) return <Detalle key={c.codigo} ruta={ruta} c={c} nombre={nombre} />
+    if (c) return <Detalle key={c.codigo} ruta={ruta} c={c} />
     return (
       <div className="rv-detalle">
         <div className="rv-barra">
@@ -612,7 +560,7 @@ export function Revision({ ruta }: { ruta: string }) {
         {l.electron.esElectron && !l.electron.cargaLinea && <AvisoElectron ruta={ruta} />}
         <ul className="filas con-lineas rv-filas">
           {mostrar.map((c) => (
-            <Fila key={c.codigo} ruta={ruta} c={c} nombre={nombre} conEstado={grupo === 'todos'} />
+            <Fila key={c.codigo} ruta={ruta} c={c} conEstado={grupo === 'todos'} />
           ))}
           {l.ilegibles.map((n) => (
             <Ilegible key={n} nombre={n} />

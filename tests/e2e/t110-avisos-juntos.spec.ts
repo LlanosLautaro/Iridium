@@ -160,8 +160,10 @@ for (const [ancho, alto] of [
     // Dentro de un proyecto, a la izquierda de su conversación.
     await win.locator('.tarjeta', { hasText: 'Beta' }).click()
     await expect(win.locator('[data-seccion]')).toBeVisible()
-    // T-101: Beta no tiene conversación; la cabecera del chat va sin título, en una línea, con sus botones.
-    await expect(win.locator('.cab-conv .nombre-conv b')).toHaveCount(0)
+    // T-101, Q-248: Beta no tiene conversación; la cabecera dice «Nueva conversación», entera, en una línea con sus botones.
+    const titulo = win.locator('.cab-conv .nombre-conv b')
+    await expect(titulo).toHaveText('Nueva conversación')
+    expect(await titulo.evaluate((b) => b.scrollWidth <= b.clientWidth)).toBe(true)
     await expect(win.locator('.cab-conv').getByRole('button', { name: 'Continuar' })).toBeVisible()
     expect((await win.locator('.cab-conv').boundingBox())?.height).toBe(48)
     await deAlfa.hover()
