@@ -39,25 +39,16 @@
 | Arranque (`modulos/arranque/estado.md`) | sección | en operación (con el hito 10; probada en Q-227, calidad el 2026-11-21) | hecho |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Paridad, Orden y Abrir, D-166; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, después de Paridad y Orden, D-166) | en pausa |
-| Paridad (`modulos/paridad/estado.md`) | sección | 7. Construcción (PA-I1 hecha, prueba en Q-250; sigue PA-I2) | en curso |
+| Paridad (`modulos/paridad/estado.md`) | sección | 7. Construcción (PA-I1 probada en Q-250; sigue PA-I2) | en curso |
 
 ## En qué estamos ahora
 **Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
 **Ronda de UX 1 hecha** (2026-11-21, T-100) **y su tanda también**: el chat sin conversación ya no muestra un título cortado (T-101), Git con siluetas al leer (T-103), Acerca de con una frase (T-104), Este proyecto en palabras del usuario (T-106), `04-ux.md` al día con la app (T-107), la Bandeja vacía en su columna (T-108) y los avisos de la esquina medidos juntos (T-110), que encontró los botones de un aviso desarmados: arreglado. Probada en Q-248; el chat sin conversación ya dice «Nueva conversación». R-101: Mandar a la IA, desde Revisión, ahora cita el comentario en la conversación en vez de enviarlo; probado en Q-249. R-93: en la Bandeja, «Respondida, sin procesar» va en verde (T-85). Los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
-**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168) y el diseño técnico, cerrado (D-169): tres iteraciones, PA-I1 (comandos), PA-I2 (archivos y fotos) y PA-I3 (texto pegado). La UI también (D-170). **PA-I1 hecha**: «/» abre la lista de comandos arriba del cuadro, elegir no manda, los usados hace poco van primero y un comando escondido (`/clear`, `/model`…) no se manda y dice dónde está eso en Iridium; tu prueba, Q-250. Sigue PA-I2 (archivos y fotos). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
+**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168) y el diseño técnico, cerrado (D-169): tres iteraciones, PA-I1 (comandos), PA-I2 (archivos y fotos) y PA-I3 (texto pegado). La UI también (D-170). **PA-I1 hecha**: «/» abre la lista de comandos arriba del cuadro, elegir no manda, los usados hace poco van primero y un comando escondido (`/clear`, `/model`…) no se manda y dice dónde está eso en Iridium; probada en Q-250. Sigue PA-I2 (archivos y fotos). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-250 — Probá los comandos con «/» en el chat**
-  Tipo: prueba · Frente: Paridad
-  Contexto: PA-I1. Con la app armada (`scripts.md` › Armar la última versión) o en modo desarrollo, en el chat de un proyecto:
-  - [ ] Escribir «/» abre la lista arriba del cuadro, con los comandos y para qué sirven; los de un complemento dicen de cuál a la derecha
-  - [ ] Escribir después de «/» filtra (`/review` encuentra `/code-review`); las flechas y Enter eligen, y elegir no manda: queda «/nombre » para escribirle algo
-  - [ ] Mandar un comando que sirve en Iridium (`/compact` o `/iridium:iridium`) funciona: en el chat se ve el comando en la letra de los códigos y la respuesta debajo
-  - [ ] Volver a escribir «/» muestra arriba «Usados hace poco»
-  - [ ] Escribir `/clear` o `/model` a mano no se manda: una línea arriba del cuadro dice dónde está eso en Iridium (con `/clear`, el botón Nueva)
-  - [ ] El + del pie del cuadro tiene «Comandos», que escribe la «/» y abre la lista
-  - [ ] Al reabrir esa conversación desde ◔, el comando sigue viéndose como comando
+(ninguna)
 
 ## Próximo paso
 Construir PA-I2, archivos y fotos (Paridad).
