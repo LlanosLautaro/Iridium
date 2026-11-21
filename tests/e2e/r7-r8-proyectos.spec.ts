@@ -1,5 +1,5 @@
 // R-7 y R-8 (D-089): el menú del clic derecho en la tarjeta, Nuevo proyecto y las ideas y las skills del proyecto.
-import { mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
+import { chmod, mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
@@ -75,7 +75,7 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true })
 })
 
-test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cambia el ícono y abre afuera (R-7)', async () => {
+test('el clic derecho en una tarjeta cambia el estado, archiva al instante, cambia el ícono y abre afuera (R-7)', async () => {
   const { app, win } = await abrir()
   const beta = win.locator('.tarjeta', { hasText: 'Beta' })
   await beta.click({ button: 'right' })
@@ -90,23 +90,34 @@ test('el clic derecho en una tarjeta cambia el estado, archiva con Deshacer, cam
   await expect(beta).toContainText('pausado')
   expect(await leerFicha('Beta')).toMatchObject({ estado: 'pausado', descripcion: 'Otra app' })
 
-  // Archivar: sale de la grilla y el aviso deja deshacerlo.
+  // Archivar: sale de la grilla al instante, sin aviso (Q-240).
   await beta.click({ button: 'right' })
   await menu.getByRole('menuitem', { name: 'Archivar' }).click()
   await expect(beta).toHaveCount(0)
-  await expect(win.locator('.aviso-accion')).toContainText('«Beta» archivado.')
-  expect(await leerFicha('Beta')).toMatchObject({
-    archivado: true,
-    archivadoEl: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
-  })
-  // Con los archivados a la vista, la tarjeta dice desde cuándo en lugar del estado (T-58).
+  await expect(win.locator('.aviso-accion')).toHaveCount(0)
+  await expect
+    .poll(async () => leerFicha('Beta'))
+    .toMatchObject({ archivado: true, archivadoEl: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) })
+  // Con los archivados a la vista, la tarjeta dice desde cuándo en lugar del estado (T-58); Desarchivar la deja como estaba.
   await win.getByRole('switch', { name: /Archivados/ }).click()
   await expect(beta.locator('.estado-t')).toHaveText('archivado hoy')
-  await win.getByRole('switch', { name: /Archivados/ }).click()
-  await win.locator('.aviso-accion').getByRole('button', { name: 'Deshacer' }).click()
-  await expect(beta).toBeVisible()
+  await beta.click({ button: 'right' })
+  await menu.getByRole('menuitem', { name: 'Desarchivar' }).click()
+  await expect(beta.locator('.estado-t')).toHaveText('pausado')
   await expect.poll(async () => (await leerFicha('Beta')).archivado).toBe(false)
   expect(await leerFicha('Beta')).not.toHaveProperty('archivadoEl')
+  await win.getByRole('switch', { name: /Archivados/ }).click()
+  await expect(beta).toBeVisible()
+
+  // Si la ficha no se puede escribir, la tarjeta vuelve a como estaba y el aviso dice por qué (Q-240).
+  const fichaBeta = join(raiz, 'Beta', '.proyecto.json')
+  await chmod(fichaBeta, 0o444)
+  await beta.click({ button: 'right' })
+  await menu.getByRole('menuitemradio', { name: 'En uso' }).click()
+  await expect(win.locator('.aviso-accion.error')).toBeVisible()
+  await expect(beta.locator('.estado-t')).toHaveText('pausado')
+  await chmod(fichaBeta, 0o644)
+  await win.locator('.aviso-accion').getByRole('button', { name: 'Cerrar el aviso' }).click()
 
   // El ⋯ aparece al pasar el mouse y abre el mismo menú (T-58).
   const mas = beta.locator('.mas-t')

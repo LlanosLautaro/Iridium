@@ -242,20 +242,6 @@ export function Proyectos() {
                 <Icono nombre={aviso.error ? 'error' : 'check'} />
                 <div className="cuerpo-recuadro">
                   <span>{aviso.texto}</span>
-                  {aviso.deshacer && (
-                    <span className="acciones-recuadro">
-                      <button
-                        type="button"
-                        className="boton sin-fondo chico"
-                        onClick={() => {
-                          aviso.deshacer?.()
-                          setAviso(null)
-                        }}
-                      >
-                        Deshacer
-                      </button>
-                    </span>
-                  )}
                 </div>
                 <button
                   type="button"

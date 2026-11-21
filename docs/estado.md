@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I8, las piezas de cada versión, probada en Q-225) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 18 probadas, la 19 espera Q-240; vuelve por D-162) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 19 probadas, falta escribir el diseño desde lo construido; vuelve por D-162) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va después de Paridad, D-166) | en pausa |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
@@ -42,23 +42,16 @@
 | Paridad (`modulos/paridad/estado.md`) | sección | 2. Definición (empieza al cerrar DI-I3; Capacidades, T-28, es su segunda parte, D-166) | pendiente |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasaron a las piezas, tanda por tanda; no queda nada del estilo de antes. La tanda 19 hizo lo que no son piezas: el ⋯ y «archivado el …» en la tarjeta, el español neutro que faltaba y la lupa de Archivos (T-58, T-90, T-53); espera tu prueba (Q-240). Después se cierra DI-I3.
+**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasaron a las piezas, tanda por tanda; no queda nada del estilo de antes. La tanda 19 (el ⋯ y «archivado el …» en la tarjeta, el español neutro y la lupa de Archivos) quedó probada en Q-240; con ella, archivar ya no deja aviso y el estado cambia en la tarjeta al instante. Después se cierra DI-I3.
 **Sigue Paridad** (D-165; D-166, después de DI-I3): el chat con «/», adjuntos, fotos pegadas y el texto largo como archivo, contra la frontera del motor; su segunda parte es Capacidades (T-28).
 **Arranque** (D-135) anduvo la segunda noche (Q-227); su paso 8 va al cerrar DI-I3. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito) y T-95 (plugins por proyecto). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-240 — Probá la tanda 19 de Diseño: la tarjeta, la lupa de Archivos y los textos**
-  Tipo: prueba · Frente: Diseño
-  Contexto: `modulos/diseno/estado.md` › tanda 19. Armala con `scripts.md` › Armar la última versión y abrila.
-  - [ ] En Proyectos, al pasar el mouse por una tarjeta aparece el ⋯ arriba a la derecha y abre el mismo menú que el clic derecho
-  - [ ] Archivar un proyecto de prueba y prender Archivados: la tarjeta dice «archivado hoy» en lugar del estado; Desarchivar lo deja como estaba
-  - [ ] En Archivos, la lupa de arriba a la derecha abre el campo: al escribir parte de un nombre aparecen los archivos con su carpeta en gris
-  - [ ] Con las flechas y Enter se abre uno y queda marcado en el árbol; Esc vuelve al árbol sin elegir
-  - [ ] Los avisos y errores que veas dicen «prueba», «elige», «escribe» (sin «probá», «elegí», «escribí»)
+(ninguna)
 
 ## Próximo paso
-Con Q-240 respondida, cerrar DI-I3: `DESIGN.md` y `06-ui.md` reescritos desde lo construido; después, Paridad (D-166).
+Cerrar DI-I3: `DESIGN.md` y `06-ui.md` reescritos desde lo construido; después, Paridad (D-166).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

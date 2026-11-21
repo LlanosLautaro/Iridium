@@ -1,6 +1,7 @@
 // El menú del clic derecho en una tarjeta (R-7, C-9, C-12, D-089): abrir el proyecto, en VS Code o su carpeta; pasarlo
 // al framework o ver sus avisos (OR-8, T-48); y de la ficha, el estado, archivar y el ícono; y eliminarlo, con
 // confirmación (R-10). Si el proyecto marca lo que abre, Ejecutar Alfa (frente Abrir, AB-1). En rescate no está: pide decir qué proyecto lo reemplaza (eso, con la IA).
+import { diaDe } from '../../../compartido/notas'
 import type { ListaProyectos, ResultadoFicha, TarjetaProyecto } from '../../../compartido/puente'
 import { ESTADOS, type Estado, NOMBRE_ESTADO } from '../../../compartido/tipos'
 import { usarEstado } from '../../estado'
@@ -8,11 +9,19 @@ import { Icono } from '../../ui/Icono'
 import { MenuContextual, type Punto } from '../../ui/MenuContextual'
 import { ejecutarProyecto, nombreEjecutar } from '../proyecto/ejecutar'
 
-/** Lo que pasó, para el aviso de la grilla; `deshacer` vuelve atrás (archivar). */
+/** Lo que pasó, para el aviso de la grilla. */
 export interface AvisoGrilla {
   texto: string
   error: boolean
-  deshacer?: () => void
+}
+
+type CambioTarjeta = Partial<Pick<TarjetaProyecto, 'estado' | 'archivado' | 'archivadoEl'>>
+
+/** Le pone el cambio a la tarjeta de esa ruta en la grilla de ahora, sin esperar al disco. */
+function tocarTarjeta(ponerLista: (l: ListaProyectos) => void, ruta: string, cambio: CambioTarjeta): void {
+  const lista = usarEstado.getState().lista
+  if (lista?.tipo !== 'lista') return
+  ponerLista({ ...lista, proyectos: lista.proyectos.map((t) => (t.ruta === ruta ? { ...t, ...cambio } : t)) })
 }
 
 const ELEGIBLES = ESTADOS.filter((e) => e !== 'en-rescate')
@@ -57,19 +66,34 @@ export function MenuTarjeta({
       avisar({ texto: e instanceof Error ? e.message : String(e), error: true }),
     )
   }
-  const conFicha = async (r: Promise<ResultadoFicha>, ok?: AvisoGrilla) => {
+  const conFicha = async (r: Promise<ResultadoFicha>) => {
     const res = await r
-    if (res.tipo === 'ok') {
-      ponerLista(res.lista)
-      if (ok) avisar(ok)
-    } else if (res.tipo === 'error') avisar({ texto: res.mensaje, error: true })
+    if (res.tipo === 'ok') ponerLista(res.lista)
+    else if (res.tipo === 'error') avisar({ texto: res.mensaje, error: true })
+  }
+  /**
+   * El estado y archivar se ven en la tarjeta al instante (Q-240): la grilla cambia antes de escribir la ficha y vuelve
+   * como estaba solo si no se pudo.
+   */
+  const optimista = async (cambio: CambioTarjeta, r: () => Promise<ResultadoFicha>) => {
+    const antes: CambioTarjeta = {}
+    for (const k of Object.keys(cambio) as (keyof CambioTarjeta)[])
+      Object.assign(antes, { [k]: p[k] ?? null })
+    tocarTarjeta(ponerLista, p.ruta, cambio)
+    try {
+      const res = await r()
+      if (res.tipo === 'ok') return ponerLista(res.lista)
+      tocarTarjeta(ponerLista, p.ruta, antes)
+      if (res.tipo === 'error') avisar({ texto: res.mensaje, error: true })
+    } catch (e) {
+      tocarTarjeta(ponerLista, p.ruta, antes)
+      throw e
+    }
   }
   const archivar = (archivado: boolean): Promise<void> =>
-    conFicha(window.iridium.archivarProyecto(p.ruta, archivado), {
-      texto: `«${p.nombre}» ${archivado ? 'archivado' : 'vuelve a la grilla'}.`,
-      error: false,
-      deshacer: () => void archivar(!archivado),
-    })
+    optimista({ archivado, archivadoEl: archivado ? diaDe(new Date()) : null }, () =>
+      window.iridium.archivarProyecto(p.ruta, archivado),
+    )
   const abrirAfuera = async (r: Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }>) => {
     const res = await r
     if (res.tipo === 'error') avisar({ texto: res.mensaje, error: true })
@@ -144,7 +168,9 @@ export function MenuTarjeta({
                 type="button"
                 role="menuitemradio"
                 aria-checked={p.estado === e}
-                onClick={hacer(() => conFicha(window.iridium.estadoProyecto(p.ruta, e)))}
+                onClick={hacer(() =>
+                  optimista({ estado: e }, () => window.iridium.estadoProyecto(p.ruta, e)),
+                )}
               >
                 <span className="marca">{p.estado === e && <Icono nombre="check" />}</span>
                 {NOMBRE_ESTADO[e]}

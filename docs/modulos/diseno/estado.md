@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso: tanda 1 probada en Q-162, tanda 2 en Q-163, tanda 3 en Q-164, tanda 4 en Q-165, tanda 5 en Q-166, tanda 6 en Q-170 y tanda 7 en Q-171; el color de D-124 en Q-172; las pestañas y las casillas verdes en Q-173; la tanda 8, Ideas como bloc de notas, quedó sin probar: el usuario la dio por descontinuada en Q-174, la reemplaza el frente Ideas; reactivado el 2026-11-18 por D-151; tanda 9, Skills, probada en Q-212; tanda 10, Revisión, en Q-213; tanda 11, Docs, en Q-214; en pausa del 2026-11-19 al 2026-11-20 por D-153, vuelve por D-162; tanda 12, Archivos, probada en Q-228; tanda 13, Git, probada en Q-229 y su visor en Q-231; tanda 14, Scripts, probada en Q-232; tanda 15, Ajustes, probada en Q-233; tanda 16, la Cabecera y los cuadros, probada en Q-234; tanda 17, la grilla de Proyectos, probada en Q-235; tanda 18, los menús de la barra y del uso, probada en Q-236; tanda 19, lo que no son piezas (T-58, T-90, T-53), espera Q-240) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso: tanda 1 probada en Q-162, tanda 2 en Q-163, tanda 3 en Q-164, tanda 4 en Q-165, tanda 5 en Q-166, tanda 6 en Q-170 y tanda 7 en Q-171; el color de D-124 en Q-172; las pestañas y las casillas verdes en Q-173; la tanda 8, Ideas como bloc de notas, quedó sin probar: el usuario la dio por descontinuada en Q-174, la reemplaza el frente Ideas; reactivado el 2026-11-18 por D-151; tanda 9, Skills, probada en Q-212; tanda 10, Revisión, en Q-213; tanda 11, Docs, en Q-214; en pausa del 2026-11-19 al 2026-11-20 por D-153, vuelve por D-162; tanda 12, Archivos, probada en Q-228; tanda 13, Git, probada en Q-229 y su visor en Q-231; tanda 14, Scripts, probada en Q-232; tanda 15, Ajustes, probada en Q-233; tanda 16, la Cabecera y los cuadros, probada en Q-234; tanda 17, la grilla de Proyectos, probada en Q-235; tanda 18, los menús de la barra y del uso, probada en Q-236; tanda 19, lo que no son piezas (T-58, T-90, T-53), probada en Q-240) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -36,7 +36,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 - [x] Pasar la Cabecera y los cuadros a la maqueta (DI-I3)
 - [x] Pasar la grilla de Proyectos a la maqueta (DI-I3)
 - [x] Pasar los menús de la barra y del uso a la pieza (DI-I3)
-- [ ] Lo que el rediseño cambia en la app además de las piezas (Q-240)
+- [x] Lo que el rediseño cambia en la app además de las piezas (Q-240)
   - [x] Buscar un archivo en Archivos (T-90)
 - [x] Que la captura del detalle de Ideas salga en la auditoría (T-53)
 - [ ] Escribir el diseño de Iridium desde lo construido (DESIGN.md y 06-ui.md)
@@ -63,7 +63,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 |---|---|---|
 | DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | hecho (Q-152, 2026-11-09) |
 | DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | hecho (Q-157, 2026-11-09) |
-| DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | en curso (tandas 1 a 7 y 9 a 13 probadas; la 8 sin probar, la reemplaza el frente Ideas; la 14, Scripts, probada en Q-232; la 15, Ajustes, en Q-233; la 16, la Cabecera y los cuadros, en Q-234; la 17, la grilla de Proyectos, en Q-235; la 18, los menús, en Q-236; la 19, lo que no son piezas, espera Q-240) |
+| DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | en curso (tandas 1 a 7 y 9 a 13 probadas; la 8 sin probar, la reemplaza el frente Ideas; la 14, Scripts, probada en Q-232; la 15, Ajustes, en Q-233; la 16, la Cabecera y los cuadros, en Q-234; la 17, la grilla de Proyectos, en Q-235; la 18, los menús, en Q-236; la 19, lo que no son piezas, en Q-240) |
 | DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | pendiente |
 
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
@@ -76,6 +76,7 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Buscar un archivo** (T-90): la lupa de la Cabecera de Archivos cambia el árbol por un campo y la lista de los que coinciden, con su carpeta en gris; sin mayúsculas ni tildes, cada palabra tiene que estar en la ruta y primero van los que empiezan así. Las flechas recorren, Enter abre (y deja el archivo a la vista en el árbol, con sus carpetas abiertas) y Esc vuelve. Busca entre todos los archivos del proyecto menos `node_modules` y `.git` (hasta 20 000).
 - **La auditoría de capturas** (T-53, `tools/auditoria-ux.ts`): el detalle de Ideas sale del proyecto (sin ideas sueltas, el del inicio no se saca); al día los selectores que se habían quedado viejos (Archivados, el detalle de una skill y la entrada a un proyecto, que abre en la última sección). Corre las 31 pantallas sin fallas.
 - **Pruebas:** nuevas `t90-buscar-archivo` (5) y, en Playwright, el ⋯ y «archivado hoy» (`r7-r8-proyectos`) y la lupa (`i4-tres-paneles`). `pnpm test` (910), `pnpm typecheck`, `pnpm lint` (8 avisos, los de antes) y el control sin avisos; Playwright de lo tocado, 28 de 28.
+- **Q-240:** todo bien (el ⋯, «archivado hoy», la lupa y los textos). Dos pedidos, hechos en el momento: archivar ya no deja el aviso de arriba de la grilla (con su Deshacer; se desarchiva desde Archivados), y el estado y archivar son optimistas: la tarjeta cambia al instante y vuelve como estaba solo si la ficha no se pudo escribir, con el aviso del error (antes tardaba casi un segundo, lo que tarda releer la grilla). Pruebas: `r7-r8-proyectos` suma la ficha que no se puede escribir; Vitest (910), Playwright de Proyectos (5), typecheck y lint en verde. La tanda 19 queda probada.
 
 ### DI-I3 — 2026-11-21 — después de la tanda 18: el detalle del uso, más corto
 - **Q-236:** todo bien en los menús (el uso, las anteriores, el modelo y el esfuerzo, el contexto, «En esta página», las flechas y Esc). La tanda 18 queda probada.
