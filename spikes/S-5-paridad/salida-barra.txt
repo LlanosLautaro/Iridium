@@ -1,0 +1,36 @@
+
+===  C:/Program Files/Git/context
+init: slash_commands 85
+otro: system thinking_tokens {"type":"system","subtype":"thinking_tokens","estimated_tokens":50,"estimated_tokens_delta":50,"session_id":"15218b87-a4ae-4e07-955b-88432b33fd3e","uuid":"508a9227-0256-4520-89d3-787087832ba3"}
+otro: system thinking_tokens {"type":"system","subtype":"thinking_tokens","estimated_tokens":226,"estimated_tokens_delta":176,"session_id":"15218b87-a4ae-4e07-955b-88432b33fd3e","uuid":"ee3f3793-2fa1-4a21-a968-55165d8e4656"}
+ia: [{"type":"thinking","thinking":"","signature":"CAQS/wYKEAgUGAI4AUIIdGhpbmtpbmcSDD6yRI/SoIkJQlZFUxoMU/ubQaHq6U9jtdP3IjArNNvj2YnvSsPY5FgE8dy/ejaAsH3gmirsdv+leHq515HHNSsGqm4UNFSw5+eZqKEqnAZTLYSX5CVYtVcBNAPqW7JXLRBBRj0JY7Xg7qp12sNPOAbMsjrzmrPss5vojMQxYg98MNy9HtBVdnbvCngkZWxft4ioxFPeJnwOBCcIhrnNB9TrDYQ2Ez8ZXR7QKTjGPoUWmhemidfD49OG1wS+hKeOv3k6L/R+l+/nGGS4dHxdt+XvifKiAmr7uETAqJPmh18HVI8qiGePxr/Dn5ueWyjXE
+ia: [{"type":"tool_use","id":"toolu_01AvTVyvgmNMuV9zMcHGHorQ","name":"Bash","input":{"command":"ls -la \"C:/Program Files/Git/context\" 2>&1 | head -50","description":"List contents of the Git context folder"},"caller":{"type":"direct"}}]
+usuario (eco): [{"tool_use_id":"toolu_01AvTVyvgmNMuV9zMcHGHorQ","type":"tool_result","content":"ls: cannot access 'C:/Program Files/Git/context': No such file or directory\nShell cwd was reset to C:\\Users\\Lautaro\\AppData\\Local\\Temp\\s5-sandbox","is_error":false}]
+otro: system thinking_tokens {"type":"system","subtype":"thinking_tokens","estimated_tokens":50,"estimated_tokens_delta":50,"session_id":"15218b87-a4ae-4e07-955b-88432b33fd3e","uuid":"fa0ade3e-cb2f-478d-a5e6-2c8c8c5b514c"}
+otro: system thinking_tokens {"type":"system","subtype":"thinking_tokens","estimated_tokens":194,"estimated_tokens_delta":144,"session_id":"15218b87-a4ae-4e07-955b-88432b33fd3e","uuid":"dbbefa57-e641-4b51-8871-d385e0bb6dcf"}
+ia: [{"type":"thinking","thinking":"","signature":"CAQS/QUKEAgUGAI4AUIIdGhpbmtpbmcSDKuWPrYgaYilfaXF4RoM18G6oJDvheX3fUNNIjBjnj7Uh0WrKniTGyCjbUiCvqoUEoya6abIOulnNfUrjUktHIKnhK5HYVSgJg62YXAqmgV8bmRCWQB33kfbrWjNMelo1obatetxJ9tzErFpYHpjz8NsLJlRDyGF3M2eLjFXEDvn+A52Jm/A3iJrS29oNOy0N0aDZDOG8/vVWtySmt0Xvo1J76kZ03PloJNFLHh0qa1ki+InBDtzi2+yvMR9om+AkZAc/kg62nJo7PO5wGT2DsZAqBtx+HLt6V5ZQE/R/jwUZp16Hmsagt6wtX8oT/5rM
+ia: [{"type":"tool_use","id":"toolu_01YFoULqoAZYkcEfngmiu4aj","name":"Bash","input":{"command":"ls \"C:/Program Files/Git\" 2>&1 | head -30; echo ---; find \"C:/Program Files/Git\" -maxdepth 3 -iname \"*context*\" 2>/dev/null | head -20","description":"Check Git install folder and search for context entries"},"caller":{"type":"direct"}}]
+usuario (eco): [{"tool_use_id":"toolu_01YFoULqoAZYkcEfngmiu4aj","type":"tool_result","content":"LICENSE.txt\nReleaseNotes.html\nbin\ncmd\ndev\netc\ngit-bash.exe\ngit-cmd.exe\nmingw64\ntmp\nunins000.dat\nunins000.exe\nunins000.msg\nusr\n---\nShell cwd was reset to C:\\Users\\Lautaro\\AppData\\Local\\Temp\\s5-sandbox","is_error":false}]
+ia: [{"type":"thinking","thinking":"","signature":"CAQSzAUKEAgUGAI4AUIIdGhpbmtpbmcSDOWv1HTYDVWMddhPIBoMfArvwwlopc+BwFX8IjC2z/Qyl0E6RZN1CY9nUwL9G2NvG7cpXVJpwKC3aS+6ssvMoPkU4RUuWvELfYpPYLAq6QQg9dxDZieoIDO8+uI2nExarorQTYT/Bu6mXqwLDfRRs0IcqJvmZK6oHTCgO3r+tojeywA1fAvxuvqGwNbtvkHEs14FVQhCyMl/gC8VCP2wAyNGqFDyJ2ImRpozSVLm4RJVW3ZmMv8fgAiz10RUmF0omy2C3OnpoGH4DLYRWp+sAPrRBU4Ct0i25Oc2k85Urrt+EUVpNMaQvlLWD9ZlTWinc
+ia: [{"type":"text","text":"No encontré nada en `C:/Program Files/Git/context`. La carpeta no existe, y tampoco hay ningún elemento con \"context\" en el nivel superior ni hasta tres niveles de profundidad dentro de `C:/Program Files/Git`. La instalación de Git sí está (`bin`, `cmd`, `mingw64`, `usr`, etc.), así que la ruta puede estar mal escrita o apuntar a algo que no está instalado.\n\n¿Qué querés
+result: success false "No encontré nada en `C:/Program Files/Git/context`. La carpeta no existe, y tampoco hay ningún elemento con \"context\" en el nivel superior ni hasta tres niveles de profundidad dentro de `C:/Program Files/Git`. La instalación de Git sí está (`bin`, `cmd`, `mingw64`, `usr`, etc.), así que la ruta puede estar mal escrita o apuntar a algo que no está instalado.\n\n¿Qué querés hacer con eso? Algunas costo 0.00422308
+
+===  /model
+init: slash_commands 85
+ia: [{"type":"text","text":"Current model: `Haiku 5.5`\nUsage: /model <name>. Available: sonnet, opus, haiku, fable, best, sonnet[1m], opus[1m], fable[1m], opusplan, default, or a full model ID."}]
+result: success false "Current model: `Haiku 5.5`\nUsage: /model <name>. Available: sonnet, opus, haiku, fable, best, sonnet[1m], opus[1m], fable[1m], opusplan, default, or a full model ID." costo 0
+
+===  /usage
+init: slash_commands 85
+ia: [{"type":"text","text":"You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 17% used · resets Nov 21, 6:09pm (America/Argentina/Buenos_Aires)\nCurrent week (all models): 86% used · resets Nov 24, 8:59pm (America/Argentina/Buenos_Aires)\n\nWhat's contributing to your limits usage?\nApproximate · sessions on this machine only · shares overlap\n\nLast 24h · 1
+result: success false "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 17% used · resets Nov 21, 6:09pm (America/Argentina/Buenos_Aires)\nCurrent week (all models): 86% used · resets Nov 24, 8:59pm (America/Argentina/Buenos_Aires)\n\nWhat's contributing to your limits usage?\nApproximate · sessions on this machine only · shares overlap\n\nLast 24h · 1187 requests · 24 sessi costo 0
+
+===  /config
+init: slash_commands 85
+ia: [{"type":"text","text":"Usage: /config key=value [key=value ...]\n  agentPushNotifEnabled=true|false\n  autoCompact=true|false\n  autoConnectIde=true|false\n  autoScroll=true|false\n  checkpoints=true|false\n  copyFullResponse=true|false\n  copyOnSelect=true|false\n  defaultToAgentsView=true|false\n  editor=normal|vim\n  externalEditorContext=true|false\n  gitignore=true|false\n  inputNeededNotifE
+result: success false "Usage: /config key=value [key=value ...]\n  agentPushNotifEnabled=true|false\n  autoCompact=true|false\n  autoConnectIde=true|false\n  autoScroll=true|false\n  checkpoints=true|false\n  copyFullResponse=true|false\n  copyOnSelect=true|false\n  defaultToAgentsView=true|false\n  editor=normal|vim\n  externalEditorContext=true|false\n  gitignore=true|false\n  inputNeededNotifEnabled=true|false\n  la costo 0
+
+===  /clear
+otro: conversation_reset  {"type":"conversation_reset","new_conversation_id":"d07ccfc1-c1fc-4c03-be1a-af4cc573098b","uuid":"d07ccfc1-c1fc-4c03-be1a-af4cc573098b","trigger":"clear","user_message_uuid":"9562c922-a7a8-4741-b942-4e5c6971f28a","timestamp":"2026-11-21T17:33:04.876Z","session_id":"624fb937-a2c3-47a5-a149-f8ac5ed438
+init: slash_commands 85
+result: success false "" costo 0

@@ -40,6 +40,10 @@ Un caso por fila, en una o dos líneas, agrupados por área. Sirven para probar 
 | C-60 | Lo que escribe en el chat de una conversación o en una respuesta de Pendientes no se pierde al cambiar de lugar ni al cerrar Iridium, y al abrirlo vuelve al proyecto que tenía abierto (D-060) | B-1, B-4 | Must |
 | C-61 | Conversa con la IA desde la vista de Proyectos: ideas que todavía no sabe dónde van, crear proyectos o hablar de varios a la vez; trabaja en la carpeta `Ideas` de la carpeta Iridium (D-060, D-083) | B-1, B-4 | Must |
 | C-59 | Comparte Iridium con conocidos como beta: lo instalan desde GitHub, eligen su carpeta de proyectos, reciben la guía y las actualizaciones al cerrar (D-054) | B-1, B-4 | Must |
+| C-64 | Escribe «/» en el chat y elige un comando de la lista, con su descripción: de Claude Code, de una skill o de un complemento (frente Paridad, D-165) | B-4 | Must |
+| C-65 | Adjunta archivos y fotos a un mensaje con el + (Ctrl+U) o arrastrándolos al chat; la IA los ve sin que escriba la ruta (frente Paridad, D-165) | B-4 | Must |
+| C-66 | Pega una captura en el chat con Ctrl+V: viaja con el mensaje y queda como miniatura en la conversación (frente Paridad, D-165) | B-4 | Must |
+| C-67 | Pega un texto largo y queda como un adjunto («Texto pegado, 340 líneas») en vez de llenar el cuadro (frente Paridad, D-165) | B-4 | Must |
 
 ### Proyectos y plan
 | Caso | Qué hace el usuario | Base | Prioridad |
@@ -238,6 +242,9 @@ Además de lo que está en *Won't*:
 | Carpeta Iridium | La carpeta de Iridium aparte de los proyectos, con `Ideas` y `Skills`; de entrada `Documentos\Iridium`, se cambia en Ajustes › Proyectos (D-083) |
 | Motor | Lo que hace el trabajo de IA: hoy Claude Code, por el Agent SDK |
 | Frontera | El único lugar de la app que habla con el motor (D-007) |
+| Adjunto | Una foto, un archivo o un texto pegado que viaja con un mensaje del chat (frente Paridad) |
+| Texto pegado | Un pegado largo que queda como adjunto en vez de llenar el cuadro del chat (frente Paridad) |
+| Comando | Lo que se escribe con «/» al principio de un mensaje: de Claude Code, de una skill o de un complemento; la lista la da el motor (frente Paridad) |
 | Mapa | El dibujo del plan de un proyecto como cajas dentro de cajas: hitos con sus pasos (D-008) |
 | Paso | Una parte de un hito que el mapa muestra: un área, una iteración, un paso de un módulo |
 | Frente | Una línea de trabajo del proyecto con su propio estado: el núcleo o un módulo. Avanzan hasta dos a la vez (D-063) |

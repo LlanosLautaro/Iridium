@@ -1,0 +1,88 @@
+comandos: 86 de Claude Code: 53
+   /impeccable [shape · audit|critique · animate|bolder|colorize|delight|layout|overdrive|quieter|typeset · adapt|clarify|distill · harden|onboard|optimize|polish · init|document|extract|live|generate] [target] — Use when the user wants to design, redesign, shape, critique, audit, polish, clarify, dist
+   /iridium:iridium — (iridium) El framework de Iridium
+   /impeccable:impeccable [shape · audit|critique · animate|bolder|colorize|delight|layout|overdrive|quieter|typeset · adapt|clarify|distill · harden|onboard|optimize|polish · init|document|extract|live|generate] [target] — (impeccable) Use to design, redesign, critique, audit, polish or animate a frontend: websi
+   /engineering:architecture <decision or system to design> (= architecture) — (engineering) Create or evaluate an architecture decision record (ADR). Use when choosing 
+   /engineering:code-review <PR URL, diff, or file path> — (engineering) Review code changes for security, performance, and correctness. Trigger with
+   /engineering:debug <error message or problem description> — (engineering) Structured debugging session — reproduce, isolate, diagnose, and fix. Trigge
+   /engineering:deploy-checklist [service or release name] (= deploy-checklist) — (engineering) Pre-deployment verification checklist. Use when about to ship a release, dep
+   /engineering:documentation (= documentation) — (engineering) Write and maintain technical documentation. Trigger with "write docs for", "
+   /engineering:incident-response <incident description or alert> (= incident-response) — (engineering) Run an incident response workflow — triage, communicate, and write postmorte
+   /engineering:standup [yesterday | today | blockers] (= standup) — (engineering) Generate a standup update from recent activity. Use when preparing for daily
+   /engineering:system-design (= system-design) — (engineering) Design systems, services, and architectures. Trigger with "design a system f
+   /engineering:tech-debt (= tech-debt) — (engineering) Identify, categorize, and prioritize technical debt. Trigger with "tech debt
+   /engineering:testing-strategy (= testing-strategy) — (engineering) Design test strategies and test plans. Trigger with "how should we test", "t
+   /design:accessibility-review <Figma URL, URL, or description> (= accessibility-review) — (design) Run a WCAG 2.1 AA accessibility audit on a design or page. Trigger with "audit ac
+   /design:design-critique <Figma URL, screenshot, or description> (= design-critique) — (design) Get structured design feedback on usability, hierarchy, and consistency. Trigger 
+   /design:design-handoff <Figma URL or design description> (= design-handoff) — (design) Generate developer handoff specs from a design. Use when a design is ready for en
+   /design:design-system [audit | document | extend] <component or system> (= design-system) — (design) Audit, document, or extend your design system. Use when checking for naming incon
+   /design:research-synthesis <research data, transcripts, or survey results> (= research-synthesis) — (design) Synthesize user research into themes, insights, and recommendations. Use when you
+   /design:user-research (= user-research) — (design) Plan, conduct, and synthesize user research. Trigger with "user research plan", "
+   /design:ux-copy <context or copy to review> (= ux-copy) — (design) Write or review UX copy — microcopy, error messages, empty states, CTAs. Trigger 
+CC /design consent | revoke — Grant or revoke Claude agent access to your Design projects
+CC /design-sync [<project hint, e.g. "Acme DS">] — Push a React design system to claude.ai/design. This runs a converter that bundles the rea
+CC /dataviz — Use this skill whenever you are about to create ANY chart, graph, plot, dashboard, or data
+CC /update-config — Use this skill to configure the Claude Code harness via settings.json. Automated behaviors
+CC /verify — Verify that a code change actually does what it's supposed to by exercising it end-to-end 
+CC /debug [issue description] — Enable debug logging for this session and help diagnose issues
+CC /code-review [low|medium|high|xhigh|max|ultra] [--fix] [--comment] [<pr#>|<branch>|<path>] [--max-findings <n>|all] (= review) — Review the current diff, or a PR number/branch/path target, for correctness bugs (plus reu
+CC /simplify [<target>] — Review the changed code for reuse, simplification, efficiency, and altitude cleanups, then
+CC /batch <instruction> — Research and plan a large-scale change, then execute it in parallel across 5–30 isolated w
+CC /fewer-permission-prompts — Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized
+CC /doctor [prompt-audit [<path>]] (= checkup) — Health-check the user's Claude Code setup and fix issues: diagnose installation health — w
+CC /loop [interval] [prompt] (= proactive) — Run a prompt or slash command on a recurring interval (e.g. /loop 5m /foo). Omit the inter
+CC /schedule (= routines) — Create, update, list, or run scheduled cloud agents (routines) that execute on a cron sche
+CC /claude-api — Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool
+CC /run — Launch and drive this project's app to see a change working. Use when asked to run, start,
+CC /run-skill-generator — Author or improve the run-<unit> skill - a per-project skill that tells agents how to buil
+CC /plugin-authoring — Make a mod: a change to Claude's own interface or behaviour, such as a panel or pane that 
+CC /advisor [fable|opus|sonnet|off] — Let Claude consult a stronger model at key moments
+CC /agents — (removed) Ask Claude to create/manage subagents, or edit .claude/agents/
+CC /auto-mode-setup [--request-id <uuid>] (--wizard posture=… scope=… depth=… --propose | --expect-sha256 <64-hex> --apply-file <path>) — Teach auto mode about your environment, plus optional rule tweaks
+CC /autocompact [auto|<tokens>] — Configure the auto-compact window size
+CC /clear [name] (= reset, new) — Start a new session with empty context; previous session stays on disk (resumable with /re
+CC /color [red|blue|green|yellow|purple|orange|pink|cyan|default] — Set the prompt bar color for this session
+CC /compact <optional custom summarization instructions> — Free up context by summarizing the conversation so far
+CC /config key=value (= settings) — Set a setting by key
+CC /output-style [style] — List output styles or switch to one
+CC /context — Show current context usage
+CC /effort <low|medium|high|xhigh|max|auto> — Set effort level for model usage
+CC /fast [on|off] — Toggle fast mode (Opus 5.5)
+CC /focus [on|off] — Toggle focus view: just your prompt, summary, and response
+CC /heapdump — Dump the JS heap to the Desktop; on Linux with no Desktop folder, the home directory
+CC /init — Initialize a new CLAUDE.md file with codebase documentation
+CC /mcp [reconnect|enable|disable [<server>|all]] — Manage MCP servers
+CC /import — Import config from another AI coding agent
+CC /model <model> — Set the AI model for Claude Code
+CC /__remote-workflow — Run the workflow script delivered in this session environment (server-launched sessions on
+CC /workflow-launch-exec — Execute a server-launched workflow handoff (workflow_launch event sessions only)
+CC /reload-plugins [--force] — Activate pending plugin changes in the current session
+CC /reload-skills — Pick up skills added or changed on disk during this session
+CC /rename [name] (= name) — Rename the current conversation
+CC /ultrareview — Start a cloud agent that finds and verifies bugs in your branch (~5-15 min, $5-$25 USD) · 
+CC /security-review — Complete a security review of the pending changes on the current branch
+CC /usage-credits — Configure usage credits or request them from your admin when you hit a limit
+CC /extra-usage — Renamed to /usage-credits
+CC /usage (= cost, stats) — Show session cost, plan usage, and what's contributing to your limits
+CC /insights — Generate a report analyzing your Claude Code sessions
+CC /recap — Generate a one-line session recap now
+CC /skill-doctor — Show which loaded skills are unused and costing context
+CC /goal — Set a goal — keep working until the condition is met
+CC /design-consent — Grant Claude agent access to your Design projects
+CC /design-revoke — Revoke Claude agent access to your Design projects
+CC /list-agents (= peers) — List subagents, teammates, and other Claude sessions you can message
+CC /team-onboarding — Help teammates ramp on Claude Code with a guide from your usage
+   /built-in-browser (= anthropic-skills:built-in-browser) — Read this skill before the first step that uses the built-in browser, the browser pane ins
+   /chrome-browser (= anthropic-skills:chrome-browser) — Read this skill before the first step that uses Claude in Chrome, the browser extension wh
+   /computer-use (= anthropic-skills:computer-use) — Read this skill before the first step of any request to do something in an app on the pers
+   /deep-research (= anthropic-skills:deep-research) — Use this skill when the user's prompt requires (1) researching a topic across multiple sou
+   /docs (= anthropic-skills:docs) — docs (editable docs people share and comment on; the default for any document, named as a 
+   /docx (= anthropic-skills:docx) — Use this skill whenever the user wants to create, read, edit, or manipulate Word documents
+   /google-workspace (= anthropic-skills:google-workspace) — Read this before the first Google Drive, Docs, Sheets or Slides connector call whenever th
+   /import-memory (= anthropic-skills:import-memory) — Import a memory export from another AI assistant into Claude's memory — conversationally, 
+   /morning (= anthropic-skills:morning) — Render the user's morning brief as a styled HTML artifact, or set it up as a recurring wee
+   /pdf (= anthropic-skills:pdf) — Use this skill whenever the user wants to do anything with PDF files. This includes readin
+   /pptx (= anthropic-skills:pptx) — Use this skill any time a .pptx or .potx file is involved in any way — as input, output, o
+   /skill-creator (= anthropic-skills:skill-creator) — Create new skills, modify and improve existing skills, and measure skill performance. Use 
+   /xlsx (= anthropic-skills:xlsx) — Use this skill any time a spreadsheet file is the primary input or output. This means any 
+claves del init: commands, agents, output_style, available_output_styles, user_output_styles_dir, models, account, pid, claude_code_version, current_permission_mode, feedback_mode, analytics_disabled, remote_control_auto_enable, remote_control_auto_connect_default, remote_control_available, remote_control_auto_on_by_default, ide_rc_auto_enable_gate, fast_mode_state, fast_mode_disabled_reason, session_state, capabilities

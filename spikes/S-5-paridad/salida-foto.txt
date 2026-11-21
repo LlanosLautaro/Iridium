@@ -1,0 +1,8 @@
+otro: system hook_started {"type":"system","subtype":"hook_started","hook_id":"d5d66d67-c347-45d0-8068-ddfabc89afe9","hook_name":"SessionStart:startup","hook_event":"SessionStart","uuid":"c3c2ceb6-b3a0-4362-97f2-c94353302666","session_id":"9020d86c-5f67-4aad-b0cc-c064eded7d24"}
+otro: system hook_response {"type":"system","subtype":"hook_response","hook_id":"d5d66d67-c347-45d0-8068-ddfabc89afe9","hook_name":"SessionStart:startup","hook_event":"SessionStart","output":"","stdout":"","stderr":"","exit_code":0,"outcome":"success","uuid":"46bd1a56-aebc-430f-a775-035672d780e3","session_id":"9020d86c-5f67-4
+init: slash_commands 85
+otro: rate_limit_event  {"type":"rate_limit_event","rate_limit_info":{"status":"allowed_warning","resetsAt":1795564800,"rateLimitType":"seven_day","utilization":0.85,"overageStatus":"rejected","overageDisabledReason":"org_level_disabled","isUsingOverage":false,"surpassedThreshold":0.75,"unifiedWindows":{"five_hour":{"utili
+ia: [{"type":"text","text":"Rojo"}]
+result: success false "Rojo" costo 0.0054222
+historial: user [{"type":"image","source":{"type":"base64","media_type":"image/png","data":"iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAeUlEQVR4nO3PQQkAMAzAwCqpf1ETMxF7HINABFzm7H7dcEEDWtCAFjSgBQ1oQQNa0IAWNKAFDWhB
+historial: assistant [{"type":"text","text":"Rojo"}]
