@@ -162,7 +162,7 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const mapa = await alMapa(win)
-  await expect(mapa.locator('.cab-seccion')).toContainText('Hito 10 · Operación')
+  await expect(mapa.locator('.cabecera')).toContainText('Hito 10 · Operación')
   // El activo primero, después en el orden de la tabla y «Por empezar» con su cuenta (MA-3); Notas, en uso y con
   // todo hecho, está archivada (D-152).
   const barra = mapa.getByRole('tablist', { name: 'Frentes' })
@@ -219,7 +219,7 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   await expect(avisos.locator('.tramo.pausa')).toHaveText(/Sonar al terminar\s*En pausa/)
   // «Archivados», arriba a la derecha, la muestra después de los activos y en gris; se recuerda (R-91, D-152).
   const archivados = mapa.getByRole('switch')
-  await expect(mapa.locator('.cab-seccion')).toContainText('Archivados 1')
+  await expect(mapa.locator('.cabecera')).toContainText('Archivados 1')
   await archivados.check()
   await expect(barra.getByRole('tab')).toHaveText(['Galería', 'Avisos', 'Notas', 'Por empezar3'])
   await expect(barra.getByRole('tab', { name: 'Notas' })).toHaveClass(/archivado/)

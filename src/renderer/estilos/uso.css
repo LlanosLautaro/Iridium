@@ -355,40 +355,6 @@
   }
 }
 
-/* F-6: la confirmación de cerrar con sesiones trabajando */
-.velo-dialogo {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  background: var(--velo);
-}
-.dialogo {
-  width: min(440px, calc(100vw - 40px));
-  display: grid;
-  gap: 10px;
-  padding: 20px 22px 18px;
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-tarjeta);
-  background: var(--elevado);
-  box-shadow: var(--sombra-menu);
-}
-.dialogo h2 {
-  font: 600 16px / 1.35 var(--ui);
-  color: var(--texto);
-}
-.dialogo p {
-  color: var(--texto-2);
-  line-height: 1.5;
-}
-.dialogo .acc {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 6px;
-}
-
 .aviso-flotante .x:hover {
   background: var(--hover);
   color: var(--texto);

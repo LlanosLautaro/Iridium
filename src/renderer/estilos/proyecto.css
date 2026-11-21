@@ -76,15 +76,6 @@
   font-size: 12px;
 }
 
-.cab-panel {
-  display: flex;
-  align-items: center;
-  height: 38px;
-  padding: 0 8px 0 16px;
-  flex: none;
-  border-bottom: 1px solid var(--borde-suave);
-}
-
 /* Vacío dentro de una sección */
 .vacia {
   flex: 1;

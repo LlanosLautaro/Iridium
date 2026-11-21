@@ -118,7 +118,7 @@ test('el Mapa antes del hito 10: los hitos como camino y de un paso a su secció
     .click()
 
   const mapa = win.locator('[data-seccion="mapa"]')
-  await expect(mapa.locator('.cab-seccion')).toContainText('Hito 7 · Construcción')
+  await expect(mapa.locator('.cabecera')).toContainText('Hito 7 · Construcción')
   // Sin frentes no hay barra: el camino son los hitos, lo hecho antes del último, plegado (D-142).
   await expect(mapa.getByRole('tablist')).toHaveCount(0)
   const camino = mapa.locator('.camino')
@@ -239,7 +239,7 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
   await cuadro.fill('una línea\notra\notra más\ny otra')
   const alto4 = await alto()
   expect(alto4).toBeGreaterThan(alto1 + 30)
-  await win.locator('.seccion-vista:not([hidden]) .cab-seccion h2').first().click()
+  await win.locator('.seccion-vista:not([hidden]) .cabecera h1').first().click()
   expect(await alto()).toBe(alto4)
   await cuadro.fill('')
   expect(await alto()).toBe(alto1)

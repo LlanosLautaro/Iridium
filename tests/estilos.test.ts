@@ -173,28 +173,20 @@ const VIEJAS = [
 
 /** Las clases viejas que todavía tiene cada sección. */
 const VIEJAS_PENDIENTES: Record<string, string[]> = {
-  'base.css': ['mini-link', 'cab-filtros', 'cab-filtro'],
   'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
-  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás; tanda 12: Archivos; tanda 14: Scripts; tanda 15: Ajustes
-  'proyecto.css': ['recuadro-simple', 'menu-lista', 'cab-panel'],
-  'proyectos.css': [
-    'peligro',
-    'aviso-grilla',
-    'mudanza',
-    'aviso-fw',
-    'menu-contextual',
-    'cab-proyecto',
-    'interruptor-arch',
-  ],
-  'uso.css': ['menu-boton', 'medidor', 'menu-lista', 'dialogo', 'velo-dialogo'],
+  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás; tanda 12: Archivos; tanda 14: Scripts;
+  // tanda 15: Ajustes; tanda 16: la Cabecera y los cuadros
+  'proyecto.css': ['recuadro-simple', 'menu-lista'],
+  'proyectos.css': ['peligro', 'aviso-grilla', 'mudanza', 'aviso-fw', 'menu-contextual'],
+  'uso.css': ['menu-boton', 'medidor', 'menu-lista'],
 }
 
 /** Cuántas veces se usa cada token de antes (`tokens-viejos.css`) en la app: como mucho esto. */
 const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
   '--barra': 1,
   '--caja': 4,
-  '--medidor-fondo': 5,
-  '--primario': 12,
+  '--medidor-fondo': 4,
+  '--primario': 11,
   '--primario-texto': 1,
   '--ok': 4,
   '--esp-md': 1,

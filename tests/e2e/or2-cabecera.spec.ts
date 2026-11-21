@@ -97,6 +97,11 @@ const SECCIONES: [boton: string, titulo: string][] = [
   ['Scripts', 'Scripts'],
 ]
 
+/** La altura de la Cabecera de sección (PZ-9): el relleno, la fila de un campo y su línea; con los Filtros (PZ-6), más
+ * (con fracciones de píxel por la letra: se redondea). */
+const ALTO = 61
+const ALTO_CON_FILTROS = 89
+
 test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con los filtros abajo', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
@@ -104,25 +109,26 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
   const cajas: { top: number; height: number; filtros: boolean }[] = []
   for (const [boton, titulo] of SECCIONES) {
     await barra.getByRole('button', { name: new RegExp(`^${boton}`) }).click()
-    const cab = win.locator('.seccion-vista:not([hidden]) .cab-seccion')
-    await expect(cab.locator('.cab-1 h2')).toHaveText(titulo)
+    const cab = win.locator('.seccion-vista:not([hidden]) .cabecera')
+    await expect(cab.locator('.fila-cab h1')).toHaveText(new RegExp(`^${titulo}`))
     const caja = await cab.boundingBox()
     if (!caja) throw new Error(`sin cabecera en ${boton}`)
-    cajas.push({ top: caja.y, height: caja.height, filtros: (await cab.locator('.cab-2').count()) > 0 })
+    cajas.push({ top: caja.y, height: caja.height, filtros: (await cab.locator('> .filtros').count()) > 0 })
   }
-  // Todas en el mismo lugar y con la misma altura sin filtros; la de la conversación, sin línea, la de las maquetas.
+  // Todas en el mismo lugar y con la misma altura: la de la pieza (PZ-9), más alta con los filtros. La de la
+  // conversación, la de las maquetas.
   const chat = await win.locator('.cab-conv').boundingBox()
   expect(chat?.height).toBe(48)
   for (const c of cajas) {
     expect(c.top).toBe(cajas[0]?.top)
-    expect(c.height).toBe(c.filtros ? 78 : 40)
+    expect(Math.round(c.height)).toBe(c.filtros ? ALTO_CON_FILTROS : ALTO)
   }
 
   // La Bandeja: la cuenta junto al título y los filtros por frente en la segunda fila, fijos al desplazar.
   await barra.getByRole('button', { name: /^Bandeja de entrada/ }).click()
   const bandeja = win.locator('[data-seccion="pendientes"]')
-  await expect(bandeja.locator('.cab-1 .cuenta')).toHaveText('2')
-  const filtros = bandeja.locator('.cab-2').getByRole('group', { name: 'Filtrar por frente' })
+  await expect(bandeja.locator('.fila-cab h1 > .cuenta')).toHaveText('2')
+  const filtros = bandeja.locator('.cabecera > .filtros').getByRole('group', { name: 'Filtrar por frente' })
   await expect(filtros).toContainText('Todos 2')
   await expect(filtros).toContainText('Compartir 1')
   await filtros.getByRole('button', { name: /^Compartir/ }).click()
@@ -135,16 +141,16 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
 
   // Scripts: la cuenta.
   await barra.getByRole('button', { name: 'Scripts' }).click()
-  await expect(win.locator('[data-seccion="scripts"] .cab-1 > .n')).toHaveText('1')
+  await expect(win.locator('[data-seccion="scripts"] .fila-cab h1 > .cuenta')).toHaveText('1')
   await app.close()
 })
 
 test('en el inicio, Proyectos usa la misma cabecera', async () => {
   const { app, win } = await abrir()
-  const proyectos = win.locator('.grilla-proyectos .cab-seccion')
+  const proyectos = win.locator('.grilla-proyectos .cabecera')
   await expect(proyectos.locator('h1')).toHaveText('Proyectos')
-  await expect(proyectos.locator('.cab-1 > .n')).toHaveText('1')
+  await expect(proyectos.locator('.fila-cab h1 > .cuenta')).toHaveText('1')
   await expect(proyectos.getByRole('button', { name: 'Nuevo proyecto' })).toBeVisible()
-  expect((await proyectos.boundingBox())?.height).toBe(40)
+  expect((await proyectos.boundingBox())?.height).toBe(ALTO)
   await app.close()
 })

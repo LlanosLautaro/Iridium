@@ -200,7 +200,7 @@ export function Proyectos() {
           titulo="Proyectos"
           cuenta={
             conGrilla && (
-              <span className="n" title="Proyectos sin archivar">
+              <span className="cuenta" title="Proyectos sin archivar">
                 {proyectos.length - archivados}
               </span>
             )
@@ -209,23 +209,22 @@ export function Proyectos() {
           acciones={
             lista?.tipo === 'lista' && (
               <>
-                <button type="button" className="boton principal chico" onClick={() => setNuevo(true)}>
+                {conGrilla && (
+                  <label className="interruptor" title="Mostrar los archivados al final, más tenues">
+                    <input
+                      type="checkbox"
+                      role="switch"
+                      aria-checked={verArchivados}
+                      checked={verArchivados}
+                      onChange={(e) => guardarPreferencias({ verArchivados: e.target.checked })}
+                    />
+                    Archivados <span className="cuenta">{archivados}</span>
+                  </label>
+                )}
+                <button type="button" className="boton principal" onClick={() => setNuevo(true)}>
                   <Icono nombre="mas" />
                   Nuevo proyecto
                 </button>
-                {conGrilla && (
-                  <button
-                    type="button"
-                    className="interruptor-arch"
-                    role="switch"
-                    aria-checked={verArchivados}
-                    title="Mostrar los archivados al final, más tenues"
-                    onClick={() => guardarPreferencias({ verArchivados: !verArchivados })}
-                  >
-                    <span className="pista" />
-                    Archivados <span className="n">{archivados}</span>
-                  </button>
-                )}
               </>
             )
           }

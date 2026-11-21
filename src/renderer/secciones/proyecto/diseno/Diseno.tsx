@@ -28,9 +28,9 @@ function ConfirmarPedido({
   const primero = useRef<HTMLButtonElement>(null)
   useEffect(() => primero.current?.focus(), [])
   return (
-    <div className="velo-dialogo">
+    <div className="velo capa-cuadro">
       <div
-        className="dialogo"
+        className="cuadro"
         role="dialog"
         aria-modal="true"
         aria-labelledby="di-pedir-t"
@@ -44,7 +44,7 @@ function ConfirmarPedido({
             : 'La IA dibuja las pantallas desde la UX del proyecto (04-ux.md), con los tokens y las piezas.'}{' '}
           Van apareciendo acá a medida que las guarda. Gasta uso de tu suscripción.
         </p>
-        <div className="acc">
+        <div className="pie">
           <button ref={primero} type="button" className="boton sin-fondo" onClick={cerrar}>
             Cancelar
           </button>
@@ -216,7 +216,7 @@ export function Diseno({ ruta }: { ruta: string }) {
                 etiqueta="Pantallas o sistema"
               />
               {pestana === 'pantallas' && (
-                <div className="di-tamano">
+                <div className="derecha">
                   <Filtros
                     filtros={[
                       { clave: 'chico', nombre: 'Chicas' },

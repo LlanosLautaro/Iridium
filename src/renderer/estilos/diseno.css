@@ -94,11 +94,6 @@
   background: var(--espera);
 }
 
-/* El tamaño de las miniaturas, a la derecha de las pestañas */
-.di-tamano {
-  margin-left: auto;
-}
-
 /* Avisos: el índice mal escrito y el pedido mandado */
 .di-aviso,
 .di-pedido {

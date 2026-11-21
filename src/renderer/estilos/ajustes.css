@@ -69,12 +69,6 @@
   color: var(--texto-2);
   overflow-wrap: anywhere;
 }
-.grupo-ancho {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  min-width: 0;
-}
 .tonos {
   display: flex;
   flex-direction: column;

@@ -143,7 +143,7 @@ test('al cambiar de pantalla con un atajo o abrir un proyecto con Enter, el foco
   await win.locator('.tarjeta', { hasText: 'Beta' }).focus()
   await win.keyboard.press('Enter')
   await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Beta')
-  await expect(win.locator('.seccion-vista:not([hidden]) .cab-seccion h2')).toBeFocused()
+  await expect(win.locator('.seccion-vista:not([hidden]) .cabecera h1')).toBeFocused()
   // El próximo Tab sigue desde el título, no desde las pestañas de arriba.
   await win.keyboard.press('Tab')
   expect(await win.evaluate(() => !!document.activeElement?.closest('main.trabajo'))).toBe(true)

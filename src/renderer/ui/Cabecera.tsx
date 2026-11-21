@@ -1,11 +1,11 @@
-// La cabecera de una sección (04-ux.md › W-9, A-8): la misma en todas. Título y cuenta a la izquierda, una o dos
-// acciones a la derecha y, en la segunda fila, los filtros como píldoras con su cuenta. La misma altura en todas las
-// secciones. Vacía, debajo, una línea de para qué es la sección con su acción principal.
+// La cabecera de una sección (04-ux.md › W-9, A-8), con la Cabecera de sección (PZ-9) de las piezas: la misma en todas.
+// Título y cuenta a la izquierda, la ruta en gris, una o dos acciones a la derecha y, debajo, los Filtros (PZ-6) con su
+// cuenta. Vacía, debajo, una línea de para qué es la sección con su acción principal.
 import type { ReactNode } from 'react'
 
 export type Filtro = { clave: string; nombre: string; n?: number; titulo?: string }
 
-/** Los filtros de una sección: el elegido con el fondo de selección (W-9). */
+/** Los filtros de una sección (PZ-6): el elegido, subrayado (W-9). */
 export function Filtros({
   filtros,
   elegido,
@@ -19,12 +19,12 @@ export function Filtros({
   etiqueta: string
 }) {
   return (
-    <fieldset className="cab-filtros" aria-label={etiqueta}>
+    <fieldset className="grupo-filtros" aria-label={etiqueta}>
       {filtros.map((f) => (
         <button
           key={f.clave}
           type="button"
-          className={f.clave === elegido ? 'cab-filtro sel' : 'cab-filtro'}
+          className={f.clave === elegido ? 'filtro elegido' : 'filtro'}
           aria-pressed={f.clave === elegido}
           title={f.titulo}
           onClick={() => elegir(f.clave)}
@@ -33,7 +33,7 @@ export function Filtros({
           {f.n !== undefined && (
             <>
               {' '}
-              <span className="n">{f.n}</span>
+              <span className="cuenta">{f.n}</span>
             </>
           )}
         </button>
@@ -66,18 +66,20 @@ export function Cabecera({
   /** h1 en el inicio, h2 dentro de un proyecto (debajo de su nombre). */
   nivel?: 1 | 2
 }) {
-  const H = nivel === 1 ? 'h1' : 'h2'
+  // La pieza escribe el título como h1; dentro de un proyecto (debajo de su nombre) se lee como de segundo nivel.
   return (
     <>
-      <header className="cab-seccion">
-        <div className="cab-1">
+      <header className="cabecera">
+        <div className="fila-cab">
           {icono}
-          <H title={titulo}>{titulo}</H>
-          {typeof cuenta === 'number' ? <span className="n">{cuenta}</span> : cuenta}
-          {sub && <span className="sub">{sub}</span>}
-          {acciones && <div className="der">{acciones}</div>}
+          <h1 title={titulo} aria-level={nivel === 1 ? undefined : 2}>
+            {titulo}
+            {typeof cuenta === 'number' ? <span className="cuenta">{cuenta}</span> : cuenta}
+          </h1>
+          {sub && <span className="ruta">{sub}</span>}
+          {acciones && <span className="acciones-cab">{acciones}</span>}
         </div>
-        {filtros && <div className="cab-2">{filtros}</div>}
+        {filtros && <div className="filtros">{filtros}</div>}
       </header>
       {vacia && <p className="cab-vacia">{vacia}</p>}
     </>

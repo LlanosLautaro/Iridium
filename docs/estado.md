@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I8, las piezas de cada versión, probada en Q-225) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 14 probadas; la 15, Ajustes, espera Q-233; vuelve por D-162) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3: tandas 1 a 7 y 9 a 15 probadas; la 16, la Cabecera y los cuadros, espera Q-234; vuelve por D-162) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 va al cerrar Diseño, D-102, D-151) | en pausa |
 | Capacidades (T-28) | sección | 1. Propuesta (detrás de Diseño, D-102) | pendiente |
@@ -42,10 +42,10 @@
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, al cerrar DI-I3, D-162) | en pausa |
 
 ## En qué estamos ahora
-**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Archivos, Git y Scripts quedaron probadas (Q-228 a Q-232). **Ajustes** ya es la de la maqueta y espera Q-233 (la prueba). Siguen la Cabecera compartida y los cuadros; la lupa para buscar un archivo, en T-90.
+**Frente activo: Diseño** (vuelve por D-162, a tu pedido): las secciones pasan a las piezas, tanda por tanda. Archivos, Git, Scripts y Ajustes quedaron probadas (Q-228 a Q-233). **La Cabecera** de todas las secciones y **los cuadros** ya son los de la maqueta y esperan Q-234 (la prueba). Sigue la grilla de Proyectos; la lupa para buscar un archivo, en T-90.
 **Abrir** (D-153) queda en pausa con sus tres iteraciones probadas: el paso 8 y la otra PC (T-87, D-160) vuelven al cerrar DI-I3. **Git al día con GitHub** (D-159) quedó probado en las dos PC (Q-224).
 **Arranque** (D-135): la primera noche no arrancó; arreglado, espera otra noche (Q-227). Después de Diseño, Orden mide la calidad y sigue Plantillas (D-151, D-150).
-Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
+Ideas sin evaluar: T-76, T-78, T-89 y T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
 - **Q-227 — Probá el arranque otra noche**
@@ -56,18 +56,18 @@ Ideas sin evaluar: T-76, T-78 y T-89. Los avisos de `pnpm audit`, en T-79. Chat 
   - [ ] La conversación de ese proyecto empieza con «Continúa con el proyecto.» y debajo del título dice «la empezó Iridium a las…»
   - [ ] Tocando el uso (abajo a la derecha) dice «Último arranque: …»
   - [ ] Al cerrar y abrir Iridium, el aviso no vuelve a aparecer
-- **Q-233 — Probá Ajustes**
+- **Q-234 — Probá la cabecera de las secciones y los cuadros**
   Tipo: prueba · Frente: Diseño
-  Contexto: la tanda 15 (`modulos/diseno/estado.md` › DI-I3, tanda 15). Antes, Actualizar. Ábrela con el ⚙ o Ctrl+,.
-  - [ ] Las pestañas a la izquierda, sin íconos, y cada ajuste en una fila: qué es en gris a la izquierda y el control a la derecha
-  - [ ] En IA, el tono se elige con un círculo y su explicación debajo, y queda elegido al cerrar y abrir
-  - [ ] En Apariencia, Angosto · Normal · Ancho cambia el ancho de Docs en el momento
-  - [ ] En Proyectos, la carpeta se ve en letra de código y Cambiar… sigue andando
-  - [ ] Esc, la ✕ y un clic afuera la cierran sin perder lo escrito en la conversación
+  Contexto: la tanda 16 (`modulos/diseno/estado.md` › DI-I3, tanda 16). Antes, Actualizar. La cabecera tiene más aire y los filtros son texto subrayado, como las maquetas.
+  - [ ] En un proyecto, la cabecera de cada sección queda a la misma altura al pasar de una a otra
+  - [ ] En la Bandeja, los filtros por frente son texto gris y el elegido queda blanco y subrayado
+  - [ ] En Proyectos, Archivados es un interruptor que muestra y esconde los archivados, y Nuevo proyecto abre su cuadro
+  - [ ] Nuevo proyecto con un nombre que ya existe muestra el error en un recuadro rojo, y Cancelar lo cierra
+  - [ ] Eliminar (menú de una tarjeta) muestra lo que se borra con su tamaño a la derecha; Cancelar no borra nada
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso
-Diseño, DI-I3 tanda 16: la Cabecera compartida y los cuadros como la maqueta (procesar Q-233 si llegó).
+Diseño, DI-I3 tanda 17: la grilla de Proyectos como la maqueta (procesar Q-234 si llegó).
 **Leer antes:** `modulos/diseno/estado.md` › Próximo paso y lo que pide.
 
 ## Hitos con huecos aceptados

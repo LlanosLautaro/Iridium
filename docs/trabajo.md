@@ -402,3 +402,6 @@ Que Iridium corra las pruebas al terminar cada turno de la IA y solo le avise si
 ## T-92 — Ordenar cómo corre las pruebas la IA
 Estado: nueva · Idea: IA · Fecha: 2026-11-20 · Origen: D-163
 Sin cambiar cuándo se verifica: un solo comando de cierre que corre todo y muestra solo lo que falla, Playwright nunca en segundo plano con sondeos, y probar si puede correr de a varias ventanas (hoy va de a una). Ahorra pasos y minutos de espera (`research/costo-de-pruebas.md`).
+
+## T-93 — Al comparti Iridium sucedió un problema, la otra persona no tenía ni idea de como usarlo, quizás una demo programada sirva, como un recorrido de la app, es una idea ya mencionada, la otra cosa es que tampoco tenía ni la más de las palidas ideas sobre desarrollo, no tenia ni nocion de lo que es una app web, de lo que es una nativa, electron, rust, nada de nada. Como enfrentamos este segundo desafío? es que en realidad hay que hacerle saber estas cosas? definir plantillas predefinidas para ciertos tipos de apps dependiendo de algunos requisitos? como por ejemplo sincronizacion celular/desktop, etc.
+Estado: nueva · Idea: usuario · Fecha: 2026-11-20

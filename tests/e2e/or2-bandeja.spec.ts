@@ -110,7 +110,7 @@ test('la Bandeja: filtros por frente con su cuenta, solo lo que frena en ámbar 
   const { app, win } = await abrir()
   // Alfa tiene preguntas: se entra por su Bandeja (sin la Bandeja de todos, D-111).
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
-  await expect(win.locator('[data-seccion="pendientes"] .cab-seccion h2')).toHaveText('Bandeja de entrada')
+  await expect(win.locator('[data-seccion="pendientes"] .cabecera h1')).toHaveText(/^Bandeja de entrada/)
 
   const filtros = win.getByRole('group', { name: 'Filtrar por frente' }).getByRole('button')
   await expect(filtros).toHaveText(['Todos 3', 'Núcleo 1', 'Compartir 2'])

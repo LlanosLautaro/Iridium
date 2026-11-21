@@ -103,7 +103,7 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Actualizar (SK-1, SK
   // La primera vez: Framework, con Gamma fuera (framework viejo) y Alfa al día, sin botón. La cuenta, en gris.
   await expect(lista.locator('.sk-framework .cuenta')).toHaveText('1 fuera')
   const detalle = win.getByRole('region', { name: 'Framework' })
-  await expect(detalle.locator('.cab-seccion .sub')).toHaveText('1 fuera')
+  await expect(detalle.locator('.cabecera .ruta')).toHaveText('1 fuera')
   const gamma = detalle.locator('li.fila[data-proyecto="Gamma"]')
   const alfa = detalle.locator('li.fila[data-proyecto="Alfa"]')
   await expect(gamma).toContainText('framework viejo · 2026-10-16')

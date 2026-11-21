@@ -214,7 +214,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Para qué: el título de la sección con su cuenta, sus acciones a la derecha (una principal como mucho) y los filtros debajo.
    Estados: con ruta, con acciones, con filtros. */
 .cabecera { padding: var(--esp-4) var(--esp-6) 0; border-bottom: 1px solid var(--borde); flex: none; }
-.cabecera .fila-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: var(--alto-campo); padding-bottom: var(--esp-3); }
+.cabecera .fila-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: var(--alto-campo); margin-bottom: var(--esp-3); }
 .cabecera h1 { margin: 0; font: var(--estilo-titulo); display: flex; align-items: baseline; gap: var(--esp-2); }
 .cabecera .ruta { color: var(--texto-3); font-size: var(--tam-chico); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cabecera .acciones-cab { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }

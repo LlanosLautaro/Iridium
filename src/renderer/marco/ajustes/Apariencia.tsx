@@ -9,11 +9,7 @@ export function Apariencia({ cambiar }: PropsSeccion) {
   const ancho = usarEstado((s) => s.preferencias.anchoHoja)
   return (
     <Ajuste titulo="Ancho de lectura" detalle="Lo ancho del texto en Docs" id="ajuste-ancho">
-      <fieldset
-        className="filtros grupo-ancho"
-        aria-labelledby="ajuste-ancho"
-        aria-describedby="ajuste-ancho-d"
-      >
+      <fieldset className="filtros" aria-labelledby="ajuste-ancho" aria-describedby="ajuste-ancho-d">
         {ANCHOS.map((a) => (
           <button
             key={a.id}

@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { esNombreRepo, nombreRepoDe } from '../../../compartido/github'
 import type { CuentaGithub, ResultadoGit } from '../../../compartido/puente'
+import { Icono } from '../../ui/Icono'
 
 /** Cuando el proyecto no tiene git: lo explica y ofrece crear el repositorio. */
 export function SinRepositorio({ ruta, listo }: { ruta: string; listo: (r: ResultadoGit) => void }) {
@@ -97,9 +98,9 @@ export function PublicarGithub({
   }
 
   return (
-    <div className="velo-dialogo">
+    <div className="velo capa-cuadro">
       <form
-        className="dialogo publicar-github"
+        className="cuadro publicar-github"
         role="dialog"
         aria-modal="true"
         aria-labelledby="publicar-t"
@@ -120,15 +121,20 @@ export function PublicarGithub({
           </p>
         )}
         {cuenta?.tipo === 'error' && (
-          <div className="error-git" role="alert">
-            {cuenta.mensaje}{' '}
-            <button type="button" className="enlace" onClick={conectar}>
-              Probar de nuevo
-            </button>
+          <div className="recuadro error" role="alert">
+            <Icono nombre="error" />
+            <div className="cuerpo-recuadro">
+              {cuenta.mensaje}
+              <div className="acciones-recuadro">
+                <button type="button" className="boton secundario chico" onClick={conectar}>
+                  Probar de nuevo
+                </button>
+              </div>
+            </div>
           </div>
         )}
-        <label className="campo-publicar">
-          <span>Nombre</span>
+        <label className="etiqueta-campo">
+          Nombre
           <input
             ref={campo}
             className="campo"
@@ -138,7 +144,11 @@ export function PublicarGithub({
             aria-invalid={!valido}
             onChange={(e) => setNombre(e.target.value)}
           />
-          {!valido && <small>Solo letras sin acento, números, puntos, guiones y guiones bajos.</small>}
+          {!valido && (
+            <small className="nombre-invalido">
+              Solo letras sin acento, números, puntos, guiones y guiones bajos.
+            </small>
+          )}
         </label>
         <div className="opciones" role="radiogroup" aria-label="Quién lo ve">
           <label className="opcion opcion-publicar">
@@ -155,11 +165,12 @@ export function PublicarGithub({
           </label>
         </div>
         {error && (
-          <p className="error-git" role="alert">
-            {error}
-          </p>
+          <div className="recuadro error" role="alert">
+            <Icono nombre="error" />
+            <div className="cuerpo-recuadro">{error}</div>
+          </div>
         )}
-        <div className="acc">
+        <div className="pie">
           <button type="button" className="boton sin-fondo" disabled={enviando} onClick={cerrar}>
             Cancelar
           </button>

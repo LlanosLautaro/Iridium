@@ -365,28 +365,16 @@
   max-width: var(--ancho-centrado);
 }
 
-/* El cuadro de Publicar en GitHub (D-081): pasa a las piezas con los cuadros */
-.error-git {
-  margin-top: 10px;
-  color: var(--error);
-  font-size: var(--tam-chico);
-  line-height: 1.5;
-}
-.campo-publicar {
-  display: grid;
-  gap: 5px;
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-}
-.campo-publicar small {
+/* El cuadro de Publicar en GitHub (D-081): el nombre mal escrito y quién lo ve */
+.nombre-invalido {
   color: var(--error);
 }
 .publicar-github .opciones {
   display: grid;
-  gap: 6px;
+  gap: var(--esp-2);
 }
 .publicar-github .opcion-publicar small {
   display: block;
   color: var(--texto-3);
-  font-size: 12px;
+  font-size: var(--tam-chico);
 }

@@ -1,6 +1,7 @@
 // Nuevo proyecto (R-7, C-10, D-089, R-14): solo el nombre. Iridium crea la carpeta con la plantilla básica del framework
 // y la abre; la idea, la ficha y el ícono se hacen después, conversando con la IA (D-101).
 import { useEffect, useRef, useState } from 'react'
+import { Icono } from '../../ui/Icono'
 
 export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (ruta: string) => void }) {
   const [nombre, setNombre] = useState('')
@@ -39,9 +40,9 @@ export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (r
   }
 
   return (
-    <div className="velo-dialogo">
+    <div className="velo capa-cuadro">
       <form
-        className="dialogo nuevo-proyecto"
+        className="cuadro"
         role="dialog"
         aria-modal="true"
         aria-labelledby="nuevo-t"
@@ -56,8 +57,8 @@ export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (r
           Se crea la carpeta en tu carpeta de proyectos con la plantilla básica. Después le cuentas a la IA de
           qué se trata, en la conversación.
         </p>
-        <label className="campo-nuevo">
-          <span>Nombre</span>
+        <label className="etiqueta-campo">
+          Nombre
           <input
             ref={campo}
             className="campo"
@@ -73,11 +74,12 @@ export function NuevoProyecto({ cerrar, listo }: { cerrar: () => void; listo: (r
           />
         </label>
         {error && (
-          <p id="nuevo-error" className="error-nuevo" role="alert">
-            {error}
-          </p>
+          <div id="nuevo-error" className="recuadro error" role="alert">
+            <Icono nombre="error" />
+            <div className="cuerpo-recuadro">{error}</div>
+          </div>
         )}
-        <div className="acc">
+        <div className="pie">
           <button type="button" className="boton sin-fondo" disabled={creando} onClick={cerrar}>
             Cancelar
           </button>

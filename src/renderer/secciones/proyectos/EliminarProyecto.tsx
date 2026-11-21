@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { ListaProyectos, TarjetaProyecto } from '../../../compartido/puente'
 import { cantidadArchivos, tamanoLegible } from '../../../compartido/tamanos'
 import type { PlanEliminacion } from '../../../compartido/tipos'
+import { Icono } from '../../ui/Icono'
 
 export function EliminarProyecto({
   p,
@@ -63,9 +64,9 @@ export function EliminarProyecto({
 
   const regenerables = plan?.regenerables ?? []
   return (
-    <div className="velo-dialogo">
+    <div className="velo capa-cuadro">
       <div
-        className="dialogo eliminar-proyecto"
+        className="cuadro eliminar-proyecto"
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="eliminar-t"
@@ -87,7 +88,7 @@ export function EliminarProyecto({
                     {regenerables.map((r) => (
                       <li key={r.relativa}>
                         <code>{r.relativa}</code>
-                        {r.bytes !== null && <span> · {tamanoLegible(r.bytes)}</span>}
+                        {r.bytes !== null && <span className="tam">{tamanoLegible(r.bytes)}</span>}
                       </li>
                     ))}
                   </ul>
@@ -97,11 +98,12 @@ export function EliminarProyecto({
           )}
         </div>
         {error && (
-          <p className="error-nuevo" role="alert">
-            {error}
-          </p>
+          <div className="recuadro error" role="alert">
+            <Icono nombre="error" />
+            <div className="cuerpo-recuadro">{error}</div>
+          </div>
         )}
-        <div className="acc">
+        <div className="pie">
           <button
             ref={cancelar}
             type="button"

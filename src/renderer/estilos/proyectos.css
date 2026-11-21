@@ -1,75 +1,4 @@
 /* Proyectos (04-ux.md › W-2, D-034): una sola grilla de tarjetas. Sale de docs/ui/vista-proyectos.html. */
-.cab-proyecto {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 38px;
-  padding: 0 16px 0 20px;
-  flex: none;
-  border-bottom: 1px solid var(--borde-suave);
-}
-.cab-proyecto h1 {
-  font: 600 16px / 1 var(--ui);
-  color: var(--texto);
-}
-.cab-proyecto .der {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex: none;
-}
-
-.interruptor-arch {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 30px;
-  padding: 0 6px;
-  border-radius: var(--radio-control);
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-}
-.interruptor-arch:hover {
-  color: var(--texto);
-}
-.interruptor-arch .pista {
-  position: relative;
-  width: 26px;
-  height: 14px;
-  border-radius: var(--radio-pildora);
-  background: var(--medidor-fondo);
-  border: 1px solid var(--borde-fuerte);
-  transition:
-    background 0.15s,
-    border-color 0.15s;
-}
-.interruptor-arch .pista::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--texto-3);
-  transition:
-    transform 0.2s var(--sale),
-    background 0.15s;
-}
-.interruptor-arch[aria-checked="true"] .pista {
-  background: var(--sel-fondo);
-  border-color: var(--marcado);
-}
-.interruptor-arch[aria-checked="true"] .pista::after {
-  transform: translateX(12px);
-  background: var(--marcado);
-}
-.interruptor-arch .n {
-  font: 500 12px / 1 var(--mono);
-  color: var(--texto-3);
-}
-
 .lienzo {
   flex: 1;
   overflow-y: auto;
@@ -463,26 +392,23 @@
   color: var(--error);
 }
 
-/* Eliminar (R-10, D-090) */
+/* Eliminar (R-10, D-090): lo que se borra para siempre, una lista corta con el tamaño de cada cosa */
 .eliminar-proyecto .regenerables {
-  display: grid;
-  gap: 2px;
-  padding-left: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+}
+.eliminar-proyecto .regenerables li {
+  display: flex;
+  gap: var(--esp-3);
+  font-size: var(--tam-chico);
   color: var(--texto-2);
-  font-size: var(--tam-chico);
 }
-
-/* Nuevo proyecto (R-7, C-10, R-14) */
-.nuevo-proyecto {
-  width: min(460px, calc(100vw - 40px));
-}
-.campo-nuevo {
-  display: grid;
-  gap: 5px;
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-}
-.error-nuevo {
-  color: var(--error);
-  font-size: var(--tam-chico);
+.eliminar-proyecto .tam {
+  margin-left: auto;
+  font-family: var(--mono);
+  color: var(--texto-3);
 }

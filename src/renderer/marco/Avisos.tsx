@@ -64,7 +64,7 @@ function Aviso({ a }: { a: AvisoSesion }) {
         <Icono nombre="x" />
       </button>
       {detalle && <span className="d">{detalle}</span>}
-      <div className="acc">
+      <div className="pie">
         <button type="button" className="boton secundario chico" onClick={() => abrirProyecto(a.ruta)}>
           Abrir
         </button>
@@ -139,7 +139,7 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
           <FilaArranque key={r.cuando} r={r} />
         ))}
       </ul>
-      <div className="acc">
+      <div className="pie">
         {resto > 0 && (
           <button
             type="button"
@@ -192,7 +192,7 @@ function AvisoDeEjecutar({ a }: { a: AvisoEjecutar }) {
       </button>
       {a.detalle && <span className="d">{a.detalle}</span>}
       {a.armar && (
-        <div className="acc">
+        <div className="pie">
           <button
             type="button"
             className="boton principal chico"
@@ -270,9 +270,9 @@ export function ConfirmarCierre() {
   if (!cierre) return null
   const nombres = cierre.map((r) => tarjetaDe(lista, r)?.nombre ?? r.split(/[\\/]/).pop() ?? r)
   return (
-    <div className="velo-dialogo">
+    <div className="velo capa-cuadro">
       <div
-        className="dialogo"
+        className="cuadro"
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="cierre-t"
@@ -285,7 +285,7 @@ export function ConfirmarCierre() {
           {reiniciando ? 'Reiniciar' : 'Cerrar'} {nombres.length === 1 ? 'la frena' : 'las frena'}. Las
           conversaciones quedan guardadas: con Continuar se retoman y la IA sabe que la detuviste.
         </p>
-        <div className="acc">
+        <div className="pie">
           <button
             ref={cancelar}
             type="button"
