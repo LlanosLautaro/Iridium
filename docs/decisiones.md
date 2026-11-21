@@ -174,6 +174,7 @@
 | D-165 | 2026-11-21 | general (Paridad) | 10, a pedido del usuario (T-96) | El frente Paridad: el chat de Iridium como el de Claude, sin atarlo a Claude | vigente |
 | D-166 | 2026-11-21 | Paridad, Orden, Abrir, Plantillas | 10, Q-237 a Q-239 | Paridad va después de DI-I3, con los cuatro pedidos y Capacidades como su segunda parte | vigente |
 | D-167 | 2026-11-21 | Paridad | 10, Q-243 y Q-244 | La lista de «/» esconde los comandos que pisan a Iridium y los de la terminal | vigente |
+| D-168 | 2026-11-21 | Paridad | 10, Q-246 y Q-247 | La UX de Paridad, aprobada: un comando escondido escrito a mano no se manda y dice dónde está en Iridium | vigente |
 
 ---
 
@@ -3334,3 +3335,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** la lista de «/» muestra todos menos dos grupos (Q-243, A): los que pisan lo que Iridium maneja (`/model`, `/effort`, `/fast`, `/output-style`, `/clear`, `/context`, `/usage`) y los que no sirven fuera de la terminal o están retirados (`/color`, `/focus`, `/heapdump`, `/__remote-workflow`, `/workflow-launch-exec`, `/agents`, `/extra-usage`). Quién esconde qué lo dice el motor, no el compositor (D-165). Con eso, la definición de Paridad queda aprobada tal como está (Q-244, A).
 **Motivo:** lo que queda funciona y la barra de Iridium no muestra algo falso; cada cosa se cambia en un solo lugar.
 **Consecuencias:** paso 2 de Paridad `hecho`; sigue la UX, que decide qué pasa si uno de los escondidos se escribe a mano.
+
+## D-168 — La UX de Paridad, aprobada: un comando escondido escrito a mano no se manda y dice dónde está en Iridium
+- **Fecha:** 2026-11-21
+- **Ámbito:** frente Paridad
+- **Hito o paso:** 10, Q-246 y Q-247
+- **Estado:** vigente
+
+**Contexto:** la UX de Paridad (`modulos/paridad/ux.md`, PA-1 a PA-6, con cuatro maquetas en Diseño › Paridad) dejó abierto qué pasa si se escribe a mano uno de los comandos que la lista de «/» esconde (D-167): mandado, Claude cambia el modelo o empieza otra conversación por fuera de Iridium.
+**Decisión:** la UX queda aprobada como está (Q-247, A). Un comando escondido escrito a mano no se manda: una línea arriba del cuadro dice dónde está eso en Iridium y, si hay, el botón que lo hace («`/clear`: en Iridium, otra conversación se empieza con Nueva»); Enter no hace nada mientras está la línea (Q-246, A).
+**Motivo:** la barra de Iridium nunca muestra algo falso y la línea enseña dónde está cada cosa; Iridium no tiene que traducir comandos ni seguir una conversación que empezó Claude.
+**Consecuencias:** paso 4 de Paridad `hecho`; `04-ux.md` › W-12 suma el +, la lista de «/» y los adjuntos. Sigue el diseño técnico, con la lista de escondidos y su línea del lado del motor (D-165).

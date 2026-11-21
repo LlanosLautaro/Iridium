@@ -1,7 +1,7 @@
 # UX del módulo: Paridad
 
 **Fecha:** 2026-11-21
-**Estado:** espera el visto bueno (Q-247) y qué pasa con un comando escondido escrito a mano (Q-246)
+**Estado:** aprobada en Q-247, con un comando escondido escrito a mano que no se manda (Q-246, D-168)
 > Usa los principios de interacción y el design system generales (`04-ux.md`, `06-ui.md`). Alcance: `definicion.md` (D-167).
 
 ## Puntos de entrada y salida
@@ -129,7 +129,7 @@ Enter con fichas ─→ el mensaje con sus adjuntos ─→ las fichas en mi mens
 ```
 
 ## Estados y extremos
-- **Un comando escondido escrito a mano** (`/model`, `/effort`, `/fast`, `/output-style`, `/clear`, `/context`, `/usage` y los de la terminal, D-167): lo decide Q-246. La propuesta (A): no se manda; una línea arriba del cuadro dice dónde está eso en Iridium y, si hay, el botón que lo hace: «`/clear`: en Iridium, otra conversación se empieza con [Nueva]», «`/model`: en Iridium, el modelo se elige abajo», «`/context`: el contexto está abajo, al lado del modelo», «`/usage`: el uso está en la barra de abajo», «`/color`: solo sirve en la terminal». `Enter` no hace nada mientras está la línea; se va al cambiar lo escrito.
+- **Un comando escondido escrito a mano** (`/model`, `/effort`, `/fast`, `/output-style`, `/clear`, `/context`, `/usage` y los de la terminal, D-167): lo decide Q-246. No se manda (Q-246, D-168): una línea arriba del cuadro dice dónde está eso en Iridium y, si hay, el botón que lo hace: «`/clear`: en Iridium, otra conversación se empieza con [Nueva]», «`/model`: en Iridium, el modelo se elige abajo», «`/context`: el contexto está abajo, al lado del modelo», «`/usage`: el uso está en la barra de abajo», «`/color`: solo sirve en la terminal». `Enter` no hace nada mientras está la línea; se va al cambiar lo escrito.
 - **La IA trabajando:** el compositor funciona igual («Suma algo a lo que está haciendo…»): se pueden sumar adjuntos y comandos; los de Claude Code se responden cuando el motor los toma.
 - **Una foto demasiado grande** (más de unos 5 MB o 8000 px por lado): se achica sola antes de mandarla (Should). Si no se puede (un archivo dañado), la ficha queda con el borde rojo y «No se puede mandar: no es una imagen válida» al pasar el mouse, y el mensaje no sale hasta sacarla.
 - **Muchos adjuntos:** hasta 20 por mensaje; el 21 no entra y una línea arriba del cuadro lo dice. Las fichas se acomodan en varios renglones; el cuadro no se achica por debajo de dos líneas.

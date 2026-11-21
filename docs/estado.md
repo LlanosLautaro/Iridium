@@ -39,27 +39,20 @@
 | Arranque (`modulos/arranque/estado.md`) | sección | en operación (con el hito 10; probada en Q-227, calidad el 2026-11-21) | hecho |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Paridad, Orden y Abrir, D-166; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, después de Paridad y Orden, D-166) | en pausa |
-| Paridad (`modulos/paridad/estado.md`) | sección | 4. UX (escrita; espera Q-246 y Q-247) | en curso |
+| Paridad (`modulos/paridad/estado.md`) | sección | 5. Diseño técnico (UX aprobada, D-168) | en curso |
 
 ## En qué estamos ahora
 **Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
 **Ronda de UX 1 hecha** (2026-11-21, T-100): diez hallazgos, T-101 a T-110, sobre todo de un lugar y un nombre para cada cosa (`10-operacion.md` › Rondas de UX). Arreglado en el momento el aviso falso de carpeta faltante al arrancar; `scripts.md` quedó en ocho (probado en Q-245). Los `pendiente` van en una tanda antes de construir Paridad; los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
-**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está escrita (`modulos/paridad/ux.md`) con cuatro maquetas en Diseño; espera Q-246 y Q-247. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
+**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium (Q-246). Sigue su diseño técnico. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-246 — ¿Qué pasa si escribo a mano un comando que la lista esconde?**
-  Tipo: decisión · frena · Frente: Paridad
-  Contexto: `modulos/paridad/ux.md` › Estados y extremos, y la maqueta «Un comando escondido escrito a mano» en Diseño › Paridad (propuesta). La lista de «/» esconde `/model`, `/clear`, `/context`, `/usage` y los de la terminal (D-167), pero se pueden escribir igual. Si se mandan, Claude cambia el modelo o empieza otra conversación por fuera, y la barra de Iridium muestra algo que ya no es cierto.
-  Opciones: A) No se manda: una línea dice dónde está eso en Iridium, con su botón si hay («/clear: otra conversación se empieza con Nueva») (recomendada: la barra nunca miente y enseña dónde está cada cosa) · B) Iridium lo hace con lo suyo: «/model sonnet» cambia el modelo de abajo, «/clear» es Nueva (más cómodo si lo escribís de memoria, pero más trabajo y algunos no tienen equivalente) · C) Se manda igual y Claude lo hace (lo más simple; la barra puede quedar mal hasta abrir otra conversación)
-- **Q-247 — ¿Apruebo cómo se usan los comandos y los adjuntos en el chat?**
-  Tipo: decisión · frena · Frente: Paridad
-  Contexto: `modulos/paridad/ux.md` y las cuatro maquetas de Diseño › Paridad (propuesta). «/» abre la lista arriba del cuadro y filtra al escribir; elegir deja el comando escrito y el segundo Enter lo manda. El + va primero en el pie, con «Agregar archivos o fotos» (Ctrl+U) y «Comandos». Los adjuntos son fichas arriba del cuadro (miniatura para las fotos) con ✕; arrastrar y Ctrl+V también suman. Un pegado de más de 40 líneas o 2.000 caracteres queda como «Texto pegado» (Ctrl+Z lo devuelve al cuadro). En los mensajes mandados, las mismas fichas sin ✕, y se abren con un clic.
-  Opciones: A) Aprobada como está (recomendada: es lo que ya conocés del chat de Claude, en las piezas de Iridium) · B) Aprobada con cambios (escribilos en Otro)
+(ninguna)
 
 ## Próximo paso
-Con Q-246 y Q-247 respondidas: cerrar la UX de Paridad (decisión, `ux.md` y maquetas al día) y escribir su diseño técnico (`modulos/paridad/diseno-tecnico.md`).
-**Leer antes:** `respuestas/Q-246.md`, `respuestas/Q-247.md` y `modulos/paridad/estado.md` › Próximo paso.
+El diseño técnico de Paridad (`modulos/paridad/diseno-tecnico.md`).
+**Leer antes:** `modulos/paridad/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
