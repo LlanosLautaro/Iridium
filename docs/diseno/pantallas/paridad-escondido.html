@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Un comando escondido escrito a mano</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  .ejecutar { flex: none; color: var(--bien); }
+  /* Paridad (modulos/paridad/ux.md): la lista de «/», el menú del +, las fichas de los adjuntos y cómo se ven al mandarlos. */
+  .compositor { position: relative; }
+  .compositor .menu.arriba { display: flex; position: absolute; left: 0; bottom: calc(100% + var(--esp-2)); }
+  .compositor .menu.comandos { right: 0; width: auto; max-height: 372px; overflow: auto; }
+  .comandos .nombre-cmd { font: var(--estilo-codigo); font-size: var(--tam-base); color: var(--texto); }
+  .comandos .arg { font: var(--estilo-codigo); color: var(--texto-3); margin-left: var(--esp-1); }
+  .comandos .detalle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .comandos .elegida { background: var(--sel-fondo); }
+  .comandos .vacia { padding: var(--esp-2); color: var(--texto-3); }
+  .menu .barra-cmd { display: inline-grid; place-items: center; width: 15px; font: var(--estilo-codigo); color: var(--texto-2); }
+  .fichas { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+  .ficha { position: relative; display: inline-flex; align-items: center; gap: var(--esp-2); max-width: 100%; height: var(--alto-control); padding: 0 2px 0 var(--esp-2); border: 1px solid var(--borde-fuerte); border-radius: var(--radio-control); background: none; font: var(--estilo-meta); color: var(--texto-2); cursor: pointer; }
+  .ficha .ic { width: 14px; height: 14px; flex: none; }
+  .ficha b { font-weight: 500; color: var(--texto); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ficha .quitar { display: grid; place-items: center; width: 24px; height: 24px; flex: none; border: 0; border-radius: var(--radio-control); background: none; color: var(--texto-3); cursor: pointer; }
+  .ficha .quitar:hover { background: var(--hover); color: var(--texto); }
+  .ficha.foto { width: 56px; height: 56px; padding: 0; overflow: hidden; }
+  .ficha.foto .quitar { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; background: var(--elevado); }
+  .ficha.no-va { border-color: var(--error-borde); }
+  .captura { width: 100%; height: 100%; display: block; background: var(--hover); }
+  .captura .c-barra { fill: var(--sel-fondo); }
+  .captura .c-linea { stroke: var(--borde-control); stroke-width: 3; stroke-linecap: round; }
+  .captura .c-boton { fill: none; stroke: var(--principal); stroke-width: 1.5; }
+  .linea-cmd { display: flex; align-items: center; gap: var(--esp-2); font: var(--estilo-meta); color: var(--texto-2); }
+  .linea-cmd .ic { width: 14px; height: 14px; flex: none; color: var(--texto-3); }
+  .linea-cmd code, .mensaje-yo code.cmd { font: var(--estilo-codigo); color: var(--texto); }
+  .linea-cmd .boton { margin-left: auto; }
+  .mensaje-yo .adjuntos { display: flex; flex-wrap: wrap; gap: var(--esp-1); margin-bottom: var(--esp-2); }
+  .mensaje-yo .adjuntos .ficha { border-color: var(--borde-control); }
+  .mensaje-yo .adjuntos .ficha.foto { width: 72px; height: 72px; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="scripts">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Scripts</h1></div>
+  </header>
+  <div class="contenido centrado">
+    <div class="filas con-lineas">
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Abrir en modo desarrollo</span><span class="detalle">pnpm dev · arma y abre la app con los cambios en vivo</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Correr las pruebas</span><span class="detalle">pnpm test · reglas, casos de uso y disco; tarda un minuto</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Pruebas con la app abierta</span><span class="detalle">pnpm e2e · abre la app escondida con el motor falso</span></span></div>
+    </div>
+  </div>
+</main>
+<template id="conversacion" data-titulo="El armado falla en la otra PC" data-detalle="Hoy, 10:12">
+<div class="mensaje-yo">Al armar en la otra PC sale un error con el instalador. ¿Lo miras?</div>
+<div class="mensaje-ia"><div class="quien">IA</div>
+  <div class="paso"><i data-ic="ok"></i> Leí docs/scripts.md</div>
+  <div class="texto-doc conversacion"><p>Necesito ver el error completo: pégame lo que salió en la consola y, si puedes, una captura de la ventana del instalador.</p></div>
+</div>
+</template>
+<template id="compositor">
+<div class="compositor">
+  
+  <div class="linea-cmd" role="note"><i data-ic="info"></i><span><code>/clear</code>: en Iridium, otra conversación se empieza con</span><button class="boton sin-fondo chico">Nueva</button></div>
+  <textarea placeholder="Escribe a la IA…" aria-label="Mensaje para la IA">/clear</textarea>
+  <div class="pie-comp">
+    <button class="boton solo-icono chico" aria-label="Agregar" title="Agregar archivos, fotos o comandos"><i data-ic="mas"></i></button>
+    <button class="boton sin-fondo chico">Opus</button>
+    <button class="boton sin-fondo chico">Medio</button>
+    <button class="boton solo-icono chico enviar" aria-label="Enviar"><i data-ic="enviar"></i></button>
+  </div>
+</div>
+</template>
+<script src="../piezas.js"></script>
+</body>
+</html>

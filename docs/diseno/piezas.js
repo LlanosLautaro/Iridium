@@ -120,6 +120,8 @@ function armarMarco() {
   const conv = CONVERSACION[tipo]
   const sinConv = cuerpo.dataset.conversacion === 'no'
   const propio = document.getElementById('conversacion')
+  // Un compositor propio (<template id="compositor">), para las maquetas de lo que se escribe: la lista de «/», los adjuntos.
+  const compPropio = document.getElementById('compositor')
 
   const marco = document.createElement('div')
   marco.className = 'marco' + (sinConv ? ' sin-conversacion' : '')
@@ -178,18 +180,19 @@ function armarMarco() {
         ${c.seguir ? `<button class="boton principal chico">${icono('seguir')}Continuar</button>` : ''}
       </div>
       <div class="mensajes">${c.mensajes}</div>
-      <div class="compositor">
+      ${compPropio ? compPropio.innerHTML : `<div class="compositor">
         <textarea placeholder="Escribe a la IA…" aria-label="Mensaje para la IA"></textarea>
         <div class="pie-comp">
           <button class="boton sin-fondo chico">Opus</button>
           <button class="boton sin-fondo chico">Medio</button>
           <button class="boton solo-icono chico enviar" aria-label="Enviar">${icono('enviar')}</button>
         </div>
-      </div>
+      </div>`}
       <div class="menu lista-menu" id="menu-conversaciones" role="menu">${CONVERSACIONES[tipo]}</div>`
     marco.insertBefore(aside, marco.querySelector('.estado-barra'))
   }
   propio?.remove()
+  compPropio?.remove()
   cuerpo.prepend(marco)
 }
 
