@@ -64,6 +64,7 @@ Ideas sin evaluar: T-76, T-78, T-89 y T-93 (cómo lo usa alguien sin nociones t�
   - [ ] En Proyectos, Archivados es un interruptor que muestra y esconde los archivados, y Nuevo proyecto abre su cuadro
   - [ ] Nuevo proyecto con un nombre que ya existe muestra el error en un recuadro rojo, y Cancelar lo cierra
   - [ ] Eliminar (menú de una tarjeta) muestra lo que se borra con su tamaño a la derecha; Cancelar no borra nada
+  - [ ] Después de responder las preguntas de un proyecto, su pestaña deja de contarlas sin cerrarla (R-98)
 Respuesta: en el chat o en `respuestas/Q-n.md` (adjuntos en `respuestas/Q-n/`).
 
 ## Próximo paso

@@ -189,7 +189,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
           {p.framework === 'viejo' && <span className="viejo">framework viejo</span>}
           {ficha && (
             <span className="sesion">
-              <SenalSesion ficha={ficha} />
+              <SenalSesion ficha={ficha} sinResponder={p.preguntas.sinResponder} />
             </span>
           )}
           {actualiza && <SenalActualizacion a={actualizacion} />}

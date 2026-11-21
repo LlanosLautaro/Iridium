@@ -140,9 +140,10 @@ function BarraActividad() {
 
 /**
  * El estado de una sesión con ícono y palabra (H-2), como Señal (PZ-7): trabajando · esperando lo que dejó de fondo
- * (T-65) · terminada (con sus preguntas, en ámbar) · error (en rojo).
+ * (T-65) · terminada (con sus preguntas, en ámbar) · error (en rojo). Las preguntas que dejó el turno cuentan mientras
+ * sigan sin responder (R-98): con `sinResponder`, las que ya respondiste no se cuentan.
  */
-export function SenalSesion({ ficha }: { ficha: FichaSesion }) {
+export function SenalSesion({ ficha, sinResponder }: { ficha: FichaSesion; sinResponder?: number }) {
   if (ficha.estado === 'trabajando')
     return (
       <span className="senal verde">
@@ -164,7 +165,7 @@ export function SenalSesion({ ficha }: { ficha: FichaSesion }) {
         Esperando
       </span>
     )
-  const n = ficha.preguntas.length
+  const n = Math.min(ficha.preguntas.length, sinResponder ?? Number.POSITIVE_INFINITY)
   if (n > 0)
     return (
       <span className="senal ambar">
@@ -220,7 +221,7 @@ function EstadoPestana({
   if (ficha?.estado === 'trabajando' || ficha?.estado === 'error' || ficha?.fondo?.length)
     return <SenalSesion ficha={ficha} />
   if (preguntas.sinResponder > 0) return <Cuenta n={preguntas.sinResponder} frenan={preguntas.frenan} />
-  if (ficha) return <SenalSesion ficha={ficha} />
+  if (ficha) return <SenalSesion ficha={ficha} sinResponder={preguntas.sinResponder} />
   return null
 }
 

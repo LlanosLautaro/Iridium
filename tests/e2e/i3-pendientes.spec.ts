@@ -243,6 +243,18 @@ test('Responder en la conversación y la Bandeja de entrada llevan a las pregunt
   await expect(win.locator('.resumen .pregunta[data-q="Q-4"]')).toContainText(
     '¿La prueba del motor falso funciona?',
   )
+
+  // R-98: respondida la pregunta que dejó el turno, la pestaña no la sigue contando.
+  const pestana = win.locator('.barra-proyectos .proy', { hasText: 'Gestor' })
+  await expect(pestana.locator('.cuenta')).toHaveText('1')
+  await mkdir(join(raiz, 'Gestor', 'docs', 'respuestas'), { recursive: true })
+  await writeFile(
+    join(raiz, 'Gestor', 'docs', 'respuestas', 'Q-4.md'),
+    '# Q-4 — ¿La prueba del motor falso funciona?\n\n**Opción:** A) Sí\n',
+  )
+  await expect(pestana.locator('.cuenta')).toHaveCount(0)
+  await expect(pestana).toContainText('Terminada')
+  await expect(pestana).not.toContainText('pregunta')
   await app.close()
 })
 
