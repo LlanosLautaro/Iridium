@@ -1,4 +1,5 @@
-// Un menú que se despliega desde un botón (Docs: elegir documento, «En esta página»; la conversación: las anteriores).
+// Un menú que se despliega desde un botón (Docs: «En esta página»; la conversación: las anteriores, el modelo, el
+// esfuerzo y el contexto; la barra de abajo: el uso). La lista es el Menú (PZ-8), o el menú en lista con `enLista`.
 // Se cierra al elegir, al tocar afuera, con Esc o cuando el foco sale con Tab. Con el teclado (Defecto 18): al abrir,
 // el foco va a la opción elegida (o a la primera); las flechas, Inicio y Fin recorren las opciones.
 import { type ReactNode, type KeyboardEvent as TeclaReact, useEffect, useRef, useState } from 'react'
@@ -14,17 +15,20 @@ export function Menu({
   boton,
   titulo,
   clase,
-  claseBoton = 'menu-boton',
+  claseBoton = 'boton sin-fondo chico',
+  enLista = false,
   deshabilitado,
   alAbrir,
   children,
 }: {
   boton: ReactNode
   titulo: string
-  /** Clases del contenedor (`desplegable`, más las que se pasen). */
+  /** Clases del contenedor (`con-menu`, más las que se pasen), para ubicar la lista. */
   clase?: string
-  /** Las clases del botón que lo abre: el de antes (`menu-boton`) o la pieza Botón (`boton sin-fondo chico`). */
+  /** Las clases del botón que lo abre: la pieza Botón (`boton sin-fondo chico`, si no se dice otra). */
   claseBoton?: string
+  /** El menú en lista (PZ-8): cada opción con título y detalle, como las conversaciones. */
+  enLista?: boolean
   deshabilitado?: boolean
   alAbrir?: () => void
   children: (cerrar: () => void) => ReactNode
@@ -86,7 +90,7 @@ export function Menu({
     // biome-ignore lint/a11y/noStaticElementInteractions: solo mira a dónde va el foco para cerrar el menú al salir con Tab.
     <div
       ref={ref}
-      className={clase ? `desplegable ${clase}` : 'desplegable'}
+      className={clase ? `con-menu ${clase}` : 'con-menu'}
       onBlur={(e) => {
         // Tab fuera del menú lo cierra; un clic adentro en algo que no toma el foco, no.
         if (abierto && e.relatedTarget && !ref.current?.contains(e.relatedTarget)) setAbierto(false)
@@ -114,7 +118,12 @@ export function Menu({
         {boton}
       </button>
       {abierto && (
-        <div ref={lista} className="menu-lista" role="menu" onKeyDown={recorrer}>
+        <div
+          ref={lista}
+          className={enLista ? 'menu abierto lista-menu' : 'menu abierto'}
+          role="menu"
+          onKeyDown={recorrer}
+        >
           {children(cerrar)}
         </div>
       )}

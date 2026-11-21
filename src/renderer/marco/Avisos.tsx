@@ -145,9 +145,7 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
             type="button"
             className="boton sin-fondo chico"
             // El detalle del uso tiene los de la semana: se abre como si se tocara el uso de la barra.
-            onClick={() =>
-              document.querySelector<HTMLButtonElement>('.desplegable.uso > .menu-boton')?.click()
-            }
+            onClick={() => document.querySelector<HTMLButtonElement>('.con-menu.uso > button')?.click()}
           >
             y {resto} más
           </button>

@@ -279,6 +279,7 @@ export function Lector({ ruta, lugar, documentos }: { ruta: string; lugar: Lugar
           <>
             {titulos.length > 0 && (
               <Menu
+                clase="en-pagina"
                 titulo="Ir a una sección de este documento"
                 claseBoton="boton sin-fondo chico docs-en-pagina"
                 boton={

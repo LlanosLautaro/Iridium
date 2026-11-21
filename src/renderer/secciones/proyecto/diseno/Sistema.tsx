@@ -211,16 +211,20 @@ export function Sistema({
             agrandar={() => agrandar('piezas.html')}
           />
         ) : (
-          <div className="recuadro-simple" role="note">
-            <b>Las piezas todavía no están dibujadas</b>
-            <p>
-              La IA las arma en <code>piezas.html</code>, con cada pieza y sus variantes.
-            </p>
-            {pedir && (
-              <button type="button" className="boton secundario chico" onClick={pedir}>
-                Pedírselo a la IA
-              </button>
-            )}
+          <div className="recuadro punteado di-falta" role="note">
+            <div className="cuerpo-recuadro">
+              <strong>Las piezas todavía no están dibujadas</strong>
+              <span>
+                La IA las arma en <code>piezas.html</code>, con cada pieza y sus variantes.
+              </span>
+              {pedir && (
+                <div className="acciones-recuadro">
+                  <button type="button" className="boton secundario chico" onClick={pedir}>
+                    Pedírselo a la IA
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </section>

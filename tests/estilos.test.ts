@@ -2,7 +2,7 @@
 // Los estilos de cada sección no escriben colores ni rehacen las piezas; las piezas de la app son las de las maquetas.
 // Mientras las secciones pasan a las piezas, tanda por tanda, lo que falta queda anotado acá abajo y solo puede bajar:
 // al pasar una sección, se saca de las listas lo que ya no está (la prueba avisa qué).
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
@@ -15,7 +15,7 @@ const sinComentarios = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, '')
 
 /** Las hojas de cada sección: todas menos las piezas y el puente de los tokens de antes. */
 const SECCIONES = readdirSync(ESTILOS)
-  .filter((f) => f.endsWith('.css') && f !== 'piezas.css' && f !== 'tokens-viejos.css')
+  .filter((f) => f.endsWith('.css') && f !== 'piezas.css')
   .sort()
 
 /** Las clases que aparecen en los selectores de una hoja. */
@@ -169,29 +169,6 @@ const VIEJAS = [
   'velo-dialogo',
 ]
 
-// ── Lo que falta pasar (DI-I3; el punto de partida es la tanda 1). Solo baja. ──
-
-/** Las clases viejas que todavía tiene cada sección. */
-const VIEJAS_PENDIENTES: Record<string, string[]> = {
-  'marco.css': ['actualizar', 'menu-boton', 'menu-lista', 'desplegable'],
-  // DI-I3, tanda 7: el Mapa pasó a las piezas; tanda 11: Docs y el botón Atrás; tanda 12: Archivos; tanda 14: Scripts;
-  // tanda 15: Ajustes; tanda 16: la Cabecera y los cuadros; tanda 17: la grilla de Proyectos
-  'proyecto.css': ['recuadro-simple', 'menu-lista'],
-  'uso.css': ['menu-boton', 'medidor', 'menu-lista'],
-}
-
-/** Cuántas veces se usa cada token de antes (`tokens-viejos.css`) en la app: como mucho esto. */
-const TOKENS_VIEJOS_PENDIENTES: Record<string, number> = {
-  '--barra': 1,
-  '--caja': 3,
-  '--medidor-fondo': 3,
-  '--primario': 7,
-  '--primario-texto': 1,
-  '--ok': 3,
-  '--radio-medidor': 2,
-  '--sombra-flotante': 1,
-}
-
 /** Lo que encuentra cada regla, por hoja, para compararlo con lo anotado. */
 function porHoja(buscar: (clases: Set<string>) => string[]): Record<string, string[]> {
   const r: Record<string, string[]> = {}
@@ -207,7 +184,7 @@ function archivosDelRenderer(carpeta = join(RAIZ, 'src/renderer')): string[] {
   return readdirSync(carpeta, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory()
       ? archivosDelRenderer(join(carpeta, e.name))
-      : /\.(css|ts|tsx)$/.test(e.name) && e.name !== 'tokens-viejos.css'
+      : /\.(css|ts|tsx)$/.test(e.name)
         ? [join(carpeta, e.name)]
         : [],
   )
@@ -217,7 +194,7 @@ describe('el control de estilos (DI-I3)', () => {
   it('ninguna hoja de la app escribe un color: solo var(--…)', () => {
     const color = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb)\(/
     const malos: string[] = []
-    for (const f of [...SECCIONES, 'piezas.css', 'tokens-viejos.css'])
+    for (const f of [...SECCIONES, 'piezas.css'])
       sinComentarios(texto(join(ESTILOS, f)))
         .split('\n')
         .forEach((l, i) => {
@@ -242,7 +219,7 @@ describe('el control de estilos (DI-I3)', () => {
       leer('src/preload/index.ts'),
       ...archivosDelRenderer().map(texto),
     ]
-    for (const t of [...tokens, leer('src/renderer/estilos/tokens-viejos.css')])
+    for (const t of tokens)
       for (const m of t.matchAll(/(--[a-z][\w-]*)\s*['"]?\s*:/g)) if (m[1]) definidos.add(m[1])
     const usados = new Set<string>()
     for (const a of archivosDelRenderer())
@@ -279,26 +256,14 @@ describe('el control de estilos (DI-I3)', () => {
     expect(malos).toEqual([])
   })
 
-  it('las clases viejas del inventario se van (lo que falta pasar, solo baja)', () => {
-    const hoy = porHoja((c) => VIEJAS.filter((v) => c.has(v)))
+  it('ninguna sección usa una clase vieja del inventario: todas pasaron a las piezas (DI-I3, tanda 18)', () => {
     expect(
-      hoy,
-      'si una clase vieja ya no está, sacala de VIEJAS_PENDIENTES; una nueva no se suma: usá la pieza',
-    ).toEqual(VIEJAS_PENDIENTES)
+      porHoja((c) => VIEJAS.filter((v) => c.has(v))),
+      'una clase vieja no vuelve: usá la pieza',
+    ).toEqual({})
   })
 
-  it('los tokens de antes no se usan más que al empezar', () => {
-    const textos = archivosDelRenderer().map(texto)
-    const puente = [...leer('src/renderer/estilos/tokens-viejos.css').matchAll(/^\s*(--[\w-]+):/gm)].map(
-      (m) => m[1],
-    )
-    expect(puente.sort()).toEqual(Object.keys(TOKENS_VIEJOS_PENDIENTES).sort())
-    for (const [token, maximo] of Object.entries(TOKENS_VIEJOS_PENDIENTES)) {
-      const usos = textos.reduce((n, t) => n + t.split(`var(${token})`).length - 1, 0)
-      expect(
-        usos,
-        `${token}: bajá TOKENS_VIEJOS_PENDIENTES a ${usos} o pasá a un token de docs/diseno/tokens.css`,
-      ).toBe(maximo)
-    }
+  it('no quedan los tokens de antes: el puente tokens-viejos.css se borró al pasar la última sección', () => {
+    expect(existsSync(join(ESTILOS, 'tokens-viejos.css'))).toBe(false)
   })
 })

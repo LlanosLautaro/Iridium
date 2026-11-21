@@ -2,7 +2,7 @@
    conversación (D-045), los errores del motor (F-5), los avisos (H-13) y cerrar con sesiones trabajando (F-6). */
 
 /* Medidores finos, lo único con brillo (D-032; prototipo ui/vista-mapa-docs.html) */
-.medidor {
+.medidor-uso {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -10,17 +10,17 @@
   color: var(--texto-3);
   font-size: 12px;
 }
-.medidor .barra,
+.medidor-uso .barra,
 .ventana-uso .barra {
   position: relative;
   display: inline-block;
   width: 64px;
   height: 6px;
-  border-radius: var(--radio-medidor);
+  border-radius: var(--radio-pildora);
   overflow: hidden;
-  background: var(--medidor-fondo);
+  background: var(--borde-fuerte);
 }
-.medidor .pc {
+.medidor-uso .pc {
   min-width: 30px;
   font: 500 12px / 1 var(--mono);
   color: var(--texto);
@@ -30,19 +30,15 @@
   display: inline-flex;
   align-items: center;
 }
-.uso .menu-boton {
-  height: 22px;
-  gap: 14px;
-  padding: 0 8px;
+.uso > button {
+  gap: var(--esp-4);
 }
-.uso .menu-lista {
+.uso > [role="menu"] {
   top: auto;
-  bottom: 28px;
+  bottom: calc(100% + var(--esp-1));
   left: auto;
   right: 0;
   width: 340px;
-  max-width: none;
-  padding: 4px 4px 8px;
   /* Sobre el aviso al volver, que lo abre con «y N más» (AR-4). */
   z-index: 45;
 }
@@ -97,7 +93,7 @@
   height: 14px;
   flex: none;
   margin-top: 2px;
-  color: var(--icono-ritmo, var(--ok));
+  color: var(--icono-ritmo, var(--texto-2));
 }
 .ritmo[data-alcanza="no"] {
   --icono-ritmo: var(--espera);
@@ -163,7 +159,7 @@
   stroke-width: 2.6;
 }
 .anillo .fondo {
-  stroke: var(--medidor-fondo);
+  stroke: var(--borde-fuerte);
 }
 .anillo .lleno {
   stroke: var(--medidor);
@@ -179,11 +175,16 @@
 .medidor-ctx .vence[data-vencida] {
   color: var(--espera);
 }
-.ctx .menu-lista {
+.elegir-ia > [role="menu"] {
+  top: auto;
+  bottom: calc(100% + var(--esp-1));
+  width: 300px;
+  max-width: calc(var(--ancho-chat, 360px) - 40px);
+}
+.elegir-ia.ctx > [role="menu"] {
   left: auto;
   right: 0;
   width: 330px;
-  padding: 4px 4px 8px;
 }
 .detalle-ctx {
   display: grid;
@@ -232,7 +233,7 @@
   height: 14px;
   flex: none;
   margin-top: 2px;
-  color: var(--icono-cache, var(--ok));
+  color: var(--icono-cache, var(--texto-2));
 }
 .cache[data-vencida="si"] {
   --icono-cache: var(--espera);
@@ -257,29 +258,6 @@
   white-space: nowrap;
   max-width: 120px;
 }
-.elegir-ia .menu-lista {
-  top: auto;
-  bottom: 30px;
-  width: 300px;
-  max-width: calc(var(--ancho-chat, 360px) - 40px);
-}
-.menu-lista > button.opcion-ia {
-  height: auto;
-  padding: 6px 10px;
-  display: grid;
-  gap: 1px;
-  text-align: left;
-  white-space: normal;
-}
-.opcion-ia b {
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--texto);
-}
-.opcion-ia small {
-  font-size: 12px;
-  color: var(--texto-3);
-}
 .elegir-ia.ctx {
   margin-left: 4px;
 }
@@ -302,7 +280,7 @@
   border: 1px solid var(--borde-fuerte);
   border-radius: var(--radio-tarjeta);
   background: var(--elevado);
-  box-shadow: var(--sombra-flotante);
+  box-shadow: var(--sombra-menu);
   animation: llega-aviso 0.3s var(--sale) both;
 }
 .aviso-flotante[data-estado="espera"] {
@@ -312,7 +290,7 @@
   width: 15px;
   height: 15px;
   margin-top: 2px;
-  color: var(--ok);
+  color: var(--texto-2);
 }
 .aviso-flotante[data-estado="espera"] > svg {
   color: var(--espera);
@@ -394,36 +372,32 @@
 }
 
 /* Lo más específico, al final: Biome pide las reglas de menor a mayor especificidad */
-.medidor .barra b,
+.medidor-uso .barra b,
 .ventana-uso .barra b {
   position: absolute;
   inset: 0 auto 0 0;
   width: var(--v);
-  border-radius: var(--radio-medidor);
+  border-radius: var(--radio-pildora);
   background: var(--medidor, var(--bien));
   box-shadow: 0 0 8px var(--medidor, var(--bien));
 }
-.medidor[data-nivel="alta"],
+.medidor-uso[data-nivel="alta"],
 .ventana-uso[data-nivel="alta"] {
   --medidor: var(--espera);
 }
-.medidor[data-nivel="alta"] .pc {
+.medidor-uso[data-nivel="alta"] .pc {
   color: var(--espera);
 }
-.medidor[data-nivel="critica"],
-.medidor[data-nivel="agotada"],
+.medidor-uso[data-nivel="critica"],
+.medidor-uso[data-nivel="agotada"],
 .ventana-uso[data-nivel="critica"],
 .ventana-uso[data-nivel="agotada"] {
   --medidor: var(--error);
 }
-.medidor[data-nivel="critica"] .pc,
-.medidor[data-nivel="agotada"] .pc,
-.medidor .libera {
+.medidor-uso[data-nivel="critica"] .pc,
+.medidor-uso[data-nivel="agotada"] .pc,
+.medidor-uso .libera {
   color: var(--error);
-}
-
-.menu-lista > button.opcion-ia[aria-checked="true"] b {
-  color: var(--primario);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -22,7 +22,7 @@ export function nivel(v: VentanaUso): 'agotada' | 'critica' | 'alta' | undefined
 function Medidor({ etiqueta, v }: { etiqueta: string; v: VentanaUso }) {
   const estilo = { '--v': `${Math.min(100, v.usado)}%` } as CSSProperties
   return (
-    <span className="medidor" data-nivel={nivel(v)}>
+    <span className="medidor-uso" data-nivel={nivel(v)}>
       {etiqueta}
       <span className="barra" style={estilo}>
         <b />
@@ -170,13 +170,13 @@ function ArranqueEnElUso({ cerrar }: { cerrar: () => void }) {
 function Detalle({ uso, cerrar }: { uso: UsoSuscripcion; cerrar: () => void }) {
   return (
     <div className="detalle-uso">
-      <h3>Uso de la suscripción</h3>
+      <h4 className="titulo-menu">Uso de la suscripción</h4>
       <Ventana titulo="Ventana de 5 horas" v={uso.cincoHoras} />
       <ArranqueEnElUso cerrar={cerrar} />
       <Ventana titulo="Semana" v={uso.semana} />
       {uso.ritmo && uso.semana && (
         <>
-          <h3>Ritmo de la semana</h3>
+          <h4 className="titulo-menu">Ritmo de la semana</h4>
           <Ritmo r={uso.ritmo} semana={uso.semana} />
         </>
       )}

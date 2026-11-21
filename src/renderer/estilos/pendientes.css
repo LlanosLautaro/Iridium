@@ -38,7 +38,7 @@
 .linea-silueta {
   display: block;
   height: 10px;
-  background: var(--medidor-fondo);
+  background: var(--borde-fuerte);
   border-radius: var(--radio-control);
 }
 /* Pendientes del proyecto elegido */

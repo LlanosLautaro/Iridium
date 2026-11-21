@@ -197,7 +197,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: var(--barra);
+  background: var(--fondo);
   border-top: 1px solid var(--borde);
   padding: 0 12px;
   font-size: 12px;
@@ -238,72 +238,23 @@
   color: var(--texto);
 }
 
-/* Un menú que se despliega desde un botón */
-.desplegable {
+/* Un menú que se despliega desde un botón (ui/Menu.tsx): la lista es el Menú (PZ-8), debajo del botón; cada uso la
+   acomoda con la clase de su contenedor (el uso, el compositor, las anteriores, «En esta página»). */
+.con-menu {
   position: relative;
   min-width: 0;
 }
-.menu-boton {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 28px;
-  max-width: 100%;
-  padding: 0 8px;
-  border-radius: var(--radio-control);
-  color: var(--texto-2);
-  font-size: var(--tam-chico);
-}
-.menu-boton:disabled {
-  opacity: 0.45;
-}
-.menu-boton .ic {
-  width: 13px;
-  height: 13px;
-}
-.menu-lista {
-  position: absolute;
-  top: 32px;
+.con-menu > [role="menu"] {
+  top: calc(100% + var(--esp-1));
   left: 0;
-  z-index: 20;
-  min-width: 240px;
-  max-width: 380px;
   max-height: 60vh;
   overflow-y: auto;
-  padding: 4px;
-  border: 1px solid var(--borde-fuerte);
-  border-radius: var(--radio-bloque);
-  background: var(--elevado);
-  box-shadow: var(--sombra-menu);
-  animation: aparece 0.14s var(--sale);
 }
-@keyframes aparece {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-}
-.menu-lista > button {
-  display: block;
-  width: 100%;
-  height: 28px;
-  padding: 0 10px;
-  border-radius: var(--radio-control);
-  color: var(--texto-2);
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.menu-lista h3 {
-  padding: 6px 8px 4px;
-  font: 600 12px / 1.3 var(--ui);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.con-menu [role="menu"] .nota {
+  margin: 0;
+  padding: var(--esp-1) var(--esp-2) var(--esp-2);
+  font: var(--estilo-meta);
   color: var(--texto-3);
-}
-.menu-lista .nota {
-  padding: 6px 8px 8px;
 }
 
 /* Lo que va dentro de otro componente, al final: Biome pide las reglas de menor a mayor especificidad */
@@ -320,52 +271,14 @@
   color: var(--texto);
   background: var(--hover);
 }
-.menu-boton:hover:not(:disabled),
-.menu-boton[aria-expanded="true"] {
-  background: var(--hover);
-  color: var(--texto);
-}
-.menu-lista > button:hover {
-  background: var(--hover);
-  color: var(--texto);
-}
-.menu-lista > button[aria-current="true"] {
-  color: var(--primario);
-}
-.menu-lista > button.mono {
-  font: 500 12.5px / 1 var(--mono);
-}
-.menu-lista > button.sub {
-  padding-left: 22px;
-  color: var(--texto-3);
-  font-size: 12.5px;
-}
-
-/* Actualizar (W-1, R-12): un botón chico de contorno del color de lo activo; armando, el ícono que gira y el tiempo
-   en mono; falló, la señal roja con sus enlaces. */
-.estado-barra .actualizar {
+/* Actualizar (W-1, R-12): el Botón secundario chico; armando, el ícono que gira y el tiempo en mono; falló, la Señal
+   roja con sus enlaces. */
+.actualizar-it {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 20px;
-  padding: 0 8px;
-  border-radius: var(--radio-control);
-  border: 1px solid color-mix(in oklab, var(--primario) 50%, transparent);
-  background: none;
-  color: var(--primario-texto);
-  font: 600 12px / 1 var(--ui);
-  cursor: pointer;
+  gap: var(--esp-2);
 }
-.estado-barra .actualizar:hover:not(:disabled) {
-  background: var(--sel-fondo);
-}
-.estado-barra .actualizar:disabled {
-  border-color: var(--borde-fuerte);
-  color: var(--texto-3);
-  cursor: default;
-}
-.estado-barra .actualizar .ic,
-.estado-barra .armando .ic {
+.estado-barra .actualizar-it .ic {
   width: 12px;
   height: 12px;
 }

@@ -639,6 +639,7 @@ function Anteriores({
     <Menu
       clase="anteriores"
       claseBoton="boton solo-icono"
+      enLista
       titulo={
         trabajando
           ? 'Mientras la IA trabaja no se cambia de conversación'
@@ -653,7 +654,7 @@ function Anteriores({
     >
       {(cerrar) => (
         <>
-          <h3>Conversaciones{nombre ? ` de ${nombre}` : ''}</h3>
+          <h4 className="titulo-menu">Conversaciones{nombre ? ` de ${nombre}` : ''}</h4>
           {!lista && <p className="nota">Buscando…</p>}
           {lista?.length === 0 && <p className="nota">Este proyecto todavía no tiene conversaciones.</p>}
           {lista?.map((c) => (
@@ -661,19 +662,23 @@ function Anteriores({
               key={c.id}
               type="button"
               role="menuitem"
-              className={c.id === actual ? 'conv actual' : 'conv'}
+              className={c.id === actual ? 'actual' : undefined}
               aria-current={c.id === actual}
               onClick={() => {
                 cerrar()
                 if (c.id !== actual) void elegir(c.id)
               }}
             >
-              <b title={c.titulo}>{c.titulo}</b>
-              <time>{fechaCorta(c.modificada)}</time>
-              <small>
-                {c.origen === 'vscode' ? 'VS Code' : 'Iridium'}
-                {c.id === actual && ' · abierta'}
-              </small>
+              <span className="principal-fila">
+                <span className="titulo-fila" title={c.titulo}>
+                  {c.titulo}
+                </span>
+                <span className="detalle">
+                  {c.origen === 'vscode' ? 'VS Code' : 'Iridium'}
+                  {c.id === actual && ' · abierta'}
+                </span>
+              </span>
+              <time className="meta">{fechaCorta(c.modificada)}</time>
             </button>
           ))}
         </>

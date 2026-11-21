@@ -188,7 +188,7 @@ test('con el usuario delante no hay aviso: la conversación dice que la empezó 
   await expect(win.getByRole('status', { name: 'Lo que hizo Iridium mientras no estabas' })).toHaveCount(0)
   await win.screenshot({ path: 'test-results/ar2-conversacion.png' })
 
-  await win.locator('.desplegable.uso > .menu-boton').click()
+  await win.locator('.con-menu.uso > button').click()
   await expect(win.locator('.detalle-uso')).toContainText('Último arranque: Alfa, hoy a las')
   await expect(win.locator('.detalle-uso')).toContainText('terminó')
   await app.close()

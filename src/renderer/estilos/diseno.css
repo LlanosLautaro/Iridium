@@ -46,7 +46,7 @@
   overflow: hidden;
   border: 1px solid var(--borde);
   border-radius: var(--radio-bloque);
-  background: var(--caja);
+  background: var(--tarjeta);
   transition: border-color 0.12s;
 }
 .di-marco iframe {
@@ -64,7 +64,7 @@
   outline: none;
 }
 .di-mini:focus-visible .di-marco {
-  outline: 2px solid var(--primario);
+  outline: 2px solid var(--texto);
   outline-offset: 2px;
 }
 .di-marco.rota {
@@ -92,6 +92,11 @@
   height: 7px;
   border-radius: 50%;
   background: var(--espera);
+}
+
+/* Lo que falta (sin diseño, las piezas sin dibujar): el Recuadro punteado (PZ-4), con aire alrededor */
+.di-falta {
+  margin: var(--esp-3) var(--esp-4) 0;
 }
 
 /* Avisos: el índice mal escrito y el pedido mandado */

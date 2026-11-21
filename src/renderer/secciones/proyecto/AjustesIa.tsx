@@ -87,7 +87,7 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
     <div className="ajustes-ia">
       <Menu
         clase="elegir-ia"
-        claseBoton="boton sin-fondo chico"
+        enLista
         titulo={`Modelo: ${nombreModelo(elegido, modelos)}. Vale desde el próximo mensaje.`}
         boton={
           <>
@@ -98,14 +98,14 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
       >
         {(cerrar) => (
           <>
-            <h3>Modelo de este proyecto</h3>
+            <h4 className="titulo-menu">Modelo de este proyecto</h4>
             {modelos.map((m) => (
               <button
                 key={m.id}
                 type="button"
                 role="menuitemradio"
                 aria-checked={m.id === elegido.id}
-                className="opcion-ia"
+                className={m.id === elegido.id ? 'actual' : undefined}
                 onClick={() => {
                   cerrar()
                   const modelo = m.id === 'default' ? null : m.id
@@ -113,8 +113,10 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
                   cambiar({ modelo, esfuerzo: esfuerzo && m.esfuerzos.includes(esfuerzo) ? esfuerzo : null })
                 }}
               >
-                <b>{nombreModelo(m, modelos)}</b>
-                <small>{descripcionModelo(m)}</small>
+                <span className="principal-fila">
+                  <span className="titulo-fila">{nombreModelo(m, modelos)}</span>
+                  <span className="detalle">{descripcionModelo(m)}</span>
+                </span>
               </button>
             ))}
           </>
@@ -122,7 +124,7 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
       </Menu>
       <Menu
         clase="elegir-ia"
-        claseBoton="boton sin-fondo chico"
+        enLista
         deshabilitado={esfuerzos.length === 0}
         titulo={
           esfuerzos.length === 0
@@ -135,22 +137,24 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
       >
         {(cerrar) => (
           <>
-            <h3>Esfuerzo de este proyecto</h3>
+            <h4 className="titulo-menu">Esfuerzo de este proyecto</h4>
             <button
               type="button"
               role="menuitemradio"
               aria-checked={esfuerzo === null}
-              className="opcion-ia"
+              className={esfuerzo === null ? 'actual' : undefined}
               onClick={() => {
                 cerrar()
                 cambiar({ modelo: ajuste.modelo, esfuerzo: null })
               }}
             >
-              <b>
-                Predeterminado
-                {elegido.esfuerzoPredeterminado && ` (${NOMBRE_ESFUERZO[elegido.esfuerzoPredeterminado]})`}
-              </b>
-              <small>El que usa Claude Code para este modelo</small>
+              <span className="principal-fila">
+                <span className="titulo-fila">
+                  Predeterminado
+                  {elegido.esfuerzoPredeterminado && ` (${NOMBRE_ESFUERZO[elegido.esfuerzoPredeterminado]})`}
+                </span>
+                <span className="detalle">El que usa Claude Code para este modelo</span>
+              </span>
             </button>
             {esfuerzos.map((e) => (
               <button
@@ -158,14 +162,16 @@ export function ModeloYEsfuerzo({ ruta }: { ruta: string }) {
                 type="button"
                 role="menuitemradio"
                 aria-checked={e === esfuerzo}
-                className="opcion-ia"
+                className={e === esfuerzo ? 'actual' : undefined}
                 onClick={() => {
                   cerrar()
                   cambiar({ modelo: ajuste.modelo, esfuerzo: e })
                 }}
               >
-                <b>{NOMBRE_ESFUERZO[e]}</b>
-                <small>{DETALLE_ESFUERZO[e]}</small>
+                <span className="principal-fila">
+                  <span className="titulo-fila">{NOMBRE_ESFUERZO[e]}</span>
+                  <span className="detalle">{DETALLE_ESFUERZO[e]}</span>
+                </span>
               </button>
             ))}
           </>
@@ -302,7 +308,6 @@ export function MedidorContexto({ contexto }: { contexto: ContextoConversacion }
   return (
     <Menu
       clase="elegir-ia ctx"
-      claseBoton="boton sin-fondo chico"
       titulo={`Contexto: ${miles(contexto.usados)} de ${miles(contexto.maximo)} tokens (${pc(contexto.porcentaje)})${cache}. Toca para ver el detalle.`}
       boton={
         <span className="medidor-ctx" data-nivel={nivel}>
@@ -320,7 +325,7 @@ export function MedidorContexto({ contexto }: { contexto: ContextoConversacion }
     >
       {() => (
         <div className="detalle-ctx">
-          <h3>Contexto de esta conversación</h3>
+          <h4 className="titulo-menu">Contexto de esta conversación</h4>
           <div className="ventana-uso" data-nivel={nivel}>
             <b>
               {miles(contexto.usados)} de {miles(contexto.maximo)} tokens
@@ -341,7 +346,7 @@ export function MedidorContexto({ contexto }: { contexto: ContextoConversacion }
               Code) o es anterior. Llega con el próximo turno.
             </p>
           )}
-          <h3>Caché</h3>
+          <h4 className="titulo-menu">Caché</h4>
           <Cache c={contexto} ahora={ahora} />
         </div>
       )}

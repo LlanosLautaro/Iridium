@@ -405,3 +405,10 @@ Sin cambiar cuándo se verifica: un solo comando de cierre que corre todo y mues
 
 ## T-93 — Al comparti Iridium sucedió un problema, la otra persona no tenía ni idea de como usarlo, quizás una demo programada sirva, como un recorrido de la app, es una idea ya mencionada, la otra cosa es que tampoco tenía ni la más de las palidas ideas sobre desarrollo, no tenia ni nocion de lo que es una app web, de lo que es una nativa, electron, rust, nada de nada. Como enfrentamos este segundo desafío? es que en realidad hay que hacerle saber estas cosas? definir plantillas predefinidas para ciertos tipos de apps dependiendo de algunos requisitos? como por ejemplo sincronizacion celular/desktop, etc.
 Estado: nueva · Idea: usuario · Fecha: 2026-11-20
+
+## T-94 — Pantallas a medida para algunas partes de los hitos
+Estado: nueva · Idea: usuario · Fecha: 2026-11-21 · Origen: una respuesta del usuario en otro proyecto
+Hoy un documento largo (como la clasificación MoSCoW de un hito 2) solo se puede leer y contestar con una pregunta: no hay forma cómoda de revisarlo y corregirlo. La idea es sumar cuestionarios o pantallas específicas para ciertas partes de ciertos hitos: por ejemplo, un tablero de decisiones del MVP con columnas (Must, Should, Could, Won't, postergar como idea) donde se arrastran los casos, o una pantalla de métricas para las fases de rendimiento. El usuario lo ve como un frente de mejora grande y casi sin costo.
+
+## T-95 — plugins por proyecto, similares a los mods de claude desktop
+Estado: nueva · Idea: usuario · Fecha: 2026-11-21

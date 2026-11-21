@@ -255,7 +255,7 @@ test('Sistema: los colores, la letra, los tamaños y las piezas vivas (DS-13)', 
 test('sin docs/diseno/: el recuadro y Pedírselo a la IA con el cuadro antes (DS-1)', async () => {
   const { app, win } = await abrir()
   const diseno = await entrarADiseno(win, 'Beta')
-  const recuadro = diseno.locator('.recuadro-simple')
+  const recuadro = diseno.locator('.di-falta')
   await expect(recuadro).toContainText('Este proyecto todavía no tiene su diseño')
   await recuadro.getByRole('button', { name: 'Pedírselo a la IA' }).click()
   const cuadro = win.getByRole('dialog', { name: 'Pedirle el diseño a la IA' })

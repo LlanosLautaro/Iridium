@@ -83,7 +83,7 @@
 .divisor-columna.arrastra,
 .divisor-columna:focus-visible {
   outline: 0;
-  background: color-mix(in oklab, var(--primario) 25%, var(--fondo));
+  background: color-mix(in oklab, var(--texto) 25%, var(--fondo));
 }
 /* El detalle (de una skill o Framework): la cabecera arriba y lo demás debajo, a lo ancho */
 .sk-detalle {

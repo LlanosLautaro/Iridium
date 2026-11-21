@@ -1,7 +1,7 @@
 # Estado del módulo: Arranque
 
 **Tipo:** sección (el arranque del período de 5 horas; T-70)
-**Última actualización:** 2026-11-20
+**Última actualización:** 2026-11-21
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,12 +13,12 @@
 | 4. UX | hecho (aprobada en Q-207 con el aviso al volver, D-147) | `ux.md` |
 | 5. Diseño técnico | hecho (D-149) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (sin piezas nuevas: el aviso fijo es un estado de la pieza Aviso, D-149) | — |
-| 7. Construcción | en curso (AR-I1 y AR-I2 hechas; la primera noche no arrancó, arreglado; espera otra noche, Q-227) | este archivo |
-| 8. Calidad | pendiente | este archivo |
+| 7. Construcción | hecho (AR-I1 y AR-I2; la primera noche no arrancó, arreglado; la segunda, probada en Q-227) | este archivo |
+| 8. Calidad | pendiente (al cerrar DI-I3, como Abrir, D-162) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso al volver, el detalle del uso y la línea de la conversación). La primera noche (Q-210, 2026-11-20) no arrancó: a las 03:00 el período seguía abierto y, al vencer, el momento de 5 minutos después se perdía. Arreglado ese día; espera otra noche (Q-227) y con ella el paso 8.
+Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnico (D-149) cerrados. AR-I1 y AR-I2 hechas el 2026-11-18: arranca solo y cuenta lo que hizo (el aviso al volver, el detalle del uso y la línea de la conversación). La primera noche (Q-210, 2026-11-20) no arrancó: a las 03:00 el período seguía abierto y, al vencer, el momento de 5 minutos después se perdía. Arreglado ese día; la segunda noche anduvo (Q-227, 2026-11-21). El paso 8 va al cerrar DI-I3, como el de Abrir (D-162).
 
 ## Ruta
 - [x] Decidir cómo se arranca el período (con trabajo real, desde Iridium)
@@ -28,7 +28,8 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - [x] Arrancar el proyecto que espera hace más, a la hora elegida y al vencer el período (AR-I1)
 - [x] Contar qué arrancó o por qué no pudo: el aviso al volver, la pestaña y el detalle del uso (AR-I2)
 - [x] Arrancar también al vencer el período que estaba abierto a la hora elegida (Q-210)
-- [ ] Probarlo una noche con Iridium abierta (Q-227)
+- [x] Probarlo una noche con Iridium abierta (Q-227)
+- [ ] Medir su calidad (paso 8)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -63,6 +64,10 @@ Abierto el 2026-11-18 (Q-205). Definición (D-146), UX (D-147) y diseño técnic
 - **Arreglo:** el arranque recuerda el último vencimiento que vio y lo usa mientras el uso no traiga otro. Además, después de cada momento el registro del día anota el próximo («Arranque: el próximo, … (vencimiento)»), para ver en la próxima noche qué programó.
 - **Pruebas:** Vitest `tests/ar1-arranque.test.ts` suma «con el período abierto a la hora elegida, arranca al vencer aunque el uso releído ya no lo traiga» (falla sin el arreglo: quedaba para el día siguiente a las 03:00). Vitest (902), typecheck y lint en verde.
 
+### Q-227 — la segunda noche (2026-11-21)
+- **Q-227:** todo bien: el aviso «Mientras no estabas», Abrir y Listo, la línea de la conversación, «Último arranque» en el uso y el aviso que no vuelve.
+- **El registro** (`arranques.json`) lo confirma: a la hora elegida el período estaba abierto y arrancó 5 minutos después del vencimiento, con el proyecto que esperaba. El paso 7 queda hecho.
+
 ## Próximo paso
-Esperar la segunda noche (Q-227). Con la respuesta: mirar en el registro del día las líneas «Arranque…» (qué pasó y el próximo programado), arreglar lo que falle y pasar al paso 8 (calidad).
-**Leer antes:** `respuestas/Q-227.md`; este archivo › Arreglo tras Q-210.
+Paso 8 (calidad) al cerrar DI-I3, junto con el de Abrir (D-162): las pruebas del frente en la corrida entera, los casos raros del uso (sin período, la PC suspendida) y la accesibilidad del aviso.
+**Leer antes:** este archivo › Log de iteraciones; `docs/08-calidad.md` › lo que mide cada frente.

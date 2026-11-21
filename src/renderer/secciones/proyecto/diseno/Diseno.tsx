@@ -251,23 +251,27 @@ export function Diseno({ ruta }: { ruta: string }) {
         </p>
       )}
       {sinDiseno && (
-        <div className="recuadro-simple" role="note">
-          <b>Este proyecto todavía no tiene su diseño</b>
-          <p>
-            Las pantallas se diseñan como maquetas que la IA escribe en <code>docs/diseno/</code>: se ven
-            vivas acá, se usan y se comentan con F8.
-          </p>
-          <button
-            type="button"
-            className="boton secundario chico"
-            disabled={trabajando}
-            title={
-              trabajando ? 'Su IA está trabajando' : 'Le manda el pedido a la IA del proyecto: gasta uso'
-            }
-            onClick={() => setConfirmar(true)}
-          >
-            Pedírselo a la IA
-          </button>
+        <div className="recuadro punteado di-falta" role="note">
+          <div className="cuerpo-recuadro">
+            <strong>Este proyecto todavía no tiene su diseño</strong>
+            <span>
+              Las pantallas se diseñan como maquetas que la IA escribe en <code>docs/diseno/</code>: se ven
+              vivas acá, se usan y se comentan con F8.
+            </span>
+            <div className="acciones-recuadro">
+              <button
+                type="button"
+                className="boton secundario chico"
+                disabled={trabajando}
+                title={
+                  trabajando ? 'Su IA está trabajando' : 'Le manda el pedido a la IA del proyecto: gasta uso'
+                }
+                onClick={() => setConfirmar(true)}
+              >
+                Pedírselo a la IA
+              </button>
+            </div>
+          </div>
         </div>
       )}
       {vista?.tipo === 'diseno' && vista.problemaIndice && (

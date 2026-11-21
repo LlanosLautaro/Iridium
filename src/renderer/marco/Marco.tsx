@@ -483,7 +483,7 @@ function Actualizar() {
     <span className="it actualizar-it">
       <button
         type="button"
-        className="actualizar"
+        className="boton secundario chico"
         disabled={bloqueado || reiniciando}
         title={
           bloqueado
