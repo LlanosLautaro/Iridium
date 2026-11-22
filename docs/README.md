@@ -46,6 +46,6 @@ Los estándar (`D`, `Q`, `T`, `R`, `H`, `F`, `W`, `S`, `I`; `P1`–`P5` es el ni
 | `PO-n` | pantalla del frente Orden antes de pasar a `W-n` (historia) | `modulos/orden/ux.md` |
 | `PZ-n` | pieza compartida de la interfaz (frente Diseño) | `modulos/diseno/ux.md` › Las piezas |
 | `DS-n` | historia, flujo o pantalla de la sección Diseño | `modulos/diseno/ux.md` › Parte 2 |
-| `CO-n`, `AJ-n`, `IN-n`, `FR-n`, `ID-n`, `MA-n`, `AR-n`, `AB-n`, `PA-n` | historia o flujo de un frente: Compartir, Apariencia y ajustes, Inicio, Revisión de la app, Ideas, Mapa, Arranque, Abrir, Paridad | el `ux.md` de su frente |
-| `OR-In`, `DI-In`, `CO-In`, `SK-In`, `AP-In`, `IN-In`, `R-In`, `ID-In`, `MA-In`, `AR-In`, `AB-In`, `PA-In` | iteración de un frente: Orden, Diseño, Compartir, Skills, Apariencia y ajustes, Inicio, Revisión de la app, Ideas, Mapa, Arranque, Abrir, Paridad | el `estado.md` de su frente |
+| `CO-n`, `AJ-n`, `IN-n`, `FR-n`, `ID-n`, `MA-n`, `AR-n`, `AB-n`, `PA-n`, `FS-n` | historia o flujo de un frente: Compartir, Apariencia y ajustes, Inicio, Revisión de la app, Ideas, Mapa, Arranque, Abrir, Paridad, Frentes | el `ux.md` de su frente |
+| `OR-In`, `DI-In`, `CO-In`, `SK-In`, `AP-In`, `IN-In`, `R-In`, `ID-In`, `MA-In`, `AR-In`, `AB-In`, `PA-In`, `FS-In` | iteración de un frente: Orden, Diseño, Compartir, Skills, Apariencia y ajustes, Inicio, Revisión de la app, Ideas, Mapa, Arranque, Abrir, Paridad, Frentes | el `estado.md` de su frente |
 | `Defecto n` | defecto encontrado en el hito 8 | `08-calidad.md` › Defectos |

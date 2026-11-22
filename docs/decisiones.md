@@ -181,6 +181,7 @@
 | D-172 | 2026-11-22 | general (Git, T-114) | 10, Q-257 | Lo que cambia archivos espera a que su proyecto esté al día con GitHub | vigente |
 | D-173 | 2026-11-22 | Paridad, general (T-114) | 10, Q-259 | T-114 va antes de Capacidades, la segunda parte de Paridad | vigente |
 | D-174 | 2026-11-22 | general (framework y control; T-117) | 10, a pedido del usuario (T-117) | Lo terminado se cierra en el mismo cambio, y el control avisa del trabajo hecho en la ruta o del frente hecho que sigue abierto | vigente |
+| D-175 | 2026-11-22 | Frentes (T-112, T-113), Arranque y Mapa | 10, Q-262 | Se abre el frente Frentes antes de Capacidades: primero la IA avanzando sola por tamaño con la fila interna, después el Mapa rediseñado como Frentes | vigente |
 
 ---
 
@@ -3428,3 +3429,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** el framework pide cerrar un `T-n` en el mismo cambio que lo termina, en especial al marcar `[x]` el último paso de la ruta que lo nombra y al pasar a `hecho` el frente que nació de él (el `T-n` de su `**Tipo:**` o de su fila en `## Módulos`). El control de la ruta avisa de las dos cosas: un `T-n` abierto que las rutas solo nombran en pasos `[x]`, y el `T-n` abierto de un frente `hecho`. Es un error de formato que se repite: va al framework y al control, no a un parche (D-086).
 **Motivo:** cerrarlo a mano no evita la próxima vez; con el aviso al final del turno, la IA lo corrige en el momento. Las dos señales no dan avisos de más en los documentos de hoy: solo T-70 y T-96.
 **Consecuencias:** `core/control/ruta.ts` suma los dos avisos (pruebas en `tests/ma1-ruta.test.ts`); el origen de un frente se lee en un solo lugar (`origenDeFrente`, `core/ruta.ts`), el mismo que usa el Mapa. T-70 y T-96 pasan a `hecho`; T-117, hecho.
+
+## D-175 — Se abre el frente Frentes: la IA avanza sola por tamaño, y el Mapa pasa a ser Frentes
+- **Fecha:** 2026-11-22
+- **Ámbito:** el frente nuevo Frentes (T-112, T-113), el Arranque (D-146, D-149) y el Mapa (D-138, D-139)
+- **Hito o paso:** 10, Q-262 (respondida en el chat)
+- **Estado:** vigente
+
+**Contexto:** el usuario quiere que la IA avance sola en lo que no lo necesita y drenar la cuota (le queda el 83 % de la semana, que se reinicia el martes 2026-11-24 a la noche), sin empezar algo grande con poca cuota; y el Mapa sigue sin responder «qué sigue». Pensado en el chat en dos vueltas (`trabajo.md` › T-113); Q-261 quedó reemplazada por Q-262.
+**Decisión:** se abre el frente Frentes, antes de Capacidades (Paridad queda en pausa). Primero el motor: la IA marca en la ruta el tamaño (chico, mediano, grande) y si sigue sola; Iridium arma la fila en su propio JSON y el Arranque toma pasos mientras se cumplen las condiciones que elige el usuario (por defecto, drenar todo), con interruptores por proyecto y por frente. Después, con maquetas, el Mapa pasa a ser Frentes: tarjetas por frente a la izquierda (lo más reciente arriba), el mapa de tareas reales al centro y las preguntas del frente en su lugar, sin repetir su nombre.
+**Motivo:** el motor primero aprovecha la cuota de esta semana; la marca va en la ruta y no en un JSON que escriba la IA para no tener dos lugares que se desfasan (como las ideas en T-117).
+**Consecuencias:** `modulos/frentes/` (propuesta, definición y ruta); el formato de la ruta, su lector y el control cambian juntos (D-086); T-112 y T-113 pasan a `en curso` en el frente Frentes. La definición espera Q-263.

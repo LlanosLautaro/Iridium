@@ -498,11 +498,11 @@ Estado: en curso · Idea: usuario · Fecha: 2026-11-22 · Frente: Compartir
 Hecho el 2026-11-22 (CO-I9, `modulos/compartir/estado.md`): la versión publicada (d1d1750) abre bien en esta PC, con datos limpios, con una copia de los datos de uso y con otro idioma, así que la ventana negra depende de esa PC y Iridium no dejaba rastro. Encontrado y arreglado: el actualizador de las copias compartidas no podía bajar una versión desde CO-I8 (veía adentro de `app.asar` y se trababa al borrar), así que esa copia ya no se actualiza sola; probado de punta a punta contra GitHub. Además, una falla de la ventana ahora queda en el registro del día y muestra «Iridium no pudo mostrar esta pantalla» con Volver a cargar en vez de quedar en negro. Con Q-255 (A, D-171), CO-I10 el 2026-11-22: Iridium se instala como una app y se actualiza solo con electron-updater, bajando solo lo que cambió; probado de punta a punta en esta PC con instaladores de verdad. Falta: instalarlo en la otra PC y ver que abre (Q-256, reemplaza a Q-254).
 
 ## T-112 — dejar tareas en cola ya sea para un chat o en un "pendientes"
-Estado: nueva · Idea: usuario · Fecha: 2026-11-22
-Pensada en el chat con T-113 el 2026-11-22: son una sola cosa, una fila de trabajo que la IA puede hacer sola (esta idea) y un motor que la consume cuando hay cuota que se perdería (T-113). Ver T-113; espera Q-262.
+Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-22 · Origen: D-175
+Pensada en el chat con T-113 el 2026-11-22: son una sola cosa, una fila de trabajo que la IA puede hacer sola (esta idea) y un motor que la consume cuando hay cuota que se perdería (T-113). Ver T-113; es el frente Frentes (D-175).
 
 ## T-113 — hacer que elsistema que activa el uso de cuota se pueda configurar más activo, por ejemplo ir atacando uno a uno los pendientes de todos los proyectos siempre que haya cuota disponible y no se esté usando, esto sería especiamente util durante la mañana, claro podria amancer con un 0% de mi cuota de 5hs pero habría obtenido progreso que en caso de no usarlo y llegar el reset semanal sería cuota de uso perdida
-Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-22 · Origen: D-175
 Pensada en el chat con T-112 el 2026-11-22 (sin construir nada):
 - **Qué falta no es un estado más:** de 117 ítems, 35 son `nueva` sin evaluar y 24 `pendiente`, pero ninguno dice si la IA puede hacerlo sola. Esa es la dimensión que falta. Mezclar ideas con pedidos y errores no es el problema (el framework ya anota los errores como `T-n`); el problema es que no hay una señal de «listo para que la IA siga sola». T-78 («implementada») ya quedó cubierta por `hecho` (T-117).
 - **No es un Kanban:** mover tarjetas a mano ya se descartó (D-137), y lo que se busca es lo contrario, que la IA tome cosas sin que muevas nada.
@@ -518,7 +518,7 @@ Segunda vuelta en el chat (2026-11-22); Q-261 quedó sin responder y la reemplaz
 - **Si volvés mientras trabaja:** termina la iteración que tiene en la mano (cortarla a medias es lo más caro) y no toma otra hasta que dejes de usar Iridium.
 - **Condiciones que se eligen:** horario (ej. de 1 a 9), minutos sin usar Iridium, cuánto del período deja (0 % si se drena), tope de la semana (100 % si se drena) y qué tamaños acepta.
 - **A tener en cuenta:** usar Claude Code sin ventana para trabajo propio está previsto por Anthropic, pero el uso continuo toda la noche es justo lo que motivó el límite semanal; con trabajo real y dentro de los límites, el riesgo es bajo.
-Espera Q-262.
+Q-262 respondida en el chat (D-175): se abre el frente Frentes antes de Capacidades; primero el motor, con la fila interna, y después las maquetas del tablero (tarjetas a la izquierda, el mapa de tareas al centro, las preguntas aparte), con interruptores por proyecto y por frente. Sigue en `modulos/frentes/`.
 
 ## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
 Estado: en curso (espera Q-260) · Idea: usuario · Fecha: 2026-11-22 · Origen: Q-257
