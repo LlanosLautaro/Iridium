@@ -3485,3 +3485,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** (1) las respuestas de la Bandeja cuentan como un paso chico también para la casilla «Chicos»: sin ella, el avance no las toma (el Arranque de las 3:00 sí). (2) Lo que tomó el avance solo entra siempre al aviso al volver, sin la regla de los 5 minutos sin usar del Arranque: lo tomó porque el usuario no estaba, aunque haya elegido 1 minuto. (3) Se anota en `arranques.json` antes de abrir la conversación: si abrirla falla, el mismo paso no se reintenta cada minuto, sino a las 12 horas. (4) Las respuestas que ya tomó no se repiten en 12 horas salvo que el usuario responda otra pregunta del mismo proyecto (es trabajo nuevo).
 **Motivo:** que el avance no insista con lo que falla, que el usuario vea siempre lo que hizo y que la casilla de tamaños signifique lo mismo para todo lo que toma.
 **Consecuencias:** se prueba en `tests/fs2-avance.test.ts` y `tests/e2e/fs2-avance.spec.ts`; si la casilla «Chicos» confunde en la prueba del usuario, se revisa (1).
+
+## D-180 — Lo que el tablero Frentes muestra en cada tarjeta y en el centro
+- **Fecha:** 2026-11-22
+- **Ámbito:** el frente Frentes, parte 2 (`modulos/frentes/ux.md` › Parte 2)
+- **Hito o paso:** 10; frente Frentes, paso 4 (UX)
+- **Estado:** vigente
+
+**Contexto:** la definición (D-176) deja la forma exacta del tablero para las maquetas; al dibujarlas hubo que decidir lo chico.
+**Decisión:** (1) La tarjeta tiene dos renglones, el nombre y el paso que sigue, para que diez frentes entren sin desplazar; las preguntas, como cuenta ámbar, y el avance solo, como el ícono del robot (o «apagada»), sin texto cuando no hay nada. (2) Las preguntas del frente van arriba del recorrido, porque son lo que frena. (3) El Núcleo es una tarjeta más, con los `T-n` y las preguntas sin frente y su propio interruptor. (4) El interruptor del frente va en la cabecera del centro, no en la tarjeta, para no tocarlo sin querer al elegir. (5) Para el recorrido se dibujan dos formas (A, columnas Hecho · Ahora · Después; B, el camino de hoy con el tamaño y «sola»), y el usuario elige en Q-265.
+**Motivo:** que «qué sigue» se lea en la columna sin abrir cada frente, y que el centro responda «qué hace la IA y qué me espera» de este frente.
+**Consecuencias:** un token nuevo, `--ancho-frentes` (280 px). Al construir, la tarjeta es la pieza Fila con detalle y, si gana A, la tarea es una pieza nueva para `piezas.css`.

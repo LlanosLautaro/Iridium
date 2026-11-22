@@ -116,6 +116,7 @@
   --alto-ventana: 600px; /* la ventana de Ajustes */
   --ancho-pestanas-ventana: 200px; /* las pestañas a la izquierda de la ventana de Ajustes */
   --ancho-arbol: 240px; /* la columna del árbol a la izquierda: los documentos de Docs, los archivos */
+  --ancho-frentes: 280px; /* la columna de las tarjetas de los frentes, a la izquierda del tablero Frentes */
   --ancho-panel-git: 340px; /* el panel de Git a la izquierda, como el Control de código fuente de VS Code */
   --ancho-lectura: 760px; /* lo más ancho de un documento para leer de corrido */
   --ancho-centrado: 820px; /* lo más ancho del contenido centrado de una sección */

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Frentes · A · Columnas</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Lo del tablero (las tarjetas, la cabecera del frente y sus preguntas), igual en A y B, con prefijo fs-. */
+  .fs-dos { display: grid; grid-template-columns: var(--ancho-frentes) minmax(0, 1fr); height: 100%; }
+  .fs-dos > nav { border-right: 1px solid var(--borde-suave); padding: var(--esp-4) var(--esp-2); overflow: auto; }
+  .fs-dos > nav > .bloque { margin-top: var(--esp-5); }
+  .fs-dos > nav .bloque-titulo { padding: 0 var(--esp-2); }
+  .fs-dos > article { overflow: auto; padding: var(--esp-5) var(--esp-6) var(--esp-7); }
+  .fs-tarjeta { width: 100%; background: none; border: 0; text-align: left; font: var(--estilo-cuerpo); cursor: pointer; }
+  .fs-tarjeta .fs-marcas { display: flex; gap: var(--esp-2); align-items: center; align-self: flex-start; padding-top: 2px; }
+  .fs-tarjeta.archivado .titulo-fila { color: var(--texto-3); }
+  .fs-cab { display: flex; align-items: baseline; gap: var(--esp-3); margin-bottom: var(--esp-5); }
+  .fs-cab h2 { margin: 0; font: var(--estilo-titulo); }
+  .fs-cab .derecha { margin-left: auto; }
+  .fs-preguntas { margin-bottom: var(--esp-6); }
+
+  /* A: el recorrido en tres columnas, de lo hecho a lo que viene; las tarjetas no se mueven a mano (D-137). */
+  .fs-columnas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--esp-4); align-items: start; }
+  .fs-col { display: flex; flex-direction: column; gap: var(--esp-2); }
+  .fs-col .bloque-titulo { margin-bottom: var(--esp-1); }
+  .fs-tarea { display: flex; flex-direction: column; gap: var(--esp-1); padding: var(--esp-2) var(--esp-3); border: 1px solid var(--borde); border-radius: var(--radio-fila); font: var(--estilo-cuerpo); color: var(--texto); text-align: left; background: none; }
+  .fs-tarea .pie { display: flex; flex-wrap: wrap; gap: var(--esp-1) var(--esp-3); align-items: center; font: var(--estilo-meta); color: var(--texto-3); }
+  .fs-tarea .pie .codigo { font: var(--estilo-codigo); }
+  .fs-tarea .pie .senal { margin-left: auto; }
+  .fs-tarea.hecho { border-color: var(--borde-suave); color: var(--texto-2); cursor: pointer; }
+  .fs-tarea.hecho:hover { background: var(--hover); }
+  .fs-tarea.foco { border-color: var(--borde-control); }
+  .fs-tarea.foco .nombre { font-weight: 600; }
+  .fs-tarea.espera, .fs-tarea.pausa { border-color: var(--espera-borde); }
+  .fs-tarea.descartado { border-color: var(--borde-suave); }
+  .fs-tarea.descartado .nombre { color: var(--texto-apagado); text-decoration: line-through; }
+  .fs-tarea.rama { margin-left: var(--esp-4); }
+  .fs-gris { margin: 0; color: var(--texto-3); font: var(--estilo-cuerpo); }
+  a.senal { cursor: pointer; text-decoration: none; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="mapa">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Frentes</h1><span class="ruta">Hito 10 · Operación</span>
+      <span class="acciones-cab"><label class="interruptor"><input type="checkbox" id="ver-archivados"><span>Archivados <span class="cuenta">5</span></span></label></span></div>
+  </header>
+  <div class="contenido sin-margen">
+    <div class="fs-dos">
+      <nav id="tarjetas" aria-label="Frentes"></nav>
+      <article id="frente"></article>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+<script src="frentes.js"></script>
+<script>
+  const VISIBLES_HECHOS = 3
+
+  function tareaA(p, clase) {
+    const senal = p.e === 'tuya' ? `<a class="senal ambar" href="bandeja.html" title="Abrir ${p.q} en la Bandeja">Te espera · ${p.q}</a>`
+      : p.e === 'pausa' ? '<span class="senal ambar">En pausa</span>'
+      : p.sola ? `<span class="senal">${icono('robot')}sola</span>` : ''
+    const pie = [p.cod ? `<span class="codigo">${p.cod}</span>` : '', p.tam && !p.e ? `<span>${p.tam}</span>` : '', senal].join('')
+    const etiqueta = p.e === 'hecho' && p.cod ? 'button' : 'div'
+    return `<${etiqueta} class="fs-tarea ${clase}${p.rama ? ' rama' : ''}"${etiqueta === 'button' ? ` title="Abrir ${p.cod}"` : ''}>` +
+      `<span class="nombre">${p.t}</span>${pie ? `<span class="pie">${pie}</span>` : ''}</${etiqueta}>`
+  }
+
+  window.recorrido = (f, zona, todos = false) => {
+    const pend = f.pasos.filter(pendiente)
+    const hechos = f.pasos.filter((p) => !pendiente(p))
+    // Ahora: lo que te espera hasta el primero que la IA puede hacer, y ese mismo. Después: lo demás, en orden.
+    const s = sigue(f)
+    const corte = s ? pend.indexOf(s) + 1 : 0
+    const ahora = pend.slice(0, corte)
+    // Una rama que sale de un paso de Ahora sigue con él.
+    let fin = corte
+    while (pend[fin]?.rama) ahora.push(pend[fin++])
+    const despues = pend.slice(fin)
+    const ocultos = todos ? 0 : Math.max(0, hechos.length - VISIBLES_HECHOS)
+    const col = (titulo, cuenta, html, vacio) => `<section class="fs-col"><h3 class="bloque-titulo">${titulo}${cuenta ? ` <span class="cuenta">${cuenta}</span>` : ''}</h3>` +
+      (html || (vacio ? `<p class="fs-gris">${vacio}</p>` : '')) + '</section>'
+    const clase = (p) => p === s && !p.e ? 'foco' : p.e === 'tuya' ? 'espera' : p.e
+    zona.innerHTML = '<div class="fs-columnas">' +
+      col('Hecho', hechos.length,
+        (ocultos ? `<button class="boton sin-fondo chico" data-todos>${ocultos} ${ocultos === 1 ? 'hecho' : 'hechos'} antes</button>` : '') +
+        hechos.slice(ocultos).map((p) => tareaA(p, p.e)).join(''), 'Nada todavía.') +
+      col('Ahora', 0, ahora.map((p) => tareaA(p, clase(p))).join(''), 'Todo hecho por ahora.') +
+      col('Después', despues.length, despues.map((p) => tareaA(p, clase(p))).join(''), ahora.length ? 'Nada más en la ruta.' : '') +
+      '</div>'
+    zona.querySelector('[data-todos]')?.addEventListener('click', () => window.recorrido(f, zona, true))
+  }
+
+  armarTablero()
+</script>
+</body>
+</html>
