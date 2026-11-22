@@ -170,6 +170,24 @@
         ],
         "createdAt": "2026-11-21T19:38:20.394Z",
         "reason": "Claude triage: the flagged spans are photo thumbnails (.ficha.foto) whose image fills the bordered frame by design; they contain no text"
+      },
+      {
+        "rule": "monotonous-spacing",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/frentes-a.html"
+        ],
+        "createdAt": "2026-11-22T19:50:06.344Z",
+        "reason": "Claude triage: the spacing comes from the project's token scale and varies with what it separates (--esp-1 inside a card up to --esp-6 between the questions and the tasks); the rule reads the repeated var() as one value"
+      },
+      {
+        "rule": "monotonous-spacing",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/frentes-b.html"
+        ],
+        "createdAt": "2026-11-22T19:50:06.563Z",
+        "reason": "Claude triage: the spacing comes from the project's token scale and varies with what it separates (--esp-1 inside a card up to --esp-6 between the questions and the tasks); the rule reads the repeated var() as one value"
       }
     ]
   }
