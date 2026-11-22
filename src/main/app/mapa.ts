@@ -7,6 +7,7 @@ import type {
   FrenteMapa,
   MapaProyecto,
   PasoCamino,
+  PreguntaMapa,
   PreguntaNueva,
 } from '../../compartido/puente'
 import type { PasoSolo } from '../core/avance'
@@ -73,7 +74,7 @@ export function mapaDe(d: DocumentosProyecto, preguntas: PreguntaNueva[]): MapaP
   const actual = guia?.hito ?? null
   const delActual = leidos.find((h) => h.numero === actual)
   const documento = documentoDe(d, delActual?.documento ?? null)
-  const { frentes, porEmpezar } = frentesDe(d, estado, abiertas, framework)
+  const { frentes, porEmpezar, nucleo } = frentesDe(d, estado, preguntas, framework)
   const conHitos = actual === null || actual < OPERACION || frentes.length === 0
   return {
     tipo: 'mapa',
@@ -82,6 +83,7 @@ export function mapaDe(d: DocumentosProyecto, preguntas: PreguntaNueva[]): MapaP
     hitos: conHitos ? caminoDeHitos(d, leidos, guia, abiertas, framework) : null,
     frentes,
     porEmpezar,
+    nucleo,
   }
 }
 
@@ -173,9 +175,10 @@ function estadoDe(fila: FrenteLeido | null, pasos: PasoCamino[]): Pick<FrenteMap
 function frentesDe(
   d: DocumentosProyecto,
   estado: string,
-  abiertas: ReadonlySet<string>,
+  preguntas: PreguntaNueva[],
   framework: boolean,
-): { frentes: FrenteMapa[]; porEmpezar: Extract<MapaProyecto, { tipo: 'mapa' }>['porEmpezar'] } {
+): Pick<Extract<MapaProyecto, { tipo: 'mapa' }>, 'frentes' | 'porEmpezar' | 'nucleo'> {
+  const abiertas = new Set(preguntas.map((q) => q.codigo))
   const modulos = d
     .rutas()
     .filter((r) => frenteDeEstado(r) !== null)
@@ -218,6 +221,7 @@ function frentesDe(
       ? ruta.pasos.map((p) => pasoDeRuta(d, p, x.modulo.ruta, abiertas))
       : pasosDelMetodo(d, x.modulo.texto, x.modulo.carpeta, framework)
     const sinCamino = pasos.length === 0
+    const fecha = leerGuia(x.modulo.texto)?.actualizado ?? null
     return {
       clave: x.modulo.carpeta,
       nombre: x.fila?.nombre ?? x.modulo.nombre,
@@ -231,6 +235,8 @@ function frentesDe(
         : x.modulo.texto === ''
           ? `No se puede leer ${x.modulo.ruta}: está vacío o no se pudo abrir.`
           : `${x.modulo.ruta} no tiene camino: le faltan la sección «Ruta» y la tabla «Progreso».`,
+      preguntas: [],
+      actualizado: fecha,
     }
   })
   // Una fila que cita su carpeta y ya empezó, pero su `estado.md` no está (lo borraron o lo movieron, MA-12).
@@ -247,11 +253,28 @@ function frentesDe(
       pasos: [],
       sinLugar: [],
       error: `No se encuentra ${documento}, que nombra la tabla «Módulos» de docs/estado.md.`,
+      preguntas: [],
+      actualizado: null,
     })
   }
   const activo = frentes.findIndex((f) => f.estado === 'en curso')
   if (activo > 0) frentes.unshift(...frentes.splice(activo, 1))
-  return { frentes, porEmpezar: listas.porEmpezar }
+  // Cada pregunta abierta va a su frente (por el nombre de la tabla o la carpeta), o al que espera; si no, al Núcleo.
+  const porEmpezar = {
+    ...listas.porEmpezar,
+    frentes: listas.porEmpezar.frentes.map((f) => ({ ...f, preguntas: [] as PreguntaMapa[] })),
+  }
+  const nucleo: PreguntaMapa[] = []
+  for (const q of preguntas) {
+    const p = { codigo: q.codigo, titulo: q.pregunta, tipo: q.tipo }
+    const nombre = q.frente
+    const destino = nombre
+      ? (frentes.find((f) => igual(f.nombre, nombre) || igual(f.clave, nombre)) ??
+        porEmpezar.frentes.find((f) => igual(f.nombre, nombre)))
+      : undefined
+    ;(destino?.preguntas ?? nucleo).push(p)
+  }
+  return { frentes, porEmpezar, nucleo }
 }
 
 function pasoDeRuta(
@@ -269,6 +292,7 @@ function pasoDeRuta(
     espera: p.preguntas.find((q) => abiertas.has(q)) ?? null,
     destino: nace ? { documento: nace.ruta, ancla: nace.ancla } : ancla ? { documento, ancla } : null,
     ...(p.tamano || p.sola ? { marcas: { tamano: p.tamano, sola: p.sola } } : {}),
+    ...(p.iteracion || p.trabajo[0] ? { codigo: p.iteracion ?? p.trabajo[0] } : {}),
     ramas: p.ramas.map((r) => pasoDeRuta(d, r, documento, abiertas)),
   }
 }

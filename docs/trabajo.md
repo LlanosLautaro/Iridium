@@ -498,7 +498,7 @@ Estado: en curso · Idea: usuario · Fecha: 2026-11-22 · Frente: Compartir
 Hecho el 2026-11-22 (CO-I9, `modulos/compartir/estado.md`): la versión publicada (d1d1750) abre bien en esta PC, con datos limpios, con una copia de los datos de uso y con otro idioma, así que la ventana negra depende de esa PC y Iridium no dejaba rastro. Encontrado y arreglado: el actualizador de las copias compartidas no podía bajar una versión desde CO-I8 (veía adentro de `app.asar` y se trababa al borrar), así que esa copia ya no se actualiza sola; probado de punta a punta contra GitHub. Además, una falla de la ventana ahora queda en el registro del día y muestra «Iridium no pudo mostrar esta pantalla» con Volver a cargar en vez de quedar en negro. Con Q-255 (A, D-171), CO-I10 el 2026-11-22: Iridium se instala como una app y se actualiza solo con electron-updater, bajando solo lo que cambió; probado de punta a punta en esta PC con instaladores de verdad. Falta: instalarlo en la otra PC y ver que abre (Q-256, reemplaza a Q-254).
 
 ## T-112 — dejar tareas en cola ya sea para un chat o en un "pendientes"
-Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-22 · Origen: D-175
+Estado: en curso (el tablero hecho en FS-I3, espera Q-267) · Frente: Frentes · Idea: usuario · Fecha: 2026-11-22 · Origen: D-175
 Pensada en el chat con T-113 el 2026-11-22: son una sola cosa, una fila de trabajo que la IA puede hacer sola (esta idea) y un motor que la consume cuando hay cuota que se perdería (T-113). Ver T-113; es el frente Frentes (D-175).
 
 ## T-113 — hacer que elsistema que activa el uso de cuota se pueda configurar más activo, por ejemplo ir atacando uno a uno los pendientes de todos los proyectos siempre que haya cuota disponible y no se esté usando, esto sería especiamente util durante la mañana, claro podria amancer con un 0% de mi cuota de 5hs pero habría obtenido progreso que en caso de no usarlo y llegar el reset semanal sería cuota de uso perdida
@@ -538,4 +538,10 @@ Revisada el 2026-11-22: Iridium muestra bien el estado que lee; el problema era 
 Hecho el 2026-11-22 (D-174): las dos pasan a Hechas, el framework dice cuándo se cierra una idea (al marcar hecho el último paso de la ruta que la nombra y al cerrar el frente que nació de ella) y el control lo avisa al terminar cada turno si la IA se olvida. Pruebas: `tests/ma1-ruta.test.ts`.
 
 ## T-118 — skill de iridium incluye un MCP iridium? tendrpia algún sentido si todo es local?
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-119 — actualmente creo que tenemos rastros de un "claude notifer" que suena cuando claude termina de trabajar, eso yo lo desinstalé, creo que quedo como vestigio de un complemento de vscode, deberíamos quitarlo ya que hay una idea para que Iridiuj tenga su propia implementación de ello con algo más de control para eviatar justamente esto de q queda como vestigio
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-120 — comandos iridium, por ejemplo /consulta sería para hablar con la IA pero que no haga cambios de código, puede leer y todo pero no escribir (no estricto, por ejemplo sí pod´ria escribir en pendientes o en ideas etc)
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22

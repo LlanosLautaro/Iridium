@@ -100,7 +100,7 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   await expect(win.locator('[data-seccion="pendientes"] .pregunta')).toHaveCount(1)
   expect(await barra(win)).toEqual([
     'Bandeja de entrada',
-    'Mapa',
+    'Frentes',
     'Ideas',
     'Revisión',
     'Diseño',
@@ -116,7 +116,7 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   // Beta no tiene nada en la bandeja: entra al Mapa.
   await win.locator('button.boton-menu').click()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
-  await expect(actual).toHaveAttribute('aria-label', 'Mapa')
+  await expect(actual).toHaveAttribute('aria-label', 'Frentes')
   await expect(win.locator('[data-seccion="mapa"]')).toBeVisible()
   await win.screenshot({ path: 'test-results/or2-esqueleto-beta.png' })
 

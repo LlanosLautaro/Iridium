@@ -645,7 +645,16 @@ export interface PasoCamino {
   destino: Destino | null
   /** Las marcas de la ruta (Frentes, FS-1): cuánto cuesta y si la IA lo puede hacer sola. Falta sin marcas. */
   marcas?: { tamano: 'chico' | 'mediano' | 'grande' | null; sola: boolean }
+  /** Su iteración (`FS-I1`) o su primer `T-n`, al pie del paso en Frentes (FS-7); falta si no nombra ninguno. */
+  codigo?: string
   ramas: PasoCamino[]
+}
+
+/** Una pregunta abierta en el tablero Frentes (FS-7): arriba del camino de su frente, o en el Núcleo. */
+export interface PreguntaMapa {
+  codigo: string
+  titulo: string
+  tipo: string
 }
 
 /** Un ítem de `trabajo.md` en las listas del Mapa. */
@@ -672,6 +681,10 @@ export interface FrenteMapa {
   sinLugar: TrabajoMapa[]
   /** Su `estado.md` falta o no tiene camino: un Recuadro de error en lugar del camino (MA-12); null si se lee. */
   error: string | null
+  /** Las preguntas abiertas cuyo `Frente:` es este (FS-6, FS-7). */
+  preguntas: PreguntaMapa[]
+  /** La fecha de `**Última actualización:**` de su `estado.md` (`2026-11-22`): el que cambió último va arriba (FS-6). */
+  actualizado: string | null
 }
 
 export type MapaProyecto =
@@ -687,9 +700,11 @@ export type MapaProyecto =
       frentes: FrenteMapa[]
       /** Lo aprobado que todavía no empezó (MA-6, D-143). */
       porEmpezar: {
-        frentes: { nombre: string; pasos: TrabajoMapa[] }[]
+        frentes: { nombre: string; pasos: TrabajoMapa[]; preguntas: PreguntaMapa[] }[]
         sinFrente: (TrabajoMapa & { enCurso: boolean })[]
       }
+      /** Las preguntas abiertas sin frente, o con uno que el proyecto no tiene: van al Núcleo (FS-8). */
+      nucleo: PreguntaMapa[]
     }
   /** Sin `docs/estado.md` (W-7: «no sigue la guía todavía»): sus documentos, si tiene. */
   | { tipo: 'sin-guia'; documentos: string[] }

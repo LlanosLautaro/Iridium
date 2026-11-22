@@ -61,7 +61,7 @@ Como usuario quiero saber, al volver, qué avanzó sola y qué me espera.
 # Parte 2 — El tablero
 
 **Fecha:** 2026-11-22
-**Estado:** escrita por la IA con lo aprobado en la definición (D-176); las decisiones chicas, en D-180. Las maquetas, `diseno/pantallas/frentes-a.html` a `frentes-e.html`; A y B no convencieron (Q-265), C, D y E se eligen en Q-266 (› Las formas).
+**Estado:** escrita por la IA con lo aprobado en la definición (D-176); las decisiones chicas, en D-180. Las maquetas, `diseno/pantallas/frentes-a.html` a `frentes-e.html`; vistas las cinco, el usuario eligió la **B** (Q-266, D-181), construida en FS-I3.
 > Alcance: `definicion.md` › Must, parte 2. Reemplaza a `modulos/mapa/ux.md` › W-7 cuando se construya.
 
 ## Puntos de entrada y salida
@@ -87,7 +87,7 @@ Como usuario quiero tocar un frente y ver sus tareas en orden, con qué hace la 
 - [ ] Debajo, el recorrido: las tareas reales (los pasos de su ruta con sus `T-n` o su iteración), de lo hecho a lo que viene, cada una con su tamaño y «sola». No se mueven a mano (D-137).
 - [ ] Lo hecho, plegado salvo lo último, con «N hechos antes» para verlo entero.
 - [ ] El paso que sigue, resaltado; uno que te espera, en ámbar con «Te espera · Q-n»; uno en pausa, «En pausa»; uno descartado, tachado. Una rama, debajo de su paso y corrida a la derecha.
-- [ ] La forma sale de Q-266 (› Las formas).
+- [ ] La forma es la B (Q-266, D-181): el camino de hoy con, al pie de cada paso, su código, su tamaño y «sola» con el robot.
 
 ### FS-8 — El Núcleo y lo que está por empezar
 Como usuario quiero ver también lo que no es de ningún frente y lo que todavía no empezó.
@@ -95,14 +95,14 @@ Como usuario quiero ver también lo que no es de ningún frente y lo que todaví
 - [ ] Un frente por empezar muestra lo aprobado para él en filas y «Empezar este frente» (como hoy en el Mapa); la ruta la escribe la IA al empezarlo.
 
 ## Las formas
-Las historias FS-6 a FS-8 describen la forma de la definición (tarjetas a la izquierda, el frente al centro), la de A y B. C y D cambian eso; lo que se elija se ajusta en estas historias y, si cambia la definición, en D-176.
+Las historias FS-6 a FS-8 describen la forma de la definición (tarjetas a la izquierda, el frente al centro), la de A y B. Ganó la **B** (Q-266, D-181); C, D y E quedan como maquetas descartadas.
 | Forma | Qué es | A favor | En contra |
 |---|---|---|---|
 | A · Columnas (Q-265, no) | Tarjetas a la izquierda; al centro, Hecho, Ahora y Después del frente elegido | Ordena un frente | Un frente a la vez |
-| B · Camino (Q-265, no) | Tarjetas a la izquierda; al centro, el camino de hoy | Lo conocido | Un frente a la vez; el camino costaba leerlo |
-| C · Una fila por frente | Todos los frentes a la vez, uno por fila, con columnas Te espera, Lo que sigue y Después («N más» despliega) | Todo de un vistazo, frente por frente | Larga: con muchos frentes hay que desplazar |
-| D · Por quién lo hace | Todo el proyecto en tres columnas: Te espera, La IA sigue sola (en el orden en que la toma) y Cuando estés; cada tarea dice su frente; los frentes son un filtro arriba con su interruptor | Responde directo «qué me espera y qué hace sola»; muestra lo que la IA va a tomar (la Could) | No muestra lo hecho ni el avance de cada frente |
-| E · Grilla de frentes | Una tarjeta por frente, como la grilla de proyectos, con su avance en puntos y el paso que sigue; la que se toca se abre arriba con Te espera y Lo que viene | Se ve el avance de cada frente y el detalle sin cambiar de pantalla | Abrir uno empuja la grilla hacia abajo |
+| **B · Camino (elegida en Q-266)** | Tarjetas a la izquierda; al centro, el camino de hoy | Lo conocido | Un frente a la vez; el camino costaba leerlo |
+| C · Una fila por frente (no) | Todos los frentes a la vez, uno por fila, con columnas Te espera, Lo que sigue y Después («N más» despliega) | Todo de un vistazo, frente por frente | Larga: con muchos frentes hay que desplazar |
+| D · Por quién lo hace (no) | Todo el proyecto en tres columnas: Te espera, La IA sigue sola (en el orden en que la toma) y Cuando estés; cada tarea dice su frente; los frentes son un filtro arriba con su interruptor | Responde directo «qué me espera y qué hace sola»; muestra lo que la IA va a tomar (la Could) | No muestra lo hecho ni el avance de cada frente |
+| E · Grilla de frentes (no) | Una tarjeta por frente, como la grilla de proyectos, con su avance en puntos y el paso que sigue; la que se toca se abre arriba con Te espera y Lo que viene | Se ve el avance de cada frente y el detalle sin cambiar de pantalla | Abrir uno empuja la grilla hacia abajo |
 
 ## Estados
 - **Un frente sin ruta:** en el centro, la línea gris de hoy («Todavía sin ruta: la IA la escribe la próxima vez que trabaje en este frente.») y los pasos del método.

@@ -79,8 +79,9 @@
   flex: 1;
 }
 
-/* Mapa (D-141, D-144; modulos/mapa/ux.md › W-7): la barra de frentes (Pestañas) y el camino del elegido (la pieza
-   Camino, PZ-15); «Aprobado, sin lugar» y «Por empezar», Bloques con Filas. Aquí solo va cómo se acomodan. */
+/* Frentes (antes el Mapa; D-141, D-144, D-180, D-181; modulos/frentes/ux.md › Parte 2), como la maqueta B
+   (docs/diseno/pantallas/frentes-b.html): a la izquierda la columna de tarjetas (Filas con detalle), al centro el frente
+   elegido con sus preguntas y su camino (la pieza Camino, PZ-15). Sin frentes, solo el camino de los hitos, centrado. */
 .mapa {
   flex: 1;
   overflow-y: auto;
@@ -92,22 +93,76 @@
   display: flex;
   flex-direction: column;
 }
-/* Con muchos frentes la barra se desplaza de costado; «Por empezar», al final a la derecha */
-.barra-frentes {
-  margin-bottom: var(--esp-5);
-  overflow-x: auto;
+.tablero-frentes {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: var(--ancho-frentes) minmax(0, 1fr);
+}
+.columna-frentes {
+  overflow: auto;
+  padding: var(--esp-4) var(--esp-2);
+  border-right: 1px solid var(--borde-suave);
+}
+.grupo-frentes {
+  margin-top: var(--esp-5);
+}
+.grupo-frentes > h2 {
+  padding: 0 var(--esp-2);
+}
+.tarjeta-frente {
+  width: 100%;
   flex: none;
+  text-align: left;
+  cursor: pointer;
 }
-.barra-frentes > * {
-  flex: none;
-  white-space: nowrap;
+/* El robot y las preguntas, a la altura del nombre */
+.marcas-tarjeta {
+  display: flex;
+  gap: var(--esp-2);
+  align-items: center;
+  align-self: flex-start;
+  padding-top: 2px;
 }
-.barra-frentes .por-empezar {
-  margin-left: auto;
-}
-/* Un frente archivado (en uso, sin nada por hacer; D-152): en gris, después de los activos */
-.barra-frentes .archivado:not(.elegida) {
+/* Un frente archivado (en uso, sin nada por hacer; D-152): en gris, al final */
+.tarjeta-frente.archivado .titulo-fila {
   color: var(--texto-3);
+}
+.centro-frentes {
+  overflow-y: auto;
+  min-width: 0;
+  padding: var(--esp-5) var(--esp-6) var(--esp-7);
+}
+/* Con la sección angosta (FS-6 › Ancho chico) la columna pasa a ser una barra arriba, solo con los nombres */
+@container (max-width: 900px) {
+  .tablero-frentes {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .columna-frentes {
+    display: flex;
+    gap: var(--esp-1);
+    overflow-x: auto;
+    padding: var(--esp-2) var(--esp-4);
+    border-right: 0;
+    border-bottom: 1px solid var(--borde-suave);
+  }
+  .lista-frentes {
+    flex-direction: row;
+    gap: var(--esp-1);
+  }
+  .grupo-frentes {
+    margin-top: 0;
+    flex-direction: row;
+    align-items: center;
+  }
+  .tarjeta-frente {
+    width: auto;
+    white-space: nowrap;
+  }
+  .tarjeta-frente .detalle {
+    display: none;
+  }
 }
 .cab-frente {
   display: flex;
@@ -116,7 +171,7 @@
   gap: var(--esp-3);
   margin-bottom: var(--esp-4);
 }
-.cab-frente h3 {
+.cab-frente h2 {
   margin: 0;
   font: var(--estilo-titulo);
 }
@@ -147,10 +202,26 @@
   color: var(--texto-2);
   font: var(--estilo-meta);
 }
-/* El tamaño y si sigue sola (Frentes, FS-1): al lado del paso, sin competir con él */
-.marcas-paso {
+/* «Empezar este frente», a la derecha de la cabecera de uno por empezar (FS-8) */
+.cab-frente .empezar-frente {
+  margin-left: auto;
+}
+/* Las preguntas del frente, arriba del camino: son lo que frena (D-180) */
+.preguntas-frente {
+  margin-bottom: var(--esp-6);
+}
+/* Al pie de cada paso, a la derecha: el código, el tamaño y «sola» o lo que espera (FS-7), sin competir con él */
+.pie-paso {
+  margin-left: auto;
+  display: inline-flex;
+  gap: var(--esp-3);
+  align-items: center;
   color: var(--texto-3);
   font: var(--estilo-meta);
+  white-space: nowrap;
+}
+.pie-paso .codigo {
+  font: var(--estilo-codigo);
 }
 .gris-mapa.al-pie {
   margin: var(--esp-3) 0 0 var(--esp-6);

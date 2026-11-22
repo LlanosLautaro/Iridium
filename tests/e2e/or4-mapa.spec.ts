@@ -135,7 +135,7 @@ test('Docs: una tabla usa el ancho de la sección y se desplaza dentro de su rec
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
+    .getByRole('button', { name: 'Frentes' })
     .click()
   await win.locator('[data-seccion="mapa"]').getByRole('button', { name: 'Abrir 10-operacion.md' }).click()
   const docs = win.locator('[data-seccion="docs"]')

@@ -82,7 +82,7 @@ test('sin Trabajo en la barra: un T-n abre trabajo.md en Docs, en ese ítem, y A
   try {
     await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
     const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
-    await expect(barra.getByRole('button', { name: 'Mapa' })).toBeVisible()
+    await expect(barra.getByRole('button', { name: 'Frentes' })).toBeVisible()
     await expect(barra.getByRole('button', { name: 'Trabajo' })).toHaveCount(0)
 
     // El «Hacer T-2» del Próximo paso de estado.md lleva a trabajo.md con T-2 a la vista.

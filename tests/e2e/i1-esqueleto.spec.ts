@@ -134,7 +134,7 @@ test('entrar a un proyecto: sus secciones a la izquierda, la conversación a la 
   await expect(win.locator('.sin-conversacion')).toContainText('Hacer la grilla.')
   // La barra de íconos es la del proyecto; nada de otro proyecto.
   const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
-  for (const nombre of ['Bandeja de entrada', 'Mapa', 'Docs', 'Archivos', 'Git', 'Scripts'])
+  for (const nombre of ['Bandeja de entrada', 'Frentes', 'Docs', 'Archivos', 'Git', 'Scripts'])
     await expect(secciones.getByRole('button', { name: new RegExp(`^${nombre}`) })).toBeVisible()
   // Se entra a su Bandeja de entrada (D-043).
   await expect(secciones.getByRole('button', { name: /^Bandeja de entrada/ })).toHaveAttribute(

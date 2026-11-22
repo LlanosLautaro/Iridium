@@ -88,7 +88,7 @@ export interface VistaProyecto {
   enBlanco: boolean
   /** La maqueta que Diseño abre grande al entrar (desde un comentario de la Revisión); null = el lienzo. */
   maqueta: string | null
-  /** La pestaña elegida del Mapa (la clave de un frente, `hitos` o `por-empezar`); null = el frente activo (D-145). */
+  /** La tarjeta elegida de Frentes (la clave de un frente, `hitos`, `nucleo` o `empezar:<nombre>`); null = la primera (D-145). */
   pestanaMapa: string | null
   /** El Mapa muestra también los frentes archivados: en uso y sin nada por hacer (R-91, D-152). */
   mapaArchivados: boolean

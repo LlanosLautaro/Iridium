@@ -153,7 +153,7 @@ test.afterEach(async () => {
 async function alMapa(win: Page) {
   await win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
+    .getByRole('button', { name: 'Frentes' })
     .click()
   return win.locator('[data-seccion="mapa"]')
 }
@@ -163,11 +163,24 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const mapa = await alMapa(win)
   await expect(mapa.locator('.cabecera')).toContainText('Hito 10 · Operación')
-  // El activo primero, después en el orden de la tabla y «Por empezar» con su cuenta (MA-3); Notas, en uso y con
-  // todo hecho, está archivada (D-152).
+  // Las tarjetas (FS-6): sin fechas, el activo primero y después en el orden de la tabla; el Núcleo debajo del primero
+  // (D-181) y «Por empezar» al final; Notas, en uso y con todo hecho, está archivada (D-152).
   const barra = mapa.getByRole('tablist', { name: 'Frentes' })
-  await expect(barra.getByRole('tab')).toHaveText(['Galería', 'Avisos', 'Por empezar3'])
+  await expect(barra.getByRole('tab').locator('.titulo-fila')).toHaveText([
+    'Galería',
+    'Núcleo',
+    'Avisos',
+    'Exportar',
+  ])
   await expect(barra.getByRole('tab', { name: 'Galería' })).toHaveAttribute('aria-selected', 'true')
+  // Debajo del nombre, lo que sigue (el que espera, si no hay otro antes) y las preguntas en ámbar.
+  const galeria = barra.getByRole('tab', { name: 'Galería' })
+  await expect(galeria.locator('.detalle')).toHaveText('Las fotos verticales sin recortar')
+  await expect(galeria.locator('.cuenta.frena')).toHaveText('1')
+  await expect(barra.getByRole('tab', { name: 'Núcleo' }).locator('.detalle')).toHaveText(
+    'Medir cuánto tarda en abrir',
+  )
+  await expect(barra.getByRole('tab', { name: 'Exportar' }).locator('.detalle')).toHaveText('1 aprobado')
 
   const frente = mapa.getByRole('region', { name: 'Galería' })
   await expect(frente.locator('.estado-frente')).toHaveText('En curso')
@@ -180,12 +193,14 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
     'Buscar una foto por fecha',
     'Borrar varias fotos a la vez',
   ])
-  await expect(frente).not.toContainText('Q-5')
-  await expect(frente).not.toContainText('GA-I1')
-  // El que sigue nombra una pregunta abierta: «Te espera» en lugar del resalte (MA-2).
+  // Sus preguntas, arriba del camino (FS-7); el código del paso, a su pie.
+  await expect(frente.locator('.preguntas-frente .fila')).toHaveText([/Q-5.*¿La grilla se ve bien\?.*prueba/])
+  await expect(camino.locator('.tramo.hecho .pie-paso')).toHaveText('GA-I1')
+  // El que sigue nombra una pregunta abierta: «Te espera · Q-5» en lugar del resalte (MA-2).
   const espera = camino.locator('.tramo.espera').first()
-  await expect(espera).toContainText('Te espera')
-  await expect(camino.locator('.tramo.foco')).toHaveCount(0)
+  await expect(espera.locator('.pie-paso')).toHaveText('Te espera · Q-5')
+  // Resaltado, el que la IA puede hacer: aquí, la rama del que espera (D-181).
+  await expect(camino.locator('.tramo.foco')).toHaveText('Las fotos verticales sin recortar')
   // Sus ramas: lo que viene y lo descartado, tachado.
   await expect(camino.locator('.tramo.rama .nombre-tramo')).toHaveText([
     'Las fotos verticales sin recortar',
@@ -221,32 +236,44 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   const archivados = mapa.getByRole('switch', { name: 'Archivados' })
   await expect(mapa.locator('.cabecera')).toContainText('Archivados 1')
   await archivados.check()
-  await expect(barra.getByRole('tab')).toHaveText(['Galería', 'Avisos', 'Notas', 'Por empezar3'])
+  await expect(barra.getByRole('tab').locator('.titulo-fila')).toHaveText([
+    'Galería',
+    'Núcleo',
+    'Avisos',
+    'Exportar',
+    'Notas',
+  ])
   await expect(barra.getByRole('tab', { name: 'Notas' })).toHaveClass(/archivado/)
   await win.screenshot({ path: 'test-results/ma2-mapa-archivados.png' })
   await barra.getByRole('tab', { name: 'Notas' }).click()
   const notas = mapa.getByRole('region', { name: 'Notas' })
-  await expect(notas.locator('.estado-frente')).toHaveText('En uso')
+  await expect(notas.locator('.estado-frente')).toHaveText('Archivado')
   await expect(notas).toContainText('Todo hecho por ahora. Lo que venga, la IA lo suma a la ruta.')
 
   // «Te espera» lleva a la Bandeja.
   await barra.getByRole('tab', { name: 'Galería' }).click()
   await frente.getByRole('button', { name: 'Te espera' }).click()
   await expect(win.locator('[data-seccion="pendientes"]')).toBeVisible()
+  // Una pregunta del frente, también.
+  await alMapa(win)
+  await frente.locator('.preguntas-frente .fila').click()
+  await expect(win.locator('[data-seccion="pendientes"]')).toBeVisible()
   await app.close()
 })
 
-test('«Por empezar»: el frente que espera, lo aprobado sin frente y Empezar este frente (MA-6, MA-7)', async () => {
+test('«Por empezar» y el Núcleo: el frente que espera, lo aprobado sin frente y Empezar este frente (MA-6, MA-7, FS-8)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   const mapa = await alMapa(win)
-  await mapa.getByRole('tab', { name: /Por empezar/ }).click()
-  const lista = mapa.getByRole('region', { name: 'Por empezar' })
+  await mapa.getByRole('tab', { name: 'Exportar' }).click()
   // El frente que espera, con su trabajo aprobado; el que lo nombra (T-20) es el frente mismo.
-  const exportar = lista.locator('.bloque').filter({ hasText: 'Exportar' }).first()
+  const exportar = mapa.getByRole('region', { name: 'Exportar' })
+  await expect(exportar.locator('.estado-frente')).toHaveText('Por empezar')
   await expect(exportar.locator('.titulo-fila')).toHaveText(['Exportar a PDF'])
-  // Sin frente: lo que la IA está haciendo, primero; los títulos largos bajan de renglón.
-  const sinFrente = lista.locator('.bloque').filter({ hasText: 'Sin frente' })
+  await win.screenshot({ path: 'test-results/ma2-mapa-por-empezar.png' })
+  // El Núcleo: lo aprobado sin frente, lo que la IA está haciendo primero; los títulos largos bajan de renglón.
+  await mapa.getByRole('tab', { name: 'Núcleo' }).click()
+  const sinFrente = mapa.getByRole('region', { name: 'Núcleo' })
   await expect(sinFrente.locator('.bloque-titulo .cuenta')).toHaveText('2')
   await expect(sinFrente.locator('.titulo-fila')).toHaveText([
     'Medir cuánto tarda en abrir',
@@ -258,9 +285,10 @@ test('«Por empezar»: el frente que espera, lo aprobado sin frente y Empezar es
     .nth(1)
     .evaluate((e) => e.scrollWidth <= e.clientWidth)
   expect(largo).toBe(true)
-  await win.screenshot({ path: 'test-results/ma2-mapa-por-empezar.png' })
+  await win.screenshot({ path: 'test-results/fs3-nucleo.png' })
 
   // Empezar este frente lo cita arriba del campo de la conversación, sin enviar (D-131).
+  await mapa.getByRole('tab', { name: 'Exportar' }).click()
   await exportar.getByRole('button', { name: 'Empezar este frente' }).click()
   await expect(win.locator('.compositor .citado')).toContainText('Exportar')
   await app.close()
@@ -379,8 +407,7 @@ Usarla.
       'Flujos aprobados',
     ])
     await expect(camino.locator('.tramo.rama.hecho')).toHaveText('Historias con criterios')
-    await expect(camino.locator('.tramo.rama.espera')).toContainText('Te espera')
-    await expect(mapa).not.toContainText('Q-7')
+    await expect(camino.locator('.tramo.rama.espera')).toContainText('Te espera · Q-7')
     await win.screenshot({ path: 'test-results/ma8-mapa-porton.png' })
 
     await win.getByRole('button', { name: /^Inicio/ }).click()
@@ -398,7 +425,7 @@ Usarla.
     const { app, win } = await abrir()
     await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
     const mapa = await alMapa(win)
-    await mapa.getByRole('tab', { name: /Por empezar/ }).click()
+    await mapa.getByRole('tab', { name: 'Exportar' }).click()
     const empezar = mapa.getByRole('button', { name: 'Empezar este frente' })
     const citas = win.locator('.compositor .citado')
     await empezar.click()
@@ -441,7 +468,8 @@ Usarla.
     expect(await barra.evaluate((e) => e.scrollWidth > e.clientWidth)).toBe(true)
     // Con las flechas hasta el último frente (Notas, archivada, no está): la barra corre y la elegida se ve.
     await barra.getByRole('tab', { name: 'Galería' }).focus()
-    for (let i = 0; i < nombres.length + 1; i++) await win.keyboard.press('ArrowRight')
+    // Galería, Núcleo, Avisos y los catorce.
+    for (let i = 0; i < nombres.length + 2; i++) await win.keyboard.press('ArrowRight')
     const ultima = barra.getByRole('tab', { name: nombres.at(-1) ?? '' })
     await expect(ultima).toHaveAttribute('aria-selected', 'true')
     await expect(ultima).toBeInViewport({ ratio: 0.9 })

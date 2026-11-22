@@ -411,7 +411,7 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
           <span>
             {pasando
               ? 'La IA la está actualizando al framework…'
-              : 'Se ve y se conversa, sin Mapa ni preguntas.'}
+              : 'Se ve y se conversa, sin frentes ni preguntas.'}
           </span>
           {error && <span role="alert">{error}</span>}
         </div>

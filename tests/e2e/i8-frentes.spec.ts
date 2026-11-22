@@ -104,12 +104,12 @@ test('el Mapa antes del hito 10 con un frente abierto: «Hitos» primero y el fr
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
+    .getByRole('button', { name: 'Frentes' })
     .click()
   const mapa = win.locator('[data-seccion="mapa"]')
   const barra = mapa.getByRole('tablist', { name: 'Frentes' })
-  // Skills no está en ninguna tabla, pero tiene su carpeta: es un frente.
-  await expect(barra.getByRole('tab')).toHaveText(['Hitos', 'Skills'])
+  // Skills no está en ninguna tabla, pero tiene su carpeta: es un frente. Con un frente, el Núcleo (D-181).
+  await expect(barra.getByRole('tab').locator('.titulo-fila')).toHaveText(['Hitos', 'Skills', 'Núcleo'])
   await expect(barra.getByRole('tab', { name: 'Hitos' })).toHaveAttribute('aria-selected', 'true')
   await expect(mapa.locator('.camino .tramo.foco')).toHaveText('Construcción')
   await expect(mapa.locator('.camino .tramo.rama')).toHaveText(['Frentes'])

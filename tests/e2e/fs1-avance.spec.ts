@@ -89,18 +89,24 @@ test.afterEach(async () => {
   await rm(datos, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })
 })
 
-test('el Mapa muestra el tamaño y sola de lo que viene, y apaga el frente (FS-1, FS-3)', async () => {
+test('Frentes muestra el tamaño y sola de lo que viene, y apaga el frente (FS-1, FS-3)', async () => {
   const { win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
+    .getByRole('button', { name: 'Frentes' })
     .click()
   const mapa = win.locator('[data-seccion="mapa"]')
-  await expect(mapa.getByText('Ver las fotos en una grilla', { exact: true })).toBeVisible()
+  await expect(
+    mapa.locator('.camino').getByText('Ver las fotos en una grilla', { exact: true }),
+  ).toBeVisible()
   // Los códigos y las marcas no están en el texto; lo hecho no muestra marcas; «grande» en el texto sigue ahí.
-  await expect(mapa.locator('.marcas-paso')).toHaveText(['mediano · sola', 'chico'])
-  await expect(mapa.getByText('Hacer la versión grande de la grilla', { exact: true })).toBeVisible()
+  // Al pie de cada paso que viene (FS-7): el tamaño y «sola» con el robot.
+  await expect(mapa.locator('.pie-paso')).toHaveText([/^mediano\s*sola$/, 'chico'])
+  await expect(mapa.locator('.pie-paso').first().locator('.senal svg')).toHaveCount(1)
+  await expect(
+    mapa.locator('.camino').getByText('Hacer la versión grande de la grilla', { exact: true }),
+  ).toBeVisible()
 
   const interruptor = mapa.getByRole('switch', { name: 'Avanza sola' })
   await expect(interruptor).toBeChecked()

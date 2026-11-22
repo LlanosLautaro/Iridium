@@ -176,7 +176,7 @@ describe('El Mapa en operación (MA-I2)', () => {
   it('«Por empezar»: el frente que espera con su trabajo y lo aprobado sin frente (MA-6)', async () => {
     const m = await mapa()
     expect(m.porEmpezar).toEqual({
-      frentes: [{ nombre: 'Exportar', pasos: [{ codigo: 'T-21', titulo: 'Exportar a PDF' }] }],
+      frentes: [{ nombre: 'Exportar', pasos: [{ codigo: 'T-21', titulo: 'Exportar a PDF' }], preguntas: [] }],
       sinFrente: [
         {
           codigo: 'T-30',

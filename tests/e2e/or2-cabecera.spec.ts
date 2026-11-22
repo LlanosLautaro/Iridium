@@ -88,7 +88,7 @@ test.afterEach(async () => {
 
 const SECCIONES: [boton: string, titulo: string][] = [
   ['Bandeja de entrada', 'Bandeja de entrada'],
-  ['Mapa', 'Mapa'],
+  ['Frentes', 'Frentes'],
   ['Ideas', 'Ideas'],
   ['Revisión', 'Revisión'],
   ['Diseño', 'Diseño'],

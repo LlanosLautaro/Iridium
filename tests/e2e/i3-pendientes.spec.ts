@@ -230,7 +230,7 @@ test('Responder en la conversación y la Bandeja de entrada llevan a las pregunt
   const { app, win } = await abrir({ IRIDIUM_FALSO_PREGUNTA: '1' })
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   const secciones = win.getByRole('navigation', { name: 'Secciones del proyecto' })
-  await secciones.getByRole('button', { name: 'Mapa' }).click()
+  await secciones.getByRole('button', { name: 'Frentes' }).click()
   await secciones.getByRole('button', { name: /^Bandeja de entrada/ }).click()
   await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Beta')
   await expect(win.locator('.resumen .pregunta').first()).toBeVisible()

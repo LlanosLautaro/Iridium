@@ -114,7 +114,7 @@ test('el Mapa antes del hito 10: los hitos como camino y de un paso a su secció
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await win
     .getByRole('navigation', { name: 'Secciones del proyecto' })
-    .getByRole('button', { name: 'Mapa' })
+    .getByRole('button', { name: 'Frentes' })
     .click()
 
   const mapa = win.locator('[data-seccion="mapa"]')

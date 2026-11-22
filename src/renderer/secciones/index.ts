@@ -63,7 +63,7 @@ const sigue = (p: TarjetaProyecto) => p.framework !== null
  */
 export const SECCIONES_PROYECTO: readonly SeccionDeProyecto[] = [
   { id: 'pendientes', nombre: 'Bandeja de entrada', icono: 'pendientes', grupo: 'sigue', soloSi: sigue },
-  { id: 'mapa', nombre: 'Mapa', icono: 'mapa', grupo: 'sigue', soloSi: sigue },
+  { id: 'mapa', nombre: 'Frentes', icono: 'mapa', grupo: 'sigue', soloSi: sigue },
   // Las ideas y los enlaces para revisar (frente Ideas, D-128 a D-130): `T-n` de `trabajo.md` con `Idea:`.
   { id: 'ideas', nombre: 'Ideas', icono: 'ideas', grupo: 'sigue', soloSi: sigue },
   { id: 'revision', nombre: 'Revisión', icono: 'revision', grupo: 'sigue', soloSi: sigue },

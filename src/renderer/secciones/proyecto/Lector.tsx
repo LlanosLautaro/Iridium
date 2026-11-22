@@ -70,7 +70,7 @@ export function BotonAtras({ ruta }: { ruta: string }) {
       ? nombreDoc(paso.doc.documento)
       : {
           pendientes: 'la Bandeja de entrada',
-          mapa: 'el Mapa',
+          mapa: 'Frentes',
           ideas: 'Ideas',
           docs: 'Docs',
           archivos: 'Archivos',

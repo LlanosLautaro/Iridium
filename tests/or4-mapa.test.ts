@@ -182,7 +182,7 @@ Estado: pendiente · Frente: Nadie · Fecha: 2026-11-06
     expect(m.frentes[0]?.sinLugar.map((t) => t.codigo)).toEqual(['T-1', 'T-2', 'T-4'])
     // Diseño espera sin carpeta: T-5 es el frente mismo; T-6, su paso. Avisos (en pausa, sin carpeta) no espera.
     expect(m.porEmpezar.frentes).toEqual([
-      { nombre: 'Diseño', pasos: [{ codigo: 'T-6', titulo: 'Paleta nueva' }] },
+      { nombre: 'Diseño', pasos: [{ codigo: 'T-6', titulo: 'Paleta nueva' }], preguntas: [] },
     ])
     // Sin frente: lo abierto de nadie (o de un frente que no está), lo en curso primero; ni lo nuevo ni lo hecho.
     expect(m.porEmpezar.sinFrente).toEqual([

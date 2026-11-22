@@ -106,7 +106,7 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
-  await expect(barra.getByRole('button', { name: 'Mapa' })).toHaveCount(0)
+  await expect(barra.getByRole('button', { name: 'Frentes' })).toHaveCount(0)
   await expect(barra.getByRole('button', { name: 'Docs' })).toHaveCount(0)
   // Sin estado.md no hay próximo paso: el chat no ofrece Seguí.
   await expect(win.getByRole('button', { name: 'Continuar' })).toHaveCount(0)
@@ -128,7 +128,7 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar
   await expect(recuadro).toHaveCount(0, { timeout: 15_000 })
   await expect(win.locator('.turno').first()).toContainText('pasar-al-framework.md')
   await expect(win.locator('.turno', { hasText: 'Charla vieja' })).toHaveCount(0)
-  await expect(barra.getByRole('button', { name: 'Mapa' })).toBeVisible()
+  await expect(barra.getByRole('button', { name: 'Frentes' })).toBeVisible()
   await expect(win.getByRole('button', { name: 'Continuar' })).toBeVisible()
   await app.close()
 })
