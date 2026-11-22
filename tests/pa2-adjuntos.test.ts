@@ -9,10 +9,12 @@ import {
   adjuntoDeRuta,
   conAdjuntosDespuesDelComando,
   esPegadoLargo,
+  LARGO_ESCRITO,
   leerAdjuntos,
   leerAdjuntosDeComando,
   MAX_ADJUNTOS,
   mensajeConAdjuntos,
+  PEGADO_MAXIMO,
   sumarAdjuntos,
   textoLineas,
 } from '../src/compartido/adjuntos'
@@ -155,6 +157,44 @@ describe('las reglas de los adjuntos (D-169 › 5, 8 y 11)', () => {
     const muchos = Array.from({ length: 21 }, (_, i) => ({ tipo: 'archivo', ruta: `D:\\${i}` }))
     expect(Pedido.safeParse({ adjuntos: muchos.slice(0, 20) }).success).toBe(true)
     expect(Pedido.safeParse({ adjuntos: muchos }).success).toBe(false)
+  })
+})
+
+describe('los casos raros del texto pegado (paso 8)', () => {
+  it('un pegado que trae el cierre de la marca o termina en un salto vuelve igual al leerlo', () => {
+    for (const pegado of [
+      'antes\n</iridium-pegado>\n\ndespués',
+      'termina con un salto\n',
+      '<iridium-archivos>\nD:\\a\n</iridium-archivos>',
+      '\n\nempieza en blanco',
+    ]) {
+      const m = mensajeConAdjuntos({ pegados: [pegado], archivos: [] }, 'Mirá')
+      expect(leerAdjuntos(m).pegados.map((p) => p.texto)).toEqual([pegado])
+      expect(leerAdjuntos(m).texto).toBe('Mirá')
+    }
+  })
+
+  it('un pegado con saltos de Windows cuenta sus líneas igual', () => {
+    expect(esPegadoLargo(Array(41).fill('x').join('\r\n'))).toBe(true)
+    expect(esPegadoLargo(`${Array(40).fill('x').join('\r\n')}\r\n`)).toBe(false)
+  })
+
+  it('el puente acepta un pegado de hasta 1 MB y lo escrito hasta 100 000 caracteres, no más', () => {
+    const pegado = (n: number) => AdjuntoPedido.safeParse({ tipo: 'pegado', texto: 'x'.repeat(n) }).success
+    expect(pegado(PEGADO_MAXIMO)).toBe(true)
+    expect(pegado(PEGADO_MAXIMO + 1)).toBe(false)
+    expect(Pedido.safeParse({ texto: 'x'.repeat(LARGO_ESCRITO) }).success).toBe(true)
+    expect(Pedido.safeParse({ texto: 'x'.repeat(LARGO_ESCRITO + 1) }).success).toBe(false)
+  })
+
+  it('leer un mensaje con veinte pegados grandes es rápido', () => {
+    const pegados = Array.from({ length: MAX_ADJUNTOS }, (_, i) => `${i}\n${'z'.repeat(50_000)}`)
+    const m = mensajeConAdjuntos({ pegados, archivos: [] }, 'fin')
+    const t = performance.now()
+    const leido = leerAdjuntos(m)
+    expect(performance.now() - t).toBeLessThan(200)
+    expect(leido.pegados).toHaveLength(MAX_ADJUNTOS)
+    expect(leido.texto).toBe('fin')
   })
 })
 

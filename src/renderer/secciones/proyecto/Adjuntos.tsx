@@ -29,6 +29,24 @@ export function Visor({ que, cerrar }: { que: EnVisor; cerrar: () => void }) {
     que.tipo === 'foto' ? 'cargando' : null,
   )
   const caja = useRef<HTMLDivElement>(null)
+  // Esc lo cierra aunque el foco haya salido del cuadro (como el menú del clic derecho), y al cerrar el foco vuelve a
+  // donde estaba (la ficha que lo abrió), como en Ajustes.
+  const alCerrar = useRef(cerrar)
+  alCerrar.current = cerrar
+  useEffect(() => {
+    const antes = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    const tecla = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      e.preventDefault()
+      e.stopPropagation()
+      alCerrar.current()
+    }
+    document.addEventListener('keydown', tecla, true)
+    return () => {
+      document.removeEventListener('keydown', tecla, true)
+      antes?.focus()
+    }
+  }, [])
   useEffect(() => {
     caja.current?.focus()
     if (que.tipo !== 'foto') return
@@ -44,7 +62,7 @@ export function Visor({ que, cerrar }: { que: EnVisor; cerrar: () => void }) {
   const titulo = que.tipo === 'texto' ? 'Texto pegado' : que.nombre
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: el velo solo cierra con un clic afuera del cuadro.
-    // biome-ignore lint/a11y/useKeyWithClickEvents: Esc lo atiende el cuadro.
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Esc lo atiende la página entera, mientras está abierto.
     <div className="velo capa-cuadro" onClick={(e) => e.target === e.currentTarget && cerrar()}>
       <div
         ref={caja}
@@ -53,11 +71,6 @@ export function Visor({ que, cerrar }: { que: EnVisor; cerrar: () => void }) {
         aria-modal="true"
         aria-label={titulo}
         tabIndex={-1}
-        onKeyDown={(e) => {
-          if (e.key !== 'Escape') return
-          e.stopPropagation()
-          cerrar()
-        }}
       >
         {que.tipo === 'texto' ? (
           <pre className="texto-pegado">{que.texto}</pre>

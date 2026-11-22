@@ -1,6 +1,6 @@
 // Esquemas que validan lo que llega desde la ventana (05-arquitectura.md › Seguridad: validar todo contenido externo).
 import { z } from 'zod'
-import { MAX_ADJUNTOS } from '../../compartido/adjuntos'
+import { LARGO_ESCRITO, MAX_ADJUNTOS, PEGADO_MAXIMO } from '../../compartido/adjuntos'
 import { LARGO_NOMBRE_REPO } from '../../compartido/github'
 import { ESTADOS_DESDE_IDEAS } from '../../compartido/ideas'
 import {
@@ -42,7 +42,7 @@ export const CambioPreferencias = z
 export const Ruta = z.string().min(1).max(1024)
 
 /** Lo escrito en el cuadro de una conversación (como un mensaje: hasta 100 000 caracteres). */
-export const Escrito = z.string().max(100_000)
+export const Escrito = z.string().max(LARGO_ESCRITO)
 
 /** La hoja de Ideas entera (D-126): como mucho lo que lee Docs, 2 MB. */
 export const TextoNotas = z.string().max(2 * 1024 * 1024)
@@ -68,7 +68,7 @@ export const RutaAbsoluta = z
 /** Un adjunto del chat (PA-I2): una foto o un archivo por su ruta, o un texto pegado (hasta 1 MB). */
 export const AdjuntoPedido = z.union([
   z.object({ tipo: z.enum(['foto', 'archivo']), ruta: RutaAbsoluta }).strict(),
-  z.object({ tipo: z.literal('pegado'), texto: z.string().max(1024 * 1024) }).strict(),
+  z.object({ tipo: z.literal('pegado'), texto: z.string().max(PEGADO_MAXIMO) }).strict(),
 ])
 
 /** Los adjuntos de un mensaje o de lo escrito sin mandar: hasta 20 (`ux.md` › Muchos adjuntos). */
@@ -79,7 +79,7 @@ export const EscritoConAdjuntos = z.object({ texto: Escrito, adjuntos: Adjuntos 
 
 export const Pedido = z
   .object({
-    texto: z.string().max(100_000),
+    texto: z.string().max(LARGO_ESCRITO),
     nueva: z.boolean(),
     adjuntos: Adjuntos,
   })

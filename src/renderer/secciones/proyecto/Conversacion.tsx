@@ -19,7 +19,9 @@ import {
   type AdjuntoVista,
   adjuntoDeRuta,
   esPegadoLargo,
+  LARGO_ESCRITO,
   MAX_ADJUNTOS,
+  PEGADO_MAXIMO,
   sumarAdjuntos,
 } from '../../../compartido/adjuntos'
 import { type Cita, leerCitas, mensajeConCitas } from '../../../compartido/citas'
@@ -1016,11 +1018,16 @@ export function Conversacion({
     const lista = usarEstado.getState().adjuntos[ruta] ?? []
     const i = u ? lista.lastIndexOf(u.pegado) : -1
     if (!u || i === -1 || texto !== u.antes || u.pegado.tipo !== 'pegado') return false
+    const nuevo = u.antes.slice(0, u.desde) + u.pegado.texto + u.antes.slice(u.hasta)
+    // Más largo de lo que entra en el cuadro: queda como ficha, que se manda igual.
+    if (nuevo.length > LARGO_ESCRITO) {
+      setLineaAdjuntos('Es demasiado largo para el cuadro: queda como texto pegado.')
+      return true
+    }
     adjuntar(
       ruta,
       lista.filter((_, j) => j !== i),
     )
-    const nuevo = u.antes.slice(0, u.desde) + u.pegado.texto + u.antes.slice(u.hasta)
     setTexto(nuevo)
     const fin = u.desde + u.pegado.texto.length
     requestAnimationFrame(() => {
@@ -1038,6 +1045,12 @@ export function Conversacion({
     const pegadoTexto = datos.getData('text/plain')
     if (pegadoTexto && esPegadoLargo(pegadoTexto)) {
       e.preventDefault()
+      if (pegadoTexto.length > PEGADO_MAXIMO) {
+        setLineaAdjuntos(
+          'Pasa de 1 MB y no entra como texto pegado: guárdalo en un archivo y súmalo con el +.',
+        )
+        return
+      }
       const pegado: AdjuntoPedido = { tipo: 'pegado', texto: pegadoTexto.replace(/\r\n/g, '\n') }
       const c = e.currentTarget
       sumar([pegado])

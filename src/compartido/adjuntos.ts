@@ -18,6 +18,12 @@ export const MAX_ADJUNTOS = 20
 /** El texto pegado que pasa de esto va como ficha (PA-4). */
 export const PEGADO_LARGO = { lineas: 40, caracteres: 2000 }
 
+/** Un texto pegado no pasa de esto (1 MB): más grande, va mejor como archivo (paso 8). */
+export const PEGADO_MAXIMO = 1024 * 1024
+
+/** Lo escrito en el cuadro y lo que se manda como texto no pasan de esto (`escritos.json`, el puente). */
+export const LARGO_ESCRITO = 100_000
+
 /** Las fotos que el compositor muestra como miniatura (PNG, JPEG, GIF y WebP), por la extensión del archivo. */
 const EXTENSIONES_FOTO = /\.(png|jpe?g|gif|webp)$/i
 
@@ -75,6 +81,8 @@ const PEGADO = /^<iridium-pegado lineas="(\d+)">\n([\s\S]*?)\n<\/iridium-pegado>
 const ARCHIVOS = /^<iridium-archivos>\n([\s\S]*?)\n<\/iridium-archivos>(?:\n\n|\n?$)/
 /** El cierre de un pegado dentro de su texto se rompe con un espacio: así no corta el bloque antes de tiempo. */
 const CIERRE_PEGADO = /<\/iridium-pegado>/g
+/** Y al leerlo vuelve a ser el de antes: la ficha muestra lo que se pegó. */
+const CIERRE_ROTO = /<\/ iridium-pegado>/g
 
 /**
  * El texto que sale con los adjuntos (D-169 › 5): primero cada texto pegado en su `<iridium-pegado>`, después las rutas
@@ -109,7 +117,7 @@ export function leerAdjuntos(mensaje: string): {
   while (true) {
     const p = PEGADO.exec(resto)
     if (p) {
-      pegados.push({ lineas: Number(p[1]), texto: p[2] ?? '' })
+      pegados.push({ lineas: Number(p[1]), texto: (p[2] ?? '').replace(CIERRE_ROTO, '</iridium-pegado>') })
       resto = resto.slice(p[0].length)
       continue
     }
