@@ -62,7 +62,7 @@ Ideas sin evaluar: T-112 (dejar tareas en cola), T-113 (que el arranque vaya ata
   Tipo: tarea · Frente: Compartir
   Contexto: T-111, `modulos/compartir/estado.md` › CO-I9. La versión que tiene esa PC no puede actualizarse sola (el arreglo es justamente eso), así que va una vez a mano; los proyectos y los datos (`%APPDATA%\Centro de Desarrollo`) no se tocan. En la otra PC:
   - [ ] Cerrar Iridium (si quedó abierto en negro, desde el Administrador de tareas)
-  - [ ] Bajar el `.zip` de la última versión de github.com/LlanosLautaro/Iridium/releases (la de arriba, «Iridium-….zip», no la «.pieza»)
+  - [ ] Bajar el `.zip` de la última versión de github.com/LlanosLautaro/Iridium/releases (la de arriba, «Iridium · 22/11/2026 · a2b8991»: el archivo `Iridium-a2b8991.zip`, no la «.pieza»)
   - [ ] Cambiarle el nombre a la carpeta de Iridium de esa PC (por ejemplo, «Iridium viejo») y descomprimir el `.zip` en su lugar, con la misma carpeta `win-unpacked` adentro
   - [ ] Abrir `win-unpacked\Iridium.exe`: abre normal, o muestra «Iridium no pudo mostrar esta pantalla» (anotá el texto del recuadro)
   - [ ] Si sigue en negro o muestra ese mensaje: dejar en Otro el archivo más nuevo de `%APPDATA%\Centro de Desarrollo\registros\` (ahora anota lo que le pasa a la ventana)
