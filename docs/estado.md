@@ -52,7 +52,7 @@ Ideas sin evaluar: T-112 (dejar tareas en cola), T-113 (que el arranque vaya ata
   Tipo: tarea · Frente: Compartir
   Contexto: CO-I10 (D-171), reemplaza a Q-254. Iridium pasa a ser una app instalada que se actualiza sola; los proyectos y los datos (`%APPDATA%\Centro de Desarrollo`) no se tocan. En la otra PC:
   - [ ] Cerrar Iridium (si quedó abierto en negro, desde el Administrador de tareas)
-  - [ ] Bajar `Iridium-Setup-….exe` de la versión de arriba en github.com/LlanosLautaro/Iridium/releases
+  - [ ] Bajar `Iridium-Setup-2026.1122.1004.exe` de la versión de arriba en github.com/LlanosLautaro/Iridium/releases
   - [ ] Abrirlo; si Windows dice «Windows protegió su PC»: Más información › Ejecutar de todas formas. Se instala solo y abre Iridium
   - [ ] Iridium abre normal, con los proyectos de siempre (o muestra «Iridium no pudo mostrar esta pantalla»: anotá el texto)
   - [ ] Hay un acceso «Iridium» en el escritorio y en el menú Inicio
