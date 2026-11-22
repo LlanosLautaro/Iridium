@@ -2086,7 +2086,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-04
 - **Ámbito:** general (frente Compartir; precisa D-070 punto 3 y D-074)
 - **Hito o paso:** 10, a pedido del usuario («compartir Iridium lo antes posible y asegurarnos de poder hacerle llegar actualizaciones bien a la otra persona»)
-- **Estado:** vigente (Q-123: A, el repo privado con la otra persona como colaboradora; desde D-132 el repo es público y la invitación no hace falta)
+- **Estado:** vigente en el punto 1 (publicar) y el 4; los puntos 2 y 3, reemplazados por D-171 (la copia instalada con electron-updater). Q-123: A, el repo privado con la otra persona como colaboradora; desde D-132 el repo es público y la invitación no hace falta
 
 **Contexto:** la copia que el usuario le pasó a otra persona (D-074) no se actualizaba: cada versión era otra carpeta para reemplazar a mano. D-070 ya había dejado pensado que, al repartir, las copias de otros se actualicen desde GitHub y la del usuario siga armándose en su PC.
 
@@ -3259,7 +3259,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-20
 - **Ámbito:** Compartir (T-37; precisa D-085)
 - **Hito o paso:** 10; frente Compartir, a pedido del usuario («Achicar el .zip de cada versión»)
-- **Estado:** vigente
+- **Estado:** reemplazada por D-171 (el instalador baja solo lo que cambió con su `.blockmap`)
 
 **Contexto:** el `.zip` de cada versión pesaba 296 MB. Medido: Electron son unos 330 MB sin comprimir (el programa, 235), el Claude Code que viaja con Iridium 285 MB y el código de Iridium solo 11 MB. Comprimir más (xz) lo dejaba en 215 MB, tardaba cuatro minutos y el Explorador de Windows de algunas PC no lo abre. Electron y Claude Code solo cambian cuando se actualizan a propósito; el programa `Iridium.exe` cambia en cada armado, pero solo en 64 caracteres: la huella de `app.asar` que electron-builder le graba.
 **Decisión:** lo eligió la IA para cumplir el pedido:
@@ -3370,3 +3370,20 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** la **Ficha** es una pieza nueva, PZ-16 (archivo, foto, no va, en un mensaje mandado), en las dos hojas de piezas; al construir Paridad, «Sobre la skill…» y las citas del compositor pasan a ella. El **Menú** (PZ-8) suma abrirse arriba del compositor (`.arriba`) y tomar su ancho (`.ancho`). **Soltar** no es pieza: es un estado de la conversación (`soltando`), con su maqueta `paridad-soltar.html`. Las maquetas de Paridad ya no tienen estilos propios salvo el dibujo de la captura de muestra.
 **Motivo:** la ficha se repite (el compositor y cada mensaje mandado) y reemplaza a la de las citas; el borde de soltar solo existe en la conversación.
 **Consecuencias:** `piezas.css` (maquetas y app), `DESIGN.md`, `06-ui.md`, `modulos/diseno/ux.md` › Las piezas y el control de estilos (17 bloques, `ficha` y `fichas` reservadas), al día. Paso 6 de Paridad `hecho`; sigue la construcción, después de la tanda de la ronda de UX.
+
+## D-171 — Iridium se instala como una app y se actualiza con electron-updater
+- **Fecha:** 2026-11-22
+- **Ámbito:** Compartir (T-111; reemplaza D-085 puntos 2 y 3 y D-161, y deja sin efecto el aviso de GitHub de Q-123)
+- **Hito o paso:** 10; frente Compartir, CO-I10
+- **Estado:** vigente (Q-255: A)
+
+**Contexto:** la otra PC usaba una carpeta suelta (`win-unpacked`) con un actualizador hecho para Iridium, que se trabó desde CO-I8 (T-111, CO-I9). El usuario prefiere una app instalada antes que una carpeta portable.
+**Decisión:** el usuario eligió el instalador con el actualizador estándar (Q-255: A); los detalles los eligió la IA:
+1. **El instalador:** el de electron-builder (NSIS), por usuario y sin pedir permisos de administrador: un doble clic instala en `%LOCALAPPDATA%\Programs\iridium`, con acceso en el escritorio y en el menú Inicio, y queda en «Aplicaciones instaladas» con su desinstalador. Los datos (`%APPDATA%\Centro de Desarrollo`) no se tocan al instalar, actualizar ni desinstalar. Sin firma de código: la primera vez Windows avisa.
+2. **Publicar** (`pnpm publicar`): arma el instalador desde la app ya armada (unos 45 s), le pone `resources/app-update.yml` (de dónde se actualiza) y sube a la versión de GitHub el instalador, su `.blockmap` y `latest.yml`. La etiqueta es `v<número>`. Ya no sube el `.zip` ni las piezas.
+3. **El número de versión:** cada armado lleva la fecha y la hora, `AAAA.MDD.HMM` (`2026.1122.1700`); lo pone `tools/actualizar.ps1`. electron-updater necesita un número que crezca; la lista de cambios sigue en T-38.
+4. **La copia instalada:** electron-updater mira al abrir (a los 20 s) y cada seis horas; baja sola la versión nueva, solo lo que cambió (el `.blockmap`: casi siempre la app, unos 11 MB, porque Electron y Claude Code van guardados sin comprimir dentro del instalador), y muestra el aviso de siempre, «Versión nueva lista · entra al cerrar», con Reiniciar ahora. Entra al cerrar Iridium, sin preguntar nada.
+5. **La copia del usuario no cambia** (D-070, D-071, CO-I2): se arma en su PC y entra con el ayudante; nunca trae `app-update.yml`, así que no se actualiza desde GitHub (D-132 punto 2).
+6. **Se va** el actualizador propio de las copias compartidas (`version-github.ts`, las piezas de D-161) y el aviso «Iniciá sesión en GitHub» (el repo es público, D-132). Una copia en carpeta que quede no se actualiza más: se instala a mano una vez.
+**Motivo:** es el camino de casi todas las apps de Electron, probado por miles; deja menos código propio que se pueda trabar, y la otra persona tiene Iridium como cualquier app.
+**Consecuencias:** `electron-builder.yml` con la sección `nsis`; `tools/publicar.ts` y `tools/actualizar.ps1` cambiados; `infra/actualizador.ts` nuevo; `05-arquitectura.md` › Despliegue, `scripts.md` y `herramientas-ia.md` al día. La otra PC instala a mano una vez el instalador.

@@ -504,41 +504,6 @@ function Actualizar() {
 }
 
 /**
- * Una copia compartida que no ve las versiones de GitHub (Q-123): sin sesión, Iniciar sesión abre la ventana de git;
- * con una cuenta sin invitación, se dice a quién pedírsela.
- */
-function AccesoVersionesGithub() {
-  const a = usarEstado((s) => s.accesoVersiones)
-  const [entrando, setEntrando] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  if (!a || a === 'ok') return null
-  const entrar = async () => {
-    setEntrando(true)
-    const r = await window.iridium.entrarGithub()
-    setEntrando(false)
-    setError(r.tipo === 'error' ? r.mensaje : null)
-  }
-  const sinPermiso = a === 'sin-permiso'
-  const ayuda = sinPermiso
-    ? 'Tu cuenta de GitHub no tiene acceso a Iridium: pídele a quien te lo pasó que te invite, acepta la invitación y toca Probar de nuevo.'
-    : 'Iridium baja sus versiones nuevas de GitHub: inicia sesión una vez con la cuenta que invitaron.'
-  return (
-    <span className="it acceso-versiones" title={error ?? ayuda}>
-      <span className={`senal ${error ? 'rojo' : 'ambar'}`}>
-        <Icono nombre={error ? 'error' : 'espera'} />
-        {sinPermiso
-          ? 'Sin acceso a las versiones nuevas'
-          : 'Para recibir versiones nuevas, inicia sesión en GitHub'}
-      </span>
-      <button type="button" className="senal" disabled={entrando} title={ayuda} onClick={() => void entrar()}>
-        <Icono nombre={entrando ? 'sync' : 'reintentar'} gira={entrando} />
-        {entrando ? 'Esperando a GitHub…' : sinPermiso ? 'Probar de nuevo' : 'Iniciar sesión'}
-      </button>
-    </span>
-  )
-}
-
-/**
  * La barra de abajo sin ruido (D-108): Claude solo cuando falla, lo de la sección, Actualizar y, a la derecha, el uso.
  * Sin las sesiones abiertas ni la hora: las pestañas ya dicen qué trabaja.
  */
@@ -550,7 +515,6 @@ function BarraEstado() {
         <SenalClaude motor={motor} />
       </span>
       <Actualizar />
-      <AccesoVersionesGithub />
       <span className="der">
         <UsoEnLaBarra />
       </span>

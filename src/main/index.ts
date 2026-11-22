@@ -14,6 +14,8 @@ import { ENCABEZADO_CONTROL } from './core/control'
 import { abrirDeFondo, UsoDeIridium } from './core/uso-iridium'
 import { comoAbrir, type VentanaGuardada } from './core/ventana'
 import { zoomSiguiente } from './core/zoom'
+import { Actualizador } from './infra/actualizador'
+import { actualizableElectron } from './infra/actualizador-electron'
 import { ArchivoArmados } from './infra/armados'
 import { ArchivoArranques } from './infra/arranques'
 import { ArchivoBorradores } from './infra/borradores'
@@ -32,7 +34,6 @@ import { lineasDeComandosDelPuerto } from './infra/revision/puerto'
 import { arrancarReceptor, type Receptor } from './infra/revision/receptor'
 import { ArchivoSesiones } from './infra/sesiones'
 import { VigiaSinArmar } from './infra/sin-armar'
-import { leerActualizaciones, VigiaVersionGithub } from './infra/version-github'
 import { VigiaVersionNueva } from './infra/version-nueva'
 import { type Puente, registrarPuente } from './ipc/puente'
 import { crearMotorFalso, crearMotorQueFalla, type Motor } from './motor/motor'
@@ -253,15 +254,11 @@ const vigiaVersion = release
     )
   : null
 /**
- * Una copia compartida (D-085) trae `resources/actualizaciones.json`: baja sus versiones nuevas de GitHub y no tiene
- * código para armar. Las pruebas usan otro archivo (IRIDIUM_ACTUALIZACIONES) y otra API (IRIDIUM_GITHUB_API).
+ * Una copia instalada (D-171) trae `resources/app-update.yml`, que le pone `tools/publicar.ts` al armar el instalador:
+ * baja sus versiones nuevas de GitHub con electron-updater. La del usuario corre desde `win-unpacked` y nunca lo trae.
  */
-const archivoActualizaciones =
-  process.env.IRIDIUM_ACTUALIZACIONES ??
-  (app.isPackaged ? join(process.resourcesPath, 'actualizaciones.json') : null)
-const actualizaciones =
-  release && archivoActualizaciones ? leerActualizaciones(archivoActualizaciones) : Promise.resolve(null)
-/** El código de Iridium es la carpeta de `release` (CO-I6); una copia compartida no tiene. */
+const instalada = app.isPackaged && !release && existsSync(join(process.resourcesPath, 'app-update.yml'))
+/** El código de Iridium es la carpeta de `release` (CO-I6). */
 let vigiaSinArmar: VigiaSinArmar | null = null
 
 /**
@@ -568,24 +565,14 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
     filtrarPedidosDeMaquetas()
     const leida = await config.leer()
     zoom = leida.zoom
-    const compartida = await actualizaciones
-    if (release && !compartida) vigiaSinArmar = new VigiaSinArmar(dirname(release), release)
-    const vigiaGithub =
-      release && compartida
-        ? new VigiaVersionGithub({
-            release,
-            actualizaciones: compartida,
-            anotar: (t) => registro.escribir(t),
-            // Con otra API (las pruebas), nunca la clave de git: solo la de IRIDIUM_GITHUB_CLAVE, si hay.
-            ...(process.env.IRIDIUM_GITHUB_API
-              ? {
-                  api: process.env.IRIDIUM_GITHUB_API,
-                  clave: async () => process.env.IRIDIUM_GITHUB_CLAVE ?? null,
-                  primeraMs: 500,
-                }
-              : {}),
-          })
-        : null
+    if (release) vigiaSinArmar = new VigiaSinArmar(dirname(release), release)
+    const actualizador = instalada
+      ? new Actualizador({
+          updater: actualizableElectron((t) => registro.escribir(t)),
+          anotar: (t) => registro.escribir(t),
+          ...(process.env.IRIDIUM_ACTUALIZAR_DESDE ? { primeraMs: 2000 } : {}),
+        })
+      : null
     const escritos = new ArchivoEscritos(join(carpetaDatos, 'escritos.json'))
     // Las fotos pegadas sin mandar viven en los datos hasta mandarlas; al abrir se borran las que ningún escrito nombra.
     const fotos = new Fotos(join(carpetaDatos, 'pegadas'), imagenesElectron)
@@ -616,9 +603,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         ponerZoom(zoomSiguiente(zoom, paso))
         void config.guardar({ zoom }).catch(() => {})
       },
-      versionNueva: vigiaVersion,
+      versionNueva: vigiaVersion ?? actualizador,
       sinArmar: vigiaSinArmar,
-      versionesGithub: vigiaGithub,
       maquetas,
       vistos: new ArchivoVistos(join(carpetaDatos, 'diseno.json')),
       reiniciarAhora: () => {
@@ -657,7 +643,6 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
     if (leida.abrirDeFondo !== null) void config.guardar({ abrirDeFondo: null }).catch(() => {})
     crearVentana(puente, leida.ventana, deFondo)
     const revision = arrancarRevision(puente)
-    vigiaGithub?.vigilar()
     app.on('window-all-closed', () => app.quit())
     // Antes de salir se espera lo que la ventana mandó a guardar (D-060). Va acá y no en window-all-closed porque
     // app.quit() desde afuera (las pruebas, otro programa) no pasa por ahí; y lo que la ventana manda al cerrarse puede
@@ -675,8 +660,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
           // La versión nueva entra ahora (CO-I2): el ayudante espera a que Iridium termine de cerrarse.
           vigiaVersion?.cerrar()
           vigiaSinArmar?.cerrar()
-          vigiaGithub?.cerrar()
-          await vigiaVersion
+          actualizador?.cerrar()
+          await (vigiaVersion ?? actualizador)
             ?.ponerAlCerrar(reiniciar)
             .then(
               (puesta) =>

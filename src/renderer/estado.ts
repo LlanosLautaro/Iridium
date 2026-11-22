@@ -5,7 +5,6 @@ import type { AdjuntoPedido } from '../compartido/adjuntos'
 import { SIN_ANCHOS } from '../compartido/ancho-conversacion'
 import { type Cita, sumarCita } from '../compartido/citas'
 import {
-  type AccesoVersiones,
   type ActualizacionProyecto,
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
@@ -237,9 +236,6 @@ interface EstadoApp {
   /** Los cambios sin armar (CO-I6); null en desarrollo. */
   sinArmar: SinArmar | null
   ponerSinArmar(s: SinArmar | null): void
-  /** Si la copia compartida ve las versiones de GitHub (Q-123); null si no es una copia compartida. */
-  accesoVersiones: AccesoVersiones | null
-  ponerAccesoVersiones(a: AccesoVersiones | null): void
   /** Se tocó Actualizar con una versión lista: la confirmación de F-6, si aparece, habla de reiniciar. */
   reiniciando: boolean
   reiniciarAhora(): void
@@ -416,8 +412,6 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   ponerVersionNueva: (versionNueva) => set({ versionNueva }),
   sinArmar: null,
   ponerSinArmar: (sinArmar) => set({ sinArmar }),
-  accesoVersiones: null,
-  ponerAccesoVersiones: (accesoVersiones) => set({ accesoVersiones }),
   reiniciando: false,
   reiniciarAhora: () => {
     set({ reiniciando: true, reiniciarAlTerminar: false })

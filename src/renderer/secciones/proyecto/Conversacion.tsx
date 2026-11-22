@@ -1401,7 +1401,7 @@ export function Conversacion({
                       void elegirAdjuntos()
                     }}
                   >
-                    <Icono nombre="archivo" />
+                    <Icono nombre="clip" />
                     {capacidades.fotos ? 'Agregar archivos o fotos' : 'Agregar archivos'}
                     <span className="atajo">Ctrl+U</span>
                   </button>

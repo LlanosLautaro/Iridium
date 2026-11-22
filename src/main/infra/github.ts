@@ -87,19 +87,6 @@ async function recordar(c: Credencial, sirve: boolean): Promise<void> {
   }
 }
 
-/**
- * Inicia sesión en GitHub con la ventana del Administrador de credenciales y la guarda en git (Q-123: la copia
- * compartida la usa para ver las versiones de un repositorio privado). Si ya hay una guardada, no pregunta nada.
- */
-export async function entrarGithub(): Promise<{ tipo: 'ok' } | { tipo: 'error'; mensaje: string }> {
-  try {
-    await recordar(await credencial(), true)
-    return { tipo: 'ok' }
-  } catch (e) {
-    return { tipo: 'error', mensaje: e instanceof Error ? e.message : String(e) }
-  }
-}
-
 async function api(c: Credencial, ruta: string, cuerpo?: unknown): Promise<Response> {
   try {
     return await fetch(`${API}${ruta}`, {

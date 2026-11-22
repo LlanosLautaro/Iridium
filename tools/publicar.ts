@@ -1,21 +1,18 @@
-// Publica la app de uso diario como versión de GitHub (D-085, scripts.md › Publicar la versión para compartir): la
-// copia de `release/win-unpacked` con `resources/actualizaciones.json` (el repositorio y el commit), en un `.zip`
-// con la carpeta `win-unpacked` adentro. Las copias compartidas la bajan solas y la ponen al cerrar Iridium.
+// Publica la app de uso diario como versión de GitHub (D-085, D-171, scripts.md › Publicar la versión para compartir):
+// arma su instalador desde `release/win-unpacked` (`tools/instalador.ts`) y lo sube con su `.blockmap` y `latest.yml`.
+// Las copias instaladas la bajan solas con electron-updater (solo lo que cambió) y la ponen al cerrar Iridium.
 // Publica lo que marca `main` (lo que se armó por última vez, D-070); si `main` no está en GitHub, lo sube.
 // Con `--desde <carpeta>`, la versión armada en otra carpeta (`tools/actualizar.ps1 -Release <carpeta>`): la de
 // `nueva`, con el commit de su `lista.json`, o, si ya se puso, la de `win-unpacked` con `--commit`. Sirve para publicar
 // sin cambiar la app de uso diario.
-// Con la versión van sus piezas (D-161): `piezas.json`, las huellas de Electron, Claude Code y la app, y la pieza de la
-// app sola (`-app.pieza`, un .zip con lo de la app). Una copia que ya tiene ese Electron y ese Claude Code baja solo eso.
 // La sesión de GitHub es la de git (D-081): si no hay, git abre su ventana.
 // Uso: node --experimental-strip-types tools/publicar.ts [--repo dueño/nombre] [--desde carpeta [--commit c]]
 import { execFileSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
-import { cp, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdtemp, readFile, rm, stat } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { etiquetaVersion } from '../src/compartido/versiones.ts'
-import { archivosDe, huellasDe, piezaDe } from '../src/main/infra/piezas.ts'
+import { basename, join } from 'node:path'
+import { armarInstalador, versionDeApp } from './instalador.ts'
 
 const API = 'https://api.github.com'
 const git = (...args: string[]) => execFileSync('git', args, { encoding: 'utf8' }).trim()
@@ -62,8 +59,13 @@ const base = ref?.commit ?? opcion('--commit') ?? 'main'
 const commit = git('rev-parse', '--short', base)
 const largo = git('rev-parse', base)
 const mensaje = git('log', '-1', '--format=%s', base)
+const version = versionDeApp(app)
+// Las versiones armadas antes de D-171 no tienen número: electron-updater no sabría si es más nueva.
+if (version === '0.1.0')
+  throw new Error('Esa app se armó sin número de versión: armala de nuevo (pnpm actualizar).')
+// electron-updater busca el .blockmap de la versión anterior cambiando el número en la dirección: la etiqueta es él.
+const etiqueta = `v${version}`
 const fecha = new Date()
-const etiqueta = etiquetaVersion(fecha, commit)
 console.log(`Publicando ${commit} («${mensaje}») en ${repo} como ${etiqueta}…`)
 
 const token = clave()
@@ -90,41 +92,20 @@ if (!desde) {
 }
 
 // La misma versión no se publica dos veces.
-const ultima = await fetch(`${API}/repos/${repo}/releases/latest`, { headers: encabezados })
-if (ultima.ok) {
-  const d = (await ultima.json()) as { tag_name?: string }
-  if (d.tag_name?.endsWith(`-${commit}`)) {
-    console.log(`Esa versión ya está publicada (${d.tag_name}). Nada que hacer.`)
-    process.exit(0)
-  }
+const ya = await fetch(`${API}/repos/${repo}/releases/tags/${etiqueta}`, { headers: encabezados })
+if (ya.ok) {
+  console.log(`Esa versión ya está publicada (${etiqueta}). Nada que hacer.`)
+  process.exit(0)
 }
 
-console.log('2/4  Armando el .zip (copia de la app con actualizaciones.json)…')
+console.log('2/4  Armando el instalador…')
 const temporal = await mkdtemp(join(tmpdir(), 'iridium-publicar-'))
 try {
-  const copia = join(temporal, 'win-unpacked')
-  await cp(app, copia, { recursive: true })
-  await writeFile(
-    join(copia, 'resources', 'actualizaciones.json'),
-    JSON.stringify({ repo, commit, fecha: fecha.toISOString(), mensaje }, null, 2),
-  )
-  const huellas = JSON.stringify(await huellasDe(copia), null, 2)
-  await writeFile(join(copia, 'resources', 'piezas.json'), huellas)
-  const zip = join(temporal, `Iridium-${commit}.zip`)
-  const tar = join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
-  execFileSync(tar, ['-a', '-c', '-f', zip, '-C', temporal, 'win-unpacked'])
-  // La pieza de la app: sus archivos y los propios de la versión (actualizaciones.json y piezas.json), con la misma
-  // carpeta win-unpacked delante.
-  const pieza = join(temporal, `Iridium-${commit}-app.pieza`)
-  const lista = join(temporal, 'pieza-app.txt')
-  const deLaApp = (await archivosDe(copia)).filter(
-    (r) => piezaDe(r) !== 'electron' && piezaDe(r) !== 'claude',
-  )
-  await writeFile(lista, deLaApp.map((r) => `win-unpacked/${r}`).join('\n'))
-  execFileSync(tar, ['--format', 'zip', '-c', '-f', pieza, '-C', temporal, '-T', lista])
+  const instalador = await armarInstalador({ app, trabajo: temporal, repo, commit, mensaje })
   const mb = async (archivo: string) => `${((await stat(archivo)).size / 1024 / 1024).toFixed(0)} MB`
-  console.log(`     Completa: ${await mb(zip)} · solo la app: ${await mb(pieza)}`)
+  console.log(`     ${basename(instalador.exe)}: ${await mb(instalador.exe)}`)
 
+  // Se crea como borrador y se publica al final: mientras se sube, las copias instaladas no la ven.
   console.log('3/4  Creando la versión en GitHub…')
   const r = await fetch(`${API}/repos/${repo}/releases`, {
     method: 'POST',
@@ -134,34 +115,46 @@ try {
       target_commitish: largo,
       name: `Iridium · ${fecha.toLocaleDateString('es-AR')} · ${commit}`,
       body: mensaje,
-      make_latest: 'true',
+      draft: true,
     }),
   })
   if (!r.ok) throw new Error(`GitHub no creó la versión: ${r.status} ${await r.text()}`)
-  const version = (await r.json()) as { id: number; upload_url: string; html_url: string }
+  const creada = (await r.json()) as { id: number; upload_url: string }
+  const borrar = () =>
+    fetch(`${API}/repos/${repo}/releases/${creada.id}`, { method: 'DELETE', headers: encabezados })
 
-  console.log('4/4  Subiendo las piezas y el .zip…')
-  const subir = async (nombre: string, tipo: string, cuerpo: Buffer<ArrayBuffer>) => {
-    const url = version.upload_url.replace(/\{.*\}$/, `?name=${nombre}`)
+  console.log('4/4  Subiendo el instalador…')
+  const subir = async (archivo: string, tipo: string) => {
+    const nombre = basename(archivo)
+    const cuerpo = await readFile(archivo)
+    const url = creada.upload_url.replace(/\{.*\}$/, `?name=${encodeURIComponent(nombre)}`)
     const s = await fetch(url, {
       method: 'POST',
       headers: { ...encabezados, 'Content-Type': tipo, 'Content-Length': String(cuerpo.length) },
       body: cuerpo,
     })
     if (s.ok) return
-    // Sin todo lo suyo la versión no sirve: se borra para que no quede como la última.
-    await fetch(`${API}/repos/${repo}/releases/${version.id}`, { method: 'DELETE', headers: encabezados })
-    await fetch(`${API}/repos/${repo}/git/refs/tags/${etiqueta}`, { method: 'DELETE', headers: encabezados })
+    // Sin todo lo suyo la versión no sirve: se borra el borrador.
+    await borrar()
     throw new Error(`No se pudo subir ${nombre}: ${s.status} ${await s.text()}`)
   }
-  // Las piezas antes que el .zip: una copia que mira mientras se sube, sin el .zip todavía no la ve.
-  await subir('piezas.json', 'application/json', Buffer.from(huellas))
-  await subir(`Iridium-${commit}-app.pieza`, 'application/zip', await readFile(pieza))
-  await subir(`Iridium-${commit}.zip`, 'application/zip', await readFile(zip))
+  await subir(instalador.exe, 'application/octet-stream')
+  await subir(instalador.blockmap, 'application/octet-stream')
+  await subir(instalador.latest, 'text/yaml')
+  const p = await fetch(`${API}/repos/${repo}/releases/${creada.id}`, {
+    method: 'PATCH',
+    headers: encabezados,
+    body: JSON.stringify({ draft: false, make_latest: 'true' }),
+  })
+  if (!p.ok) {
+    await borrar()
+    throw new Error(`GitHub no publicó la versión: ${p.status} ${await p.text()}`)
+  }
+  const publicada = (await p.json()) as { html_url: string }
   console.log('')
-  console.log(`Listo: ${version.html_url}`)
+  console.log(`Listo: ${publicada.html_url}`)
   console.log(
-    'Las copias compartidas la bajan solas (al abrir y cada seis horas) y la ponen al cerrar Iridium.',
+    'Las copias instaladas la bajan solas (al abrir y cada seis horas) y la ponen al cerrar Iridium.',
   )
 } finally {
   await rm(temporal, { recursive: true, force: true })

@@ -211,6 +211,10 @@ const TRAZOS = {
   ),
   atras: <path d="M19 12H5M12 19l-7-7 7-7" />,
   circulo: <circle cx="12" cy="12" r="8" />,
+  // Adjuntar archivos o fotos en el chat (PA-2, Q-251): un clip.
+  clip: (
+    <path d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l8.6-8.6a4 4 0 0 1 5.7 5.7l-8.6 8.6a2 2 0 0 1-2.8-2.8l8.5-8.5" />
+  ),
   imagen: (
     <>
       <rect x="3" y="4" width="18" height="16" rx="2" />

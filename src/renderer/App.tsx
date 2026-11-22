@@ -17,7 +17,6 @@ function useConexion() {
   const ponerCierre = usarEstado((s) => s.ponerCierre)
   const ponerVersionNueva = usarEstado((s) => s.ponerVersionNueva)
   const ponerSinArmar = usarEstado((s) => s.ponerSinArmar)
-  const ponerAccesoVersiones = usarEstado((s) => s.ponerAccesoVersiones)
   const ponerEscritos = usarEstado((s) => s.ponerEscritos)
   const volverAlAbierto = usarEstado((s) => s.volverAlAbierto)
   useEffect(() => {
@@ -36,7 +35,6 @@ function useConexion() {
     void api.actualizaciones().then(ponerActualizaciones)
     void api.versionNueva().then(ponerVersionNueva)
     void api.sinArmar().then(ponerSinArmar)
-    void api.accesoVersiones().then(ponerAccesoVersiones)
     const quitar = [
       api.alCambiarProyectos(ponerLista),
       api.alCambiarMotor(ponerMotor),
@@ -47,7 +45,6 @@ function useConexion() {
       api.alPedirCierre(ponerCierre),
       api.alCambiarVersionNueva(ponerVersionNueva),
       api.alCambiarSinArmar(ponerSinArmar),
-      api.alCambiarAccesoVersiones(ponerAccesoVersiones),
     ]
     return () => {
       window.removeEventListener('beforeunload', guardarTodoYa)
@@ -64,7 +61,6 @@ function useConexion() {
     ponerCierre,
     ponerVersionNueva,
     ponerSinArmar,
-    ponerAccesoVersiones,
     ponerEscritos,
     volverAlAbierto,
   ])

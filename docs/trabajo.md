@@ -491,7 +491,7 @@ Hecho el 2026-11-21: una prueba con la app abierta (`tests/e2e/t110-avisos-junto
 
 ## T-111 — hay un problema gordo con la ultima actualizacion de iridium en la otra computadora que lo descarga del repo, se queda congelado en negro y solo carga los botones de control de pestaña, es de alta relevancia olucionar eso, quizas un instalador y gestor de actualizaciones real ¿? como un electron builder o algo de eso ¿? esto pasa a ser la prioridad numero 1.
 Estado: en curso · Idea: usuario · Fecha: 2026-11-22 · Frente: Compartir
-Hecho el 2026-11-22 (CO-I9, `modulos/compartir/estado.md`): la versión publicada (d1d1750) abre bien en esta PC, con datos limpios, con una copia de los datos de uso y con otro idioma, así que la ventana negra depende de esa PC y Iridium no dejaba rastro. Encontrado y arreglado: el actualizador de las copias compartidas no podía bajar una versión desde CO-I8 (veía adentro de `app.asar` y se trababa al borrar), así que esa copia ya no se actualiza sola; probado de punta a punta contra GitHub. Además, una falla de la ventana ahora queda en el registro del día y muestra «Iridium no pudo mostrar esta pantalla» con Volver a cargar en vez de quedar en negro. Falta: instalar a mano la versión con el arreglo en la otra PC y ver qué dice (Q-254), y decidir el instalador (Q-255).
+Hecho el 2026-11-22 (CO-I9, `modulos/compartir/estado.md`): la versión publicada (d1d1750) abre bien en esta PC, con datos limpios, con una copia de los datos de uso y con otro idioma, así que la ventana negra depende de esa PC y Iridium no dejaba rastro. Encontrado y arreglado: el actualizador de las copias compartidas no podía bajar una versión desde CO-I8 (veía adentro de `app.asar` y se trababa al borrar), así que esa copia ya no se actualiza sola; probado de punta a punta contra GitHub. Además, una falla de la ventana ahora queda en el registro del día y muestra «Iridium no pudo mostrar esta pantalla» con Volver a cargar en vez de quedar en negro. Con Q-255 (A, D-171), CO-I10 el 2026-11-22: Iridium se instala como una app y se actualiza solo con electron-updater, bajando solo lo que cambió; probado de punta a punta en esta PC con instaladores de verdad. Falta: instalarlo en la otra PC y ver que abre (Q-256, reemplaza a Q-254).
 
 ## T-112 — dejar tareas en cola ya sea para un chat o en un "pendientes"
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
@@ -500,7 +500,4 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
-Estado: nueva · Idea: usuario · Fecha: 2026-11-22
-
-## T-115 — establecer en el proyecto "Lesan" una forma de comunicación formal entre la IA de Lautaro y la de Sara, en esa via se hablará solo de cosa de iridium, solicitudes de mejoras o correxión de errores
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22

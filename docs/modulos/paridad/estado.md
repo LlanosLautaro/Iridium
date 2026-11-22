@@ -13,7 +13,7 @@
 | 4. UX | hecho (Q-246, Q-247, D-168) | `ux.md` |
 | 5. Diseño técnico | hecho (D-169) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (D-170) | `06-ui.md` y `diseno/piezas.css` |
-| 7. Construcción | en curso (PA-I1 probada en Q-250; PA-I2 hecha, prueba en Q-251; sigue PA-I3) | este archivo |
+| 7. Construcción | en curso (PA-I1 probada en Q-250; PA-I2 probada en Q-251; sigue PA-I3) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -21,7 +21,7 @@
 Definición aprobada e investigación hecha (2026-11-21): los cuatro pedidos entran como Must y todo lo del motor pasa por su frontera; la lista de «/» esconde los comandos que pisan a Iridium y los de la terminal (D-167). La ronda de UX (T-100) y su tanda ya están (2026-11-21).
 La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito a mano no se manda y dice dónde está en Iridium. Diseño técnico cerrado (D-169): el motor dice qué sabe hacer (comandos, fotos, escondidos), los adjuntos viajan con marcas de Iridium que el historial reconoce y las fotos pegadas se guardan en los datos de Iridium. Piezas en el sistema (D-170): la Ficha (PZ-16), el menú arriba del compositor y el estado de soltar, con su maqueta.
 **PA-I1 hecha** (2026-11-21): «/» abre la lista arriba del compositor, elegir no manda, los usados hace poco van primero, un escondido escrito a mano no se manda y dice dónde está eso en Iridium, el + tiene Comandos y la lista se pone al día cuando la IA descubre una skill. Probada en Q-250: todo bien.
-**PA-I2 hecha** (2026-11-22): el + (y `Ctrl+U`) suma archivos y fotos con el selector de Windows, arrastrarlos sobre la conversación también, y una captura pegada con `Ctrl+V` es una foto. Cada adjunto es una ficha arriba del cuadro (la foto, miniatura; un clic la abre grande), se guarda con lo escrito y sale con el mensaje: la foto dentro, el archivo como su ruta; en el hilo, las fichas quedan arriba de lo escrito, también al reabrir. Probada con el Claude Code real: vio la foto y abrió el archivo. Tu prueba, Q-251. Sigue PA-I3, el texto largo pegado.
+**PA-I2 hecha** (2026-11-22): el + (y `Ctrl+U`) suma archivos y fotos con el selector de Windows, arrastrarlos sobre la conversación también, y una captura pegada con `Ctrl+V` es una foto. Cada adjunto es una ficha arriba del cuadro (la foto, miniatura; un clic la abre grande), se guarda con lo escrito y sale con el mensaje: la foto dentro, el archivo como su ruta; en el hilo, las fichas quedan arriba de lo escrito, también al reabrir. Probada con el Claude Code real: vio la foto y abrió el archivo. Probada en Q-251, todo bien; pediste un clip en vez de la hoja en «Agregar archivos o fotos»: hecho. Sigue PA-I3, el texto largo pegado.
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -47,7 +47,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 | ID | Objetivo | Estado |
 |---|---|---|
 | PA-I1 | Los comandos con «/» | hecha (probada en Q-250) |
-| PA-I2 | Archivos y fotos | hecha (prueba del usuario en Q-251) |
+| PA-I2 | Archivos y fotos | hecho (probada en Q-251) |
 | PA-I3 | El texto largo pegado | pendiente |
 
 ## Log de iteraciones
@@ -61,6 +61,8 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - 2026-11-21 — PA-I1 construida. La frontera dice qué sabe hacer (`capacidades`), da la lista sin gastar (`comandos`, con el real: 86 en 2 s, los escondidos de D-167) y avisa `commands_changed`; la app la recuerda 10 minutos por carpeta y guarda los cinco usados hace poco. La ventana: la lista arriba del compositor (filtro por nombre, otro nombre y después de los dos puntos de un complemento; flechas, Enter, Tab, Esc), la línea de un escondido con Nueva cuando corresponde, el + con Comandos y el comando mandado en la letra de los códigos. Un comando va primero, con lo citado después, y sin el aviso de «te detuve», que queda para el próximo mensaje (la prueba encontró que se perdía al terminar el turno del comando: arreglado). Al reabrir, el comando vuelve a ser «/nombre lo escrito» y su respuesta, que Claude Code guarda en una línea que el SDK no devuelve, se lee del `.jsonl`. El motor falso tiene comandos (y `IRIDIUM_FALSO_COMANDOS=no`). Vitest (20 nuevas) y Playwright (4 nuevas) en verde. Q-250: la prueba.
 - 2026-11-21 — Q-250 respondida: PA-I1 probada, todo bien.
 - 2026-11-22 — PA-I2 construida. La frontera manda las fotos antes del texto (`enviar(texto, fotos)`; sin fotos, el texto como siempre) y al leer el historial devuelve las fotos y deja las marcas `iridium-*`. Las reglas (`compartido/adjuntos.ts`): las marcas ida y vuelta (con un comando, después de él), el umbral del pegado y hasta 20. Las fotos (`infra/fotos.ts`): el tipo y el tamaño por el contenido, achicar con `nativeImage` lo que pasa los límites (a JPEG si pesa), la GIF o WebP grande no va; las pegadas en `pegadas/` y su limpieza al abrir; la miniatura y la foto grande por el puente. `escritos.json` 2 con los adjuntos (la 1 se lee igual). La ventana: el + con «Agregar archivos o fotos» (`Ctrl+U`) y Comandos, pegar, arrastrar con el borde de soltar, las fichas (PZ-16) con su ✕, el visor, las fichas en el mensaje mandado (el archivo se abre en Archivos si es del proyecto; afuera, con Windows, y un programa solo se muestra en su carpeta), la línea de los que no entraron, la de un comando de Claude Code con adjuntos (no se manda) y la de una foto pegada en un motor sin fotos. Una foto que no se puede leer va como archivo. El motor falso dice qué vio e `IRIDIUM_FALSO_FOTOS=no`. Prueba real (`tools/probar-fotos.ts`, Haiku): la IA vio la foto y leyó el archivo por su ruta, y la conversación guardada devolvió las dos. Vitest (21 nuevas) y Playwright (5 nuevas) en verde. Quedan para PA-I3: la ficha del texto pegado y pasar las citas y «Sobre la skill» a la Ficha (`ux.md` › Piezas). Sin probar con el real: un comando de una skill con una foto (D-169 › 7). Q-251: la prueba.
+
+- 2026-11-22 — Q-251: las siete casillas bien. Pediste cambiar el ícono de adjuntar por un clip: «Agregar archivos o fotos» del + lleva ahora un clip (`ui/Icono.tsx` › clip); las fichas de archivo siguen con la hoja.
 
 ## Próximo paso
 Construir PA-I3, el texto largo pegado (`diseno-tecnico.md` › Iteraciones): la ficha «Texto pegado», `Ctrl+Z`, el visor de texto (ya está en `Adjuntos.tsx`) y la marca `iridium-pegado` (ya va y vuelve, `compartido/adjuntos.ts`); con ella, las citas y «Sobre la skill» pasan a la Ficha (PZ-16).

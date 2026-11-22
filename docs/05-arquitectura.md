@@ -268,6 +268,7 @@ En un proyecto con framework, al terminar cada turno con resultado `ok`, el cont
 ## Despliegue
 - **Desarrollo:** `pnpm dev` abre la app con recarga en vivo (va a `scripts.md` cuando haya código).
 - **Uso diario:** una carpeta con el ejecutable armada con electron-builder, como otra app, más un acceso directo (D-036). Las versiones nuevas se arman aparte, en `release/nueva`, y entran al cerrar Iridium (CO-I2, `modulos/compartir/diseno-tecnico.md` › Versión nueva lista).
+- **Copias de otras personas:** se instalan como una app con el instalador que arma `pnpm publicar` (por usuario, sin permisos de administrador, en `%LOCALAPPDATA%\Programs\iridium`) y se actualizan solas con electron-updater desde las versiones de GitHub, bajando solo lo que cambió (D-171, `modulos/compartir/diseno-tecnico.md` › Iridium instalado). Cada armado lleva un número, la fecha y la hora (`AAAA.MDD.HMM`).
 - **Riesgo de la primera iteración, resuelto en I-1:** el SDK trae su propio Claude Code; queda fuera del archivo comprimido de la app (`app.asar.unpacked`) y desde la app armada verifica la sesión y la suscripción (`07-construccion.md` › Log de iteraciones).
 - **Linux:** electron-builder también arma para Linux; no se hace hasta que se pida (Q-30).
 - Detalle en el hito 9.
