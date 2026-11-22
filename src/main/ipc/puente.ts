@@ -393,14 +393,20 @@ export function registrarPuente(s: Servicios): Puente {
       })
     : null
 
-  // La sincronización con GitHub (D-159): trae sola lo que se hizo en otra PC, sin tocar donde trabaja la IA.
+  // La sincronización con GitHub (D-159): trae sola lo que se hizo en otra PC, sin tocar donde trabaja la IA. Lo que
+  // cambia archivos (mandarle algo a la IA, Arranque, Commit) espera a que su proyecto esté al día (D-172).
   const iaEnMarcha = (ruta: string) => conversaciones.enMarcha().includes(ruta)
   const sincronia = new VigiaSincronia({
-    proyectos: async () =>
-      ultimaLista?.tipo === 'lista'
-        ? ultimaLista.proyectos.filter((p) => !p.archivado).map((p) => p.ruta)
-        : [],
-    traer: (ruta) => traerDelRemoto(ruta),
+    proyectos: async () => {
+      const lista = ultimaLista ?? (await listar())
+      return lista.tipo === 'lista' ? lista.proyectos.filter((p) => !p.archivado).map((p) => p.ruta) : []
+    },
+    traer: async (ruta) => {
+      // Para probar la espera (D-172): cada traer tarda esto de más.
+      const demora = Number(process.env.IRIDIUM_TRAER_MS) || 0
+      if (demora > 0) await new Promise((c) => setTimeout(c, demora))
+      return traerDelRemoto(ruta)
+    },
     ocupado: async (ruta) =>
       iaEnMarcha(ruta) || !!armados?.armando(ruta) || (await conversaciones.usadaAfuera(ruta)),
     ahora: Date.now,
@@ -421,7 +427,10 @@ export function registrarPuente(s: Servicios): Puente {
   // Revisión (H-R5, H-R2): Enviar ahora va a la sesión del proyecto solo si tiene su pestaña en Iridium.
   const comentarios: Comentarios = new Comentarios({
     sesionAbierta: async (ruta) => (await s.config.leer()).pestanas.includes(ruta),
-    enviarALaSesion: (ruta, texto) => conversaciones.seguir(ruta, { texto }),
+    enviarALaSesion: async (ruta, texto) => {
+      await sincronia.alDia(ruta)
+      return conversaciones.seguir(ruta, { texto })
+    },
     ultimaConexion: s.ultimaConexionExtension,
   })
 
@@ -516,7 +525,10 @@ export function registrarPuente(s: Servicios): Puente {
       const e = await motorListo()
       return e.tipo === 'listo' || e.tipo === 'clave-api'
     },
-    arrancar: (ruta, marca) => conversaciones.seguir(ruta, { nueva: true }, { arranque: marca }),
+    arrancar: async (ruta, marca) => {
+      await sincronia.alDia(ruta)
+      return conversaciones.seguir(ruta, { nueva: true }, { arranque: marca })
+    },
     archivo: s.arranques,
     segundosSinUsar: () => s.segundosSinUso(),
     registrar: (t) => s.registro.escribir(t),
@@ -718,7 +730,10 @@ export function registrarPuente(s: Servicios): Puente {
   )
   ipcMain.handle(CANALES.seguir, async (_, ruta: unknown, pedido: unknown) => {
     const valido = Pedido.parse(pedido)
-    await conversaciones.seguir(await proyecto(ruta), {
+    const carpeta = await proyecto(ruta)
+    // La ventana ya esperó con `ponerseAlDia`; esto cubre lo que llegue sin pasar por ahí (enseguida si ya se miró).
+    await sincronia.alDia(carpeta)
+    await conversaciones.seguir(carpeta, {
       ...(valido.texto !== undefined ? { texto: valido.texto } : {}),
       ...(valido.nueva !== undefined ? { nueva: valido.nueva } : {}),
       ...(valido.adjuntos?.length ? { adjuntos: valido.adjuntos } : {}),
@@ -860,6 +875,7 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.guardarGit, async (_, ruta: unknown, mensaje: unknown, subir: unknown) => {
     const carpeta = await proyecto(ruta)
     if (iaEnMarcha(carpeta)) return ocupadaLaIa
+    await sincronia.alDia(carpeta)
     const r = await guardarYSubir(carpeta, MensajeCommit.parse(mensaje), z.boolean().parse(subir))
     return subir ? anotarSincronia(carpeta, r) : r
   })
@@ -869,6 +885,7 @@ export function registrarPuente(s: Servicios): Puente {
     return anotarSincronia(carpeta, await sincronizar(carpeta))
   })
   ipcMain.handle(CANALES.revisarRemoto, async (_, ruta: unknown) => sincronia.revisar(await proyecto(ruta)))
+  ipcMain.handle(CANALES.ponerseAlDia, async (_, ruta: unknown) => sincronia.alDia(await proyecto(ruta)))
   ipcMain.handle(CANALES.elegirConversacion, async (_, ruta: unknown, id: unknown) =>
     conversaciones.elegir(await proyecto(ruta), IdConversacion.parse(id)),
   )

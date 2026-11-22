@@ -858,6 +858,12 @@ export function Conversacion({
   // La línea de los adjuntos se va al cambiar lo escrito, como la de un comando escondido.
   // biome-ignore lint/correctness/useExhaustiveDependencies: solo cuando cambia lo escrito.
   useEffect(() => setLineaAdjuntos(null), [texto])
+  // Antes de mandar, el proyecto se pone al día con GitHub (D-172): lo escrito queda en el cuadro con esta línea y sale
+  // solo al terminar. Si no se pudo, se manda igual y la línea dice por qué, hasta que se escriba otra cosa.
+  const [lineaGit, setLineaGit] = useState<'esperando' | string | null>(null)
+  useEffect(() => {
+    if (texto !== '') setLineaGit((l) => (l === 'esperando' ? l : null))
+  }, [texto])
   // El cuadro crece con lo que se escribe (hasta un tope, después se desplaza) y vuelve a una línea al enviar.
   const caja = useRef<HTMLTextAreaElement>(null)
   useAltoDelTexto(caja, texto, 0)
@@ -943,7 +949,13 @@ export function Conversacion({
 
   const seguir = async (pedido: { texto?: string; nueva?: boolean; adjuntos?: AdjuntoPedido[] }) => {
     setEnviando(true)
+    setLineaGit(null)
+    // La línea sale solo si la espera se nota: lo ya mirado contesta enseguida.
+    const reloj = setTimeout(() => setLineaGit('esperando'), 200)
     try {
+      const alDia = await window.iridium.ponerseAlDia(ruta).catch(() => null)
+      clearTimeout(reloj)
+      setLineaGit(alDia?.aviso ? `Se mandó sin estar al día con GitHub: ${alDia.aviso}` : null)
       await window.iridium.seguir(ruta, enBlanco ? { ...pedido, nueva: true } : pedido)
       setTexto('')
       quitarCita(ruta)
@@ -952,6 +964,8 @@ export function Conversacion({
       setLineaAdjuntos(null)
       if (enBlanco) cambiarVista(ruta, { enBlanco: false })
     } finally {
+      clearTimeout(reloj)
+      setLineaGit((l) => (l === 'esperando' ? null : l))
       setEnviando(false)
     }
   }
@@ -1385,6 +1399,19 @@ export function Conversacion({
               Sácalos o mándalos en otro mensaje.
             </span>
           </div>
+        )}
+        {lineaGit === 'esperando' ? (
+          <div className="linea-cmd" role="status">
+            <Icono nombre="sync" gira />
+            <span>Poniéndose al día con GitHub…</span>
+          </div>
+        ) : (
+          lineaGit && (
+            <div className="linea-cmd" role="note">
+              <Icono nombre="info" />
+              <span>{lineaGit}</span>
+            </div>
+          )
         )}
         {lineaAdjuntos && (
           <div className="linea-cmd" role="note">

@@ -464,6 +464,8 @@ function MensajeCommit({
 }) {
   const [mensaje, setMensaje] = useState('')
   const [enCurso, setEnCurso] = useState(false)
+  // Antes del commit, el proyecto se pone al día con GitHub (D-172); casi siempre ya lo está y no se nota.
+  const [alDia, setAlDia] = useState(false)
   const sugerido = mensajeSugerido(archivos)
   const que = preparados
     ? plural(archivos.length, 'archivo preparado', 'archivos preparados')
@@ -471,13 +473,24 @@ function MensajeCommit({
   const hacer = () => {
     if (enCurso || porQueNo) return
     setEnCurso(true)
+    const reloj = setTimeout(() => setAlDia(true), 200)
     void window.iridium
-      .guardarGit(ruta, mensaje.trim() || sugerido, subir)
+      .ponerseAlDia(ruta)
+      .catch(() => null)
+      .then(() => {
+        clearTimeout(reloj)
+        setAlDia(false)
+        return window.iridium.guardarGit(ruta, mensaje.trim() || sugerido, subir)
+      })
       .then((r) => {
         if (r.tipo === 'ok') setMensaje('')
         terminar(r)
       })
-      .finally(() => setEnCurso(false))
+      .finally(() => {
+        clearTimeout(reloj)
+        setAlDia(false)
+        setEnCurso(false)
+      })
   }
   return (
     <div className="git-mensaje">
@@ -509,7 +522,15 @@ function MensajeCommit({
         onClick={hacer}
       >
         <Icono nombre={subir ? 'nube' : 'tilde'} />
-        {enCurso ? (subir ? 'Subiendo…' : 'Guardando…') : subir ? 'Commit y subir' : 'Commit'}
+        {alDia
+          ? 'Poniéndose al día con GitHub…'
+          : enCurso
+            ? subir
+              ? 'Subiendo…'
+              : 'Guardando…'
+            : subir
+              ? 'Commit y subir'
+              : 'Commit'}
       </button>
     </div>
   )

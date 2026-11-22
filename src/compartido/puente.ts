@@ -926,6 +926,7 @@ export const CANALES = {
   guardarGit: 'git:guardar',
   sincronizarGit: 'git:sincronizar',
   revisarRemoto: 'git:revisar-remoto',
+  ponerseAlDia: 'git:ponerse-al-dia',
   uso: 'uso:leer',
   usoCambio: 'uso:cambio',
   pedirCierre: 'app:pedir-cierre',
@@ -1158,6 +1159,11 @@ export interface ApiIridium {
   sincronizarGit(ruta: string): Promise<ResultadoGit>
   /** Al entrar a un proyecto: si hace más de un minuto que no se miró su remoto, lo trae ya (D-159). */
   revisarRemoto(ruta: string): Promise<void>
+  /**
+   * Antes de mandarle algo a la IA (D-172): si el proyecto todavía no se miró desde que abrió Iridium, lo trae ya, hasta
+   * unos 15 s. `aviso`, si sigue sin estar al día (sin conexión, sin sesión, commits distintos o tardó demasiado).
+   */
+  ponerseAlDia(ruta: string): Promise<{ espero: boolean; aviso: string | null }>
   /** Las skills de la PC por origen, con las copias dobles (SK-1, SK-2). */
   skills(): Promise<ListaSkills>
   /** Cómo está cada proyecto con el framework (Skills › Framework, W-13): los de afuera primero. */

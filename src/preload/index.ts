@@ -111,6 +111,7 @@ const api: ApiIridium = {
   guardarGit: (ruta, mensaje, subir) => ipcRenderer.invoke(CANALES.guardarGit, ruta, mensaje, subir),
   sincronizarGit: (ruta) => ipcRenderer.invoke(CANALES.sincronizarGit, ruta),
   revisarRemoto: (ruta) => ipcRenderer.invoke(CANALES.revisarRemoto, ruta),
+  ponerseAlDia: (ruta) => ipcRenderer.invoke(CANALES.ponerseAlDia, ruta),
   skills: () => ipcRenderer.invoke(CANALES.skills),
   framework: () => ipcRenderer.invoke(CANALES.framework),
   pasarAlFramework: (ruta) => ipcRenderer.invoke(CANALES.pasarAlFramework, ruta),

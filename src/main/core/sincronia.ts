@@ -34,7 +34,7 @@ export function motivoDeRed(error: string): { resultado: 'sin-conexion' | 'error
       resultado: 'error',
       motivo: 'No hay una sesión de GitHub con permiso para este repositorio en esta PC.',
     }
-  if (/repository .* not found|not found/.test(t))
+  if (/repository .* not found|not found|does not appear to be a git repository/.test(t))
     return { resultado: 'error', motivo: 'El repositorio ya no está en el remoto, o esta cuenta no lo ve.' }
   const linea =
     error

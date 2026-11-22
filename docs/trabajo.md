@@ -500,8 +500,15 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
-Estado: pendiente · Idea: usuario · Fecha: 2026-11-22 · Origen: Q-257
-Evaluada el 2026-11-22: hoy (D-159) la primera vuelta empieza a los 20 s de abrir y va de a un proyecto (unos 1,6 s cada uno; medido: 7 con remoto, 11 s en total), y nada frena mandarle algo a la IA antes: en la otra PC la IA puede trabajar sobre archivos viejos y después las dos PC quedan separadas. Arranque (y T-113) tiene el mismo hueco. Con Q-257 (A, D-172): por proyecto; va después de Paridad.
+Estado: en curso (espera Q-260) · Idea: usuario · Fecha: 2026-11-22 · Origen: Q-257
+Evaluada el 2026-11-22: hoy (D-159) la primera vuelta empieza a los 20 s de abrir y va de a un proyecto (unos 1,6 s cada uno; medido: 7 con remoto, 11 s en total), y nada frena mandarle algo a la IA antes: en la otra PC la IA puede trabajar sobre archivos viejos y después las dos PC quedan separadas. Arranque (y T-113) tiene el mismo hueco. Con Q-257 (A, D-172): por proyecto; con Q-259 (D-173), antes de Capacidades.
+Hecha el 2026-11-22: la primera vuelta empieza a los 2 s de abrir y el proyecto al que se entra o al que se le manda algo pasa primero en la fila. Mandarle algo a la IA (también desde Revisión), Arranque y Commit esperan a que ese proyecto se haya mirado desde que abrió Iridium, hasta 15 s; lo ya mirado no espera. En el chat lo escrito queda en el cuadro con «Poniéndose al día con GitHub…» (en Git, el botón lo dice) y sale solo; sin conexión, sin sesión, con commits distintos de cada lado o pasados los 15 s, sale igual y una línea dice por qué. Pruebas: `tests/d172-al-dia.test.ts` y `tests/e2e/d172-al-dia.spec.ts`.
 
 ## T-115 — añadir la seleccion de modo de permisossi viene con claude cli o agent sdk, no crear una funcion personalizada
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-116 — que las consolas vengan dentro de iridium, podríamos colocar un algo que la haga aparecer como hero o como colapsable en algún lugar que no ocupe espacio, admitiría multiples consolas como vscode, podría también estar en la barra inferior o allí simplemente poner el indicador de que está running. De este modo nos ahorramos también que los scripts de iridium estén desplegando consolas en nuevas ventanas
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-117 — Parece que las Ideas anotadas aqui no siempre se mueven correctamente entre sus estados de "aprobada" y "implementada"
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22

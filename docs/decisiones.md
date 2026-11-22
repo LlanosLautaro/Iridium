@@ -179,6 +179,7 @@
 | D-170 | 2026-11-21 | general (Paridad) | 10; Paridad, paso 6 | La Ficha (PZ-16) y el menú arriba del compositor entran al design system | vigente |
 | D-171 | 2026-11-22 | Compartir | 10; CO-I10, Q-255 | Iridium se instala como una app y se actualiza con electron-updater | vigente |
 | D-172 | 2026-11-22 | general (Git, T-114) | 10, Q-257 | Lo que cambia archivos espera a que su proyecto esté al día con GitHub | vigente |
+| D-173 | 2026-11-22 | Paridad, general (T-114) | 10, Q-259 | T-114 va antes de Capacidades, la segunda parte de Paridad | vigente |
 
 ---
 
@@ -3403,3 +3404,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 3. Sin conexión, sin sesión o pasados unos 15 s, deja seguir y lo avisa.
 **Motivo:** frena solo donde importa y casi no se nota; una espera global crece con cada proyecto.
 **Consecuencias:** T-114 `pendiente`; va después de Paridad (D-166).
+
+## D-173 — T-114 va antes de Capacidades, la segunda parte de Paridad
+- **Fecha:** 2026-11-22
+- **Ámbito:** frente Paridad y general (T-114; ajusta el orden de D-166 y las consecuencias de D-172)
+- **Hito o paso:** 10, Q-259
+- **Estado:** vigente (Q-259: A)
+
+**Contexto:** con la primera parte de Paridad completa (comandos, adjuntos, fotos y texto pegado) quedaban Capacidades (T-28), larga, con su definición e investigación, y T-114 (D-172), corta, que D-172 había dejado para después de Paridad.
+**Opciones (Q-259):** A) primero T-114, después Capacidades (elegida); B) Capacidades ahora, como decía D-166; C) Capacidades al final de la fila, después de Orden, Abrir y Plantillas.
+**Decisión:** A. T-114 va ahora; después, la definición de Capacidades.
+**Motivo:** con Iridium instalado en la otra PC, T-114 evita que las dos trabajen sobre archivos distintos, y es corta.
+**Consecuencias:** la fila queda: T-114, Capacidades (Paridad, segunda parte), Orden (paso 8), Abrir (paso 8 y T-87), Plantillas.

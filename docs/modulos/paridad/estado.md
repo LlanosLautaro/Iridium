@@ -23,7 +23,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **PA-I1 hecha** (2026-11-21): «/» abre la lista arriba del compositor, elegir no manda, los usados hace poco van primero, un escondido escrito a mano no se manda y dice dónde está eso en Iridium, el + tiene Comandos y la lista se pone al día cuando la IA descubre una skill. Probada en Q-250: todo bien.
 **PA-I2 hecha** (2026-11-22): el + (y `Ctrl+U`) suma archivos y fotos con el selector de Windows, arrastrarlos sobre la conversación también, y una captura pegada con `Ctrl+V` es una foto. Cada adjunto es una ficha arriba del cuadro (la foto, miniatura; un clic la abre grande), se guarda con lo escrito y sale con el mensaje: la foto dentro, el archivo como su ruta; en el hilo, las fichas quedan arriba de lo escrito, también al reabrir. Probada con el Claude Code real: vio la foto y abrió el archivo. Probada en Q-251, todo bien; pediste un clip en vez de la hoja en «Agregar archivos o fotos»: hecho. Sigue PA-I3, el texto largo pegado.
 **PA-I3 hecha** (2026-11-22): un texto pegado de más de 40 líneas o 2.000 caracteres queda como ficha «Texto pegado · 340 líneas»; un clic lo abre en el visor, la ✕ lo saca y `Ctrl+Z` justo después lo vuelve texto en el cuadro, donde se pegó. Va con el mensaje y queda en él, también al reabrir. «Sobre la skill» y las citas (Revisar, Idea…) pasaron a la Ficha, con su ícono, en la misma fila que los adjuntos. Probada en Q-258, todo bien.
-**Primera parte completa** (2026-11-22): la calidad está en la sección Calidad. Queda la segunda parte, Capacidades (T-28, D-166); cuándo empieza, en Q-259.
+**Primera parte completa** (2026-11-22): la calidad está en la sección Calidad. Queda la segunda parte, Capacidades (T-28, D-166); con Q-259 (D-173), va después de T-114, que ya está hecha.
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -82,5 +82,5 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **Verificado:** `pnpm test` (964 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` entero (157 pasan; dos que fallaron por la carga de la tanda, `h8-teclado` › los menús y `i6-uso` › Detener angosto, pasan dos veces seguidas solas, y la tercera fue la del `Esc`, arreglada). `pa-calidad.spec.ts` suma 3.
 
 ## Próximo paso
-Con Q-259 respondida: si va ahora, empezar la segunda parte, Capacidades (T-28): la definición, que dice qué de los complementos, la PC y el navegador entra (`referencias/` del framework, paso 2), y su investigación; si va después, el frente queda en pausa con la primera parte completa y sigue lo que elija Q-259.
+Empezar la segunda parte, Capacidades (T-28): la definición, que dice qué de los complementos, la PC y el navegador entra (`referencias/` del framework, paso 2), y su investigación.
 **Leer antes:** `definicion.md` › Fuera de alcance y `trabajo.md` › T-28.
