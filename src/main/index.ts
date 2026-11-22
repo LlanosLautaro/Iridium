@@ -388,6 +388,29 @@ function crearVentana(puente: Puente, guardada: VentanaGuardada | null, deFondo:
     abrirAfuera(url)
   })
 
+  // Lo que le pasa a la ventana va al registro del día (T-111): una falla al abrir era una ventana negra sin rastro.
+  // De la consola, solo los errores y como mucho cien por sesión; si su proceso se cae, se vuelve a cargar una vez.
+  let erroresDeConsola = 0
+  let recargada = false
+  v.webContents.on('console-message', (e) => {
+    if (e.level !== 'error' || ++erroresDeConsola > 100) return
+    registro.escribir(`Ventana: ${e.message}${e.sourceId ? ` (${e.sourceId}:${e.lineNumber})` : ''}`)
+  })
+  v.webContents.on('preload-error', (_e, ruta, error) =>
+    registro.escribir(`Ventana: falló ${ruta}: ${error.stack ?? error.message}`),
+  )
+  v.webContents.on('did-fail-load', (_e, codigo, descripcion, url, principal) => {
+    if (principal) registro.escribir(`Ventana: no cargó ${url} (${codigo} ${descripcion})`)
+  })
+  v.webContents.on('render-process-gone', (_e, d) => {
+    registro.escribir(`Ventana: se cerró su proceso (${d.reason}, código ${d.exitCode})`)
+    if (d.reason === 'clean-exit' || recargada || v.isDestroyed()) return
+    recargada = true
+    v.webContents.reload()
+  })
+  v.on('unresponsive', () => registro.escribir('Ventana: no responde'))
+  v.on('responsive', () => registro.escribir('Ventana: volvió a responder'))
+
   const urlDesarrollo = process.env.ELECTRON_RENDERER_URL
   if (urlDesarrollo) void v.loadURL(urlDesarrollo)
   else void v.loadFile(join(import.meta.dirname, '../renderer/index.html'))

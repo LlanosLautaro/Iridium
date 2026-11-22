@@ -6,8 +6,6 @@
 // Si la versión publicada trae sus piezas (D-161) y Electron y Claude Code son los mismos que los de esta copia, baja
 // solo la pieza de la app y copia el resto de la versión que está usando; si no, el `.zip` completo.
 import { execFile } from 'node:child_process'
-import { createWriteStream } from 'node:fs'
-import { copyFile, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { Readable } from 'node:stream'
@@ -18,6 +16,7 @@ import { commitDeEtiqueta } from '../../compartido/versiones'
 import {
   archivosDe,
   esPrograma,
+  fsReal,
   huellasDe,
   leerArchivoHuellas,
   leerHuellas,
@@ -25,6 +24,10 @@ import {
   ponerIntegridad,
 } from './piezas'
 import { leerVersionNueva } from './version-nueva'
+
+// Las versiones traen su `app.asar`: sin el `.asar` como carpeta de Electron (T-111, `piezas.ts` › fsReal).
+const { createWriteStream } = fsReal
+const { copyFile, mkdir, readFile, rename, rm, stat, writeFile } = fsReal.promises
 
 /** Cada cuánto se mira si hay una versión nueva en GitHub. */
 const CADA_MS = 6 * 60 * 60 * 1000

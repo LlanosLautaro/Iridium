@@ -1,7 +1,7 @@
 # Estado del módulo: Compartir
 
 **Tipo:** sección
-**Última actualización:** 2026-11-20
+**Última actualización:** 2026-11-22
 **Nivel de protección:** hereda P2; el repo es público desde el 2026-11-16 (D-132).
 
 ## Progreso
@@ -48,8 +48,17 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I7 | Versiones para compartir: `pnpm publicar` y la copia compartida que las baja y las pone al cerrar (D-085); con el repo privado, el aviso para iniciar sesión en GitHub (Q-123) | hecho, probada con GitHub (2026-11-04); con el repo público (D-132) no hace falta invitar |
 | CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | hecho, aprobada (Q-102, 2026-11-01) |
 | CO-I8 | Achicar lo que se baja en cada versión: las piezas (D-161, T-37) | hecho (probada publicando, Q-225) |
+| CO-I9 | La otra PC en negro (T-111): el actualizador que se trababa con `app.asar` y las fallas de la ventana, al registro y a una pantalla | hecho; falta instalarla a mano en la otra PC (Q-254) y decidir el instalador (Q-255) |
 
 ## Log de iteraciones
+### CO-I9 — La otra PC en negro (2026-11-22, T-111)
+- **Repetido acá:** la versión publicada (d1d1750) bajada de GitHub abre bien con datos limpios, con una copia de los datos de uso y con Chromium en otro idioma. La ventana negra depende de esa PC, y no quedaba rastro: Iridium no anotaba nada de lo que le pasa a la ventana.
+- **Encontrado al simular la actualización:** desde CO-I8 una copia compartida no podía bajar ninguna versión. Dentro de Electron, el `fs` de Node trata cada `.asar` como una carpeta: al listar la versión armada contaba 922 archivos de adentro de `app.asar`, la huella nunca daba la publicada, y al pasar al `.zip` completo no podía borrar la carpeta a medio bajar (EBUSY: el propio listado dejó el `.asar` abierto). Cada intento siguiente fallaba igual. Las pruebas no lo veían porque Vitest corre en Node, sin esa capa. (Q-225 se probó con una copia ya armada; la otra PC no pudo haber tomado la pieza así.)
+- **Arreglo:** las piezas y el actualizador usan `original-fs`, el `fs` sin esa capa, dentro de Electron (`piezas.ts` › fsReal); fuera de Electron, el de siempre.
+- **Lo que le pasa a la ventana, al registro del día:** los errores de su consola (hasta cien por sesión), una carga fallida, un preload que falla, que no responda y que se caiga su proceso (en ese caso se vuelve a cargar una vez). Y si algo se rompe al dibujar, en vez de negro muestra «Iridium no pudo mostrar esta pantalla» con el error y **Volver a cargar** (`ui/FallaPantalla.tsx`, con el mensaje de error de siempre).
+- **Verificado:** una copia armada con el arreglo, con un commit viejo, bajó de GitHub solo la pieza de la app de d1d1750, se reinició sola, el ayudante la puso, quedó idéntica a la publicada (las cuatro huellas) y abrió. La misma simulación con la versión publicada falla como se describe arriba.
+- **Pruebas:** `tests/t111-asar.test.ts` (corre las piezas con el Electron del repo sobre una versión con un `.asar` de verdad: la lista como está en el disco y la borra entera; el `fs` de Electron sí ve adentro) y `tests/e2e/t111-falla.spec.ts` (una lista de proyectos rota: la pantalla de falla, el error en el registro y Volver a cargar; captura `t111-falla.png`).
+- **La otra PC no se arregla sola:** su versión trae el actualizador trabado, así que la versión con el arreglo se instala a mano una vez (Q-254).
 ### CO-I8 — Las piezas de cada versión (2026-11-20)
 - **Medido:** el `.zip` pesaba 296 MB; el código de Iridium son 11 MB y el resto es Electron y el Claude Code que viaja adentro. Comprimir con xz lo dejaba en 215 MB, tardando cuatro minutos y sin abrirse en el Explorador de algunas PC: descartado.
 - **Hecho (D-161):** `pnpm publicar` sube, además del `.zip`, `piezas.json` (las huellas de Electron, Claude Code y la app) y la pieza de la app sola. La copia compartida con el mismo Electron y Claude Code baja solo eso, copia lo demás de la versión que usa y le escribe al programa la huella de la app nueva (electron-builder la graba en `Iridium.exe` en cada armado); si las huellas no dan, baja el `.zip` completo. La app trae solo los idiomas de Chromium en español y el inglés (45 MB menos).

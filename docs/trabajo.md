@@ -490,7 +490,8 @@ La ronda no pudo ver si los avisos de Arranque, de Ejecutar y de las conversacio
 Hecho el 2026-11-21: una prueba con la app abierta (`tests/e2e/t110-avisos-juntos.spec.ts`) provoca los tres a la vez y mide que no se pisen, entren en la ventana y no tapen la conversación, a 1440×900 y 1024×700. Se apilan bien. Encontró que los botones del aviso de una conversación caían uno debajo del otro (el estilo apuntaba a un nombre viejo): arreglado.
 
 ## T-111 — hay un problema gordo con la ultima actualizacion de iridium en la otra computadora que lo descarga del repo, se queda congelado en negro y solo carga los botones de control de pestaña, es de alta relevancia olucionar eso, quizas un instalador y gestor de actualizaciones real ¿? como un electron builder o algo de eso ¿? esto pasa a ser la prioridad numero 1.
-Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Estado: en curso · Idea: usuario · Fecha: 2026-11-22 · Frente: Compartir
+Hecho el 2026-11-22 (CO-I9, `modulos/compartir/estado.md`): la versión publicada (d1d1750) abre bien en esta PC, con datos limpios, con una copia de los datos de uso y con otro idioma, así que la ventana negra depende de esa PC y Iridium no dejaba rastro. Encontrado y arreglado: el actualizador de las copias compartidas no podía bajar una versión desde CO-I8 (veía adentro de `app.asar` y se trababa al borrar), así que esa copia ya no se actualiza sola; probado de punta a punta contra GitHub. Además, una falla de la ventana ahora queda en el registro del día y muestra «Iridium no pudo mostrar esta pantalla» con Volver a cargar en vez de quedar en negro. Falta: instalar a mano la versión con el arreglo en la otra PC y ver qué dice (Q-254), y decidir el instalador (Q-255).
 
 ## T-112 — dejar tareas en cola ya sea para un chat o en un "pendientes"
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22

@@ -8,9 +8,21 @@
 // copia lo escribe en el programa que copia.
 // Sin dependencias del resto de la app: lo usa también `tools/publicar.ts`.
 import { createHash } from 'node:crypto'
-import { createReadStream } from 'node:fs'
-import { open, readdir, readFile } from 'node:fs/promises'
+import * as fsDeNode from 'node:fs'
+import { createRequire } from 'node:module'
 import { join, relative, sep } from 'node:path'
+
+/**
+ * Los archivos tal como están en el disco (T-111). Dentro de Electron, `node:fs` trata cada `.asar` como una carpeta:
+ * listar una versión daba también los archivos de adentro de su `app.asar` (la huella nunca coincidía con la
+ * publicada) y borrar una carpeta con un `.asar` lo dejaba abierto y fallaba (EBUSY), así que la copia compartida no
+ * se actualizaba más. `original-fs` es el de Node sin eso; fuera de Electron (las pruebas, `tools/`), el de siempre.
+ */
+export const fsReal: typeof fsDeNode = process.versions.electron
+  ? createRequire(import.meta.url)('original-fs')
+  : fsDeNode
+const { createReadStream } = fsReal
+const { open, readdir, readFile } = fsReal.promises
 
 export type Pieza = 'electron' | 'claude' | 'app'
 export interface Huellas {
