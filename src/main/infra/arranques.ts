@@ -8,14 +8,30 @@ import { escribirAtomico, leerDatos } from './escritura'
 
 const DIA = 24 * 3_600_000
 
+const UsoAnotado = z.object({ periodo: z.number(), semana: z.number() })
+
 const Renglon = z.object({
   cuando: z.number(),
-  momento: z.enum(['hora', 'vencimiento']),
+  /** `avance`: lo tomó el avance solo (frente Frentes, D-178 › 6). */
+  momento: z.enum(['hora', 'vencimiento', 'avance']),
   resultado: z.enum(['arranco', 'periodo-abierto', 'nada-listo', 'semana', 'sin-uso', 'sin-sesion']),
   /** El proyecto que arrancó: su conversación se encuentra por la marca `arranque` de `sesiones.json` (= `cuando`). */
   proyecto: z.object({ ruta: z.string(), nombre: z.string(), preguntas: z.array(z.string()) }).optional(),
   /** Cuánto llevaba Iridium sin usarse: el aviso al volver muestra solo los de 5 minutos o más (D-149 › 8). */
   sinUsarIridium: z.number(),
+  /** El paso que tomó el avance solo; falta en los de la Bandeja y en los del Arranque. */
+  paso: z
+    .object({
+      frente: z.string(),
+      carpeta: z.string(),
+      texto: z.string(),
+      tamano: z.enum(['chico', 'mediano', 'grande']),
+      linea: z.number(),
+    })
+    .optional()
+    .catch(undefined),
+  /** El uso al empezar y al terminar (% del período y de la semana): lo gastado, para compararlo con el tamaño. */
+  uso: z.object({ antes: UsoAnotado, despues: UsoAnotado.nullable() }).optional().catch(undefined),
 })
 export type RenglonArranque = z.infer<typeof Renglon>
 
@@ -49,6 +65,13 @@ export class ArchivoArranques {
     const d = await this.leer()
     const desde = r.cuando - DIAS_GUARDADOS * DIA
     await this.guardar({ momentos: [...d.momentos.filter((m) => m.cuando >= desde), r] })
+  }
+
+  /** Cambia el renglón de `cuando` (lo gastado, al terminar la sesión del avance solo). */
+  async cambiar(cuando: number, cambio: Partial<RenglonArranque>): Promise<void> {
+    const d = await this.leer()
+    if (!d.momentos.some((m) => m.cuando === cuando)) return
+    await this.guardar({ momentos: d.momentos.map((m) => (m.cuando === cuando ? { ...m, ...cambio } : m)) })
   }
 
   async guardar(cambio: Partial<Omit<DatosArranques, 'version'>>): Promise<void> {

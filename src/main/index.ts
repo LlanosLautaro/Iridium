@@ -632,6 +632,10 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       ...(process.env.IRIDIUM_ARRANQUE_EN
         ? { arranqueEnSegundos: Number(process.env.IRIDIUM_ARRANQUE_EN) }
         : {}),
+      // Solo pruebas: los segundos sin usar del avance solo, que mira cada segundo.
+      ...(process.env.IRIDIUM_AVANCE_SIN_USAR
+        ? { avanceSinUsarS: Number(process.env.IRIDIUM_AVANCE_SIN_USAR) }
+        : {}),
     })
     // La suspensión de la PC, para el arranque (D-149 › 2): un momento que cayó durmiendo se hace al despertar.
     powerMonitor.on('suspend', () => puente.alSuspender())

@@ -3474,3 +3474,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** las marcas (`chico`, `mediano`, `grande`, `sola`) van en el paréntesis final del paso, con los códigos; el control avisa una palabra parecida, dos tamaños o un `sola` sin tamaño. Un motor aparte (`AvanceSolo`) mira cada minuto, con el avance prendido, condiciones que no tocan el disco, y recién entonces lee el uso y arma la fila. Lo disponible es lo libre del período (100 con el período cerrado) menos lo que se deja libre. Lo que pasó va a `arranques.json` con el momento `avance`, el paso y el uso de antes y de después. Dos iteraciones: FS-I1 (las marcas, el Mapa, los ajustes y los interruptores) y FS-I2 (el motor y el aviso).
 **Motivo:** el Arranque espera un momento fijo; el avance depende de cosas que cambian solas (el uso de la PC, las sesiones), y mirarlas cada minuto en memoria no cuesta. Guardar el uso de antes y de después deja comparar los tamaños más adelante sin otro archivo.
 **Consecuencias:** el framework, el lector, el control y sus pruebas cambian juntos (D-086); `config.json`, `arranques.json` y `sesiones.json` suman campos que faltan en los datos de antes.
+
+## D-179 — Los detalles del motor de Frentes al construirlo
+- **Fecha:** 2026-11-22
+- **Ámbito:** el frente Frentes, FS-I2 (`src/main/core/avance.ts`, `src/main/app/avance.ts`)
+- **Hito o paso:** 10; frente Frentes, paso 7 (Construcción)
+- **Estado:** vigente
+
+**Contexto:** al construir el motor (D-178) aparecieron cuatro casos que el diseño no decía.
+**Decisión:** (1) las respuestas de la Bandeja cuentan como un paso chico también para la casilla «Chicos»: sin ella, el avance no las toma (el Arranque de las 3:00 sí). (2) Lo que tomó el avance solo entra siempre al aviso al volver, sin la regla de los 5 minutos sin usar del Arranque: lo tomó porque el usuario no estaba, aunque haya elegido 1 minuto. (3) Se anota en `arranques.json` antes de abrir la conversación: si abrirla falla, el mismo paso no se reintenta cada minuto, sino a las 12 horas. (4) Las respuestas que ya tomó no se repiten en 12 horas salvo que el usuario responda otra pregunta del mismo proyecto (es trabajo nuevo).
+**Motivo:** que el avance no insista con lo que falla, que el usuario vea siempre lo que hizo y que la casilla de tamaños signifique lo mismo para todo lo que toma.
+**Consecuencias:** se prueba en `tests/fs2-avance.test.ts` y `tests/e2e/fs2-avance.spec.ts`; si la casilla «Chicos» confunde en la prueba del usuario, se revisa (1).

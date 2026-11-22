@@ -173,6 +173,8 @@ export class Arranque {
 
   private async vista(r: RenglonArranque): Promise<RenglonArranqueVista> {
     if (!r.proyecto) return { cuando: r.cuando, resultado: r.resultado, proyecto: null }
+    const avance =
+      r.momento === 'avance' ? { avance: r.paso ? { frente: r.paso.frente, texto: r.paso.texto } : null } : {}
     const c = (await this.d.conversacion?.(r.proyecto.ruta, r.cuando).catch(() => null)) ?? null
     return {
       cuando: r.cuando,
@@ -185,6 +187,7 @@ export class Arranque {
         preguntas: c?.preguntas.length ?? 0,
         frenan: c?.frenan ?? 0,
       },
+      ...avance,
     }
   }
 

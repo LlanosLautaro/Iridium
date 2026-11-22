@@ -44,6 +44,8 @@ const Resumen = z.object({
   contexto: Contexto.nullable().optional().catch(undefined),
   /** La empezó Iridium para abrir el período (frente Arranque, D-149 › 7): cuándo. Falta en las demás. */
   arranque: z.number().nullable().optional().catch(undefined),
+  /** Con `arranque`: la empezó el avance solo (frente Frentes, D-178 › 8). Falta en las demás. */
+  motivo: z.literal('avance').optional().catch(undefined),
 })
 export type ResumenSesion = z.infer<typeof Resumen>
 

@@ -594,6 +594,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
             id: cambio.id,
             origen: 'iridium',
             arrancada: cambio.arrancada ?? null,
+            avance: cambio.avance ?? false,
             titulo: null,
             modificada: null,
             usadaAfuera: null,

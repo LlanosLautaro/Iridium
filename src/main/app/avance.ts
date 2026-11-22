@@ -1,0 +1,196 @@
+// El avance solo (frente Frentes, D-176, D-178; `modulos/frentes/diseno-tecnico.md`): con Iridium sin usar, mira cada
+// minuto si se cumplen las condiciones baratas; recién entonces lee el uso, arma la fila y abre una conversación nueva
+// con el paso elegido, de a uno. Lo que tomó va a `arranques.json` (momento `avance`) con el uso al empezar; al
+// terminar la sesión, el de después.
+import type { AjusteAvance, AvanceApagado, UsoSuscripcion } from '../../compartido/puente'
+import {
+  apagado,
+  clave,
+  disponible,
+  type Eleccion,
+  elegirPaso,
+  NO_REPETIR_MS,
+  type PasoSolo,
+  puedeMirar,
+  type RespuestasSolas,
+  textoDe,
+} from '../core/avance'
+import type { ArchivoArranques, RenglonArranque } from '../infra/arranques'
+
+/** Cada cuánto mira (D-178 › 2): las condiciones cambian con el uso de la PC y con las sesiones, no con el reloj. */
+const CADA_MS = 60_000
+
+export interface DependenciasAvance {
+  ajuste: () => Promise<AjusteAvance>
+  apagados: () => Promise<AvanceApagado>
+  /** El uso que ya se conoce, para no leerlo cada minuto. */
+  usoActual: () => UsoSuscripcion | null
+  /** El uso leído de nuevo, sin gastar; null si no se pudo leer. */
+  leerUso: () => Promise<UsoSuscripcion | null>
+  /** Los proyectos con respuestas del usuario sin procesar (`candidatosDe`, la lectura del Arranque). */
+  bandeja: () => Promise<RespuestasSolas[]>
+  /** Los pasos `[ ]` marcados `sola` de los proyectos que se pueden tocar, en el orden de los proyectos y la ruta. */
+  pasos: () => Promise<PasoSolo[]>
+  /** Los proyectos con la IA trabajando en Iridium. */
+  enMarcha: () => string[]
+  /** Hay sesión de Claude para abrir una conversación. */
+  sesionLista: () => Promise<boolean>
+  /** Abre la conversación nueva con ese primer mensaje, marcada con `marca` y el motivo `avance`. */
+  arrancar: (ruta: string, marca: number, texto: string | null) => Promise<void>
+  archivo: ArchivoArranques
+  /** Cuántos segundos lleva Iridium sin usarse (T-67). */
+  segundosSinUsar: () => number
+  /** Solo pruebas (`IRIDIUM_AVANCE_SIN_USAR`): reemplaza los minutos sin usar del ajuste y mira cada segundo. */
+  sinUsarS?: number
+  registrar?: (texto: string) => void
+  ahora?: () => number
+  /** Cambió lo que se muestra en el aviso al volver. */
+  alCambio?: () => void
+}
+
+const usoAnotado = (u: UsoSuscripcion | null) => ({
+  periodo: u?.cincoHoras?.usado ?? 0,
+  semana: u?.semana?.usado ?? 0,
+})
+
+export class AvanceSolo {
+  private temporizador: NodeJS.Timeout | null = null
+  private mirando = false
+  private cerrado = false
+  /** Lo que tomó y sigue trabajando: al terminar se anota lo gastado. */
+  private tomado: { ruta: string; cuando: number } | null = null
+  private readonly ahora: () => number
+
+  constructor(private readonly d: DependenciasAvance) {
+    this.ahora = d.ahora ?? Date.now
+  }
+
+  /** Al abrir Iridium: empieza a mirar. */
+  iniciar(): void {
+    if (this.cerrado || this.temporizador) return
+    this.temporizador = setInterval(() => void this.mirar(), this.d.sinUsarS !== undefined ? 1000 : CADA_MS)
+    this.temporizador.unref?.()
+  }
+
+  cerrar(): void {
+    this.cerrado = true
+    if (this.temporizador) clearInterval(this.temporizador)
+    this.temporizador = null
+  }
+
+  /** Una mirada: anota lo gastado si terminó lo que tomó y, si se cumple todo, toma el paso siguiente. */
+  async mirar(): Promise<void> {
+    if (this.mirando || this.cerrado) return
+    this.mirando = true
+    try {
+      await this.terminado()
+      await this.tomar()
+    } catch (e) {
+      this.d.registrar?.(`Avance solo: falló al mirar: ${e instanceof Error ? e.message : String(e)}`)
+    } finally {
+      this.mirando = false
+    }
+  }
+
+  /** La sesión que abrió terminó: lee el uso y anota el de después (D-178 › 6). */
+  private async terminado(): Promise<void> {
+    const t = this.tomado
+    if (!t || this.d.enMarcha().includes(t.ruta)) return
+    this.tomado = null
+    const uso = await this.d.leerUso().catch(() => null)
+    const r = (await this.d.archivo.leer()).momentos.find((m) => m.cuando === t.cuando)
+    if (r?.uso)
+      await this.d.archivo.cambiar(t.cuando, { uso: { ...r.uso, despues: uso ? usoAnotado(uso) : null } })
+    this.d.alCambio?.()
+  }
+
+  private async tomar(): Promise<void> {
+    const ajuste = await this.d.ajuste()
+    const condiciones = {
+      ajuste,
+      ahora: this.ahora(),
+      segundosSinUsar: this.d.segundosSinUsar(),
+      sinUsarS: this.d.sinUsarS ?? null,
+      trabajando: this.d.enMarcha().length,
+    }
+    if (!puedeMirar({ ...condiciones, uso: this.d.usoActual() })) return
+    const uso = await this.d.leerUso()
+    const libre = disponible(uso, ajuste, this.ahora())
+    if (libre === null || libre <= 0) return
+    const elegido = await this.elegir(ajuste, libre)
+    if (!elegido) return
+    // Mientras leía, pudo volver el usuario o arrancar otra sesión.
+    if (
+      !puedeMirar({
+        ...condiciones,
+        segundosSinUsar: this.d.segundosSinUsar(),
+        trabajando: this.d.enMarcha().length,
+        uso,
+      })
+    )
+      return
+    if (!(await this.d.sesionLista())) return
+    await this.empezar(elegido, uso)
+  }
+
+  private async elegir(ajuste: AjusteAvance, libre: number): Promise<Eleccion | null> {
+    const [apagados, bandeja, pasos, datos] = await Promise.all([
+      this.d.apagados(),
+      this.d.bandeja(),
+      this.d.pasos(),
+      this.d.archivo.leer().catch(() => ({ momentos: [] as RenglonArranque[] })),
+    ])
+    const desde = this.ahora() - NO_REPETIR_MS
+    const tomados = new Set(
+      datos.momentos
+        .filter((m) => m.momento === 'avance' && m.cuando >= desde && m.proyecto)
+        .map((m) => clave(m.proyecto?.ruta ?? '', m.paso, m.proyecto?.preguntas ?? [])),
+    )
+    return elegirPaso(
+      bandeja.filter((c) => !apagado(apagados, c.ruta)),
+      pasos.filter((p) => !apagado(apagados, p.ruta, p.carpeta)),
+      libre,
+      ajuste,
+      tomados,
+    )
+  }
+
+  private async empezar(e: Eleccion, uso: UsoSuscripcion | null): Promise<void> {
+    const cuando = this.ahora()
+    const ruta = e.tipo === 'bandeja' ? e.candidato.ruta : e.paso.ruta
+    const renglon: RenglonArranque = {
+      cuando,
+      momento: 'avance',
+      resultado: 'arranco',
+      proyecto:
+        e.tipo === 'bandeja'
+          ? { ruta, nombre: e.candidato.nombre, preguntas: e.candidato.preguntas }
+          : { ruta, nombre: e.paso.proyecto, preguntas: [] },
+      sinUsarIridium: this.d.segundosSinUsar(),
+      ...(e.tipo === 'paso'
+        ? {
+            paso: {
+              frente: e.paso.frente,
+              carpeta: e.paso.carpeta,
+              texto: e.paso.texto,
+              tamano: e.paso.tamano,
+              linea: e.paso.linea,
+            },
+          }
+        : {}),
+      uso: { antes: usoAnotado(uso), despues: null },
+    }
+    // Se anota antes de arrancar: si arrancar falla, no se insiste con el mismo paso en 12 horas.
+    await this.d.archivo.anotar(renglon).catch(() => {})
+    this.tomado = { ruta, cuando }
+    this.d.registrar?.(
+      `Avance solo: ${renglon.proyecto?.nombre}${e.tipo === 'paso' ? ` — «${e.paso.texto}» (${e.paso.frente}, ${e.paso.tamano})` : ' — sus respuestas'}`,
+    )
+    await this.d.arrancar(ruta, cuando, e.tipo === 'bandeja' ? null : textoDe(e)).catch((err) => {
+      this.d.registrar?.(
+        `Avance solo: no se pudo abrir la conversación: ${err instanceof Error ? err.message : err}`,
+      )
+    })
+    this.d.alCambio?.()
+  }
+}

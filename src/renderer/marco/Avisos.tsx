@@ -88,7 +88,10 @@ function Aviso({ a }: { a: AvisoSesion }) {
 /** Con más de estos, el aviso al volver muestra los últimos y «y N más». */
 const FILAS_ARRANQUE = 4
 
-/** Un renglón del aviso al volver: «Alfa  03:02  dejó 2 preguntas  Abrir» o «13:10 no arrancó: …». */
+/**
+ * Un renglón del aviso al volver: «Alfa  03:02  dejó 2 preguntas  Abrir», «Alfa  03:40  avanzó «Cargar el tema
+ * propio» · terminó  Abrir» o «13:10 no arrancó: …».
+ */
 function FilaArranque({ r }: { r: RenglonArranqueVista }) {
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
   if (!r.proyecto)
@@ -102,8 +105,12 @@ function FilaArranque({ r }: { r: RenglonArranqueVista }) {
     <li>
       <b>{p.nombre}</b>
       <span className="cuando">{horaCorta(r.cuando)}</span>
-      <span className={p.frenan > 0 ? 'cuenta frena' : p.estado === 'error' ? 'fallo' : undefined}>
-        {queDejo(p)}
+      <span>
+        {/* Lo que tomó el avance solo (FS-5): el paso; sus respuestas de la Bandeja, como el Arranque. */}
+        {r.avance && <>avanzó «{r.avance.texto}» · </>}
+        <span className={p.frenan > 0 ? 'cuenta frena' : p.estado === 'error' ? 'fallo' : undefined}>
+          {queDejo(p)}
+        </span>
       </span>
       <button
         type="button"

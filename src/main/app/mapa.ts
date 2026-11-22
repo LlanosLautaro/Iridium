@@ -9,6 +9,7 @@ import type {
   PasoCamino,
   PreguntaNueva,
 } from '../../compartido/puente'
+import type { PasoSolo } from '../core/avance'
 import { tieneFramework } from '../core/control'
 import { leerGuia } from '../core/guia'
 import {
@@ -292,4 +293,47 @@ function pasosDelMetodo(
       ramas: [],
     }
   })
+}
+
+/**
+ * Los pasos que el avance solo puede tomar de un proyecto (Frentes, D-178 › 4): los `[ ]` marcados `sola` con su
+ * tamaño (camino o rama), que no nombran una pregunta sin responder, de los frentes que no están hechos. En el orden
+ * del Mapa (el frente en curso primero) y de la ruta.
+ */
+export function pasosSolos(
+  d: DocumentosProyecto,
+  preguntas: PreguntaNueva[],
+  proyecto: { ruta: string; nombre: string },
+): PasoSolo[] {
+  const mapa = mapaDe(d, preguntas)
+  if (mapa.tipo !== 'mapa') return []
+  const abiertas = new Set(preguntas.map((q) => q.codigo))
+  const r: PasoSolo[] = []
+  for (const f of mapa.frentes) {
+    if (f.estado === 'en uso' || f.error) continue
+    const texto = d.texto(f.documento)
+    const ruta = texto ? leerRuta(texto) : null
+    if (!texto || !ruta) continue
+    const fecha = leerGuia(texto)?.actualizado
+    const actualizado = fecha ? new Date(`${fecha}T00:00:00`).getTime() : null
+    const juntar = (pasos: PasoRuta[]) => {
+      for (const p of pasos) {
+        if (p.marca === 'viene' && p.sola && p.tamano && !p.preguntas.some((q) => abiertas.has(q)))
+          r.push({
+            ruta: proyecto.ruta,
+            proyecto: proyecto.nombre,
+            frente: f.nombre,
+            carpeta: f.clave,
+            texto: p.texto,
+            tamano: p.tamano,
+            linea: p.linea,
+            enCurso: f.estado === 'en curso',
+            actualizado,
+          })
+        juntar(p.ramas)
+      }
+    }
+    juntar(ruta.pasos)
+  }
+  return r
 }

@@ -137,6 +137,8 @@ interface Proyecto {
   arranque: number | null
   /** La conversación que se muestra la empezó el arranque: cuándo (la línea de debajo del título, AR-2). */
   arrancada: number | null
+  /** La empezó el avance solo (frente Frentes, D-178 › 8): la marca `arranque` va con el motivo. */
+  avance: boolean
 }
 
 export class Conversaciones {
@@ -180,6 +182,7 @@ export class Conversaciones {
         fondo: [],
         arranque: null,
         arrancada: null,
+        avance: false,
       }
       this.proyectos.set(ruta, p)
     }
@@ -255,7 +258,7 @@ export class Conversaciones {
       ruta: p.ruta,
       id: p.id,
       reiniciar,
-      ...(reiniciar ? { arrancada: p.arrancada } : {}),
+      ...(reiniciar ? { arrancada: p.arrancada, avance: p.avance } : {}),
       entradas,
       ficha: this.ficha(p),
       contexto: p.contexto,
@@ -325,6 +328,7 @@ export class Conversaciones {
         id: null,
         origen: null,
         arrancada: null,
+        avance: false,
         titulo: null,
         elegida: null,
         modificada: null,
@@ -350,6 +354,7 @@ export class Conversaciones {
     p.modificada = ultima.modificada
     p.origen = resumen?.empezadaEn === 'iridium' ? 'iridium' : 'vscode'
     p.arrancada = resumen?.arranque ?? null
+    p.avance = p.arrancada !== null && resumen?.motivo === 'avance'
     p.usoCentro = resumen?.ultimoUso ?? null
     p.detenida = resumen?.detenida ?? false
     p.entradas = mensajes.map((m) => this.entradaDe(p, m))
@@ -378,6 +383,7 @@ export class Conversaciones {
       id: p.id,
       origen: p.origen,
       arrancada: p.arrancada,
+      avance: p.avance,
       titulo: p.titulo,
       modificada: p.modificada,
       usadaAfuera: afuera,
@@ -422,7 +428,11 @@ export class Conversaciones {
   }
 
   /** Seguí, Nueva o un mensaje propio. Si ya trabaja, el mensaje se suma a lo que está haciendo. */
-  seguir(ruta: string, pedido: PedidoSeguir, opciones: { arranque?: number } = {}): Promise<void> {
+  seguir(
+    ruta: string,
+    pedido: PedidoSeguir,
+    opciones: { arranque?: number; motivo?: 'avance' } = {},
+  ): Promise<void> {
     const p = this.proyecto(ruta)
     return this.enFila(p, async () => {
       const capacidades = this.d.motor.capacidades()
@@ -433,6 +443,7 @@ export class Conversaciones {
         if (this.trabajando(p)) return
         p.arranque = opciones.arranque ?? null
         p.arrancada = p.arranque
+        p.avance = p.arranque !== null && opciones.motivo === 'avance'
         p.sesion?.cerrar()
         Object.assign(p, {
           cargado: true,
@@ -672,11 +683,12 @@ export class Conversaciones {
         if (p.id === e.id) return
         const empezadaEn = p.id === null ? 'iridium' : 'afuera'
         const arranque = p.id === null ? p.arranque : null
+        const motivo = arranque !== null && p.avance ? { motivo: 'avance' as const } : {}
         p.id = e.id
         p.arranque = null
         p.origen ??= 'iridium'
         void this.d.registro
-          .guardar(e.id, this.resumenInicial(p, empezadaEn), arranque !== null ? { arranque } : {})
+          .guardar(e.id, this.resumenInicial(p, empezadaEn), arranque !== null ? { arranque, ...motivo } : {})
           .catch(() => {})
         this.emitir(p, [])
         return

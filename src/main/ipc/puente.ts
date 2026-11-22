@@ -29,6 +29,7 @@ import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/
 import type { PlanEliminacion } from '../../compartido/tipos'
 import { planDeArmado, VigiaArmados } from '../app/abrir'
 import { Arranque, candidatosDe } from '../app/arranque'
+import { AvanceSolo } from '../app/avance'
 import { Comandos } from '../app/comandos'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
@@ -49,7 +50,7 @@ import {
   moverIdea,
   pegarImagenIdea,
 } from '../app/ideas'
-import { mapaDe } from '../app/mapa'
+import { mapaDe, pasosSolos } from '../app/mapa'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
@@ -201,6 +202,8 @@ export interface Servicios {
   arranques: ArchivoArranques
   /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento del arranque, a tantos segundos de abrir. */
   arranqueEnSegundos?: number
+  /** Solo pruebas (`IRIDIUM_AVANCE_SIN_USAR`): los segundos sin usar del avance solo, que mira cada segundo. */
+  avanceSinUsarS?: number
   /**
    * La actualización automática (frente Abrir, AB-I2): `armados.json` y la carpeta de datos (los logs van en
    * `armados/`); `excluida`, la carpeta del código de Iridium, que se arma con D-122.
@@ -459,6 +462,8 @@ export function registrarPuente(s: Servicios): Puente {
       // La conversación de un arranque terminó o dejó preguntas: cambia lo que dicen el detalle del uso y el aviso.
       if (c.ficha && c.ficha.estado !== 'trabajando') {
         void arranque.arrancoEn(c.ruta).then((si) => si && avisarArranque())
+        // Si era lo que tomó el avance solo, se anota lo gastado y mira si sigue con otro.
+        void avance.mirar()
         armados?.alTerminarTurno(c.ruta)
       }
     },
@@ -494,33 +499,39 @@ export function registrarPuente(s: Servicios): Puente {
 
   const pendientes = new Pendientes(s.borradores, Date.now, docs)
 
+  /** El uso leído de nuevo, sin gastar (el arranque y el avance solo); null si no se pudo leer. */
+  const leerUsoDeNuevo = async () => {
+    const leido = await s.motor.uso().catch(() => null)
+    if (!leido) return null
+    uso.poner(leido)
+    return uso.get()
+  }
+
+  /** Los proyectos con respuestas del usuario sin procesar: los toman el arranque y el avance solo. */
+  const candidatosListos = async () => {
+    const lista = await listar()
+    if (lista.tipo !== 'lista') return []
+    return candidatosDe(lista.proyectos, {
+      enMarcha: () => conversaciones.enMarcha(),
+      usadaAfuera: (ruta) => conversaciones.usadaAfuera(ruta),
+      pendientes: async (ruta) => {
+        const p = await pendientes.proyecto(ruta)
+        return p.tipo === 'ok' ? p.pendientes : null
+      },
+      fechaRespuesta: (ruta, codigo) =>
+        stat(join(ruta, 'docs', 'respuestas', `${codigo}.md`)).then(
+          (e) => e.mtimeMs,
+          () => null,
+        ),
+    })
+  }
+
   // El arranque del período de 5 horas (frente Arranque, D-149): espera el próximo momento y arranca como Nueva.
   const arranque = new Arranque({
     ajuste: async () => (await s.config.leer()).arranque,
     usoActual: () => uso.get(),
-    leerUso: async () => {
-      const leido = await s.motor.uso().catch(() => null)
-      if (!leido) return null
-      uso.poner(leido)
-      return uso.get()
-    },
-    candidatos: async () => {
-      const lista = await listar()
-      if (lista.tipo !== 'lista') return []
-      return candidatosDe(lista.proyectos, {
-        enMarcha: () => conversaciones.enMarcha(),
-        usadaAfuera: (ruta) => conversaciones.usadaAfuera(ruta),
-        pendientes: async (ruta) => {
-          const p = await pendientes.proyecto(ruta)
-          return p.tipo === 'ok' ? p.pendientes : null
-        },
-        fechaRespuesta: (ruta, codigo) =>
-          stat(join(ruta, 'docs', 'respuestas', `${codigo}.md`)).then(
-            (e) => e.mtimeMs,
-            () => null,
-          ),
-      })
-    },
+    leerUso: () => leerUsoDeNuevo(),
+    candidatos: () => candidatosListos(),
     sesionLista: async () => {
       const e = await motorListo()
       return e.tipo === 'listo' || e.tipo === 'clave-api'
@@ -552,6 +563,50 @@ export function registrarPuente(s: Servicios): Puente {
       }
     },
   })
+  // El avance solo (frente Frentes, D-178): con Iridium sin usar, toma de a un paso marcado `sola`.
+  const avance = new AvanceSolo({
+    ajuste: async () => (await s.config.leer()).avanceSolo,
+    apagados: async () => (await s.config.leer()).avanceApagado,
+    usoActual: () => uso.get(),
+    leerUso: () => leerUsoDeNuevo(),
+    bandeja: () => candidatosListos(),
+    pasos: async () => {
+      const lista = await listar()
+      if (lista.tipo !== 'lista') return []
+      const trabajando = new Set(conversaciones.enMarcha())
+      const pasos: ReturnType<typeof pasosSolos> = []
+      for (const t of lista.proyectos) {
+        if (t.archivado || t.framework === null || t.framework === 'viejo' || trabajando.has(t.ruta)) continue
+        if (await conversaciones.usadaAfuera(t.ruta)) continue
+        try {
+          const [d, preguntas] = await Promise.all([docs.de(t.ruta), leerPreguntasAbiertas(t.ruta)])
+          pasos.push(...pasosSolos(d, preguntas, { ruta: t.ruta, nombre: t.nombre }))
+        } catch {
+          // Un proyecto que no se puede leer no frena a los demás.
+        }
+      }
+      return pasos
+    },
+    enMarcha: () => conversaciones.enMarcha(),
+    sesionLista: async () => {
+      const e = await motorListo()
+      return e.tipo === 'listo' || e.tipo === 'clave-api'
+    },
+    arrancar: async (ruta, marca, texto) => {
+      await sincronia.alDia(ruta)
+      return conversaciones.seguir(
+        ruta,
+        { nueva: true, ...(texto ? { texto } : {}) },
+        { arranque: marca, motivo: 'avance' },
+      )
+    },
+    archivo: s.arranques,
+    segundosSinUsar: () => s.segundosSinUso(),
+    registrar: (t) => s.registro.escribir(t),
+    ...(s.avanceSinUsarS !== undefined ? { sinUsarS: s.avanceSinUsarS } : {}),
+    alCambio: () => avisarArranque(),
+  })
+
   /** Lo que muestra el arranque cambió: se manda a la ventana (una vez aunque lo pidan varios juntos). */
   let avisandoArranque = false
   const avisarArranque = (): void => {
@@ -1174,6 +1229,7 @@ export function registrarPuente(s: Servicios): Puente {
   // Al abrir, el motor se verifica aparte: la grilla no lo espera (05-arquitectura.md › Abrir la app).
   void verificarMotor()
   void arranque.iniciar()
+  avance.iniciar()
   armados?.vigilar()
   sincronia.vigilar()
 
@@ -1193,6 +1249,7 @@ export function registrarPuente(s: Servicios): Puente {
     alDespertar: () => void arranque.alDespertar(),
     cerrar() {
       arranque.cerrar()
+      avance.cerrar()
       armados?.cerrar()
       sincronia.cerrar()
       uso.cerrar()

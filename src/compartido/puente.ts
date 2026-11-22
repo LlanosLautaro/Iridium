@@ -180,6 +180,8 @@ export interface RenglonArranqueVista {
     preguntas: number
     frenan: number
   } | null
+  /** Lo tomó el avance solo (FS-5): el paso, si no fueron las respuestas de la Bandeja. */
+  avance?: { frente: string; texto: string } | null
 }
 
 /** El arranque para la ventana: el detalle del uso y el aviso al volver. */
@@ -454,6 +456,8 @@ export interface ConversacionProyecto {
   origen: 'iridium' | 'vscode' | null
   /** La empezó el arranque del período (frente Arranque, AR-2): cuándo; null si no. */
   arrancada: number | null
+  /** La empezó el avance solo (frente Frentes, FS-4): la línea dice «para avanzar sola». */
+  avance?: boolean
   /** El título que le da Claude Code (el resumen o el primer mensaje); null si todavía no tiene. */
   titulo: string | null
   /** Última vez que se escribió, en milisegundos. */
@@ -477,6 +481,8 @@ export interface CambioConversacion {
   reiniciar: boolean
   /** Con `reiniciar`: si la empezó el arranque del período, cuándo (AR-2). */
   arrancada?: number | null
+  /** Con `reiniciar`: la empezó el avance solo (FS-4). */
+  avance?: boolean
   entradas: Entrada[]
   ficha: FichaSesion | null
   contexto: ContextoConversacion | null

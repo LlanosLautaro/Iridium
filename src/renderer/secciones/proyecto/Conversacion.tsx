@@ -1272,13 +1272,13 @@ export function Conversacion({
           ? 'Ideas y proyectos'
           : // Sin conversación (T-101, Q-248): un título corto; «Sin conversación todavía» quedaba cortado.
             'Nueva conversación'
-  // Sin ruido (D-108): debajo del título, cuándo fue y si se empezó en VS Code o la empezó el arranque del período
-  // (AR-2); lo demás lo dice la conversación.
+  // Sin ruido (D-108): debajo del título, cuándo fue y si se empezó en VS Code o la empezó Iridium, para abrir el
+  // período (AR-2) o para avanzar sola (FS-4); lo demás lo dice la conversación.
   const subtitulo =
     !enBlanco && hayConversacion && c
       ? `${mayuscula(c.modificada !== null ? cuandoFue(c.modificada) : 'hoy')}${
           c.arrancada !== null
-            ? ` · la empezó Iridium a las ${hora(c.arrancada)} para abrir el período`
+            ? ` · la empezó Iridium a las ${hora(c.arrancada)} ${c.avance ? 'para avanzar sola' : 'para abrir el período'}`
             : c.origen === 'vscode'
               ? ' · empezada en VS Code'
               : ''

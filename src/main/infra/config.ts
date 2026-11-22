@@ -13,7 +13,7 @@ import {
   type Preferencias,
 } from '../../compartido/puente'
 import { AJUSTE_INICIAL, HORA_ARRANQUE } from '../core/arranque'
-import { AJUSTE_AVANCE_INICIAL, LIMITES_AVANCE, NINGUNO_APAGADO, TAMANOS } from '../core/avance'
+import { AJUSTE_AVANCE_INICIAL, LIMITES_AVANCE, NINGUNO_APAGADO } from '../core/avance'
 import { escribirAtomico, leerDatos } from './escritura'
 
 /** El modelo y el esfuerzo de un proyecto; null = el de Claude Code. */
@@ -32,7 +32,7 @@ export const AjusteAvance = z.object({
   minutosSinUsar: Entre(LIMITES_AVANCE.minutosSinUsar),
   libre: Entre(LIMITES_AVANCE.libre),
   semana: Entre(LIMITES_AVANCE.semana),
-  tamanos: z.array(z.enum(TAMANOS as [string, ...string[]])).max(3),
+  tamanos: z.array(z.enum(['chico', 'mediano', 'grande'])).max(3),
 })
 
 /** Lo apagado del avance solo (FS-3). */

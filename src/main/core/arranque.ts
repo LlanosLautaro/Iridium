@@ -106,17 +106,16 @@ export function pendienteAlAbrir(programado: number | null, ahora: number): bool
 /**
  * Los renglones del aviso al volver (D-149 › 8), del más viejo al más nuevo: los que todavía no se mostraron, que
  * pasaron con Iridium sin usar hace 5 minutos o más y que dicen algo (arrancó, o no pudo por la semana, la sesión de
- * Claude o el uso sin leer).
+ * Claude o el uso sin leer). Lo del avance solo (FS-5) entra siempre: lo tomó porque el usuario no estaba.
  */
-export function paraElAviso<R extends { cuando: number; resultado: Resultado; sinUsarIridium: number }>(
-  momentos: readonly R[],
-  vistoHasta: number | null,
-): R[] {
+export function paraElAviso<
+  R extends { cuando: number; resultado: Resultado; sinUsarIridium: number; momento?: string },
+>(momentos: readonly R[], vistoHasta: number | null): R[] {
   return momentos
     .filter(
       (m) =>
         m.cuando > (vistoHasta ?? Number.NEGATIVE_INFINITY) &&
-        m.sinUsarIridium >= SIN_USAR_PARA_EL_AVISO_S &&
+        (m.momento === 'avance' || m.sinUsarIridium >= SIN_USAR_PARA_EL_AVISO_S) &&
         PARA_EL_AVISO.has(m.resultado),
     )
     .sort((a, b) => a.cuando - b.cuando)
