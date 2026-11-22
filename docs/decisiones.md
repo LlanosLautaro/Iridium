@@ -177,6 +177,8 @@
 | D-168 | 2026-11-21 | Paridad | 10, Q-246 y Q-247 | La UX de Paridad, aprobada: un comando escondido escrito a mano no se manda y dice dónde está en Iridium | vigente |
 | D-169 | 2026-11-21 | general (Paridad) | 10; Paridad, paso 5 | Paridad: el motor dice qué sabe hacer, los adjuntos van con marcas de Iridium y las fotos pegadas en los datos | vigente |
 | D-170 | 2026-11-21 | general (Paridad) | 10; Paridad, paso 6 | La Ficha (PZ-16) y el menú arriba del compositor entran al design system | vigente |
+| D-171 | 2026-11-22 | Compartir | 10; CO-I10, Q-255 | Iridium se instala como una app y se actualiza con electron-updater | vigente |
+| D-172 | 2026-11-22 | general (Git, T-114) | 10, Q-257 | Lo que cambia archivos espera a que su proyecto esté al día con GitHub | vigente |
 
 ---
 
@@ -3387,3 +3389,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 6. **Se va** el actualizador propio de las copias compartidas (`version-github.ts`, las piezas de D-161) y el aviso «Iniciá sesión en GitHub» (el repo es público, D-132). Una copia en carpeta que quede no se actualiza más: se instala a mano una vez.
 **Motivo:** es el camino de casi todas las apps de Electron, probado por miles; deja menos código propio que se pueda trabar, y la otra persona tiene Iridium como cualquier app.
 **Consecuencias:** `electron-builder.yml` con la sección `nsis`; `tools/publicar.ts` y `tools/actualizar.ps1` cambiados; `infra/actualizador.ts` nuevo; `05-arquitectura.md` › Despliegue, `scripts.md` y `herramientas-ia.md` al día. La otra PC instala a mano una vez el instalador.
+
+## D-172 — Lo que cambia archivos espera a que su proyecto esté al día con GitHub
+- **Fecha:** 2026-11-22
+- **Ámbito:** general (Git, T-114; ajusta D-159 punto 1)
+- **Hito o paso:** 10; a pedido del usuario
+- **Estado:** vigente (Q-257: A)
+
+**Contexto:** con dos PC, la primera vuelta de D-159 empezaba a los 20 s de abrir y tardaba unos 11 s (7 proyectos con remoto, 1,6 s cada uno); mientras tanto se le podía mandar algo a la IA, que trabajaba sobre archivos viejos y dejaba las dos PC separadas. Arranque tenía el mismo hueco.
+**Decisión:** el usuario eligió esperar por proyecto (Q-257: A):
+1. La vuelta empieza al abrir, y el proyecto al que se entra pasa primero (unos 2 s).
+2. Solo espera lo que cambia archivos: mandarle algo a la IA, Arranque y Commit. Mirar y navegar, nunca. Lo escrito queda en el cuadro con «Poniéndose al día con GitHub…» y sale solo al terminar.
+3. Sin conexión, sin sesión o pasados unos 15 s, deja seguir y lo avisa.
+**Motivo:** frena solo donde importa y casi no se nota; una espera global crece con cada proyecto.
+**Consecuencias:** T-114 `pendiente`; va después de Paridad (D-166).
