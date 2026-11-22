@@ -4,7 +4,7 @@
 // un `T-n` que la ruta solo nombra en pasos hechos, o el que originó un frente que ya está hecho.
 import type { Estado } from '../estados'
 import { frenteDeEstado, leerFrentes } from '../mapa'
-import { leerRuta, origenDeFrente, type PasoRuta } from '../ruta'
+import { leerRuta, marcasDe, marcasDudosas, origenDeFrente, type PasoRuta } from '../ruta'
 import { leerTrabajo } from '../trabajo'
 import { type Aviso, type Regla, sinAcentos } from './tipos'
 
@@ -13,6 +13,25 @@ function codigosQueExisten(estado: string, trabajo: string | null, respuestas: R
   for (const c of respuestas.keys()) q.add(c)
   const t = new Set([...(trabajo ?? '').matchAll(/^##\s+(T-\d+)\s+—/gm)].map((m) => m[1] ?? ''))
   return { q, t }
+}
+
+/**
+ * Las marcas del paso que viene (Frentes, D-178): una palabra parecida que no es la marca, dos tamaños, o `sola` sin
+ * tamaño (el avance solo no sabría si cabe). Lo hecho o descartado no se avisa.
+ */
+function avisosDeMarcas(linea: string, p: PasoRuta): string[] {
+  if (p.marca !== 'viene') return []
+  const r = marcasDudosas(linea).map(
+    (x) => `«${x}» no es una marca de la ruta: \`chico\`, \`mediano\`, \`grande\` o \`sola\`, en minúscula`,
+  )
+  const { tamanos } = marcasDe(linea)
+  if (tamanos.length > 1)
+    r.push(`el paso tiene ${tamanos.length} tamaños: uno solo (\`chico\`, \`mediano\` o \`grande\`)`)
+  if (p.sola && tamanos.length === 0)
+    r.push(
+      'un paso `sola` lleva su tamaño (`chico`, `mediano` o `grande`): sin él, el avance solo no lo toma',
+    )
+  return r
 }
 
 const ABIERTO: ReadonlySet<Estado> = new Set<Estado>(['nueva', 'pendiente', 'en curso', 'en pausa'])
@@ -59,8 +78,11 @@ export const reglaRuta: Regla = (a) => {
     }
     for (const p of ruta.problemas)
       avisos.push({ regla: 'ruta', archivo: e.ruta, linea: p.linea, texto: p.texto })
+    const lineas = e.texto.split(/\r?\n/)
     const revisar = (ps: PasoRuta[]) => {
       for (const p of ps) {
+        for (const texto of avisosDeMarcas(lineas[p.linea - 1] ?? '', p))
+          avisos.push({ regla: 'ruta', archivo: e.ruta, linea: p.linea, texto })
         for (const c of p.preguntas.filter((x) => !existen.q.has(x)))
           avisos.push({
             regla: 'ruta',

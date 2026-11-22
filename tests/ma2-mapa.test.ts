@@ -278,6 +278,8 @@ describe('listasDelMapa', () => {
                 preguntas: [],
                 trabajo: ['T-1'],
                 iteracion: null,
+                tamano: null,
+                sola: false,
                 linea: 1,
                 ramas: [],
               },

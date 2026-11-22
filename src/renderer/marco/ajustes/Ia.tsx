@@ -1,4 +1,4 @@
-// Ajustes › IA (AJ-2, AJ-3, CO-I1, AR-1): la cuenta de Claude, el nombre de la IA en la conversación, el tono, uno de
+// Ajustes › IA (AJ-2, AJ-3, CO-I1, AR-1, FS-2): la cuenta de Claude, el nombre de la IA en la conversación, el tono, uno de
 // los estilos de respuesta de Claude Code, y abrir el período de Claude mientras no está. El tono vale para las
 // sesiones de Iridium; VS Code y la terminal siguen con el suyo.
 import { useEffect, useState } from 'react'
@@ -7,6 +7,7 @@ import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
 import type { PropsSeccion } from '../Ajustes'
 import { Ajuste } from './Ajuste'
+import { AvanceSolo } from './AvanceSolo'
 import { CampoTexto } from './CampoTexto'
 
 /** Los estilos que trae Claude Code, en castellano. Los propios se muestran con su nombre y su descripción. */
@@ -181,6 +182,7 @@ export function Ia({ cambiar }: PropsSeccion) {
         </span>
       </Ajuste>
       <AbrirPeriodo cambiar={cambiar} />
+      <AvanceSolo cambiar={cambiar} />
     </>
   )
 }

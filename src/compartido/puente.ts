@@ -122,6 +122,34 @@ export interface Preferencias {
   arranque: AjusteArranque
   /** Los proyectos con la actualización automática apagada (frente Abrir, D-154): las demás, prendidas. */
   actualizacionApagada: string[]
+  /** El avance solo (frente Frentes, FS-2): apagado al principio. */
+  avanceSolo: AjusteAvance
+  /** Los proyectos y los frentes con el avance solo apagado (FS-3). */
+  avanceApagado: AvanceApagado
+}
+
+/** Cuánto cuesta un paso de la ruta (Frentes, D-175): una iteración, no el frente entero. */
+export type TamanoPaso = 'chico' | 'mediano' | 'grande'
+
+/** El avance solo (Frentes, FS-2, D-178): cuándo toma pasos la IA sin el usuario. */
+export interface AjusteAvance {
+  prendido: boolean
+  /** null = siempre; si no, de `desde` a `hasta` (`HH:MM` local; puede cruzar la medianoche). */
+  horario: { desde: string; hasta: string } | null
+  /** Cuántos minutos sin usar Iridium antes de tomar un paso. */
+  minutosSinUsar: number
+  /** El % de cada período de 5 horas que no toca. */
+  libre: number
+  /** Hasta qué % de la semana. */
+  semana: number
+  /** Los tamaños que acepta. */
+  tamanos: TamanoPaso[]
+}
+
+/** Lo apagado del avance solo (FS-3): lo que no está, prendido. */
+export interface AvanceApagado {
+  proyectos: string[]
+  frentes: { ruta: string; carpeta: string }[]
 }
 
 /** El arranque del período de 5 horas (D-146): si está prendido y la hora del primero, `HH:MM` local. */
@@ -609,6 +637,8 @@ export interface PasoCamino {
   espera: string | null
   /** Su sección (la de su iteración, su documento); null si no tiene. */
   destino: Destino | null
+  /** Las marcas de la ruta (Frentes, FS-1): cuánto cuesta y si la IA lo puede hacer sola. Falta sin marcas. */
+  marcas?: { tamano: 'chico' | 'mediano' | 'grande' | null; sola: boolean }
   ramas: PasoCamino[]
 }
 

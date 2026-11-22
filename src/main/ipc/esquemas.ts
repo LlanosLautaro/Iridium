@@ -13,7 +13,7 @@ import { LARGO_MENSAJE } from '../../compartido/sincronia'
 import { ESTADOS } from '../../compartido/tipos'
 import { HORA_ARRANQUE } from '../core/arranque'
 import { LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
-import { AjusteIa, AnchosConversacion } from '../infra/config'
+import { AjusteAvance, AjusteIa, AnchosConversacion, AvanceApagado } from '../infra/config'
 
 export const CambioPreferencias = z
   .object({
@@ -34,6 +34,8 @@ export const CambioPreferencias = z
     tono: z.string().max(LARGO_AJUSTES.tono),
     arranque: z.object({ prendido: z.boolean(), hora: z.string().regex(HORA_ARRANQUE) }).strict(),
     actualizacionApagada: z.array(z.string().min(1).max(1024)).max(500),
+    avanceSolo: AjusteAvance.strict(),
+    avanceApagado: AvanceApagado.strict(),
   })
   .partial()
   .strict()

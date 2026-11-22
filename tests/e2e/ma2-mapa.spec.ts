@@ -218,7 +218,7 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   await expect(avisos.locator('.estado-frente')).toHaveText('En pausa')
   await expect(avisos.locator('.tramo.pausa')).toHaveText(/Sonar al terminar\s*En pausa/)
   // «Archivados», arriba a la derecha, la muestra después de los activos y en gris; se recuerda (R-91, D-152).
-  const archivados = mapa.getByRole('switch')
+  const archivados = mapa.getByRole('switch', { name: 'Archivados' })
   await expect(mapa.locator('.cabecera')).toContainText('Archivados 1')
   await archivados.check()
   await expect(barra.getByRole('tab')).toHaveText(['Galería', 'Avisos', 'Notas', 'Por empezar3'])
@@ -311,7 +311,7 @@ test('MA-12: un frente sin su estado.md muestra el error en su pestaña; al camb
   await expect(avisos.locator('.camino')).toHaveCount(0)
   await expect(barra.getByRole('tab', { name: 'Avisos' })).toHaveAttribute('aria-selected', 'true')
   await win.screenshot({ path: 'test-results/ma3-mapa-error.png' })
-  await mapa.getByRole('switch').check()
+  await mapa.getByRole('switch', { name: 'Archivados' }).check()
   await barra.getByRole('tab', { name: 'Notas' }).click()
   await expect(mapa.getByRole('region', { name: 'Notas' })).toContainText('Todo hecho por ahora')
   await app.close()

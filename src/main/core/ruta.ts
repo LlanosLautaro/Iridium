@@ -5,6 +5,9 @@ import { lineasFueraDeCodigo, partirLineas, textoPlano } from './visor/lineas'
 
 export type MarcaRuta = 'hecho' | 'viene' | 'descartado' | 'otro'
 
+/** Cuánto cuesta un paso (Frentes, D-175, D-178): una iteración, no el frente entero. */
+export type TamanoPaso = 'chico' | 'mediano' | 'grande'
+
 export interface PasoRuta {
   /** Lo que se muestra: sin los códigos. */
   texto: string
@@ -13,6 +16,9 @@ export interface PasoRuta {
   preguntas: string[]
   trabajo: string[]
   iteracion: string | null
+  /** Las marcas del paréntesis final (D-178): el tamaño y si la IA lo puede hacer sin preguntar. */
+  tamano: TamanoPaso | null
+  sola: boolean
   /** Desde 1, en el `estado.md`. */
   linea: number
   ramas: PasoRuta[]
@@ -30,12 +36,42 @@ export interface RutaLeida {
 
 const CODIGO = /\b(?:Q-\d+|T-\d+|D-\d+|R-\d+|[A-Z]{1,3}-I\d+|I-\d+)\b/g
 
+const MARCA = /^(?:chico|mediano|grande|sola)$/
+
+/** Las palabras sueltas del paréntesis final de un paso: ahí van los códigos y las marcas (D-178). */
+function finalDe(plano: string): { dentro: string; palabras: string[] } | null {
+  const m = /\(([^()]*)\)\s*$/.exec(plano)
+  if (!m) return null
+  const dentro = m[1] ?? ''
+  return { dentro, palabras: dentro.split(/[\s,;·]+/).filter(Boolean) }
+}
+
+/** El tamaño y `sola` del paréntesis final de un paso; solo ahí, para que «grande» en el texto siga siendo texto. */
+export function marcasDe(texto: string): { tamano: TamanoPaso | null; sola: boolean; tamanos: TamanoPaso[] } {
+  const palabras = finalDe(textoPlano(texto))?.palabras ?? []
+  const tamanos = palabras.filter((p): p is TamanoPaso => p === 'chico' || p === 'mediano' || p === 'grande')
+  return { tamano: tamanos[0] ?? null, sola: palabras.includes('sola'), tamanos }
+}
+
+/** Las palabras del paréntesis final que parecen una marca mal escrita (`chica`, `solo`, `Mediano`…). */
+export function marcasDudosas(texto: string): string[] {
+  const palabras = finalDe(textoPlano(texto))?.palabras ?? []
+  const parecida = /^(?:chic[oa]s?|median[oa]s?|medio|grandes?|s[oó]l[oa]s?)$/i
+  return palabras.filter((p) => parecida.test(p) && !MARCA.test(p))
+}
+
 /** El texto que se muestra de un paso: sin los códigos y, si quedan solos en un paréntesis final, sin el paréntesis. */
 export function textoSinCodigos(texto: string): string {
   const plano = textoPlano(texto)
-  const sinParentesis = plano.replace(/\s*\(([^()]*)\)\s*$/, (todo, dentro: string) =>
-    dentro.replace(CODIGO, '').replace(/[\s,;·y]+/g, '') === '' ? '' : todo,
-  )
+  const sinParentesis = plano.replace(/\s*\(([^()]*)\)\s*$/, (todo, dentro: string) => {
+    const partes = dentro.split(/\s*[,;·]\s*/)
+    const sinMarcas = partes.filter((p) => !MARCA.test(p.trim()))
+    const resto = sinMarcas.join(', ')
+    if (resto.replace(CODIGO, '').replace(/[\s,;·y]+/g, '') === '') return ''
+    if (sinMarcas.length === partes.length) return todo
+    const quedan = sinMarcas.map((p) => p.replace(CODIGO, '').trim()).filter(Boolean)
+    return ` (${quedan.join(', ')})`
+  })
   return sinParentesis
     .replace(CODIGO, '')
     .replace(/\(\s*\)/g, '')
@@ -48,12 +84,15 @@ export function textoSinCodigos(texto: string): string {
 
 function paso(linea: number, marca: MarcaRuta, crudo: string): PasoRuta {
   const codigos = textoPlano(crudo).match(CODIGO) ?? []
+  const { tamano, sola } = marcasDe(crudo)
   return {
     texto: textoSinCodigos(crudo) || textoPlano(crudo).trim(),
     marca,
     preguntas: codigos.filter((c) => c.startsWith('Q-')),
     trabajo: codigos.filter((c) => c.startsWith('T-')),
     iteracion: codigos.find((c) => /^(?:[A-Z]{1,3}-I\d+|I-\d+)$/.test(c)) ?? null,
+    tamano,
+    sola,
     linea,
     ramas: [],
   }

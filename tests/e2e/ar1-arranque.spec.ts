@@ -83,7 +83,7 @@ test('Ajustes › IA: abrir el período, apagado al principio; prendido, la hora
   await expect(interruptor).not.toBeChecked()
   await expect(hora).toBeDisabled()
   await expect(hora).toHaveValue('03:00')
-  await expect(win.getByText('Necesita Iridium abierta.', { exact: false })).toBeVisible()
+  await expect(win.getByText('Sigue el proyecto que espera hace más', { exact: false })).toBeVisible()
 
   await interruptor.check()
   await expect(hora).toBeEnabled()

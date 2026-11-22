@@ -1,4 +1,4 @@
-// Ajustes › Este proyecto (frente Abrir, AB-4; `modulos/abrir/ux.md` › Ajustes del proyecto): solo dentro de un
+// Ajustes › Este proyecto (frente Abrir, AB-4; el avance solo, Frentes FS-3; `modulos/abrir/ux.md` › Ajustes del proyecto): solo dentro de un
 // proyecto. La actualización automática: el interruptor, la última vez y Actualizar ahora; si el proyecto no marca
 // cómo se arma, para qué sirve y que su IA lo puede preparar (T-106).
 import { useState } from 'react'
@@ -21,7 +21,7 @@ export function ultimaVez(a: ActualizacionProyecto): string {
   return `Falló ${cuando}`
 }
 
-export function EsteProyecto({ cambiar }: PropsSeccion) {
+function Actualizacion({ cambiar }: PropsSeccion) {
   const ruta = usarEstado((s) => s.proyectoAbierto)
   const nombre = usarEstado((s) => tarjetaDe(s.lista, s.proyectoAbierto)?.nombre)
   const a = usarEstado((s) => (s.proyectoAbierto ? s.actualizaciones[s.proyectoAbierto] : undefined))
@@ -91,5 +91,54 @@ export function EsteProyecto({ cambiar }: PropsSeccion) {
         Actualizar ahora
       </button>
     </Ajuste>
+  )
+}
+
+/** El avance solo de este proyecto (FS-3): prendido de entrada; apagado, no se toma nada de acá. */
+function AvanceDelProyecto({ cambiar }: PropsSeccion) {
+  const ruta = usarEstado((s) => s.proyectoAbierto)
+  const apagados = usarEstado((s) => s.preferencias.avanceApagado)
+  if (!ruta) return null
+  const prendido = !apagados.proyectos.includes(ruta)
+  return (
+    <Ajuste
+      titulo="Avance solo"
+      detalle="Si la IA puede seguir sola los pasos marcados de este proyecto"
+      id="ajuste-avance-proyecto"
+      clase="avance-proyecto"
+    >
+      <label className="interruptor">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-checked={prendido}
+          aria-labelledby="ajuste-avance-proyecto"
+          checked={prendido}
+          onChange={(e) =>
+            void cambiar({
+              avanceApagado: {
+                ...apagados,
+                proyectos: e.target.checked
+                  ? apagados.proyectos.filter((r) => r !== ruta)
+                  : [...apagados.proyectos, ruta],
+              },
+            })
+          }
+        />
+        {prendido ? 'Prendido' : 'Apagado'}
+      </label>
+      <span className="expl">
+        Apagado, no toma nada de este proyecto, tampoco tus respuestas. Se prende para todos en Ajustes › IA.
+      </span>
+    </Ajuste>
+  )
+}
+
+export function EsteProyecto({ cambiar }: PropsSeccion) {
+  return (
+    <>
+      <Actualizacion cambiar={cambiar} />
+      <AvanceDelProyecto cambiar={cambiar} />
+    </>
   )
 }

@@ -3452,3 +3452,25 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** aprobada como está escrita; el orden: lo que espera en la Bandeja, después el paso chico más viejo, después el frente en curso.
 **Motivo:** va cerrando lo chico, como pidió el usuario, y lo grande avanza con el período recién abierto.
 **Consecuencias:** sigue la UX corta del motor y su diseño técnico; después, la construcción (FS-I1).
+
+## D-177 — La UX del motor de Frentes: dónde se prende, dónde se apaga y qué cuenta
+- **Fecha:** 2026-11-22
+- **Ámbito:** el frente Frentes, parte 1 (`modulos/frentes/ux.md`)
+- **Hito o paso:** 10; frente Frentes, paso 4 (UX)
+- **Estado:** vigente
+
+**Contexto:** la definición (D-176) fijó qué hace el avance solo; faltaba dónde se toca. El usuario pidió el motor antes del reinicio semanal (martes 2026-11-24), así que la UX se escribe con lo aprobado y se ajusta en la prueba de FS-I1.
+**Decisión:** el avance solo se prende en Ajustes › IA, debajo de «Abrir el período de Claude», con sus condiciones (siempre o de una hora a otra, minutos sin usar, % del período libre, % de la semana, tamaños); se apaga por proyecto en Ajustes › Este proyecto y por frente en la cabecera del frente en el Mapa; cada paso que viene muestra en el Mapa su tamaño y si va sola. Lo que hizo se ve como lo del Arranque: la pestaña, la línea de la conversación («para avanzar sola») y el aviso al volver. No repite un paso tomado en las últimas 12 horas que sigue sin hacer.
+**Motivo:** usa lugares que el usuario ya conoce y piezas que ya existen (sin maquetas, que quedan para el tablero); lo de las 12 horas evita gastar la cuota en un paso que se traba.
+**Consecuencias:** FS-1 a FS-5; el diseño técnico, D-178.
+
+## D-178 — El diseño técnico del motor de Frentes
+- **Fecha:** 2026-11-22
+- **Ámbito:** el frente Frentes, parte 1 (`modulos/frentes/diseno-tecnico.md`)
+- **Hito o paso:** 10; frente Frentes, paso 5 (Diseño técnico)
+- **Estado:** vigente
+
+**Contexto:** el motor tiene que tomar pasos con las condiciones de D-176 y D-177 sin pisarse con el Arranque ni con el usuario.
+**Decisión:** las marcas (`chico`, `mediano`, `grande`, `sola`) van en el paréntesis final del paso, con los códigos; el control avisa una palabra parecida, dos tamaños o un `sola` sin tamaño. Un motor aparte (`AvanceSolo`) mira cada minuto, con el avance prendido, condiciones que no tocan el disco, y recién entonces lee el uso y arma la fila. Lo disponible es lo libre del período (100 con el período cerrado) menos lo que se deja libre. Lo que pasó va a `arranques.json` con el momento `avance`, el paso y el uso de antes y de después. Dos iteraciones: FS-I1 (las marcas, el Mapa, los ajustes y los interruptores) y FS-I2 (el motor y el aviso).
+**Motivo:** el Arranque espera un momento fijo; el avance depende de cosas que cambian solas (el uso de la PC, las sesiones), y mirarlas cada minuto en memoria no cuesta. Guardar el uso de antes y de después deja comparar los tamaños más adelante sin otro archivo.
+**Consecuencias:** el framework, el lector, el control y sus pruebas cambian juntos (D-086); `config.json`, `arranques.json` y `sesiones.json` suman campos que faltan en los datos de antes.

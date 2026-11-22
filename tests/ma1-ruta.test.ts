@@ -185,3 +185,37 @@ describe('el control de la ruta', () => {
     expect(deRuta(archivos(`${tipo}\n## Ruta\n- [ ] Uno\n`))).toEqual([])
   })
 })
+
+// FS-I1 (D-178): el tamaño y `sola` van en el paréntesis final, con los códigos, y no se muestran.
+describe('las marcas del avance solo', () => {
+  it('lee el tamaño y sola del paréntesis final, y solo de ahí', () => {
+    const r = leerRuta(
+      '## Ruta\n- [ ] Cargar el tema propio (T-52, mediano, sola)\n- [ ] Hacer la versión grande (chico)\n- [ ] Sin marcas (T-52)\n',
+    )
+    expect(r?.pasos.map((p) => [p.texto, p.tamano, p.sola, p.trabajo])).toEqual([
+      ['Cargar el tema propio', 'mediano', true, ['T-52']],
+      ['Hacer la versión grande', 'chico', false, []],
+      ['Sin marcas', null, false, ['T-52']],
+    ])
+  })
+
+  it('deja lo que no es marca ni código dentro del paréntesis', () => {
+    expect(textoSinCodigos('Medir (antes del martes, chico, sola)')).toBe('Medir (antes del martes)')
+    expect(textoSinCodigos('Medir (T-5, antes del martes, grande)')).toBe('Medir (antes del martes)')
+    expect(textoSinCodigos('Medir (sola)')).toBe('Medir')
+  })
+
+  it('avisa una marca mal escrita, dos tamaños y sola sin tamaño; no en lo hecho', () => {
+    const avisos = deRuta(
+      archivos(
+        '## Ruta\n- [ ] Uno (chica, sola)\n- [ ] Dos (chico, grande)\n- [ ] Tres (sola)\n- [x] Cuatro (solo)\n- [ ] Cinco (T-52, chico, sola)\n',
+      ),
+    )
+    expect(avisos.map((a) => [a.linea, a.texto.slice(0, 22)])).toEqual([
+      [2, '«chica» no es una marc'],
+      [2, 'un paso `sola` lleva s'],
+      [3, 'el paso tiene 2 tamaño'],
+      [4, 'un paso `sola` lleva s'],
+    ])
+  })
+})

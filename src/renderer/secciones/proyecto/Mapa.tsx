@@ -265,6 +265,7 @@ function VistaFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
         <span className={f.estado === 'otro' ? 'estado-frente fuera' : 'estado-frente'}>
           {ESTADO_FRENTE[f.estado] || f.estadoTexto}
         </span>
+        {f.estado !== 'en uso' && <InterruptorAvance ruta={ruta} carpeta={f.clave} />}
       </div>
       {f.error && (
         <div className="recuadro error" role="alert">
@@ -290,6 +291,33 @@ function VistaFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
         </section>
       )}
     </section>
+  )
+}
+
+/** Si la IA puede seguir sola los pasos marcados de este frente (Frentes, FS-3); prendido de entrada. */
+function InterruptorAvance({ ruta, carpeta }: { ruta: string; carpeta: string }) {
+  const apagados = usarEstado((s) => s.preferencias.avanceApagado)
+  const guardar = usarEstado((s) => s.guardarPreferencias)
+  const prendido = !apagados.frentes.some((x) => x.ruta === ruta && x.carpeta === carpeta)
+  return (
+    <label className="interruptor avance-frente" title="Si la IA puede seguir sola los pasos marcados «sola»">
+      <input
+        type="checkbox"
+        role="switch"
+        aria-checked={prendido}
+        checked={prendido}
+        onChange={(e) => {
+          const otros = apagados.frentes.filter((x) => !(x.ruta === ruta && x.carpeta === carpeta))
+          guardar({
+            avanceApagado: {
+              ...apagados,
+              frentes: e.target.checked ? otros : [...otros, { ruta, carpeta }],
+            },
+          })
+        }}
+      />
+      {prendido ? 'Avanza sola' : 'No avanza sola'}
+    </label>
   )
 }
 
@@ -526,6 +554,11 @@ function Tramo({
         ) : (
           <span className="nombre-tramo" title={titulo}>
             {p.texto}
+          </span>
+        )}
+        {viene && p.marcas && (
+          <span className="marcas-paso" title="Cuánto cuesta y si la IA lo puede hacer sola">
+            {[p.marcas.tamano, p.marcas.sola ? 'sola' : null].filter(Boolean).join(' · ')}
           </span>
         )}
         {espera && (

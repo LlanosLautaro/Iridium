@@ -267,6 +267,7 @@ function pasoDeRuta(
     marca: p.marca,
     espera: p.preguntas.find((q) => abiertas.has(q)) ?? null,
     destino: nace ? { documento: nace.ruta, ancla: nace.ancla } : ancla ? { documento, ancla } : null,
+    ...(p.tamano || p.sola ? { marcas: { tamano: p.tamano, sola: p.sola } } : {}),
     ramas: p.ramas.map((r) => pasoDeRuta(d, r, documento, abiertas)),
   }
 }

@@ -141,6 +141,17 @@
   color: var(--texto-3);
   font: var(--estilo-cuerpo);
 }
+/* El interruptor del avance solo, a la derecha de la cabecera del frente (FS-3) */
+.cab-frente .avance-frente {
+  margin-left: auto;
+  color: var(--texto-2);
+  font: var(--estilo-meta);
+}
+/* El tamaño y si sigue sola (Frentes, FS-1): al lado del paso, sin competir con él */
+.marcas-paso {
+  color: var(--texto-3);
+  font: var(--estilo-meta);
+}
 .gris-mapa.al-pie {
   margin: var(--esp-3) 0 0 var(--esp-6);
 }

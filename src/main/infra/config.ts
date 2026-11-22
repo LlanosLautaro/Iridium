@@ -13,12 +13,34 @@ import {
   type Preferencias,
 } from '../../compartido/puente'
 import { AJUSTE_INICIAL, HORA_ARRANQUE } from '../core/arranque'
+import { AJUSTE_AVANCE_INICIAL, LIMITES_AVANCE, NINGUNO_APAGADO, TAMANOS } from '../core/avance'
 import { escribirAtomico, leerDatos } from './escritura'
 
 /** El modelo y el esfuerzo de un proyecto; null = el de Claude Code. */
 export const AjusteIa = z.object({
   modelo: z.string().min(1).max(200).nullable(),
   esfuerzo: z.enum(ESFUERZOS).nullable(),
+})
+
+const Hora = z.string().regex(HORA_ARRANQUE)
+const Entre = (l: { minimo: number; maximo: number }) => z.number().int().min(l.minimo).max(l.maximo)
+
+/** El avance solo (frente Frentes, FS-2, D-178). */
+export const AjusteAvance = z.object({
+  prendido: z.boolean(),
+  horario: z.object({ desde: Hora, hasta: Hora }).strict().nullable(),
+  minutosSinUsar: Entre(LIMITES_AVANCE.minutosSinUsar),
+  libre: Entre(LIMITES_AVANCE.libre),
+  semana: Entre(LIMITES_AVANCE.semana),
+  tamanos: z.array(z.enum(TAMANOS as [string, ...string[]])).max(3),
+})
+
+/** Lo apagado del avance solo (FS-3). */
+export const AvanceApagado = z.object({
+  proyectos: z.array(z.string().min(1).max(1024)).max(500),
+  frentes: z
+    .array(z.object({ ruta: z.string().min(1).max(1024), carpeta: z.string().min(1).max(200) }).strict())
+    .max(1000),
 })
 
 const Ancho = z.number().int().min(ANCHO_CONVERSACION.minimo).max(ANCHO_CONVERSACION.maximo)
@@ -92,6 +114,9 @@ const Config = z.object({
   arranque: z
     .object({ prendido: z.boolean(), hora: z.string().regex(HORA_ARRANQUE) })
     .catch({ ...AJUSTE_INICIAL }),
+  /** El avance solo (frente Frentes, FS-2): apagado si falta o está roto. */
+  avanceSolo: AjusteAvance.catch({ ...AJUSTE_AVANCE_INICIAL }),
+  avanceApagado: AvanceApagado.catch({ ...NINGUNO_APAGADO }),
   /** El tamaño de todo, con Ctrl+= y Ctrl+- (Defecto 17): 1 = normal. */
   zoom: z.number().min(0.5).max(3).catch(1),
   /** La ventana como quedó al cerrar (T-66): su lugar y tamaño sin maximizar, y si estaba maximizada. */
@@ -132,6 +157,8 @@ const PREDETERMINADA: Config = {
   nombreIa: '',
   tono: '',
   arranque: { ...AJUSTE_INICIAL },
+  avanceSolo: { ...AJUSTE_AVANCE_INICIAL },
+  avanceApagado: { ...NINGUNO_APAGADO },
   zoom: 1,
   ventana: null,
   abrirDeFondo: null,
@@ -159,6 +186,8 @@ export function preferenciasDe(c: Config): Preferencias {
     tono: c.tono,
     arranque: c.arranque,
     actualizacionApagada: c.actualizacionApagada,
+    avanceSolo: c.avanceSolo as Preferencias['avanceSolo'],
+    avanceApagado: c.avanceApagado,
   }
 }
 
