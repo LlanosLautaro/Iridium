@@ -1,0 +1,13 @@
+/* La tarea como tarjeta, para las maquetas C, D y E del tablero Frentes (modulos/frentes/ux.md › Parte 2). Si una gana,
+   pasa a piezas.css como pieza. */
+.fs-tarea { display: flex; flex-direction: column; gap: var(--esp-1); padding: var(--esp-2) var(--esp-3); border: 1px solid var(--borde); border-radius: var(--radio-fila); font: var(--estilo-cuerpo); color: var(--texto); text-decoration: none; }
+.fs-tarea .pie { display: flex; flex-wrap: wrap; gap: var(--esp-1) var(--esp-3); align-items: center; font: var(--estilo-meta); color: var(--texto-3); }
+.fs-tarea .pie .codigo { font: var(--estilo-codigo); }
+.fs-tarea .pie .senal { margin-left: auto; }
+.fs-tarea .fs-de { color: var(--texto-2); }
+.fs-tarea.foco { border-color: var(--borde-control); }
+.fs-tarea.foco .nombre { font-weight: 600; }
+.fs-tarea.espera, .fs-tarea.pausa { border-color: var(--espera-borde); }
+a.fs-tarea:hover { background: var(--hover); }
+a.senal { cursor: pointer; text-decoration: none; }
+.fs-gris { margin: 0; color: var(--texto-3); font: var(--estilo-cuerpo); }

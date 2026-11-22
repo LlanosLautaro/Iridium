@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Frentes · C · Una fila por frente</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<link rel="stylesheet" href="frentes-tarea.css">
+<style>
+  /* C: todos los frentes a la vez, uno por fila; las columnas dicen de quién es cada cosa. */
+  .fs-filas { display: grid; grid-template-columns: 180px repeat(3, minmax(0, 1fr)); column-gap: var(--esp-4); }
+  .fs-filas > .titulos { display: contents; }
+  .fs-filas > .titulos > * { padding-bottom: var(--esp-2); }
+  .fs-fila { display: contents; }
+  .fs-fila > * { padding: var(--esp-3) 0; border-top: 1px solid var(--borde-suave); display: flex; flex-direction: column; gap: var(--esp-2); min-width: 0; }
+  .fs-nombre b { font-weight: 600; color: var(--texto); }
+  .fs-nombre .meta { display: flex; gap: var(--esp-2); align-items: center; font: var(--estilo-meta); color: var(--texto-3); }
+  .fs-nombre .ic { width: 14px; height: 14px; }
+  .fs-fila.archivado b { color: var(--texto-3); }
+  .fs-mas { align-self: flex-start; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="mapa">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Frentes</h1><span class="ruta">Hito 10 · Operación</span>
+      <span class="acciones-cab"><label class="interruptor"><input type="checkbox" id="ver-archivados"><span>Archivados <span class="cuenta">5</span></span></label></span></div>
+  </header>
+  <div class="contenido">
+    <div class="fs-filas" id="filas">
+      <div class="titulos"><span></span><h3 class="bloque-titulo">Te espera</h3><h3 class="bloque-titulo">Lo que sigue</h3><h3 class="bloque-titulo">Después</h3></div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+<script src="frentes.js"></script>
+<script>
+  const filas = document.getElementById('filas')
+  const ver = document.getElementById('ver-archivados')
+
+  function fila(f) {
+    const d = document.createElement('div')
+    d.className = 'fs-fila' + (f.archivado ? ' archivado' : '')
+    const pend = f.pasos.filter(pendiente)
+    const s = sigue(f)
+    const preg = f.preguntas ?? []
+    const espera = [...preg.map((q) => pregHTML(q)), ...pend.filter((p) => p.e === 'tuya' && !preg.some(([q]) => q === p.q)).map((p) => tareaHTML(p, 'espera'))]
+    const resto = pend.filter((p) => p !== s && p.e !== 'tuya')
+    const hechos = f.pasos.length - pend.length
+    const sola = f.empezar || f.archivado ? '' : f.sola ? (tomaSola(f) ? `<span title="Avanza sola">${icono('robot')}</span>` : '') : '<span>apagada</span>'
+    const estado = f.nucleo ? 'sin frente' : f.empezar ? 'por empezar' : f.estado.toLowerCase()
+    const mas = resto.length > 1 ? `<button class="boton sin-fondo chico fs-mas">${resto.length - 1} más</button>` : ''
+    const ahora = f.empezar ? '' : s && s.e !== 'tuya' ? tareaHTML(s, s.e === 'pausa' ? 'pausa' : 'foco') : !pend.length ? '<p class="fs-gris">Todo hecho</p>' : ''
+    d.innerHTML = `<div class="fs-nombre"><b>${f.nombre}</b><span class="meta">${estado}${hechos ? ` · ${hechos} hechos` : ''}${sola}</span>` +
+      (f.empezar ? '<button class="boton sin-fondo chico fs-mas"><i data-ic="claude"></i>Empezar este frente</button>' : '') + '</div>' +
+      `<div>${espera.join('')}</div><div>${ahora}</div>` +
+      `<div>${f.empezar ? f.pasos.map((p) => tareaHTML(p)).join('') : (resto[0] ? tareaHTML(resto[0]) : '') + mas}</div>`
+    d.querySelector('div:last-child .fs-mas')?.addEventListener('click', (ev) => {
+      const celda = ev.currentTarget.parentElement
+      celda.innerHTML = resto.map((p) => tareaHTML(p, p.e === 'pausa' ? 'pausa' : '')).join('')
+      ponerIconos(celda)
+    })
+    ponerIconos(d)
+    return d
+  }
+
+  function pintar() {
+    filas.querySelectorAll('.fs-fila').forEach((x) => x.remove())
+    for (const f of [...FRENTES, ...POR_EMPEZAR, ...(ver.checked ? ARCHIVADOS : [])]) filas.append(fila(f))
+  }
+  ver.addEventListener('change', pintar)
+  pintar()
+</script>
+</body>
+</html>

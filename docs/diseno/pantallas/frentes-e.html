@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Frentes · E · Grilla de frentes</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<link rel="stylesheet" href="frentes-tarea.css">
+<style>
+  /* E: los frentes como la grilla de proyectos, cada uno con su recorrido en puntos; al tocarlo se abre a todo el ancho. */
+  .fs-grilla { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--esp-3); align-items: start; }
+  .fs-frente { display: flex; flex-direction: column; gap: var(--esp-2); padding: var(--esp-3) var(--esp-4); border: 1px solid var(--borde); border-radius: var(--radio-bloque); font: var(--estilo-cuerpo); color: var(--texto); cursor: pointer; }
+  .fs-frente:hover { background: var(--hover); }
+  .fs-frente.abierto { grid-column: 1 / -1; cursor: default; border-color: var(--borde-control); padding: var(--esp-4) var(--esp-5) var(--esp-5); }
+  .fs-frente.abierto:hover { background: none; }
+  .fs-frente .arriba { display: flex; align-items: center; gap: var(--esp-2); min-height: var(--alto-control-chico); }
+  .fs-frente .arriba b { font-weight: 600; }
+  .fs-frente .arriba .derecha { margin-left: auto; display: flex; gap: var(--esp-3); align-items: center; }
+  .fs-frente.archivado b { color: var(--texto-3); }
+  .fs-puntos { display: flex; flex-wrap: wrap; gap: 3px; }
+  .fs-puntos i { width: 8px; height: 8px; border-radius: var(--radio-pildora); border: 1.5px solid var(--borde-control); }
+  .fs-puntos i.hecho { background: var(--bien); border-color: var(--bien); }
+  .fs-puntos i.espera, .fs-puntos i.pausa { border-color: var(--espera); }
+  .fs-puntos i.foco { border-color: var(--texto); background: var(--texto); }
+  .fs-puntos i.descartado { border-color: var(--texto-apagado); }
+  .fs-frente .sigue { color: var(--texto-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fs-frente .sigue .meta { color: var(--texto-3); font: var(--estilo-meta); }
+  .fs-detalle { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-5); margin-top: var(--esp-3); }
+  .fs-detalle .bloque + .bloque { margin-top: 0; }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="mapa">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Frentes</h1><span class="ruta">Hito 10 · Operación</span>
+      <span class="acciones-cab"><label class="interruptor"><input type="checkbox" id="ver-archivados"><span>Archivados <span class="cuenta">5</span></span></label></span></div>
+  </header>
+  <div class="contenido">
+    <div class="fs-grilla" id="grilla"></div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+<script src="frentes.js"></script>
+<script>
+  const ver = document.getElementById('ver-archivados')
+  let abierto = FRENTES[0]
+
+  function frente(f) {
+    const d = document.createElement('div')
+    d.className = 'fs-frente' + (f === abierto ? ' abierto' : '') + (f.archivado ? ' archivado' : '')
+    const s = sigue(f)
+    const pend = f.pasos.filter(pendiente)
+    const preg = f.preguntas ?? []
+    const sola = f.empezar || f.archivado ? '' : f.sola ? (tomaSola(f) ? `<span class="senal" title="Avanza sola">${icono('robot')}</span>` : '') : '<span class="senal">apagada</span>'
+    const clase = (p) => p === s && !p.e ? 'foco' : p.e === 'tuya' ? 'espera' : p.e ?? ''
+    const puntos = f.empezar ? '' : '<span class="fs-puntos">' + f.pasos.map((p) => `<i class="${clase(p)}"></i>`).join('') + '</span>'
+    const linea = f.empezar ? `${f.pasos.length} aprobados` : s ? `${s.t}${s.tam && !s.e ? ` <span class="meta">· ${s.tam}${s.sola ? ' · sola' : ''}</span>` : ''}` : 'Todo hecho'
+    const derecha = f === abierto && !f.empezar && !f.archivado
+      ? `<label class="interruptor"><input type="checkbox"${f.sola ? ' checked' : ''}><span>${f.sola ? 'Avanza sola' : 'No avanza sola'}</span></label>`
+      : f.empezar && f === abierto ? '<button class="boton sin-fondo chico"><i data-ic="claude"></i>Empezar este frente</button>' : sola
+    d.innerHTML = `<div class="arriba"><b>${f.nombre}</b><span class="gris-3">${f.nucleo ? 'sin frente' : f.empezar ? 'por empezar' : f.estado}</span>` +
+      `<span class="derecha">${derecha}${preg.length ? `<span class="cuenta frena">${preg.length}</span>` : ''}</span></div>` +
+      puntos + (f === abierto ? '' : `<div class="sigue">${linea}</div>`)
+    if (f === abierto) {
+      const espera = [...preg.map((q) => pregHTML(q)), ...pend.filter((p) => p.e === 'tuya' && !preg.some(([q]) => q === p.q)).map((p) => tareaHTML(p, 'espera'))]
+      const resto = pend.filter((p) => p.e !== 'tuya')
+      d.insertAdjacentHTML('beforeend', '<div class="fs-detalle">' +
+        `<section class="bloque"><h3 class="bloque-titulo">Te espera${espera.length ? ` <span class="cuenta frena">${espera.length}</span>` : ''}</h3>${espera.join('') || '<p class="fs-gris">Nada te espera.</p>'}</section>` +
+        `<section class="bloque"><h3 class="bloque-titulo">Lo que viene <span class="cuenta">${resto.length}</span></h3>${resto.map((p) => tareaHTML(p, clase(p))).join('') || '<p class="fs-gris">Todo hecho por ahora.</p>'}</section></div>`)
+      d.querySelector('input')?.addEventListener('change', (ev) => { f.sola = ev.target.checked; pintar() })
+    } else d.addEventListener('click', () => { abierto = f; pintar() })
+    return d
+  }
+
+  function pintar() {
+    const g = document.getElementById('grilla')
+    g.innerHTML = ''
+    for (const f of [...FRENTES, ...POR_EMPEZAR, ...(ver.checked ? ARCHIVADOS : [])]) g.append(frente(f))
+    ponerIconos(g)
+  }
+  ver.addEventListener('change', pintar)
+  pintar()
+</script>
+</body>
+</html>

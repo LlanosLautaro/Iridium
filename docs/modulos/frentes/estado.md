@@ -12,13 +12,13 @@
 | 3. Investigación | descartado (lo del límite y Anthropic ya se revisó en T-70) | — |
 | 4. UX | hecho (el motor, D-177; el tablero, D-180, con las maquetas) | `ux.md` |
 | 5. Diseño técnico | hecho (D-178) | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | en curso (las maquetas del tablero, A y B, esperan Q-265) | `diseno/pantallas/frentes-a.html`, `frentes-b.html` |
+| 6. UI (solo si hay piezas nuevas) | en curso (A y B descartadas en Q-265; C, D y E esperan Q-266) | `diseno/pantallas/frentes-a.html` a `frentes-e.html` |
 | 7. Construcción | en curso (FS-I1 y FS-I2 hechas: el motor; sigue el tablero) | este archivo |
 | 8. Calidad | pendiente (la del motor, marcada `sola`; la del tablero, al terminarlo) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); se eligen en Q-265.
+Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); no convencieron (Q-265) y se dibujaron tres formas nuevas: C (una fila por frente), D (por quién lo hace, con los frentes como filtro) y E (grilla de frentes); se eligen en Q-266.
 
 ## Ruta
 - [x] Pensar cómo la IA trabaja sola y cómo se ve qué sigue
@@ -30,7 +30,7 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - [x] Contar al volver lo que hizo sola y lo que te espera (FS-I2, chico)
 - [ ] Probar el avance solo una noche (T-113, Q-264)
 - [ ] Medir la calidad del motor (mediano, sola)
-- [ ] Dibujar el tablero Frentes: las tarjetas a la izquierda y el mapa de tareas al centro (Q-265)
+- [ ] Dibujar el tablero Frentes: las tarjetas a la izquierda y el mapa de tareas al centro (Q-266)
 - [ ] Construir el tablero, con las preguntas de cada frente en su lugar (T-112, grande)
   - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (mediano)
 - [ ] Medir la calidad del tablero (mediano)
@@ -63,5 +63,5 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - Pruebas: Vitest `fs2-avance.test.ts` (19: las reglas, los pasos de un proyecto, el motor con reloj falso, el aviso), Playwright `fs2-avance.spec.ts` (toma el paso de Alfa, la conversación y el aviso, con capturas; con el frente apagado no toma nada).
 
 ## Próximo paso
-Con Q-265, pasar la maqueta elegida a la app (FS-I3: el tablero, con su prueba con capturas); si pide cambios, corregir la maqueta y volver a preguntar. Con Q-264, ver qué hizo el motor de noche (`arranques.json`, la conversación) y arreglar lo que falle.
+Con Q-266, pasar la maqueta elegida a la app (FS-I3: el tablero, con su prueba con capturas); si pide cambios, corregir la maqueta y volver a preguntar. Con Q-264, ver qué hizo el motor de noche (`arranques.json`, la conversación) y arreglar lo que falle.
 **Leer antes:** `modulos/frentes/ux.md` › Parte 2; D-180; la maqueta elegida; `modulos/mapa/diseno-tecnico.md` (lo que lee el Mapa de hoy).

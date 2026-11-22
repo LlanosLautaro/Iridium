@@ -150,3 +150,14 @@ function armarTablero() {
   ver.addEventListener('change', pintar)
   pintar()
 }
+
+// Una tarea como tarjeta (C, D y E): el texto y, abajo, el código, el tamaño, «sola» o lo que espera; con frente, su nombre.
+function tareaHTML(p, clase = '', frente = '') {
+  const senal = p.e === 'tuya' ? `<a class="senal ambar" href="bandeja.html" title="Abrir ${p.q} en la Bandeja">Te espera · ${p.q}</a>`
+    : p.e === 'pausa' ? '<span class="senal ambar">En pausa</span>'
+    : p.sola ? `<span class="senal">${icono('robot')}sola</span>` : ''
+  const pie = [frente ? `<span class="fs-de">${frente}</span>` : '', p.cod ? `<span class="codigo">${p.cod}</span>` : '', p.tam && !p.e ? `<span>${p.tam}</span>` : '', senal].join('')
+  return `<div class="fs-tarea ${clase}"><span class="nombre">${p.t}</span>${pie ? `<span class="pie">${pie}</span>` : ''}</div>`
+}
+const pregHTML = ([q, t, tipo], frente = '') =>
+  `<a class="fs-tarea espera" href="bandeja.html"><span class="nombre">${t}</span><span class="pie">${frente ? `<span class="fs-de">${frente}</span>` : ''}<span class="codigo">${q}</span><span>${tipo}</span></span></a>`

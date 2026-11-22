@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Frentes · D · Por quién</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<link rel="stylesheet" href="frentes-tarea.css">
+<style>
+  /* D: todo el proyecto en tres columnas por quién lo hace; los frentes, como filtro arriba. */
+  .fs-filtros { flex-wrap: wrap; row-gap: 0; margin-bottom: var(--esp-5); }
+  .fs-cab { display: flex; align-items: center; gap: var(--esp-3); min-height: var(--alto-campo); margin-bottom: var(--esp-4); }
+  .fs-cab h2 { margin: 0; font: var(--estilo-titulo); }
+  .fs-cab .derecha { margin-left: auto; }
+  .fs-columnas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--esp-5); align-items: start; }
+  .fs-col { display: flex; flex-direction: column; gap: var(--esp-2); }
+  .fs-col .bloque-titulo { margin-bottom: var(--esp-1); }
+  .filtro .apagada { color: var(--texto-apagado); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="mapa">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Frentes</h1><span class="ruta">Hito 10 · Operación</span>
+      <span class="acciones-cab"><label class="interruptor"><input type="checkbox" id="ver-archivados"><span>Archivados <span class="cuenta">5</span></span></label></span></div>
+  </header>
+  <div class="contenido">
+    <div class="filtros fs-filtros" id="filtros"></div>
+    <div id="cab"></div>
+    <div class="fs-columnas" id="columnas"></div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+<script src="frentes.js"></script>
+<script>
+  const ver = document.getElementById('ver-archivados')
+  let elegido = null
+
+  function pintar() {
+    const lista = elegido ? [elegido] : FRENTES
+    const espera = [], sola = [], vos = []
+    for (const f of lista) {
+      const de = elegido ? '' : f.nombre
+      const preg = f.preguntas ?? []
+      for (const q of preg) espera.push(pregHTML(q, de))
+      for (const p of f.pasos.filter(pendiente)) {
+        if (p.e === 'tuya') { if (!preg.some(([q]) => q === p.q)) espera.push(tareaHTML(p, 'espera', de)); continue }
+        if (p.sola && f.sola && !p.e) sola.push([p, de])
+        else vos.push([p, de])
+      }
+    }
+    // La IA sola, en el orden en que los toma: lo chico primero, después lo demás.
+    const peso = { chico: 0, mediano: 1, grande: 2 }
+    sola.sort((a, b) => (peso[a[0].tam] ?? 1) - (peso[b[0].tam] ?? 1))
+    const col = (t, items, vacio, frena) => `<section class="fs-col"><h3 class="bloque-titulo">${t} <span class="cuenta${frena && items.length ? ' frena' : ''}">${items.length}</span></h3>` +
+      (items.join('') || `<p class="fs-gris">${vacio}</p>`) + '</section>'
+    const columnas = document.getElementById('columnas')
+    columnas.innerHTML =
+      col('Te espera', espera, 'Nada te espera.', true) +
+      col('La IA sigue sola', sola.map(([p, de], i) => tareaHTML(p, i === 0 ? 'foco' : '', de)), 'Nada marcado para que siga sola.') +
+      col('Cuando estés', vos.map(([p, de]) => tareaHTML(p, p.e === 'pausa' ? 'pausa' : '', de)), 'Nada más en la ruta.')
+    const cab = document.getElementById('cab')
+    cab.innerHTML = elegido && !elegido.archivado
+      ? `<div class="fs-cab"><h2>${elegido.nombre}</h2><span class="gris-3">${elegido.nucleo ? 'Lo que no es de ningún frente' : elegido.estado}</span>` +
+        `<span class="derecha"><label class="interruptor"><input type="checkbox"${elegido.sola ? ' checked' : ''}><span>${elegido.sola ? 'Avanza sola' : 'No avanza sola'}</span></label></span></div>`
+      : ''
+    cab.querySelector('input')?.addEventListener('change', (ev) => { elegido.sola = ev.target.checked; filtros(); pintar() })
+    ponerIconos(columnas)
+  }
+
+  function filtros() {
+    const zona = document.getElementById('filtros')
+    zona.innerHTML = ''
+    for (const f of [null, ...FRENTES, ...(ver.checked ? ARCHIVADOS : [])]) {
+      const b = document.createElement('button')
+      b.className = 'filtro' + (f === elegido ? ' elegido' : '')
+      const n = f ? (f.preguntas?.length ?? 0) : FRENTES.reduce((a, x) => a + (x.preguntas?.length ?? 0), 0)
+      b.innerHTML = (f ? f.nombre : 'Todos') + (n ? ` <span class="cuenta frena">${n}</span>` : '') + (f && !f.sola && !f.archivado ? ' <span class="apagada">apagada</span>' : '')
+      b.addEventListener('click', () => { elegido = f; filtros(); pintar() })
+      zona.append(b)
+    }
+  }
+  ver.addEventListener('change', () => { if (elegido?.archivado) elegido = null; filtros(); pintar() })
+  filtros()
+  pintar()
+</script>
+</body>
+</html>

@@ -21,6 +21,9 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Antes del hito 10 (los hitos) | Mapa (propuesta) | pantallas/mapa-hitos.html | 2026-11-18 00:48 |
 | A · Columnas: Hecho, Ahora, Después | Frentes (propuesta) | pantallas/frentes-a.html | — |
 | B · El camino de hoy, con tamaño y «sola» | Frentes (propuesta) | pantallas/frentes-b.html | — |
+| C · Una fila por frente | Frentes (propuesta) | pantallas/frentes-c.html | — |
+| D · Por quién lo hace | Frentes (propuesta) | pantallas/frentes-d.html | — |
+| E · Grilla de frentes | Frentes (propuesta) | pantallas/frentes-e.html | — |
 | Bandeja de entrada | Un proyecto | pantallas/bandeja.html | — |
 | Mapa | Un proyecto | pantallas/mapa.html | — |
 | Revisión | Un proyecto | pantallas/revision.html | 2026-11-18 19:45 |
