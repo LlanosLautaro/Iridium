@@ -188,6 +188,15 @@
         ],
         "createdAt": "2026-11-22T19:50:06.563Z",
         "reason": "Claude triage: the spacing comes from the project's token scale and varies with what it separates (--esp-1 inside a card up to --esp-6 between the questions and the tasks); the rule reads the repeated var() as one value"
+      },
+      {
+        "rule": "monotonous-spacing",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/frentes-e.html"
+        ],
+        "createdAt": "2026-11-22T19:58:05.578Z",
+        "reason": "Claude triage: spacing comes from the project's token scale and varies by what it separates (--esp-1 inside a task up to --esp-5 inside the open frente); same false positive as frentes-a/b"
       }
     ]
   }
