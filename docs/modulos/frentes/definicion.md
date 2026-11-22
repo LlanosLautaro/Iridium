@@ -1,7 +1,7 @@
 # Definición del módulo: Frentes
 
 **Fecha:** 2026-11-22
-**Estado:** espera Q-263
+**Estado:** aprobada en Q-263 (D-176)
 **Base:** `propuesta.md`, D-175 (Q-262), lo pensado en `trabajo.md` › T-113, el Arranque (D-146, D-149) y la ruta de cada frente (D-139).
 
 ## Objetivo del módulo

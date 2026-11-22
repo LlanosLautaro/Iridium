@@ -8,9 +8,9 @@
 | Paso | Estado | Documento |
 |---|---|---|
 | 1. Propuesta | hecho (pensada en el chat; Q-262, D-175) | `propuesta.md` |
-| 2. Definición | en curso (espera Q-263) | `definicion.md` |
+| 2. Definición | hecho (aprobada en Q-263, D-176) | `definicion.md` |
 | 3. Investigación | descartado (lo del límite y Anthropic ya se revisó en T-70) | — |
-| 4. UX | pendiente | `ux.md` |
+| 4. UX | en curso | `ux.md` |
 | 5. Diseño técnico | pendiente | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | pendiente (las maquetas del tablero) | — |
 | 7. Construcción | pendiente | este archivo |
@@ -18,11 +18,11 @@
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. La definición espera Q-263.
+Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176): sigue la UX del motor.
 
 ## Ruta
 - [x] Pensar cómo la IA trabaja sola y cómo se ve qué sigue
-- [ ] Aprobar qué hace el avance solo y qué muestra el tablero (Q-263)
+- [x] Aprobar qué hace el avance solo y qué muestra el tablero (Q-263)
 - [ ] Marcar en la ruta de cada frente el tamaño y si la IA sigue sola
 - [ ] Apagar el avance solo por proyecto y por frente
 - [ ] Elegir en Ajustes cuándo avanza sola
@@ -47,5 +47,5 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 ## Log de iteraciones
 
 ## Próximo paso
-Con Q-263 respondida: la UX corta del motor (Ajustes, interruptores, el aviso) y el diseño técnico, para construir el motor (FS-I1) antes del reinicio semanal.
+La UX corta del motor (Ajustes, interruptores, el aviso) y el diseño técnico, para construir el motor (FS-I1) antes del reinicio semanal.
 **Leer antes:** `modulos/frentes/definicion.md`; `modulos/arranque/diseno-tecnico.md`; `recursos/plugins/iridium/skills/iridium/SKILL.md` › La ruta de un frente.

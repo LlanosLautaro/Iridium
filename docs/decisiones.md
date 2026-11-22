@@ -182,6 +182,7 @@
 | D-173 | 2026-11-22 | Paridad, general (T-114) | 10, Q-259 | T-114 va antes de Capacidades, la segunda parte de Paridad | vigente |
 | D-174 | 2026-11-22 | general (framework y control; T-117) | 10, a pedido del usuario (T-117) | Lo terminado se cierra en el mismo cambio, y el control avisa del trabajo hecho en la ruta o del frente hecho que sigue abierto | vigente |
 | D-175 | 2026-11-22 | Frentes (T-112, T-113), Arranque y Mapa | 10, Q-262 | Se abre el frente Frentes antes de Capacidades: primero la IA avanzando sola por tamaño con la fila interna, después el Mapa rediseñado como Frentes | vigente |
+| D-176 | 2026-11-22 | Frentes | 10; frente Frentes, paso 2 (Definición), Q-263 | La definición de Frentes queda aprobada, con la Bandeja primero, después lo chico más viejo y después el frente en curso | vigente |
 
 ---
 
@@ -3440,3 +3441,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** se abre el frente Frentes, antes de Capacidades (Paridad queda en pausa). Primero el motor: la IA marca en la ruta el tamaño (chico, mediano, grande) y si sigue sola; Iridium arma la fila en su propio JSON y el Arranque toma pasos mientras se cumplen las condiciones que elige el usuario (por defecto, drenar todo), con interruptores por proyecto y por frente. Después, con maquetas, el Mapa pasa a ser Frentes: tarjetas por frente a la izquierda (lo más reciente arriba), el mapa de tareas reales al centro y las preguntas del frente en su lugar, sin repetir su nombre.
 **Motivo:** el motor primero aprovecha la cuota de esta semana; la marca va en la ruta y no en un JSON que escriba la IA para no tener dos lugares que se desfasan (como las ideas en T-117).
 **Consecuencias:** `modulos/frentes/` (propuesta, definición y ruta); el formato de la ruta, su lector y el control cambian juntos (D-086); T-112 y T-113 pasan a `en curso` en el frente Frentes. La definición espera Q-263.
+
+## D-176 — La definición de Frentes queda aprobada, con lo chico antes que el frente en curso
+- **Fecha:** 2026-11-22
+- **Ámbito:** el frente Frentes (`modulos/frentes/definicion.md`)
+- **Hito o paso:** 10; frente Frentes, paso 2 (Definición), Q-263
+- **Estado:** vigente
+
+**Contexto:** la definición (D-175) dejaba abierto en qué orden toma el trabajo el avance solo.
+**Decisión:** aprobada como está escrita; el orden: lo que espera en la Bandeja, después el paso chico más viejo, después el frente en curso.
+**Motivo:** va cerrando lo chico, como pidió el usuario, y lo grande avanza con el período recién abierto.
+**Consecuencias:** sigue la UX corta del motor y su diseño técnico; después, la construcción (FS-I1).
