@@ -180,6 +180,7 @@
 | D-171 | 2026-11-22 | Compartir | 10; CO-I10, Q-255 | Iridium se instala como una app y se actualiza con electron-updater | vigente |
 | D-172 | 2026-11-22 | general (Git, T-114) | 10, Q-257 | Lo que cambia archivos espera a que su proyecto esté al día con GitHub | vigente |
 | D-173 | 2026-11-22 | Paridad, general (T-114) | 10, Q-259 | T-114 va antes de Capacidades, la segunda parte de Paridad | vigente |
+| D-174 | 2026-11-22 | general (framework y control; T-117) | 10, a pedido del usuario (T-117) | Lo terminado se cierra en el mismo cambio, y el control avisa del trabajo hecho en la ruta o del frente hecho que sigue abierto | vigente |
 
 ---
 
@@ -3416,3 +3417,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** A. T-114 va ahora; después, la definición de Capacidades.
 **Motivo:** con Iridium instalado en la otra PC, T-114 evita que las dos trabajen sobre archivos distintos, y es corta.
 **Consecuencias:** la fila queda: T-114, Capacidades (Paridad, segunda parte), Orden (paso 8), Abrir (paso 8 y T-87), Plantillas.
+
+## D-174 — Lo terminado se cierra en el mismo cambio que lo termina, y el control lo vigila
+- **Fecha:** 2026-11-22
+- **Ámbito:** general: el framework (`SKILL.md` › El trabajo) y el control de la ruta (T-117; D-086, D-145)
+- **Hito o paso:** 10, a pedido del usuario (T-117)
+- **Estado:** vigente
+
+**Contexto:** el usuario vio ideas que no pasaban de «Aprobada» a «Hecha» (T-117). Iridium muestra bien lo que lee: aprobar pasa la idea a `pendiente`, pero el framework no le pedía a la IA cerrarla al terminarla, y nada lo controlaba. Dos ideas ya construidas seguían abiertas: T-70 (el frente Arranque, hecho el 2026-11-21) y T-96 (la primera parte de Paridad, el 2026-11-22). Ninguna perdió su `Idea:`.
+**Decisión:** el framework pide cerrar un `T-n` en el mismo cambio que lo termina, en especial al marcar `[x]` el último paso de la ruta que lo nombra y al pasar a `hecho` el frente que nació de él (el `T-n` de su `**Tipo:**` o de su fila en `## Módulos`). El control de la ruta avisa de las dos cosas: un `T-n` abierto que las rutas solo nombran en pasos `[x]`, y el `T-n` abierto de un frente `hecho`. Es un error de formato que se repite: va al framework y al control, no a un parche (D-086).
+**Motivo:** cerrarlo a mano no evita la próxima vez; con el aviso al final del turno, la IA lo corrige en el momento. Las dos señales no dan avisos de más en los documentos de hoy: solo T-70 y T-96.
+**Consecuencias:** `core/control/ruta.ts` suma los dos avisos (pruebas en `tests/ma1-ruta.test.ts`); el origen de un frente se lee en un solo lugar (`origenDeFrente`, `core/ruta.ts`), el mismo que usa el Mapa. T-70 y T-96 pasan a `hecho`; T-117, hecho.

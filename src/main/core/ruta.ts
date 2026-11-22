@@ -122,6 +122,12 @@ export function trabajoDeRuta(ruta: RutaLeida | null): Set<string> {
   return r
 }
 
+/** El trabajo que originó un frente: los `T-n` de la línea `**Tipo:**` de su `estado.md` (D-145). */
+export function origenDeFrente(texto: string): string[] {
+  const tipo = texto.split(/\r?\n/).find((l) => /^\*\*Tipo:\*\*/.test(l.trim()))
+  return tipo?.match(/\bT-\d+\b/g) ?? []
+}
+
 // Las listas del Mapa que salen de `trabajo.md` al leer (D-143, D-145): «Aprobado, sin lugar en la ruta» de cada
 // frente y «Por empezar». Cuenta el trabajo abierto (`pendiente` o `en curso`); lo `nueva` sigue solo en Ideas.
 

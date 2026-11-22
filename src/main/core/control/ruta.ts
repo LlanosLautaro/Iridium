@@ -1,8 +1,11 @@
 // La ruta de cada frente (Mapa, MA-I1, D-145): que `## Ruta` sea una lista de casillas que el Mapa entiende, que nombre
 // códigos que existen y que el frente en curso la tenga. Los frentes en operación o en pausa sin ruta no se avisan:
-// la reciben la próxima vez que se trabaje en ellos (D-139).
+// la reciben la próxima vez que se trabaje en ellos (D-139). Además (D-174), que el trabajo cumplido no siga abierto:
+// un `T-n` que la ruta solo nombra en pasos hechos, o el que originó un frente que ya está hecho.
+import type { Estado } from '../estados'
 import { frenteDeEstado, leerFrentes } from '../mapa'
-import { leerRuta, type PasoRuta } from '../ruta'
+import { leerRuta, origenDeFrente, type PasoRuta } from '../ruta'
+import { leerTrabajo } from '../trabajo'
 import { type Aviso, type Regla, sinAcentos } from './tipos'
 
 function codigosQueExisten(estado: string, trabajo: string | null, respuestas: ReadonlyMap<string, string>) {
@@ -12,22 +15,36 @@ function codigosQueExisten(estado: string, trabajo: string | null, respuestas: R
   return { q, t }
 }
 
+const ABIERTO: ReadonlySet<Estado> = new Set<Estado>(['nueva', 'pendiente', 'en curso', 'en pausa'])
+
 export const reglaRuta: Regla = (a) => {
   const avisos: Aviso[] = []
   const general = a.estados.find((e) => e.ruta === 'docs/estado.md')
   const existen = codigosQueExisten(general?.texto ?? '', a.trabajo, a.respuestas)
-  const enCurso = new Set(
-    leerFrentes(general?.texto ?? '', true)
-      .filter((f) => f.estado === 'en curso')
-      .map((f) => {
-        const delNombre = a.frentes.find((x) => sinAcentos(x.nombre) === sinAcentos(f.nombre))?.carpeta
-        return f.carpeta ?? delNombre ?? null
-      })
-      .filter((c): c is string => c !== null),
-  )
+  const estadoDe = new Map(leerTrabajo(a.trabajo ?? '').items.map((i) => [i.codigo, i]))
+  const filas = leerFrentes(general?.texto ?? '', true).map((f) => ({
+    ...f,
+    carpeta:
+      f.carpeta ?? a.frentes.find((x) => sinAcentos(x.nombre) === sinAcentos(f.nombre))?.carpeta ?? null,
+  }))
+  const enCurso = new Set(filas.filter((f) => f.estado === 'en curso').map((f) => f.carpeta))
+  // Por `T-n` abierto, los pasos de todas las rutas que lo nombran: si todos están hechos, el trabajo también.
+  const pasosDe = new Map<string, { archivo: string; linea: number; hecho: boolean }[]>()
   for (const e of a.estados) {
     const carpeta = frenteDeEstado(e.ruta)
     if (!carpeta) continue
+    const fila = filas.find((f) => f.carpeta === carpeta)
+    if (fila?.estado === 'hecho')
+      for (const c of new Set([...fila.trabajo, ...origenDeFrente(e.texto)])) {
+        const item = estadoDe.get(c)
+        if (item?.estado && ABIERTO.has(item.estado))
+          avisos.push({
+            regla: 'ruta',
+            archivo: 'docs/trabajo.md',
+            linea: item.linea + 1,
+            texto: `${c} originó el frente ${fila.nombre}, que está \`hecho\`, y sigue \`${item.estado}\`: pasalo a \`hecho\` (o a \`descartado\` con el motivo)`,
+          })
+      }
     const ruta = leerRuta(e.texto)
     if (!ruta) {
       if (enCurso.has(carpeta))
@@ -58,10 +75,27 @@ export const reglaRuta: Regla = (a) => {
             linea: p.linea,
             texto: `${c} no está en \`trabajo.md\``,
           })
+        for (const c of p.trabajo)
+          pasosDe.set(c, [
+            ...(pasosDe.get(c) ?? []),
+            { archivo: e.ruta, linea: p.linea, hecho: p.marca === 'hecho' },
+          ])
         revisar(p.ramas)
       }
     }
     revisar(ruta.pasos)
+  }
+  for (const [c, pasos] of pasosDe) {
+    const item = estadoDe.get(c)
+    if (!item?.estado || !ABIERTO.has(item.estado) || pasos.some((p) => !p.hecho)) continue
+    const ultimo = pasos.at(-1)
+    if (ultimo)
+      avisos.push({
+        regla: 'ruta',
+        archivo: ultimo.archivo,
+        linea: ultimo.linea,
+        texto: `${c} está hecho en la ruta y sigue \`${item.estado}\` en \`trabajo.md\`: pasalo a \`hecho\`, o nombrá lo que le falta en un paso sin marcar`,
+      })
   }
   return avisos
 }

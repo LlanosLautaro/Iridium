@@ -23,7 +23,7 @@ import {
   nombreDeModulo,
   type PasoLeido,
 } from '../core/mapa'
-import { leerRuta, listasDelMapa, type PasoRuta, textoSinCodigos } from '../core/ruta'
+import { leerRuta, listasDelMapa, origenDeFrente, type PasoRuta, textoSinCodigos } from '../core/ruta'
 import { leerTrabajo } from '../core/trabajo'
 import { textoPlano } from '../core/visor/lineas'
 import { ordenDeDocumentos } from './documentos'
@@ -206,7 +206,7 @@ function frentesDe(
     conCarpeta.map((x, i) => ({
       nombres: [x.modulo.nombre, x.modulo.carpeta, ...(x.fila ? [x.fila.nombre] : [])],
       ruta: rutas[i] ?? null,
-      origen: [...(x.fila?.trabajo ?? []), ...origenDe(x.modulo.texto)],
+      origen: [...(x.fila?.trabajo ?? []), ...origenDeFrente(x.modulo.texto)],
     })),
     esperan,
     leerTrabajo(d.texto(TRABAJO) ?? '').items,
@@ -251,12 +251,6 @@ function frentesDe(
   const activo = frentes.findIndex((f) => f.estado === 'en curso')
   if (activo > 0) frentes.unshift(...frentes.splice(activo, 1))
   return { frentes, porEmpezar: listas.porEmpezar }
-}
-
-/** El trabajo que originó un frente: los `T-n` de la línea `**Tipo:**` de su `estado.md` (D-145). */
-function origenDe(texto: string): string[] {
-  const tipo = texto.split(/\r?\n/).find((l) => /^\*\*Tipo:\*\*/.test(l.trim()))
-  return tipo?.match(/\bT-\d+\b/g) ?? []
 }
 
 function pasoDeRuta(

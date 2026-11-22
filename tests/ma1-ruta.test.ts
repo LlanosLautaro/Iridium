@@ -121,14 +121,16 @@ const GENERAL = `# Estado del proyecto
 Seguir.
 `
 
-function archivos(alfa: string, beta = '# Estado del módulo: Beta\n'): ArchivosControl {
+const SONAR = '# Trabajo\n\n## T-52 — Sonar\nEstado: pendiente · Fecha: 2026-11-07\n'
+
+function archivos(alfa: string, beta = '# Estado del módulo: Beta\n', trabajo = SONAR): ArchivosControl {
   return {
     estados: [
       { ruta: 'docs/estado.md', texto: GENERAL },
       { ruta: 'docs/modulos/alfa/estado.md', texto: alfa },
       { ruta: 'docs/modulos/beta/estado.md', texto: beta },
     ],
-    trabajo: '# Trabajo\n\n## T-52 — Sonar\nEstado: pendiente · Fecha: 2026-11-07\n',
+    trabajo,
     respuestas: new Map(),
     documentos: [],
     frentes: [
@@ -160,5 +162,26 @@ describe('el control de la ruta', () => {
       [4, 'Q-99 no está'],
       [4, 'T-77 no está'],
     ])
+  })
+
+  // D-174 (T-117): el trabajo cumplido no queda abierto, o la idea sigue «Aprobada» en Ideas.
+  it('avisa del T-n que la ruta solo nombra en pasos hechos y sigue abierto', () => {
+    const avisos = deRuta(archivos('## Ruta\n- [x] Sonar cuando termina (T-52)\n'))
+    expect(avisos.map((a) => [a.archivo, a.linea])).toEqual([['docs/modulos/alfa/estado.md', 2]])
+    expect(avisos[0]?.texto).toContain('T-52 está hecho en la ruta y sigue `pendiente`')
+  })
+
+  it('no avisa si le queda un paso sin marcar o si ya está hecho', () => {
+    expect(deRuta(archivos('## Ruta\n- [x] Sonar (T-52)\n- [ ] Elegir el sonido (T-52)\n'))).toEqual([])
+    const hecho = SONAR.replace('Estado: pendiente', 'Estado: hecho')
+    expect(deRuta(archivos('## Ruta\n- [x] Sonar (T-52)\n', undefined, hecho))).toEqual([])
+  })
+
+  it('avisa del T-n que originó un frente hecho y sigue abierto; no si el frente sigue en curso', () => {
+    const tipo = '# Estado del módulo: X\n\n**Tipo:** sección (T-52)\n'
+    const avisos = deRuta(archivos('## Ruta\n- [ ] Uno\n', tipo))
+    expect(avisos.map((a) => [a.archivo, a.linea])).toEqual([['docs/trabajo.md', 3]])
+    expect(avisos[0]?.texto).toContain('originó el frente Beta')
+    expect(deRuta(archivos(`${tipo}\n## Ruta\n- [ ] Uno\n`))).toEqual([])
   })
 })

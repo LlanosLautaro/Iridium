@@ -292,7 +292,7 @@ Pasó a ser el frente Ideas (D-127): sumado a guardar enlaces de repos para revi
 Hecho el 2026-11-17: el frente Ideas terminó (ID-I1 a ID-I4 probadas, la última en Q-198; la calidad, en `modulos/ideas/estado.md` › Calidad).
 
 ## T-70 — es posible un "session usage starter"? es decir, una pequeña herramienta que inicie con casi 0 tokens el periodo de 5hs de uso, de este modo se podría iniciar siempre cada 5hs independientemente de si y escribí algo o no, para aprovechar mejor los periodos de tiempo de 5hs, creo que esto es similar a los caché warmers que según entiendo anthropic los permite, quizás deberíamos echar un ojo antes de hacerlo
-Estado: en curso · Frente: Arranque · Idea: usuario · Fecha: 2026-11-15 · Origen: D-135
+Estado: hecho · Frente: Arranque · Idea: usuario · Fecha: 2026-11-15 · Origen: D-135
 Decidido en Q-188 (D-135): con trabajo real y desde la misma Iridium abierta, a eso de las 3 y unos 5 minutos después de que venza cada ventana. Va después de Ideas.
 Revisada con la IA el 2026-11-16 (espera Q-184):
 - **Cómo anda el límite:** en Pro y Max, el período de 5 horas empieza con el primer mensaje (en claude.ai o en Claude Code, que comparten el uso) y se renueva 5 horas después; aparte está el límite semanal, que no cambia con esto.
@@ -301,6 +301,8 @@ Revisada con la IA el 2026-11-16 (espera Q-184):
 - **Lo de Anthropic:** las condiciones prohíben usar el servicio «por medios automáticos» salvo con clave de API o donde Anthropic lo permita; Claude Code sin ventana sí está pensado para eso, pero no hay nada escrito sobre arrancar el período a propósito. Riesgo bajo con un mensaje por día; no usar herramientas de terceros que imiten a Claude Code (eso sí lo cortaron). Los «cache warmers» son otra cosa: mantienen la caché de la API, que se paga por uso, y no aplican a la suscripción.
 - **Cómo sería en Iridium:** en Ajustes, «Abrir el período de Claude a las HH:MM» (una o más horas, días de semana), que crea o borra la tarea de Windows; anda con Iridium cerrada y la PC prendida, y si falló (sin red, sesión vencida) lo dice la próxima vez que abras Iridium. Chico: una o dos iteraciones, después del frente Ideas.
 - **Q-184, la propuesta del usuario (2026-11-16):** en vez de un mensaje vacío, arrancar el período con trabajo real: tocar solo «Continúa con el proyecto» en un proyecto con la Bandeja lista (respuestas sin procesar, que no dependen de él), a eso de las 3 si la PC está prendida y unos minutos después de que venza cada ventana; sin bandeja lista, no hace nada. Revisado: es mejor que el mensaje vacío (no hay nada que parezca abuso: es el uso normal de Claude Code, que Iridium ya hace) y Iridium ya sabe cuándo vence la ventana (la barra de uso la lee del motor). Cómo sería: uno solo por vez, el proyecto cuyas respuestas esperan hace más; en una conversación nueva (a esa hora la caché venció, y retomar una larga es lo más caro); no si ya hay una sesión trabajando en él; la Bandeja dice qué arrancó y cuándo. Necesita Iridium abierta (es la que corre las sesiones), salvo que una tarea de Windows la abra. Espera Q-188.
+
+Hecho el 2026-11-21: es el frente Arranque (`modulos/arranque/estado.md`), construido, probado una noche (Q-227) y con su calidad medida. Quedó `en curso` al cerrar el frente; corregido el 2026-11-22 (T-117).
 
 ## T-71 — El Mapa como una red de pasos, uno por frente
 Estado: hecho · Frente: Mapa · Fecha: 2026-11-15 · Origen: R-59, Q-171
@@ -414,8 +416,10 @@ Hoy un documento largo (como la clasificación MoSCoW de un hito 2) solo se pued
 Estado: nueva · Idea: usuario · Fecha: 2026-11-21
 
 ## T-96 — una muestra de como se ve el chat de Claude desktop, el + despliega esas opciones, el resto nosotros lo tenemos parecido.
-Estado: pendiente · Frente: Paridad · Idea: usuario · Fecha: 2026-11-21 · Origen: D-165
+Estado: hecho · Frente: Paridad · Idea: usuario · Fecha: 2026-11-21 · Origen: D-165
 Es la base del frente Paridad: el + del compositor con Agregar archivos o fotos (Ctrl+U) y Comandos de barra, y «/» para los comandos (`modulos/paridad/propuesta.md`).
+
+Hecho el 2026-11-22: la primera parte de Paridad (PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258): «/» con los comandos, el + con archivos y fotos, pegar fotos y el texto largo pegado como ficha. Lo que sigue del frente, Capacidades, es T-28. Quedó `pendiente` al cerrar esa parte; corregido el 2026-11-22 (T-117).
 
 ## T-97 — Mencionar un archivo con «@» en el chat
 Estado: nueva · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
@@ -511,4 +515,6 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-117 — Parece que las Ideas anotadas aqui no siempre se mueven correctamente entre sus estados de "aprobada" y "implementada"
-Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Estado: hecho · Idea: usuario · Fecha: 2026-11-22
+Revisada el 2026-11-22: Iridium muestra bien el estado que lee; el problema era la IA. Aprobar pasa la idea a `pendiente` (Aprobada), pero nada le pedía a la IA pasarla a `hecho` (Hecha) al terminarla, y dos ideas tuyas ya construidas seguían como Aprobadas: T-70 (el Arranque, terminado el 2026-11-21) y T-96 (el + y los comandos del chat, la primera parte de Paridad). Ninguna idea perdió su marca de idea ni cambió sola de estado.
+Hecho el 2026-11-22 (D-174): las dos pasan a Hechas, el framework dice cuándo se cierra una idea (al marcar hecho el último paso de la ruta que la nombra y al cerrar el frente que nació de ella) y el control lo avisa al terminar cada turno si la IA se olvida. Pruebas: `tests/ma1-ruta.test.ts`.
