@@ -499,7 +499,7 @@ Hecho el 2026-11-22 (CO-I9, `modulos/compartir/estado.md`): la versión publicad
 
 ## T-112 — dejar tareas en cola ya sea para un chat o en un "pendientes"
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
-Pensada en el chat con T-113 el 2026-11-22: son una sola cosa, una fila de trabajo que la IA puede hacer sola (esta idea) y un motor que la consume cuando hay cuota que se perdería (T-113). Ver T-113; espera Q-261.
+Pensada en el chat con T-113 el 2026-11-22: son una sola cosa, una fila de trabajo que la IA puede hacer sola (esta idea) y un motor que la consume cuando hay cuota que se perdería (T-113). Ver T-113; espera Q-262.
 
 ## T-113 — hacer que elsistema que activa el uso de cuota se pueda configurar más activo, por ejemplo ir atacando uno a uno los pendientes de todos los proyectos siempre que haya cuota disponible y no se esté usando, esto sería especiamente util durante la mañana, claro podria amancer con un 0% de mi cuota de 5hs pero habría obtenido progreso que en caso de no usarlo y llegar el reset semanal sería cuota de uso perdida
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
@@ -511,7 +511,14 @@ Pensada en el chat con T-112 el 2026-11-22 (sin construir nada):
 - **El motor (el Arranque, más activo):** además de abrir el período, mientras no estés usando Iridium y quede cuota en las 5 horas, toma de a uno lo siguiente de la fila de cualquier proyecto, un proyecto a la vez (dos sesiones en el mismo repo se pisan) y esperando a GitHub (D-172).
 - **La cuota semanal manda:** solo vale gastar la que se perdería. Regla propuesta: trabaja sola si el uso de la semana va por debajo de lo que pasó de la semana (ej. martes a la noche, 30 % usado de un 40 % transcurrido), con un margen y un tope que elegís; así nunca te come lo que vas a necesitar el viernes. La mañana con el período en 0 % es una elección tuya: un «hasta las HH:MM» o un «dejar al menos N % del período».
 - **El cuello pasa a ser tuyo:** si trabaja toda la noche en 5 cosas, a la mañana tenés 5 pruebas y decisiones. El aviso «Mientras no estabas» (AR-4) es el lugar para eso, y la fila tendría que no tomar más de un frente nuevo si ya dejó muchas `Q-n` esperando.
-Espera Q-261.
+Segunda vuelta en el chat (2026-11-22); Q-261 quedó sin responder y la reemplaza Q-262:
+- **Lo que dijo el usuario:** el Mapa no cumple «ver qué sigue» (sigue costando entenderlo); que pase a ser **Frentes**, un tablero con todos los frentes (también los no empezados), su selector, sus pendientes y si puede seguir sola; Pendientes queda igual, como atajo a todo. Los frentes chicos se van haciendo apenas surgen y los muy chicos van al núcleo (la consola integrada, T-116, no sería un frente aparte). El uso, sin piedad: drenar la cuota, con las condiciones configurables. Cada frente (o su próximo paso) se estima a ojo en chico, mediano o grande, para no empezar uno grande con 10 % del período.
+- **Evaluado:** el tablero vuelve a lo que pedía T-71 (la opción A de D-137, «qué viene») sin perder el camino de hoy (D-138), que pasa a ser el detalle al tocar un frente. Cada fila: el nombre, el próximo paso en una línea, el tamaño, «sigue sola» o «te espera» (con la `Q-n`) y cuántos pendientes tiene. Grupos: en curso, listos para seguir solos, te esperan, por empezar; los archivados, aparte como hoy. El núcleo es una fila más, con sus `T-n` sin frente.
+- **Tamaño y cuota:** el tamaño es del próximo paso (una iteración), no del frente entero, porque eso es lo que se corta. Grande solo con el período recién abierto (o casi entero); mediano con la mitad; chico rellena lo que queda. Al terminar, Iridium anota cuánto del período gastó cada uno y avisa si la estimación anda mal, así deja de ser a ojo con el tiempo. Los chicos del mismo proyecto van juntos en una sesión: el arranque de cada sesión cuesta.
+- **Si volvés mientras trabaja:** termina la iteración que tiene en la mano (cortarla a medias es lo más caro) y no toma otra hasta que dejes de usar Iridium.
+- **Condiciones que se eligen:** horario (ej. de 1 a 9), minutos sin usar Iridium, cuánto del período deja (0 % si se drena), tope de la semana (100 % si se drena) y qué tamaños acepta.
+- **A tener en cuenta:** usar Claude Code sin ventana para trabajo propio está previsto por Anthropic, pero el uso continuo toda la noche es justo lo que motivó el límite semanal; con trabajo real y dentro de los límites, el riesgo es bajo.
+Espera Q-262.
 
 ## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
 Estado: en curso (espera Q-260) · Idea: usuario · Fecha: 2026-11-22 · Origen: Q-257
@@ -528,3 +535,6 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Estado: hecho · Idea: usuario · Fecha: 2026-11-22
 Revisada el 2026-11-22: Iridium muestra bien el estado que lee; el problema era la IA. Aprobar pasa la idea a `pendiente` (Aprobada), pero nada le pedía a la IA pasarla a `hecho` (Hecha) al terminarla, y dos ideas tuyas ya construidas seguían como Aprobadas: T-70 (el Arranque, terminado el 2026-11-21) y T-96 (el + y los comandos del chat, la primera parte de Paridad). Ninguna idea perdió su marca de idea ni cambió sola de estado.
 Hecho el 2026-11-22 (D-174): las dos pasan a Hechas, el framework dice cuándo se cierra una idea (al marcar hecho el último paso de la ruta que la nombra y al cerrar el frente que nació de ella) y el control lo avisa al terminar cada turno si la IA se olvida. Pruebas: `tests/ma1-ruta.test.ts`.
+
+## T-118 — skill de iridium incluye un MCP iridium? tendrpia algún sentido si todo es local?
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
