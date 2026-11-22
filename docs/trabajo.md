@@ -499,9 +499,19 @@ Hecho el 2026-11-22 (CO-I9, `modulos/compartir/estado.md`): la versión publicad
 
 ## T-112 — dejar tareas en cola ya sea para un chat o en un "pendientes"
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Pensada en el chat con T-113 el 2026-11-22: son una sola cosa, una fila de trabajo que la IA puede hacer sola (esta idea) y un motor que la consume cuando hay cuota que se perdería (T-113). Ver T-113; espera Q-261.
 
 ## T-113 — hacer que elsistema que activa el uso de cuota se pueda configurar más activo, por ejemplo ir atacando uno a uno los pendientes de todos los proyectos siempre que haya cuota disponible y no se esté usando, esto sería especiamente util durante la mañana, claro podria amancer con un 0% de mi cuota de 5hs pero habría obtenido progreso que en caso de no usarlo y llegar el reset semanal sería cuota de uso perdida
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Pensada en el chat con T-112 el 2026-11-22 (sin construir nada):
+- **Qué falta no es un estado más:** de 117 ítems, 35 son `nueva` sin evaluar y 24 `pendiente`, pero ninguno dice si la IA puede hacerlo sola. Esa es la dimensión que falta. Mezclar ideas con pedidos y errores no es el problema (el framework ya anota los errores como `T-n`); el problema es que no hay una señal de «listo para que la IA siga sola». T-78 («implementada») ya quedó cubierta por `hecho` (T-117).
+- **No es un Kanban:** mover tarjetas a mano ya se descartó (D-137), y lo que se busca es lo contrario, que la IA tome cosas sin que muevas nada.
+- **La fila:** una marca en lo que ya existe, no una lista nueva. Un `T-n` `pendiente` o un paso de la `## Ruta` de un frente pueden marcarse «la IA puede seguir sola» (lo marca la IA al planear y vos lo ves y lo sacás si no querés). Cada frente chico (temas T-75, el instalador, esto mismo) aporta su próximo paso marcado; así no hace falta abrir 10 frentes «en curso» a la vez: quedan listos y la fila los va tomando.
+- **La regla para frenar ya existe:** la IA trabaja hasta que necesita algo tuyo; ahí deja la `Q-n`, cierra la iteración y el motor pasa a lo siguiente de la fila (así se trabaja hoy desde Iridium sin nadie mirando).
+- **El motor (el Arranque, más activo):** además de abrir el período, mientras no estés usando Iridium y quede cuota en las 5 horas, toma de a uno lo siguiente de la fila de cualquier proyecto, un proyecto a la vez (dos sesiones en el mismo repo se pisan) y esperando a GitHub (D-172).
+- **La cuota semanal manda:** solo vale gastar la que se perdería. Regla propuesta: trabaja sola si el uso de la semana va por debajo de lo que pasó de la semana (ej. martes a la noche, 30 % usado de un 40 % transcurrido), con un margen y un tope que elegís; así nunca te come lo que vas a necesitar el viernes. La mañana con el período en 0 % es una elección tuya: un «hasta las HH:MM» o un «dejar al menos N % del período».
+- **El cuello pasa a ser tuyo:** si trabaja toda la noche en 5 cosas, a la mañana tenés 5 pruebas y decisiones. El aviso «Mientras no estabas» (AR-4) es el lugar para eso, y la fila tendría que no tomar más de un frente nuevo si ya dejó muchas `Q-n` esperando.
+Espera Q-261.
 
 ## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
 Estado: en curso (espera Q-260) · Idea: usuario · Fecha: 2026-11-22 · Origen: Q-257
