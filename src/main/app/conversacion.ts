@@ -2,7 +2,15 @@
 // (H-14) y una sesión por proyecto que sigue aunque no esté a la vista (H-2, H-6, D-015). Recibe el motor y el
 // registro de sesiones de afuera: así se prueba con el motor falso.
 import { basename } from 'node:path'
-import { type ComandoMotor, comandoDe, escondidoDe } from '../../compartido/comandos'
+import {
+  type AdjuntoPedido,
+  type AdjuntoVista,
+  conAdjuntosDespuesDelComando,
+  leerAdjuntos,
+  leerAdjuntosDeComando,
+  lineasDe,
+} from '../../compartido/adjuntos'
+import { type CapacidadesMotor, type ComandoMotor, comandoDe, escondidoDe } from '../../compartido/comandos'
 import type {
   AjusteIa,
   CambioConversacion,
@@ -26,8 +34,17 @@ import {
   tocadaDespues,
   usadaAfuera,
 } from '../core/sesiones'
+import type { FotoLeida } from '../infra/fotos'
 import type { ArchivoSesiones, ResumenSesion } from '../infra/sesiones'
-import type { EventoMotor, FallaMotor, MensajeMotor, Motor, SesionMotor, UsoMotor } from '../motor/motor'
+import type {
+  EventoMotor,
+  FallaMotor,
+  FotoMotor,
+  MensajeMotor,
+  Motor,
+  SesionMotor,
+  UsoMotor,
+} from '../motor/motor'
 
 const SIN_AJUSTE: AjusteIa = { modelo: null, esfuerzo: null }
 /** Cuánto se espera, al cerrar la app, a que las sesiones frenadas terminen de guardar su estado (F-6). */
@@ -73,6 +90,10 @@ export interface DependenciasConversacion {
   alComandos?: (ruta: string, comandos: ComandoMotor[]) => void
   /** Se mandó un comando: va a los usados hace poco (PA-1). */
   alComando?: (nombre: string) => void
+  /** Lee una foto para mandarla, achicada si pasa los límites del motor (PA-I2). Sin esto, la foto va como archivo. */
+  leerFoto?: (ruta: string, limites: NonNullable<CapacidadesMotor['fotos']>) => Promise<FotoLeida>
+  /** Si una ruta es de una foto pegada: su nombre en el mensaje es «Imagen pegada». */
+  esPegada?: (ruta: string) => boolean
   /** Una línea para el registro del día (errores del motor; nunca el texto de la conversación). */
   registrar?: (texto: string) => void
   ahora?: () => number
@@ -187,10 +208,31 @@ export class Conversaciones {
             avisos: control.map((a) => ({ ...a, quedo: null })),
             corrigiendo: false,
           }
-        const texto = m.texto.startsWith(AVISO_DETENIDA)
+        const crudo = m.texto.startsWith(AVISO_DETENIDA)
           ? m.texto.slice(AVISO_DETENIDA.length).trim()
           : m.texto
-        return { tipo: 'usuario', id: this.id(), texto, cuando: m.cuando }
+        // Los adjuntos (PA-5): los bloques de Iridium del principio (después del comando, si empieza con uno) y las fotos.
+        const comando = comandoDe(crudo) !== null
+        const leidos = comando ? leerAdjuntosDeComando(crudo) : { comando: '', ...leerAdjuntos(crudo) }
+        const texto = comando
+          ? [leidos.comando, leidos.texto.trim()].filter(Boolean).join('\n\n')
+          : leidos.texto
+        const adjuntos: AdjuntoVista[] = [
+          ...(m.fotos ?? []).map((f) => ({
+            tipo: 'foto' as const,
+            src: `data:${f.medio};base64,${f.datos}`,
+            nombre: null,
+          })),
+          ...leidos.archivos.map((ruta) => ({ tipo: 'archivo' as const, ruta })),
+          ...leidos.pegados.map((p) => ({ tipo: 'pegado' as const, ...p })),
+        ]
+        return {
+          tipo: 'usuario',
+          id: this.id(),
+          texto,
+          cuando: m.cuando,
+          ...(adjuntos.length ? { adjuntos } : {}),
+        }
       }
       case 'ia':
         return {
@@ -410,7 +452,9 @@ export class Conversaciones {
       } else if (!p.cargado) await this.cargar(p)
       if (!p.sesion) await this.prepararHtml(p)
 
-      const texto = pedido.texto?.trim() || MENSAJE_SEGUI
+      const pedidos = pedido.adjuntos ?? []
+      // Solo con adjuntos, el mensaje sale sin texto (PA-2); sin nada, es Seguí.
+      const texto = pedido.texto?.trim() || (pedidos.length ? '' : MENSAJE_SEGUI)
       // Sin sesión iniciada en Claude Code no se abre nada (F-5): el aviso dice cómo y Reintentar lo vuelve a mandar.
       if (!p.sesion && this.d.motorListo) {
         const estado = await this.d.motorListo()
@@ -420,7 +464,13 @@ export class Conversaciones {
             p,
             [
               estado.tipo === 'sin-sesion'
-                ? { tipo: 'sin-sesion', id: this.id(), reintentar, enviado: false }
+                ? {
+                    tipo: 'sin-sesion',
+                    id: this.id(),
+                    reintentar,
+                    ...(pedidos.length ? { adjuntos: pedidos } : {}),
+                    enviado: false,
+                  }
                 : {
                     tipo: 'aviso',
                     id: this.id(),
@@ -435,7 +485,11 @@ export class Conversaciones {
       }
       // Un comando va primero, sin el aviso de «te detuve»: ese queda para el próximo mensaje que no lo sea (D-169 › 7).
       const comando = capacidades.comandos ? comandoDe(texto) : null
-      const mensaje = comando ? texto : mensajeParaLaIa(texto, p.detenida)
+      // Los adjuntos (D-169 › 5): las fotos aparte; los archivos y los textos pegados, en sus bloques antes de lo escrito
+      // (después del comando, si empieza con uno).
+      const { fotos, vistas, archivos, pegados } = await this.leerAdjuntos(pedidos, capacidades)
+      const conAdjuntos = conAdjuntosDespuesDelComando(texto, { pegados, archivos }, comando !== null)
+      const mensaje = comando ? conAdjuntos : mensajeParaLaIa(conAdjuntos, p.detenida)
       if (!comando) {
         if (p.id && p.detenida)
           await this.d.registro.guardar(p.id, this.resumenInicial(p, 'afuera'), { detenida: false })
@@ -447,17 +501,69 @@ export class Conversaciones {
         p.ficha = { ruta, estado: 'trabajando', preguntas: [], motivo: null }
       }
       p.envios++
-      this.emitir(p, [{ tipo: 'usuario', id: this.id(), texto, cuando: this.ahora() }], reiniciar)
+      this.emitir(
+        p,
+        [
+          {
+            tipo: 'usuario',
+            id: this.id(),
+            texto,
+            cuando: this.ahora(),
+            ...(vistas.length ? { adjuntos: vistas } : {}),
+          },
+        ],
+        reiniciar,
+      )
       if (comando) this.d.alComando?.(comando.nombre)
 
-      await this.mandar(p, mensaje)
+      await this.mandar(p, mensaje, fotos)
     })
   }
 
+  /**
+   * Los adjuntos de un pedido, listos para mandar (D-169 › 5 y 9): cada foto leída (y achicada si pasa los límites del
+   * motor); sin fotos en el motor, o una que no se pudo leer, va como archivo, con su ruta. En el orden del mensaje: las
+   * fotos, los archivos y los textos pegados.
+   */
+  private async leerAdjuntos(
+    pedidos: readonly AdjuntoPedido[],
+    capacidades: CapacidadesMotor,
+  ): Promise<{ fotos: FotoMotor[]; vistas: AdjuntoVista[]; archivos: string[]; pegados: string[] }> {
+    const fotos: FotoMotor[] = []
+    const vistasFotos: AdjuntoVista[] = []
+    const archivos: string[] = []
+    const pegados: string[] = []
+    for (const a of pedidos) {
+      if (a.tipo === 'pegado') {
+        pegados.push(a.texto)
+        continue
+      }
+      if (a.tipo === 'foto' && capacidades.fotos && this.d.leerFoto) {
+        const leida = await this.d.leerFoto(a.ruta, capacidades.fotos).catch(() => null)
+        if (leida?.tipo === 'ok') {
+          fotos.push(leida.foto)
+          vistasFotos.push({
+            tipo: 'foto',
+            src: `data:${leida.foto.medio};base64,${leida.foto.datos}`,
+            nombre: this.d.esPegada?.(a.ruta) ? 'Imagen pegada' : basename(a.ruta),
+          })
+          continue
+        }
+      }
+      archivos.push(a.ruta)
+    }
+    const vistas: AdjuntoVista[] = [
+      ...vistasFotos,
+      ...archivos.map((ruta) => ({ tipo: 'archivo' as const, ruta })),
+      ...pegados.map((t) => ({ tipo: 'pegado' as const, lineas: lineasDe(t), texto: t })),
+    ]
+    return { fotos, vistas, archivos, pegados }
+  }
+
   /** Manda un mensaje a la sesión abierta o abre una con la misma conversación (D-037). */
-  private async mandar(p: Proyecto, mensaje: string): Promise<void> {
+  private async mandar(p: Proyecto, mensaje: string, fotos: FotoMotor[] = []): Promise<void> {
     const ruta = p.ruta
-    if (p.sesion?.enviar(mensaje)) return
+    if (p.sesion?.enviar(mensaje, fotos)) return
     {
       const base = this.d.instruccionBase?.(ruta) ?? INSTRUCCION_CENTRO
       const extra = await this.d.instruccion?.(ruta).catch(() => null)
@@ -474,7 +580,7 @@ export class Conversaciones {
         (e) => this.alEvento(p, sesion, e),
       )
       p.sesion = sesion
-      sesion.enviar(mensaje)
+      sesion.enviar(mensaje, fotos)
     }
   }
 

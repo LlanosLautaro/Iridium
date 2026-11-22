@@ -3,15 +3,24 @@
 // texto y Detener. Los códigos y las citas de la IA abren Docs (F-4). Cada proyecto guarda la suya y su posición (H-6).
 // Con las piezas de las maquetas (docs/diseno/piezas.css › La conversación; DI-I3, tanda 5) y en español neutro (D-110).
 import {
+  type ClipboardEvent,
   type KeyboardEvent,
   memo,
   type ReactNode,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
+import {
+  type AdjuntoPedido,
+  type AdjuntoVista,
+  adjuntoDeRuta,
+  MAX_ADJUNTOS,
+  sumarAdjuntos,
+} from '../../../compartido/adjuntos'
 import { type Cita, leerCitas, mensajeConCitas } from '../../../compartido/citas'
 import {
   type ComandoMotor,
@@ -35,6 +44,7 @@ import { useAltoDelTexto } from '../../ui/altoDelTexto'
 import { Icono } from '../../ui/Icono'
 import { Menu } from '../../ui/Menu'
 import { cuandoFue, cuandoSera, hora, pc } from '../../ui/tiempo'
+import { type EnVisor, FichasCompositor, FichasEnviadas, Visor } from './Adjuntos'
 import { MedidorContexto, ModeloYEsfuerzo } from './AjustesIa'
 import { idOpcion, LineaEscondido, ListaComandos, useCapacidades, useListaComandos } from './Comandos'
 import { tocarEnlace } from './enlaces'
@@ -196,7 +206,10 @@ function SinSesion({ entrada, ruta }: { entrada: Extract<Entrada, { tipo: 'sin-s
             onClick={() => {
               setReintentando(true)
               void window.iridium
-                .seguir(ruta, entrada.reintentar ? { texto: entrada.reintentar } : {})
+                .seguir(ruta, {
+                  ...(entrada.reintentar ? { texto: entrada.reintentar } : {}),
+                  ...(entrada.adjuntos?.length ? { adjuntos: entrada.adjuntos } : {}),
+                })
                 .finally(() => setReintentando(false))
             }}
           >
@@ -479,9 +492,21 @@ function TarjetaComentario({ ruta, com }: { ruta: string; com: MensajeComentario
  * Lo que escribió el usuario. Un comentario de la Revisión, enviado desde la extensión o citado desde la sección
  * (R-101), se ve como tarjeta; lo demás citado, como cita arriba de lo escrito.
  */
-function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; quien: string }) {
+function MensajePropio({
+  ruta,
+  texto,
+  quien,
+  adjuntos,
+}: {
+  ruta: string
+  texto: string
+  quien: string
+  adjuntos?: AdjuntoVista[] | undefined
+}) {
   const com = leerMensaje(texto)
   if (com) return <TarjetaComentario ruta={ruta} com={com} />
+  // Lo que fue con el mensaje (PA-5): las fichas arriba del texto, sin ✕.
+  const fichas = adjuntos?.length ? <FichasEnviadas ruta={ruta} adjuntos={adjuntos} /> : null
   // Un comando (PA-5): el comando en la letra de los códigos, lo que se le escribió y, después, lo citado.
   if (comandoDe(texto)) {
     const [linea = '', ...resto] = texto.trim().split(/\n{2,}/)
@@ -489,6 +514,7 @@ function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; qu
     const { citas: citadas, texto: escrito } = leerCitas(resto.join('\n\n'))
     return (
       <div className="mensaje-yo con-citas" title={quien}>
+        {fichas}
         <p>
           <code className="cmd">/{cmd?.nombre}</code>
           {cmd?.resto && ` ${cmd.resto}`}
@@ -506,7 +532,12 @@ function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; qu
   // Lo citado al enviar (Q-182) se ve como cita, arriba de lo escrito.
   const { citas, texto: escrito } = leerCitas(texto)
   if (!citas.length)
-    return (
+    return fichas ? (
+      <div className="mensaje-yo con-citas" title={quien}>
+        {fichas}
+        {texto.trim() && <p>{texto}</p>}
+      </div>
+    ) : (
       <p className="mensaje-yo" title={quien}>
         {texto}
       </p>
@@ -516,8 +547,9 @@ function MensajePropio({ ruta, texto, quien }: { ruta: string; texto: string; qu
   return (
     <>
       {comentarios.map((c) => c && <TarjetaComentario key={c.codigo} ruta={ruta} com={c} />)}
-      {otras.length > 0 ? (
+      {otras.length > 0 || fichas ? (
         <div className="mensaje-yo con-citas" title={quien}>
+          {fichas}
           {otras.map((c, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
             <p key={i} className="citado-en-mensaje">
@@ -560,6 +592,7 @@ const Turnos = memo(function Turnos({
             <MensajePropio
               ruta={ruta}
               texto={t.entrada.texto}
+              adjuntos={t.entrada.adjuntos}
               quien={t.entrada.cuando !== null ? `${yo} · ${hora(t.entrada.cuando)}` : yo}
             />
           </div>
@@ -745,6 +778,8 @@ export interface Sobre {
 
 /** Sin citas: siempre el mismo arreglo, para que el estado no cambie de balde. */
 const SIN_CITAS: Cita[] = []
+/** Sin adjuntos: siempre el mismo arreglo. */
+const SIN_ADJUNTOS: AdjuntoPedido[] = []
 
 /** Lo que va al principio del mensaje: `Sobre la skill X`. */
 function sobreQue(s: Sobre): string {
@@ -784,6 +819,29 @@ export function Conversacion({
   const soltarCampo = usarEstado((s) => s.soltarCampo)
   const citas = usarEstado((s) => s.citas[ruta]) ?? SIN_CITAS
   const quitarCita = usarEstado((s) => s.quitarCita)
+  // Los adjuntos sin mandar (PA-2, PA-3): se guardan con lo escrito y no se pierden al cambiar de proyecto ni al cerrar.
+  const adjuntos = usarEstado((s) => s.adjuntos[ruta]) ?? SIN_ADJUNTOS
+  const adjuntar = usarEstado((s) => s.adjuntar)
+  /** Las fotos que no se pueden mandar (borde rojo): el mensaje no sale hasta sacarlas. */
+  const [noVan, setNoVan] = useState<ReadonlySet<string>>(new Set())
+  const alNoVa = useCallback(
+    (r: string, noVa: boolean) =>
+      setNoVan((antes) => {
+        if (antes.has(r) === noVa) return antes
+        const despues = new Set(antes)
+        if (noVa) despues.add(r)
+        else despues.delete(r)
+        return despues
+      }),
+    [],
+  )
+  /** Una línea arriba del cuadro sobre los adjuntos (los que no entraron, la foto pegada sin fotos en el motor). */
+  const [lineaAdjuntos, setLineaAdjuntos] = useState<string | null>(null)
+  const [enVisor, setEnVisor] = useState<EnVisor | null>(null)
+  const [soltando, setSoltando] = useState(false)
+  // La línea de los adjuntos se va al cambiar lo escrito, como la de un comando escondido.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: solo cuando cambia lo escrito.
+  useEffect(() => setLineaAdjuntos(null), [texto])
   // El cuadro crece con lo que se escribe (hasta un tope, después se desplaza) y vuelve a una línea al enviar.
   const caja = useRef<HTMLTextAreaElement>(null)
   useAltoDelTexto(caja, texto, 0)
@@ -797,7 +855,22 @@ export function Conversacion({
     capacidades?.comandos && !escondido && cerradaCon !== texto
       ? consultaDe(texto, cursor ?? texto.length)
       : null
-  const estadoComandos = useListaComandos(ruta, consulta !== null)
+  // Un comando con adjuntos: la lista dice si es de Claude Code, que no los lleva (D-169 › 7).
+  const comandoEscrito = capacidades?.comandos ? comandoDe(texto) : null
+  const estadoComandos = useListaComandos(
+    ruta,
+    consulta !== null || (comandoEscrito !== null && adjuntos.length > 0),
+  )
+  const comandoSinAdjuntos =
+    comandoEscrito && adjuntos.length > 0 && estadoComandos.tipo === 'lista'
+      ? (estadoComandos.comandos.find(
+          (c) =>
+            c.origen === 'motor' &&
+            [c.nombre, ...c.otrosNombres].some(
+              (n) => n.toLowerCase() === comandoEscrito.nombre.toLowerCase(),
+            ),
+        ) ?? null)
+      : null
   const grupos = useMemo(
     () =>
       estadoComandos.tipo === 'lista'
@@ -852,12 +925,15 @@ export function Conversacion({
     }
   }, [ruta, ponerConversacion])
 
-  const seguir = async (pedido: { texto?: string; nueva?: boolean }) => {
+  const seguir = async (pedido: { texto?: string; nueva?: boolean; adjuntos?: AdjuntoPedido[] }) => {
     setEnviando(true)
     try {
       await window.iridium.seguir(ruta, enBlanco ? { ...pedido, nueva: true } : pedido)
       setTexto('')
       quitarCita(ruta)
+      // Al mandar, las fichas se van con el mensaje (la foto pegada queda en los datos hasta el próximo arranque).
+      if (pedido.adjuntos?.length) adjuntar(ruta, [])
+      setLineaAdjuntos(null)
       if (enBlanco) cambiarVista(ruta, { enBlanco: false })
     } finally {
       setEnviando(false)
@@ -869,16 +945,110 @@ export function Conversacion({
     requestAnimationFrame(() => caja.current?.focus())
   }
   // Las citas van al principio del mensaje (Q-182); sin nada escrito, salen solas.
-  const sinNada = texto.trim() === '' && citas.length === 0
+  // Se puede mandar solo con adjuntos, sin texto (PA-2).
+  const sinNada = texto.trim() === '' && citas.length === 0 && adjuntos.length === 0
+  /** Lo que frena el envío además de un escondido: una foto que no va o un comando de Claude Code con adjuntos. */
+  const frenado = noVan.size > 0 || comandoSinAdjuntos !== null
   // Con un comando, el comando va primero y lo citado y «Sobre la skill…» después (D-169 › 7).
   const mensaje = () =>
     comandoPrimero(texto, mensajeConCitas(citas, sobre ? sobreQue(sobre) : ''), () =>
       mensajeConCitas(citas, sobre && texto.trim() ? `${sobreQue(sobre)}: ${texto}` : texto),
     )
+  /** El pedido con lo escrito y los adjuntos; sin nada, Seguí. */
+  const pedido = () => (sinNada ? {} : { texto: mensaje(), ...(adjuntos.length ? { adjuntos } : {}) })
   const enviar = () => {
-    if (sinNada || enviando || escondido) return
-    void seguir({ texto: mensaje() })
+    if (sinNada || enviando || escondido || frenado) return
+    void seguir(pedido())
   }
+  /** Suma adjuntos a los del cuadro: sin fotos en el motor, una foto va como archivo (PA-6); hasta 20. */
+  const sumar = (nuevos: AdjuntoPedido[]) => {
+    if (nuevos.length === 0) return
+    const tipados = capacidades?.fotos
+      ? nuevos
+      : nuevos.map((a) => (a.tipo === 'foto' ? { tipo: 'archivo' as const, ruta: a.ruta } : a))
+    const r = sumarAdjuntos(usarEstado.getState().adjuntos[ruta] ?? [], tipados)
+    adjuntar(ruta, r.adjuntos)
+    setLineaAdjuntos(
+      r.sobran > 0
+        ? `Entran hasta ${MAX_ADJUNTOS} adjuntos por mensaje: ${r.sobran === 1 ? 'uno quedó' : `${r.sobran} quedaron`} afuera.`
+        : null,
+    )
+    requestAnimationFrame(() => caja.current?.focus())
+  }
+  const quitarAdjunto = (i: number) => {
+    const quitado = adjuntos[i]
+    adjuntar(
+      ruta,
+      adjuntos.filter((_, j) => j !== i),
+    )
+    if (quitado && quitado.tipo !== 'pegado') alNoVa(quitado.ruta, false)
+    setLineaAdjuntos(null)
+  }
+  /** El + › Agregar archivos o fotos y Ctrl+U: el selector de Windows, con varios a la vez (PA-2). */
+  const elegirAdjuntos = async () => {
+    const rutas = await window.iridium.elegirAdjuntos().catch(() => [])
+    sumar(rutas.map(adjuntoDeRuta))
+  }
+  /** Ctrl+V con una imagen en el portapapeles (y sin texto): una ficha de foto (PA-3). */
+  const alPegar = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    const datos = e.clipboardData
+    if (datos.getData('text/plain')) return
+    const imagen = [...datos.files].find((f) => f.type.startsWith('image/'))
+    if (!imagen) return
+    e.preventDefault()
+    if (!capacidades?.fotos) {
+      setLineaAdjuntos('Este motor no recibe fotos pegadas.')
+      return
+    }
+    void imagen
+      .arrayBuffer()
+      .then((b) => window.iridium.guardarPegada(new Uint8Array(b)))
+      .then((r) =>
+        r ? sumar([{ tipo: 'foto', ruta: r }]) : setLineaAdjuntos('Eso no es una imagen que se pueda pegar.'),
+      )
+      .catch(() => setLineaAdjuntos('No se pudo pegar la imagen.'))
+  }
+  // Arrastrar archivos sobre la conversación (PA-2): el borde punteado y «Suelta para adjuntar»; soltar los suma. Se
+  // escucha en el panel entero (el `aside` que la contiene), no solo en el cuadro.
+  const cabecera = useRef<HTMLDivElement>(null)
+  const sumarSueltos = useRef(sumar)
+  sumarSueltos.current = sumar
+  useEffect(() => {
+    const panel = cabecera.current?.parentElement
+    if (!panel) return
+    const conArchivos = (e: DragEvent) => e.dataTransfer?.types.includes('Files') ?? false
+    const encima = (e: DragEvent) => {
+      if (!conArchivos(e)) return
+      e.preventDefault()
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'
+      setSoltando(true)
+    }
+    const sale = (e: DragEvent) => {
+      if (!(e.relatedTarget instanceof Node && panel.contains(e.relatedTarget))) setSoltando(false)
+    }
+    const suelta = (e: DragEvent) => {
+      if (!conArchivos(e)) return
+      e.preventDefault()
+      setSoltando(false)
+      const rutas = [...(e.dataTransfer?.files ?? [])]
+        .map((f) => window.iridium.rutaDeArchivo(f))
+        .filter((r) => r !== '')
+      sumarSueltos.current(rutas.map(adjuntoDeRuta))
+    }
+    panel.addEventListener('dragenter', encima)
+    panel.addEventListener('dragover', encima)
+    panel.addEventListener('dragleave', sale)
+    panel.addEventListener('drop', suelta)
+    return () => {
+      panel.removeEventListener('dragenter', encima)
+      panel.removeEventListener('dragover', encima)
+      panel.removeEventListener('dragleave', sale)
+      panel.removeEventListener('drop', suelta)
+    }
+  }, [])
+  useEffect(() => {
+    cabecera.current?.parentElement?.classList.toggle('soltando', soltando)
+  }, [soltando])
   /** Elegir un comando no lo manda: queda «/nombre » con el cursor para escribirle lo que pida (PA-1). */
   const elegirComando = (c: ComandoMotor) => {
     const nuevo = conComando(texto, c.nombre)
@@ -925,6 +1095,12 @@ export function Conversacion({
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault()
       enviar()
+      return
+    }
+    // Ctrl+U: agregar archivos o fotos (PA-2).
+    if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'u') {
+      e.preventDefault()
+      void elegirAdjuntos()
     }
   }
 
@@ -1024,7 +1200,7 @@ export function Conversacion({
 
   return (
     <>
-      <div className="cab-conv">
+      <div ref={cabecera} className="cab-conv">
         <div className="nombre-conv">
           {titulo && <b title={titulo}>{titulo}</b>}
           {subtitulo && <span title={subtitulo}>{subtitulo}</span>}
@@ -1050,7 +1226,7 @@ export function Conversacion({
           <button
             type="button"
             className="boton principal chico"
-            disabled={enviando || trabajando}
+            disabled={enviando || trabajando || frenado}
             title={
               trabajando
                 ? 'La IA está trabajando'
@@ -1058,7 +1234,7 @@ export function Conversacion({
                   ? 'Retomar esta conversación: lee docs/estado.md y sigue el próximo paso'
                   : 'La IA lee docs/estado.md y hace el próximo paso'
             }
-            onClick={() => void seguir(sinNada ? {} : { texto: mensaje() })}
+            onClick={() => void seguir(pedido())}
           >
             <Icono nombre="play" />
             Continuar
@@ -1128,6 +1304,21 @@ export function Conversacion({
             }
           />
         )}
+        {comandoSinAdjuntos && (
+          <div className="linea-cmd" role="note">
+            <Icono nombre="info" />
+            <span>
+              <code>/{comandoSinAdjuntos.nombre}</code>: los comandos de Claude Code no llevan adjuntos.
+              Sácalos o mándalos en otro mensaje.
+            </span>
+          </div>
+        )}
+        {lineaAdjuntos && (
+          <div className="linea-cmd" role="note">
+            <Icono nombre="info" />
+            <span>{lineaAdjuntos}</span>
+          </div>
+        )}
         {sobre && (
           <div className="sobre-skill">
             <span title={`El mensaje sale con «${sobreQue(sobre)}:» al principio`}>
@@ -1164,6 +1355,9 @@ export function Conversacion({
             ))}
           </div>
         )}
+        {adjuntos.length > 0 && (
+          <FichasCompositor adjuntos={adjuntos} quitar={quitarAdjunto} ver={setEnVisor} alNoVa={alNoVa} />
+        )}
         <textarea
           ref={caja}
           placeholder={trabajando ? 'Suma algo a lo que está haciendo…' : 'Escribe a la IA…'}
@@ -1175,6 +1369,7 @@ export function Conversacion({
           }}
           onSelect={(e) => setCursor(e.currentTarget.selectionStart)}
           onKeyDown={alTeclado}
+          onPaste={alPegar}
           {...(listaAbierta
             ? {
                 'aria-controls': 'lista-comandos',
@@ -1184,27 +1379,47 @@ export function Conversacion({
         />
         {/* El pie se parte en dos renglones si no entra: Detener nunca tapa el medidor del contexto. */}
         <div className="pie-comp">
-          {capacidades?.comandos && (
+          {capacidades && (
             <Menu
               boton={<Icono nombre="mas" />}
-              titulo="Agregar comandos"
+              titulo={
+                capacidades.comandos
+                  ? `Agregar ${capacidades.fotos ? 'archivos, fotos' : 'archivos'} o comandos`
+                  : `Agregar ${capacidades.fotos ? 'archivos o fotos' : 'archivos'}`
+              }
               claseBoton="boton solo-icono chico"
               clase="del-compositor"
               claseLista="arriba"
             >
               {(cerrar) => (
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => {
-                    cerrar()
-                    abrirComandos()
-                  }}
-                >
-                  <span className="barra-cmd">/</span>
-                  Comandos
-                  <span className="atajo">/</span>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      cerrar()
+                      void elegirAdjuntos()
+                    }}
+                  >
+                    <Icono nombre="archivo" />
+                    {capacidades.fotos ? 'Agregar archivos o fotos' : 'Agregar archivos'}
+                    <span className="atajo">Ctrl+U</span>
+                  </button>
+                  {capacidades.comandos && (
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        cerrar()
+                        abrirComandos()
+                      }}
+                    >
+                      <span className="barra-cmd">/</span>
+                      Comandos
+                      <span className="atajo">/</span>
+                    </button>
+                  )}
+                </>
               )}
             </Menu>
           )}
@@ -1231,7 +1446,7 @@ export function Conversacion({
               className="boton solo-icono chico"
               title="Enviar (Enter; Shift+Enter, salto de línea)"
               aria-label="Enviar"
-              disabled={sinNada || enviando || escondido !== null}
+              disabled={sinNada || enviando || escondido !== null || frenado}
               onClick={enviar}
             >
               <Icono nombre="flecha" />
@@ -1239,6 +1454,10 @@ export function Conversacion({
           </div>
         </div>
       </div>
+      <div className="soltar" aria-hidden="true">
+        Suelta para adjuntar
+      </div>
+      {enVisor && <Visor que={enVisor} cerrar={() => setEnVisor(null)} />}
     </>
   )
 }

@@ -14,6 +14,9 @@ import { ArchivoSesiones } from '../src/main/infra/sesiones'
 import { CambioPreferencias, Escrito } from '../src/main/ipc/esquemas'
 import { crearMotorFalso, type Motor } from '../src/main/motor/motor'
 
+/** Lo escrito sin adjuntos. */
+const solo = (texto: string) => ({ texto, adjuntos: [] })
+
 let raiz: string
 
 beforeEach(async () => {
@@ -27,18 +30,39 @@ describe('lo escrito en el cuadro de la conversación (D-060)', () => {
   it('se guarda por proyecto, sobrevive a cerrar Iridium y vacío se borra', async () => {
     const archivo = join(raiz, 'datos', 'escritos.json')
     const e = new ArchivoEscritos(archivo)
-    await e.guardar('C:/Alfa', 'Quiero que el chat\nguarde lo que escribo')
-    await e.guardar('C:/Beta', 'Otra cosa')
+    await e.guardar('C:/Alfa', solo('Quiero que el chat\nguarde lo que escribo'))
+    await e.guardar('C:/Beta', solo('Otra cosa'))
     // Otra vez la app: lo lee del disco.
     const otra = new ArchivoEscritos(archivo)
     expect(Object.fromEntries(await otra.todos())).toEqual({
-      'C:/Alfa': 'Quiero que el chat\nguarde lo que escribo',
-      'C:/Beta': 'Otra cosa',
+      'C:/Alfa': solo('Quiero que el chat\nguarde lo que escribo'),
+      'C:/Beta': solo('Otra cosa'),
     })
     // Al enviar queda vacío: se borra.
-    await otra.guardar('C:/Alfa', '   ')
+    await otra.guardar('C:/Alfa', solo('   '))
     expect(Object.fromEntries(await new ArchivoEscritos(archivo).todos())).toEqual({
-      'C:/Beta': 'Otra cosa',
+      'C:/Beta': solo('Otra cosa'),
+    })
+  })
+
+  it('guarda los adjuntos sin mandar, aunque no haya texto (PA-I2)', async () => {
+    const archivo = join(raiz, 'adjuntos', 'escritos.json')
+    const adjuntos = [
+      { tipo: 'foto' as const, ruta: 'D:/Descargas/captura.png' },
+      { tipo: 'archivo' as const, ruta: 'D:/Descargas/registro.log' },
+    ]
+    await new ArchivoEscritos(archivo).guardar('C:/Alfa', { texto: '', adjuntos })
+    const otra = new ArchivoEscritos(archivo)
+    expect((await otra.todos()).get('C:/Alfa')).toEqual({ texto: '', adjuntos })
+    expect([...(await otra.rutasAdjuntas())]).toEqual(adjuntos.map((a) => a.ruta))
+  })
+
+  it('lee el escritos.json de antes (versión 1, solo texto)', async () => {
+    const archivo = join(raiz, 'v1', 'escritos.json')
+    await mkdir(join(raiz, 'v1'), { recursive: true })
+    await writeFile(archivo, JSON.stringify({ version: 1, escritos: { 'C:/Alfa': 'de antes' } }))
+    expect(Object.fromEntries(await new ArchivoEscritos(archivo).todos())).toEqual({
+      'C:/Alfa': solo('de antes'),
     })
   })
 
@@ -46,10 +70,10 @@ describe('lo escrito en el cuadro de la conversación (D-060)', () => {
     const archivo = join(raiz, 'escritos.json')
     await writeFile(archivo, '{ roto')
     expect((await new ArchivoEscritos(archivo).todos()).size).toBe(0)
-    await new ArchivoEscritos(archivo).guardar('C:/Alfa', 'hola')
+    await new ArchivoEscritos(archivo).guardar('C:/Alfa', solo('hola'))
     expect(JSON.parse(await readFile(archivo, 'utf8'))).toEqual({
-      version: 1,
-      escritos: { 'C:/Alfa': 'hola' },
+      version: 2,
+      escritos: { 'C:/Alfa': solo('hola') },
     })
   })
 

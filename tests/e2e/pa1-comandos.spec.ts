@@ -137,7 +137,7 @@ test('el + › Comandos escribe la «/» y abre la lista; una skill nueva la pon
   const { app, win } = await abrir()
   const cuadro = win.getByLabel('Mensaje para la IA')
   const lista = win.getByRole('listbox', { name: 'Comandos' })
-  await win.locator('.compositor').getByRole('button', { name: 'Agregar comandos' }).click()
+  await win.locator('.compositor').getByRole('button', { name: 'Agregar archivos, fotos o comandos' }).click()
   await win.screenshot({ path: 'test-results/pa1-mas.png' })
   await win.getByRole('menuitem', { name: /Comandos/ }).click()
   await expect(cuadro).toHaveValue('/')
@@ -154,12 +154,14 @@ test('el + › Comandos escribe la «/» y abre la lista; una skill nueva la pon
   await app.close()
 })
 
-test('un motor sin comandos: «/» no abre nada y no hay + (PA-6)', async () => {
+test('un motor sin comandos: «/» no abre nada y el + no tiene Comandos (PA-6)', async () => {
   const { app, win } = await abrir({ IRIDIUM_FALSO_COMANDOS: 'no' })
   const cuadro = win.getByLabel('Mensaje para la IA')
   await cuadro.click()
   await cuadro.pressSequentially('/cle')
   await expect(win.getByRole('listbox', { name: 'Comandos' })).toHaveCount(0)
-  await expect(win.locator('.compositor').getByRole('button', { name: 'Agregar comandos' })).toHaveCount(0)
+  await win.locator('.compositor').getByRole('button', { name: 'Agregar archivos o fotos' }).click()
+  await expect(win.getByRole('menuitem', { name: /Agregar archivos o fotos/ })).toBeVisible()
+  await expect(win.getByRole('menuitem', { name: /Comandos/ })).toHaveCount(0)
   await app.close()
 })

@@ -53,9 +53,11 @@ describe('un archivo roto se aparta antes de pisarlo', () => {
     await writeFile(archivo, 'no es JSON')
     const e = new ArchivoEscritos(archivo)
     expect((await e.todos()).size).toBe(0)
-    await e.guardar('D:/P', 'hola')
+    await e.guardar('D:/P', { texto: 'hola', adjuntos: [] })
     expect(await readFile(`${archivo}.roto`, 'utf8')).toBe('no es JSON')
-    await expect(new ArchivoEscritos(archivo).todos()).resolves.toEqual(new Map([['D:/P', 'hola']]))
+    await expect(new ArchivoEscritos(archivo).todos()).resolves.toEqual(
+      new Map([['D:/P', { texto: 'hola', adjuntos: [] }]]),
+    )
   })
 
   it('sesiones.json', async () => {

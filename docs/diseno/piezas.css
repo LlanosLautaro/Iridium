@@ -403,7 +403,6 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .linea-cmd .ic { width: 14px; height: 14px; flex: none; color: var(--texto-3); }
 .linea-cmd code, .mensaje-yo code.cmd { font: var(--estilo-codigo); color: var(--texto); }
 .linea-cmd .boton { margin-left: auto; }
-.mensaje-yo .fichas.enviadas { margin-bottom: var(--esp-2); }
 .panel-conversacion { position: relative; }
 .panel-conversacion.soltando .mensajes, .panel-conversacion.soltando .compositor { opacity: .35; }
 .panel-conversacion .soltar { position: absolute; inset: var(--esp-2); z-index: 10; display: none; place-items: center; border: 2px dashed var(--borde-control); border-radius: var(--radio-bloque); color: var(--texto); font: var(--estilo-control); pointer-events: none; }
@@ -458,10 +457,14 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .ficha.foto { width: 56px; height: 56px; padding: 0; overflow: hidden; }
 .ficha.foto img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .ficha.foto .quitar { position: absolute; top: 2px; right: 2px; background: var(--elevado); }
+.ficha.foto .abrir-ficha { display: grid; place-items: center; width: 100%; height: 100%; padding: 0; border: 0; background: none; color: var(--texto-3); cursor: pointer; }
+.ficha.foto .abrir-ficha img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.ficha .nota { color: var(--texto-3); }
 .ficha.no-va { border-color: var(--error-borde); }
 .fichas.enviadas { gap: var(--esp-1); }
 .fichas.enviadas .ficha { border-color: var(--borde-control); padding-right: var(--esp-3); }
 .fichas.enviadas .ficha.foto { width: 72px; height: 72px; padding: 0; }
+.mensaje-yo .fichas.enviadas { margin-bottom: var(--esp-1); }
 
 /* ───────── Información a pedido ─────────
    Grupo: Avisos

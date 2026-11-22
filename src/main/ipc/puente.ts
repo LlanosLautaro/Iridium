@@ -1,9 +1,10 @@
 // El lado principal del puente: atiende los pedidos de la ventana y le manda los eventos. Valida todo lo que llega.
 import { mkdir, readdir, readFile, rename, stat } from 'node:fs/promises'
-import { basename, dirname, join, normalize } from 'node:path'
+import { basename, dirname, isAbsolute, join, normalize, relative } from 'node:path'
 import { type BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { z } from 'zod'
 import { actualizarSolo } from '../../compartido/actualizar'
+import { MAX_ADJUNTOS } from '../../compartido/adjuntos'
 import { sumarReciente } from '../../compartido/comandos'
 import {
   type AccesoVersiones,
@@ -14,6 +15,7 @@ import {
   type ListaProyectos,
   type Preferencias,
   type ResultadoAbrir,
+  type ResultadoAdjunto,
   type ResultadoEjecutar,
   type ResultadoFicha,
   type ResultadoGit,
@@ -92,6 +94,7 @@ import { ESQUEMA_MAQUETA, type MaquetasAbiertas } from '../infra/diseno/protocol
 import type { ArchivoVistos } from '../infra/diseno/vistos'
 import { ejecutarPlan } from '../infra/ejecutar'
 import type { ArchivoEscritos } from '../infra/escritos'
+import { type Fotos, leerFoto } from '../infra/fotos'
 import { leerCommit, leerDiferencia, leerGit } from '../infra/git'
 import { entrarGithub, githubFalso, githubReal, inicializarRepo, publicarRepo } from '../infra/github'
 import { abrirEnNavegador } from '../infra/navegador'
@@ -112,6 +115,7 @@ import {
   CommitPedido,
   Documento,
   Escrito,
+  EscritoConAdjuntos,
   EsquemaBorrador,
   EstadoFicha,
   EstadoIdeaEsquema,
@@ -129,16 +133,31 @@ import {
   PedidoPublicar,
   PedidoResponder,
   Ruta,
+  RutaAbsoluta,
   RutaArchivo,
   Tengo,
   TextoNotas,
 } from './esquemas'
+
+/** Lo que se ejecuta al abrirlo: un clic en una ficha lo muestra en su carpeta, nunca lo ejecuta. */
+const SE_EJECUTA = /\.(exe|bat|cmd|ps1|msi|lnk|vbs|js|com|scr)$/i
+/** Lo más que pesa una foto pegada (`diseno-tecnico.md` › Seguridad). */
+const MAX_PEGADA = 20 * 2 ** 20
+
+async function existe(ruta: string): Promise<boolean> {
+  return stat(ruta).then(
+    () => true,
+    () => false,
+  )
+}
 
 export interface Servicios {
   config: ArchivoConfig
   sesiones: ArchivoSesiones
   borradores: ArchivoBorradores
   escritos: ArchivoEscritos
+  /** Las fotos del chat: leerlas, achicarlas, sus miniaturas y las pegadas (frente Paridad, PA-I2). */
+  fotos: Fotos
   motor: Motor
   /** La carpeta de proyectos si `config.json` todavía no tiene una. */
   raizInicial: () => Promise<string>
@@ -432,6 +451,8 @@ export function registrarPuente(s: Servicios): Puente {
           comandosRecientes: sumarReciente((await s.config.leer()).comandosRecientes, nombre),
         }),
       ).catch(() => {}),
+    leerFoto: (ruta, limites) => leerFoto(ruta, limites, s.fotos.imagenes),
+    esPegada: (ruta) => s.fotos.esPegada(ruta),
     preguntas: leerPreguntasAbiertas,
     alCambio: (c) => {
       enviar(CANALES.conversacionCambio, c)
@@ -605,8 +626,45 @@ export function registrarPuente(s: Servicios): Puente {
   })
 
   ipcMain.handle(CANALES.leerEscritos, async () => Object.fromEntries(await s.escritos.todos()))
-  ipcMain.handle(CANALES.guardarEscrito, (_, ruta: unknown, texto: unknown) =>
-    guardando(async () => s.escritos.guardar(await proyecto(ruta), Escrito.parse(texto))),
+  ipcMain.handle(CANALES.guardarEscrito, (_, ruta: unknown, escrito: unknown) =>
+    guardando(async () => s.escritos.guardar(await proyecto(ruta), EscritoConAdjuntos.parse(escrito))),
+  )
+
+  // Los adjuntos del chat (frente Paridad, PA-I2): el selector de Windows, la foto pegada, la miniatura y la foto
+  // grande (la ventana no lee el disco) y abrir el archivo de una ficha.
+  ipcMain.handle(CANALES.elegirAdjuntos, async (): Promise<string[]> => {
+    const v = s.ventana()
+    const opciones = { title: 'Agregar archivos o fotos' }
+    const r = await (v
+      ? dialog.showOpenDialog(v, { ...opciones, properties: ['openFile', 'multiSelections'] })
+      : null)
+    return r && !r.canceled ? r.filePaths.slice(0, MAX_ADJUNTOS) : []
+  })
+  ipcMain.handle(CANALES.guardarPegada, async (_, bytes: unknown) => {
+    if (!(bytes instanceof Uint8Array) || bytes.byteLength > MAX_PEGADA)
+      throw new Error('guardarPegada: no es una imagen o pesa más de 20 MB')
+    return s.fotos.guardarPegada(bytes)
+  })
+  ipcMain.handle(CANALES.miniatura, (_, ruta: unknown) => s.fotos.miniatura(RutaAbsoluta.parse(ruta)))
+  ipcMain.handle(CANALES.fotoGrande, (_, ruta: unknown) => s.fotos.grande(RutaAbsoluta.parse(ruta)))
+  ipcMain.handle(
+    CANALES.abrirAdjunto,
+    async (_, ruta: unknown, archivo: unknown): Promise<ResultadoAdjunto> => {
+      const r = await proyecto(ruta)
+      const a = RutaAbsoluta.parse(archivo)
+      if (!(await existe(a))) return { tipo: 'no-esta' }
+      const dentro = relative(r, a)
+      if (dentro && !dentro.startsWith('..') && !isAbsolute(dentro))
+        return { tipo: 'en-proyecto', archivo: dentro.replace(/\\/g, '/') }
+      if (process.env.IRIDIUM_VSCODE === 'falso') return { tipo: 'ok' }
+      // Un clic en una ficha nunca ejecuta un programa: se muestra en su carpeta (`diseno-tecnico.md` › Seguridad).
+      if (SE_EJECUTA.test(a)) {
+        shell.showItemInFolder(a)
+        return { tipo: 'ok' }
+      }
+      const error = await shell.openPath(a)
+      return error ? { tipo: 'error', mensaje: `Windows no lo pudo abrir: ${error}` } : { tipo: 'ok' }
+    },
   )
 
   ipcMain.handle(CANALES.estadoMotor, () => estadoMotor)
@@ -682,6 +740,7 @@ export function registrarPuente(s: Servicios): Puente {
     await conversaciones.seguir(await proyecto(ruta), {
       ...(valido.texto !== undefined ? { texto: valido.texto } : {}),
       ...(valido.nueva !== undefined ? { nueva: valido.nueva } : {}),
+      ...(valido.adjuntos?.length ? { adjuntos: valido.adjuntos } : {}),
     })
   })
   ipcMain.handle(CANALES.detener, async (_, ruta: unknown) => conversaciones.detener(await proyecto(ruta)))

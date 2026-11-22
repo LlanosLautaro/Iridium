@@ -21,6 +21,8 @@ import { ArchivoConfig } from './infra/config'
 import { ESQUEMA_MAQUETA, MaquetasAbiertas } from './infra/diseno/protocolo'
 import { ArchivoVistos } from './infra/diseno/vistos'
 import { ArchivoEscritos } from './infra/escritos'
+import { Fotos } from './infra/fotos'
+import { imagenesElectron } from './infra/imagenes'
 import { abrirEnNavegador } from './infra/navegador'
 import { leerCarpetas } from './infra/raiz'
 import { Registro } from './infra/registro'
@@ -195,6 +197,8 @@ function crearMotor(): Motor {
       pasoMs,
       // IRIDIUM_FALSO_COMANDOS=no: un motor sin comandos con «/» (PA-6).
       ...(process.env.IRIDIUM_FALSO_COMANDOS === 'no' ? { comandos: false } : {}),
+      // IRIDIUM_FALSO_FOTOS=no: un motor que no recibe fotos (PA-6).
+      ...(process.env.IRIDIUM_FALSO_FOTOS === 'no' ? { fotos: false } : {}),
       ...(periodoCerrado
         ? {
             uso: {
@@ -559,11 +563,19 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
               : {}),
           })
         : null
+    const escritos = new ArchivoEscritos(join(carpetaDatos, 'escritos.json'))
+    // Las fotos pegadas sin mandar viven en los datos hasta mandarlas; al abrir se borran las que ningún escrito nombra.
+    const fotos = new Fotos(join(carpetaDatos, 'pegadas'), imagenesElectron)
+    void escritos
+      .rutasAdjuntas()
+      .then((usadas) => fotos.limpiar(usadas))
+      .catch(() => {})
     const puente = registrarPuente({
       config,
       sesiones: new ArchivoSesiones(join(carpetaDatos, 'sesiones.json')),
       borradores: new ArchivoBorradores(join(carpetaDatos, 'borradores.json')),
-      escritos: new ArchivoEscritos(join(carpetaDatos, 'escritos.json')),
+      escritos,
+      fotos,
       motor: crearMotor(),
       raizInicial,
       carpetaIridiumInicial: () => porDefecto('Iridium'),

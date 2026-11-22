@@ -12,9 +12,15 @@ import type {
   VentanaUso,
 } from '../../compartido/puente'
 
-/** Un mensaje de una conversación, sin nada del SDK. */
+/** Una foto que va dentro de un mensaje (PA-I2), en base64. */
+export interface FotoMotor {
+  medio: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp'
+  datos: string
+}
+
+/** Un mensaje de una conversación, sin nada del SDK. Las fotos del usuario, si mandó (PA-5). */
 export type MensajeMotor =
-  | { tipo: 'usuario'; texto: string; cuando: number | null }
+  | { tipo: 'usuario'; texto: string; cuando: number | null; fotos?: FotoMotor[] }
   /**
    * Markdown, tal como lo escribió la IA. `final`: con él terminó de responder (`end_turn`); si después sigue (un hook
    * de fin de turno le pidió algo más), esa respuesta no se pliega en el proceso de lo que siguió (R-72).
@@ -107,8 +113,10 @@ export interface OpcionesSesion {
 }
 
 export interface SesionMotor {
-  /** Manda un mensaje. false si la sesión ya se cerró: hay que abrir otra. */
-  enviar(texto: string): boolean
+  /**
+   * Manda un mensaje, con sus fotos antes del texto (D-169 › 5). false si la sesión ya se cerró: hay que abrir otra.
+   */
+  enviar(texto: string, fotos?: FotoMotor[]): boolean
   /** Cambia el modelo y el esfuerzo desde el próximo mensaje. */
   ajustar(ajuste: AjusteIa): void
   /** Cambia el estilo de respuesta desde el próximo mensaje; null = el de Claude Code. */
@@ -165,6 +173,8 @@ export interface OpcionesFalso {
   alAjuste?: (carpeta: string, ajuste: AjusteIa) => void
   /** false: un motor sin comandos con «/» (PA-6). */
   comandos?: boolean
+  /** false: un motor que no recibe fotos (PA-6). */
+  fotos?: boolean
 }
 
 /** Los estilos que trae Claude Code (los nombres que usa él), como los informa el motor real. */
@@ -345,14 +355,17 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
   /** La lista de comandos: crece con la skill nueva de un mensaje que la nombra. */
   let comandos = [...COMANDOS_FALSOS]
   const conComandos = o.comandos ?? true
+  const conFotos = o.fotos ?? true
   return {
     capacidades: () => ({
       comandos: conComandos,
-      fotos: {
-        medios: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-        maxBytes: 5 * 2 ** 20,
-        maxLado: 8000,
-      },
+      fotos: conFotos
+        ? {
+            medios: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+            maxBytes: 5 * 2 ** 20,
+            maxLado: 8000,
+          }
+        : null,
       escondidos: conComandos ? escondidosDe(comandos) : {},
     }),
 
@@ -398,7 +411,7 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
       let temporizadores: NodeJS.Timeout[] = []
       let alDetener: (() => void) | null = null
       let esperandoFondo = false
-      const cola: string[] = []
+      const cola: { texto: string; fotos: number }[] = []
 
       const emitir = (m: MensajeMotor) => {
         guardada.mensajes.push(m)
@@ -411,7 +424,19 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
         for (const t of temporizadores) clearTimeout(t)
         alEvento({ tipo: 'cerrada' })
       }
-      const turno = (texto: string) => {
+      /** Lo que la IA falsa dice que vio (PA-I2): las fotos, los archivos y los textos pegados, para las pruebas. */
+      const vio = (texto: string, fotos: number): string => {
+        const archivos =
+          /<iridium-archivos>\n([\s\S]*?)\n<\/iridium-archivos>/.exec(texto)?.[1]?.split('\n').length ?? 0
+        const pegados = texto.match(/<iridium-pegado /g)?.length ?? 0
+        const partes = [
+          fotos > 0 && `${fotos} ${fotos === 1 ? 'foto' : 'fotos'}`,
+          archivos > 0 && `${archivos} ${archivos === 1 ? 'archivo' : 'archivos'}`,
+          pegados > 0 && `${pegados} ${pegados === 1 ? 'texto pegado' : 'textos pegados'}`,
+        ].filter(Boolean)
+        return partes.length ? ` Vi ${partes.join(', ')}.` : ''
+      }
+      const turno = (texto: string, fotos = 0) => {
         const ms = /lento/i.test(texto) ? paso * 10 : paso
         const falla = fallaDe(texto)
         // «skill nueva»: mientras trabaja descubre una skill y avisa la lista entera, como el real (`commands_changed`).
@@ -426,7 +451,7 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
               () =>
                 emitir({
                   tipo: 'ia',
-                  texto: `Recibí el comando \`/${comando.nombre}\`${comando.resto ? ` con: ${comando.resto}` : ''}.`,
+                  texto: `Recibí el comando \`/${comando.nombre}\`${comando.resto ? ` con: ${comando.resto.split('\n')[0]}` : ''}.${vio(texto, fotos)}`,
                   cuando: Date.now(),
                   final: true,
                 }),
@@ -447,7 +472,7 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
               () =>
                 emitir({
                   tipo: 'ia',
-                  texto: 'Listo: dejé el estado al día.',
+                  texto: `Listo: dejé el estado al día.${vio(texto, fotos)}`,
                   cuando: Date.now(),
                   final: true,
                 }),
@@ -486,7 +511,9 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
             return cerrar()
           }
           guardada.tokens = Math.min(CONTEXTO_FALSO.maximo, guardada.tokens + CONTEXTO_FALSO.porTurno)
-          const sigue = cola.splice(0).join('\n\n')
+          const juntos = cola.splice(0)
+          const sigue = juntos.map((m) => m.texto).join('\n\n')
+          const fotosQueSiguen = juntos.reduce((n, m) => n + m.fotos, 0)
           // «de fondo» (T-65): deja unas pruebas corriendo, termina el turno y retoma sola cuando terminan.
           const deFondo = !sigue && /de fondo/i.test(texto)
           if (deFondo) alEvento({ tipo: 'fondo', tareas: ['Pruebas con la app abierta (de prueba)'] })
@@ -494,7 +521,7 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
           alEvento({ tipo: 'contexto', contexto: contextoDe(guardada.tokens) })
           const nuevo = sumarUso(2)
           if (nuevo) alEvento({ tipo: 'uso', uso: nuevo })
-          if (sigue) turno(sigue)
+          if (sigue) turno(sigue, fotosQueSiguen)
           else if (deFondo) esperarFondo(ms)
           else cerrar()
         }
@@ -557,24 +584,29 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
       }
 
       return {
-        enviar(texto) {
+        enviar(texto, fotos = []) {
           if (cerrada) return false
           if (!anunciada) {
             anunciada = true
             alEvento({ tipo: 'conversacion', id })
           }
-          guardada.mensajes.push({ tipo: 'usuario', texto, cuando: Date.now() })
+          guardada.mensajes.push({
+            tipo: 'usuario',
+            texto,
+            cuando: Date.now(),
+            ...(fotos.length ? { fotos } : {}),
+          })
           // Esperando lo de fondo, un mensaje abre un turno (la prueba no espera a que termine).
           if (esperandoFondo) {
             esperandoFondo = false
             alDetener = null
             for (const t of temporizadores) clearTimeout(t)
             alEvento({ tipo: 'fondo', tareas: [] })
-            turno(texto)
+            turno(texto, fotos.length)
           }
           // Como el real: lo que llega mientras trabaja se junta para el turno siguiente.
-          else if (alDetener) cola.push(texto)
-          else turno(texto)
+          else if (alDetener) cola.push({ texto, fotos: fotos.length })
+          else turno(texto, fotos.length)
           return true
         },
         ajustar(a) {

@@ -1,5 +1,6 @@
 // Esquemas que validan lo que llega desde la ventana (05-arquitectura.md › Seguridad: validar todo contenido externo).
 import { z } from 'zod'
+import { MAX_ADJUNTOS } from '../../compartido/adjuntos'
 import { LARGO_NOMBRE_REPO } from '../../compartido/github'
 import { ESTADOS_DESDE_IDEAS } from '../../compartido/ideas'
 import {
@@ -57,10 +58,30 @@ export const ImagenesAlAnotar = z.array(z.object({ mime: Mime, base64: ImagenBas
 
 export const Tengo = z.number().int().min(0)
 
+/** Una ruta de un archivo de la PC, elegido o soltado (frente Paridad): absoluta, de Windows o con `/`. */
+export const RutaAbsoluta = z
+  .string()
+  .min(3)
+  .max(1024)
+  .refine((r) => /^([a-z]:[\\/]|\\\\|\/)/i.test(r), 'no es una ruta absoluta')
+
+/** Un adjunto del chat (PA-I2): una foto o un archivo por su ruta, o un texto pegado (hasta 1 MB). */
+export const AdjuntoPedido = z.union([
+  z.object({ tipo: z.enum(['foto', 'archivo']), ruta: RutaAbsoluta }).strict(),
+  z.object({ tipo: z.literal('pegado'), texto: z.string().max(1024 * 1024) }).strict(),
+])
+
+/** Los adjuntos de un mensaje o de lo escrito sin mandar: hasta 20 (`ux.md` › Muchos adjuntos). */
+export const Adjuntos = z.array(AdjuntoPedido).max(MAX_ADJUNTOS)
+
+/** Lo escrito sin mandar, con sus adjuntos (`escritos.json` 2). */
+export const EscritoConAdjuntos = z.object({ texto: Escrito, adjuntos: Adjuntos }).strict()
+
 export const Pedido = z
   .object({
     texto: z.string().max(100_000),
     nueva: z.boolean(),
+    adjuntos: Adjuntos,
   })
   .partial()
   .strict()

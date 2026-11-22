@@ -35,7 +35,7 @@ import type {
 } from '../../compartido/puente'
 import { carpetaDeConversaciones } from '../core/carpeta-iridium'
 import { moverConversaciones } from '../infra/carpeta-iridium'
-import type { FallaMotor, MensajeMotor, Motor, SesionMotor, UsoMotor } from './motor'
+import type { FallaMotor, FotoMotor, MensajeMotor, Motor, SesionMotor, UsoMotor } from './motor'
 
 const ESPERA_VERIFICAR_MS = 30_000
 /** Lo que se espera a que Claude Code termine solo después de una consulta sin mensajes. */
@@ -334,8 +334,11 @@ export function comandosDe(lista: readonly SlashCommand[]): ComandoMotor[] {
   })
 }
 
-/** Lo que el usuario no escribió: avisos del sistema, archivos abiertos en el editor, comandos. */
-const BLOQUE_INTERNO = /<([a-z][\w-]*)(?:\s[^>]*)?>[\s\S]*?<\/\1>/gi
+/**
+ * Lo que el usuario no escribió: avisos del sistema, archivos abiertos en el editor, comandos. Las marcas de Iridium
+ * (`iridium-*`: el texto pegado y los archivos, D-169 › 6) quedan: las lee la app.
+ */
+const BLOQUE_INTERNO = /<((?!iridium-)[a-z][\w-]*)(?:\s[^>]*)?>[\s\S]*?<\/\1>/gi
 const DETENIDA = /^\[Request interrupted by user[^\]]*\]$/
 
 interface Bloque {
@@ -343,11 +346,41 @@ interface Bloque {
   text?: string
   name?: string
   input?: unknown
+  source?: { type?: unknown; media_type?: unknown; data?: unknown }
 }
 
 function bloques(contenido: unknown): Bloque[] {
   if (typeof contenido === 'string') return [{ type: 'text', text: contenido }]
   return Array.isArray(contenido) ? (contenido as Bloque[]) : []
+}
+
+/** Las fotos de un mensaje del usuario (bloques `image` en base64), como las guarda Claude Code (PA-5). */
+export function fotosDe(contenido: unknown): FotoMotor[] {
+  return bloques(contenido).flatMap((b) => {
+    const s = b.source
+    return b.type === 'image' &&
+      s?.type === 'base64' &&
+      typeof s.media_type === 'string' &&
+      FOTOS.medios.includes(s.media_type) &&
+      typeof s.data === 'string'
+      ? [{ medio: s.media_type as FotoMotor['medio'], datos: s.data }]
+      : []
+  })
+}
+
+/** Lo que sale en un mensaje: sin fotos, el texto, como siempre; con fotos, ellas primero y el texto después (D-169 › 5). */
+export function contenidoDe(
+  texto: string,
+  fotos: readonly FotoMotor[],
+): SDKUserMessage['message']['content'] {
+  if (fotos.length === 0) return texto
+  return [
+    ...fotos.map((f) => ({
+      type: 'image' as const,
+      source: { type: 'base64' as const, media_type: f.medio, data: f.datos },
+    })),
+    ...(texto.trim() ? [{ type: 'text' as const, text: texto }] : []),
+  ]
 }
 
 function corto(t: string, max = 120): string {
@@ -440,14 +473,16 @@ export function textoDeUsuario(contenido: unknown): MensajeMotor | null {
     .flatMap((b) => (b.type === 'text' && typeof b.text === 'string' ? [b.text] : []))
     .join('\n')
   // Un comando que se mandó y lo que respondió sin el modelo, antes de sacar lo que agrega Claude Code (PA-5).
+  const fotos = fotosDe(contenido)
+  const conFotos = fotos.length ? { fotos } : {}
   const comando = comandoGuardado(crudo)
-  if (comando) return { tipo: 'usuario', texto: comando, cuando: null }
+  if (comando) return { tipo: 'usuario', texto: comando, cuando: null, ...conFotos }
   const salida = salidaDeComando(crudo)
   if (salida) return { tipo: 'ia', texto: salida, cuando: null, final: true }
   const texto = crudo.replace(BLOQUE_INTERNO, '').trim()
-  if (texto === '') return null
+  if (texto === '' && fotos.length === 0) return null
   if (DETENIDA.test(texto)) return { tipo: 'detenida' }
-  return { tipo: 'usuario', texto, cuando: null }
+  return { tipo: 'usuario', texto, cuando: null, ...conFotos }
 }
 
 /** Los textos y las herramientas de un mensaje de la IA. */
@@ -776,7 +811,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
     },
 
     abrir({ carpeta, conversacion, instruccion, ajuste, tono }, alEvento): SesionMotor {
-      const cola: string[] = []
+      const cola: { texto: string; fotos: FotoMotor[] }[] = []
       let despertar: (() => void) | null = null
       let terminada = false
       let deteniendo = false
@@ -801,11 +836,15 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
       }
       async function* entrada(): AsyncGenerator<SDKUserMessage> {
         while (true) {
-          const texto = cola.shift()
-          if (texto !== undefined) {
+          const m = cola.shift()
+          if (m !== undefined) {
             turnoAbierto = true
             esperandoFondo = false
-            yield { type: 'user', message: { role: 'user', content: texto }, parent_tool_use_id: null }
+            yield {
+              type: 'user',
+              message: { role: 'user', content: contenidoDe(m.texto, m.fotos) },
+              parent_tool_use_id: null,
+            }
             continue
           }
           if (terminada) return
@@ -984,9 +1023,9 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
       })()
 
       return {
-        enviar(texto) {
+        enviar(texto, fotos = []) {
           if (terminada) return false
-          cola.push(texto)
+          cola.push({ texto, fotos })
           despertar?.()
           return true
         },

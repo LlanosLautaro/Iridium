@@ -1,6 +1,7 @@
 // Estado de la ventana (Zustand). Cada proyecto abierto guarda su vista en memoria: cambiar de sección o de
 // proyecto no recarga nada (D-020, H-6).
 import { create } from 'zustand'
+import type { AdjuntoPedido } from '../compartido/adjuntos'
 import { SIN_ANCHOS } from '../compartido/ancho-conversacion'
 import { type Cita, sumarCita } from '../compartido/citas'
 import {
@@ -12,6 +13,7 @@ import {
   type ConversacionProyecto,
   type Destino,
   type Entrada,
+  type EscritoGuardado,
   type EstadoArranque,
   type EstadoMotor,
   type FichaSesion,
@@ -188,9 +190,13 @@ interface EstadoApp {
   quitarCita(ruta: string, clave?: string): void
   /** Lo escrito en el cuadro de cada conversación y no enviado, por ruta (D-060): se guarda en disco. */
   escritos: Record<string, string>
-  ponerEscritos(escritos: Record<string, string>): void
+  /** Los adjuntos sin mandar de cada conversación (PA-I2): se guardan con lo escrito. */
+  adjuntos: Record<string, AdjuntoPedido[]>
+  ponerEscritos(escritos: Record<string, EscritoGuardado>): void
   /** Cambia lo escrito en el cuadro de una conversación y lo guarda en un momento. */
   escribir(ruta: string, texto: string): void
+  /** Cambia los adjuntos sin mandar de una conversación y los guarda con lo escrito. */
+  adjuntar(ruta: string, adjuntos: AdjuntoPedido[]): void
   /** Al abrir Iridium, vuelve al proyecto que estaba abierto (D-060), si sigue en la carpeta. Una sola vez. */
   volverAlAbierto(): void
   /** El uso de la suscripción (H-12); null hasta que se lee. */
@@ -353,10 +359,30 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
       return { citas: quedan.length ? { ...resto, [ruta]: quedan } : resto }
     }),
   escritos: {},
-  ponerEscritos: (escritos) => set((s) => ({ escritos: { ...escritos, ...s.escritos } })),
+  adjuntos: {},
+  // Lo que ya se escribió antes de que llegue lo guardado no se pisa.
+  ponerEscritos: (guardados) =>
+    set((s) => ({
+      escritos: {
+        ...Object.fromEntries(Object.entries(guardados).map(([r, e]) => [r, e.texto])),
+        ...s.escritos,
+      },
+      adjuntos: {
+        ...Object.fromEntries(
+          Object.entries(guardados)
+            .filter(([, e]) => e.adjuntos.length > 0)
+            .map(([r, e]) => [r, e.adjuntos]),
+        ),
+        ...s.adjuntos,
+      },
+    })),
   escribir: (ruta, texto) => {
     set((s) => ({ escritos: { ...s.escritos, [ruta]: texto } }))
-    guardarLuego(`escrito|${ruta}`, () => void window.iridium.guardarEscrito(ruta, texto).catch(() => {}))
+    guardarEscritoLuego(ruta)
+  },
+  adjuntar: (ruta, adjuntos) => {
+    set((s) => ({ adjuntos: { ...s.adjuntos, [ruta]: adjuntos } }))
+    guardarEscritoLuego(ruta)
   },
   volverAlAbierto: () => {
     const s = get()
@@ -730,4 +756,14 @@ function juntarEntradas(antes: readonly Entrada[], nuevas: readonly Entrada[]): 
   const r = antes.map((e) => porId.get(e.id) ?? e)
   const vistas = new Set(antes.map((e) => e.id))
   return [...r, ...nuevas.filter((e) => !vistas.has(e.id))]
+}
+
+/** Guarda en un momento lo escrito de una conversación con sus adjuntos, como estén cuando toque (D-060, PA-I2). */
+function guardarEscritoLuego(ruta: string): void {
+  guardarLuego(`escrito|${ruta}`, () => {
+    const s = usarEstado.getState()
+    void window.iridium
+      .guardarEscrito(ruta, { texto: s.escritos[ruta] ?? '', adjuntos: s.adjuntos[ruta] ?? [] })
+      .catch(() => {})
+  })
 }

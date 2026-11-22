@@ -488,3 +488,18 @@ En Ideas, una idea rechazada lleva «Rechazada» en rojo (Q-175). `06-ui.md` dej
 Estado: hecho · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 La ronda no pudo ver si los avisos de Arranque, de Ejecutar y de las conversaciones se pisan: `tools/auditoria-ux.ts` no los provoca. Sumarle un paso que los muestre a la vez (con el motor falso y `IRIDIUM_ARRANQUE_EN`) y mirar que se apilen sin taparse ni taparle el cuadro al chat.
 Hecho el 2026-11-21: una prueba con la app abierta (`tests/e2e/t110-avisos-juntos.spec.ts`) provoca los tres a la vez y mide que no se pisen, entren en la ventana y no tapen la conversación, a 1440×900 y 1024×700. Se apilan bien. Encontró que los botones del aviso de una conversación caían uno debajo del otro (el estilo apuntaba a un nombre viejo): arreglado.
+
+## T-111 — hay un problema gordo con la ultima actualizacion de iridium en la otra computadora que lo descarga del repo, se queda congelado en negro y solo carga los botones de control de pestaña, es de alta relevancia olucionar eso, quizas un instalador y gestor de actualizaciones real ¿? como un electron builder o algo de eso ¿? esto pasa a ser la prioridad numero 1.
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-112 — dejar tareas en cola ya sea para un chat o en un "pendientes"
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-113 — hacer que elsistema que activa el uso de cuota se pueda configurar más activo, por ejemplo ir atacando uno a uno los pendientes de todos los proyectos siempre que haya cuota disponible y no se esté usando, esto sería especiamente util durante la mañana, claro podria amancer con un 0% de mi cuota de 5hs pero habría obtenido progreso que en caso de no usarlo y llegar el reset semanal sería cuota de uso perdida
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-115 — establecer en el proyecto "Lesan" una forma de comunicación formal entre la IA de Lautaro y la de Sara, en esa via se hablará solo de cosa de iridium, solicitudes de mejoras o correxión de errores
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22

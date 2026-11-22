@@ -1,5 +1,5 @@
 // El puente seguro: la única API que ve la ventana (`window.iridium`). No expone nada de Node ni de Electron.
-import { contextBridge, ipcRenderer, webFrame } from 'electron'
+import { contextBridge, ipcRenderer, webFrame, webUtils } from 'electron'
 import { version } from '../../package.json'
 import type { CambioDiseno } from '../compartido/diseno'
 import {
@@ -74,7 +74,14 @@ const api: ApiIridium = {
   pendientes: (ruta) => ipcRenderer.invoke(CANALES.pendientes, ruta),
   responder: (ruta, pedido) => ipcRenderer.invoke(CANALES.responder, ruta, pedido),
   leerEscritos: () => ipcRenderer.invoke(CANALES.leerEscritos),
-  guardarEscrito: (ruta, texto) => ipcRenderer.invoke(CANALES.guardarEscrito, ruta, texto),
+  guardarEscrito: (ruta, escrito) => ipcRenderer.invoke(CANALES.guardarEscrito, ruta, escrito),
+  elegirAdjuntos: () => ipcRenderer.invoke(CANALES.elegirAdjuntos),
+  // Electron ya no pone `path` en el `File` arrastrado: la ruta se pide así (D-169 › 10).
+  rutaDeArchivo: (archivo) => webUtils.getPathForFile(archivo),
+  guardarPegada: (bytes) => ipcRenderer.invoke(CANALES.guardarPegada, bytes),
+  miniatura: (ruta) => ipcRenderer.invoke(CANALES.miniatura, ruta),
+  fotoGrande: (ruta) => ipcRenderer.invoke(CANALES.fotoGrande, ruta),
+  abrirAdjunto: (ruta, archivo) => ipcRenderer.invoke(CANALES.abrirAdjunto, ruta, archivo),
   aMedias: (ruta, codigo, borrador) => ipcRenderer.invoke(CANALES.aMedias, ruta, codigo, borrador),
   documento: (ruta, documento) => ipcRenderer.invoke(CANALES.documento, ruta, documento),
   documentos: (ruta) => ipcRenderer.invoke(CANALES.documentos, ruta),

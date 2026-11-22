@@ -60,7 +60,7 @@ Descartado: mandar el texto pegado como un bloque de contenido aparte (lo mismo 
 | El compositor | `renderer/secciones/proyecto/Conversacion.tsx` y piezas nuevas en `renderer/ui/` | El +, la lista de «/», las fichas, el borde de soltar, el visor y la línea del escondido |
 
 ## Datos
-- **`MensajeSaliente`** (frontera): `{ texto: string; fotos: FotoMotor[] }`, con `FotoMotor = { medio: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp'; datos: string }` (base64).
+- **`enviar(texto, fotos)`** (frontera; en la construcción quedó así en vez de un `MensajeSaliente`, y los que llamaban con solo el texto no cambiaron): `fotos: FotoMotor[]`, con `FotoMotor = { medio: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp'; datos: string }` (base64).
 - **`MensajeMotor` `usuario`** suma `fotos?: FotoMotor[]`.
 - **`ComandoMotor`**: `{ nombre, otrosNombres: string[], argumentos: string | null, descripcion: string, origen: 'motor' | 'skill' | 'complemento', complemento: string | null, escondido: Pisa | null }`, con `Pisa = 'modelo' | 'esfuerzo' | 'tono' | 'conversacion' | 'contexto' | 'uso' | 'terminal'`.
 - **`CapacidadesMotor`**: `{ comandos: boolean; fotos: { medios: string[]; maxBytes: number; maxLado: number } | null; escondidos: Record<string, Pisa> }`. Hoy: comandos sí, fotos PNG/JPEG/GIF/WebP de hasta 5 MB y 8000 px (a confirmar con una captura real, `investigacion.md` › Riesgos).

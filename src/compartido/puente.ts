@@ -1,6 +1,7 @@
 // El puente entre la ventana y el proceso principal (05-arquitectura.md › Componentes): una lista cerrada de
 // pedidos y eventos. Los tipos los ven los dos lados; lo que llega desde la ventana se valida en `main/ipc/`.
 
+import type { AdjuntoPedido, AdjuntoVista } from './adjuntos'
 import type { AnchosConversacion } from './ancho-conversacion'
 import type { CapacidadesMotor, ComandoMotor, ListaComandos } from './comandos'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
@@ -386,7 +387,8 @@ export interface ReintentoSesion {
 
 /** Una línea de la conversación, ya lista para mostrar (04-ux.md › W-3). */
 export type Entrada =
-  | { tipo: 'usuario'; id: string; texto: string; cuando: number | null }
+  /** Lo que mandó el usuario, con sus adjuntos si llevó (PA-5). */
+  | { tipo: 'usuario'; id: string; texto: string; cuando: number | null; adjuntos?: AdjuntoVista[] }
   /**
    * El texto de la IA convertido de Markdown a HTML seguro (sin HTML crudo). `final`: con él terminó de responder,
    * aunque después siguiera por un hook (R-72).
@@ -396,9 +398,15 @@ export type Entrada =
   | { tipo: 'aviso'; id: string; clase: 'detenida' | 'error'; texto: string }
   /**
    * Errores del motor con qué hacer (F-5): sin sesión iniciada (con Reintentar: `reintentar` es el texto que no se
-   * envió, null = Seguí) o el uso agotado (`libera`: cuándo, ms).
+   * envió, null = Seguí; `adjuntos`, los que iban con él) o el uso agotado (`libera`: cuándo, ms).
    */
-  | { tipo: 'sin-sesion'; id: string; reintentar: string | null; enviado: boolean }
+  | {
+      tipo: 'sin-sesion'
+      id: string
+      reintentar: string | null
+      adjuntos?: AdjuntoPedido[]
+      enviado: boolean
+    }
   | { tipo: 'uso-agotado'; id: string; libera: number | null }
   | { tipo: 'preguntas'; id: string; preguntas: PreguntaNueva[] }
   /**
@@ -465,7 +473,33 @@ export interface PedidoSeguir {
   texto?: string
   /** Empezar una conversación nueva en vez de retomar la última. */
   nueva?: boolean
+  /** Las fotos, los archivos y los textos pegados que van con el mensaje (PA-I2). */
+  adjuntos?: AdjuntoPedido[]
 }
+
+/** Lo escrito sin mandar en el cuadro de una conversación, con sus adjuntos (D-060, `escritos.json` 2). */
+export interface EscritoGuardado {
+  texto: string
+  adjuntos: AdjuntoPedido[]
+}
+
+/** La foto entera para el visor (PA-2): su `data:`, cuánto mide y cuánto pesa. */
+export interface FotoGrande {
+  src: string
+  ancho: number
+  alto: number
+  bytes: number
+}
+
+/**
+ * Abrir el archivo de una ficha (PA-5): uno del proyecto se abre en Archivos (`archivo`, relativo); uno de afuera, con
+ * Windows (o su carpeta, si es un programa); `no-esta`, si ya no existe.
+ */
+export type ResultadoAdjunto =
+  | { tipo: 'en-proyecto'; archivo: string }
+  | { tipo: 'ok' }
+  | { tipo: 'no-esta' }
+  | { tipo: 'error'; mensaje: string }
 
 /** Lo que cita un pendiente, con su texto ya convertido (D-022, W-5 › Contexto dentro). */
 export type CitaVista =
@@ -922,6 +956,11 @@ export const CANALES = {
   entrarGithub: 'app:entrar-github',
   leerEscritos: 'escritos:leer',
   guardarEscrito: 'escritos:guardar',
+  elegirAdjuntos: 'adjuntos:elegir',
+  guardarPegada: 'adjuntos:guardar-pegada',
+  miniatura: 'adjuntos:miniatura',
+  fotoGrande: 'adjuntos:foto-grande',
+  abrirAdjunto: 'adjuntos:abrir',
   estilos: 'ajustes:estilos',
   skills: 'skills:lista',
   framework: 'skills:framework',
@@ -1060,9 +1099,21 @@ export interface ApiIridium {
   /** Escribe `docs/respuestas/Q-n.md` (H-10, H-11). */
   responder(ruta: string, pedido: PedidoResponder): Promise<ResultadoResponder>
   /** Lo escrito en el cuadro de cada conversación y no enviado, por ruta (D-060): sobrevive a cerrar Iridium. */
-  leerEscritos(): Promise<Record<string, string>>
-  /** Guarda lo escrito en el cuadro de la conversación; vacío, lo borra. */
-  guardarEscrito(ruta: string, texto: string): Promise<void>
+  leerEscritos(): Promise<Record<string, EscritoGuardado>>
+  /** Guarda lo escrito en el cuadro de la conversación, con sus adjuntos; vacío, lo borra. */
+  guardarEscrito(ruta: string, escrito: EscritoGuardado): Promise<void>
+  /** El selector de Windows para sumar archivos y fotos (PA-2): las rutas elegidas, vacío si se canceló. */
+  elegirAdjuntos(): Promise<string[]>
+  /** La ruta de un archivo arrastrado sobre la conversación (PA-2); vacía si no tiene (no es del disco). */
+  rutaDeArchivo(archivo: File): string
+  /** Guarda una foto pegada en los datos de Iridium y da su ruta (PA-3); null si no es una imagen. */
+  guardarPegada(bytes: Uint8Array): Promise<string | null>
+  /** La miniatura de una foto, como `data:`; null si no es una imagen o ya no está. */
+  miniatura(ruta: string): Promise<string | null>
+  /** La foto entera para el visor; null si no es una imagen o ya no está. */
+  fotoGrande(ruta: string): Promise<FotoGrande | null>
+  /** Abre el archivo de una ficha (PA-5): del proyecto, en Archivos; de afuera, con Windows. */
+  abrirAdjunto(ruta: string, archivo: string): Promise<ResultadoAdjunto>
   /** Guarda el borrador sin enviarlo: la IA no lo ve (D-039). */
   aMedias(ruta: string, codigo: string, borrador: Borrador): Promise<PendienteVista | null>
   /** Un documento del proyecto entero: «Ver entero» (W-5 › Panel derecho) y Docs (W-8). */

@@ -506,3 +506,59 @@
 .linea-cmd > button:last-child {
   margin-left: auto;
 }
+
+/* Paridad, los adjuntos (modulos/paridad/ux.md › PA-2 a PA-5; maquetas paridad-adjuntos.html, paridad-enviado.html y
+   paridad-soltar.html): el visor (el cuadro de PZ-8 con la
+   foto o el texto) y el estado de soltar de la conversación, en el panel que la contiene. */
+.visor-adjunto {
+  width: auto;
+  max-width: min(90vw, 1200px);
+  max-height: 90vh;
+}
+.visor-adjunto img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(90vh - 120px);
+  margin: 0 auto;
+  object-fit: contain;
+}
+.visor-adjunto.texto {
+  width: min(90vw, 900px);
+}
+.visor-adjunto .texto-pegado {
+  margin: 0;
+  max-height: calc(90vh - 120px);
+  overflow: auto;
+  font: var(--estilo-codigo);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+.visor-adjunto .pie {
+  align-items: center;
+}
+.visor-adjunto .pie-visor {
+  margin-right: auto;
+}
+.chat {
+  position: relative;
+}
+.chat .soltar {
+  position: absolute;
+  inset: var(--esp-2);
+  z-index: 10;
+  display: none;
+  place-items: center;
+  border: 2px dashed var(--borde-control);
+  border-radius: var(--radio-bloque);
+  color: var(--texto);
+  font: var(--estilo-control);
+  pointer-events: none;
+}
+.chat.soltando .soltar {
+  display: grid;
+}
+.chat.soltando .hilo,
+.chat.soltando .compositor {
+  opacity: 0.35;
+}

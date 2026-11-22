@@ -169,7 +169,7 @@ describe('la mudanza', () => {
     await sesiones.guardar('uno', resumen)
     await sesiones.guardar('dos', resumen)
     await sesiones.guardar('otra', { ...resumen, ruta: 'C:/P/Alfa' })
-    await escritos.guardar('C:/P/Ideas', 'a medio escribir')
+    await escritos.guardar('C:/P/Ideas', { texto: 'a medio escribir', adjuntos: [] })
     await sesiones.mudarRuta('C:/P/Ideas', 'C:/I/Ideas')
     await escritos.mudarRuta('C:/P/Ideas', 'C:/I/Ideas')
     const releidas = new ArchivoSesiones(join(base, 'datos', 'sesiones.json'))
@@ -177,7 +177,7 @@ describe('la mudanza', () => {
     expect((await releidas.de('dos'))?.ruta).toBe('C:/I/Ideas')
     expect((await releidas.de('otra'))?.ruta).toBe('C:/P/Alfa')
     const todos = await new ArchivoEscritos(join(base, 'datos', 'escritos.json')).todos()
-    expect([...todos]).toEqual([['C:/I/Ideas', 'a medio escribir']])
+    expect([...todos]).toEqual([['C:/I/Ideas', { texto: 'a medio escribir', adjuntos: [] }]])
   })
 })
 

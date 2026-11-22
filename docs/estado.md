@@ -3,7 +3,7 @@
 > Este archivo es lo primero que lee la IA en cada sesión. Cabe en una pantalla: el historial va al documento del hito.
 
 **Proyecto:** Iridium (carpeta «Centro de Desarrollo», D-033)
-**Última actualización:** 2026-11-21
+**Última actualización:** 2026-11-22
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
@@ -39,20 +39,36 @@
 | Arranque (`modulos/arranque/estado.md`) | sección | en operación (con el hito 10; probada en Q-227, calidad el 2026-11-21) | hecho |
 | Plantillas (T-81) | plugin (el framework) | 1. Propuesta (detrás de Paridad, Orden y Abrir, D-166; la primera pieza, las pruebas sin ventanas, y queda en pausa) | pendiente |
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, después de Paridad y Orden, D-166) | en pausa |
-| Paridad (`modulos/paridad/estado.md`) | sección | 7. Construcción (PA-I1 probada en Q-250; sigue PA-I2) | en curso |
+| Paridad (`modulos/paridad/estado.md`) | sección | 7. Construcción (PA-I1 probada en Q-250; PA-I2 hecha, prueba en Q-251; sigue PA-I3) | en curso |
 
 ## En qué estamos ahora
 **Diseño cerró DI-I3** (2026-11-21): las diecinueve tandas probadas y `DESIGN.md` y `06-ui.md` escritos desde lo construido. Q-240 pidió además que archivar no deje aviso y que el estado cambie en la tarjeta al instante: hecho y probado (Q-241, Q-242). Queda en pausa con DI-I4, el paso 8 y la extensión de la Revisión al negro (T-99).
 **Ronda de UX 1 hecha** (2026-11-21, T-100) **y su tanda también**: el chat sin conversación ya no muestra un título cortado (T-101), Git con siluetas al leer (T-103), Acerca de con una frase (T-104), Este proyecto en palabras del usuario (T-106), `04-ux.md` al día con la app (T-107), la Bandeja vacía en su columna (T-108) y los avisos de la esquina medidos juntos (T-110), que encontró los botones de un aviso desarmados: arreglado. Probada en Q-248; el chat sin conversación ya dice «Nueva conversación». R-101: Mandar a la IA, desde Revisión, ahora cita el comentario en la conversación en vez de enviarlo; probado en Q-249. R-93: en la Bandeja, «Respondida, sin procesar» va en verde (T-85). Los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
-**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168) y el diseño técnico, cerrado (D-169): tres iteraciones, PA-I1 (comandos), PA-I2 (archivos y fotos) y PA-I3 (texto pegado). La UI también (D-170). **PA-I1 hecha**: «/» abre la lista de comandos arriba del cuadro, elegir no manda, los usados hace poco van primero y un comando escondido (`/clear`, `/model`…) no se manda y dice dónde está eso en Iridium; probada en Q-250. Sigue PA-I2 (archivos y fotos). Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
-Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
+**Ahora: Paridad** (D-165, D-166): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168) y el diseño técnico, cerrado (D-169): tres iteraciones, PA-I1 (comandos), PA-I2 (archivos y fotos) y PA-I3 (texto pegado). La UI también (D-170). **PA-I1 hecha**: «/» abre la lista de comandos arriba del cuadro, elegir no manda, los usados hace poco van primero y un comando escondido (`/clear`, `/model`…) no se manda y dice dónde está eso en Iridium; probada en Q-250. **PA-I2 hecha** (2026-11-22): archivos y fotos con el +, `Ctrl+U`, arrastrándolos o pegando una captura; van como fichas arriba del cuadro, no se pierden al cerrar y quedan en el mensaje mandado; probado también con el Claude Code real. Tu prueba, Q-251. PA-I3 (el texto largo pegado) espera: **T-111 pasa primero** (2026-11-22, lo pediste como prioridad número 1): la versión bajada en la otra PC queda en negro, solo con los botones de la ventana; en T-111.md preferís una app instalada antes que la carpeta suelta de hoy. Después de Paridad, Orden mide la calidad, **Abrir** hace su paso 8 y la otra PC (T-87) y sigue Plantillas (D-166).
+Ideas sin evaluar: T-112 (dejar tareas en cola), T-113 (que el arranque vaya atacando pendientes mientras haya cuota), T-114 (esperar a que cada proyecto esté sincronizado al abrir), T-115 (es de otro proyecto tuyo: Q-253), T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-(ninguna)
+- **Q-251 — Probá los archivos y las fotos en el chat**
+  Tipo: prueba · Frente: Paridad
+  Contexto: PA-I2. Con la app armada (`scripts.md` › Armar la última versión) o en modo desarrollo, en el chat de un proyecto:
+  - [ ] El + del pie tiene «Agregar archivos o fotos» (y `Ctrl+U` en el cuadro): abre el selector de Windows y se pueden elegir varios; cada uno queda como ficha arriba del cuadro (la foto como miniatura, el archivo con su nombre)
+  - [ ] Arrastrar archivos desde el explorador sobre la conversación la marca con un borde punteado y «Suelta para adjuntar»; al soltarlos se suman
+  - [ ] Una captura copiada (`Win+Shift+S`) y pegada con `Ctrl+V` en el cuadro queda como foto
+  - [ ] Un clic en una foto la abre grande; `Esc` la cierra. La ✕ de una ficha la saca
+  - [ ] Cambiar de proyecto o cerrar Iridium no pierde las fichas
+  - [ ] Al mandar, la IA ve la foto y abre el archivo; en tu mensaje quedan las fichas arriba de lo escrito, y siguen al reabrir la conversación desde ◔
+  - [ ] Un clic en un archivo de un mensaje mandado lo abre (si es del proyecto, en Archivos)
+- **Q-252 — ¿Qué hace Iridium en la otra PC cuando queda en negro?**
+  Tipo: consulta · Frente: Compartir
+  Contexto: T-111. Para encontrar la causa sin estar en esa PC me sirve: (1) cómo llegó la versión que falla (con **Actualizar** desde la app o bajada a mano de GitHub), (2) el registro del día de esa PC, el archivo más nuevo de `%APPDATA%\Centro de Desarrollo\registros\` (pegalo en Otro o dejalo en esta PC y decime dónde), y (3) si una versión anterior sí abría. Mientras tanto voy a intentar repetirlo acá con una copia compartida limpia (`tools/probar-compartida.ts`).
+- **Q-253 — T-115 habla de otro proyecto tuyo: ¿la paso allá?**
+  Tipo: decisión · Frente: Orden
+  Contexto: la idea T-115 (`trabajo.md`) pide armar algo en otro de tus proyectos, y el repo de Iridium no nombra tus otros proyectos (D-082). Desde acá no toco otros proyectos sin que lo pidas.
+  Opciones: A) Pasarla al `trabajo.md` de ese proyecto y sacarla de acá (recomendada: queda donde se va a hacer y el repo no lo nombra) · B) Dejarla acá como idea de Iridium, reescrita sin el nombre (si lo que querés es un canal dentro de Iridium) · C) Dejarla como está
 
 ## Próximo paso
-Construir PA-I2, archivos y fotos (Paridad).
-**Leer antes:** `modulos/paridad/estado.md` › Próximo paso.
+T-111 (prioridad 1 del usuario): por qué la versión bajada en la otra PC queda en negro. Repetirlo con una copia compartida limpia (`tools/probar-compartida.ts`) y el registro de Q-252 si llegó; arreglarlo. Después, evaluar con el usuario pasar de la carpeta suelta (`win-unpacked`) a una app instalada con su gestor de actualizaciones (pide eso en `ideas/T-111.md`; va como decisión con opciones). Luego sigue PA-I3 (`modulos/paridad/estado.md` › Próximo paso).
+**Leer antes:** `trabajo.md` › T-111, `ideas/T-111.md`, `modulos/compartir/estado.md` y `05-arquitectura.md` › Despliegue.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
