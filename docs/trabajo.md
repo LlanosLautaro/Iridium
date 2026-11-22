@@ -501,3 +501,7 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Evaluada el 2026-11-22: hoy (D-159) la primera vuelta empieza a los 20 s de abrir y va de a un proyecto (unos 1,6 s cada uno; medido: 7 con remoto, 11 s en total), y nada frena mandarle algo a la IA antes: en la otra PC la IA puede trabajar sobre archivos viejos y después las dos PC quedan separadas. Arranque (y T-113) tiene el mismo hueco. Cómo frenarlo, en Q-257.
+
+## T-115 — añadir la seleccion de modo de permisossi viene con claude cli o agent sdk, no crear una funcion personalizada
+Estado: nueva · Idea: usuario · Fecha: 2026-11-22
