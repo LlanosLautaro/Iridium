@@ -35,6 +35,11 @@ export function lineasDe(texto: string): number {
   return texto.replace(/\r\n/g, '\n').replace(/\n$/, '').split('\n').length
 }
 
+/** «340 líneas», «1 línea»: lo que dice la ficha de un texto pegado. */
+export function textoLineas(n: number): string {
+  return `${n} ${n === 1 ? 'línea' : 'líneas'}`
+}
+
 /** Si un pegado es largo: más de 40 líneas o más de 2.000 caracteres (PA-4). */
 export function esPegadoLargo(texto: string): boolean {
   return lineasDe(texto) > PEGADO_LARGO.lineas || texto.length > PEGADO_LARGO.caracteres

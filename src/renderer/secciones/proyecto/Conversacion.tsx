@@ -18,6 +18,7 @@ import {
   type AdjuntoPedido,
   type AdjuntoVista,
   adjuntoDeRuta,
+  esPegadoLargo,
   MAX_ADJUNTOS,
   sumarAdjuntos,
 } from '../../../compartido/adjuntos'
@@ -44,7 +45,7 @@ import { useAltoDelTexto } from '../../ui/altoDelTexto'
 import { Icono } from '../../ui/Icono'
 import { Menu } from '../../ui/Menu'
 import { cuandoFue, cuandoSera, hora, pc } from '../../ui/tiempo'
-import { type EnVisor, FichasCompositor, FichasEnviadas, Visor } from './Adjuntos'
+import { type EnVisor, FichaCita, FichasCompositor, FichasEnviadas, Visor } from './Adjuntos'
 import { MedidorContexto, ModeloYEsfuerzo } from './AjustesIa'
 import { idOpcion, LineaEscondido, ListaComandos, useCapacidades, useListaComandos } from './Comandos'
 import { tocarEnlace } from './enlaces'
@@ -781,6 +782,19 @@ const SIN_CITAS: Cita[] = []
 /** Sin adjuntos: siempre el mismo arreglo. */
 const SIN_ADJUNTOS: AdjuntoPedido[] = []
 
+/** El ícono de la ficha de una cita, por lo que cita (Revisar, Idea, Comentario, Frente). */
+function iconoDeCita(tipo: string): 'revision' | 'idea' | 'comentar' | 'mapa' | 'ficha' {
+  return tipo === 'Revisar'
+    ? 'revision'
+    : tipo === 'Idea'
+      ? 'idea'
+      : tipo === 'Comentario'
+        ? 'comentar'
+        : tipo === 'Frente'
+          ? 'mapa'
+          : 'ficha'
+}
+
 /** Lo que va al principio del mensaje: `Sobre la skill X`. */
 function sobreQue(s: Sobre): string {
   return `Sobre la skill ${s.nombre}`
@@ -989,10 +1003,49 @@ export function Conversacion({
     const rutas = await window.iridium.elegirAdjuntos().catch(() => [])
     sumar(rutas.map(adjuntoDeRuta))
   }
-  /** Ctrl+V con una imagen en el portapapeles (y sin texto): una ficha de foto (PA-3). */
+  /**
+   * El último texto largo pegado como ficha, mientras no se escribió otra cosa: `Ctrl+Z` lo vuelve texto en el cuadro,
+   * donde se pegó (PA-4). `antes`, lo escrito en ese momento; `desde` y `hasta`, lo que estaba elegido.
+   */
+  const ultimoPegado = useRef<{ pegado: AdjuntoPedido; antes: string; desde: number; hasta: number } | null>(
+    null,
+  )
+  const deshacerPegado = (): boolean => {
+    const u = ultimoPegado.current
+    ultimoPegado.current = null
+    const lista = usarEstado.getState().adjuntos[ruta] ?? []
+    const i = u ? lista.lastIndexOf(u.pegado) : -1
+    if (!u || i === -1 || texto !== u.antes || u.pegado.tipo !== 'pegado') return false
+    adjuntar(
+      ruta,
+      lista.filter((_, j) => j !== i),
+    )
+    const nuevo = u.antes.slice(0, u.desde) + u.pegado.texto + u.antes.slice(u.hasta)
+    setTexto(nuevo)
+    const fin = u.desde + u.pegado.texto.length
+    requestAnimationFrame(() => {
+      caja.current?.setSelectionRange(fin, fin)
+      setCursor(fin)
+    })
+    return true
+  }
+  /**
+   * Ctrl+V: un texto largo (más de 40 líneas o 2.000 caracteres) es una ficha «Texto pegado» (PA-4); una imagen sin
+   * texto, una ficha de foto (PA-3).
+   */
   const alPegar = (e: ClipboardEvent<HTMLTextAreaElement>) => {
     const datos = e.clipboardData
-    if (datos.getData('text/plain')) return
+    const pegadoTexto = datos.getData('text/plain')
+    if (pegadoTexto && esPegadoLargo(pegadoTexto)) {
+      e.preventDefault()
+      const pegado: AdjuntoPedido = { tipo: 'pegado', texto: pegadoTexto.replace(/\r\n/g, '\n') }
+      const c = e.currentTarget
+      sumar([pegado])
+      if ((usarEstado.getState().adjuntos[ruta] ?? []).includes(pegado))
+        ultimoPegado.current = { pegado, antes: texto, desde: c.selectionStart, hasta: c.selectionEnd }
+      return
+    }
+    if (pegadoTexto) return
     const imagen = [...datos.files].find((f) => f.type.startsWith('image/'))
     if (!imagen) return
     e.preventDefault()
@@ -1096,6 +1149,13 @@ export function Conversacion({
       e.preventDefault()
       enviar()
       return
+    }
+    // Ctrl+Z justo después de pegar un texto largo: vuelve al cuadro como texto (PA-4).
+    if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'z' && ultimoPegado.current) {
+      if (deshacerPegado()) {
+        e.preventDefault()
+        return
+      }
     }
     // Ctrl+U: agregar archivos o fotos (PA-2).
     if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'u') {
@@ -1319,44 +1379,40 @@ export function Conversacion({
             <span>{lineaAdjuntos}</span>
           </div>
         )}
-        {sobre && (
-          <div className="sobre-skill">
-            <span title={`El mensaje sale con «${sobreQue(sobre)}:» al principio`}>
-              Sobre la skill <b>{sobre.nombre}</b>
-            </span>
-            <button
-              type="button"
-              className="quitar"
-              aria-label="Que el mensaje no sea sobre esa skill"
-              title="Que el mensaje no sea sobre esa skill"
-              onClick={sobre.quitar}
-            >
-              <Icono nombre="x" />
-            </button>
-          </div>
-        )}
-        {citas.length > 0 && (
-          <div className="citados">
-            {citas.map((c) => (
-              <div key={c.clave} className="citado" title={c.texto}>
-                <span>
-                  {c.tipo} <b>{c.nombre}</b>
-                </span>
-                <button
-                  type="button"
-                  className="quitar"
-                  aria-label={`Quitar la cita ${c.nombre}`}
-                  title="Que no vaya con el mensaje"
-                  onClick={() => quitarCita(ruta, c.clave)}
-                >
-                  <Icono nombre="x" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-        {adjuntos.length > 0 && (
-          <FichasCompositor adjuntos={adjuntos} quitar={quitarAdjunto} ver={setEnVisor} alNoVa={alNoVa} />
+        {(sobre || citas.length > 0 || adjuntos.length > 0) && (
+          <FichasCompositor
+            adjuntos={adjuntos}
+            quitar={quitarAdjunto}
+            ver={setEnVisor}
+            alNoVa={alNoVa}
+            antes={
+              <>
+                {sobre && (
+                  <FichaCita
+                    icono="skills"
+                    clase="sobre-skill"
+                    titulo={`El mensaje sale con «${sobreQue(sobre)}:» al principio`}
+                    quitar={sobre.quitar}
+                    textoQuitar="Que el mensaje no sea sobre esa skill"
+                  >
+                    Sobre la skill <b>{sobre.nombre}</b>
+                  </FichaCita>
+                )}
+                {citas.map((c) => (
+                  <FichaCita
+                    key={c.clave}
+                    icono={iconoDeCita(c.tipo)}
+                    clase="citado"
+                    titulo={c.texto}
+                    quitar={() => quitarCita(ruta, c.clave)}
+                    textoQuitar={`Quitar la cita ${c.nombre}`}
+                  >
+                    {c.tipo} <b>{c.nombre}</b>
+                  </FichaCita>
+                ))}
+              </>
+            }
+          />
         )}
         <textarea
           ref={caja}
@@ -1364,6 +1420,7 @@ export function Conversacion({
           aria-label="Mensaje para la IA"
           value={texto}
           onChange={(e) => {
+            ultimoPegado.current = null
             setTexto(e.target.value)
             setCursor(e.target.selectionStart)
           }}

@@ -14,6 +14,7 @@ import {
   MAX_ADJUNTOS,
   mensajeConAdjuntos,
   sumarAdjuntos,
+  textoLineas,
 } from '../src/compartido/adjuntos'
 import type { CambioConversacion, Entrada } from '../src/compartido/puente'
 import { Conversaciones } from '../src/main/app/conversacion'
@@ -84,6 +85,11 @@ describe('las reglas de los adjuntos (D-169 › 5, 8 y 11)', () => {
     expect(esPegadoLargo(Array(41).fill('x').join('\n'))).toBe(true)
     expect(esPegadoLargo('x'.repeat(2000))).toBe(false)
     expect(esPegadoLargo('x'.repeat(2001))).toBe(true)
+  })
+
+  it('la ficha de un texto pegado dice sus líneas en singular o plural (PA-I3)', () => {
+    expect(textoLineas(1)).toBe('1 línea')
+    expect(textoLineas(340)).toBe('340 líneas')
   })
 
   it('una ruta es foto o archivo por su extensión', () => {

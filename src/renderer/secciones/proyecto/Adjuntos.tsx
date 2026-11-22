@@ -2,8 +2,14 @@
 // fichas arriba del cuadro (la Ficha, PZ-16: la foto como miniatura, el archivo con su ícono y su nombre, la ✕ que lo
 // saca), las mismas sin ✕ en un mensaje mandado y el visor, el cuadro de siempre (PZ-8) con la foto o el texto adentro.
 // La ventana no lee el disco: las miniaturas y la foto grande las da el puente.
-import { useEffect, useRef, useState } from 'react'
-import { type AdjuntoPedido, type AdjuntoVista, nombreDe } from '../../../compartido/adjuntos'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
+import {
+  type AdjuntoPedido,
+  type AdjuntoVista,
+  lineasDe,
+  nombreDe,
+  textoLineas,
+} from '../../../compartido/adjuntos'
 import type { FotoGrande } from '../../../compartido/puente'
 import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
@@ -67,7 +73,7 @@ export function Visor({ que, cerrar }: { que: EnVisor; cerrar: () => void }) {
         <div className="pie">
           <span className="nota pie-visor">
             {titulo}
-            {que.tipo === 'texto' && ` · ${que.lineas} líneas`}
+            {que.tipo === 'texto' && ` · ${textoLineas(que.lineas)}`}
             {que.tipo === 'foto' &&
               grande &&
               grande !== 'cargando' &&
@@ -151,25 +157,78 @@ function FichaFoto({
   )
 }
 
+/** Una ficha del compositor que no es un adjunto: «Sobre la skill …» o una cita (PA-I3: pasan a la Ficha, PZ-16). */
+export function FichaCita({
+  icono,
+  titulo,
+  clase,
+  quitar,
+  textoQuitar,
+  children,
+}: {
+  icono: Parameters<typeof Icono>[0]['nombre']
+  titulo: string
+  clase: string
+  quitar: () => void
+  textoQuitar: string
+  children: ReactNode
+}) {
+  return (
+    <span className={`ficha ${clase}`} title={titulo}>
+      <Icono nombre={icono} />
+      <span className="nombre-ficha">{children}</span>
+      <button type="button" className="quitar" aria-label={textoQuitar} title={textoQuitar} onClick={quitar}>
+        <Icono nombre="x" />
+      </button>
+    </span>
+  )
+}
+
 /**
  * Las fichas arriba del cuadro (PA-2): una por adjunto, con su ✕. `alNoVa` dice qué fotos no se pueden mandar (el
- * mensaje no sale hasta sacarlas).
+ * mensaje no sale hasta sacarlas). `antes`: las de «Sobre la skill» y las citas, en la misma fila.
  */
 export function FichasCompositor({
   adjuntos,
   quitar,
   ver,
   alNoVa,
+  antes,
 }: {
   adjuntos: AdjuntoPedido[]
   quitar: (i: number) => void
   ver: (que: EnVisor) => void
   alNoVa: (ruta: string, noVa: boolean) => void
+  antes?: ReactNode
 }) {
   return (
     <div className="fichas">
+      {antes}
       {adjuntos.map((a, i) =>
-        a.tipo === 'foto' ? (
+        a.tipo === 'pegado' ? (
+          // biome-ignore lint/suspicious/noArrayIndexKey: dos textos pegados pueden ser iguales; su lugar no cambia.
+          <span key={`pegado-${i}`} className="ficha pegado">
+            <button
+              type="button"
+              className="abrir-ficha"
+              title="Abrir para leerlo"
+              onClick={() => ver({ tipo: 'texto', texto: a.texto, lineas: lineasDe(a.texto) })}
+            >
+              <Icono nombre="docs" />
+              <b>Texto pegado</b>
+              {textoLineas(lineasDe(a.texto))}
+            </button>
+            <button
+              type="button"
+              className="quitar"
+              aria-label="Sacar el texto pegado"
+              title="Sacar"
+              onClick={() => quitar(i)}
+            >
+              <Icono nombre="x" />
+            </button>
+          </span>
+        ) : a.tipo === 'foto' ? (
           <FichaFoto
             key={a.ruta}
             ruta={a.ruta}
@@ -177,7 +236,7 @@ export function FichasCompositor({
             abrir={() => ver({ tipo: 'foto', ruta: a.ruta, nombre: nombreDeFoto(a.ruta, esPegada(a.ruta)) })}
             alNoVa={(n) => alNoVa(a.ruta, n)}
           />
-        ) : a.tipo === 'archivo' ? (
+        ) : (
           <span key={a.ruta} className="ficha" title={a.ruta}>
             <Icono nombre="archivo" />
             <b>{nombreDe(a.ruta)}</b>
@@ -190,12 +249,6 @@ export function FichasCompositor({
             >
               <Icono nombre="x" />
             </button>
-          </span>
-        ) : (
-          // biome-ignore lint/suspicious/noArrayIndexKey: dos textos pegados pueden ser iguales; su lugar no cambia.
-          <span key={`pegado-${i}`} className="ficha" title="Abrir para leerlo">
-            <Icono nombre="docs" />
-            <b>Texto pegado</b>
           </span>
         ),
       )}
@@ -261,7 +314,7 @@ export function FichasEnviadas({ ruta, adjuntos }: { ruta: string; adjuntos: Adj
           >
             <Icono nombre="docs" />
             <b>Texto pegado</b>
-            {a.lineas} líneas
+            {textoLineas(a.lineas)}
           </button>
         ),
       )}
