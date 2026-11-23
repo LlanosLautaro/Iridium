@@ -415,6 +415,119 @@ describe('AvanceSolo', () => {
     await cerrado.a.mirar()
     expect(cerrado.arrancados).toHaveLength(1)
   })
+
+  describe('los casos raros (paso 8)', () => {
+    it('sin nada para tomar, no lee el uso: leerlo abre Claude Code y miraría cada minuto toda la noche', async () => {
+      let lecturas = 0
+      const nada = armar({
+        pasos: async () => [],
+        leerUso: async () => {
+          lecturas++
+          return uso(10)
+        },
+      })
+      for (let i = 0; i < 5; i++) {
+        await nada.a.mirar()
+        nada.pasar(MIN)
+      }
+      expect(lecturas).toBe(0)
+      // Sin el uso conocido, con algo para tomar, lo lee una vez y arranca.
+      const sinUso = armar({
+        usoActual: () => null,
+        leerUso: async () => {
+          lecturas++
+          return uso(10)
+        },
+      })
+      await sinUso.a.mirar()
+      expect(lecturas).toBe(1)
+      expect(sinUso.arrancados).toHaveLength(1)
+    })
+
+    it('si el uso no se puede leer, no toma nada ni anota; al minuto siguiente, sí', async () => {
+      let leido: UsoSuscripcion | null = null
+      const { a, arrancados, archivo, pasar } = armar({ leerUso: async () => leido })
+      await a.mirar()
+      expect(arrancados).toEqual([])
+      expect((await archivo.leer()).momentos).toEqual([])
+      leido = uso(10)
+      pasar(MIN)
+      await a.mirar()
+      expect(arrancados).toHaveLength(1)
+    })
+
+    it('el uso releído manda: con el período más gastado de lo que se sabía, lo mediano no arranca', async () => {
+      const { a, arrancados } = armar({
+        pasos: async () => [paso({ tamano: 'mediano', enCurso: true })],
+        usoActual: () => uso(10),
+        leerUso: async () => uso(70),
+      })
+      await a.mirar()
+      expect(arrancados).toEqual([])
+    })
+
+    it('si el usuario vuelve mientras arma la fila, no arranca', async () => {
+      let veces = 0
+      const { a, arrancados } = armar({ segundosSinUsar: () => (veces++ === 0 ? 20 * 60 : 5) })
+      await a.mirar()
+      expect(arrancados).toEqual([])
+    })
+
+    it('dos miradas a la vez arrancan una sola conversación', async () => {
+      const { a, arrancados } = armar()
+      await Promise.all([a.mirar(), a.mirar(), a.mirar()])
+      expect(arrancados).toHaveLength(1)
+    })
+
+    it('si abrir la conversación falla, lo dice el registro y no insiste con ese paso: sigue con otro', async () => {
+      const registro: string[] = []
+      const intentos: string[] = []
+      const { a, archivo, pasar } = armar({
+        arrancar: async (_ruta, _marca, texto) => {
+          intentos.push(texto ?? '')
+          throw new Error('sin red')
+        },
+        registrar: (t) => registro.push(t),
+      })
+      await a.mirar()
+      expect(registro).toContainEqual(expect.stringContaining('no se pudo abrir la conversación: sin red'))
+      pasar(MIN)
+      await a.mirar()
+      pasar(MIN)
+      await a.mirar()
+      expect(intentos).toEqual([
+        expect.stringContaining('Cargar el tema propio'),
+        expect.stringContaining('«Segundo»'),
+      ])
+      // Lo anotó igual: el aviso al volver lo cuenta (sin conversación guardada, «falló»).
+      expect((await archivo.leer()).momentos).toHaveLength(2)
+    })
+
+    it('la semana que llega a su tope mientras trabaja frena el siguiente', async () => {
+      let semana = 30
+      const { a, arrancados, trabajando, pasar } = armar({
+        ajuste: async () => ({ ...prendido, semana: 50 }),
+        usoActual: () => uso(10, semana),
+        leerUso: async () => uso(10, semana),
+      })
+      await a.mirar()
+      semana = 50
+      trabajando.clear()
+      pasar(MIN)
+      await a.mirar()
+      expect(arrancados).toHaveLength(1)
+    })
+
+    it('con el horario de 23:00 a 7:00, a las 7 no toma el siguiente aunque haya lugar', async () => {
+      const noche = { ...prendido, horario: { desde: '23:00', hasta: '07:00' } }
+      const { a, arrancados, trabajando, pasar } = armar({ ajuste: async () => noche })
+      await a.mirar()
+      trabajando.clear()
+      pasar(4 * HORA)
+      await a.mirar()
+      expect(arrancados).toHaveLength(1)
+    })
+  })
 })
 
 describe('el aviso al volver (FS-5)', () => {

@@ -1,7 +1,7 @@
 # Estado del módulo: Frentes
 
 **Tipo:** sección (el Mapa pasa a ser Frentes y el Arranque suma el avance solo; T-112, T-113)
-**Última actualización:** 2026-11-22
+**Última actualización:** 2026-11-23
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -14,11 +14,11 @@
 | 5. Diseño técnico | hecho (D-178) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (vistas las cinco, la B, Q-266, D-181) | `diseno/pantallas/frentes-b.html` |
 | 7. Construcción | en curso (FS-I1 a FS-I3 hechas: el tablero, probado en Q-267; el motor, se prueba en Q-264) | este archivo |
-| 8. Calidad | pendiente (la del motor, marcada `sola`; la del tablero, al terminarlo) | este archivo |
+| 8. Calidad | en curso (la del motor, hecha el 2026-11-23 por el avance solo: ver Calidad; la del tablero, marcada `sola`) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); no convencieron (Q-265) y se dibujaron tres formas nuevas: C (una fila por frente), D (por quién lo hace, con los frentes como filtro) y E (grilla de frentes); vistas las cinco, ganó la B (Q-266, D-181). **FS-I3 hecha** (2026-11-22): el Mapa pasa a ser Frentes, con las tarjetas a la izquierda y el camino del elegido al centro; probada en Q-267 (el robot, que necesita el avance solo prendido, se mira con Q-264). Con R-105, las preguntas de cada frente se responden ahí mismo, como en la Bandeja (se prueba en Q-268).
+Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); no convencieron (Q-265) y se dibujaron tres formas nuevas: C (una fila por frente), D (por quién lo hace, con los frentes como filtro) y E (grilla de frentes); vistas las cinco, ganó la B (Q-266, D-181). **FS-I3 hecha** (2026-11-22): el Mapa pasa a ser Frentes, con las tarjetas a la izquierda y el camino del elegido al centro; probada en Q-267 (el robot, que necesita el avance solo prendido, se mira con Q-264). Con R-105, las preguntas de cada frente se responden ahí mismo, como en la Bandeja (se prueba en Q-268). **La calidad del motor, hecha** (2026-11-23, la tomó el avance solo): encontró que sin nada para tomar releía el uso cada minuto, abriendo Claude Code cada vez; arreglado (ver Calidad).
 
 ## Ruta
 - [x] Pensar cómo la IA trabaja sola y cómo se ve qué sigue
@@ -29,12 +29,12 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - [x] Que el Arranque tome pasos solo mientras haya cuota, según su tamaño (T-113, FS-I2, grande)
 - [x] Contar al volver lo que hizo sola y lo que te espera (FS-I2, chico)
 - [ ] Probar el avance solo una noche (T-113, Q-264)
-- [ ] Medir la calidad del motor (mediano, sola)
+- [x] Medir la calidad del motor
 - [x] Dibujar el tablero Frentes: las tarjetas a la izquierda y el mapa de tareas al centro (Q-266)
 - [x] Construir el tablero, con las preguntas de cada frente en su lugar (FS-I3)
 - [x] Probar el tablero con los frentes de verdad (T-112, Q-267)
   - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (mediano)
-- [ ] Medir la calidad del tablero (mediano)
+- [ ] Medir la calidad del tablero (mediano, sola)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -71,6 +71,23 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - Pruebas: Vitest `fs3-tablero.test.ts` (4), Playwright `fs3-tablero.spec.ts` (3, con capturas) y las del Mapa pasadas a las tarjetas (`ma2-mapa`, `fs1-avance`, `i8-frentes` y los nombres de la sección en las demás).
 - Q-267: probado, salvo el robot (necesita el avance solo prendido; pasa a Q-264). R-105: «Te esperan N» muestra cada pregunta como en la Bandeja (opciones o casillas, nota, Enviar), la más nueva arriba y sin repetir el frente; mientras la Bandeja no se leyó, las filas de antes.
 
+## Calidad del motor (paso 8, 2026-11-23)
+La tomó el avance solo. Cubre el motor (FS-1 a FS-5); el tablero (FS-6 a FS-8) tiene su paso aparte.
+
+**Historias.** Cada criterio de FS-1 a FS-5 tiene su prueba: las marcas en la ruta y en Frentes (`fs1-avance`, Vitest del lector y del control), los ajustes y los interruptores (`fs1-avance.spec.ts`), la fila, el horario, lo disponible y el motor con reloj falso (`fs2-avance.test.ts`), y la conversación y el aviso al volver (`fs2-avance.spec.ts`, `ar2-arranque.spec.ts`). Lo que solo se ve con el uso real (que tome de verdad de noche y el robot en la tarjeta) lo prueba el usuario en Q-264.
+
+**Encontrado y arreglado (grave).** Prendido, sin usar Iridium y sin nada para tomar (todo hecho, apagado o tomado hace menos de 12 horas), el motor releía el uso **cada minuto**, y cada lectura abre un proceso de Claude Code y consulta la cuenta: toda una noche, unas 60 por hora. Ahora arma primero la fila con el uso que ya conoce (Iridium lo relee sola cada tanto y cuando se libera una ventana) y solo relee el uso si hay algo para tomar; el uso releído sigue mandando antes de arrancar.
+
+**Casos raros.** `tests/fs2-avance.test.ts` › los casos raros (paso 8) suma ocho: sin nada para tomar no lee el uso (falla sin el arreglo: 5 lecturas en 5 minutos); sin el uso conocido lo lee una vez y arranca; si el uso no se puede leer, no toma ni anota nada y prueba al minuto siguiente; si el uso releído está más gastado de lo que se sabía, lo mediano no arranca; si el usuario vuelve mientras arma la fila, no arranca; tres miradas a la vez abren una sola conversación; si abrir la conversación falla, lo dice el registro, el aviso lo cuenta como «falló» y no insiste con ese paso (sigue con otro); la semana que llega a su tope mientras trabaja frena el siguiente; y con el horario de 23:00 a 7:00, a las 7 no toma otro.
+
+**Menor, queda así.** Si se cierra Iridium mientras trabaja un paso, lo gastado de ese paso queda sin anotar (`despues: null`): para comparar los tamaños (la rama de la ruta) cuenta como desconocido, no como cero.
+
+**Accesibilidad y UI.** Ajustes › IA › Avance solo: el interruptor es un `switch` con nombre, cada campo dice qué es para el lector («Minutos sin usar Iridium», «Desde qué hora»…), las condiciones se apagan juntas con el interruptor y todo se usa con Tab. El aviso al volver es el del Arranque, ya revisado en su paso 8.
+
+**Seguridad (P2).** Nada nuevo sale de la PC: la cuenta y el motor de siempre; los ajustes que llegan de la ventana pasan por su esquema estricto y un `config.json` roto vuelve a «apagado».
+
+**Verificado:** `pnpm test` (1009 pasan), `pnpm typecheck`, `pnpm lint` y Playwright de lo tocado (`fs1-avance`, `fs2-avance`, `ar2-arranque`: 7 pasan).
+
 ## Próximo paso
-Con Q-264, ver qué hizo el motor de noche (`arranques.json`, la conversación) y arreglar lo que falle. Después, medir la calidad del motor y la del tablero (paso 8).
+Con Q-264, ver qué hizo el motor de noche (`arranques.json`, la conversación) y arreglar lo que falle. Después, la calidad del tablero (paso 8; marcada `sola`, la puede tomar el avance solo).
 **Leer antes:** `modulos/frentes/ux.md` › Parte 2; D-181; `src/renderer/secciones/proyecto/Mapa.tsx`.

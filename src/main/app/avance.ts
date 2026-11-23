@@ -113,11 +113,17 @@ export class AvanceSolo {
       sinUsarS: this.d.sinUsarS ?? null,
       trabajando: this.d.enMarcha().length,
     }
-    if (!puedeMirar({ ...condiciones, uso: this.d.usoActual() })) return
+    const conocido = this.d.usoActual()
+    if (!puedeMirar({ ...condiciones, uso: conocido })) return
+    // La fila primero, con el uso que ya se conoce (sin él, como con el período entero): leer el uso abre Claude Code,
+    // y sin nada para tomar no se lo abre cada minuto toda la noche (paso 8).
+    const fila = await this.fila()
+    const elegir = (libre: number) => elegirPaso(fila.bandeja, fila.pasos, libre, ajuste, fila.tomados)
+    if (!elegir(conocido ? (disponible(conocido, ajuste, this.ahora()) ?? 0) : 100)) return
     const uso = await this.d.leerUso()
     const libre = disponible(uso, ajuste, this.ahora())
     if (libre === null || libre <= 0) return
-    const elegido = await this.elegir(ajuste, libre)
+    const elegido = elegir(libre)
     if (!elegido) return
     // Mientras leía, pudo volver el usuario o arrancar otra sesión.
     if (
@@ -133,7 +139,8 @@ export class AvanceSolo {
     await this.empezar(elegido, uso)
   }
 
-  private async elegir(ajuste: AjusteAvance, libre: number): Promise<Eleccion | null> {
+  /** Lo que podría tomar, sin mirar el uso: lo que no está apagado y las claves de lo tomado hace menos de 12 horas. */
+  private async fila(): Promise<{ bandeja: RespuestasSolas[]; pasos: PasoSolo[]; tomados: Set<string> }> {
     const [apagados, bandeja, pasos, datos] = await Promise.all([
       this.d.apagados(),
       this.d.bandeja(),
@@ -146,13 +153,11 @@ export class AvanceSolo {
         .filter((m) => m.momento === 'avance' && m.cuando >= desde && m.proyecto)
         .map((m) => clave(m.proyecto?.ruta ?? '', m.paso, m.proyecto?.preguntas ?? [])),
     )
-    return elegirPaso(
-      bandeja.filter((c) => !apagado(apagados, c.ruta)),
-      pasos.filter((p) => !apagado(apagados, p.ruta, p.carpeta)),
-      libre,
-      ajuste,
+    return {
+      bandeja: bandeja.filter((c) => !apagado(apagados, c.ruta)),
+      pasos: pasos.filter((p) => !apagado(apagados, p.ruta, p.carpeta)),
       tomados,
-    )
+    }
   }
 
   private async empezar(e: Eleccion, uso: UsoSuscripcion | null): Promise<void> {
