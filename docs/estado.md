@@ -50,6 +50,10 @@
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
+- **Q-278 — ¿Cómo querés ver el progreso al actualizar?**
+  Tipo: decisión
+  Contexto: T-128 (tu idea). Hoy Iridium se cierra y vuelve a abrir sin mostrar nada en el medio, tanto acá como en la otra PC. Va después de las consolas (I-10) y de T-127.
+  Opciones: A) Una ventanita «Actualizando Iridium…» con su barra mientras se cambia la versión, acá y en la otra PC, sin preguntas (recomendada: ves que avanza y no suma pasos; chico) · B) Solo en la otra PC, la ventanita del instalador que ya existe (una línea; acá sigue escondido) · C) Un instalador con asistente completo (elegir carpeta, Siguiente, Terminar), también al actualizar (más clics y no muestra más)
 - **Q-277 — Probá las consolas adentro (I-9)**
   Tipo: prueba
   Contexto: `cambios/consolas.md` › Log y `04-ux.md` › W-18. Las de Iridium, en su sección Scripts:
@@ -72,8 +76,8 @@ Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa
   - [ ] Si sigue en negro: dejar en Otro el archivo más nuevo de `%APPDATA%\Centro de Desarrollo\registros\`
 
 ## Próximo paso
-Construir I-10 de las consolas adentro (`cambios/consolas.md` › Iteraciones: el alto recordado, `Ctrl+ñ`, la confirmación al cerrar con algo corriendo, sacar lo que no es de Windows), con lo que diga Q-277. Con Q-270, cerrar CO-I10 o leer el registro de la otra PC. Después, Capacidades (T-28).
-**Leer antes:** `respuestas/Q-277.md` (si llegó); `cambios/consolas.md` › Iteraciones y › Log; `decisiones.md` › D-185; `src/renderer/marco/Consolas.tsx`.
+Arreglar T-127 (que el ayudante no abra una segunda Iridium) y construir I-10 de las consolas adentro (`cambios/consolas.md` › Iteraciones: el alto recordado, `Ctrl+ñ`, la confirmación al cerrar con algo corriendo, sacar lo que no es de Windows), con lo que diga Q-277. Con Q-270, cerrar CO-I10 o leer el registro de la otra PC. Después, Capacidades (T-28).
+**Leer antes:** `trabajo.md` › T-127 y `release/actualizacion.log`; `respuestas/Q-277.md` y `Q-278.md` (si llegaron); `cambios/consolas.md` › Iteraciones y › Log; `decisiones.md` › D-185; `src/renderer/marco/Consolas.tsx`.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

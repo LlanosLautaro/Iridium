@@ -580,3 +580,11 @@ Hecho el 2026-11-23: en Frentes la cuenta va en gris y pasa a ámbar solo si alg
 ## T-126 — Un título corto para las ideas del usuario al evaluarlas
 Estado: nueva · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2)
 Una idea que anotás queda con tu texto entero como título, y lo sigue teniendo al aprobarla: en Frentes, T-116 (las consolas adentro) ocupa cinco renglones en el Núcleo, y en Ideas varias se cortan a la mitad. Propuesta: al evaluarla, la IA le pone un título corto («Las consolas adentro de Iridium») y tu texto queda tal cual debajo, como «Tu idea: …», así no se pierde nada de lo que escribiste. Es un cambio del framework (cómo se escribe una idea evaluada) con su control; Iridium no cambia. Si no, se deja como está.
+
+## T-127 — Una segunda Iridium abierta trabó la actualización
+Estado: pendiente · Fecha: 2026-11-23 · Origen: el usuario en el chat («parece que ya no se actualiza»)
+Desde las 15:41 había dos Iridium de uso diario abiertas: la segunda, sin conversaciones, quedó de un cambio de versión en el que el ayudante corrió dos veces y abrió Iridium dos veces (`release/actualizacion.log`). Con ella abierta, cada Actualizar terminaba en «Iridium sigue abierto» y volvía la versión vieja. Se cerró a mano el 2026-11-23. Falta: que el ayudante no abra Iridium si ya hay una abierta, averiguar por qué la segunda no se cerró sola (debería: una sola ventana) y que Actualizar diga por qué no entró en vez de volver callado.
+
+## T-128 — Ver el progreso al actualizar o instalar
+Estado: nueva · Idea: usuario · Fecha: 2026-11-23 · Origen: el usuario en el chat
+«¿Y si incluimos un instalador con interfaz? Aunque sea para ver el progreso, nada más.» Hoy la actualización corre escondida: Iridium se cierra y vuelve a abrir sin mostrar nada en el medio (en la app de uso diario y en las copias instaladas). Se decide en Q-278.
