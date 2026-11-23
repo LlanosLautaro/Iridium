@@ -431,7 +431,7 @@ Estado: descartado · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen
 Repetida: el dictado ya estaba como T-57 (de Capacidades, que ahora es Paridad, D-166).
 
 ## T-99 — La extensión de la Revisión, al negro
-Estado: nueva · Frente: Diseño · Idea: IA · Fecha: 2026-11-21 · Origen: cierre de DI-I3
+Estado: descartado · Frente: Diseño · Idea: IA · Fecha: 2026-11-21 · Origen: cierre de DI-I3
 Lo que la extensión dibuja sobre otra app (el aviso del modo comentar, el resaltado, la tarjeta del comentario) sigue con el aspecto de antes: Chakra Petch, JetBrains Mono y el verde con tinte (`extension/src/selector/estilos.ts`, con las fuentes en `extension/fuentes/`). Pasarlo a los tokens del negro y a la letra del sistema, con el paso 8 de Diseño.
 
 ## T-100 — Ronda de UX al cerrar Arranque
@@ -534,6 +534,7 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-116 — que las consolas vengan dentro de iridium, podríamos colocar un algo que la haga aparecer como hero o como colapsable en algún lugar que no ocupe espacio, admitiría multiples consolas como vscode, podría también estar en la barra inferior o allí simplemente poner el indicador de que está running. De este modo nos ahorramos también que los scripts de iridium estén desplegando consolas en nuevas ventanas
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Evaluada el 2026-11-23: se puede, y es lo que hace VS Code. Hoy cada **Ejecutar** de Scripts abre una ventana de consola aparte que queda abierta (D-043), igual que el inicio de sesión de Claude; Armar ya corre sin ventana y muestra su registro (D-122). Adentro iría un panel abajo, plegado por defecto, con una pestaña por consola, **Detener** y **Limpiar**, y en la barra de abajo «▶ 2 corriendo» que lo abre. Dos maneras: una consola de verdad (se le puede escribir, con colores, como la de VS Code, con la misma pieza que usa VS Code, que es nativa y hay que probar que arme bien) o solo la salida (se lee lo que imprime pero no se le escribe; sin piezas nativas, la mitad de trabajo). Límites de las dos: una consola de adentro muere al cerrar Iridium (un `pnpm dev` lanzado desde ahí se cierra con él), y Armar y Volver tienen que seguir corriendo aparte porque cierran y reemplazan Iridium: en el panel se ve su avance leyendo su registro. Tamaño: mediano (solo la salida) o grande (la consola de verdad); es más que «muy chico», así que no va al núcleo sin más. Se decide en Q-272.
 
 ## T-117 — Parece que las Ideas anotadas aqui no siempre se mueven correctamente entre sus estados de "aprobada" y "implementada"
 Estado: hecho · Idea: usuario · Fecha: 2026-11-22

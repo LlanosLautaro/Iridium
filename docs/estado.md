@@ -50,6 +50,10 @@
 Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto) y T-99 (la extensión de la Revisión, al negro). Los avisos de `pnpm audit`, en T-79. Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
+- **Q-272 — ¿Cómo traemos las consolas adentro de Iridium (T-116)?**
+  Tipo: decisión
+  Contexto: `trabajo.md` › T-116. Panel abajo, plegado, con una pestaña por consola y «▶ corriendo» en la barra de abajo; Scripts deja de abrir ventanas. Armar y Volver siguen aparte (cierran Iridium) y el panel muestra su avance. Lo que corre adentro se cierra con Iridium. Iría después de la ronda de UX 2 (T-123), antes o junto a Capacidades.
+  Opciones: A) Consola de verdad, como VS Code: se le escribe, con colores; grande, con una pieza nativa a probar primero (recomendada: es lo que pediste y sirve también para lo que espera un Enter o un inicio de sesión) · B) Solo la salida: se lee, no se le escribe; mediano y sin riesgo de armado, lo interactivo sigue en ventana aparte · C) Por ahora no
 - **Q-271 — Probá el sonido de Iridium al terminar**
   Tipo: prueba
   Contexto: T-119 y T-52 (D-183). El Claude Notifier está borrado del todo y el sonido ahora es de Iridium. Con la app armada (`scripts.md` › Armar la última versión) y una conversación nueva (las que estaban abiertas antes pueden seguir sonando con el viejo hasta cerrarlas).
@@ -79,7 +83,7 @@ Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa
   - [ ] Sin internet, un mensaje a un proyecto que no se miró sale igual, con una línea que dice que no se pudo conectar
 
 ## Próximo paso
-La ronda de UX 2 (T-123, `referencias/ronda-ux.md`): capturas de toda la app con `tools/auditoria-ux.ts`, contra `04-ux.md` y `06-ui.md`; cada hallazgo, un `T-n`, y la ronda en `10-operacion.md` › Rondas de UX. Con Q-260, cerrar T-114; con Q-271, cerrar T-52 o ajustar el sonido (si suena algo con aviso de Windows, buscar qué otro hook quedó en la configuración de Claude); con Q-270, cerrar CO-I10 o leer el registro de la otra PC. Al cerrar un frente, subir el número del medio de la versión (D-182). Después de la ronda, Capacidades (T-28).
+La ronda de UX 2 (T-123, `referencias/ronda-ux.md`): capturas de toda la app con `tools/auditoria-ux.ts`, contra `04-ux.md` y `06-ui.md`; cada hallazgo, un `T-n`, y la ronda en `10-operacion.md` › Rondas de UX. Con Q-260, cerrar T-114; con Q-271, cerrar T-52 o ajustar el sonido (si suena algo con aviso de Windows, buscar qué otro hook quedó en la configuración de Claude); con Q-270, cerrar CO-I10 o leer el registro de la otra PC. Con Q-272, anotar la decisión de T-116 (las consolas adentro) y ubicarla en la ruta que toque. Al cerrar un frente, subir el número del medio de la versión (D-182). Después de la ronda, Capacidades (T-28).
 **Leer antes:** `trabajo.md` › T-123 y T-100 (la ronda 1); `10-operacion.md` › Rondas de UX; `herramientas-ia.md` (la auditoría de capturas).
 
 ## Hitos con huecos aceptados
