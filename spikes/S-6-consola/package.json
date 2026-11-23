@@ -1,0 +1,9 @@
+{
+  "name": "s-6-consola",
+  "version": "1.0.0",
+  "private": true,
+  "main": "main.cjs",
+  "dependencies": {
+    "node-pty": "1.1.0"
+  }
+}

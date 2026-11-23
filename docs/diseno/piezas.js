@@ -1,7 +1,7 @@
 // Lo que comparten las maquetas de Iridium: los íconos, el marco (la barra de proyectos, la de secciones, la
 // conversación y la de estado) y los clics de las piezas (menús, filtros, pestañas, cuadros). No guarda nada ni habla
 // con la app. Cada pantalla dice qué marco lleva en <body>: data-marco="inicio|proyecto|sin-marco" y data-seccion
-// (y data-claude="sin-sesion" para ver el aviso de Claude abajo).
+// (y data-claude="sin-sesion" para ver el aviso de Claude abajo; data-consolas="2", las consolas que corren, T-116).
 
 const ICONOS = {
   grilla: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
@@ -159,6 +159,7 @@ function armarMarco() {
     <footer class="estado-barra">
       ${sinClaude ? `<a class="senal rojo" href="ajustes.html">${icono('error')}Claude sin sesión · Iniciar sesión</a>` : ''}
       ${enProyecto ? '<span>Hito 10 · Operación</span>' : ''}
+      ${cuerpo.dataset.consolas ? `<a class="senal" href="consolas.html" title="Consolas · Ctrl+ñ">${icono('seguir')}${cuerpo.dataset.consolas} corriendo</a>` : ''}
       <span class="derecha">
         <span>5 h <span class="num">34 %</span></span>
         <span>Semana <span class="num">61 %</span></span>

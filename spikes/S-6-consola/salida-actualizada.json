@@ -1,0 +1,18 @@
+{
+  "electron": "44.10.1",
+  "empaquetada": true,
+  "conptyDll": false,
+  "pasos": [
+    "cargó node-pty",
+    "abrió powershell (pid 29224)",
+    "leyó la respuesta en 1272 ms",
+    "cambió de tamaño",
+    "ping corriendo adentro (1 nuevo)",
+    "cortó el árbol de procesos",
+    "la consola terminó (código 1)",
+    "a los 7 s quedan 0 ping vivos"
+  ],
+  "colores": true,
+  "ok": true,
+  "muestra": "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nPS C:\\Users\\Lautaro> ping -t 12ping -t 127.0.0.1\r\n\r\nHaciendo ping a 127.0.0.1 con 32 bytes de datos:\r\nRespuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128\r\n"
+}

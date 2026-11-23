@@ -1,0 +1,37 @@
+# Lo mismo que el electron-builder.yml de Iridium en lo que importa para una pieza nativa: asar, fusibles e instalador.
+appId: com.lautaro.iridium-s6-consola
+productName: S6Consola
+electronVersion: 44.10.1
+electronDist: ../../node_modules/electron/dist
+directories:
+  output: release
+files:
+  - main.cjs
+  - package.json
+  - node_modules/**
+# La pieza trae su versión compilada (N-API, sirve para cualquier Electron): no se recompila.
+npmRebuild: false
+asar: true
+# Lo único nuevo para Iridium: node-pty fuera del archivo comprimido (su .node, el worker y OpenConsole.exe).
+asarUnpack:
+  - node_modules/node-pty/**
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: true
+  onlyLoadAppFromAsar: true
+electronLanguages:
+  - es
+  - en-US
+win:
+  target:
+    - target: nsis
+      arch: x64
+  signAndEditExecutable: false
+nsis:
+  oneClick: true
+  perMachine: false
+  allowElevation: false
+  artifactName: S6-Setup-${version}.${ext}
+  runAfterFinish: false
+  differentialPackage: store-asar

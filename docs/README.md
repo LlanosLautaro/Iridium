@@ -30,6 +30,7 @@ Esta carpeta documenta el desarrollo de la app hito por hito. Es documentación 
 | `08-calidad.md` | Verificación y defectos |
 | `09-lanzamiento.md` | Build, distribución, versiones |
 | `10-operacion.md` | Señales, mantenimiento, próxima versión |
+| `cambios/` | Las propuestas grandes de la operación, una por archivo (`10-operacion.md` › Próxima versión) |
 | `respuestas/` | Respuestas del usuario a las preguntas `Q-n`, con sus adjuntos |
 | `revision/` | Comentarios del usuario sobre la interfaz (`R-n`) |
 | `modulos/` | Frentes: secciones, plugins y productos hermanos con desarrollo propio (índice en `modulos/README.md`) |

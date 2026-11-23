@@ -1,0 +1,18 @@
+{
+  "electron": "44.10.1",
+  "empaquetada": false,
+  "conptyDll": false,
+  "pasos": [
+    "cargó node-pty",
+    "abrió powershell (pid 49876)",
+    "leyó la respuesta en 1239 ms",
+    "cambió de tamaño",
+    "ping corriendo adentro (1 nuevo)",
+    "cerró la consola",
+    "la consola terminó (código -1073741510)",
+    "a los 7 s quedan 0 ping vivos"
+  ],
+  "colores": true,
+  "ok": true,
+  "muestra": "e ping para 127.0.0.1:\r\n    Paquetes: enviados = 1, recibidos = 1, perdidos = 0\r\n    (0% perdidos),\r\nTiempos aproximados de ida y vuelta en milisegundos:\r\n    Mínimo = 0ms, Máximo = 0ms, Media = 0ms\r\n"
+}

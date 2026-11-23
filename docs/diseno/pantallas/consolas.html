@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Las consolas adentro</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* T-116, D-184: el panel de las consolas, abajo de la sección y no de la conversación (que sigue entera), como el
+     Terminal de VS Code. Plegado no se ve: queda «▶ N corriendo» en la barra de abajo. */
+  .ejecutar { flex: none; color: var(--bien); }
+  .consolas { flex: none; height: 300px; display: flex; flex-direction: column; border-top: 1px solid var(--borde); background: var(--fondo); }
+  /* El borde de arriba se arrastra para darle más o menos alto. */
+  .consolas .tirador { height: 4px; margin-top: -2px; cursor: row-resize; }
+  .cab-consolas { display: flex; align-items: center; gap: var(--esp-2); padding: 0 var(--esp-2) 0 var(--esp-3); height: var(--alto-campo); border-bottom: 1px solid var(--borde-suave); }
+  .cab-consolas .pestanas { flex: 1; min-width: 0; overflow: hidden; }
+  .cab-consolas .pestana { gap: 6px; font-size: var(--tam-chico); }
+  .cab-consolas .pestana .ic { width: 13px; height: 13px; }
+  .cab-consolas .pestana .cerrar { opacity: 0; }
+  .cab-consolas .pestana:hover .cerrar, .cab-consolas .pestana.elegida .cerrar { opacity: 1; }
+  .pestana .corre, .pestana .termino, .pestana .aparte { display: inline-flex; }
+  .pestana .corre { color: var(--bien); }
+  .pestana .termino { color: var(--texto-3); }
+  .pestana .fallo { color: var(--error); }
+  .pestana .aparte { font-style: normal; color: var(--texto-3); }
+  .salida { flex: 1; overflow: auto; margin: 0; padding: var(--esp-2) var(--esp-3); font: var(--estilo-codigo); color: var(--texto-2); white-space: pre-wrap; }
+  .salida .verde { color: var(--bien); }
+  .salida .gris { color: var(--texto-3); }
+  .salida .azul { color: var(--enlace); }
+  .salida .cursor { display: inline-block; width: 7px; height: 14px; vertical-align: text-bottom; background: var(--texto-2); }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="scripts" data-consolas="1">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Scripts</h1></div>
+  </header>
+  <div class="contenido centrado">
+    <div class="filas con-lineas">
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Abrir en modo desarrollo</span><span class="detalle">pnpm dev · arma y abre la app con los cambios en vivo</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Actualizar la app de uso diario</span><span class="detalle">pnpm actualizar · arma la versión nueva; se pone al cerrar Iridium</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Correr las pruebas</span><span class="detalle">pnpm test · reglas, casos de uso y disco; tarda un minuto</span></span></div>
+      <div class="fila con-detalle"><button class="boton solo-icono ejecutar" aria-label="Ejecutar" title="Ejecutar"><i data-ic="seguir"></i></button><span class="principal-fila"><span class="titulo-fila">Publicar una versión para compartir</span><span class="detalle">pnpm publicar · sube la app de uso diario a GitHub</span></span></div>
+    </div>
+  </div>
+
+  <section class="consolas" aria-label="Consolas">
+    <div class="tirador" title="Arrastrá para cambiar el alto"></div>
+    <div class="cab-consolas">
+      <nav class="pestanas" aria-label="Consolas abiertas">
+        <a class="pestana elegida" href="#"><span class="corre"><i data-ic="seguir"></i></span>Abrir en modo desarrollo<span class="cerrar" title="Cerrar (la detiene)"><i data-ic="cerrar"></i></span></a>
+        <a class="pestana" href="#"><span class="termino"><i data-ic="ok"></i></span>Correr las pruebas<span class="cerrar" title="Cerrar"><i data-ic="cerrar"></i></span></a>
+        <a class="pestana" href="#" title="Corre aparte, porque cierra y reemplaza Iridium: acá se lee su avance"><span class="aparte"><i data-ic="reloj"></i></span>Actualizar · aparte<span class="cerrar" title="Cerrar"><i data-ic="cerrar"></i></span></a>
+      </nav>
+      <button class="boton sin-fondo chico">Detener</button>
+      <button class="boton sin-fondo chico">Limpiar</button>
+      <button class="boton solo-icono chico" title="Plegar · Ctrl+ñ" aria-label="Plegar"><i data-ic="abajo"></i></button>
+    </div>
+<pre class="salida"><span class="gris">PS D:\…\Iridium&gt;</span> pnpm dev
+
+<span class="verde">&gt;</span> iridium@1.0.4 dev
+<span class="verde">&gt;</span> electron-vite dev
+
+<span class="verde">✓</span> main     out/main/index.js     <span class="gris">812 ms</span>
+<span class="verde">✓</span> preload  out/preload/index.js  <span class="gris">96 ms</span>
+
+  <span class="verde">➜</span>  Local:   <span class="azul">http://localhost:5173/</span>
+<span class="gris">start electron app…</span>
+<span class="cursor"></span></pre>
+  </section>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>
