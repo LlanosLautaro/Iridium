@@ -567,4 +567,4 @@ Toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los 
 
 ## T-124 — La notifiacion iridium sonó mientras claude estaba trabajando
 Estado: hecho · Idea: usuario · Fecha: 2026-11-23
-Hecho el 2026-11-23: no era la conversación. Sonó entre las 11:45 y las 11:47, mientras la IA corría las pruebas de los avisos (R-106): esas pruebas abren Iridium escondidas, con una IA de mentira que termina enseguida, y cada una tocaba la campana. Ahora las Iridium de las pruebas (y de las capturas) están mudas: el sonido se sigue probando, sin oírse. Se mira en Q-274.
+Hecho el 2026-11-23: no era la conversación. Sonó entre las 11:45 y las 11:47, mientras la IA corría las pruebas de los avisos (R-106): esas pruebas abren Iridium escondidas, con una IA de mentira que termina enseguida, y cada una tocaba la campana. Ahora las Iridium de las pruebas (y de las capturas) están mudas: el sonido se sigue probando, sin oírse. Probado en Q-274: no sonó mientras la IA corría las pruebas y sonó una sola vez al terminar.
