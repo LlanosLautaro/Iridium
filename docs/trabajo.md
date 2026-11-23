@@ -546,3 +546,7 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-120 — comandos iridium, por ejemplo /consulta sería para hablar con la IA pero que no haga cambios de código, puede leer y todo pero no escribir (no estricto, por ejemplo sí pod´ria escribir en pendientes o en ideas etc)
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+
+## T-121 — cambiar como se nueran las versiones de iridium, usar 1.0.x etc en lugar de codigos alfanumericos
+Estado: nueva · Idea: usuario · Fecha: 2026-11-23 · Frente: Compartir · Origen: D-171
+Hoy la versión es la fecha y la hora del armado (`2026.1123.1404`) y Acerca de le suma el código del commit (`ef5ed5c`). Evaluada el 2026-11-23: se puede, y conviene antes de que la otra PC instale (Q-256), porque el actualizador solo baja números más altos y 1.0 es más bajo que 2026. Va con T-38 (el número y la lista de cambios). Se decide en Q-269.
