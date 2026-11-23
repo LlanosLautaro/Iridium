@@ -165,6 +165,8 @@ interface Tarjeta {
   nombre: string
   detalle: string
   preguntas: number
+  /** Las que frenan: con alguna, la cuenta va en ámbar; si no, gris, como en la grilla y las pestañas (T-125). */
+  frenan: number
   avance: 'sola' | 'apagada' | null
   grupo: 'activos' | 'empezar' | 'archivados'
 }
@@ -203,6 +205,7 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
     nombre: f.nombre,
     detalle: detalleDe(f),
     preguntas: f.preguntas.length,
+    frenan: f.preguntas.filter((q) => q.frena).length,
     avance: grupo === 'activos' ? avance(f) : null,
     grupo,
   })
@@ -215,6 +218,7 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
             nombre: 'Núcleo',
             detalle: (sinFrente.find((t) => t.enCurso) ?? sinFrente[0])?.titulo ?? 'Nada aprobado sin frente',
             preguntas: m.nucleo.length,
+            frenan: m.nucleo.filter((q) => q.frena).length,
             avance: null,
             grupo: 'activos',
           },
@@ -229,6 +233,7 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
             nombre: 'Hitos',
             detalle: queSigue(m.hitos)?.texto ?? 'Todo hecho',
             preguntas: 0,
+            frenan: 0,
             avance: null,
             grupo: 'activos' as const,
           },
@@ -241,8 +246,12 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
     ...m.porEmpezar.frentes.map((f) => ({
       clave: `${EMPEZAR}${f.nombre}`,
       nombre: f.nombre,
-      detalle: `${f.pasos.length} ${f.pasos.length === 1 ? 'aprobado' : 'aprobados'}`,
+      detalle:
+        f.pasos.length === 0
+          ? 'Nada aprobado todavía'
+          : `${f.pasos.length} ${f.pasos.length === 1 ? 'aprobado' : 'aprobados'}`,
       preguntas: f.preguntas.length,
+      frenan: f.preguntas.filter((q) => q.frena).length,
       avance: null,
       grupo: 'empezar' as const,
     })),
@@ -370,7 +379,7 @@ function ColumnaFrentes({
               {t.avance === 'apagada' && <span className="senal">apagada</span>}
               {t.preguntas > 0 && (
                 <span
-                  className="cuenta frena"
+                  className={t.frenan > 0 ? 'cuenta frena' : 'cuenta'}
                   title={`${t.preguntas} ${t.preguntas === 1 ? 'pregunta te espera' : 'preguntas te esperan'}`}
                 >
                   {t.preguntas}
@@ -431,7 +440,9 @@ function PreguntasFrente({ ruta, preguntas }: { ruta: string; preguntas: Pregunt
       <section className="bloque preguntas-frente">
         <h3 className="bloque-titulo">
           Te {enLaBandeja.length === 1 ? 'espera' : 'esperan'}{' '}
-          <span className="cuenta frena">{enLaBandeja.length}</span>
+          <span className={enLaBandeja.some((x) => x.frena) ? 'cuenta frena' : 'cuenta'}>
+            {enLaBandeja.length}
+          </span>
         </h3>
         <div className="preguntas">
           {enLaBandeja.map((x) => (
@@ -444,7 +455,7 @@ function PreguntasFrente({ ruta, preguntas }: { ruta: string; preguntas: Pregunt
     <section className="bloque preguntas-frente">
       <h3 className="bloque-titulo">
         Te {preguntas.length === 1 ? 'espera' : 'esperan'}{' '}
-        <span className="cuenta frena">{preguntas.length}</span>
+        <span className={preguntas.some((q) => q.frena) ? 'cuenta frena' : 'cuenta'}>{preguntas.length}</span>
       </h3>
       <div className="filas">
         {preguntas.map((q) => (

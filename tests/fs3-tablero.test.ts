@@ -107,6 +107,7 @@ describe('El tablero Frentes (FS-I3)', () => {
       codigo: 'Q-5',
       titulo: 'Elegí cómo se ve la galería',
       tipo: 'decisión',
+      frena: false,
     })
   })
 

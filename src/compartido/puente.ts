@@ -673,6 +673,8 @@ export interface PreguntaMapa {
   codigo: string
   titulo: string
   tipo: string
+  /** Si frena: solo entonces su cuenta va en ámbar (04-ux.md › Un número que manda, T-125). */
+  frena: boolean
 }
 
 /** Un ítem de `trabajo.md` en las listas del Mapa. */

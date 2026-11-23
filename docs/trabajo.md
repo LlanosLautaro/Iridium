@@ -562,9 +562,19 @@ Estado: pendiente · Frente: Frentes · Fecha: 2026-11-23 · Origen: D-175
 El avance solo anota en `arranques.json` cuánto del período gastó cada paso (el uso de antes y de después). Con varias noches anotadas, avisar cuando un tamaño no se corresponde con lo gastado (un «mediano» que se come el período entero, un «grande» que gasta como uno chico), así la IA deja de estimar a ojo. La primera noche (Q-264): dos pasos medianos gastaron 10 % del período cada uno. Es la rama que quedó en la ruta de Frentes; espera más noches.
 
 ## T-123 — Ronda de UX al cerrar Frentes
-Estado: pendiente · Frente: Orden · Fecha: 2026-11-23 · Origen: D-096 (Frentes pasó a `hecho`)
+Estado: hecho · Frente: Orden · Fecha: 2026-11-23 · Origen: D-096 (Frentes pasó a `hecho`)
 Toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los principios de `06-ui.md`, como dice `referencias/ronda-ux.md`. Desde la ronda 1 cambiaron sobre todo Frentes (el Mapa pasó a ser un tablero), Ajustes › IA › Avance solo, el + y los comandos del chat (Paridad), la Bandeja (R-104) y las pestañas que se arrastran (R-102): mirar que los nombres sean los mismos en todos lados («Frentes» y no «Mapa», «avance solo») y que el tablero y la Bandeja no repitan lo mismo de dos formas. Va antes de Capacidades. Se registra en `10-operacion.md` › Rondas de UX.
+Hecha el 2026-11-23 (ronda 2): T-125 y T-126; `04-ux.md` puesto al día y dos arreglos chicos en el momento (`10-operacion.md` › Rondas de UX).
 
 ## T-124 — La notifiacion iridium sonó mientras claude estaba trabajando
 Estado: hecho · Idea: usuario · Fecha: 2026-11-23
 Hecho el 2026-11-23: no era la conversación. Sonó entre las 11:45 y las 11:47, mientras la IA corría las pruebas de los avisos (R-106): esas pruebas abren Iridium escondidas, con una IA de mentira que termina enseguida, y cada una tocaba la campana. Ahora las Iridium de las pruebas (y de las capturas) están mudas: el sonido se sigue probando, sin oírse. Probado en Q-274: no sonó mientras la IA corría las pruebas y sonó una sola vez al terminar.
+
+## T-125 — En Frentes, la cuenta de preguntas en ámbar aunque no frene
+Estado: hecho · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2)
+La tarjeta de un frente y su «Te espera» iban siempre en ámbar (D-180), aunque la pregunta no frenara (una tarea, una prueba): la grilla y las pestañas siguen «el amarillo es solo para lo que frena» (`04-ux.md` › Un número que manda) y Frentes decía otra cosa con el mismo número.
+Hecho el 2026-11-23: en Frentes la cuenta va en gris y pasa a ámbar solo si alguna de esas preguntas frena, como en la grilla. Con su prueba (Playwright del tablero y del Mapa). Se mira en Q-275.
+
+## T-126 — Un título corto para las ideas del usuario al evaluarlas
+Estado: nueva · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2)
+Una idea que anotás queda con tu texto entero como título, y lo sigue teniendo al aprobarla: en Frentes, T-116 (las consolas adentro) ocupa cinco renglones en el Núcleo, y en Ideas varias se cortan a la mitad. Propuesta: al evaluarla, la IA le pone un título corto («Las consolas adentro de Iridium») y tu texto queda tal cual debajo, como «Tu idea: …», así no se pierde nada de lo que escribiste. Es un cambio del framework (cómo se escribe una idea evaluada) con su control; Iridium no cambia. Si no, se deja como está.

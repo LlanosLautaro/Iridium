@@ -266,7 +266,7 @@ function frentesDe(
   }
   const nucleo: PreguntaMapa[] = []
   for (const q of preguntas) {
-    const p = { codigo: q.codigo, titulo: q.pregunta, tipo: q.tipo }
+    const p = { codigo: q.codigo, titulo: q.pregunta, tipo: q.tipo, frena: q.frena }
     const nombre = q.frente
     const destino = nombre
       ? (frentes.find((f) => igual(f.nombre, nombre) || igual(f.clave, nombre)) ??

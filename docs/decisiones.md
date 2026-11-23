@@ -3504,6 +3504,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** (1) La tarjeta tiene dos renglones, el nombre y el paso que sigue, para que diez frentes entren sin desplazar; las preguntas, como cuenta ámbar, y el avance solo, como el ícono del robot (o «apagada»), sin texto cuando no hay nada. (2) Las preguntas del frente van arriba del recorrido, porque son lo que frena. (3) El Núcleo es una tarjeta más, con los `T-n` y las preguntas sin frente y su propio interruptor. (4) El interruptor del frente va en la cabecera del centro, no en la tarjeta, para no tocarlo sin querer al elegir. (5) Para el recorrido se dibujan dos formas (A, columnas Hecho · Ahora · Después; B, el camino de hoy con el tamaño y «sola»), y el usuario elige en Q-265.
 **Motivo:** que «qué sigue» se lea en la columna sin abrir cada frente, y que el centro responda «qué hace la IA y qué me espera» de este frente.
 **Consecuencias:** un token nuevo, `--ancho-frentes` (280 px). Al construir, la tarjeta es la pieza Fila con detalle y, si gana A, la tarea es una pieza nueva para `piezas.css`.
+**Ajuste (2026-11-23, T-125):** la cuenta de preguntas va en ámbar solo si alguna frena; si no, gris, como en la grilla y las pestañas (`04-ux.md` › Un número que manda).
 
 ## D-181 — El tablero Frentes con la forma B, y lo que se decidió al construirlo
 - **Fecha:** 2026-11-22

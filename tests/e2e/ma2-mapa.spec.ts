@@ -176,7 +176,9 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   // Debajo del nombre, lo que sigue (el que espera, si no hay otro antes) y las preguntas en ámbar.
   const galeria = barra.getByRole('tab', { name: 'Galería' })
   await expect(galeria.locator('.detalle')).toHaveText('Las fotos verticales sin recortar')
-  await expect(galeria.locator('.cuenta.frena')).toHaveText('1')
+  // Una prueba que no frena: la cuenta va en gris (T-125).
+  await expect(galeria.locator('.cuenta')).toHaveText('1')
+  await expect(galeria.locator('.cuenta.frena')).toHaveCount(0)
   await expect(barra.getByRole('tab', { name: 'Núcleo' }).locator('.detalle')).toHaveText(
     'Medir cuánto tarda en abrir',
   )

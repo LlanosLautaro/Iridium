@@ -152,9 +152,18 @@
     gap: var(--esp-1);
   }
   .grupo-frentes {
+    display: flex;
+    flex: none;
     margin-top: 0;
     flex-direction: row;
     align-items: center;
+    gap: var(--esp-2);
+    padding-left: var(--esp-3);
+    border-left: 1px solid var(--borde-suave);
+  }
+  .grupo-frentes > h2 {
+    margin: 0;
+    white-space: nowrap;
   }
   .tarjeta-frente {
     width: auto;

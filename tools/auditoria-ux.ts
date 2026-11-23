@@ -144,7 +144,7 @@ const ESTE = '.tarjeta[title^="Iridium ·"], .tarjeta[title^="Centro de Desarrol
 await win.keyboard.press('Control+1')
 await paso('proyecto-entrada', async () => {
   await win.locator(ESTE).first().click()
-  // Abre en la última sección que se miró (el Mapa, la Bandeja…).
+  // Abre en la última sección que se miró (Frentes, la Bandeja…).
   await win.waitForSelector('[data-seccion]', { timeout: 30_000 })
   await win.waitForTimeout(1000)
 })
@@ -163,6 +163,22 @@ for (const s of secciones) {
     await win.waitForTimeout(1000)
   })
 }
+// El chat del proyecto: la lista de «/» y el + (Paridad, PA-I1 y PA-I2).
+const cuadro = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+await paso('chat-comandos', async () => {
+  await win.keyboard.press('Escape')
+  await cuadro.click()
+  await cuadro.fill('/')
+  await win.waitForTimeout(600)
+})
+await cuadro.fill('').catch(() => {})
+await paso('chat-mas', () => win.getByRole('button', { name: /^Agregar/ }).click())
+await win.keyboard.press('Escape')
+// Frentes con el segundo frente elegido (el primero es el que abre).
+await paso('proyecto-frentes-otro', async () => {
+  await delProyecto('Frentes').click()
+  await win.getByRole('tablist', { name: 'Frentes' }).getByRole('tab').nth(1).click()
+})
 await paso('proyecto-ideas-detalle', async () => {
   await win.keyboard.press('Escape') // la última sección puede ser un cuadro (Ajustes)
   await delProyecto('Ideas').click()
@@ -185,7 +201,7 @@ await paso('otro-proyecto', async () => {
     .click()
   await win.waitForTimeout(1500)
 })
-await paso('otro-proyecto-mapa', () => delProyecto('Mapa').click())
+await paso('otro-proyecto-frentes', () => delProyecto('Frentes').click())
 
 await app.close()
 await writeFile(`${SALIDA}/fallas.txt`, fallas.join('\n'))
@@ -203,7 +219,7 @@ if (appHoy) {
     ajustes: 'ajustes',
     'proyecto-entrada': 'bandeja',
     'proyecto-bandeja-de-entrada': 'bandeja',
-    'proyecto-mapa': 'mapa',
+    'proyecto-frentes': 'mapa',
     'proyecto-revision': 'revision',
     'proyecto-diseno': 'diseno',
     'proyecto-docs': 'docs',

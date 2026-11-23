@@ -41,7 +41,7 @@ const ESTADO = `# Estado del proyecto
 
 ## Preguntas abiertas
 - **Q-5 — Elegí cómo se ve la grilla**
-  Tipo: decisión · Frente: Galería
+  Tipo: decisión · frena · Frente: Galería
   Opciones: A) Cuatro columnas · B) Tres columnas
 - **Q-6 — Probá la búsqueda por fecha**
   Tipo: prueba · Frente: Galería
@@ -197,7 +197,9 @@ test('las tarjetas: el que cambió último arriba, lo que sigue, el robot o «ap
   await expect(tarjeta('Galería').locator('.senal svg')).toHaveCount(1)
   await expect(tarjeta('Avisos').locator('.marcas-tarjeta')).toHaveText('apagada')
   await expect(tarjeta('Búsqueda').locator('.marcas-tarjeta')).toHaveCount(0)
-  await expect(tarjeta('Núcleo').locator('.cuenta.frena')).toHaveText('1')
+  // El ámbar, solo si algo frena (T-125): Galería tiene una que frena; la del Núcleo no, y va en gris.
+  await expect(tarjeta('Núcleo').locator('.cuenta')).toHaveText('1')
+  await expect(tarjeta('Núcleo').locator('.cuenta.frena')).toHaveCount(0)
   // Las diez tarjetas entrarían: la columna no se desplaza.
   expect(await columna.evaluate((e) => e.scrollHeight <= e.clientHeight)).toBe(true)
   await expect(tarjeta('Avisos')).toHaveAttribute('aria-selected', 'true')
@@ -211,6 +213,7 @@ test('el centro: el interruptor, las preguntas arriba y el camino con el código
   const frente = tablero.getByRole('region', { name: 'Galería' })
   await expect(frente.locator('.estado-frente')).toHaveText('En curso')
   await expect(frente.locator('.preguntas-frente .bloque-titulo')).toHaveText('Te esperan 2')
+  await expect(frente.locator('.preguntas-frente .bloque-titulo .cuenta.frena')).toHaveText('2')
   // Se responden ahí mismo, como en la Bandeja (R-105): la más nueva arriba, con sus opciones, sin repetir el frente.
   const preguntas = frente.locator('.preguntas-frente .pregunta')
   await expect(preguntas.locator('.cab-q .cuenta')).toHaveText(['Q-6', 'Q-5'])
@@ -239,6 +242,7 @@ test('el centro: el interruptor, las preguntas arriba y el camino con el código
   await columna.getByRole('tab', { name: 'Núcleo' }).click()
   const nucleo = tablero.getByRole('region', { name: 'Núcleo' })
   await expect(nucleo.locator('.preguntas-frente .pregunta .cab-q .cuenta')).toHaveText(['Q-8'])
+  await expect(nucleo.locator('.preguntas-frente .bloque-titulo .cuenta.frena')).toHaveCount(0)
   await expect(nucleo.locator('.lista-mapa .fila')).toHaveText([
     /T-30\s*Medir cuánto tarda en abrir\s*En curso/,
   ])
