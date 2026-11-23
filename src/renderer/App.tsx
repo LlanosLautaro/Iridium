@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react'
 import { usarEstado } from './estado'
 import { Marco } from './marco/Marco'
+import { tocarSonido } from './marco/sonido'
 import { SECCIONES } from './secciones'
 import { VistaProyecto } from './secciones/proyecto/VistaProyecto'
 import { guardarTodoYa } from './ui/guardarLuego'
@@ -41,6 +42,7 @@ function useConexion() {
       api.alCambiarConversacion(aplicarCambio),
       api.alCambiarUso(ponerUso),
       api.alCambiarArranque(ponerArranque),
+      api.alTerminarTrabajo(tocarSonido),
       api.alCambiarActualizaciones(ponerActualizaciones),
       api.alPedirCierre(ponerCierre),
       api.alCambiarVersionNueva(ponerVersionNueva),

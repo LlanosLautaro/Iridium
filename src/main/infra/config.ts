@@ -15,6 +15,7 @@ import {
 } from '../../compartido/puente'
 import { AJUSTE_INICIAL, HORA_ARRANQUE } from '../core/arranque'
 import { AJUSTE_AVANCE_INICIAL, LIMITES_AVANCE, NINGUNO_APAGADO } from '../core/avance'
+import { AJUSTE_SONIDO_INICIAL, SONIDOS } from '../core/sonido'
 import { escribirAtomico, leerDatos } from './escritura'
 
 /** El modelo y el esfuerzo de un proyecto; null = el de Claude Code. */
@@ -34,6 +35,13 @@ export const AjusteAvance = z.object({
   libre: Entre(LIMITES_AVANCE.libre),
   semana: Entre(LIMITES_AVANCE.semana),
   tamanos: z.array(z.enum(['chico', 'mediano', 'grande'])).max(3),
+})
+
+/** El sonido al terminar (T-52, D-183). */
+export const AjusteSonido = z.object({
+  prendido: z.boolean(),
+  cual: z.enum(SONIDOS as [string, ...string[]]),
+  conAvance: z.boolean(),
 })
 
 /** Lo apagado del avance solo (FS-3). */
@@ -122,6 +130,8 @@ const Config = z.object({
   /** El avance solo (frente Frentes, FS-2): apagado si falta o está roto. */
   avanceSolo: AjusteAvance.catch({ ...AJUSTE_AVANCE_INICIAL }),
   avanceApagado: AvanceApagado.catch({ ...NINGUNO_APAGADO }),
+  /** El sonido al terminar (T-52): prendido con la campana si falta o está roto. */
+  sonido: AjusteSonido.catch({ ...AJUSTE_SONIDO_INICIAL }),
   /** El tamaño de todo, con Ctrl+= y Ctrl+- (Defecto 17): 1 = normal. */
   zoom: z.number().min(0.5).max(3).catch(1),
   /** La ventana como quedó al cerrar (T-66): su lugar y tamaño sin maximizar, y si estaba maximizada. */
@@ -165,6 +175,7 @@ const PREDETERMINADA: Config = {
   arranque: { ...AJUSTE_INICIAL },
   avanceSolo: { ...AJUSTE_AVANCE_INICIAL },
   avanceApagado: { ...NINGUNO_APAGADO },
+  sonido: { ...AJUSTE_SONIDO_INICIAL },
   zoom: 1,
   ventana: null,
   abrirDeFondo: null,
@@ -197,6 +208,7 @@ export function preferenciasDe(c: Config): Preferencias {
     actualizacionApagada: c.actualizacionApagada,
     avanceSolo: c.avanceSolo as Preferencias['avanceSolo'],
     avanceApagado: c.avanceApagado,
+    sonido: c.sonido as Preferencias['sonido'],
   }
 }
 

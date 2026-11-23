@@ -128,6 +128,19 @@ export interface Preferencias {
   avanceSolo: AjusteAvance
   /** Los proyectos y los frentes con el avance solo apagado (FS-3). */
   avanceApagado: AvanceApagado
+  /** El sonido al terminar la IA su trabajo (T-52, D-183): prendido al principio. */
+  sonido: AjusteSonido
+}
+
+/** Los sonidos para elegir en Ajustes › Notificaciones (T-52); se arman en la ventana, sin archivos. */
+export type SonidoFin = 'campana' | 'dos-notas' | 'gota' | 'acorde'
+
+/** El sonido al terminar (T-52, D-183): cuál, y si suena también con lo que toma el avance solo. */
+export interface AjusteSonido {
+  prendido: boolean
+  cual: SonidoFin
+  /** También cuando termina un paso del avance solo (apagado al principio: suele ser de noche). */
+  conAvance: boolean
 }
 
 /** Cuánto cuesta un paso de la ruta (Frentes, D-175): una iteración, no el frente entero. */
@@ -999,6 +1012,7 @@ export const CANALES = {
   segundosSinUso: 'app:segundos-sin-uso',
   arranque: 'arranque:leer',
   arranqueCambio: 'arranque:cambio',
+  terminoTrabajo: 'sonido:termino',
   arranqueVisto: 'arranque:visto',
   cancelarArmado: 'app:cancelar-armado',
   verConsolaArmado: 'app:ver-consola-armado',
@@ -1089,6 +1103,8 @@ export interface ApiIridium {
   /** El arranque del período (frente Arranque): lo último que pasó, la semana y el aviso al volver. */
   arranque(): Promise<EstadoArranque>
   alCambiarArranque(escuchar: (estado: EstadoArranque) => void): () => void
+  /** La IA terminó su trabajo y toca sonar (T-52, D-183): con qué sonido. */
+  alTerminarTrabajo(escuchar: (sonido: SonidoFin) => void): () => void
   /** Listo en el aviso al volver (AR-4): lo mostrado hasta `hasta` no vuelve a aparecer. */
   arranqueVisto(hasta: number): Promise<void>
   /** Se quiso cerrar la ventana con sesiones trabajando (F-6): las rutas de esos proyectos. */

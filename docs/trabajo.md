@@ -216,7 +216,8 @@ Estado: hecho · Frente: Orden · Fecha: 2026-11-07 · Origen: W-10
 La línea del final de Ideas («Las ideas de N proyectos no aparecen…») lleva **Ver en Framework**, que abre Skills › Framework. Hecho en OR-I4 (2026-11-07). Se fue con Ideas como bloc de notas (D-126, 2026-11-16).
 
 ## T-52 — Un sonido para cuando el agente termine de trabajar (cuidado de que no suene cuando el aente simplemente está esperando mientras hace pruebas)
-Estado: pendiente · Idea: IA · Fecha: 2026-11-07
+Estado: hecho · Idea: IA · Fecha: 2026-11-07
+Hecho el 2026-11-23 (D-183), a pedido del usuario al sacar el Claude Notifier (T-119): suena una vez cuando la IA terminó de verdad (después de lo de fondo y del control), no si se la detuvo o falló; sin avisos de Windows. Ajustes › Notificaciones: prendido, cuál de cuatro y si suena con el avance solo (apagado al principio). Pruebas: `tests/t52-sonido.test.ts`, `tests/e2e/t52-sonido.spec.ts`. Se prueba en Q-271.
 
 ## T-53 — La captura del detalle de Ideas no sale en auditoria-ux.ts
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-07 · Origen: DI-I1
@@ -544,7 +545,7 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-119 — actualmente creo que tenemos rastros de un "claude notifer" que suena cuando claude termina de trabajar, eso yo lo desinstalé, creo que quedo como vestigio de un complemento de vscode, deberíamos quitarlo ya que hay una idea para que Iridiuj tenga su propia implementación de ello con algo más de control para eviatar justamente esto de q queda como vestigio
 Estado: hecho · Idea: usuario · Fecha: 2026-11-22
-Hecho el 2026-11-23: la extensión de VS Code estaba desinstalada, pero dejó cinco hooks en la configuración de usuario de Claude Code (al terminar, al pedir permiso, al preguntar, al mandar un mensaje y al terminar un subagente) que seguían sonando en cada sesión, también en las de Iridium. Se sacaron, y sus archivos quedaron en un respaldo fuera del repo (anotado en el README de la carpeta de configuración de Claude). La extensión, marcada como obsoleta, la borra VS Code solo al abrirse. El sonido propio de Iridium es T-52.
+Hecho el 2026-11-23: la extensión de VS Code estaba desinstalada, pero dejó cinco hooks en la configuración de usuario de Claude Code (al terminar, al pedir permiso, al preguntar, al mandar un mensaje y al terminar un subagente) que seguían sonando en cada sesión, también en las de Iridium. Se sacaron, y sus archivos y lo que quedaba de la extensión se borraron del todo, sin respaldo, a pedido del usuario. El sonido propio de Iridium es T-52 (D-183).
 
 ## T-120 — comandos iridium, por ejemplo /consulta sería para hablar con la IA pero que no haga cambios de código, puede leer y todo pero no escribir (no estricto, por ejemplo sí pod´ria escribir en pendientes o en ideas etc)
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22

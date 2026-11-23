@@ -9,6 +9,7 @@ import { AcercaDe } from './ajustes/AcercaDe'
 import { Apariencia } from './ajustes/Apariencia'
 import { EsteProyecto } from './ajustes/EsteProyecto'
 import { Ia } from './ajustes/Ia'
+import { Notificaciones } from './ajustes/Notificaciones'
 import { Perfil } from './ajustes/Perfil'
 import { Proyectos } from './ajustes/Proyectos'
 
@@ -31,6 +32,7 @@ const SECCIONES_AJUSTES: {
   { id: 'perfil', nombre: 'Perfil', Vista: Perfil },
   { id: 'ia', nombre: 'IA', Vista: Ia },
   { id: 'apariencia', nombre: 'Apariencia', Vista: Apariencia },
+  { id: 'notificaciones', nombre: 'Notificaciones', Vista: Notificaciones },
   { id: 'proyectos', nombre: 'Proyectos', Vista: Proyectos },
   { id: 'acerca', nombre: 'Acerca de', Vista: AcercaDe },
 ]

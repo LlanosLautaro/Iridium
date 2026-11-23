@@ -34,6 +34,7 @@ import {
   tocadaDespues,
   usadaAfuera,
 } from '../core/sesiones'
+import type { FinDeTrabajo } from '../core/sonido'
 import type { FotoLeida } from '../infra/fotos'
 import type { ArchivoSesiones, ResumenSesion } from '../infra/sesiones'
 import type {
@@ -94,6 +95,11 @@ export interface DependenciasConversacion {
   leerFoto?: (ruta: string, limites: NonNullable<CapacidadesMotor['fotos']>) => Promise<FotoLeida>
   /** Si una ruta es de una foto pegada: su nombre en el mensaje es «Imagen pegada». */
   esPegada?: (ruta: string) => boolean
+  /**
+   * Terminó un turno, después del control (T-52): cómo, cuánto sigue de fondo y si lo tomó el avance solo. El sonido
+   * al terminar decide con esto si suena.
+   */
+  alTerminar?: (ruta: string, fin: FinDeTrabajo) => void
   /** Una línea para el registro del día (errores del motor; nunca el texto de la conversación). */
   registrar?: (texto: string) => void
   ahora?: () => number
@@ -895,6 +901,7 @@ export class Conversaciones {
         })
     }
     this.emitir(p, avisos)
+    this.d.alTerminar?.(ruta, { resultado, fondo: p.fondo.length, avance: p.avance })
 
     const fin = this.ahora()
     p.usoCentro = fin

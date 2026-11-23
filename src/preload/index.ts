@@ -11,6 +11,7 @@ import {
   type EstadoMotor,
   type ListaProyectos,
   type SinArmar,
+  type SonidoFin,
   type UsoSuscripcion,
   type VersionNueva,
 } from '../compartido/puente'
@@ -43,6 +44,7 @@ const api: ApiIridium = {
   alCambiarUso: (f) => escuchar<UsoSuscripcion>(CANALES.usoCambio, f),
   arranque: () => ipcRenderer.invoke(CANALES.arranque),
   alCambiarArranque: (f) => escuchar<EstadoArranque>(CANALES.arranqueCambio, f),
+  alTerminarTrabajo: (f) => escuchar<SonidoFin>(CANALES.terminoTrabajo, f),
   arranqueVisto: (hasta) => ipcRenderer.invoke(CANALES.arranqueVisto, hasta),
   alPedirCierre: (f) => escuchar<string[]>(CANALES.pedirCierre, f),
   cerrarIgual: () => ipcRenderer.invoke(CANALES.cerrarIgual),

@@ -7,6 +7,7 @@ import { actualizarSolo } from '../../compartido/actualizar'
 import { MAX_ADJUNTOS } from '../../compartido/adjuntos'
 import { sumarReciente } from '../../compartido/comandos'
 import {
+  type AjusteSonido,
   CANALES,
   CARPETA_IRIDIUM,
   type EstadoMotor,
@@ -67,6 +68,7 @@ import {
   instruccionGeneral,
   instruccionRevision,
 } from '../core/sesiones'
+import { sonidoAlTerminar } from '../core/sonido'
 import { leerScripts, RUTA_SCRIPTS } from '../core/visor/scripts'
 import { enElProyecto, leerArchivo, leerCarpeta, listarArchivos } from '../infra/archivos'
 import {
@@ -490,6 +492,12 @@ export function registrarPuente(s: Servicios): Puente {
         ? Promise.resolve(null)
         : controlarProyecto(ruta),
     registrar: (texto) => s.registro.escribir(texto),
+    // El sonido al terminar (T-52, D-183): la ventana lo toca; acá se decide si toca.
+    alTerminar: (_ruta, fin) =>
+      void s.config.leer().then((c) => {
+        const sonido = sonidoAlTerminar(c.sonido as AjusteSonido, fin)
+        if (sonido) enviar(CANALES.terminoTrabajo, sonido)
+      }),
     // Los mensajes de la IA con los códigos y las citas del proyecto como enlaces (F-4).
     html: async (ruta) => {
       const d = await docs.de(ruta)

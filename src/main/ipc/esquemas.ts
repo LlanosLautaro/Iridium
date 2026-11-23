@@ -14,7 +14,7 @@ import { LARGO_MENSAJE } from '../../compartido/sincronia'
 import { ESTADOS } from '../../compartido/tipos'
 import { HORA_ARRANQUE } from '../core/arranque'
 import { LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
-import { AjusteAvance, AjusteIa, AnchosConversacion, AvanceApagado } from '../infra/config'
+import { AjusteAvance, AjusteIa, AjusteSonido, AnchosConversacion, AvanceApagado } from '../infra/config'
 
 export const CambioPreferencias = z
   .object({
@@ -40,6 +40,7 @@ export const CambioPreferencias = z
     actualizacionApagada: z.array(z.string().min(1).max(1024)).max(500),
     avanceSolo: AjusteAvance.strict(),
     avanceApagado: AvanceApagado.strict(),
+    sonido: AjusteSonido.strict(),
   })
   .partial()
   .strict()

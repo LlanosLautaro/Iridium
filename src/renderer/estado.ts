@@ -32,7 +32,14 @@ import { guardarLuego } from './ui/guardarLuego'
 export type Seccion = 'proyectos' | 'skills' | 'ideas' | 'proyecto'
 
 /** Las secciones de la ventana de Ajustes (AJ-W1); el frente Compartir suma las suyas. */
-export type SeccionAjustes = 'proyecto' | 'perfil' | 'ia' | 'apariencia' | 'proyectos' | 'acerca'
+export type SeccionAjustes =
+  | 'proyecto'
+  | 'perfil'
+  | 'ia'
+  | 'apariencia'
+  | 'notificaciones'
+  | 'proyectos'
+  | 'acerca'
 
 /** Las secciones de la barra de íconos dentro de un proyecto (D-041). */
 /** La primera, «pendientes», es la de entrada: lo que espera del usuario y, al pie, los scripts (D-043, Q-62). */
@@ -324,6 +331,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
       tamanos: ['chico', 'mediano', 'grande'],
     },
     avanceApagado: { proyectos: [], frentes: [] },
+    sonido: { prendido: true, cual: 'campana', conAvance: false },
   },
   skills: { elegida: null, avisosDe: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
   cambiarSkills: (cambio) => set((s) => ({ skills: { ...s.skills, ...cambio } })),

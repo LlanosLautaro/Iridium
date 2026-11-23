@@ -27,12 +27,18 @@ Como usuario quiero elegir cómo me responde la IA en Iridium.
 - [ ] El elegido vale para los mensajes siguientes de las sesiones de Iridium (si hace falta conversación nueva, la ventana lo dice).
 - [ ] VS Code y la terminal siguen con su estilo.
 
+### AJ-4 — El sonido al terminar (T-52, D-183)
+Como usuario quiero oír cuándo la IA terminó su trabajo, sin avisos de Windows.
+- [x] Suena una vez cuando la IA terminó de verdad: después de lo que dejó corriendo de fondo y del control; no al dejar las pruebas corriendo, ni si la detuve o falló.
+- [x] En Notificaciones lo apago, elijo entre Campana, Dos notas, Gota y Acorde (elegir uno lo hace sonar) y decido si suena también con el avance solo (apagado al principio).
+
 ## Flujos
 ```
 ◇ o Ctrl+,  →  ventana de Ajustes (última sección)
                  ├─ Perfil      → escribir nombre → se ve en la conversación
                  ├─ IA          → nombre (opcional) · tono → mensajes siguientes
-                 └─ Apariencia  → tocar un tema → toda la app cambia
+                 ├─ Apariencia  → tocar un tema → toda la app cambia
+                 └─ Notificaciones → el sonido al terminar: prendido, cuál, con el avance solo
 Esc · ✕ · clic afuera  →  vuelve a donde estaba
 ```
 - **Error al guardar** (la carpeta de datos no se puede escribir): aviso chico abajo en la ventana, «No se pudo guardar; sigue como antes», y el cambio se deshace en pantalla.
