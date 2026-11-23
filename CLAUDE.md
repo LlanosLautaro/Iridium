@@ -13,6 +13,7 @@ Este proyecto se trabaja desde Iridium con su framework (la skill `iridium`): el
 - La lógica de dominio va separada de la interfaz, como define la arquitectura.
 - El framework (`recursos/plugins/iridium`) se cambia junto con lo que Iridium lee y su control (D-086, D-092): un formato nuevo o distinto va en el mismo cambio que el lector, el control y sus pruebas.
 - Un error de formato que se repite se arregla en el framework y en el control, nunca con un parche en un proyecto.
+- Al cerrar un frente, subí el número del medio del `version` del `package.json` (1.0.0 → 1.1.0) en el mismo commit; el primero, solo con el ok del usuario (D-182).
 - Los otros proyectos del usuario no se modifican desde acá sin que lo pida.
 - El repo no nombra los otros proyectos del usuario ni su carpeta de proyectos (D-082): los proyectos que Iridium muestra son datos de quien lo usa, no parte del producto. Las pruebas y muestras usan nombres neutros (Alfa, Beta, Gamma…).
 

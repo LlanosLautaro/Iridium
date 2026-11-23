@@ -7,8 +7,8 @@ export function AcercaDe() {
   return <VersionDeIridium />
 }
 
-/** La versión de esta app: en desarrollo, los cambios en vivo; armada, cuándo y con qué commit (la primera frase de su
- * mensaje; el mensaje entero, al pasar el mouse, T-104). */
+/** La versión de esta app: en desarrollo, los cambios en vivo; armada, su número (1.0.x, D-182, sin el código del
+ * commit), cuándo y con qué cambio (la primera frase de su mensaje; el mensaje entero, al pasar el mouse, T-104). */
 function VersionDeIridium() {
   const a = __ARMADO__
   const desarrollo = import.meta.env.DEV
@@ -17,10 +17,7 @@ function VersionDeIridium() {
     detalle = `Armada el ${fechaExacta(a.fecha)}${a.mensaje ? `, con «${primeraFrase(a.mensaje)}»` : ''}${a.sinGuardar ? ' y cambios sin commitear' : ''}.`
   return (
     <Ajuste titulo="Versión" clase="version-iridium">
-      <span className="fija">
-        {window.iridium.version}
-        {!desarrollo && a.commit ? ` · ${a.commit}` : ''}
-      </span>
+      <span className="fija">{window.iridium.version}</span>
       <span className="expl" title={!desarrollo && a.mensaje ? a.mensaje : undefined}>
         {detalle}
       </span>

@@ -88,10 +88,9 @@ if (-not $SinArmar) {
   }
   if ((Correr { pnpm build }) -ne 0) { Fallo 'No se pudo armar. Iridium quedó como estaba.' }
   if (Test-Path -LiteralPath $nueva) { Remove-Item -LiteralPath $nueva -Recurse -Force }
-  # El número de la versión es la fecha y la hora del armado, AAAA.MDD.HMM (D-171): el que compara electron-updater en
-  # las copias instaladas (compartido/versiones.ts › numeroDeVersion hace la misma cuenta).
-  $ahora = Get-Date
-  $version = '{0}.{1}.{2}' -f $ahora.Year, ($ahora.Month * 100 + $ahora.Day), ($ahora.Hour * 100 + $ahora.Minute)
+  # El número de la versión, 1.0.x (Q-269, D-182): el que compara electron-updater en las copias instaladas.
+  $version = "$(& node --experimental-strip-types (Join-Path $PSScriptRoot 'version.ts'))".Trim()
+  if ($version -notmatch '^\d+\.\d+\.\d+$') { Fallo "No se pudo calcular el número de la versión ($version)." }
   if ((Correr { pnpm exec electron-builder --win --config electron-builder.yml "-c.directories.output=$nueva" "-c.extraMetadata.version=$version" }) -ne 0) { Fallo 'No se pudo armar la versión nueva. Iridium quedó como estaba.' }
 }
 if (-not (Test-Path -LiteralPath (Join-Path $nueva 'win-unpacked\Iridium.exe'))) { Fallo "No está la versión nueva en $nueva." }

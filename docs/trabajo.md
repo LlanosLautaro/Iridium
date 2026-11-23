@@ -161,7 +161,7 @@ Could. Pesa unos 280 MB: probar a comprimirlo más. Hecho el 2026-11-20 con D-16
 
 ## T-38 — Número de versión y `CHANGELOG.md`
 Estado: pendiente · Frente: Compartir · Origen: D-077, Q-109
-Could. La opción A de Q-109, cuando quieras.
+Could. La opción A de Q-109, cuando quieras. El número ya está (T-121, D-182): queda la lista de cambios.
 
 ## T-39 — Defecto 1: una prueba que falla a veces en la tanda completa
 Estado: pendiente · Origen: `08-calidad.md` › Defectos
@@ -549,8 +549,9 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-121 — cambiar como se nueran las versiones de iridium, usar 1.0.x etc en lugar de codigos alfanumericos
-Estado: nueva · Idea: usuario · Fecha: 2026-11-23 · Frente: Compartir · Origen: D-171
+Estado: hecho · Idea: usuario · Fecha: 2026-11-23 · Frente: Compartir · Origen: D-171
 Hoy la versión es la fecha y la hora del armado (`2026.1123.1404`) y Acerca de le suma el código del commit (`ef5ed5c`). Evaluada el 2026-11-23: se puede, y conviene antes de que la otra PC instale (Q-256), porque el actualizador solo baja números más altos y 1.0 es más bajo que 2026. Va con T-38 (el número y la lista de cambios). Se decide en Q-269.
+Hecho el 2026-11-23: con Q-269 (A, D-182), cada versión se numera 1.0.x: el último número sube solo con cada cambio, el del medio al cerrar un frente y el primero con tu ok. Acerca de muestra el número y cuándo se armó, sin el código. La lista de cambios sigue en T-38.
 
 ## T-122 — Avisar si los tamaños estimados no coinciden con lo gastado
 Estado: pendiente · Frente: Frentes · Fecha: 2026-11-23 · Origen: D-175

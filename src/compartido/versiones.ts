@@ -1,9 +1,12 @@
-// El número de cada versión armada (D-171): la fecha y la hora del armado, `AAAA.MDD.HMM`. Lo pone
-// `tools/actualizar.ps1` (con la misma cuenta) y lo compara electron-updater en las copias instaladas: crece solo.
+// El número de cada versión armada (Q-269, D-182): `1.0.x`. Los dos primeros son los del `version` del `package.json`
+// (el del medio lo sube la IA al cerrar un frente; el primero, solo con el ok del usuario); el último cuenta los commits
+// desde que se cambió ese número. Lo calcula `tools/version.ts` para `tools/actualizar.ps1` y lo compara
+// electron-updater en las copias instaladas: crece con cada commit y vuelve a 0 cuando sube el del medio.
 
-/** El número de la versión armada en esa fecha: `2026.1122.1700` (sin ceros adelante, como pide semver). */
-export function numeroDeVersion(fecha: Date): string {
-  return `${fecha.getFullYear()}.${(fecha.getMonth() + 1) * 100 + fecha.getDate()}.${fecha.getHours() * 100 + fecha.getMinutes()}`
+/** `1.0.12`: los dos primeros números de `base` (el `version` del `package.json`) y los commits desde que cambió. */
+export function numeroDeVersion(base: string, cambios: number): string {
+  const [mayor = '1', medio = '0'] = base.split('.')
+  return `${Number(mayor)}.${Number(medio)}.${Math.max(0, Math.floor(cambios))}`
 }
 
 /** La primera frase del mensaje de un commit, para mostrarla sola (T-104): hasta el primer punto seguido y, si es

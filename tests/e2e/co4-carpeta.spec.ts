@@ -1,6 +1,5 @@
 // CO-I4 con la app abierta y el motor falso: Ajustes › Proyectos muestra la carpeta de proyectos y la cambia con el
 // cuadro de Windows (acá reemplazado), también cuando falta; mientras la IA trabaja no se puede (modulos/compartir/ux.md › CO-4).
-import { execFileSync } from 'node:child_process'
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -133,10 +132,9 @@ test('mientras la IA trabaja no se puede cambiar; al terminar, sí', async () =>
   await app.close()
 })
 
-test('en Acerca de, la versión de Iridium con cuándo se armó y su commit (CO-I5, Q-103)', async () => {
+test('en Acerca de, la versión de Iridium con cuándo se armó, sin el código del commit (CO-I5, Q-103, D-182)', async () => {
   const { app, win } = await abrir()
   const { version } = JSON.parse(await readFile('package.json', 'utf8'))
-  const commit = execFileSync('git', ['log', '-1', '--format=%h'], { encoding: 'utf8' }).trim()
   await expect(win.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
   await win.keyboard.press('Control+,')
   await win.getByRole('dialog').getByRole('button', { name: 'Acerca de' }).click()
@@ -145,7 +143,7 @@ test('en Acerca de, la versión de Iridium con cuándo se armó y su commit (CO-
   // `pnpm e2e` la arma recién: el día de hoy y el último commit.
   const hoy = new Date().toLocaleDateString('es-AR', { day: 'numeric' })
   await expect(fila.locator('.expl')).toContainText(new RegExp(`^Armada el ${hoy} `))
-  await expect(fila.locator('.fija')).toHaveText(`${version} · ${commit}`)
+  await expect(fila.locator('.fija')).toHaveText(version)
   await win.screenshot({ path: 'test-results/co5-version.png' })
   await app.close()
 })

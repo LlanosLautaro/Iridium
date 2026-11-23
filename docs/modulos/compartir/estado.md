@@ -35,7 +35,8 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - [x] Achicar el .zip de cada versión (T-37, CO-I8; probado en Q-225)
 - [x] Que la otra PC no quede en negro (T-111, CO-I9)
 - [ ] Instalar Iridium como una app que se actualiza sola (T-111, CO-I10; Q-256)
-- [ ] Numerar las versiones con su lista de cambios (T-38)
+- [x] Numerar las versiones 1.0.x (T-121, D-182)
+- [ ] La lista de cambios de cada versión (T-38)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

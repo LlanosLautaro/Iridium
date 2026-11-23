@@ -15,28 +15,29 @@ import {
 } from '../src/main/infra/actualizador'
 import { versionDeApp } from '../tools/instalador'
 
-describe('el número de la versión', () => {
-  it('es la fecha y la hora del armado, sin ceros adelante', () => {
-    expect(numeroDeVersion(new Date(2026, 10, 22, 17, 0))).toBe('2026.1122.1700')
-    expect(numeroDeVersion(new Date(2027, 0, 5, 0, 30))).toBe('2027.105.30')
-    expect(numeroDeVersion(new Date(2026, 11, 31, 9, 5))).toBe('2026.1231.905')
+describe('el número de la versión (Q-269, D-182)', () => {
+  it('son los dos primeros números del package.json y los commits desde que cambiaron', () => {
+    expect(numeroDeVersion('1.0.0', 12)).toBe('1.0.12')
+    expect(numeroDeVersion('1.1.0', 0)).toBe('1.1.0')
+    expect(numeroDeVersion('2.3.7', 4)).toBe('2.3.4')
   })
 
-  it('crece con el tiempo, comparado como lo compara electron-updater (número por número)', () => {
+  it('crece con cada commit y al subir el del medio, comparado como lo compara electron-updater', () => {
     const partes = (v: string) => v.split('.').map(Number)
     const mayor = (a: string, b: string) => {
       const [x, y] = [partes(a), partes(b)]
       for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return (x[i] ?? 0) > (y[i] ?? 0)
       return false
     }
-    const fechas = [
-      new Date(2026, 10, 22, 9, 59),
-      new Date(2026, 10, 22, 10, 0),
-      new Date(2026, 10, 30, 23, 59),
-      new Date(2026, 11, 1, 0, 0),
-      new Date(2027, 0, 1, 0, 1),
-    ].map(numeroDeVersion)
-    for (let i = 1; i < fechas.length; i++) expect(mayor(fechas[i] ?? '', fechas[i - 1] ?? '')).toBe(true)
+    const versiones = [
+      numeroDeVersion('1.0.0', 0),
+      numeroDeVersion('1.0.0', 9),
+      numeroDeVersion('1.0.0', 10),
+      numeroDeVersion('1.1.0', 0),
+      numeroDeVersion('2.0.0', 0),
+    ]
+    for (let i = 1; i < versiones.length; i++)
+      expect(mayor(versiones[i] ?? '', versiones[i - 1] ?? '')).toBe(true)
   })
 })
 
