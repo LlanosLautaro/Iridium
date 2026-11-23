@@ -13,12 +13,12 @@
 | 4. UX | hecho (el motor, D-177; el tablero, D-180, con las maquetas) | `ux.md` |
 | 5. Diseño técnico | hecho (D-178) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (vistas las cinco, la B, Q-266, D-181) | `diseno/pantallas/frentes-b.html` |
-| 7. Construcción | en curso (FS-I1 a FS-I3 hechas: el tablero, probado en Q-267; el motor, se prueba en Q-264) | este archivo |
+| 7. Construcción | hecho (FS-I1 a FS-I3: el tablero, probado en Q-267; el motor, una noche en Q-264) | este archivo |
 | 8. Calidad | hecho (la del motor y la del tablero, el 2026-11-23, las dos por el avance solo: ver Calidad) | este archivo |
-| 9. Lanzamiento | pendiente | este archivo |
+| 9. Lanzamiento | hecho (entra con Armar, como cada versión) | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); no convencieron (Q-265) y se dibujaron tres formas nuevas: C (una fila por frente), D (por quién lo hace, con los frentes como filtro) y E (grilla de frentes); vistas las cinco, ganó la B (Q-266, D-181). **FS-I3 hecha** (2026-11-22): el Mapa pasa a ser Frentes, con las tarjetas a la izquierda y el camino del elegido al centro; probada en Q-267 (el robot, que necesita el avance solo prendido, se mira con Q-264). Con R-105, las preguntas de cada frente se responden ahí mismo, como en la Bandeja (se prueba en Q-268). **La calidad del motor, hecha** (2026-11-23, la tomó el avance solo): encontró que sin nada para tomar releía el uso cada minuto, abriendo Claude Code cada vez; arreglado (ver Calidad). **La del tablero, también** (2026-11-23, el avance solo): el robot de la tarjeta prometía pasos que el motor no toma, y un frente de carpeta `nucleo` se pisaba con el Núcleo; arreglados (ver Calidad del tablero).
+Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); no convencieron (Q-265) y se dibujaron tres formas nuevas: C (una fila por frente), D (por quién lo hace, con los frentes como filtro) y E (grilla de frentes); vistas las cinco, ganó la B (Q-266, D-181). **FS-I3 hecha** (2026-11-22): el Mapa pasa a ser Frentes, con las tarjetas a la izquierda y el camino del elegido al centro; probada en Q-267 (el robot, que necesita el avance solo prendido, se mira con Q-264). Con R-105, las preguntas de cada frente se responden ahí mismo, como en la Bandeja (se prueba en Q-268). **La calidad del motor, hecha** (2026-11-23, la tomó el avance solo): encontró que sin nada para tomar releía el uso cada minuto, abriendo Claude Code cada vez; arreglado (ver Calidad). **La del tablero, también** (2026-11-23, el avance solo): el robot de la tarjeta prometía pasos que el motor no toma, y un frente de carpeta `nucleo` se pisaba con el Núcleo; arreglados (ver Calidad del tablero). **Frente completo (2026-11-23):** la noche del 23 el avance solo tomó la calidad del motor y la del tablero, las terminó (10 % del período cada una), lo contó al volver y no pasó el tope de la semana; probado en Q-264. El paso 9 es el de siempre: entra con Armar. Queda la rama de los tamaños (T-122), que espera más noches, y la ronda de UX que toca al cerrar un frente (T-123).
 
 ## Ruta
 - [x] Pensar cómo la IA trabaja sola y cómo se ve qué sigue
@@ -28,12 +28,12 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - [x] Elegir en Ajustes cuándo avanza sola (FS-I1)
 - [x] Que el Arranque tome pasos solo mientras haya cuota, según su tamaño (T-113, FS-I2, grande)
 - [x] Contar al volver lo que hizo sola y lo que te espera (FS-I2, chico)
-- [ ] Probar el avance solo una noche (T-113, Q-264)
+- [x] Probar el avance solo una noche (T-113, Q-264)
 - [x] Medir la calidad del motor
 - [x] Dibujar el tablero Frentes: las tarjetas a la izquierda y el mapa de tareas al centro (Q-266)
 - [x] Construir el tablero, con las preguntas de cada frente en su lugar (FS-I3)
 - [x] Probar el tablero con los frentes de verdad (T-112, Q-267)
-  - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (mediano)
+  - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (T-122, mediano)
 - [x] Medir la calidad del tablero
 
 ## Cambios requeridos en documentos generales
@@ -47,8 +47,8 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 | ID | Objetivo | Estado |
 |---|---|---|
 | FS-I1 | Las marcas en la ruta, el Mapa que las muestra, los ajustes y los interruptores (FS-1 a FS-3) | hecho |
-| FS-I2 | El motor que toma pasos y el aviso al volver (FS-4, FS-5) | hecho (se prueba en Q-264) |
-| FS-I3 | El tablero Frentes con la forma B (FS-6 a FS-8) | hecho (se prueba en Q-267) |
+| FS-I2 | El motor que toma pasos y el aviso al volver (FS-4, FS-5) | hecho (probado una noche en Q-264) |
+| FS-I3 | El tablero Frentes con la forma B (FS-6 a FS-8) | hecho (probado en Q-267) |
 
 ## Log de iteraciones
 ### FS-I1 — Las marcas, los ajustes y los interruptores (2026-11-22)
@@ -102,5 +102,5 @@ La tomó el avance solo. Cubre el tablero (FS-6 a FS-8).
 **Verificado:** `pnpm test` (1010 pasan), `pnpm typecheck`, `pnpm lint`, el control (0 avisos) y Playwright de lo tocado (`fs3-tablero`, con la prueba nueva y su captura `fs3-muchos.png`; `ma2-mapa`, `fs1-avance`, `i8-frentes`, `or4-mapa`: 17 pasan).
 
 ## Próximo paso
-Con Q-264, ver qué hizo el motor de noche (`arranques.json`, la conversación, el robot) y arreglar lo que falle; con eso, el paso 9 (Lanzamiento) y cerrar el frente. La rama que queda («Avisar si los tamaños…») espera varias noches anotadas.
-**Leer antes:** `modulos/frentes/estado.md` › Calidad del motor y Calidad del tablero; D-179.
+En operación, con el hito 10. Con varias noches anotadas en `arranques.json`, T-122 (avisar si los tamaños no coinciden con lo gastado). Lo que falle del avance solo o del tablero se anota como `T-n` con `Frente: Frentes`.
+**Leer antes:** `modulos/frentes/estado.md` › Calidad del motor; D-179.

@@ -503,7 +503,7 @@ Pensada en el chat con T-113 el 2026-11-22: son una sola cosa, una fila de traba
 Hecho el 2026-11-22: la fila de lo que la IA puede hacer sola son los pasos marcados `sola` en la ruta de cada frente, y se ve en el tablero Frentes (una tarjeta por frente con lo que sigue y el robot; al centro, el camino con el tamaño y «sola»), probado en Q-267. El motor que la consume es T-113.
 
 ## T-113 — hacer que elsistema que activa el uso de cuota se pueda configurar más activo, por ejemplo ir atacando uno a uno los pendientes de todos los proyectos siempre que haya cuota disponible y no se esté usando, esto sería especiamente util durante la mañana, claro podria amancer con un 0% de mi cuota de 5hs pero habría obtenido progreso que en caso de no usarlo y llegar el reset semanal sería cuota de uso perdida
-Estado: en curso (espera Q-264) · Frente: Frentes · Idea: usuario · Fecha: 2026-11-22 · Origen: D-175
+Estado: hecho · Frente: Frentes · Idea: usuario · Fecha: 2026-11-22 · Origen: D-175
 Pensada en el chat con T-112 el 2026-11-22 (sin construir nada):
 - **Qué falta no es un estado más:** de 117 ítems, 35 son `nueva` sin evaluar y 24 `pendiente`, pero ninguno dice si la IA puede hacerlo sola. Esa es la dimensión que falta. Mezclar ideas con pedidos y errores no es el problema (el framework ya anota los errores como `T-n`); el problema es que no hay una señal de «listo para que la IA siga sola». T-78 («implementada») ya quedó cubierta por `hecho` (T-117).
 - **No es un Kanban:** mover tarjetas a mano ya se descartó (D-137), y lo que se busca es lo contrario, que la IA tome cosas sin que muevas nada.
@@ -521,6 +521,7 @@ Segunda vuelta en el chat (2026-11-22); Q-261 quedó sin responder y la reemplaz
 - **A tener en cuenta:** usar Claude Code sin ventana para trabajo propio está previsto por Anthropic, pero el uso continuo toda la noche es justo lo que motivó el límite semanal; con trabajo real y dentro de los límites, el riesgo es bajo.
 Q-262 respondida en el chat (D-175): se abre el frente Frentes antes de Capacidades; primero el motor, con la fila interna, y después las maquetas del tablero (tarjetas a la izquierda, el mapa de tareas al centro, las preguntas aparte), con interruptores por proyecto y por frente. Sigue en `modulos/frentes/`.
 Construida el 2026-11-22 (FS-I1 y FS-I2, D-179): el motor toma de a un paso marcado `sola` mientras Iridium no se usa y queda cuota, y el aviso al volver cuenta qué avanzó. Se cierra con la prueba de una noche (Q-264).
+Hecho el 2026-11-23: la primera noche tomó solo «Medir la calidad del motor» y «Medir la calidad del tablero» de Frentes (10 % del período cada uno, 1 % de la semana), los terminó, contó lo que hizo al volver y no pasó el tope de la semana (Q-264). Avisar si los tamaños no coinciden con lo gastado queda en T-122.
 
 ## T-114 — Otro problema es que la app al abrirse debe esperar a que los repos estén sincronizados, el stop puede hacerse global o por proyecto dependiendo el tiempo de espera, creo que por proyecto debería ser lo ideal
 Estado: en curso (espera Q-260) · Idea: usuario · Fecha: 2026-11-22 · Origen: Q-257
@@ -550,3 +551,11 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 ## T-121 — cambiar como se nueran las versiones de iridium, usar 1.0.x etc en lugar de codigos alfanumericos
 Estado: nueva · Idea: usuario · Fecha: 2026-11-23 · Frente: Compartir · Origen: D-171
 Hoy la versión es la fecha y la hora del armado (`2026.1123.1404`) y Acerca de le suma el código del commit (`ef5ed5c`). Evaluada el 2026-11-23: se puede, y conviene antes de que la otra PC instale (Q-256), porque el actualizador solo baja números más altos y 1.0 es más bajo que 2026. Va con T-38 (el número y la lista de cambios). Se decide en Q-269.
+
+## T-122 — Avisar si los tamaños estimados no coinciden con lo gastado
+Estado: pendiente · Frente: Frentes · Fecha: 2026-11-23 · Origen: D-175
+El avance solo anota en `arranques.json` cuánto del período gastó cada paso (el uso de antes y de después). Con varias noches anotadas, avisar cuando un tamaño no se corresponde con lo gastado (un «mediano» que se come el período entero, un «grande» que gasta como uno chico), así la IA deja de estimar a ojo. La primera noche (Q-264): dos pasos medianos gastaron 10 % del período cada uno. Es la rama que quedó en la ruta de Frentes; espera más noches.
+
+## T-123 — Ronda de UX al cerrar Frentes
+Estado: pendiente · Frente: Orden · Fecha: 2026-11-23 · Origen: D-096 (Frentes pasó a `hecho`)
+Toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los principios de `06-ui.md`, como dice `referencias/ronda-ux.md`. Desde la ronda 1 cambiaron sobre todo Frentes (el Mapa pasó a ser un tablero), Ajustes › IA › Avance solo, el + y los comandos del chat (Paridad), la Bandeja (R-104) y las pestañas que se arrastran (R-102): mirar que los nombres sean los mismos en todos lados («Frentes» y no «Mapa», «avance solo») y que el tablero y la Bandeja no repitan lo mismo de dos formas. Va antes de Capacidades. Se registra en `10-operacion.md` › Rondas de UX.
