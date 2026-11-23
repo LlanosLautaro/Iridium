@@ -543,7 +543,8 @@ Hecho el 2026-11-22 (D-174): las dos pasan a Hechas, el framework dice cuándo s
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 
 ## T-119 — actualmente creo que tenemos rastros de un "claude notifer" que suena cuando claude termina de trabajar, eso yo lo desinstalé, creo que quedo como vestigio de un complemento de vscode, deberíamos quitarlo ya que hay una idea para que Iridiuj tenga su propia implementación de ello con algo más de control para eviatar justamente esto de q queda como vestigio
-Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Estado: hecho · Idea: usuario · Fecha: 2026-11-22
+Hecho el 2026-11-23: la extensión de VS Code estaba desinstalada, pero dejó cinco hooks en la configuración de usuario de Claude Code (al terminar, al pedir permiso, al preguntar, al mandar un mensaje y al terminar un subagente) que seguían sonando en cada sesión, también en las de Iridium. Se sacaron, y sus archivos quedaron en un respaldo fuera del repo (anotado en el README de la carpeta de configuración de Claude). La extensión, marcada como obsoleta, la borra VS Code solo al abrirse. El sonido propio de Iridium es T-52.
 
 ## T-120 — comandos iridium, por ejemplo /consulta sería para hablar con la IA pero que no haga cambios de código, puede leer y todo pero no escribir (no estricto, por ejemplo sí pod´ria escribir en pendientes o en ideas etc)
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
