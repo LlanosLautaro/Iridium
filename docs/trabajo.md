@@ -566,4 +566,5 @@ Estado: pendiente · Frente: Orden · Fecha: 2026-11-23 · Origen: D-096 (Frente
 Toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los principios de `06-ui.md`, como dice `referencias/ronda-ux.md`. Desde la ronda 1 cambiaron sobre todo Frentes (el Mapa pasó a ser un tablero), Ajustes › IA › Avance solo, el + y los comandos del chat (Paridad), la Bandeja (R-104) y las pestañas que se arrastran (R-102): mirar que los nombres sean los mismos en todos lados («Frentes» y no «Mapa», «avance solo») y que el tablero y la Bandeja no repitan lo mismo de dos formas. Va antes de Capacidades. Se registra en `10-operacion.md` › Rondas de UX.
 
 ## T-124 — La notifiacion iridium sonó mientras claude estaba trabajando
-Estado: pendiente · Idea: usuario · Fecha: 2026-11-23
+Estado: hecho · Idea: usuario · Fecha: 2026-11-23
+Hecho el 2026-11-23: no era la conversación. Sonó entre las 11:45 y las 11:47, mientras la IA corría las pruebas de los avisos (R-106): esas pruebas abren Iridium escondidas, con una IA de mentira que termina enseguida, y cada una tocaba la campana. Ahora las Iridium de las pruebas (y de las capturas) están mudas: el sonido se sigue probando, sin oírse. Se mira en Q-274.

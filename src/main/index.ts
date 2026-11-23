@@ -340,6 +340,9 @@ function crearVentana(puente: Puente, guardada: VentanaGuardada | null, deFondo:
     },
   })
   ventana = v
+  // Escondida, también muda: las pruebas abren muchas Iridium mientras la IA trabaja y su sonido al terminar se oía
+  // como si fuera el de la conversación de verdad (T-124). El sonido se sigue tocando (y anotando), sin oírse.
+  if (oculta) v.webContents.setAudioMuted(true)
   reglasDelWebview(v)
   // El tamaño guardado (Defecto 17); Ctrl+= y los demás los atiende la ventana, con sus otros atajos.
   v.webContents.on('did-finish-load', () => ponerZoom(zoom))

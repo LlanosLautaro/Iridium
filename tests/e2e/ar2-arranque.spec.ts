@@ -135,7 +135,7 @@ test('al volver, el aviso con lo que hizo mientras no estabas; «y N más» desp
   await expect(aviso).toContainText('no arrancó: no había sesión de Claude')
   await expect(aviso).not.toContainText('no había respuestas')
   await expect(aviso.getByRole('button', { name: 'y 1 más' })).toBeVisible()
-  // No se va solo, como los otros avisos (8 segundos).
+  // No se va solo, como los otros avisos (se van a los pocos segundos).
   await win.waitForTimeout(9000)
   await expect(aviso).toBeVisible()
   await win.screenshot({ path: 'test-results/ar2-aviso.png' })

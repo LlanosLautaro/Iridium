@@ -145,7 +145,7 @@ for (const [ancho, alto] of [
       .click()
     await expect(win.locator('.aviso-flotante', { hasText: 'Alfa todavía no está armada' })).toBeVisible()
 
-    // El de la conversación se va solo a los 8 s: con el mouse encima, queda.
+    // El de la conversación se va solo a los pocos segundos: con el mouse encima, queda.
     const deAlfa = win.locator('.aviso-flotante', { hasText: 'Alfa terminó' })
     await expect(deAlfa).toBeVisible({ timeout: 15_000 })
     await deAlfa.hover()

@@ -12,7 +12,7 @@ import { horaCorta, porQueNo, queDejo } from './arranque'
  * Cuánto queda un aviso a la vista (no mientras el mouse está encima): «terminó» se va rápido (R-106); si dejó
  * preguntas o falló, queda más para leerlo.
  */
-const DURA_MS = { ok: 4000, otro: 8000 }
+const DURA_MS = { ok: 4000, otro: 5000 }
 
 /** Si la ventana de Iridium está en uso: fuera de ella, los avisos esperan a que vuelvas (R-106). */
 function useVentanaEnUso(): boolean {

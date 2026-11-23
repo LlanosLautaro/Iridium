@@ -86,3 +86,12 @@ test('suena una vez cuando la IA termina, no al dejar las pruebas de fondo', asy
   await expect.poll(() => sonidos(win)).toEqual(['campana'])
   await app.close()
 })
+
+test('las Iridium de las pruebas están mudas: su sonido no se oye mientras la IA trabaja (T-124)', async () => {
+  const { app } = await abrir()
+  const muda = await app.evaluate(({ BrowserWindow }) =>
+    BrowserWindow.getAllWindows()[0]?.webContents.isAudioMuted(),
+  )
+  await app.close()
+  expect(muda).toBe(true)
+})
