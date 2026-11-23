@@ -34,7 +34,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - [x] Publicar una versión al día (Q-185)
 - [x] Achicar el .zip de cada versión (T-37, CO-I8; probado en Q-225)
 - [x] Que la otra PC no quede en negro (T-111, CO-I9)
-- [ ] Instalar Iridium como una app que se actualiza sola (T-111, CO-I10; Q-256)
+- [ ] Instalar Iridium como una app que se actualiza sola (T-111, CO-I10; Q-270)
 - [x] Numerar las versiones 1.0.x (T-121, D-182)
 - [ ] La lista de cambios de cada versión (T-38)
 
@@ -54,7 +54,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | hecho, aprobada (Q-102, 2026-11-01) |
 | CO-I8 | Achicar lo que se baja en cada versión: las piezas (D-161, T-37) | hecho (probada publicando, Q-225) |
 | CO-I9 | La otra PC en negro (T-111): el actualizador que se trababa con `app.asar` y las fallas de la ventana, al registro y a una pantalla | hecho (el instalador, Q-255, pasó a CO-I10; la prueba en la otra PC va con Q-256) |
-| CO-I10 | Iridium instalado: el instalador y electron-updater (D-171, T-111) | en curso (construida y probada acá; espera Q-256) |
+| CO-I10 | Iridium instalado: el instalador y electron-updater (D-171, T-111) | en curso (construida y probada acá; espera Q-270) |
 
 ## Log de iteraciones
 ### CO-I10 — Iridium instalado (2026-11-22, T-111, D-171)
@@ -63,6 +63,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - **Probado de punta a punta** (`tools/probar-instalador.ts`, con otro nombre interno para no chocar con un Iridium instalado): instaló la versión A en una carpeta temporal, la abrió con datos aparte, bajó la B de un servidor de prueba (0,4 MB de 218: el `.blockmap` de la A sirvió), la puso al cerrar; después, de vuelta en la A, Actualizar la puso y la abrió sola. El instalador cierra solo los Iridium de su propia carpeta (no la app de uso diario). Desinstalada sin dejar nada en «Aplicaciones instaladas».
 - **Pruebas:** `tests/d171-instalador.test.ts` (el número y que crece, `app-update.yml`, `latest.yml`, el número de un `app.asar` de verdad y el actualizador con un electron-updater falso).
 - **Publicada** `v2026.1122.1004` (107f5f2), armada aparte sin tocar la app de uso diario: el instalador (218 MB), su `.blockmap` y `latest.yml` se bajan desde GitHub sin sesión. Q-256: instalarla en la otra PC.
+- **Publicada** `v1.0.0` (da7a783, 2026-11-23), la primera con el número de D-182, armada aparte igual: como 1.0 es más bajo que 2026, reemplaza a la de arriba para instalar. Q-270 (en lugar de Q-256): instalar esa en la otra PC.
 ### CO-I9 — La otra PC en negro (2026-11-22, T-111)
 - **Repetido acá:** la versión publicada (d1d1750) bajada de GitHub abre bien con datos limpios, con una copia de los datos de uso y con Chromium en otro idioma. La ventana negra depende de esa PC, y no quedaba rastro: Iridium no anotaba nada de lo que le pasa a la ventana.
 - **Encontrado al simular la actualización:** desde CO-I8 una copia compartida no podía bajar ninguna versión. Dentro de Electron, el `fs` de Node trata cada `.asar` como una carpeta: al listar la versión armada contaba 922 archivos de adentro de `app.asar`, la huella nunca daba la publicada, y al pasar al `.zip` completo no podía borrar la carpeta a medio bajar (EBUSY: el propio listado dejó el `.asar` abierto). Cada intento siguiente fallaba igual. Las pruebas no lo veían porque Vitest corre en Node, sin esa capa. (Q-225 se probó con una copia ya armada; la otra PC no pudo haber tomado la pieza así.)
@@ -128,5 +129,5 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - `master` pasó a `dev` y `main` nació en el mismo commit; las dos están en `LlanosLautaro/Iridium`, que sigue privado (desde afuera da 404). Git ya tenía guardada la cuenta: no hizo falta el paso a mano.
 
 ## Próximo paso
-Con Q-256 respondida: si la otra PC instaló y abrió bien, CO-I10 queda hecha; si sigue en negro, leer su registro (Q-256 › Otro) y arreglar la causa.
+Con Q-270 respondida: si la otra PC instaló y abrió bien, CO-I10 queda hecha; si sigue en negro, leer su registro (Q-270 › Otro) y arreglar la causa.
 **Leer antes:** `diseno-tecnico.md` › Iridium instalado.
