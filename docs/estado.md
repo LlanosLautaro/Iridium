@@ -69,7 +69,7 @@ Ideas sin evaluar: T-76, T-78, T-89, T-97 («@» en el chat), T-93 (cómo lo usa
   - [ ] Si sigue en negro: dejar en Otro el archivo más nuevo de `%APPDATA%\Centro de Desarrollo\registros\`
 
 ## Próximo paso
-La ronda de UX 2 (T-123, `referencias/ronda-ux.md`): capturas de toda la app con `tools/auditoria-ux.ts`, contra `04-ux.md` y `06-ui.md`; cada hallazgo, un `T-n`, y la ronda en `10-operacion.md` › Rondas de UX. Con Q-270, cerrar CO-I10 o leer el registro de la otra PC. Al cerrar un frente, subir el número del medio de la versión (D-182). Después de la ronda, las consolas adentro (T-116, D-184: primero probar que la pieza nativa arme) y Capacidades (T-28).
+Primero T-124 (el sonido de Iridium sonó con Claude todavía trabajando; mirar cuándo dispara T-52, D-183, contra lo de fondo y el avance solo). Después, la ronda de UX 2 (T-123, `referencias/ronda-ux.md`): capturas de toda la app con `tools/auditoria-ux.ts`, contra `04-ux.md` y `06-ui.md`; cada hallazgo, un `T-n`, y la ronda en `10-operacion.md` › Rondas de UX. Con Q-270, cerrar CO-I10 o leer el registro de la otra PC. Al cerrar un frente, subir el número del medio de la versión (D-182). Después de la ronda, las consolas adentro (T-116, D-184: primero probar que la pieza nativa arme) y Capacidades (T-28).
 **Leer antes:** `trabajo.md` › T-123 y T-100 (la ronda 1); `10-operacion.md` › Rondas de UX; `herramientas-ia.md` (la auditoría de capturas).
 
 ## Hitos con huecos aceptados
