@@ -8,8 +8,27 @@ import { useAnchoConversacion } from '../ui/Divisor'
 import { Icono } from '../ui/Icono'
 import { horaCorta, porQueNo, queDejo } from './arranque'
 
-/** Cuánto queda un aviso a la vista (no mientras el mouse está encima). */
-const DURA_MS = 8000
+/**
+ * Cuánto queda un aviso a la vista (no mientras el mouse está encima): «terminó» se va rápido (R-106); si dejó
+ * preguntas o falló, queda más para leerlo.
+ */
+const DURA_MS = { ok: 4000, otro: 8000 }
+
+/** Si la ventana de Iridium está en uso: fuera de ella, los avisos esperan a que vuelvas (R-106). */
+function useVentanaEnUso(): boolean {
+  const [enUso, setEnUso] = useState(() => document.hasFocus())
+  useEffect(() => {
+    const si = () => setEnUso(true)
+    const no = () => setEnUso(false)
+    window.addEventListener('focus', si)
+    window.addEventListener('blur', no)
+    return () => {
+      window.removeEventListener('focus', si)
+      window.removeEventListener('blur', no)
+    }
+  }, [])
+  return enUso
+}
 
 function nombreDe(ruta: string): string {
   const t = tarjetaDe(usarEstado.getState().lista, ruta)
@@ -41,15 +60,18 @@ function Aviso({ a }: { a: AvisoSesion }) {
   const responderEn = usarEstado((s) => s.responderEn)
   const nombre = usarEstado((s) => tarjetaDe(s.lista, a.ruta)?.nombre) ?? nombreDe(a.ruta)
   const [encima, setEncima] = useState(false)
-  // Se va solo; el tiempo vuelve a empezar al sacar el mouse o al llegar las preguntas.
+  const enUso = useVentanaEnUso()
+  const espera = a.estado === 'terminada' && a.preguntas > 0
+  const dura = a.estado === 'error' || espera ? DURA_MS.otro : DURA_MS.ok
+  // Se va solo mientras usás Iridium; el tiempo vuelve a empezar al sacar el mouse, al volver a la ventana o al llegar
+  // las preguntas.
   // biome-ignore lint/correctness/useExhaustiveDependencies: `a.preguntas` reinicia la cuenta a propósito.
   useEffect(() => {
-    if (encima) return
-    const t = setTimeout(() => quitar(a.id), DURA_MS)
+    if (encima || !enUso) return
+    const t = setTimeout(() => quitar(a.id), dura)
     return () => clearTimeout(t)
-  }, [encima, quitar, a.id, a.preguntas])
+  }, [encima, enUso, dura, quitar, a.id, a.preguntas])
   const { titulo, detalle } = textoDe(a, nombre)
-  const espera = a.estado === 'terminada' && a.preguntas > 0
   return (
     <div
       className="aviso-flotante"

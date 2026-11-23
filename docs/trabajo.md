@@ -564,3 +564,6 @@ El avance solo anota en `arranques.json` cuánto del período gastó cada paso (
 ## T-123 — Ronda de UX al cerrar Frentes
 Estado: pendiente · Frente: Orden · Fecha: 2026-11-23 · Origen: D-096 (Frentes pasó a `hecho`)
 Toda la interfaz con capturas (`tools/auditoria-ux.ts`) contra `04-ux.md` y los principios de `06-ui.md`, como dice `referencias/ronda-ux.md`. Desde la ronda 1 cambiaron sobre todo Frentes (el Mapa pasó a ser un tablero), Ajustes › IA › Avance solo, el + y los comandos del chat (Paridad), la Bandeja (R-104) y las pestañas que se arrastran (R-102): mirar que los nombres sean los mismos en todos lados («Frentes» y no «Mapa», «avance solo») y que el tablero y la Bandeja no repitan lo mismo de dos formas. Va antes de Capacidades. Se registra en `10-operacion.md` › Rondas de UX.
+
+## T-124 — La notifiacion iridium sonó mientras claude estaba trabajando
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-23

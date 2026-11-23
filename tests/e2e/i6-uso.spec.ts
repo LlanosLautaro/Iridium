@@ -348,6 +348,24 @@ test('un proyecto que no está a la vista avisa cuando termina, con Responder (H
   await app.close()
 })
 
+test('«terminó» se va solo a los 4 s mientras usás Iridium (R-106)', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo.fill('Algo lento en Alfa')
+  await campo.press('Enter')
+  await win.keyboard.press('Control+1')
+  await win.locator('.tarjeta', { hasText: 'Beta' }).click()
+  // Si la ventana no tiene el foco, el aviso espera a que vuelvas: la prueba la usa.
+  await win.evaluate(() => window.dispatchEvent(new Event('focus')))
+  const aviso = win.locator('.aviso-flotante', { hasText: 'Alfa terminó' })
+  await expect(aviso).toBeVisible({ timeout: 15_000 })
+  const desde = Date.now()
+  await expect(aviso).toHaveCount(0, { timeout: 6_000 })
+  expect(Date.now() - desde).toBeGreaterThan(2_500)
+  await app.close()
+})
+
 test('cerrar con sesiones trabajando pregunta; Cerrar igual las frena y quedan para Seguí (F-6)', async () => {
   const { app, win } = await abrir({ IRIDIUM_FALSO_PASO_MS: '2000' })
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
