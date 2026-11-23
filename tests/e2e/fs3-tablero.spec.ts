@@ -211,7 +211,11 @@ test('el centro: el interruptor, las preguntas arriba y el camino con el código
   const frente = tablero.getByRole('region', { name: 'Galería' })
   await expect(frente.locator('.estado-frente')).toHaveText('En curso')
   await expect(frente.locator('.preguntas-frente .bloque-titulo')).toHaveText('Te esperan 2')
-  await expect(frente.locator('.preguntas-frente .fila .codigo')).toHaveText(['Q-5', 'Q-6'])
+  // Se responden ahí mismo, como en la Bandeja (R-105): la más nueva arriba, con sus opciones, sin repetir el frente.
+  const preguntas = frente.locator('.preguntas-frente .pregunta')
+  await expect(preguntas.locator('.cab-q .cuenta')).toHaveText(['Q-6', 'Q-5'])
+  await expect(preguntas.locator('.frente-pregunta')).toHaveCount(0)
+  await expect(frente.getByRole('radiogroup', { name: 'Opciones de Q-5' }).getByRole('radio')).toHaveCount(3)
   const camino = frente.locator('.camino')
   await expect(camino.locator('.tramo.hecho .pie-paso')).toHaveText('GA-I1')
   await expect(camino.locator('.tramo.espera .pie-paso')).toHaveText('Te espera · Q-5')
@@ -234,7 +238,7 @@ test('el centro: el interruptor, las preguntas arriba y el camino con el código
   // El Núcleo: la pregunta sin frente y lo aprobado sin frente.
   await columna.getByRole('tab', { name: 'Núcleo' }).click()
   const nucleo = tablero.getByRole('region', { name: 'Núcleo' })
-  await expect(nucleo.locator('.preguntas-frente .fila .codigo')).toHaveText(['Q-8'])
+  await expect(nucleo.locator('.preguntas-frente .pregunta .cab-q .cuenta')).toHaveText(['Q-8'])
   await expect(nucleo.locator('.lista-mapa .fila')).toHaveText([
     /T-30\s*Medir cuánto tarda en abrir\s*En curso/,
   ])

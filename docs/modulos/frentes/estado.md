@@ -13,12 +13,12 @@
 | 4. UX | hecho (el motor, D-177; el tablero, D-180, con las maquetas) | `ux.md` |
 | 5. Diseño técnico | hecho (D-178) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (vistas las cinco, la B, Q-266, D-181) | `diseno/pantallas/frentes-b.html` |
-| 7. Construcción | en curso (FS-I1 a FS-I3 hechas: el motor y el tablero; falta probarlos, Q-264 y Q-267) | este archivo |
+| 7. Construcción | en curso (FS-I1 a FS-I3 hechas: el tablero, probado en Q-267; el motor, se prueba en Q-264) | este archivo |
 | 8. Calidad | pendiente (la del motor, marcada `sola`; la del tablero, al terminarlo) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); no convencieron (Q-265) y se dibujaron tres formas nuevas: C (una fila por frente), D (por quién lo hace, con los frentes como filtro) y E (grilla de frentes); vistas las cinco, ganó la B (Q-266, D-181). **FS-I3 hecha** (2026-11-22): el Mapa pasa a ser Frentes, con las tarjetas a la izquierda y el camino del elegido al centro; se prueba en Q-267.
+Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que queda de la semana. Primero el motor con la fila interna; después las maquetas y el tablero. Definición aprobada (Q-263, D-176). UX (D-177) y diseño técnico (D-178) del motor escritos. **FS-I1 hecha** (2026-11-22): las marcas en la ruta, el Mapa que las muestra, Ajustes › IA › Avance solo y los interruptores por proyecto y por frente. **FS-I2 hecha** (2026-11-22): el motor toma pasos solo y el aviso al volver cuenta qué avanzó; los detalles, en D-179. Se prueba de noche en Q-264, y el paso que la prueba deja tomar es la calidad del motor. **Parte 2:** la UX del tablero (D-180) y dos maquetas para elegir la forma del recorrido, A (columnas Hecho · Ahora · Después) y B (el camino de hoy con el tamaño y «sola»); no convencieron (Q-265) y se dibujaron tres formas nuevas: C (una fila por frente), D (por quién lo hace, con los frentes como filtro) y E (grilla de frentes); vistas las cinco, ganó la B (Q-266, D-181). **FS-I3 hecha** (2026-11-22): el Mapa pasa a ser Frentes, con las tarjetas a la izquierda y el camino del elegido al centro; probada en Q-267 (el robot, que necesita el avance solo prendido, se mira con Q-264). Con R-105, las preguntas de cada frente se responden ahí mismo, como en la Bandeja (se prueba en Q-268).
 
 ## Ruta
 - [x] Pensar cómo la IA trabaja sola y cómo se ve qué sigue
@@ -32,7 +32,7 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - [ ] Medir la calidad del motor (mediano, sola)
 - [x] Dibujar el tablero Frentes: las tarjetas a la izquierda y el mapa de tareas al centro (Q-266)
 - [x] Construir el tablero, con las preguntas de cada frente en su lugar (FS-I3)
-- [ ] Probar el tablero con los frentes de verdad (T-112, Q-267)
+- [x] Probar el tablero con los frentes de verdad (T-112, Q-267)
   - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (mediano)
 - [ ] Medir la calidad del tablero (mediano)
 
@@ -69,7 +69,8 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - `app/mapa.ts`: cada frente suma sus preguntas abiertas (por la línea `Frente:`, con el nombre de la tabla o la carpeta) y su fecha de `**Última actualización:**`; cada paso, su código (la iteración o el primer `T-n`); el mapa suma `nucleo`, las preguntas sin frente o con uno que no está; las de un frente por empezar van a él.
 - `Mapa.tsx`: la columna de tarjetas (pestañas, con las flechas), el que cambió último arriba y el Núcleo debajo; el robot solo si la IA va a tomar algo de ese frente, «apagada» con el frente apagado; al centro, la cabecera con el interruptor, «Te esperan N» y el camino con el código, el tamaño y «sola» al pie. El resaltado del camino es el mismo paso que dice la tarjeta (el primero que la IA puede hacer, camino o rama). Con la sección de menos de 900 px, las tarjetas son una barra arriba con los nombres. `frentes.ts`: lo que sigue, sin la interfaz.
 - Pruebas: Vitest `fs3-tablero.test.ts` (4), Playwright `fs3-tablero.spec.ts` (3, con capturas) y las del Mapa pasadas a las tarjetas (`ma2-mapa`, `fs1-avance`, `i8-frentes` y los nombres de la sección en las demás).
+- Q-267: probado, salvo el robot (necesita el avance solo prendido; pasa a Q-264). R-105: «Te esperan N» muestra cada pregunta como en la Bandeja (opciones o casillas, nota, Enviar), la más nueva arriba y sin repetir el frente; mientras la Bandeja no se leyó, las filas de antes.
 
 ## Próximo paso
-Con Q-267, arreglar lo que no se vea bien del tablero; con Q-264, ver qué hizo el motor de noche (`arranques.json`, la conversación) y arreglar lo que falle. Después, medir la calidad del motor y la del tablero (paso 8).
+Con Q-264, ver qué hizo el motor de noche (`arranques.json`, la conversación) y arreglar lo que falle. Después, medir la calidad del motor y la del tablero (paso 8).
 **Leer antes:** `modulos/frentes/ux.md` › Parte 2; D-181; `src/renderer/secciones/proyecto/Mapa.tsx`.

@@ -98,8 +98,9 @@ test('la barra en dos grupos y se entra a la Bandeja si hay algo, si no al Mapa;
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   await expect(actual).toHaveAttribute('aria-label', /^Bandeja de entrada/)
   await expect(win.locator('[data-seccion="pendientes"] .pregunta')).toHaveCount(1)
+  // El ícono de la Bandeja dice cuántas esperan (R-103).
   expect(await barra(win)).toEqual([
-    'Bandeja de entrada',
+    'Bandeja de entrada, 1 sin responder',
     'Frentes',
     'Ideas',
     'Revisión',

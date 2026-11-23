@@ -1,10 +1,16 @@
 // Un pendiente de W-5 con las piezas (DI-I3, tanda 6; `docs/diseno/pantallas/bandeja.html`): código, tipo y si frena
-// como Señales; la pregunta, que se pliega desde su título (R-39); y el formulario para responder (H-10: opciones, Otro
+// como Señales; la pregunta, que se pliega desde su título (R-39; abierta salvo que el usuario la haya plegado, R-104); y el formulario para responder (H-10: opciones, Otro
 // y nota; H-11 y W-6: una fila por casilla con su nota). El contexto y lo que cita van plegados en «Mostrar detalles»
 // (Q-62). Lo escrito se guarda solo (R-3), sin «Guardar a medias» (T-58). Las respondidas sin procesar muestran lo
 // elegido y se pueden corregir hasta que la IA las procesa.
 import { type MouseEvent, useId, useLayoutEffect, useRef, useState } from 'react'
-import type { CitaVista, Destino, PendienteVista } from '../../../compartido/puente'
+import {
+  type CitaVista,
+  type Destino,
+  type PendienteVista,
+  PLEGADAS_POR_PROYECTO,
+  PROYECTOS_CON_FILTRO,
+} from '../../../compartido/puente'
 import { type Borrador, OTRO, puedeEnviar } from '../../../compartido/respuestas'
 import { claveBorrador, usarEstado } from '../../estado'
 import { useAltoDelTexto } from '../../ui/altoDelTexto'
@@ -285,25 +291,48 @@ type Envio =
   | { tipo: 'cambio'; afuera: PendienteVista }
   | { tipo: 'aviso'; mensaje: string }
 
+/**
+ * Si el usuario plegó esta pregunta (R-104): van abiertas salvo las que plegó, y eso se recuerda entre una vez y otra.
+ * Al cambiarla se olvidan las que ya no están en la Bandeja.
+ */
+function usePlegada(ruta: string, codigo: string): [boolean, (plegar: boolean) => void] {
+  const plegadas = usarEstado((s) => s.preferencias.qPlegadas[ruta])
+  const guardarPreferencias = usarEstado((s) => s.guardarPreferencias)
+  const plegada = plegadas?.includes(codigo) ?? false
+  const cambiar = (plegar: boolean) => {
+    const s = usarEstado.getState()
+    const datos = s.pendientes[ruta]
+    const vigentes = datos?.tipo === 'ok' ? datos.pendientes.map((x) => x.codigo) : null
+    const antes = (s.preferencias.qPlegadas[ruta] ?? []).filter(
+      (c) => c !== codigo && (!vigentes || vigentes.includes(c)),
+    )
+    const ahora = plegar ? [...antes, codigo].slice(-PLEGADAS_POR_PROYECTO) : antes
+    const { [ruta]: _, ...otros } = s.preferencias.qPlegadas
+    const filas = Object.entries(ahora.length > 0 ? { ...otros, [ruta]: ahora } : otros)
+    guardarPreferencias({ qPlegadas: Object.fromEntries(filas.slice(-PROYECTOS_CON_FILTRO)) })
+  }
+  return [plegada, cambiar]
+}
+
 export function Pendiente({
   ruta,
   p,
   abrirDoc,
-  primera = false,
+  enFrente = false,
 }: {
   ruta: string
   p: PendienteVista
   abrirDoc: (d: Destino) => void
-  /** La primera de la lista: va abierta. */
-  primera?: boolean
+  /** Dentro de su frente, en Frentes (R-105): no repite de qué frente es. */
+  enFrente?: boolean
 }) {
   const enMemoria = usarEstado((s) => s.borradores[claveBorrador(ruta, p.codigo)])
   const escribirBorrador = usarEstado((s) => s.escribirBorrador)
   const soltarBorrador = usarEstado((s) => s.soltarBorrador)
   const ponerPendiente = usarEstado((s) => s.ponerPendiente)
   const [envio, setEnvio] = useState<Envio>({ tipo: 'quieto' })
-  // R-39: la primera (la que frena, si hay) y lo que se está escribiendo quedan abiertos; las demás, plegadas.
-  const [abierta, setAbierta] = useState(primera || p.estado === 'a-medias' || enMemoria !== undefined)
+  const [plegada, plegar] = usePlegada(ruta, p.codigo)
+  const abierta = !plegada
   const [detalles, setDetalles] = useState(false)
   const cuerpo = useId()
   const hayDetalles = p.contextoHtml !== '' || p.citas.length > 0
@@ -384,7 +413,7 @@ export function Pendiente({
           </span>
         )}
         {p.estado === 'a-medias' && <span className="senal">A medias</span>}
-        {p.frente && (
+        {p.frente && !enFrente && (
           <span className="senal frente-pregunta" title={`Es del frente ${p.frente}`}>
             {p.frente}
           </span>
@@ -396,7 +425,7 @@ export function Pendiente({
           className="titulo-q"
           aria-expanded={abierta}
           aria-controls={cuerpo}
-          onClick={() => setAbierta(!abierta)}
+          onClick={() => plegar(abierta)}
         >
           <Icono nombre="chev" />
           {p.pregunta}

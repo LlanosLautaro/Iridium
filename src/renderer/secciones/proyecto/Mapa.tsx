@@ -16,10 +16,14 @@ import type {
 import { usarEstado, vistaDe } from '../../estado'
 import { Cabecera } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
+import { Pendiente } from '../pendientes/Pendiente'
+import { useLeerPendientes } from '../pendientes/Pendientes'
 import { nombreDoc, useDocsCambian } from './enlaces'
 import { enOrden, queSigue } from './frentes'
 
 type MapaLeido = Extract<MapaProyecto, { tipo: 'mapa' }>
+
+const numeroQ = (codigo: string) => Number(/\d+/.exec(codigo)?.[0] ?? 0)
 
 const HITOS = 'hitos'
 const NUCLEO = 'nucleo'
@@ -56,6 +60,8 @@ function useMapa(ruta: string): MapaProyecto | null {
 
 export function Mapa({ ruta }: { ruta: string }) {
   const m = useMapa(ruta)
+  // Las preguntas de cada frente se responden ahí mismo (R-105): las trae la Bandeja.
+  useLeerPendientes(ruta)
   const abrirDoc = usarEstado((s) => s.abrirDoc)
   const hito = m?.tipo === 'mapa' ? m.hito : null
   const documento = m?.tipo === 'mapa' ? m.documento : null
@@ -383,10 +389,33 @@ function ColumnaFrentes({
   )
 }
 
-/** «Te esperan N» (FS-7): las preguntas abiertas del frente, arriba del camino; un clic lleva a la Bandeja. */
+/**
+ * «Te esperan N» (FS-7): las preguntas abiertas del frente, arriba del camino, para responderlas ahí mismo como en la
+ * Bandeja (R-105), la más nueva arriba. Mientras la Bandeja no se leyó, una fila por pregunta que lleva a ella.
+ */
 function PreguntasFrente({ ruta, preguntas }: { ruta: string; preguntas: PreguntaMapa[] }) {
   const responderEn = usarEstado((s) => s.responderEn)
+  const abrirDoc = usarEstado((s) => s.abrirDoc)
+  const datos = usarEstado((s) => s.pendientes[ruta])
   if (preguntas.length === 0) return null
+  const leidas = datos?.tipo === 'ok' ? datos.pendientes : null
+  const enLaBandeja = leidas
+    ?.filter((x) => preguntas.some((q) => q.codigo === x.codigo))
+    .sort((a, b) => numeroQ(b.codigo) - numeroQ(a.codigo))
+  if (enLaBandeja && enLaBandeja.length > 0)
+    return (
+      <section className="bloque preguntas-frente">
+        <h3 className="bloque-titulo">
+          Te {enLaBandeja.length === 1 ? 'espera' : 'esperan'}{' '}
+          <span className="cuenta frena">{enLaBandeja.length}</span>
+        </h3>
+        <div className="preguntas">
+          {enLaBandeja.map((x) => (
+            <Pendiente key={x.codigo} ruta={ruta} p={x} abrirDoc={(d) => abrirDoc(ruta, d)} enFrente />
+          ))}
+        </div>
+      </section>
+    )
   return (
     <section className="bloque preguntas-frente">
       <h3 className="bloque-titulo">

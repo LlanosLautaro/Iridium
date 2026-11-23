@@ -23,6 +23,7 @@ function BotonActividad({
   icono,
   n,
   queCuenta = 'abiertos',
+  ambar = false,
   alTocar,
 }: {
   activa: boolean
@@ -32,6 +33,8 @@ function BotonActividad({
   n: number
   /** Qué cuenta el número, para el lector de pantalla. */
   queCuenta?: string
+  /** El punto en ámbar: algo frena el proyecto. */
+  ambar?: boolean
   alTocar: () => void
 }) {
   return (
@@ -44,9 +47,9 @@ function BotonActividad({
       onClick={alTocar}
     >
       <Icono nombre={icono} />
-      {/* Solo los comentarios abiertos de la Revisión, un punto gris: esperan a la IA, no al usuario (R-50); el número
-      está en el nombre. La bandeja no lleva marca en su ícono: lo de cada proyecto está en su pestaña. */}
-      {n > 0 && <span className="punto" />}
+      {/* Un punto, el número está en el nombre: la Bandeja, si algo espera al usuario (R-103; ámbar si frena, como el
+      inicio), y los comentarios abiertos de la Revisión, gris: esperan a la IA, no al usuario (R-50). */}
+      {n > 0 && <span className={ambar ? 'punto ambar' : 'punto'} />}
     </button>
   )
 }
@@ -80,6 +83,7 @@ function BarraActividad() {
   const irASeccion = usarEstado((s) => s.irASeccion)
   const tarjeta = tarjetaDe(lista, ruta)
   const revision = tarjeta?.revision ?? 0
+  const { sinResponder, frenan } = tarjeta?.preguntas ?? SIN_PREGUNTAS
   if (seccion === 'proyecto' && ruta) {
     const boton = (s: SeccionDeProyecto) => (
       <BotonActividad
@@ -89,11 +93,14 @@ function BarraActividad() {
         detalle={
           s.id === 'revision' && revision > 0
             ? ` · ${revision} ${revision === 1 ? 'abierto, espera' : 'abiertos, esperan'} a la IA`
-            : ''
+            : s.id === 'pendientes' && frenan > 0
+              ? ` · ${frenan === 1 ? 'una frena' : `${frenan} frenan`} el proyecto`
+              : ''
         }
         icono={s.icono}
-        n={s.id === 'revision' ? revision : 0}
-        queCuenta={revision === 1 ? 'abierto' : 'abiertos'}
+        n={s.id === 'revision' ? revision : s.id === 'pendientes' ? sinResponder : 0}
+        queCuenta={s.id === 'pendientes' ? 'sin responder' : revision === 1 ? 'abierto' : 'abiertos'}
+        ambar={s.id === 'pendientes' && frenan > 0}
         alTocar={() => irASeccion(ruta, s.id)}
       />
     )
@@ -228,7 +235,8 @@ function EstadoPestana({
 /**
  * La barra de título propia (D-041): el inicio y la barra de proyectos, una pestaña por cada proyecto abierto, con su
  * ícono (Q-62), que queda aunque no trabaje (D-043); tocar una abre el proyecto y × la cierra (salvo mientras la IA
- * trabaja). Se arrastra desde el espacio libre; los tres botones de la derecha los dibuja Windows.
+ * trabaja); arrastrar una pestaña la cambia de lugar, y el orden se recuerda (R-102). La ventana se arrastra desde el
+ * espacio libre; los tres botones de la derecha los dibuja Windows.
  */
 function BarraTitulo() {
   const fichas = usarEstado((s) => s.fichas)
@@ -238,10 +246,22 @@ function BarraTitulo() {
   const abierto = usarEstado((s) => s.proyectoAbierto)
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
   const cerrarPestana = usarEstado((s) => s.cerrarPestana)
+  const guardarPreferencias = usarEstado((s) => s.guardarPreferencias)
+  const [arrastrada, setArrastrada] = useState<string | null>(null)
+  const [destino, setDestino] = useState<{ ruta: string; despues: boolean } | null>(null)
   // Las guardadas que siguen en la carpeta, más las sesiones que arrancaron sin abrir el proyecto y el abierto.
   const rutas = guardadas.filter((r) => lista?.tipo !== 'lista' || tarjetaDe(lista, r))
   for (const r of [...fichas.map((f) => f.ruta), ...(abierto ? [abierto] : [])])
     if (!rutas.includes(r)) rutas.push(r)
+  const soltar = () => {
+    if (arrastrada && destino && arrastrada !== destino.ruta) {
+      const sin = rutas.filter((r) => r !== arrastrada)
+      const i = sin.indexOf(destino.ruta) + (destino.despues ? 1 : 0)
+      guardarPreferencias({ pestanas: [...sin.slice(0, i), arrastrada, ...sin.slice(i)] })
+    }
+    setArrastrada(null)
+    setDestino(null)
+  }
   return (
     <header className="titulo">
       <BotonInicio />
@@ -251,8 +271,40 @@ function BarraTitulo() {
           const ficha = fichas.find((f) => f.ruta === ruta) ?? null
           const nombre = tarjeta?.nombre ?? ruta.split(/[\\/]/).pop() ?? ruta
           const activa = seccion === 'proyecto' && abierto === ruta
+          const marca =
+            arrastrada && destino?.ruta === ruta && arrastrada !== ruta
+              ? destino.despues
+                ? ' soltar-despues'
+                : ' soltar-antes'
+              : ''
           return (
-            <div key={ruta} className={activa ? 'proy elegido' : 'proy'}>
+            // biome-ignore lint/a11y/noStaticElementInteractions: arrastrar para ordenar es del mouse; las pestañas de adentro son botones.
+            <div
+              key={ruta}
+              className={`${activa ? 'proy elegido' : 'proy'}${arrastrada === ruta ? ' arrastrada' : ''}${marca}`}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = 'move'
+                e.dataTransfer.setData('text/plain', nombre)
+                setArrastrada(ruta)
+              }}
+              onDragOver={(e) => {
+                if (!arrastrada) return
+                e.preventDefault()
+                e.dataTransfer.dropEffect = 'move'
+                const caja = e.currentTarget.getBoundingClientRect()
+                const despues = e.clientX > caja.left + caja.width / 2
+                if (destino?.ruta !== ruta || destino.despues !== despues) setDestino({ ruta, despues })
+              }}
+              onDrop={(e) => {
+                e.preventDefault()
+                soltar()
+              }}
+              onDragEnd={() => {
+                setArrastrada(null)
+                setDestino(null)
+              }}
+            >
               <button
                 type="button"
                 role="tab"

@@ -194,7 +194,10 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
     'Borrar varias fotos a la vez',
   ])
   // Sus preguntas, arriba del camino (FS-7); el código del paso, a su pie.
-  await expect(frente.locator('.preguntas-frente .fila')).toHaveText([/Q-5.*¿La grilla se ve bien\?.*prueba/])
+  // Se responde ahí mismo, como en la Bandeja (R-105).
+  await expect(frente.locator('.preguntas-frente .pregunta')).toHaveText([
+    /Q-5.*prueba.*¿La grilla se ve bien\?/,
+  ])
   await expect(camino.locator('.tramo.hecho .pie-paso')).toHaveText('GA-I1')
   // El que sigue nombra una pregunta abierta: «Te espera · Q-5» en lugar del resalte (MA-2).
   const espera = camino.locator('.tramo.espera').first()
@@ -253,10 +256,6 @@ test('el Mapa en operación: la barra, el camino del activo y lo que espera (MA-
   // «Te espera» lleva a la Bandeja.
   await barra.getByRole('tab', { name: 'Galería' }).click()
   await frente.getByRole('button', { name: 'Te espera' }).click()
-  await expect(win.locator('[data-seccion="pendientes"]')).toBeVisible()
-  // Una pregunta del frente, también.
-  await alMapa(win)
-  await frente.locator('.preguntas-frente .fila').click()
   await expect(win.locator('[data-seccion="pendientes"]')).toBeVisible()
   await app.close()
 })

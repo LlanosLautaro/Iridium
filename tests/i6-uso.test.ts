@@ -347,6 +347,29 @@ describe('el frente elegido en la Bandeja de cada proyecto (R-55)', () => {
   })
 })
 
+describe('las preguntas plegadas en la Bandeja de cada proyecto (R-104)', () => {
+  it('se guardan por proyecto; una lista rota se descarta sin perder las demás', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'iridium-cfg-'))
+    try {
+      const archivo = join(dir, 'config.json')
+      await writeFile(archivo, JSON.stringify({ qPlegadas: { 'C:/Alfa': ['Q-3', 'Q-7'], 'C:/Roto': 'Q-1' } }))
+      const p = preferenciasDe(await new ArchivoConfig(archivo).leer())
+      expect(p.qPlegadas).toEqual({ 'C:/Alfa': ['Q-3', 'Q-7'] })
+      // Sin el campo (un config.json de antes), ninguna: todas abiertas.
+      await writeFile(archivo, JSON.stringify({ version: 1 }))
+      expect(preferenciasDe(await new ArchivoConfig(archivo).leer()).qPlegadas).toEqual({})
+      expect(CambioPreferencias.parse({ qPlegadas: { 'C:/Alfa': ['Q-1'] } })).toEqual({
+        qPlegadas: { 'C:/Alfa': ['Q-1'] },
+      })
+      expect(() => CambioPreferencias.parse({ qPlegadas: { x: ['Q-'.repeat(11)] } })).toThrow()
+      const muchas = Array.from({ length: 201 }, (_, i) => `Q-${i}`)
+      expect(() => CambioPreferencias.parse({ qPlegadas: { 'C:/Alfa': muchas } })).toThrow()
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
+  })
+})
+
 describe('el registro del día', () => {
   it('una línea por cosa, sin saltos; borra los de más de 14 días', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'iridium-reg-'))

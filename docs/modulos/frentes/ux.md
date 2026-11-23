@@ -83,7 +83,7 @@ Como usuario quiero ver en una columna todos los frentes del proyecto y cuál ti
 ### FS-7 — Ver las tareas de un frente, de lo hecho a lo que viene
 Como usuario quiero tocar un frente y ver sus tareas en orden, con qué hace la IA sola y qué me espera.
 - [ ] Al centro, el nombre del frente, su estado y, a la derecha, el interruptor «Avanza sola» (o «No avanza sola»), el mismo de FS-3; cambiarlo cambia la tarjeta.
-- [ ] Debajo, «Te esperan N» con las preguntas abiertas del frente (código, título y tipo), sin repetir el nombre del frente; si no hay, no aparece.
+- [ ] Debajo, «Te esperan N» con las preguntas abiertas del frente, con sus opciones o casillas para responderlas ahí mismo, como en la Bandeja (R-105), sin repetir el nombre del frente; si no hay, no aparece.
 - [ ] Debajo, el recorrido: las tareas reales (los pasos de su ruta con sus `T-n` o su iteración), de lo hecho a lo que viene, cada una con su tamaño y «sola». No se mueven a mano (D-137).
 - [ ] Lo hecho, plegado salvo lo último, con «N hechos antes» para verlo entero.
 - [ ] El paso que sigue, resaltado; uno que te espera, en ámbar con «Te espera · Q-n»; uno en pausa, «En pausa»; uno descartado, tachado. Una rama, debajo de su paso y corrida a la derecha.

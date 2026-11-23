@@ -10,6 +10,7 @@ import {
   ANCHO_LISTA_SKILLS,
   ESFUERZOS,
   LARGO_AJUSTES,
+  PLEGADAS_POR_PROYECTO,
   type Preferencias,
 } from '../../compartido/puente'
 import { AJUSTE_INICIAL, HORA_ARRANQUE } from '../core/arranque'
@@ -104,6 +105,10 @@ const Config = z.object({
   ajustesIa: z.record(z.string(), AjusteIa.optional().catch(undefined)).catch({}),
   /** El frente elegido en la Bandeja de cada proyecto (R-55), por ruta (`''`, el núcleo); uno roto se descarta solo. */
   filtrosBandeja: z.record(z.string(), z.string().max(200).optional().catch(undefined)).catch({}),
+  /** Las preguntas plegadas en la Bandeja de cada proyecto (R-104), por ruta; una lista rota se descarta sola. */
+  qPlegadas: z
+    .record(z.string(), z.array(z.string().max(20)).max(PLEGADAS_POR_PROYECTO).optional().catch(undefined))
+    .catch({}),
   /** El proyecto abierto al cerrar (D-060): al abrir se vuelve a él. */
   abierto: z.string().min(1).max(1024).nullable().catch(null),
   // Ajustes (D-065): los nombres de la conversación y el tono de la IA. El tema ya no se guarda: hay uno solo (D-104).
@@ -152,6 +157,7 @@ const PREDETERMINADA: Config = {
   pestanas: [],
   ajustesIa: {},
   filtrosBandeja: {},
+  qPlegadas: {},
   abierto: null,
   nombreUsuario: '',
   nombreIa: '',
@@ -179,6 +185,9 @@ export function preferenciasDe(c: Config): Preferencias {
     ),
     filtrosBandeja: Object.fromEntries(
       Object.entries(c.filtrosBandeja).filter((e): e is [string, string] => e[1] !== undefined),
+    ),
+    qPlegadas: Object.fromEntries(
+      Object.entries(c.qPlegadas).filter((e): e is [string, string[]] => e[1] !== undefined),
     ),
     abierto: c.abierto,
     nombreUsuario: c.nombreUsuario,

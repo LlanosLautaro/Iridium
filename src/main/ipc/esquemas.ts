@@ -7,6 +7,7 @@ import {
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
   LARGO_AJUSTES,
+  PLEGADAS_POR_PROYECTO,
   PROYECTOS_CON_FILTRO,
 } from '../../compartido/puente'
 import { LARGO_MENSAJE } from '../../compartido/sincronia'
@@ -26,6 +27,9 @@ export const CambioPreferencias = z
     ajustesIa: z.record(z.string().min(1).max(1024), AjusteIa.strict()),
     filtrosBandeja: z
       .record(z.string().min(1).max(1024), z.string().max(200))
+      .refine((f) => Object.keys(f).length <= PROYECTOS_CON_FILTRO),
+    qPlegadas: z
+      .record(z.string().min(1).max(1024), z.array(z.string().min(1).max(20)).max(PLEGADAS_POR_PROYECTO))
       .refine((f) => Object.keys(f).length <= PROYECTOS_CON_FILTRO),
     abierto: z.string().min(1).max(1024).nullable(),
     nombreUsuario: z.string().max(LARGO_AJUSTES.nombreUsuario),

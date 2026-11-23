@@ -1,9 +1,9 @@
 // Los pendientes de un proyecto (H-9, F-3, 04-ux.md › W-5), en su Bandeja de entrada (D-043): todas sus preguntas con
-// lo que citan, en Bloques (PZ-3) con su cuenta, filtros por frente y las en pausa al final. Sin la Bandeja de todos (D-111): lo que espera de cada
+// lo que citan, en Bloques (PZ-3) con su cuenta, la más nueva arriba (R-104), filtros por frente y las en pausa al final. Sin la Bandeja de todos (D-111): lo que espera de cada
 // proyecto se ve en el suyo y, desde la grilla, en la cuenta de su tarjeta. Lo escrito vive en el estado de la ventana
 // (no se pierde al cambiar de proyecto ni de filtro) y se guarda a medias solo (R-3). El frente elegido se recuerda
 // por proyecto en `config.json`: queda al cambiar de proyecto y al cerrar Iridium (R-55).
-import type { ReactNode } from 'react'
+import { type ReactNode, useEffect } from 'react'
 import {
   type Destino,
   type PendienteVista,
@@ -36,6 +36,29 @@ function Siluetas() {
       ))}
     </div>
   )
+}
+
+/** El número de una pregunta, para poner la más nueva arriba (R-104). */
+const numero = (x: PendienteVista) => Number(/\d+/.exec(x.codigo)?.[0] ?? 0)
+const masNuevaPrimero = (a: PendienteVista, b: PendienteVista) => numero(b) - numero(a)
+
+/**
+ * Lee los pendientes de un proyecto y los vuelve a leer cada vez que cambia la lista: la vigilancia avisa cuando
+ * cambia un `estado.md` o una respuesta. Los usan la Bandeja y Frentes (R-105).
+ */
+export function useLeerPendientes(ruta: string): void {
+  const lista = usarEstado((s) => s.lista)
+  const ponerPendientes = usarEstado((s) => s.ponerPendientes)
+  useEffect(() => {
+    if (!lista) return
+    let vigente = true
+    void window.iridium.pendientes(ruta).then((x) => {
+      if (vigente) ponerPendientes(x)
+    })
+    return () => {
+      vigente = false
+    }
+  }, [ruta, lista, ponerPendientes])
 }
 
 /** Los pendientes de un proyecto en los grupos de W-5; también dentro del proyecto (D-043). */
@@ -96,12 +119,10 @@ export function ListaPendientes({
   // Si el frente elegido ya no tiene preguntas, vuelve a Todos.
   const elegido = filtros.some((f) => f.clave === filtro) ? filtro : TODOS
   const delFiltro = (x: PendienteVista) => elegido === TODOS || (x.frente ?? NUCLEO) === elegido
-  const activas = datos.pendientes.filter((x) => !enPausa(x) && delFiltro(x))
-  const pausadas = datos.pendientes.filter(enPausa)
+  const activas = datos.pendientes.filter((x) => !enPausa(x) && delFiltro(x)).sort(masNuevaPrimero)
+  const pausadas = datos.pendientes.filter(enPausa).sort(masNuevaPrimero)
   const vacia = datos.pendientes.length === pausadas.length
   const grupos = GRUPOS.map((g) => ({ ...g, ps: activas.filter(g.de) })).filter((g) => g.ps.length > 0)
-  // La primera de la lista va abierta y lleva el principal de la pantalla (R-39, ux.md › Reglas).
-  const primera = grupos[0]?.ps[0]?.codigo
   return (
     <>
       <Cabecera
@@ -128,13 +149,7 @@ export function ListaPendientes({
             </h2>
             <div className="preguntas">
               {g.ps.map((x) => (
-                <Pendiente
-                  key={x.codigo}
-                  ruta={p.ruta}
-                  p={x}
-                  abrirDoc={abrirDoc}
-                  primera={x.codigo === primera}
-                />
+                <Pendiente key={x.codigo} ruta={p.ruta} p={x} abrirDoc={abrirDoc} />
               ))}
             </div>
           </section>
