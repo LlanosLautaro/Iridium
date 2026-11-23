@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { Documentos } from '../src/main/app/documentos'
 import { mapaDe } from '../src/main/app/mapa'
 import { leerPreguntasAbiertas } from '../src/main/app/proyectos'
-import { queSigue } from '../src/renderer/secciones/proyecto/frentes'
+import { queSigue, tieneParaSola } from '../src/renderer/secciones/proyecto/frentes'
 
 let raiz: string
 
@@ -129,5 +129,20 @@ describe('El tablero Frentes (FS-I3)', () => {
     expect(queSigue(m.frentes[0]?.pasos ?? [])?.texto).toBe('Ordenar por fecha')
     expect(queSigue(m.frentes[1]?.pasos ?? [])?.texto).toBe('Sonar al terminar')
     expect(queSigue([])).toBeNull()
+  })
+
+  it('el robot solo si el motor lo tomaría: con tamaño, uno que Ajustes deja y sin pregunta (paso 8)', async () => {
+    const m = await mapa()
+    const galeria = m.frentes[0]?.pasos ?? []
+    expect(tieneParaSola(galeria, ['chico', 'mediano', 'grande'])).toBe(true)
+    // Ajustes deja solo lo mediano: el único `sola` de Galería es chico, el motor no lo toma.
+    expect(tieneParaSola(galeria, ['mediano'])).toBe(false)
+    expect(tieneParaSola(galeria, [])).toBe(false)
+    // `sola` sin tamaño: el control lo marca y el motor no lo toma; tampoco lleva robot.
+    const sinTamano = galeria.map((p) => (p.marcas ? { ...p, marcas: { tamano: null, sola: true } } : p))
+    expect(tieneParaSola(sinTamano, ['chico', 'mediano', 'grande'])).toBe(false)
+    // Uno que espera una pregunta no cuenta.
+    const espera = galeria.map((p) => (p.marcas?.sola ? { ...p, espera: 'Q-5' } : p))
+    expect(tieneParaSola(espera, ['chico', 'mediano', 'grande'])).toBe(false)
   })
 })

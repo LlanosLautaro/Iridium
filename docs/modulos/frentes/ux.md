@@ -91,7 +91,7 @@ Como usuario quiero tocar un frente y ver sus tareas en orden, con qué hace la 
 
 ### FS-8 — El Núcleo y lo que está por empezar
 Como usuario quiero ver también lo que no es de ningún frente y lo que todavía no empezó.
-- [ ] **Núcleo** es una tarjeta más: sus tareas son los `T-n` aprobados, pendientes o en curso sin `Frente:` (los muy chicos, como la consola, T-116), y sus preguntas, las abiertas sin frente. Tiene su interruptor como un frente.
+- [ ] **Núcleo** es una tarjeta más: sus tareas son los `T-n` aprobados, pendientes o en curso sin `Frente:` (los muy chicos, como la consola, T-116), y sus preguntas, las abiertas sin frente. No tiene interruptor: el avance solo no toma nada de él (D-181 › 3).
 - [ ] Un frente por empezar muestra lo aprobado para él en filas y «Empezar este frente» (como hoy en el Mapa); la ruta la escribe la IA al empezarlo.
 
 ## Las formas

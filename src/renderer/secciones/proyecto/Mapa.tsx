@@ -5,7 +5,7 @@
 // del hito 10 o sin frentes, el camino son los hitos (D-142). La tarjeta elegida se recuerda en la vista del proyecto
 // (D-145). Se relee solo cuando cambia un documento del proyecto, sin mover la elegida ni lo desplegado. Los frentes en
 // uso sin nada por hacer se archivan: no están en la columna salvo con «Archivados» prendido, y ahí van en gris (D-152).
-import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { type KeyboardEvent, useCallback, useEffect, useId, useRef, useState } from 'react'
 import type {
   FrenteMapa,
   MapaProyecto,
@@ -19,14 +19,15 @@ import { Icono } from '../../ui/Icono'
 import { Pendiente } from '../pendientes/Pendiente'
 import { useLeerPendientes } from '../pendientes/Pendientes'
 import { nombreDoc, useDocsCambian } from './enlaces'
-import { enOrden, queSigue } from './frentes'
+import { queSigue, tieneParaSola } from './frentes'
 
 type MapaLeido = Extract<MapaProyecto, { tipo: 'mapa' }>
 
 const numeroQ = (codigo: string) => Number(/\d+/.exec(codigo)?.[0] ?? 0)
 
-const HITOS = 'hitos'
-const NUCLEO = 'nucleo'
+/** Las claves de los Hitos y el Núcleo llevan «:», que no puede tener una carpeta: un frente `nucleo` no se confunde. */
+const HITOS = ':hitos'
+const NUCLEO = ':nucleo'
 /** La clave de un frente por empezar: no tiene carpeta, va por su nombre. */
 const EMPEZAR = 'empezar:'
 
@@ -173,7 +174,8 @@ function detalleDe(f: FrenteMapa): string {
   return queSigue(f.pasos)?.texto ?? 'Todo hecho'
 }
 
-/** Si el avance solo va a tomar algo de este frente: prendido en Ajustes, en el proyecto y en el frente, con un paso `sola`. */
+/** Si el avance solo va a tomar algo de este frente: prendido en Ajustes, en el proyecto y en el frente, con un paso `sola`
+ * de un tamaño que Ajustes deja tomar. */
 function useAvance(ruta: string): (f: FrenteMapa) => Tarjeta['avance'] {
   const ajuste = usarEstado((s) => s.preferencias.avanceSolo)
   const apagados = usarEstado((s) => s.preferencias.avanceApagado)
@@ -181,9 +183,7 @@ function useAvance(ruta: string): (f: FrenteMapa) => Tarjeta['avance'] {
     if (f.estado === 'en uso' || f.error) return null
     if (apagados.frentes.some((x) => x.ruta === ruta && x.carpeta === f.clave)) return 'apagada'
     if (!ajuste.prendido || apagados.proyectos.includes(ruta)) return null
-    return enOrden(f.pasos).some((p) => p.marca === 'viene' && p.espera === null && p.marcas?.sola)
-      ? 'sola'
-      : null
+    return tieneParaSola(f.pasos, ajuste.tamanos) ? 'sola' : null
   }
 }
 
@@ -255,6 +255,7 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
   const empezar = m.porEmpezar.frentes.find((f) => `${EMPEZAR}${f.nombre}` === elegida)
   const todosArchivados = !m.hitos && m.frentes.length > 0 && tarjetas.length === 0
   const soloHitos = tarjetas.length <= 1 && !!m.hitos
+  const id = useId()
   const centro = todosArchivados ? (
     <p className="gris-mapa">
       Todos los frentes están archivados: ninguno tiene nada por hacer. Activa «Archivados» para verlos.
@@ -276,8 +277,12 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
     )
   return (
     <div className="tablero-frentes">
-      <ColumnaFrentes tarjetas={tarjetas} elegida={elegida} elegir={elegir} />
-      <div className="centro-frentes">
+      <ColumnaFrentes id={id} tarjetas={tarjetas} elegida={elegida} elegir={elegir} />
+      <div
+        className="centro-frentes"
+        role="tabpanel"
+        aria-labelledby={`${id}-${tarjetas.findIndex((t) => t.clave === elegida)}`}
+      >
         <div className="mapa-int">{centro}</div>
       </div>
     </div>
@@ -289,10 +294,12 @@ function MapaConCamino({ ruta, m }: { ruta: string; m: MapaLeido }) {
  * empezar» y los archivados. Con la sección angosta pasa a ser una barra arriba, solo con los nombres.
  */
 function ColumnaFrentes({
+  id,
   tarjetas,
   elegida,
   elegir,
 }: {
+  id: string
   tarjetas: Tarjeta[]
   elegida: string
   elegir: (clave: string) => void
@@ -320,43 +327,60 @@ function ColumnaFrentes({
   }
   const grupo = (g: Tarjeta['grupo']) => tarjetas.filter((t) => t.grupo === g)
   const lista = (ts: Tarjeta[]) =>
-    ts.map((t) => (
-      <button
-        key={t.clave}
-        type="button"
-        role="tab"
-        data-clave={t.clave}
-        aria-label={t.nombre}
-        aria-selected={t.clave === elegida}
-        tabIndex={t.clave === elegida ? 0 : -1}
-        title={t.detalle}
-        className={`fila con-detalle tarjeta-frente${t.clave === elegida ? ' elegida' : ''}${t.grupo === 'archivados' ? ' archivado' : ''}`}
-        onClick={() => elegir(t.clave)}
-      >
-        <span className="principal-fila">
-          <span className="titulo-fila">{t.nombre}</span>
-          <span className="detalle">{t.detalle}</span>
-        </span>
-        {(t.avance || t.preguntas > 0) && (
-          <span className="marcas-tarjeta">
-            {t.avance === 'sola' && (
-              <span className="senal" title="La IA avanza sola en este frente">
-                <Icono nombre="robot" />
-              </span>
-            )}
-            {t.avance === 'apagada' && <span className="senal">apagada</span>}
-            {t.preguntas > 0 && (
-              <span
-                className="cuenta frena"
-                title={`${t.preguntas} ${t.preguntas === 1 ? 'pregunta te espera' : 'preguntas te esperan'}`}
-              >
-                {t.preguntas}
-              </span>
-            )}
+    ts.map((t) => {
+      const n = tarjetas.indexOf(t)
+      return (
+        <button
+          key={t.clave}
+          id={`${id}-${n}`}
+          type="button"
+          role="tab"
+          data-clave={t.clave}
+          aria-label={t.nombre}
+          aria-describedby={`${id}-${n}-d`}
+          aria-selected={t.clave === elegida}
+          tabIndex={t.clave === elegida ? 0 : -1}
+          title={t.detalle}
+          className={`fila con-detalle tarjeta-frente${t.clave === elegida ? ' elegida' : ''}${t.grupo === 'archivados' ? ' archivado' : ''}`}
+          onClick={() => elegir(t.clave)}
+        >
+          <span className="principal-fila">
+            <span className="titulo-fila">{t.nombre}</span>
+            <span className="detalle">{t.detalle}</span>
+            {/* Lo que la tarjeta dice con señales, para el lector de pantalla (el nombre accesible es solo el del frente). */}
+            <span id={`${id}-${n}-d`} className="solo-lector">
+              {[
+                t.detalle,
+                t.preguntas > 0 &&
+                  `${t.preguntas} ${t.preguntas === 1 ? 'pregunta te espera' : 'preguntas te esperan'}`,
+                t.avance === 'sola' && 'la IA avanza sola',
+                t.avance === 'apagada' && 'avance solo apagado',
+              ]
+                .filter(Boolean)
+                .join('; ')}
+            </span>
           </span>
-        )}
-      </button>
-    ))
+          {(t.avance || t.preguntas > 0) && (
+            <span className="marcas-tarjeta">
+              {t.avance === 'sola' && (
+                <span className="senal" title="La IA avanza sola en este frente">
+                  <Icono nombre="robot" />
+                </span>
+              )}
+              {t.avance === 'apagada' && <span className="senal">apagada</span>}
+              {t.preguntas > 0 && (
+                <span
+                  className="cuenta frena"
+                  title={`${t.preguntas} ${t.preguntas === 1 ? 'pregunta te espera' : 'preguntas te esperan'}`}
+                >
+                  {t.preguntas}
+                </span>
+              )}
+            </span>
+          )}
+        </button>
+      )
+    })
   const empezar = grupo('empezar')
   const archivados = grupo('archivados')
   return (

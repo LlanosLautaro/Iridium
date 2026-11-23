@@ -256,3 +256,58 @@ test('con la sección angosta las tarjetas pasan a ser una barra arriba, solo co
   expect(Math.abs((a?.y ?? 0) - (g?.y ?? 0))).toBeLessThan(4)
   await win.screenshot({ path: 'test-results/fs3-angosto.png' })
 })
+
+test('calidad (paso 8): diez frentes y uno por empezar entran sin desplazar; un frente «nucleo» no se pisa con el Núcleo; lo que dice la tarjeta, para el lector', async () => {
+  // Diez frentes (los tres de la muestra, seis más y uno de carpeta `nucleo`), el Núcleo y Exportar por empezar.
+  const extra = Array.from({ length: 6 }, (_, i) => `Frente ${i + 1}`)
+  const filas = [
+    ...extra.map(
+      (n, i) => `| ${n} (\`modulos/f${i + 1}/estado.md\`) | sección | 7. Construcción | en curso |`,
+    ),
+    '| Nucleo de datos (`modulos/nucleo/estado.md`) | sección | 7. Construcción | en curso |',
+  ]
+  await writeFile(
+    join(raiz, 'Alfa', 'docs/estado.md'),
+    ESTADO.replace('| Exportar (T-20)', `${filas.join('\n')}\n| Exportar (T-20)`),
+  )
+  for (const [i, n] of extra.entries()) {
+    await mkdir(join(raiz, 'Alfa', `docs/modulos/f${i + 1}`), { recursive: true })
+    await writeFile(
+      join(raiz, 'Alfa', `docs/modulos/f${i + 1}/estado.md`),
+      `# Estado del módulo: ${n}\n\n**Última actualización:** 2026-11-0${i + 1}\n\n## Ruta\n- [ ] Un paso con un nombre bastante largo para la tarjeta (grande, sola)\n`,
+    )
+  }
+  await mkdir(join(raiz, 'Alfa', 'docs/modulos/nucleo'), { recursive: true })
+  await writeFile(
+    join(raiz, 'Alfa', 'docs/modulos/nucleo/estado.md'),
+    '# Estado del módulo: Nucleo de datos\n\n**Última actualización:** 2026-11-01\n\n## Ruta\n- [ ] Guardar las fotos\n',
+  )
+  const { win } = await abrir()
+  const tablero = await alTablero(win)
+  const columna = tablero.getByRole('tablist', { name: 'Frentes' })
+  await expect(columna.getByRole('tab')).toHaveCount(12)
+  expect(await columna.evaluate((e) => e.scrollHeight <= e.clientHeight)).toBe(true)
+  await win.screenshot({ path: 'test-results/fs3-muchos.png' })
+
+  // El frente de carpeta `nucleo` y el Núcleo son dos tarjetas distintas, y cada una abre lo suyo.
+  await columna.getByRole('tab', { name: 'Nucleo de datos' }).click()
+  await expect(tablero.getByRole('region', { name: 'Nucleo de datos' })).toBeVisible()
+  await expect(columna.getByRole('tab', { name: 'Núcleo' })).toHaveAttribute('aria-selected', 'false')
+  await columna.getByRole('tab', { name: 'Núcleo' }).click()
+  await expect(tablero.getByRole('region', { name: 'Núcleo' })).toBeVisible()
+  await expect(columna.getByRole('tab', { name: 'Nucleo de datos' })).toHaveAttribute(
+    'aria-selected',
+    'false',
+  )
+
+  // El lector de pantalla oye lo que sigue, las preguntas y el robot; el centro es el panel de la tarjeta elegida.
+  const galeria = columna.getByRole('tab', { name: 'Galería', exact: true })
+  await expect(galeria).toHaveAccessibleDescription(
+    'Ver las fotos en una grilla; 2 preguntas te esperan; la IA avanza sola',
+  )
+  await expect(columna.getByRole('tab', { name: 'Avisos' })).toHaveAccessibleDescription(
+    'Sonar al terminar; avance solo apagado',
+  )
+  await galeria.click()
+  await expect(tablero.getByRole('tabpanel', { name: 'Galería' })).toBeVisible()
+})
