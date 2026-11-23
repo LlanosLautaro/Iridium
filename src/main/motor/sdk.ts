@@ -58,6 +58,11 @@ export interface OpcionesSdk {
   releerUsoMs?: number
   /** Las carpetas de los complementos que se cargan en cada conversación (D-086): la skill de Iridium y la guía. */
   plugins?: string[]
+  /**
+   * Las consolas adentro de Iridium (T-116, D-184): corre una línea de comandos en una pestaña del panel y espera a
+   * que termine. Sin ella, el inicio de sesión abre una ventana de consola aparte, como antes.
+   */
+  consola?: (nombre: string, comando: string) => Promise<void>
 }
 
 /**
@@ -755,7 +760,12 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
     },
 
     iniciarSesion() {
-      iniciando ??= loginEnConsola(opciones.rutaClaude ?? claudeDelSdk()).finally(() => {
+      const claude = opciones.rutaClaude ?? claudeDelSdk()
+      // En la consola de abajo, si Claude pide pegar un código, se pega ahí (T-116).
+      const login = opciones.consola
+        ? opciones.consola('Iniciar sesión en Claude', `"${claude}" auth login --claudeai`)
+        : loginEnConsola(claude)
+      iniciando ??= login.finally(() => {
         iniciando = null
       })
       return iniciando

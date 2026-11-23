@@ -12,6 +12,7 @@ import { Cuenta } from '../ui/Cuenta'
 import { Icono, type NombreIcono } from '../ui/Icono'
 import { Ajustes } from './Ajustes'
 import { Avisos, ConfirmarCierre } from './Avisos'
+import { PanelConsolas, SenalConsolas } from './Consolas'
 import { UsoEnLaBarra } from './Uso'
 
 const SIN_PREGUNTAS = { sinResponder: 0, frenan: 0 }
@@ -566,11 +567,23 @@ function BarraEstado() {
       <span className="it claude" data-motor={motor.tipo}>
         <SenalClaude motor={motor} />
       </span>
+      <SenalConsolas />
       <Actualizar />
       <span className="der">
         <UsoEnLaBarra />
       </span>
     </footer>
+  )
+}
+
+/** Fuera de un proyecto, el panel de las consolas va abajo de toda la pantalla, con todas (T-116). */
+function ConsolasDelInicio() {
+  const seccion = usarEstado((s) => s.seccion)
+  if (seccion === 'proyecto') return null
+  return (
+    <div className="consolas-inicio">
+      <PanelConsolas lugar={null} />
+    </div>
   )
 }
 
@@ -580,6 +593,7 @@ export function Marco({ children }: { children: ReactNode }) {
       <BarraTitulo />
       <BarraActividad />
       {children}
+      <ConsolasDelInicio />
       <BarraEstado />
       <Avisos />
       <Ajustes />

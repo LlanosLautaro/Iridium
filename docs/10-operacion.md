@@ -79,4 +79,4 @@ Las ideas y los pendientes están en `trabajo.md`. La prioridad (Must, Should, C
 - **Ajuste chico (D-081):** Inicializar repositorio y Publicar en GitHub en la sección Git, construido y probado con GitHub de verdad (Q-118, todo bien).
 - **Ajuste mediano (D-089, R-7 y R-8):** el menú de la tarjeta, Nuevo proyecto, Ideas y Skills del proyecto; construido y probado (7 → 8); falta tu prueba (Q-129).
 - **Propuestas:** módulo Inicio completo (Q-115, 2026-11-04).
-- **Propuesta (T-116, D-184):** las consolas adentro de Iridium, `cambios/consolas.md`; la pieza nativa probada en S-6; espera Q-276.
+- **Propuesta (T-116, D-184, D-185):** las consolas adentro de Iridium, `cambios/consolas.md`; la pieza nativa probada en S-6; aprobada en Q-276 (Armar y Volver adentro). I-9 hecha el 2026-11-23: el panel, Scripts e Iniciar sesión adentro y el instalador probado con la pieza; se prueba en Q-277. Sigue I-10.

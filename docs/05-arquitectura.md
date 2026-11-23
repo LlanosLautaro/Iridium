@@ -31,6 +31,7 @@ Salen de `02-definicion.md` › Lo que la base tiene que dar y › Restricciones
 | Diagramas | Mermaid, en la interfaz | — | Los docs ya los usan; *Should* (C-19), no MVP |
 | Validación | Zod | — | Valida lo que cruza de la ventana al proceso principal y los archivos propios |
 | Mapas de fuentes | `@jridgewell/trace-mapping`, versión fija | bippy | Revisión: de la pila de React al archivo y la línea (D-048); ya viene con Vite |
+| Consolas adentro (T-116) | `node-pty` 1.1.0 (la consola nativa de VS Code) y `@xterm/xterm` con su ajuste de tamaño, versiones fijas | Solo la salida, sin pieza nativa (D-184 › B) | Una consola de verdad, a la que se le escribe; probada en S-6 (D-184, D-185) |
 | Vigilar archivos | `fs.watch` recursivo de Node | chokidar | Viene con Node en Windows y Linux; una dependencia menos |
 | Pruebas | Vitest (lógica) + Playwright (la app abierta) | Jest | Los del Gestor y otra app; las pruebas del Gestor se copian tal cual |
 | Estilo de código | Biome | ESLint + Prettier | El del Gestor y otra app |
@@ -92,6 +93,7 @@ flowchart LR
 | **Casos de uso** (`main/app/`) | Arman cada acción del usuario con las piezas de abajo: abrir un proyecto, armar el mapa, juntar los pendientes con sus citas, responder una `Q-n`, Seguí, Detener, avisos | Vitest con carpetas temporales y un motor falso |
 | **Reglas puras** (`main/core/`) | Entender el formato de la guía: `estado.md`, hitos, portón, `Q-n` con tipo y casillas, códigos y citas, `.proyecto.json`. Reglas de sesión (estados, cuándo avisar, contexto alto). Sin disco ni red. Base: el código del Gestor (D-026) | Vitest, sin nada externo |
 | **Disco y datos** (`main/infra/`) | Leer la carpeta de proyectos, escribir sin dejar archivos a medias, vigilar cambios, datos propios del Centro | Vitest con carpetas temporales |
+| **Consolas** (`main/infra/consolas.ts`) | El **único** lugar que importa `node-pty` (D-185): abre un `cmd` de verdad por script o por el inicio de sesión, manda lo impreso en tandas, guarda las últimas 5000 líneas y corta el árbol de procesos al detener, cerrar o salir. La ventana no puede abrir una con un comando propio | Vitest con una consola real; Playwright; `tools/probar-instalador.ts` |
 | **Frontera del motor** (`main/motor/`) | El **único** lugar que importa el SDK (D-007, D-025). Expone una interfaz propia `Motor`; nada fuera de esta carpeta conoce los tipos del SDK | Vitest con el SDK simulado; prueba real a mano con un modelo barato |
 
 ### La interfaz `Motor` (frontera, D-025)
@@ -269,6 +271,7 @@ En un proyecto con framework, al terminar cada turno con resultado `ok`, el cont
 - **Desarrollo:** `pnpm dev` abre la app con recarga en vivo (va a `scripts.md` cuando haya código).
 - **Uso diario:** una carpeta con el ejecutable armada con electron-builder, como otra app, más un acceso directo (D-036). Las versiones nuevas se arman aparte, en `release/nueva`, y entran al cerrar Iridium (CO-I2, `modulos/compartir/diseno-tecnico.md` › Versión nueva lista).
 - **Copias de otras personas:** se instalan como una app con el instalador que arma `pnpm publicar` (por usuario, sin permisos de administrador, en `%LOCALAPPDATA%\Programs\iridium`) y se actualizan solas con electron-updater desde las versiones de GitHub, bajando solo lo que cambió (D-171, `modulos/compartir/diseno-tecnico.md` › Iridium instalado). Cada armado lleva un número, la fecha y la hora (`AAAA.MDD.HMM`).
+- **La consola nativa (T-116, S-6):** `node-pty` trae su versión compilada para cualquier Electron: queda fuera del archivo comprimido (`asarUnpack`) y no se recompila (`npmRebuild: false`); `tools/probar-instalador.ts` la prueba en la copia instalada y en la actualizada encima.
 - **Riesgo de la primera iteración, resuelto en I-1:** el SDK trae su propio Claude Code; queda fuera del archivo comprimido de la app (`app.asar.unpacked`) y desde la app armada verifica la sesión y la suscripción (`07-construccion.md` › Log de iteraciones).
 - **Linux:** electron-builder también arma para Linux; no se hace hasta que se pida (Q-30).
 - Detalle en el hito 9.

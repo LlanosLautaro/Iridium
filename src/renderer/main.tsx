@@ -16,6 +16,7 @@ import './estilos/skills.css'
 import './estilos/ideas.css'
 import './estilos/ideas-proyecto.css'
 import './estilos/diseno.css'
+import './estilos/consolas.css'
 import { App } from './App'
 import { FallaPantalla } from './ui/FallaPantalla'
 

@@ -1,6 +1,6 @@
 # Propuesta: las consolas adentro de Iridium
 
-**Estado:** pendiente (espera Q-276)
+**Estado:** en curso (aprobada en Q-276 con Armar y Volver adentro, D-185; I-9 hecha, se prueba en Q-277)
 **Origen:** T-116, D-184 · **Tamaño:** grande · **Fecha:** 2026-11-23
 
 ## Por qué
@@ -33,7 +33,7 @@ D-184 dejó Armar y Volver corriendo aparte porque «cierran y reemplazan Iridiu
 - `scripts.md`: nada (los scripts son los mismos; cambia dónde corren).
 
 ## Cómo se construye
-- **Proceso principal:** `infra/consolas.ts` es el único que importa `node-pty`, como `motor/` con el SDK. Abre cada consola con PowerShell en la carpeta del proyecto (o la del script), con el entorno de Iridium sin `ELECTRON_RUN_AS_NODE` (como hoy), y corre el comando del script; manda lo que imprime a la ventana en tandas cada 16 ms y guarda las últimas 5000 líneas de cada una, para que una pestaña que se vuelve a mirar o la ventana recargada la muestren entera. Detener y cerrar cortan el árbol de procesos (S-6). Al cerrar Iridium, corta todas.
+- **Proceso principal:** `infra/consolas.ts` es el único que importa `node-pty`, como `motor/` con el SDK. Abre cada consola con `cmd` (el mismo intérprete que usaban las ventanas, así los scripts de `docs/scripts.md` se escriben igual; al construir se cambió PowerShell por esto, D-185) en la carpeta del proyecto (o la del script), con el entorno de Iridium sin `ELECTRON_RUN_AS_NODE` (como hoy), y corre el comando del script; manda lo que imprime a la ventana en tandas cada 16 ms y guarda las últimas 5000 líneas de cada una, para que una pestaña que se vuelve a mirar o la ventana recargada la muestren entera. Detener y cerrar cortan el árbol de procesos (S-6). Al cerrar Iridium, corta todas.
 - **El puente:** pedidos `abrirConsola`, `escribirConsola`, `tamanoConsola`, `detenerConsola`, `cerrarConsola`, `consolas` (la lista con su estado) y el evento `consola` (salida, terminó con su código). Todo validado con Zod, como lo demás.
 - **La ventana:** la consola se dibuja con `xterm.js` (`@xterm/xterm` y su ajuste de tamaño), la misma que usa VS Code, con los colores de `tokens.css`. El panel y la señal de la barra van en el marco (`renderer/marco/`), con lo que se ve en `piezas.css`.
 - **El armado:** `node-pty` en `asarUnpack` y `npmRebuild: false`; pnpm deja correr su instalación (`onlyBuiltDependencies`).
@@ -42,5 +42,8 @@ D-184 dejó Armar y Volver corriendo aparte porque «cierran y reemplazan Iridiu
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| I-9 | El panel con consolas de verdad: Scripts e Iniciar sesión corren adentro, pestañas, Detener, Limpiar, la barra de abajo, el cierre; con el instalador probado | pendiente |
+| I-9 | El panel con consolas de verdad: Scripts e Iniciar sesión corren adentro, pestañas, Detener, Limpiar, la barra de abajo, el cierre; con el instalador probado | en curso (hecha el 2026-11-23; espera Q-277) |
 | I-10 | Lo que completa: el alto recordado, `Ctrl+ñ`, Armar y Volver adentro (según Q-276), la confirmación al cerrar, sacar las partes que no son de Windows | pendiente |
+
+## Log
+- **2026-11-23 — I-9.** El panel con consolas de verdad (`infra/consolas.ts`, `renderer/marco/Consolas.tsx`): Scripts, Ejecutar, Armar ahora e Iniciar sesión en Claude corren adentro; pestañas con cómo va cada una, Detener, Limpiar, plegar, «▶ N corriendo» en la barra y, al cerrar Iridium, nada queda corriendo. Fuera de un proyecto el panel va abajo de toda la pantalla, también debajo del chat (se verá si molesta). Si la pieza no carga, vuelve la ventana aparte. Pruebas: Vitest (las reglas, una consola real: responde, se le escribe, falla con su código, Detener sin restos, el inicio de sesión en la consola), Playwright con la app abierta (Ejecutar, contestarle, Detener, plegar, la ×, el inicio y el cierre) y el instalador de verdad: la consola anda en la versión instalada y en la actualizada encima, y al cerrar no queda nada de la carpeta instalada.

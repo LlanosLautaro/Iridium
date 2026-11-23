@@ -20,6 +20,8 @@ function useConexion() {
   const ponerSinArmar = usarEstado((s) => s.ponerSinArmar)
   const ponerEscritos = usarEstado((s) => s.ponerEscritos)
   const volverAlAbierto = usarEstado((s) => s.volverAlAbierto)
+  const ponerConsolas = usarEstado((s) => s.ponerConsolas)
+  const consolaAbierta = usarEstado((s) => s.consolaAbierta)
   useEffect(() => {
     const api = window.iridium
     // Con las preferencias y la lista, se vuelve al proyecto que estaba abierto al cerrar (D-060).
@@ -36,7 +38,10 @@ function useConexion() {
     void api.actualizaciones().then(ponerActualizaciones)
     void api.versionNueva().then(ponerVersionNueva)
     void api.sinArmar().then(ponerSinArmar)
+    void api.consolas().then(ponerConsolas)
     const quitar = [
+      api.alCambiarConsolas(ponerConsolas),
+      api.alAbrirConsola(consolaAbierta),
       api.alCambiarProyectos(ponerLista),
       api.alCambiarMotor(ponerMotor),
       api.alCambiarConversacion(aplicarCambio),
@@ -65,6 +70,8 @@ function useConexion() {
     ponerSinArmar,
     ponerEscritos,
     volverAlAbierto,
+    ponerConsolas,
+    consolaAbierta,
   ])
 }
 

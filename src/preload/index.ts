@@ -1,6 +1,7 @@
 // El puente seguro: la única API que ve la ventana (`window.iridium`). No expone nada de Node ni de Electron.
 import { contextBridge, ipcRenderer, webFrame, webUtils } from 'electron'
 import { version } from '../../package.json'
+import type { ConsolaVista, SalidaConsola } from '../compartido/consolas'
 import type { CambioDiseno } from '../compartido/diseno'
 import {
   type ActualizacionProyecto,
@@ -99,6 +100,16 @@ const api: ApiIridium = {
     escuchar<Record<string, ActualizacionProyecto>>(CANALES.actualizacionCambio, f),
   actualizarAhora: (ruta) => ipcRenderer.invoke(CANALES.actualizarAhora, ruta),
   consolaArmado: (ruta) => ipcRenderer.invoke(CANALES.consolaArmado, ruta),
+  consolas: () => ipcRenderer.invoke(CANALES.consolas),
+  alCambiarConsolas: (f) => escuchar<ConsolaVista[]>(CANALES.consolasCambio, f),
+  alAbrirConsola: (f) => escuchar<ConsolaVista>(CANALES.consolaAbierta, f),
+  alSalirConsola: (f) => escuchar<SalidaConsola>(CANALES.salidaConsola, f),
+  guardadoConsola: (id) => ipcRenderer.invoke(CANALES.guardadoConsola, id),
+  escribirConsola: (id, datos) => ipcRenderer.invoke(CANALES.escribirConsola, id, datos),
+  tamanoConsola: (id, columnas, filas) => ipcRenderer.invoke(CANALES.tamanoConsola, id, columnas, filas),
+  detenerConsola: (id) => ipcRenderer.invoke(CANALES.detenerConsola, id),
+  cerrarConsola: (id) => ipcRenderer.invoke(CANALES.cerrarConsola, id),
+  limpiarConsola: (id) => ipcRenderer.invoke(CANALES.limpiarConsola, id),
   comentarios: (ruta) => ipcRenderer.invoke(CANALES.comentarios, ruta),
   capturaComentario: (ruta, codigo) => ipcRenderer.invoke(CANALES.capturaComentario, ruta, codigo),
   enviarComentario: (ruta, codigo) => ipcRenderer.invoke(CANALES.enviarComentario, ruta, codigo),

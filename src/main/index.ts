@@ -20,6 +20,7 @@ import { ArchivoArmados } from './infra/armados'
 import { ArchivoArranques } from './infra/arranques'
 import { ArchivoBorradores } from './infra/borradores'
 import { ArchivoConfig } from './infra/config'
+import { Consolas } from './infra/consolas'
 import { ESQUEMA_MAQUETA, MaquetasAbiertas } from './infra/diseno/protocolo'
 import { ArchivoVistos } from './infra/diseno/vistos'
 import { ArchivoEscritos } from './infra/escritos'
@@ -186,6 +187,28 @@ function carpetaPlugins(): string {
   return app.isPackaged ? join(process.resourcesPath, 'plugins') : join(app.getAppPath(), 'out', 'plugins')
 }
 
+/**
+ * Las consolas adentro (T-116, D-184): Scripts y el inicio de sesión corren en el panel de abajo. Lo que pasa se manda
+ * a la ventana; al cerrar Iridium, lo que corre adentro se cierra con él.
+ */
+const consolas = new Consolas({
+  alCambiar: (lista) => mandarAVentana(CANALES.consolasCambio, lista),
+  alSalir: (salida) => mandarAVentana(CANALES.salidaConsola, salida),
+  alAbrir: (c) => mandarAVentana(CANALES.consolaAbierta, c),
+  anotar: (t) => registro.escribir(t),
+})
+
+function mandarAVentana(canal: string, dato: unknown): void {
+  if (ventana && !ventana.isDestroyed()) ventana.webContents.send(canal, dato)
+}
+
+/** El inicio de sesión en una consola del panel (de Iridium, sin proyecto); espera a que termine. */
+async function consolaDeIridium(nombre: string, comando: string): Promise<void> {
+  if (!consolas.disponible()) throw new Error('La consola de Iridium no cargó.')
+  const c = consolas.abrir({ nombre, proyecto: null, cwd: homedir(), comando })
+  await consolas.esperar(c.id)
+}
+
 function crearMotor(): Motor {
   if (process.env.IRIDIUM_MOTOR === 'falso') {
     const pasoMs = Number(process.env.IRIDIUM_FALSO_PASO_MS) || 400
@@ -219,7 +242,11 @@ function crearMotor(): Motor {
   try {
     const rutaClaude = rutaClaudeInstalado()
     const plugins = elegirComplementos(carpetaPlugins(), existsSync)
-    return crearMotorSdk({ ...(rutaClaude ? { rutaClaude } : {}), plugins })
+    return crearMotorSdk({
+      ...(rutaClaude ? { rutaClaude } : {}),
+      plugins,
+      ...(consolas.disponible() ? { consola: consolaDeIridium } : {}),
+    })
   } catch (e) {
     return crearMotorQueFalla(
       `No encuentro el Claude Code que trae la app: ${e instanceof Error ? e.message : String(e)}`,
@@ -631,6 +658,7 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         carpetaDatos,
         excluida: release ? dirname(release) : app.getAppPath(),
       },
+      consolas,
       // Solo pruebas: el primer momento del arranque, a tantos segundos de abrir.
       ...(process.env.IRIDIUM_ARRANQUE_EN
         ? { arranqueEnSegundos: Number(process.env.IRIDIUM_ARRANQUE_EN) }
@@ -663,6 +691,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         .then(() => puente.terminarDeGuardar())
         .finally(async () => {
           puente.cerrar()
+          // Lo que corre en las consolas de adentro se cierra con Iridium (D-184 › 4).
+          consolas.cerrarTodas()
           void revision.then((r) => r?.cerrar())
           // La versión nueva entra ahora (CO-I2): el ayudante espera a que Iridium termine de cerrarse.
           vigiaVersion?.cerrar()

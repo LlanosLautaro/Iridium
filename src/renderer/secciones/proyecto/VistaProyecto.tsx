@@ -3,6 +3,7 @@
 // doble clic vuelve al de entrada. Todo lo que se ve es del proyecto abierto. Cambiar de sección no recarga nada.
 import { type CSSProperties, useEffect } from 'react'
 import { type SeccionProyecto, tarjetaDe, usarEstado, vistaDe } from '../../estado'
+import { PanelConsolas } from '../../marco/Consolas'
 import { Divisor, useAnchoConversacion } from '../../ui/Divisor'
 import { SECCIONES_PROYECTO } from '..'
 import { Archivos } from './Archivos'
@@ -127,6 +128,8 @@ export function VistaProyecto() {
             </div>
           ))}
         </div>
+        {/* Las consolas, abajo de la sección y no de la conversación (T-116). */}
+        <PanelConsolas lugar={ruta} />
       </section>
       <Divisor vista={{ proyecto: ruta }} ancho={ancho} />
       <aside className="chat" aria-label="Conversación">

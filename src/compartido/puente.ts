@@ -4,6 +4,7 @@
 import type { AdjuntoPedido, AdjuntoVista } from './adjuntos'
 import type { AnchosConversacion } from './ancho-conversacion'
 import type { CapacidadesMotor, ComandoMotor, ListaComandos } from './comandos'
+import type { ConsolaVista, GuardadoConsola, SalidaConsola } from './consolas'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
 import type { EstadoDesdeIdeas, IdeasDeProyecto, NotaIdea, ResultadoIdea } from './ideas'
 import type { ImagenDelPortapapeles, ImagenPegada } from './notas'
@@ -984,6 +985,16 @@ export const CANALES = {
   actualizacionCambio: 'actualizacion:cambio',
   actualizarAhora: 'actualizacion:ahora',
   consolaArmado: 'actualizacion:consola',
+  consolas: 'consolas:lista',
+  consolasCambio: 'consolas:cambio',
+  consolaAbierta: 'consolas:abierta',
+  salidaConsola: 'consolas:salida',
+  guardadoConsola: 'consolas:guardado',
+  escribirConsola: 'consolas:escribir',
+  tamanoConsola: 'consolas:tamano',
+  detenerConsola: 'consolas:detener',
+  cerrarConsola: 'consolas:cerrar',
+  limpiarConsola: 'consolas:limpiar',
   comentarios: 'revision:comentarios',
   capturaComentario: 'revision:captura',
   enviarComentario: 'revision:enviar',
@@ -1207,6 +1218,21 @@ export interface ApiIridium {
   actualizarAhora(ruta: string): Promise<'ok' | 'falla' | 'ocupada'>
   /** Ver la consola (AB-4): abre el log del último armado del proyecto. */
   consolaArmado(ruta: string): Promise<void>
+  /**
+   * Las consolas adentro (T-116, D-184): la lista, lo guardado de una para dibujarla y lo que se les hace. Se abren solo
+   * desde Scripts, Ejecutar y el inicio de sesión: la ventana no puede correr un comando propio.
+   */
+  consolas(): Promise<ConsolaVista[]>
+  alCambiarConsolas(escuchar: (lista: ConsolaVista[]) => void): () => void
+  /** Se abrió una consola: el panel se abre en su pestaña. */
+  alAbrirConsola(escuchar: (c: ConsolaVista) => void): () => void
+  alSalirConsola(escuchar: (s: SalidaConsola) => void): () => void
+  guardadoConsola(id: string): Promise<GuardadoConsola | null>
+  escribirConsola(id: string, datos: string): Promise<void>
+  tamanoConsola(id: string, columnas: number, filas: number): Promise<void>
+  detenerConsola(id: string): Promise<void>
+  cerrarConsola(id: string): Promise<void>
+  limpiarConsola(id: string): Promise<void>
   /** Los comentarios de la Revisión del proyecto (H-R5); se releen con `alCambiarDocs`. */
   comentarios(ruta: string): Promise<ListaComentarios>
   /** La captura de un comentario como dirección `data:`; null si no tiene. */

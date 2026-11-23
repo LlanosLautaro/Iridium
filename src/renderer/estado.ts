@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import type { AdjuntoPedido } from '../compartido/adjuntos'
 import { SIN_ANCHOS } from '../compartido/ancho-conversacion'
 import { type Cita, sumarCita } from '../compartido/citas'
+import type { ConsolaVista } from '../compartido/consolas'
 import {
   type ActualizacionProyecto,
   ANCHO_LISTA_IDEAS,
@@ -243,6 +244,17 @@ interface EstadoApp {
   /** Los cambios sin armar (CO-I6); null en desarrollo. */
   sinArmar: SinArmar | null
   ponerSinArmar(s: SinArmar | null): void
+  /** Las consolas adentro (T-116, D-184): todas, de todos los proyectos. */
+  consolas: ConsolaVista[]
+  ponerConsolas(lista: ConsolaVista[]): void
+  /** El panel de abajo, abierto o plegado (plegado al empezar). */
+  panelConsolas: boolean
+  plegarConsolas(abierto: boolean): void
+  /** La pestaña elegida de cada lugar (un proyecto o el inicio, `''`). */
+  consolaElegida: Record<string, string>
+  elegirConsola(lugar: string, id: string): void
+  /** Se abrió una consola: el panel se abre en su pestaña, en su proyecto y en el inicio. */
+  consolaAbierta(c: ConsolaVista): void
   /** Se tocó Actualizar con una versión lista: la confirmación de F-6, si aparece, habla de reiniciar. */
   reiniciando: boolean
   reiniciarAhora(): void
@@ -430,6 +442,23 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   ponerVersionNueva: (versionNueva) => set({ versionNueva }),
   sinArmar: null,
   ponerSinArmar: (sinArmar) => set({ sinArmar }),
+  consolas: [],
+  ponerConsolas: (consolas) => set({ consolas }),
+  panelConsolas: false,
+  plegarConsolas: (panelConsolas) => set({ panelConsolas }),
+  consolaElegida: {},
+  elegirConsola: (lugar, id) =>
+    set((s) => ({ consolaElegida: { ...s.consolaElegida, [lugar.toLowerCase()]: id } })),
+  consolaAbierta: (c) =>
+    set((s) => ({
+      panelConsolas: true,
+      consolaElegida: {
+        ...s.consolaElegida,
+        '': c.id,
+        ...(c.proyecto ? { [c.proyecto.toLowerCase()]: c.id } : {}),
+        ...(c.proyecto === null && s.proyectoAbierto ? { [s.proyectoAbierto.toLowerCase()]: c.id } : {}),
+      },
+    })),
   reiniciando: false,
   reiniciarAhora: () => {
     set({ reiniciando: true, reiniciarAlTerminar: false })

@@ -3,16 +3,18 @@
 // Iridium instalado: otra carpeta, otra entrada en «Aplicaciones instaladas» y sin accesos directos), instala la A en
 // una carpeta temporal y la abre con datos aparte y el motor falso, mirando las versiones en un servidor de prueba que
 // sirve la B. Espera a que la baje, la cierra y mira que quedó la B. Después vuelve a la A y prueba Reiniciar ahora: la
-// pone y la abre sola (el botón Actualizar de la barra de abajo). Al final desinstala y borra todo.
+// pone y la abre sola (el botón Actualizar de la barra de abajo). En la A y en la B puesta encima prueba la consola de
+// adentro (T-116, la pieza nativa): un script corre en el panel y, al cerrar, no queda nada corriendo de la carpeta
+// instalada. Al final desinstala y borra todo.
 // Uso: node --experimental-strip-types tools/probar-instalador.ts [--sin-armar <carpeta con a/ y b/ de una vuelta anterior>]
 import { execFileSync, execSync, spawnSync } from 'node:child_process'
 import { createReadStream, existsSync } from 'node:fs'
-import { mkdir, mkdtemp, readFile, rm, stat } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { homedir, tmpdir } from 'node:os'
 import { basename, join } from 'node:path'
-import { _electron as electron } from '@playwright/test'
+import { _electron as electron, type Page } from '@playwright/test'
 import { armarInstalador, type Instalador, versionDeApp } from './instalador.ts'
 
 const NOMBRE = 'iridium-prueba'
@@ -128,12 +130,53 @@ async function registro(): Promise<string> {
   return textos.join('\n')
 }
 
-const versionInstalada = () => (existsSync(join(instalada, 'Iridium.exe')) ? versionDeApp(instalada) : null)
+/** La versión instalada; null si no hay o si el instalador la está reemplazando (falta un archivo a mitad de camino). */
+const versionInstalada = () => {
+  try {
+    return existsSync(join(instalada, 'Iridium.exe')) ? versionDeApp(instalada) : null
+  } catch {
+    return null
+  }
+}
 
-/** Abre la copia instalada mirando el servidor; espera a que baje la versión nueva. */
-async function abrirYBajar(url: string, version: string) {
+/** Un proyecto con un script, para probar la consola de adentro (T-116). */
+async function proyectoDePrueba() {
+  const raizProyectos = join(trabajo, 'proyectos')
+  const alfa = join(raizProyectos, 'Alfa')
+  await mkdir(join(alfa, 'docs'), { recursive: true })
+  await writeFile(
+    join(alfa, '.proyecto.json'),
+    JSON.stringify({ version: 1, estado: 'en-desarrollo', etiquetas: [], icono: null, archivado: false }),
+  )
+  await writeFile(join(alfa, 'docs', 'estado.md'), '# Estado del proyecto\n\n## Próximo paso\nSeguir.\n')
+  // `%OS%` lo cambia cmd al correr: si aparece «consola-Windows_NT», el comando corrió adentro.
+  await writeFile(
+    join(alfa, 'docs', 'scripts.md'),
+    '# Scripts\n\n## Saludar\n**Ejecutar:** `echo consola-%OS%`\n',
+  )
+  await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz: raizProyectos }))
+}
+
+/** La consola de adentro en la copia instalada: Ejecutar de Scripts corre en el panel (T-116). */
+async function probarConsola(win: Page): Promise<boolean> {
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await win
+    .getByRole('navigation', { name: 'Secciones del proyecto' })
+    .getByRole('button', { name: 'Scripts' })
+    .click()
+  await win.getByRole('button', { name: 'Ejecutar «Saludar»' }).click()
+  await win
+    .locator('.pantalla-consola .xterm-rows')
+    .filter({ hasText: 'consola-Windows_NT' })
+    .waitFor({ timeout: 30_000 })
+  return true
+}
+
+/** Abre la copia instalada mirando el servidor, con datos nuevos y el proyecto de prueba. */
+async function abrirInstalada(url: string) {
   await rm(datos, { recursive: true, force: true })
   await mkdir(datos, { recursive: true })
+  await proyectoDePrueba()
   const env = {
     ...process.env,
     IRIDIUM_DATOS: datos,
@@ -147,12 +190,32 @@ async function abrirYBajar(url: string, version: string) {
   delete env.ELECTRON_RUN_AS_NODE
   const app = await electron.launch({ executablePath: join(instalada, 'Iridium.exe'), env })
   const win = await app.firstWindow()
+  return { app, win }
+}
+
+/** Abre la copia instalada mirando el servidor; espera a que baje la versión nueva. */
+async function abrirYBajar(url: string, version: string) {
+  const { app, win } = await abrirInstalada(url)
   await hasta(`que baje la ${version}`, async () =>
     (await registro()).includes(`bajada la versión ${version}`),
   )
   // La ventana muestra el aviso de siempre.
   await win.getByRole('button', { name: 'Actualizar' }).waitFor({ timeout: 15_000 })
   return { app, win }
+}
+
+/**
+ * Cuántas veces arrancó esa versión según el registro de Iridium de la PC (el de hoy). La que abre el instalador no
+ * recibe los datos aparte de la prueba (el instalador no le pasa el entorno): usa los de la PC y, con un Iridium
+ * abierto, se cierra enseguida (una sola ventana), pero deja su «Arranca» en ese registro.
+ */
+async function arranquesEnLaPc(version: string): Promise<number> {
+  const f = new Date()
+  const dos = (n: number) => String(n).padStart(2, '0')
+  const dia = `${f.getFullYear()}-${dos(f.getMonth() + 1)}-${dos(f.getDate())}.log`
+  const ruta = join(process.env.APPDATA ?? '', 'Centro de Desarrollo', 'registros', dia)
+  const texto = await readFile(ruta, 'utf8').catch(() => '')
+  return texto.split('\n').filter((l) => l.includes(`Arranca Iridium ${version}`)).length
 }
 
 const procesosDesde = (carpeta: string) =>
@@ -187,7 +250,8 @@ try {
 
   paso('1) La abre, baja la versión nueva y la pone al cerrar…')
   const s1 = await servidor(ib, [ia])
-  const { app } = await abrirYBajar(s1.url, B)
+  const { app, win } = await abrirYBajar(s1.url, B)
+  resultado.consolaA = await probarConsola(win)
   const bajado = s1.pedidos.filter((p) => p.archivo === basename(ib.exe)).reduce((t, p) => t + p.bytes, 0)
   resultado.bajadoMB = +(bajado / 1024 / 1024).toFixed(1)
   resultado.diferencial = s1.pedidos.some((p) => p.archivo === basename(ia.blockmap))
@@ -195,6 +259,13 @@ try {
   await hasta('que se ponga la B', async () => versionInstalada() === B)
   await hasta('que el instalador termine', async () => procesosDesde(instalada) === '0', 60_000)
   resultado.alCerrar = versionInstalada()
+
+  paso('1b) La B, puesta encima: la consola de adentro sigue andando y al cerrar no deja nada…')
+  const b = await abrirInstalada(s1.url)
+  resultado.consolaB = await probarConsola(b.win)
+  await b.app.evaluate(({ app }) => app.quit())
+  await hasta('que la B cierre sin dejar nada', async () => procesosDesde(instalada) === '0', 60_000)
+  resultado.consolaSinRestos = true
   s1.cerrar()
 
   paso(`2) Reiniciar ahora: vuelve a la ${A}, baja la ${B}, la pone y la abre sola…`)
@@ -202,19 +273,33 @@ try {
   if (versionInstalada() !== A) throw new Error('No volvió a la A.')
   const s2 = await servidor(ib, [ia])
   const segunda = await abrirYBajar(s2.url, B)
+  const antes = await arranquesEnLaPc(B)
   await segunda.win.getByRole('button', { name: 'Actualizar' }).click()
   await hasta('que se ponga la B', async () => versionInstalada() === B)
   resultado.reiniciarAhora = versionInstalada()
-  // Se abre sola: un Iridium corriendo desde la carpeta instalada.
+  // Se abre sola: un Iridium corriendo desde la carpeta instalada o, con un Iridium abierto en la PC, su «Arranca».
   resultado.seAbrioSola = await hasta(
     'que se abra sola',
-    async () => procesosDesde(instalada) !== '0' && true,
+    async () => procesosDesde(instalada) !== '0' || (await arranquesEnLaPc(B)) > antes,
     60_000,
   )
   s2.cerrar()
   bien = true
 } finally {
   paso('Cerrando y desinstalando…')
+  // Si algo falló, qué quedó corriendo: de la carpeta instalada y los instaladores.
+  if (!bien)
+    console.log(
+      execFileSync(
+        'powershell.exe',
+        [
+          '-NoProfile',
+          '-Command',
+          `Get-CimInstance Win32_Process | ? { $_.Path -and ($_.Path.StartsWith('${instalada}', 'CurrentCultureIgnoreCase') -or $_.Name -like '*Setup*') } | % { "$($_.ProcessId) $($_.Name) $($_.CommandLine)" }`,
+        ],
+        { encoding: 'utf8' },
+      ),
+    )
   spawnSync('powershell.exe', [
     '-NoProfile',
     '-Command',
@@ -223,7 +308,9 @@ try {
   const desinstalar = join(instalada, 'Uninstall Iridium.exe')
   if (existsSync(desinstalar)) spawnSync(desinstalar, ['/S'], { stdio: 'inherit' })
   await esperar(3000)
-  await rm(cache, { recursive: true, force: true })
+  await rm(cache, { recursive: true, force: true }).catch((e) =>
+    console.log(`No se pudo borrar ${cache}: ${e}`),
+  )
   console.log('\nResultado:', JSON.stringify(resultado, null, 2))
   // Si algo falló, lo armado queda para volver a probar sin armar (--sin-armar).
   if (bien && !previa) await rm(trabajo, { recursive: true, force: true }).catch(() => {})

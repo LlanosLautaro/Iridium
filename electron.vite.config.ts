@@ -22,7 +22,8 @@ export default defineConfig({
       rollupOptions: {
         input: { index: resolve('src/main/index.ts') },
         // El SDK queda fuera del paquete: trae su propio Claude Code (05-arquitectura.md › Despliegue).
-        external: ['@anthropic-ai/claude-agent-sdk'],
+        // La consola nativa (T-116) también: su .node y OpenConsole.exe van fuera del archivo comprimido.
+        external: ['@anthropic-ai/claude-agent-sdk', 'node-pty'],
       },
     },
   },

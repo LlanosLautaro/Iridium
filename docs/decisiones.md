@@ -190,7 +190,8 @@
 | D-181 | 2026-11-22 | Frentes | 10; Frentes, pasos 6 y 7 | El tablero Frentes con la forma B, y lo que se decidió al construirlo | vigente |
 | D-182 | 2026-11-23 | Compartir | 10, Q-269 | Las versiones de Iridium se numeran 1.0.x | vigente |
 | D-183 | 2026-11-23 | general (la conversación y Ajustes; T-52, T-119) | 10 | Iridium suena cuando la IA terminó su trabajo, no en cada turno | vigente |
-| D-184 | 2026-11-23 | general (Scripts y la barra de abajo; T-116) | 10, Q-272 | Las consolas van adentro de Iridium, como en VS Code | vigente |
+| D-184 | 2026-11-23 | general (Scripts y la barra de abajo; T-116) | 10, Q-272 | Las consolas van adentro de Iridium, como en VS Code | vigente (el punto 3, cambiado por D-185) |
+| D-185 | 2026-11-23 | general (Scripts y la barra de abajo; T-116) | 10, Q-276 | Cómo se construyen las consolas adentro, y Armar y Volver corren ahí | vigente |
 
 ---
 
@@ -3550,3 +3551,18 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** A. (1) Un panel abajo, plegado por defecto, con una pestaña por consola, **Detener** y **Limpiar**; en la barra de abajo, «▶ N corriendo», que lo abre. (2) Los scripts de comando y el inicio de sesión de Claude corren ahí, ya no en ventanas. (3) Armar y Volver siguen corriendo aparte, porque cierran y reemplazan Iridium; el panel muestra su avance leyendo su registro. (4) Lo que corre adentro se cierra con Iridium. (5) Lo primero es probar que la pieza nativa arma bien (la app de uso diario, el instalador y la actualización); si no arma, se vuelve a B y se le avisa al usuario. (6) Va después de la ronda de UX 2 (T-123) y antes de Capacidades (T-28).
 **Motivo:** es lo que pidió el usuario, y una consola a la que se le escribe sirve también para lo que espera un Enter o pide iniciar sesión.
 **Consecuencias:** se suma una pieza nativa al armado (más riesgo al armar y al actualizar, que se prueba primero). Un `pnpm dev` lanzado desde Iridium se cierra con él. Con `IRIDIUM_OCULTA=1` las pruebas siguen sin mostrar nada.
+**Ajuste (2026-11-23, D-185):** el punto 3 cambia: Armar y Volver ya no cierran Iridium (desde CO-I2 solo preparan la versión), así que corren adentro como cualquier script.
+
+---
+
+## D-185 — Cómo se construyen las consolas adentro, y Armar y Volver corren ahí
+- **Fecha:** 2026-11-23
+- **Ámbito:** general: Scripts, el inicio de sesión de Claude y la barra de abajo (T-116)
+- **Hito o paso:** 10, Q-276
+- **Estado:** vigente
+
+**Contexto:** con la pieza nativa probada (S-6), la propuesta `cambios/consolas.md` dice qué se ve, cómo se construye y en dos iteraciones. Lo único que se apartaba de D-184 era Armar y Volver: D-184 los dejaba aparte porque «cierran y reemplazan Iridium», pero desde CO-I2 con Iridium abierto solo preparan la versión nueva, que entra al cerrar o con Actualizar.
+**Opciones consideradas:** A) Armar y Volver adentro, como cualquier script · B) aparte, como decía D-184, con una pestaña que lee su registro.
+**Decisión:** A, con la propuesta tal cual. (1) `infra/consolas.ts` es el único que importa `node-pty`, como `motor/` con el SDK; cada consola es un `cmd` de verdad en la carpeta del proyecto (el mismo intérprete que usaban las ventanas, así los scripts de `docs/scripts.md` se escriben igual), con el entorno de Iridium sin `ELECTRON_RUN_AS_NODE`; lo impreso va a la ventana en tandas cada 16 ms y se guardan las últimas 5000 líneas. (2) La ventana no puede abrir una consola con un comando propio: solo Scripts, Ejecutar, Armar ahora y el inicio de sesión, desde el proceso principal; lo demás (escribir, tamaño, Detener, cerrar, Limpiar) va por el puente validado con Zod. (3) La consola se dibuja con `xterm.js`, con los colores de `tokens.css`; Ctrl+C con algo marcado copia y sin nada corta, como VS Code. (4) Detener, la × y el cierre de Iridium cortan el árbol de procesos (`taskkill /T`), nunca el cierre propio de la pieza (S-6). (5) Una consola sin proyecto (el inicio de sesión) se ve en todos lados; fuera de un proyecto el panel va abajo de toda la pantalla, con todas. (6) Si la pieza no carga, Scripts y el inicio de sesión vuelven a la ventana aparte de siempre. (7) Armado: `node-pty` fuera del archivo comprimido, `npmRebuild: false` y pnpm deja correr su instalación.
+**Motivo:** se les puede contestar (Volver pregunta qué versión) y no hace falta una pestaña especial; la única consecuencia es que si se cierra Iridium mientras arma, el armado se corta y el próximo Armar lo rehace (la confirmación al cerrar lo avisa, I-10).
+**Consecuencias:** Scripts deja de abrir ventanas. Pruebas: `tests/t116-consolas.test.ts` (las reglas y una consola de verdad), `tests/e2e/t116-consolas.spec.ts` (la app abierta) y `tools/probar-instalador.ts` (la consola en la copia instalada y en la actualizada encima, sin restos al cerrar).

@@ -92,9 +92,10 @@ import {
   reenlazarSkills,
 } from '../infra/carpeta-iridium'
 import { type ArchivoConfig, preferenciasDe } from '../infra/config'
+import type { Consolas } from '../infra/consolas'
 import { ESQUEMA_MAQUETA, type MaquetasAbiertas } from '../infra/diseno/protocolo'
 import type { ArchivoVistos } from '../infra/diseno/vistos'
-import { ejecutarPlan } from '../infra/ejecutar'
+import { type EnConsola, ejecutarPlan } from '../infra/ejecutar'
 import type { ArchivoEscritos } from '../infra/escritos'
 import { type Fotos, leerFoto } from '../infra/fotos'
 import { leerCommit, leerDiferencia, leerGit } from '../infra/git'
@@ -118,14 +119,17 @@ import {
   Documento,
   Escrito,
   EscritoConAdjuntos,
+  EscritoConsola,
   EsquemaBorrador,
   EstadoFicha,
   EstadoIdeaEsquema,
   HashCommit,
+  IdConsola,
   IdConversacion,
   IdScript,
   ImagenBase64,
   ImagenesAlAnotar,
+  MedidaConsola,
   MensajeCommit,
   Mime,
   NombreProyecto,
@@ -211,6 +215,8 @@ export interface Servicios {
    * `armados/`); `excluida`, la carpeta del código de Iridium, que se arma con D-122.
    */
   armados?: { archivo: ArchivoArmados; carpetaDatos: string; excluida: string | null }
+  /** Las consolas adentro (T-116, D-184); sin ellas, Scripts abre una ventana de consola como antes. */
+  consolas?: Consolas
 }
 
 export interface Puente {
@@ -846,20 +852,41 @@ export function registrarPuente(s: Servicios): Puente {
     const d = await docs.de(await proyecto(ruta))
     return { existe: d.existe('docs/scripts.md'), scripts: d.scripts() }
   })
+  /** Un comando del proyecto corre en la consola de abajo (T-116); sin la pieza, en una ventana aparte. */
+  const enConsola = (carpeta: string): EnConsola | undefined => {
+    const c = s.consolas
+    return c?.disponible() ? { proyecto: carpeta, abrir: (p) => c.abrir(p) } : undefined
+  }
   ipcMain.handle(CANALES.correrScript, async (_, ruta: unknown, id: unknown) => {
-    const d = await docs.de(await proyecto(ruta))
+    const carpeta = await proyecto(ruta)
+    const d = await docs.de(carpeta)
     return ejecutarPlan(
       await d.prepararScript(IdScript.parse(id)),
       (r) => shell.openPath(r),
       abrirEnNavegador,
+      enConsola(carpeta),
     )
   })
+  ipcMain.handle(CANALES.consolas, () => s.consolas?.lista() ?? [])
+  ipcMain.handle(
+    CANALES.guardadoConsola,
+    (_, id: unknown) => s.consolas?.guardado(IdConsola.parse(id)) ?? null,
+  )
+  ipcMain.handle(CANALES.escribirConsola, (_, id: unknown, datos: unknown) =>
+    s.consolas?.escribir(IdConsola.parse(id), EscritoConsola.parse(datos)),
+  )
+  ipcMain.handle(CANALES.tamanoConsola, (_, id: unknown, columnas: unknown, filas: unknown) =>
+    s.consolas?.tamano(IdConsola.parse(id), MedidaConsola.parse(columnas), MedidaConsola.parse(filas)),
+  )
+  ipcMain.handle(CANALES.detenerConsola, (_, id: unknown) => s.consolas?.detener(IdConsola.parse(id)))
+  ipcMain.handle(CANALES.cerrarConsola, (_, id: unknown) => s.consolas?.cerrar(IdConsola.parse(id)))
+  ipcMain.handle(CANALES.limpiarConsola, (_, id: unknown) => s.consolas?.limpiar(IdConsola.parse(id)))
   // Ejecutar Alfa y Armar ahora (frente Abrir, AB-1, AB-2): lo marcado en `docs/scripts.md`, buscado de nuevo.
   /** Ejecutar Alfa (AB-1): lo que abre el proyecto; si es un programa que no existe, `sin-armar` (AB-2). */
   const ejecutar = async (carpeta: string): Promise<ResultadoEjecutar> => {
     const plan = await (await docs.de(carpeta)).prepararEjecutar()
     if (plan.tipo === 'sin-armar') return plan
-    return ejecutarPlan(plan, (r) => shell.openPath(r), abrirEnNavegador)
+    return ejecutarPlan(plan, (r) => shell.openPath(r), abrirEnNavegador, enConsola(carpeta))
   }
   /** Al terminar de armarse, la abre (AB-2): con la versión nueva o, si falló, con la anterior que haya. */
   const abrirAlTerminar = (carpeta: string, fin: Promise<unknown>): void => {
@@ -882,7 +909,12 @@ export function registrarPuente(s: Servicios): Puente {
       abrirAlTerminar(carpeta, armados.armarYa(carpeta))
       return { tipo: 'ok', mensaje: 'Armando.' }
     }
-    return ejecutarPlan(await (await docs.de(carpeta)).prepararArmar(), (r) => shell.openPath(r))
+    return ejecutarPlan(
+      await (await docs.de(carpeta)).prepararArmar(),
+      (r) => shell.openPath(r),
+      undefined,
+      enConsola(carpeta),
+    )
   })
   ipcMain.handle(CANALES.actualizaciones, () => armados?.ultimos() ?? {})
   ipcMain.handle(CANALES.actualizarAhora, async (_, ruta: unknown) => {

@@ -4,7 +4,8 @@
 .app {
   display: grid;
   grid-template-columns: var(--ancho-secciones) minmax(0, 1fr);
-  grid-template-rows: var(--alto-barra) minmax(0, 1fr) var(--alto-estado);
+  /* La tercera fila es el panel de las consolas fuera de un proyecto (T-116): plegado no ocupa lugar. */
+  grid-template-rows: var(--alto-barra) minmax(0, 1fr) auto var(--alto-estado);
   height: 100vh;
 }
 
@@ -140,6 +141,7 @@
 
 /* La barra de secciones (D-041): en el inicio, Proyectos, Skills e Ideas; en un proyecto, las suyas en dos grupos */
 .actividad {
+  grid-row: 2 / 4;
   border-right: 1px solid var(--borde);
   display: flex;
   flex-direction: column;
@@ -209,6 +211,7 @@
 
 .estado-barra {
   grid-column: 1 / -1;
+  grid-row: 4;
   display: flex;
   align-items: center;
   gap: 4px;

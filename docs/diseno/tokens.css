@@ -114,6 +114,7 @@
   --ancho-cuadro: 440px; /* un cuadro que confirma o pide un dato; también el texto de un recuadro punteado */
   --ancho-ventana: 860px; /* la ventana de Ajustes */
   --alto-ventana: 600px; /* la ventana de Ajustes */
+  --alto-consolas: 300px; /* el panel de las consolas abierto, abajo de la sección (T-116) */
   --ancho-pestanas-ventana: 200px; /* las pestañas a la izquierda de la ventana de Ajustes */
   --ancho-arbol: 240px; /* la columna del árbol a la izquierda: los documentos de Docs, los archivos */
   --ancho-frentes: 280px; /* la columna de las tarjetas de los frentes, a la izquierda del tablero Frentes */

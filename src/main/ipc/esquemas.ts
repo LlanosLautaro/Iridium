@@ -110,6 +110,15 @@ export const RutaArchivo = z.string().max(1024)
 /** El id de un script: el ancla de su título en `docs/scripts.md`. */
 export const IdScript = z.string().min(1).max(200)
 
+/** El id de una consola adentro (T-116). */
+export const IdConsola = z.string().min(1).max(20)
+
+/** Lo que se le escribe a una consola: una tecla o un pegado (hasta 1 MB, como el texto pegado del chat). */
+export const EscritoConsola = z.string().max(1_000_000)
+
+/** El tamaño de una consola, en columnas y filas. */
+export const MedidaConsola = z.number().int().min(1).max(2000)
+
 /** El id de una conversación guardada (un UUID de Claude Code; el motor falso usa `falsa-n`). */
 export const IdConversacion = z.string().regex(/^[\w-]{1,128}$/)
 
