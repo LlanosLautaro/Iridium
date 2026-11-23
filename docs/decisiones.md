@@ -183,6 +183,14 @@
 | D-174 | 2026-11-22 | general (framework y control; T-117) | 10, a pedido del usuario (T-117) | Lo terminado se cierra en el mismo cambio, y el control avisa del trabajo hecho en la ruta o del frente hecho que sigue abierto | vigente |
 | D-175 | 2026-11-22 | Frentes (T-112, T-113), Arranque y Mapa | 10, Q-262 | Se abre el frente Frentes antes de Capacidades: primero la IA avanzando sola por tamaño con la fila interna, después el Mapa rediseñado como Frentes | vigente |
 | D-176 | 2026-11-22 | Frentes | 10; frente Frentes, paso 2 (Definición), Q-263 | La definición de Frentes queda aprobada, con la Bandeja primero, después lo chico más viejo y después el frente en curso | vigente |
+| D-177 | 2026-11-22 | Frentes | 10; Frentes, paso 4 | La UX del motor de Frentes: dónde se prende, dónde se apaga y qué cuenta | vigente |
+| D-178 | 2026-11-22 | Frentes | 10; Frentes, paso 5 | El diseño técnico del motor de Frentes | vigente |
+| D-179 | 2026-11-22 | Frentes | 10; Frentes, paso 7 | Los detalles del motor de Frentes al construirlo | vigente |
+| D-180 | 2026-11-22 | Frentes | 10; Frentes, paso 4 | Lo que el tablero Frentes muestra en cada tarjeta y en el centro | vigente |
+| D-181 | 2026-11-22 | Frentes | 10; Frentes, pasos 6 y 7 | El tablero Frentes con la forma B, y lo que se decidió al construirlo | vigente |
+| D-182 | 2026-11-23 | Compartir | 10, Q-269 | Las versiones de Iridium se numeran 1.0.x | vigente |
+| D-183 | 2026-11-23 | general (la conversación y Ajustes; T-52, T-119) | 10 | Iridium suena cuando la IA terminó su trabajo, no en cada turno | vigente |
+| D-184 | 2026-11-23 | general (Scripts y la barra de abajo; T-116) | 10, Q-272 | Las consolas van adentro de Iridium, como en VS Code | vigente |
 
 ---
 
@@ -3529,3 +3537,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** (1) Suena cuando un turno termina bien, sin nada corriendo de fondo y después del control (si el control le devolvió algo a la IA, al terminar la corrección): una vez por trabajo terminado. Al dejar pruebas de fondo no suena; suena cuando la IA retoma y termina. (2) No suena si se la detuvo ni si falló. (3) Solo un sonido, sin avisos de Windows. Cuatro para elegir (Campana, Dos notas, Gota, Acorde), armados por la ventana sin archivos; elegir uno lo hace sonar. (4) Prendido al principio con la Campana; con el avance solo, apagado al principio, porque suele ser de noche (se prende aparte). (5) Vale para todas las conversaciones de Iridium, también el chat de Ideas y el de Skills. (6) Iridium no escribe hooks en la configuración de Claude: el sonido vive en Iridium y se va con ella.
 **Motivo:** el sonido tiene que decir «ya podés mirar», no «Claude terminó un turno»; y no puede quedar como vestigio fuera de la app.
 **Consecuencias:** `core/sonido.ts` decide; la conversación avisa cómo terminó cada turno (`alTerminar`) y el puente manda a la ventana el sonido que toca. `config.json` suma `sonido`. Si Claude Code termina sin retomar después de algo de fondo (raro), no suena. Pruebas: `tests/t52-sonido.test.ts`, `tests/e2e/t52-sonido.spec.ts`.
+
+## D-184 — Las consolas van adentro de Iridium, como en VS Code
+- **Fecha:** 2026-11-23
+- **Ámbito:** general: Scripts, el inicio de sesión de Claude y la barra de abajo (T-116)
+- **Hito o paso:** 10, Q-272
+- **Estado:** vigente
+
+**Contexto:** cada **Ejecutar** de Scripts abre una ventana de consola aparte que queda abierta (D-043), igual que el inicio de sesión de Claude. El usuario pidió tenerlas adentro de Iridium, plegadas para que no ocupen lugar, varias a la vez como en VS Code, con un indicador de que algo corre.
+**Opciones consideradas:** A) una consola de verdad, a la que se le escribe y con colores, con la pieza nativa que usa VS Code · B) solo la salida, que se lee pero no se le escribe, sin piezas nativas · C) por ahora no.
+**Decisión:** A. (1) Un panel abajo, plegado por defecto, con una pestaña por consola, **Detener** y **Limpiar**; en la barra de abajo, «▶ N corriendo», que lo abre. (2) Los scripts de comando y el inicio de sesión de Claude corren ahí, ya no en ventanas. (3) Armar y Volver siguen corriendo aparte, porque cierran y reemplazan Iridium; el panel muestra su avance leyendo su registro. (4) Lo que corre adentro se cierra con Iridium. (5) Lo primero es probar que la pieza nativa arma bien (la app de uso diario, el instalador y la actualización); si no arma, se vuelve a B y se le avisa al usuario. (6) Va después de la ronda de UX 2 (T-123) y antes de Capacidades (T-28).
+**Motivo:** es lo que pidió el usuario, y una consola a la que se le escribe sirve también para lo que espera un Enter o pide iniciar sesión.
+**Consecuencias:** se suma una pieza nativa al armado (más riesgo al armar y al actualizar, que se prueba primero). Un `pnpm dev` lanzado desde Iridium se cierra con él. Con `IRIDIUM_OCULTA=1` las pruebas siguen sin mostrar nada.
