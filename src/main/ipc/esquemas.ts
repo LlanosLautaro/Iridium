@@ -4,6 +4,7 @@ import { LARGO_ESCRITO, MAX_ADJUNTOS, PEGADO_MAXIMO } from '../../compartido/adj
 import { LARGO_NOMBRE_REPO } from '../../compartido/github'
 import { ESTADOS_DESDE_IDEAS } from '../../compartido/ideas'
 import {
+  ALTO_CONSOLAS,
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
   LARGO_AJUSTES,
@@ -22,6 +23,7 @@ export const CambioPreferencias = z
     anchoConversacion: AnchosConversacion.strict(),
     anchoListaSkills: z.number().int().min(ANCHO_LISTA_SKILLS.minimo).max(ANCHO_LISTA_SKILLS.maximo),
     anchoListaIdeas: z.number().int().min(ANCHO_LISTA_IDEAS.minimo).max(ANCHO_LISTA_IDEAS.maximo),
+    altoConsolas: z.number().int().min(ALTO_CONSOLAS.minimo).max(ALTO_CONSOLAS.maximo),
     anchoHoja: z.enum(['angosto', 'normal', 'ancho']),
     pestanas: z.array(z.string().min(1).max(1024)).max(50),
     ajustesIa: z.record(z.string().min(1).max(1024), AjusteIa.strict()),

@@ -1,6 +1,6 @@
 # Propuesta: las consolas adentro de Iridium
 
-**Estado:** en curso (aprobada en Q-276 con Armar y Volver adentro, D-185; I-9 hecha, se prueba en Q-277)
+**Estado:** en curso (aprobada en Q-276 con Armar y Volver adentro, D-185; I-9 probada en Q-277; I-10 hecha, se prueba en Q-279)
 **Origen:** T-116, D-184 · **Tamaño:** grande · **Fecha:** 2026-11-23
 
 ## Por qué
@@ -42,8 +42,9 @@ D-184 dejó Armar y Volver corriendo aparte porque «cierran y reemplazan Iridiu
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| I-9 | El panel con consolas de verdad: Scripts e Iniciar sesión corren adentro, pestañas, Detener, Limpiar, la barra de abajo, el cierre; con el instalador probado | en curso (hecha el 2026-11-23; espera Q-277) |
-| I-10 | Lo que completa: el alto recordado, `Ctrl+ñ`, Armar y Volver adentro (según Q-276), la confirmación al cerrar, sacar las partes que no son de Windows | pendiente |
+| I-9 | El panel con consolas de verdad: Scripts e Iniciar sesión corren adentro, pestañas, Detener, Limpiar, la barra de abajo, el cierre; con el instalador probado | hecha (probada en Q-277: todo bien, y el panel debajo del chat en el inicio no molesta) |
+| I-10 | Lo que completa: el alto recordado, `Ctrl+ñ`, Armar y Volver adentro (según Q-276), la confirmación al cerrar, sacar las partes que no son de Windows | hecha el 2026-11-23; espera Q-279 |
 
 ## Log
 - **2026-11-23 — I-9.** El panel con consolas de verdad (`infra/consolas.ts`, `renderer/marco/Consolas.tsx`): Scripts, Ejecutar, Armar ahora e Iniciar sesión en Claude corren adentro; pestañas con cómo va cada una, Detener, Limpiar, plegar, «▶ N corriendo» en la barra y, al cerrar Iridium, nada queda corriendo. Fuera de un proyecto el panel va abajo de toda la pantalla, también debajo del chat (se verá si molesta). Si la pieza no carga, vuelve la ventana aparte. Pruebas: Vitest (las reglas, una consola real: responde, se le escribe, falla con su código, Detener sin restos, el inicio de sesión en la consola), Playwright con la app abierta (Ejecutar, contestarle, Detener, plegar, la ×, el inicio y el cierre) y el instalador de verdad: la consola anda en la versión instalada y en la actualizada encima, y al cerrar no queda nada de la carpeta instalada.
+- **2026-11-23 — I-10.** El borde de arriba del panel se arrastra (o con las flechas) y el alto se recuerda (`altoConsolas` en las preferencias, de 120 a 1200 px; 300 de entrada). `Ctrl+ñ` pliega y abre el panel, también con el foco en la consola (la consola no lo recibe). Cerrar o reiniciar con una consola corriendo pregunta («1 consola corriendo · Cerrar la detiene»; con la IA trabajando se suma al texto, y Esperar solo aparece si hay sesiones); Actualizar solo no reinicia mientras una consola corre. Armar y Volver ya corrían adentro desde I-9 (son scripts como los demás). Del armado sale lo que no es de Windows x64 de la pieza nativa (las versiones de Mac y ARM, su código fuente y lo de compilar): de 9,9 a 3,8 MB. Pruebas: Vitest (el texto de la confirmación, las preferencias), Playwright (`Ctrl+ñ`, arrastrar y flechas, el alto al volver a abrir, la confirmación con Cancelar y Cerrar igual sin dejar nada corriendo) y `tools/probar-instalador.ts` (la consola en la versión instalada y en la actualizada encima, con el armado nuevo).

@@ -4,9 +4,10 @@ import { create } from 'zustand'
 import type { AdjuntoPedido } from '../compartido/adjuntos'
 import { SIN_ANCHOS } from '../compartido/ancho-conversacion'
 import { type Cita, sumarCita } from '../compartido/citas'
-import type { ConsolaVista } from '../compartido/consolas'
+import type { ConsolaVista, PedidoCierre } from '../compartido/consolas'
 import {
   type ActualizacionProyecto,
+  ALTO_CONSOLAS,
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
   type CambioConversacion,
@@ -234,10 +235,10 @@ interface EstadoApp {
    * devuelve false (modulos/apariencia/ux.md › Flujos).
    */
   cambiarAjustes(cambio: Partial<Preferencias>): Promise<boolean>
-  /** Se quiso cerrar con sesiones trabajando (F-6): sus rutas; null = no se está preguntando. */
-  cierre: string[] | null
+  /** Se quiso cerrar con sesiones trabajando o consolas corriendo (F-6, I-10); null = no se está preguntando. */
+  cierre: PedidoCierre | null
   /** null cierra la confirmación: es Cancelar, y si era para reiniciar con Actualizar, cerrar después ya no reinicia. */
-  ponerCierre(trabajando: string[] | null): void
+  ponerCierre(pedido: PedidoCierre | null): void
   /** La versión nueva lista para entrar al cerrar (CO-I2). */
   versionNueva: VersionNueva | null
   ponerVersionNueva(v: VersionNueva | null): void
@@ -323,6 +324,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     anchoConversacion: SIN_ANCHOS,
     anchoListaSkills: ANCHO_LISTA_SKILLS.inicial,
     anchoListaIdeas: ANCHO_LISTA_IDEAS.inicial,
+    altoConsolas: ALTO_CONSOLAS.inicial,
     anchoHoja: 'normal',
     pestanas: [],
     ajustesIa: {},

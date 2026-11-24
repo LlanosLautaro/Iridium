@@ -1,6 +1,7 @@
 // La ventana: el marco y la sección elegida. Al abrir pide la lista de proyectos y escucha sus cambios.
 import { useEffect, useRef } from 'react'
 import { usarEstado } from './estado'
+import { esAtajoConsolas } from './marco/Consolas'
 import { Marco } from './marco/Marco'
 import { tocarSonido } from './marco/sonido'
 import { SECCIONES } from './secciones'
@@ -75,7 +76,7 @@ function useConexion() {
   ])
 }
 
-/** Ctrl+1 Proyectos, Ctrl+2 Skills, Ctrl+3 Ideas (04-ux.md › Principios de interacción, D-111); Ctrl+, los Ajustes (AJ-W1); Ctrl+= y Ctrl+- el tamaño. */
+/** Ctrl+1 Proyectos, Ctrl+2 Skills, Ctrl+3 Ideas (04-ux.md › Principios de interacción, D-111); Ctrl+, los Ajustes (AJ-W1); Ctrl+= y Ctrl+- el tamaño; Ctrl+ñ las consolas (I-10). */
 function useAtajos() {
   const irA = usarEstado((s) => s.irA)
   const abrirAjustes = usarEstado((s) => s.abrirAjustes)
@@ -90,6 +91,12 @@ function useAtajos() {
         return
       }
       if (e.shiftKey) return
+      if (esAtajoConsolas(e)) {
+        e.preventDefault()
+        const s = usarEstado.getState()
+        s.plegarConsolas(!s.panelConsolas)
+        return
+      }
       if (e.key === ',') {
         e.preventDefault()
         abrirAjustes()

@@ -1,7 +1,7 @@
 // El puente seguro: la única API que ve la ventana (`window.iridium`). No expone nada de Node ni de Electron.
 import { contextBridge, ipcRenderer, webFrame, webUtils } from 'electron'
 import { version } from '../../package.json'
-import type { ConsolaVista, SalidaConsola } from '../compartido/consolas'
+import type { ConsolaVista, PedidoCierre, SalidaConsola } from '../compartido/consolas'
 import type { CambioDiseno } from '../compartido/diseno'
 import {
   type ActualizacionProyecto,
@@ -47,7 +47,7 @@ const api: ApiIridium = {
   alCambiarArranque: (f) => escuchar<EstadoArranque>(CANALES.arranqueCambio, f),
   alTerminarTrabajo: (f) => escuchar<SonidoFin>(CANALES.terminoTrabajo, f),
   arranqueVisto: (hasta) => ipcRenderer.invoke(CANALES.arranqueVisto, hasta),
-  alPedirCierre: (f) => escuchar<string[]>(CANALES.pedirCierre, f),
+  alPedirCierre: (f) => escuchar<PedidoCierre>(CANALES.pedirCierre, f),
   cerrarIgual: () => ipcRenderer.invoke(CANALES.cerrarIgual),
   cancelarCierre: () => ipcRenderer.invoke(CANALES.cancelarCierre),
   versionNueva: () => ipcRenderer.invoke(CANALES.versionNueva),

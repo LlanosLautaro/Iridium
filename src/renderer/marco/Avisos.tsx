@@ -1,6 +1,7 @@
 // Los avisos de H-13 (abajo a la derecha, W-4), el aviso al volver del arranque (AR-4) y la confirmación de cerrar con
 // sesiones trabajando (F-6).
 import { useEffect, useRef, useState } from 'react'
+import { textoDeCierre } from '../../compartido/consolas'
 import type { RenglonArranqueVista } from '../../compartido/puente'
 import { type AvisoEjecutar, type AvisoSesion, tarjetaDe, usarEstado } from '../estado'
 import { armarProyecto } from '../secciones/proyecto/ejecutar'
@@ -275,12 +276,7 @@ export function Avisos() {
   )
 }
 
-function enLista(nombres: string[]): string {
-  if (nombres.length <= 1) return nombres[0] ?? ''
-  return `${nombres.slice(0, -1).join(', ')} y ${nombres.at(-1)}`
-}
-
-/** F-6: «Alfa y Beta están trabajando. Cerrar las frena.» Cancelar tiene el foco. */
+/** F-6: «Alfa y Beta están trabajando. Cerrar las frena.» (y las consolas corriendo, I-10). Cancelar tiene el foco. */
 export function ConfirmarCierre() {
   const cierre = usarEstado((s) => s.cierre)
   const ponerCierre = usarEstado((s) => s.ponerCierre)
@@ -302,7 +298,8 @@ export function ConfirmarCierre() {
     return () => window.removeEventListener('keydown', alTeclado)
   }, [cierre, ponerCierre])
   if (!cierre) return null
-  const nombres = cierre.map((r) => tarjetaDe(lista, r)?.nombre ?? r.split(/[\\/]/).pop() ?? r)
+  const nombres = cierre.trabajando.map((r) => tarjetaDe(lista, r)?.nombre ?? r.split(/[\\/]/).pop() ?? r)
+  const { titulo, texto } = textoDeCierre(nombres, cierre.consolas, reiniciando)
   return (
     <div className="velo capa-cuadro">
       <div
@@ -312,13 +309,8 @@ export function ConfirmarCierre() {
         aria-labelledby="cierre-t"
         aria-describedby="cierre-d"
       >
-        <h2 id="cierre-t">
-          {enLista(nombres)} {nombres.length === 1 ? 'está trabajando' : 'están trabajando'}
-        </h2>
-        <p id="cierre-d">
-          {reiniciando ? 'Reiniciar' : 'Cerrar'} {nombres.length === 1 ? 'la frena' : 'las frena'}. Las
-          conversaciones quedan guardadas: con Continuar se retoman y la IA sabe que la detuviste.
-        </p>
+        <h2 id="cierre-t">{titulo}</h2>
+        <p id="cierre-d">{texto}</p>
         <div className="pie">
           <button
             ref={cancelar}
@@ -329,7 +321,8 @@ export function ConfirmarCierre() {
           >
             Cancelar
           </button>
-          {reiniciando && (
+          {/* Esperar espera a las sesiones: con solo consolas (que pueden no terminar nunca), no va. */}
+          {reiniciando && nombres.length > 0 && (
             <button
               type="button"
               className="boton secundario"
@@ -349,7 +342,13 @@ export function ConfirmarCierre() {
               void window.iridium.cerrarIgual()
             }}
           >
-            {cerrando ? 'Frenando…' : reiniciando ? 'Reiniciar igual' : 'Cerrar igual'}
+            {cerrando
+              ? nombres.length > 0
+                ? 'Frenando…'
+                : 'Cerrando…'
+              : reiniciando
+                ? 'Reiniciar igual'
+                : 'Cerrar igual'}
           </button>
         </div>
       </div>

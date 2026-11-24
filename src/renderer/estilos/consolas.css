@@ -1,6 +1,7 @@
 /* Las consolas adentro (T-116, D-184; la maqueta Diseño › Las consolas adentro): el panel abajo de la sección, como el
    Terminal de VS Code. Las pestañas son la pieza PZ-10; acá va solo lo propio del panel. */
 .consolas {
+  position: relative;
   flex: none;
   height: var(--alto-consolas);
   display: flex;
@@ -83,6 +84,21 @@
 }
 .pantalla-consola .xterm-viewport {
   scrollbar-color: var(--borde-fuerte) transparent;
+}
+
+/* El borde de arriba se arrastra para darle alto (I-10), como el de la conversación pero acostado. */
+.borde-consolas {
+  position: absolute;
+  inset: -3px 0 auto;
+  height: 5px;
+  z-index: 1;
+  cursor: row-resize;
+}
+.borde-consolas:hover,
+.borde-consolas.arrastra,
+.borde-consolas:focus-visible {
+  outline: 0;
+  background: color-mix(in oklab, var(--texto) 25%, var(--fondo));
 }
 
 /* En la barra de abajo: «▶ N corriendo», en verde mientras algo corre. */

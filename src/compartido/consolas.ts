@@ -18,6 +18,41 @@ export interface ConsolaVista {
   desde: number
 }
 
+/** Al cerrar o reiniciar Iridium con algo andando (F-6, I-10): los proyectos con la IA trabajando y las consolas corriendo. */
+export interface PedidoCierre {
+  trabajando: string[]
+  consolas: number
+}
+
+/**
+ * Lo que dice la confirmación de cierre (F-6, I-10): el título nombra lo que frena (los proyectos que trabajan o, sin
+ * ellos, las consolas) y el texto, qué pasa con cada cosa. `nombres`, los de los proyectos que trabajan.
+ */
+export function textoDeCierre(
+  nombres: readonly string[],
+  consolas: number,
+  reiniciando: boolean,
+): { titulo: string; texto: string } {
+  const verbo = reiniciando ? 'Reiniciar' : 'Cerrar'
+  const deConsolas = consolas === 1 ? '1 consola corriendo' : `${consolas} consolas corriendo`
+  const detiene = consolas === 1 ? 'la detiene' : 'las detiene'
+  if (nombres.length === 0)
+    return {
+      titulo: deConsolas.charAt(0).toUpperCase() + deConsolas.slice(1),
+      texto: `${verbo} ${detiene}: lo que estaba haciendo se corta.`,
+    }
+  const lista =
+    nombres.length === 1 ? nombres[0] : `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`
+  const sesiones = `${verbo} ${nombres.length === 1 ? 'la frena' : 'las frena'}. Las conversaciones quedan guardadas: con Continuar se retoman y la IA sabe que la detuviste.`
+  return {
+    titulo: `${lista} ${nombres.length === 1 ? 'está trabajando' : 'están trabajando'}`,
+    texto:
+      consolas > 0
+        ? `${sesiones} También ${consolas === 1 ? 'se detiene' : 'se detienen'} ${deConsolas}.`
+        : sesiones,
+  }
+}
+
 /** Lo que imprimió una consola desde `desde` (la cuenta de caracteres desde que se abrió): llega en tandas. */
 export interface SalidaConsola {
   id: string

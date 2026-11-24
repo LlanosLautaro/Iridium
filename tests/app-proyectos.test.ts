@@ -86,6 +86,7 @@ describe('ArchivoConfig', () => {
       anchoConversacion: { proyectos: {} },
       anchoListaSkills: 264,
       anchoListaIdeas: 264,
+      altoConsolas: 300,
       anchoHoja: 'normal',
       pestanas: [],
     })
@@ -105,6 +106,7 @@ describe('ArchivoConfig', () => {
         anchoConversacion: 5,
         anchoListaSkills: 9000,
         anchoListaIdeas: 12,
+        altoConsolas: 5,
         anchoHoja: 'enorme',
       }),
     )
@@ -113,6 +115,7 @@ describe('ArchivoConfig', () => {
       anchoConversacion: { proyectos: {} },
       anchoListaSkills: 264,
       anchoListaIdeas: 264,
+      altoConsolas: 300,
       anchoHoja: 'normal',
     })
   })

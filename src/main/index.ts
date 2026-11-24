@@ -385,14 +385,15 @@ function crearVentana(puente: Puente, guardada: VentanaGuardada | null, deFondo:
     if (como.maximizada) v.maximize()
     v.show()
   })
-  // Cerrar con sesiones trabajando se confirma en la ventana (F-6); sin sesiones, se cierra.
+  // Cerrar con sesiones trabajando o consolas corriendo se confirma en la ventana (F-6, I-10); sin nada, se cierra.
   v.on('close', (e) => {
     guardarVentana(v)
     if (cerrarSinPreguntar) return
     const trabajando = puente.enMarcha()
-    if (trabajando.length === 0) return
+    const corriendo = consolas.corriendo()
+    if (trabajando.length === 0 && corriendo === 0) return
     e.preventDefault()
-    puente.pedirCierre(trabajando)
+    puente.pedirCierre({ trabajando, consolas: corriendo })
   })
   v.on('closed', () => {
     ventana = null

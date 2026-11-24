@@ -3566,3 +3566,17 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** A, con la propuesta tal cual. (1) `infra/consolas.ts` es el único que importa `node-pty`, como `motor/` con el SDK; cada consola es un `cmd` de verdad en la carpeta del proyecto (el mismo intérprete que usaban las ventanas, así los scripts de `docs/scripts.md` se escriben igual), con el entorno de Iridium sin `ELECTRON_RUN_AS_NODE`; lo impreso va a la ventana en tandas cada 16 ms y se guardan las últimas 5000 líneas. (2) La ventana no puede abrir una consola con un comando propio: solo Scripts, Ejecutar, Armar ahora y el inicio de sesión, desde el proceso principal; lo demás (escribir, tamaño, Detener, cerrar, Limpiar) va por el puente validado con Zod. (3) La consola se dibuja con `xterm.js`, con los colores de `tokens.css`; Ctrl+C con algo marcado copia y sin nada corta, como VS Code. (4) Detener, la × y el cierre de Iridium cortan el árbol de procesos (`taskkill /T`), nunca el cierre propio de la pieza (S-6). (5) Una consola sin proyecto (el inicio de sesión) se ve en todos lados; fuera de un proyecto el panel va abajo de toda la pantalla, con todas. (6) Si la pieza no carga, Scripts y el inicio de sesión vuelven a la ventana aparte de siempre. (7) Armado: `node-pty` fuera del archivo comprimido, `npmRebuild: false` y pnpm deja correr su instalación.
 **Motivo:** se les puede contestar (Volver pregunta qué versión) y no hace falta una pestaña especial; la única consecuencia es que si se cierra Iridium mientras arma, el armado se corta y el próximo Armar lo rehace (la confirmación al cerrar lo avisa, I-10).
 **Consecuencias:** Scripts deja de abrir ventanas. Pruebas: `tests/t116-consolas.test.ts` (las reglas y una consola de verdad), `tests/e2e/t116-consolas.spec.ts` (la app abierta) y `tools/probar-instalador.ts` (la consola en la copia instalada y en la actualizada encima, sin restos al cerrar).
+
+---
+
+## D-186 — Al actualizar, una ventanita con el progreso
+- **Fecha:** 2026-11-23
+- **Ámbito:** general: Actualizar en la app de uso diario y en las copias instaladas (T-128)
+- **Hito o paso:** 10, Q-278
+- **Estado:** vigente
+
+**Contexto:** al actualizar, Iridium se cierra y vuelve a abrir sin mostrar nada en el medio (unos 20 a 30 s en la app de uso diario; en la otra PC, lo que tarde el instalador escondido). El usuario pidió ver el progreso.
+**Opciones consideradas:** A) una ventanita «Actualizando Iridium…» con su barra, acá y en la otra PC, sin preguntas · B) solo en la otra PC, la ventanita del instalador que ya existe · C) un instalador con asistente completo, también al actualizar.
+**Decisión:** A. Mientras se cambia la versión se ve una ventanita chica con «Actualizando Iridium…» y una barra; se cierra sola cuando abre la versión nueva, sin botones ni preguntas. Si la versión no entra, lo dice ahí antes de volver a abrir la de antes.
+**Motivo:** se ve que avanza y no suma pasos.
+**Consecuencias:** T-128 pasa a pendiente; va después de las consolas (I-10), con T-127 ya hecha.

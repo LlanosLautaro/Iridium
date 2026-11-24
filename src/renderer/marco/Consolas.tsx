@@ -4,10 +4,19 @@
 import { FitAddon } from '@xterm/addon-fit'
 import { Terminal } from '@xterm/xterm'
 import '@xterm/xterm/css/xterm.css'
-import { useEffect, useRef } from 'react'
+import { type CSSProperties, useEffect, useRef } from 'react'
 import { type ConsolaVista, consolasDe, detalleDePestana, textoDeLaBarra } from '../../compartido/consolas'
 import { usarEstado } from '../estado'
+import { BordeConsolas } from '../ui/Divisor'
 import { Icono } from '../ui/Icono'
+
+/**
+ * Ctrl+ñ abre y pliega las consolas, el atajo de VS Code en un teclado en español (I-10). Con otra distribución, la
+ * misma tecla (la que está a la derecha de la L).
+ */
+export function esAtajoConsolas(e: KeyboardEvent): boolean {
+  return e.ctrlKey && !e.altKey && !e.shiftKey && (e.key.toLowerCase() === 'ñ' || e.code === 'Semicolon')
+}
 
 /** Un color de `tokens.css`, para la consola (xterm no lee las variables de CSS). */
 const token = (nombre: string) => getComputedStyle(document.documentElement).getPropertyValue(nombre).trim()
@@ -38,6 +47,8 @@ function Pantalla({ consola }: { consola: ConsolaVista }) {
     term.open(el)
     // Ctrl+C con algo marcado copia (como VS Code); sin nada marcado, corta lo que corre. Ctrl+V pega.
     term.attachCustomKeyEventHandler((e) => {
+      // Ctrl+ñ no es para la consola: sigue hasta la ventana, que pliega el panel.
+      if (esAtajoConsolas(e)) return false
       if (e.type !== 'keydown' || !e.ctrlKey || e.altKey) return true
       if (e.key === 'c' && term.hasSelection()) {
         void navigator.clipboard.writeText(term.getSelection())
@@ -130,6 +141,7 @@ export function PanelConsolas({ lugar }: { lugar: string | null }) {
   const clave = (lugar ?? '').toLowerCase()
   const elegidaId = usarEstado((s) => s.consolaElegida[clave])
   const elegir = usarEstado((s) => s.elegirConsola)
+  const alto = usarEstado((s) => s.preferencias.altoConsolas)
   const lista = consolasDe(todas, lugar)
   if (!abierto || lista.length === 0) return null
   const elegida = lista.find((c) => c.id === elegidaId) ?? lista[lista.length - 1]
@@ -140,7 +152,12 @@ export function PanelConsolas({ lugar }: { lugar: string | null }) {
     window.dispatchEvent(new CustomEvent('limpiar-consola', { detail: elegida.id }))
   }
   return (
-    <section className="consolas" aria-label="Consolas">
+    <section
+      className="consolas"
+      aria-label="Consolas"
+      style={{ '--alto-consolas': `${alto}px` } as CSSProperties}
+    >
+      <BordeConsolas alto={alto} />
       <div className="cab-consolas">
         <div className="pestanas" role="tablist" aria-label="Consolas abiertas">
           {lista.map((c) => (

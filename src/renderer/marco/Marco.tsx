@@ -404,7 +404,10 @@ function Actualizar() {
   const iaIridiumOcupada = usarEstado((s) =>
     s.fichas.some((f) => sinArmar !== null && ocupada(f) && mismaRuta(f.ruta, sinArmar.carpeta)),
   )
-  const algunaOcupada = usarEstado((s) => s.fichas.some(ocupada))
+  // Una consola corriendo (un `pnpm dev`) también: reiniciar solo la cortaría (I-10).
+  const algunaOcupada = usarEstado(
+    (s) => s.fichas.some(ocupada) || s.consolas.some((c) => c.estado === 'corriendo'),
+  )
   const reiniciando = usarEstado((s) => s.reiniciando)
   const reiniciarAhora = usarEstado((s) => s.reiniciarAhora)
   const pedido = usarEstado((s) => s.actualizarPedido)

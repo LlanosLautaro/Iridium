@@ -341,6 +341,8 @@ test('al entrar, la bandeja sin scripts; en Scripts un botón ejecuta el script;
   await archivos.getByRole('button', { name: 'Buscar un archivo' }).click()
   await archivos.getByRole('textbox', { name: 'Buscar un archivo por su nombre' }).press('Escape')
   await expect(archivos.locator('.archivos-buscar')).toHaveCount(0)
+  // La consola del script terminó: cerrar no pregunta (I-10).
+  await expect(win.locator('.senal-consolas')).toHaveText('1 consola')
   await app.close()
 })
 

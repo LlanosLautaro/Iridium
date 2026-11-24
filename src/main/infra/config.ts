@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { ANCHO_CONVERSACION, migrarAnchos, PROYECTOS_CON_ANCHO } from '../../compartido/ancho-conversacion'
 import { RECIENTES } from '../../compartido/comandos'
 import {
+  ALTO_CONSOLAS,
   ANCHO_LISTA_IDEAS,
   ANCHO_LISTA_SKILLS,
   ESFUERZOS,
@@ -101,6 +102,12 @@ const Config = z.object({
     .min(ANCHO_LISTA_SKILLS.minimo)
     .max(ANCHO_LISTA_SKILLS.maximo)
     .catch(ANCHO_LISTA_SKILLS.inicial),
+  altoConsolas: z
+    .number()
+    .int()
+    .min(ALTO_CONSOLAS.minimo)
+    .max(ALTO_CONSOLAS.maximo)
+    .catch(ALTO_CONSOLAS.inicial),
   anchoListaIdeas: z
     .number()
     .int()
@@ -163,6 +170,7 @@ const PREDETERMINADA: Config = {
   anchoConversacion: { proyectos: {} },
   anchoListaSkills: ANCHO_LISTA_SKILLS.inicial,
   anchoListaIdeas: ANCHO_LISTA_IDEAS.inicial,
+  altoConsolas: ALTO_CONSOLAS.inicial,
   anchoHoja: 'normal',
   pestanas: [],
   ajustesIa: {},
@@ -189,6 +197,7 @@ export function preferenciasDe(c: Config): Preferencias {
     anchoConversacion: c.anchoConversacion,
     anchoListaSkills: c.anchoListaSkills,
     anchoListaIdeas: c.anchoListaIdeas,
+    altoConsolas: c.altoConsolas,
     anchoHoja: c.anchoHoja,
     pestanas: c.pestanas,
     ajustesIa: Object.fromEntries(

@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { actualizarSolo } from '../../compartido/actualizar'
 import { MAX_ADJUNTOS } from '../../compartido/adjuntos'
 import { sumarReciente } from '../../compartido/comandos'
+import type { PedidoCierre } from '../../compartido/consolas'
 import {
   type AjusteSonido,
   CANALES,
@@ -225,8 +226,8 @@ export interface Puente {
   terminarDeGuardar(): Promise<void>
   /** Los proyectos con la IA trabajando: al cerrar la ventana se pregunta (F-6). */
   enMarcha(): string[]
-  /** Pide a la ventana la confirmación de F-6. */
-  pedirCierre(trabajando: string[]): void
+  /** Pide a la ventana la confirmación de F-6 (con las consolas corriendo, I-10). */
+  pedirCierre(pedido: PedidoCierre): void
   /** La ventana volvió a tener el foco: si el uso quedó viejo, se relee (Defecto 16). */
   alVolver(): void
   /** Los comentarios de la Revisión: el receptor los usa para Enviar ahora desde la extensión. */
@@ -1276,7 +1277,7 @@ export function registrarPuente(s: Servicios): Puente {
   return {
     comentarios,
     enMarcha: () => conversaciones.enMarcha(),
-    pedirCierre: (trabajando) => enviar(CANALES.pedirCierre, trabajando),
+    pedirCierre: (pedido) => enviar(CANALES.pedirCierre, pedido),
     alVolver() {
       if (estadoMotor.tipo === 'listo') void uso.alVolver()
     },

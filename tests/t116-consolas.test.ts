@@ -13,6 +13,7 @@ import {
   estadoAlTerminar,
   recortarSalida,
   type SalidaConsola,
+  textoDeCierre,
   textoDeLaBarra,
 } from '../src/compartido/consolas'
 import { Consolas } from '../src/main/infra/consolas'
@@ -70,6 +71,23 @@ describe('las reglas del panel', () => {
       'Correr las pruebas · falló (código 2)',
     )
     expect(detalleDePestana(consola({ estado: 'ok' }))).toBe('Correr las pruebas · terminó bien')
+  })
+
+  it('al cerrar con consolas corriendo, la confirmación las nombra (I-10)', () => {
+    expect(textoDeCierre([], 1, false)).toEqual({
+      titulo: '1 consola corriendo',
+      texto: 'Cerrar la detiene: lo que estaba haciendo se corta.',
+    })
+    expect(textoDeCierre([], 2, true).texto).toBe('Reiniciar las detiene: lo que estaba haciendo se corta.')
+    // Con la IA trabajando, el título es de los proyectos y las consolas van al final.
+    const ambas = textoDeCierre(['Alfa', 'Beta'], 1, false)
+    expect(ambas.titulo).toBe('Alfa y Beta están trabajando')
+    expect(ambas.texto).toMatch(/^Cerrar las frena\. .* También se detiene 1 consola corriendo\.$/)
+    expect(textoDeCierre(['Alfa'], 0, false)).toEqual({
+      titulo: 'Alfa está trabajando',
+      texto:
+        'Cerrar la frena. Las conversaciones quedan guardadas: con Continuar se retoman y la IA sabe que la detuviste.',
+    })
   })
 
   it('Iniciar sesión en Claude corre en una consola de adentro: si pide pegar un código, se pega ahí', async () => {

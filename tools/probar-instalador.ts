@@ -169,6 +169,8 @@ async function probarConsola(win: Page): Promise<boolean> {
     .locator('.pantalla-consola .xterm-rows')
     .filter({ hasText: 'consola-Windows_NT' })
     .waitFor({ timeout: 30_000 })
+  // Hasta que termine (✓): con una consola corriendo, cerrar pregunta (I-10).
+  await win.locator('.consola-pestana .termino').waitFor({ timeout: 30_000 })
   return true
 }
 

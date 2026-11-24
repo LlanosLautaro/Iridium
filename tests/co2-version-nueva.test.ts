@@ -195,6 +195,64 @@ describe('la versión que no entró (Defecto 3)', () => {
   })
 })
 
+describe('una segunda Iridium (T-127)', { timeout: 60_000 }, () => {
+  /** El ayudante suelto, como lo lanza Iridium: devuelve cuando termina. */
+  function cambiarAparte(...extra: string[]): Promise<void> {
+    const p = spawn(
+      'powershell.exe',
+      [
+        '-NoProfile',
+        '-ExecutionPolicy',
+        'Bypass',
+        '-File',
+        join(import.meta.dirname, '..', 'tools', 'cambiar-version.ps1'),
+        '-Release',
+        release,
+        ...extra,
+      ],
+      { stdio: 'ignore', windowsHide: true },
+    )
+    return new Promise((r) => p.once('exit', () => r()))
+  }
+
+  it('dos ayudantes a la vez: uno pone la versión y el otro espera su turno sin tocar nada', async () => {
+    await armar(join(release, 'nueva', 'win-unpacked'), 'nueva.txt')
+    await writeFile(join(release, 'nueva', 'lista.json'), JSON.stringify(lista))
+    await Promise.all([cambiarAparte(), cambiarAparte()])
+    expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'nueva.txt'])
+    const log = await readFile(join(release, 'actualizacion.log'), 'utf8')
+    expect(log.match(/Versión nueva puesta/g)).toHaveLength(1)
+    expect(log.match(/No hay una versión nueva lista/g)).toHaveLength(1)
+    expect(log).not.toContain('Windows no soltó')
+  })
+
+  it('con Iridium ya abierto desde la app, no abre otro', async () => {
+    // Un «Iridium.exe» de la app que está corriendo.
+    await copyFile(
+      String.raw`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`,
+      join(release, 'win-unpacked', 'Iridium.exe'),
+    )
+    const abierto = spawn(
+      join(release, 'win-unpacked', 'Iridium.exe'),
+      ['-NoProfile', '-Command', 'Start-Sleep 60'],
+      {
+        stdio: 'ignore',
+        windowsHide: true,
+      },
+    )
+    await new Promise((r) => setTimeout(r, 1500))
+    try {
+      await cambiarAparte('-Abrir')
+      const log = await readFile(join(release, 'actualizacion.log'), 'utf8')
+      expect(log).toContain('Iridium ya está abierto: no se abre otro.')
+      expect(log).not.toContain('Abre Iridium.')
+    } finally {
+      abierto.kill()
+      if (abierto.exitCode === null) await new Promise((r) => abierto.once('exit', r))
+    }
+  })
+})
+
 describe('Iridium al cerrarse', () => {
   it('lanza el ayudante suelto desde una copia y la versión nueva queda puesta', async () => {
     await armar(join(release, 'nueva', 'win-unpacked'), 'nueva.txt')

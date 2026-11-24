@@ -163,7 +163,82 @@ test('Ejecutar abre la consola adentro: se le escribe, Detener, plegar, la × y 
   await expect(panel.getByRole('tab', { name: /Quedarse corriendo/ })).toBeVisible()
   await expect(barra.locator('.senal-consolas')).toHaveText('1 corriendo')
   await win.screenshot({ path: 'test-results/t116-consolas-inicio.png' })
-  await app.close()
+
+  // Cerrar con algo corriendo pregunta (I-10); con Cerrar igual, se cierra y no queda nada.
+  await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.close())
+  const dialogo = win.getByRole('alertdialog')
+  await expect(dialogo.getByRole('heading')).toHaveText('1 consola corriendo')
+  await expect(dialogo).toContainText('Cerrar la detiene')
+  await win.screenshot({ path: 'test-results/i10-cerrar-con-consola.png' })
+  await dialogo.getByRole('button', { name: 'Cancelar' }).click()
+  await expect(dialogo).toHaveCount(0)
+  expect(pings()).toBeGreaterThan(antes)
+  await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.close())
+  const cerrada = app.waitForEvent('close')
+  await dialogo.getByRole('button', { name: 'Cerrar igual' }).click()
+  await cerrada
   abierta = null
   await expect.poll(pings, { timeout: 10_000 }).toBe(antes)
+})
+
+test('Ctrl+ñ pliega y abre las consolas; el alto se arrastra y se recuerda al volver a abrir Iridium (I-10)', async () => {
+  const { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  await win
+    .getByRole('navigation', { name: 'Secciones del proyecto' })
+    .getByRole('button', { name: 'Scripts' })
+    .click()
+  const panel = win.getByRole('region', { name: 'Consolas' })
+  await win
+    .locator('[data-seccion="scripts"]')
+    .getByRole('button', { name: 'Ejecutar «Preguntar el nombre»' })
+    .click()
+  await expect(panel).toBeVisible()
+  // Con el foco en la consola, Ctrl+ñ (la tecla de «;» en un teclado inglés) no le llega a ella: pliega el panel. Otra vez, lo abre.
+  await panel.locator('.pantalla-consola').click()
+  await win.keyboard.press('Control+Semicolon')
+  await expect(panel).toHaveCount(0)
+  await win.keyboard.press('Control+Semicolon')
+  await expect(panel).toBeVisible()
+
+  // El borde de arriba: 300 de entrada; arrastrado 150 hacia arriba, 450.
+  const borde = panel.getByRole('separator', { name: /Alto de las consolas/ })
+  expect((await panel.boundingBox())?.height).toBe(300)
+  const caja = await borde.boundingBox()
+  if (!caja) throw new Error('sin borde')
+  await win.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2)
+  await win.mouse.down()
+  await win.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2 - 150, { steps: 5 })
+  await win.mouse.up()
+  await expect.poll(async () => (await panel.boundingBox())?.height).toBe(450)
+  // Con las flechas también: abajo achica.
+  await borde.focus()
+  await win.keyboard.press('ArrowDown')
+  await expect.poll(async () => (await panel.boundingBox())?.height).toBe(430)
+  await win.screenshot({ path: 'test-results/i10-alto.png' })
+
+  // Sin nada corriendo, cerrar no pregunta; al volver, el panel tiene el alto que quedó.
+  // El script sigue esperando su respuesta: se lo detiene.
+  await panel.getByRole('button', { name: 'Detener' }).click()
+  await expect(panel.getByRole('tab').locator('.corre')).toHaveCount(0)
+  await app.close()
+  abierta = null
+  // Vuelve sola a Alfa, el proyecto que estaba abierto (D-060).
+  const otra = await abrir()
+  await otra.win
+    .getByRole('navigation', { name: 'Secciones del proyecto' })
+    .getByRole('button', { name: 'Scripts' })
+    .click()
+  await otra.win
+    .locator('[data-seccion="scripts"]')
+    .getByRole('button', { name: 'Ejecutar «Preguntar el nombre»' })
+    .click()
+  const panel2 = otra.win.getByRole('region', { name: 'Consolas' })
+  await expect(panel2).toBeVisible()
+  expect((await panel2.boundingBox())?.height).toBe(430)
+  // Matar Electron no corta lo que corre en la consola: se la detiene y se cierra como siempre.
+  await panel2.getByRole('button', { name: 'Detener' }).click()
+  await expect(panel2.getByRole('tab').locator('.corre')).toHaveCount(0)
+  await otra.app.close()
+  abierta = null
 })

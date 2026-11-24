@@ -1,6 +1,6 @@
 // El borde entre el área grande y la conversación (D-041), en un proyecto, en Proyectos e Ideas (D-060) y en Skills:
 // se arrastra o se mueve con las flechas, hasta la mitad de la ventana, y cada vista recuerda su ancho (D-098). El
-// mismo borde, del lado izquierdo, cambia el ancho de la lista de Skills (R-6).
+// mismo borde, del lado izquierdo, cambia el ancho de la lista de Skills (R-6); acostado, el alto de las consolas (I-10).
 import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react'
 import {
   ANCHO_CONVERSACION,
@@ -9,11 +9,13 @@ import {
   conAncho,
   type VistaConversacion,
 } from '../../compartido/ancho-conversacion'
-import { ANCHO_LISTA_SKILLS } from '../../compartido/puente'
+import { ALTO_CONSOLAS, ANCHO_LISTA_SKILLS } from '../../compartido/puente'
 import { usarEstado } from '../estado'
 
 /** La vista principal necesita al menos esto (D-041): la conversación no la aplasta. */
 const MINIMO_VISTA = 360
+/** Arriba de las consolas queda al menos esto de la sección. */
+const MINIMO_ARRIBA_CONSOLAS = 140
 
 interface Limites {
   minimo: number
@@ -23,8 +25,9 @@ interface Limites {
 
 /**
  * Un borde que se arrastra o se mueve con las flechas (Shift, de a más); doble clic, el ancho de entrada. `lado` dice
- * dónde está lo que cambia de ancho: la conversación, a la derecha; una columna, a la izquierda. `mitad`: no pasa de
- * la mitad de la zona (la conversación, D-098).
+ * dónde está lo que cambia de ancho: la conversación, a la derecha; una columna, a la izquierda; con `arriba`, el
+ * borde está acostado y cambia el alto de lo que tiene abajo (las consolas). `mitad`: no pasa de la mitad de la zona
+ * (la conversación, D-098).
  */
 function Borde({
   ancho,
@@ -37,21 +40,28 @@ function Borde({
 }: {
   ancho: number
   cambiar: (px: number, guardar: boolean) => void
-  lado: 'derecha' | 'izquierda'
+  lado: 'derecha' | 'izquierda' | 'arriba'
   limites: Limites
   clase: string
   nombre: string
   mitad?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  const acostado = lado === 'arriba'
   const maximo = () => {
+    if (acostado) {
+      // El borde va adentro del panel: la zona es lo que contiene al panel.
+      const zona =
+        ref.current?.parentElement?.parentElement?.getBoundingClientRect().height ?? window.innerHeight
+      return Math.min(limites.maximo, Math.max(limites.minimo, Math.floor(zona - MINIMO_ARRIBA_CONSOLAS)))
+    }
     const zona = ref.current?.parentElement?.getBoundingClientRect().width ?? window.innerWidth
     const tope = mitad ? Math.floor(zona / 2) : zona - MINIMO_VISTA - 5
     return Math.min(limites.maximo, Math.max(limites.minimo, tope))
   }
   const limitar = (px: number) => Math.round(Math.min(maximo(), Math.max(limites.minimo, px)))
-  const crece = lado === 'derecha' ? 'ArrowLeft' : 'ArrowRight'
-  const achica = lado === 'derecha' ? 'ArrowRight' : 'ArrowLeft'
+  const crece = acostado ? 'ArrowUp' : lado === 'derecha' ? 'ArrowLeft' : 'ArrowRight'
+  const achica = acostado ? 'ArrowDown' : lado === 'derecha' ? 'ArrowRight' : 'ArrowLeft'
   const alTeclado = (e: KeyboardEvent) => {
     const paso = e.shiftKey ? 60 : 20
     if (e.key === crece) cambiar(limitar(ancho + paso), true)
@@ -64,11 +74,18 @@ function Borde({
     const zona = t.parentElement?.getBoundingClientRect()
     const derecha = zona?.right ?? window.innerWidth
     const izquierda = zona?.left ?? 0
+    const abajo = zona?.bottom ?? window.innerHeight
     t.setPointerCapture(e.pointerId)
     t.classList.add('arrastra')
     let ultimo = ancho
     const mover = (ev: globalThis.PointerEvent) => {
-      ultimo = limitar(lado === 'derecha' ? derecha - ev.clientX - 2 : ev.clientX - izquierda)
+      ultimo = limitar(
+        acostado
+          ? abajo - ev.clientY
+          : lado === 'derecha'
+            ? derecha - ev.clientX - 2
+            : ev.clientX - izquierda,
+      )
       cambiar(ultimo, false)
     }
     const soltar = () => {
@@ -86,9 +103,9 @@ function Borde({
       className={clase}
       role="separator"
       tabIndex={0}
-      title={`Arrastra para cambiar el ancho de ${nombre} (doble clic: el de entrada)`}
-      aria-orientation="vertical"
-      aria-label={`Ancho de ${nombre} (flechas para cambiarlo)`}
+      title={`Arrastra para cambiar el ${acostado ? 'alto' : 'ancho'} de ${nombre} (doble clic: el de entrada)`}
+      aria-orientation={acostado ? 'horizontal' : 'vertical'}
+      aria-label={`${acostado ? 'Alto' : 'Ancho'} de ${nombre} (flechas para cambiarlo)`}
       aria-valuemin={limites.minimo}
       aria-valuemax={limites.maximo}
       aria-valuenow={ancho}
@@ -152,6 +169,26 @@ function cambiarAncho(vista: VistaConversacion, px: number, guardar: boolean): v
   const anchoConversacion = conAncho(s.preferencias.anchoConversacion, vista, px)
   if (guardar) s.guardarPreferencias({ anchoConversacion })
   else s.ponerPreferencias({ ...s.preferencias, anchoConversacion })
+}
+
+/** El borde de arriba de las consolas (I-10): el alto se recuerda, el mismo en todos lados. */
+export function BordeConsolas({ alto }: { alto: number }) {
+  return (
+    <Borde
+      ancho={alto}
+      cambiar={cambiarAltoConsolas}
+      lado="arriba"
+      limites={ALTO_CONSOLAS}
+      clase="borde-consolas"
+      nombre="las consolas"
+    />
+  )
+}
+
+function cambiarAltoConsolas(px: number, guardar: boolean): void {
+  const s = usarEstado.getState()
+  if (guardar) s.guardarPreferencias({ altoConsolas: px })
+  else s.ponerPreferencias({ ...s.preferencias, altoConsolas: px })
 }
 
 function cambiarAnchoListaSkills(px: number, guardar: boolean): void {

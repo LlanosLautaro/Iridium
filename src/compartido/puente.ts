@@ -4,7 +4,7 @@
 import type { AdjuntoPedido, AdjuntoVista } from './adjuntos'
 import type { AnchosConversacion } from './ancho-conversacion'
 import type { CapacidadesMotor, ComandoMotor, ListaComandos } from './comandos'
-import type { ConsolaVista, GuardadoConsola, SalidaConsola } from './consolas'
+import type { ConsolaVista, GuardadoConsola, PedidoCierre, SalidaConsola } from './consolas'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
 import type { EstadoDesdeIdeas, IdeasDeProyecto, NotaIdea, ResultadoIdea } from './ideas'
 import type { ImagenDelPortapapeles, ImagenPegada } from './notas'
@@ -102,6 +102,8 @@ export interface Preferencias {
   anchoListaSkills: number
   /** Ancho de la lista de la sección Ideas (modulos/inicio/), aparte del de Skills. */
   anchoListaIdeas: number
+  /** Alto del panel de las consolas abierto (T-116, I-10), en píxeles: se arrastra de su borde de arriba. */
+  altoConsolas: number
   /** Ancho del texto en el lector de Docs (D-035, Q-51). */
   anchoHoja: AnchoHoja
   /** Los proyectos abiertos como pestañas, en orden (D-043): quedan aunque no trabajen. */
@@ -246,6 +248,9 @@ export const ANCHO_LISTA_SKILLS = { minimo: 200, inicial: 264, maximo: 640 } as 
 
 /** La lista de Ideas, igual que la de Skills. */
 export const ANCHO_LISTA_IDEAS = ANCHO_LISTA_SKILLS
+
+/** El panel de las consolas se arrastra de su borde de arriba (T-116, I-10); el inicial, el de `--alto-consolas`. */
+export const ALTO_CONSOLAS = { minimo: 120, inicial: 300, maximo: 1200 } as const
 
 /** Los niveles de esfuerzo de Claude Code (C-58, D-045), de menos a más. */
 export const ESFUERZOS = ['low', 'medium', 'high', 'xhigh', 'max'] as const
@@ -1120,8 +1125,8 @@ export interface ApiIridium {
   alTerminarTrabajo(escuchar: (sonido: SonidoFin) => void): () => void
   /** Listo en el aviso al volver (AR-4): lo mostrado hasta `hasta` no vuelve a aparecer. */
   arranqueVisto(hasta: number): Promise<void>
-  /** Se quiso cerrar la ventana con sesiones trabajando (F-6): las rutas de esos proyectos. */
-  alPedirCierre(escuchar: (trabajando: string[]) => void): () => void
+  /** Se quiso cerrar la ventana con sesiones trabajando o consolas corriendo (F-6, I-10). */
+  alPedirCierre(escuchar: (pedido: PedidoCierre) => void): () => void
   /** «Cerrar igual» (F-6): frena las sesiones y cierra; las conversaciones quedan para Seguí. */
   cerrarIgual(): Promise<void>
   /** Cancelar en la confirmación de F-6: si era para reiniciar con Actualizar, cerrar después ya no reinicia. */

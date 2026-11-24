@@ -10,6 +10,13 @@ files:
   - '!out/extension/**'
   - '!out/plugins/**'
   - package.json
+  # De la consola nativa (T-116, I-10) va solo lo que usa Windows x64: sin las versiones de Mac ni de ARM, ni su código
+  # fuente y lo que sirve para compilarla (se usa la versión lista, `npmRebuild: false`).
+  - '!node_modules/node-pty/prebuilds/darwin-*/**'
+  - '!node_modules/node-pty/prebuilds/win32-arm64/**'
+  - '!node_modules/node-pty/{deps,src,scripts,third_party}/**'
+  - '!node_modules/node-pty/binding.gyp'
+  - '!node_modules/node-pty/**/*.{pdb,test.js,map}'
 # La extensión de la Revisión va suelta: Iridium la copia a su carpeta fija al arrancar. El ayudante que pone la
 # versión nueva al cerrar (CO-I2) también: Iridium lo copia a la carpeta temporal y lo lanza.
 extraResources:

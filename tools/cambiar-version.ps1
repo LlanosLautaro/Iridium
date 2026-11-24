@@ -72,11 +72,31 @@ function Mover([string]$desde, [string]$hasta) {
   $false
 }
 
+# Con una Iridium ya abierta desde la app no se abre otra (T-127): dos arrancando juntas se saltean la ventana única
+# de Electron y queda una segunda, sin conversaciones, que traba el próximo cambio de versión.
 function AbrirSiCorresponde {
-  if ($Abrir -and (Test-Path -LiteralPath $exe)) {
-    Anotar 'Abre Iridium.'
-    Start-Process -FilePath $exe -WorkingDirectory $app
+  if (-not $Abrir -or -not (Test-Path -LiteralPath $exe)) { return }
+  if (@(ProcesosDeLaApp | Where-Object { $_.CommandLine -notmatch '--type=' }).Count -gt 0) {
+    Anotar 'Iridium ya está abierto: no se abre otro.'
+    return
   }
+  Anotar 'Abre Iridium.'
+  Start-Process -FilePath $exe -WorkingDirectory $app
+}
+
+# Un solo ayudante a la vez por carpeta `release` (T-127): dos juntos se pisaban (uno ponía la versión y abría Iridium,
+# el otro no podía mover la carpeta y abría otro). El segundo espera a que el primero termine y sigue: ya sin versión
+# lista, no cambia nada. El nombre sale de la ruta: los nombres de Windows no aceptan «\».
+$sha = [Security.Cryptography.SHA256]::Create()
+$huella = [BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Release.ToLowerInvariant()))).Replace('-', '').Substring(0, 16)
+$turno = New-Object Threading.Mutex($false, "Local\IridiumCambiarVersion-$huella")
+try {
+  if (-not $turno.WaitOne([TimeSpan]::FromMinutes(3))) {
+    Anotar 'Otro cambio de versión sigue en curso: este no hace nada.'
+    exit 1
+  }
+} catch [Threading.AbandonedMutexException] {
+  # El anterior se cortó sin soltar el turno: el turno queda de este.
 }
 
 # Cualquier error que no se esperaba queda anotado y, si había que abrir Iridium, se abre igual: nunca falla en silencio.
@@ -99,7 +119,7 @@ while ((ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) {
   Start-Sleep -Milliseconds 300
 }
 if ((ProcesosDeLaApp).Count -gt 0) {
-  NoEntro 'Iridium sigue abierto: la versión nueva queda lista para el próximo cierre.'
+  NoEntro 'Iridium sigue abierto (¿otra ventana de Iridium?): la versión nueva queda lista para cuando lo cierres del todo.'
   exit 1
 }
 
