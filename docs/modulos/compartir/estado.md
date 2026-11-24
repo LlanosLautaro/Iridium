@@ -1,7 +1,7 @@
 # Estado del módulo: Compartir
 
 **Tipo:** sección
-**Última actualización:** 2026-11-22
+**Última actualización:** 2026-11-24
 **Nivel de protección:** hereda P2; el repo es público desde el 2026-11-16 (D-132).
 
 ## Progreso
@@ -24,7 +24,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 
 2026-11-16, a pedido del usuario: el repo pasó a público (D-132), así que la otra persona no necesita invitación (Q-126 sin efecto) y la copia del usuario sigue sin actualizarse desde GitHub. Con Q-185 (2026-11-19) se publicó una versión al día y la otra persona la abrió sin avisos de GitHub.
 
-2026-11-22, T-111: CO-I9 arregló el actualizador trabado y dejó rastro de lo que le pasa a la ventana. Con Q-255 (A, D-171), CO-I10: Iridium se instala como una app y se actualiza con electron-updater; el actualizador propio de las copias compartidas se fue.
+2026-11-22, T-111: CO-I9 arregló el actualizador trabado y dejó rastro de lo que le pasa a la ventana. Con Q-255 (A, D-171), CO-I10: Iridium se instala como una app y se actualiza con electron-updater; el actualizador propio de las copias compartidas se fue. El 2026-11-24 la otra PC lo instaló y abre normal (Q-270): CO-I10 y T-111, hechos.
 
 2026-11-20, a pedido del usuario: CO-I8 (D-161, T-37). Cada versión publicada trae sus piezas y las copias bajan solo la app (unos 2 MB) cuando Electron y Claude Code no cambiaron. Probado publicando dos versiones (Q-225): la otra PC bajó solo la app.
 
@@ -34,7 +34,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - [x] Publicar una versión al día (Q-185)
 - [x] Achicar el .zip de cada versión (T-37, CO-I8; probado en Q-225)
 - [x] Que la otra PC no quede en negro (T-111, CO-I9)
-- [ ] Instalar Iridium como una app que se actualiza sola (T-111, CO-I10; Q-270)
+- [x] Instalar Iridium como una app que se actualiza sola (T-111, CO-I10; Q-270)
 - [x] Numerar las versiones 1.0.x (T-121, D-182)
 - [ ] La lista de cambios de cada versión (T-38)
 
@@ -54,10 +54,11 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I6 | Hay cambios sin armar: Iridium ofrece Armar (Q-99 B, D-071) | hecho, aprobada (Q-102, 2026-11-01) |
 | CO-I8 | Achicar lo que se baja en cada versión: las piezas (D-161, T-37) | hecho (probada publicando, Q-225) |
 | CO-I9 | La otra PC en negro (T-111): el actualizador que se trababa con `app.asar` y las fallas de la ventana, al registro y a una pantalla | hecho (el instalador, Q-255, pasó a CO-I10; la prueba en la otra PC va con Q-256) |
-| CO-I10 | Iridium instalado: el instalador y electron-updater (D-171, T-111) | en curso (construida y probada acá; espera Q-270) |
+| CO-I10 | Iridium instalado: el instalador y electron-updater (D-171, T-111) | hecho, aprobada (Q-270, 2026-11-24: la otra PC lo instaló y abre normal) |
 
 ## Log de iteraciones
 ### CO-I10 — Iridium instalado (2026-11-22, T-111, D-171)
+- **Cerrada el 2026-11-24 (Q-270):** la otra PC instaló la `v1.0.0` con el instalador, abre normal con sus proyectos, tiene el acceso en el escritorio y en el menú Inicio, y se borró la carpeta vieja. Desde acá se actualiza sola. Con T-128 (D-187), al actualizar se ve la ventanita «Actualizando Iridium…» (`diseno-tecnico.md` › La ventanita).
 - **Q-255:** A, el instalador con el actualizador estándar. Diseño en `diseno-tecnico.md` › Iridium instalado.
 - **Hecho:** cada armado lleva un número (la fecha y la hora, `2026.1122.1700`). `pnpm publicar` arma el instalador desde la app ya armada (unos 45 s, 218 MB), le pone de dónde se actualiza y sube el instalador, su `.blockmap` y `latest.yml` (como borrador, y se publica al final). La copia instalada (la que trae `app-update.yml`, nunca la del usuario) mira a los 20 s y cada seis horas, baja sola solo lo que cambió y muestra el **Actualizar** de siempre; entra al cerrar, o en el acto con Actualizar, y se vuelve a abrir. Se fueron `version-github.ts`, las piezas, el aviso «Iniciá sesión en GitHub» y sus pruebas.
 - **Probado de punta a punta** (`tools/probar-instalador.ts`, con otro nombre interno para no chocar con un Iridium instalado): instaló la versión A en una carpeta temporal, la abrió con datos aparte, bajó la B de un servidor de prueba (0,4 MB de 218: el `.blockmap` de la A sirvió), la puso al cerrar; después, de vuelta en la A, Actualizar la puso y la abrió sola. El instalador cierra solo los Iridium de su propia carpeta (no la app de uso diario). Desinstalada sin dejar nada en «Aplicaciones instaladas».

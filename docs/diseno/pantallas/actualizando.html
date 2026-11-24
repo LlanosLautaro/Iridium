@@ -8,7 +8,7 @@
 <style>
   /* T-128, D-186: mientras se cambia la versión, Iridium está cerrado y se ve solo esta ventanita, en el medio de la
      pantalla, sobre lo que haya abierto. Sin botones ni preguntas: se cierra sola cuando abre la versión nueva. En la
-     barra de tareas lleva el ícono de Iridium. Acá, sus tres momentos sobre un escritorio de muestra. */
+     barra de tareas lleva el ícono de Iridium. Acá, sus tres momentos, el cierre con la X (Q-280) y el error. */
   body { min-height: 100vh; margin: 0; padding: var(--esp-6); background: var(--fondo); display: flex; flex-direction: column; gap: var(--esp-6); align-items: center; }
   .momento { display: flex; flex-direction: column; gap: var(--esp-2); align-items: center; }
   .momento .rotulo { font: var(--estilo-rotulo); color: var(--texto-3); }
@@ -32,6 +32,10 @@
   <div class="momento">
     <span class="rotulo">3 · Abriendo Iridium (se cierra sola cuando aparece la ventana de Iridium)</span>
     <div class="ventanita"><h1>Actualizando Iridium…</h1><p>Abriendo Iridium</p><div class="barra"><div class="lleno" style="width: 90%"></div></div></div>
+  </div>
+  <div class="momento">
+    <span class="rotulo">Al cerrar con la X (Q-280): los dos primeros pasos y termina así unos segundos, sin abrir Iridium</span>
+    <div class="ventanita"><h1>Iridium está actualizado</h1><p>Lista: se abre la próxima vez.</p><div class="barra"><div class="lleno" style="width: 100%"></div></div></div>
   </div>
   <div class="momento">
     <span class="rotulo">Si no entra: lo dice unos segundos y abre la versión de antes (la nueva queda lista para el próximo cierre)</span>

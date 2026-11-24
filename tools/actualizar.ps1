@@ -103,6 +103,8 @@ $datos = [ordered]@{
   # Lo armado incluye los cambios sin commitear, si los había.
   sinGuardar = [bool](& git status --porcelain)
 }
+# El número, para la ventanita «Actualizando Iridium…» (T-128); con -SinArmar no se calculó.
+if ($version) { $datos.version = $version }
 [IO.File]::WriteAllText($lista, ($datos | ConvertTo-Json), [Text.UTF8Encoding]::new($false))
 
 Decir ''

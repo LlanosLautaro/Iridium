@@ -1,10 +1,15 @@
 // La versión nueva lista (CO-I2, modulos/compartir/diseno-tecnico.md › Versión nueva lista): `tools/actualizar.ps1`
 // la arma en `release\nueva` y la marca con `lista.json`; Iridium la ve y, al cerrarse, lanza el ayudante que cambia
 // las carpetas (`tools/cambiar-version.ps1`).
-import { spawn } from 'node:child_process'
 import { copyFile, readFile, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { VersionNueva } from '../../compartido/puente'
+import {
+  comandoPowershell,
+  lanzarSuelto,
+  lanzarVentana,
+  type VentanaActualizando,
+} from './ventana-actualizando'
 
 /** Cada cuánto se mira si apareció o se fue la versión nueva: un `stat`, nada más. */
 const CADA_MS = 5000
@@ -52,6 +57,8 @@ export class VigiaVersionNueva {
     private readonly release: string,
     private readonly ayudante: string,
     private readonly temporal: string,
+    /** La ventanita «Actualizando Iridium…» (T-128); sin ella, el cambio no se ve. */
+    private readonly ventana?: VentanaActualizando,
   ) {}
 
   ultima(): VersionNueva | null {
@@ -77,34 +84,47 @@ export class VigiaVersionNueva {
 
   /**
    * Al cerrarse Iridium: si hay una versión lista, lanza el ayudante suelto (sigue vivo después de Iridium) desde una
-   * copia en la carpeta temporal, porque el suyo se va con la versión vieja. Con `abrir`, la vuelve a abrir.
+   * copia en la carpeta temporal, porque el suyo se va con la versión vieja. Con `abrir`, la vuelve a abrir. Antes, la
+   * ventanita que muestra cómo va (T-128): si no arranca, la versión se pone igual.
    */
   async ponerAlCerrar(abrir: boolean): Promise<boolean> {
     if (!(await leerVersionNueva(this.release))) return false
+    const estado = join(this.temporal, `iridium-actualizando-${process.pid}.json`)
+    let conVentana = false
+    if (this.ventana) {
+      try {
+        await lanzarVentana(this.ventana, {
+          temporal: this.temporal,
+          carpeta: join(this.release, 'win-unpacked'),
+          abrir,
+          version: await numeroDeLaLista(this.release),
+          estado,
+        })
+        conVentana = true
+      } catch {
+        // Sin ventanita: el cambio corre callado, como antes.
+      }
+    }
     const copia = join(this.temporal, 'iridium-cambiar-version.ps1')
     await copyFile(this.ayudante, copia)
-    // Lanzado directo, PowerShell muere con Iridium (Node lo ata a su proceso) y suelto, sin consola, no arranca:
-    // `start` lo abre aparte, con su consola escondida.
-    const ayudante = `powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "${copia}" -Release "${this.release}"${abrir ? ' -Abrir' : ''}`
-    // Con ELECTRON_RUN_AS_NODE, el Iridium que se vuelve a abrir arrancaría como Node.
-    const env = { ...process.env }
-    delete env.ELECTRON_RUN_AS_NODE
-    await new Promise<void>((listo, fallo) => {
-      // `/s /c "…"`: cmd quita solo las comillas de afuera y deja el comando tal cual está escrito.
-      const p = spawn('cmd.exe', ['/d', '/s', '/c', `"start "" /min ${ayudante}"`], {
-        cwd: this.temporal,
-        env,
-        detached: true,
-        stdio: 'ignore',
-        windowsHide: true,
-        windowsVerbatimArguments: true,
-      })
-      p.once('error', fallo)
-      p.once('spawn', () => {
-        p.unref()
-        listo()
-      })
-    })
+    await lanzarSuelto(
+      comandoPowershell(copia, [
+        `-Release "${this.release}"`,
+        abrir && '-Abrir',
+        conVentana && `-Estado "${estado}"`,
+      ]),
+      this.temporal,
+    )
     return true
+  }
+}
+
+/** El número de la versión lista (`version` de `lista.json`, D-182), para la ventanita; las armadas antes no lo traen. */
+async function numeroDeLaLista(release: string): Promise<string | undefined> {
+  try {
+    const datos = JSON.parse((await readFile(join(release, 'nueva', 'lista.json'), 'utf8')).replace(/^﻿/, ''))
+    return typeof datos.version === 'string' ? datos.version : undefined
+  } catch {
+    return undefined
   }
 }

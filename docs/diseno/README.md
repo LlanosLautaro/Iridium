@@ -45,7 +45,7 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Adjuntos en los mensajes mandados | Paridad (propuesta) | pantallas/paridad-enviado.html | — |
 | Soltar archivos en la conversación | Paridad (propuesta) | pantallas/paridad-soltar.html | — |
 | Las consolas adentro | Un proyecto | pantallas/consolas.html | 2026-11-24 00:02 |
-| Actualizando Iridium | Actualizar (propuesta) | pantallas/actualizando.html | — |
+| Actualizando Iridium | Actualizar | pantallas/actualizando.html | 2026-11-24 00:57 |
 
 ## Cómo están hechas
 - **El sistema:** `tokens.css` (la dirección negra; desde DI-I3 la app lo importa tal cual), `piezas.css` con las doce piezas (PZ-1 a PZ-12, `modulos/diseno/ux.md` › Las piezas) y `piezas.html`, que las muestra con sus variantes.

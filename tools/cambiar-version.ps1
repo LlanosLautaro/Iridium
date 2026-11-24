@@ -1,10 +1,12 @@
 ﻿# Pone la versión nueva lista (CO-I2, modulos/compartir/diseno-tecnico.md › Versión nueva lista): espera a que nada
 # corra desde la app de uso diario, cambia `win-unpacked` por `nueva\win-unpacked` y, con -Abrir, la abre. Lo lanza
 # Iridium al cerrarse (desde una copia en la carpeta temporal: la suya se va con la versión vieja) y
-# `tools/actualizar.ps1` cuando Iridium está cerrado. Deja lo que hizo en `release\actualizacion.log`.
+# `tools/actualizar.ps1` cuando Iridium está cerrado. Deja lo que hizo en `release\actualizacion.log`. Con -Estado
+# escribe ahí cada paso para la ventanita «Actualizando Iridium…» (T-128, `tools/ventana-actualizando.ps1`).
 param(
   [Parameter(Mandatory = $true)][string]$Release,
-  [switch]$Abrir
+  [switch]$Abrir,
+  [string]$Estado
 )
 $ErrorActionPreference = 'Stop'
 $Release = [IO.Path]::GetFullPath($Release).TrimEnd('\')
@@ -22,10 +24,21 @@ function Anotar([string]$texto) {
   Add-Content -LiteralPath $log -Value $linea -Encoding utf8
 }
 
+# El paso en curso para la ventanita: cerrando (lo que dice al abrirse), poniendo, abriendo, abierta, lista, fallo o
+# nada (se cierra sin decir nada). Si no se puede escribir, la versión se pone igual.
+$script:fallo = ''
+function Paso([string]$paso, [string]$motivo = '') {
+  if (-not $Estado) { return }
+  $datos = @{ paso = $paso; motivo = $motivo } | ConvertTo-Json -Compress
+  try { [IO.File]::WriteAllText($Estado, $datos, (New-Object Text.UTF8Encoding $false)) } catch { }
+}
+
 # No entró: además del registro, `nueva\no-entro.json`, que Iridium muestra al abrir (Defecto 3). Se va con la carpeta
 # `nueva` cuando por fin entra o cuando se arma otra.
 function NoEntro([string]$texto) {
   Anotar $texto
+  $script:fallo = $texto
+  Paso 'fallo' $texto
   if (-not (Test-Path -LiteralPath $nueva)) { return }
   $datos = @{ fecha = (Get-Date -Format 'yyyy-MM-ddTHH:mm:ss'); motivo = $texto } | ConvertTo-Json -Compress
   [IO.File]::WriteAllText((Join-Path $nueva 'no-entro.json'), $datos, (New-Object Text.UTF8Encoding $false))
@@ -78,9 +91,11 @@ function AbrirSiCorresponde {
   if (-not $Abrir -or -not (Test-Path -LiteralPath $exe)) { return }
   if (@(ProcesosDeLaApp | Where-Object { $_.CommandLine -notmatch '--type=' }).Count -gt 0) {
     Anotar 'Iridium ya está abierto: no se abre otro.'
+    if (-not $script:fallo) { Paso 'abierta' }
     return
   }
   Anotar 'Abre Iridium.'
+  if ($script:fallo) { Paso 'fallo' "$($script:fallo) Se abre la de antes." } else { Paso 'abriendo' }
   Start-Process -FilePath $exe -WorkingDirectory $app
 }
 
@@ -93,6 +108,7 @@ $turno = New-Object Threading.Mutex($false, "Local\IridiumCambiarVersion-$huella
 try {
   if (-not $turno.WaitOne([TimeSpan]::FromMinutes(3))) {
     Anotar 'Otro cambio de versión sigue en curso: este no hace nada.'
+    Paso 'nada'
     exit 1
   }
 } catch [Threading.AbandonedMutexException] {
@@ -108,7 +124,7 @@ trap {
 
 if (-not (Test-Path -LiteralPath $lista) -or -not (Test-Path -LiteralPath (Join-Path $nueva 'win-unpacked\Iridium.exe'))) {
   Anotar 'No hay una versión nueva lista: nada que cambiar.'
-  AbrirSiCorresponde
+  if ($Abrir) { AbrirSiCorresponde } else { Paso 'nada' }
   exit 0
 }
 
@@ -123,6 +139,7 @@ if ((ProcesosDeLaApp).Count -gt 0) {
   exit 1
 }
 
+Paso 'poniendo'
 QuitarAnteriores
 if ((Test-Path -LiteralPath $app) -and -not (Mover $app $anterior)) {
   NoEntro 'Windows no soltó la carpeta de la app: la versión nueva queda lista para el próximo cierre.'
@@ -138,7 +155,7 @@ if (-not (Mover (Join-Path $nueva 'win-unpacked') $app)) {
 $datos = Get-Content -LiteralPath $lista -Raw -Encoding utf8 | ConvertFrom-Json
 Remove-Item -LiteralPath $nueva -Recurse -Force
 Anotar "Versión nueva puesta: $($datos.commit) del $($datos.fecha)."
-AbrirSiCorresponde
+if ($Abrir) { AbrirSiCorresponde } else { Paso 'lista' }
 # La versión vieja se borra al final: Iridium ya está abriéndose.
 QuitarAnteriores
 exit 0

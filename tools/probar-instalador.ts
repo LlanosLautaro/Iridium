@@ -30,6 +30,7 @@ const trabajo = previa ?? (await mkdtemp(join(tmpdir(), 'iridium-instalador-')))
 const instalada = join(trabajo, 'instalada')
 const datos = join(trabajo, 'datos')
 const cache = join(process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'), `${NOMBRE}-updater`)
+const ventanaLog = join(trabajo, 'ventana.log')
 const paso = (t: string) => console.log(`\n» ${t}`)
 const esperar = (ms: number) => new Promise((r) => setTimeout(r, ms))
 const resultado: Record<string, unknown> = {}
@@ -188,6 +189,8 @@ async function abrirInstalada(url: string) {
     // Sin reiniciar solo al rato sin uso (T-67): la prueba decide cuándo.
     IRIDIUM_ACTUALIZAR_SOLO: 'no',
     IRIDIUM_ACTUALIZAR_DESDE: url,
+    // Lo que muestra la ventanita «Actualizando Iridium…» al cerrar (T-128).
+    IRIDIUM_VENTANA_REGISTRO: ventanaLog,
   } as Record<string, string>
   delete env.ELECTRON_RUN_AS_NODE
   const app = await electron.launch({ executablePath: join(instalada, 'Iridium.exe'), env })
@@ -218,6 +221,20 @@ async function arranquesEnLaPc(version: string): Promise<number> {
   const ruta = join(process.env.APPDATA ?? '', 'Centro de Desarrollo', 'registros', dia)
   const texto = await readFile(ruta, 'utf8').catch(() => '')
   return texto.split('\n').filter((l) => l.includes(`Arranca Iridium ${version}`)).length
+}
+
+/** Lo que mostró la ventanita, sin la hora, cuando se cerró (T-128); falla si no se cierra a tiempo. */
+async function ventanaCerrada(): Promise<string[]> {
+  const lineas = async () =>
+    (await readFile(ventanaLog, 'utf8').catch(() => ''))
+      .replace(/^﻿/, '')
+      .split(/\r?\n/)
+      .filter(Boolean)
+      .map((l) => l.replace(/^\S+\s+/, ''))
+  await hasta('que la ventanita se cierre', async () => (await lineas()).includes('cierra'), 120_000)
+  const vistas = await lineas()
+  await rm(ventanaLog, { force: true })
+  return vistas
 }
 
 const procesosDesde = (carpeta: string) =>
@@ -261,6 +278,9 @@ try {
   await hasta('que se ponga la B', async () => versionInstalada() === B)
   await hasta('que el instalador termine', async () => procesosDesde(instalada) === '0', 60_000)
   resultado.alCerrar = versionInstalada()
+  resultado.ventanaAlCerrar = await ventanaCerrada()
+  if (!(resultado.ventanaAlCerrar as string[]).some((l) => l.startsWith('lista')))
+    throw new Error('La ventanita no terminó en «Lista» al cerrar.')
 
   paso('1b) La B, puesta encima: la consola de adentro sigue andando y al cerrar no deja nada…')
   const b = await abrirInstalada(s1.url)
@@ -285,6 +305,11 @@ try {
     async () => procesosDesde(instalada) !== '0' || (await arranquesEnLaPc(B)) > antes,
     60_000,
   )
+  // Con un Iridium abierto en la PC, la que abre el instalador se cierra sin ventana: la ventanita puede quedarse en
+  // «Abriendo Iridium» hasta su tope (un minuto).
+  resultado.ventanaReiniciar = await ventanaCerrada()
+  if (!(resultado.ventanaReiniciar as string[]).some((l) => l.startsWith('abri')))
+    throw new Error('La ventanita no llegó a «Abriendo Iridium» con Reiniciar ahora.')
   s2.cerrar()
   bien = true
 } finally {

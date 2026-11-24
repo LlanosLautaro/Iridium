@@ -3,6 +3,7 @@
 // lo mismo que la versión nueva lista de la copia del usuario (CO-I2): el mismo aviso y el mismo Reiniciar ahora.
 // electron-updater queda detrás de `Actualizable` (`actualizador-electron.ts`), así se prueba con uno falso.
 import type { VersionNueva } from '../../compartido/puente'
+import { lanzarVentana, type VentanaActualizando } from './ventana-actualizando'
 
 /** Cada cuánto se mira si hay una versión nueva. */
 const CADA_MS = 6 * 60 * 60 * 1000
@@ -45,6 +46,7 @@ export function versionDeInfo(info: InfoBajada): VersionNueva {
 
 export class Actualizador {
   private actual: VersionNueva | null = null
+  private numero: string | undefined
   private avisar: ((v: VersionNueva | null) => void) | null = null
   private relojes: ReturnType<typeof setTimeout>[] = []
 
@@ -54,10 +56,16 @@ export class Actualizador {
       anotar: (texto: string) => void
       primeraMs?: number
       cadaMs?: number
+      /**
+       * La ventanita «Actualizando Iridium…» (T-128): `carpeta` es la de Iridium.exe, `pendiente` la de
+       * electron-updater (el instalador corre desde ahí) y `temporal` donde se copia.
+       */
+      ventana?: VentanaActualizando & { carpeta: string; pendiente: string; temporal: string }
     },
   ) {
     o.updater.alBajar((info) => {
       this.actual = versionDeInfo(info)
+      this.numero = info.version
       o.anotar(`Actualizaciones: bajada la versión ${info.version} (${this.actual.commit})`)
       this.avisar?.(this.actual)
     })
@@ -95,10 +103,20 @@ export class Actualizador {
 
   /**
    * Al cerrarse Iridium, si hay una versión bajada: con `abrir` (Reiniciar ahora) la pone y la abre; sin él la pone
-   * electron-updater solo cuando Iridium termina de salir, en silencio.
+   * electron-updater solo cuando Iridium termina de salir. En los dos casos, antes, la ventanita que muestra cómo va
+   * (T-128, Q-280): mira este Iridium cerrarse y el instalador correr; si no arranca, la versión entra igual.
    */
   async ponerAlCerrar(abrir: boolean): Promise<boolean> {
     if (!this.actual) return false
+    const v = this.o.ventana
+    if (v)
+      await lanzarVentana(v, {
+        temporal: v.temporal,
+        carpeta: v.carpeta,
+        abrir,
+        version: this.numero,
+        instalada: { iridium: process.pid, pendiente: v.pendiente },
+      }).catch((e) => this.o.anotar(`Actualizaciones: no se pudo mostrar la ventanita (${e})`))
     if (abrir) this.o.updater.instalarYSalir(true)
     return true
   }

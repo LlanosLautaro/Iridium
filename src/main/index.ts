@@ -35,6 +35,7 @@ import { lineasDeComandosDelPuerto } from './infra/revision/puerto'
 import { arrancarReceptor, type Receptor } from './infra/revision/receptor'
 import { ArchivoSesiones } from './infra/sesiones'
 import { VigiaSinArmar } from './infra/sin-armar'
+import { carpetaDelActualizador, type VentanaActualizando } from './infra/ventana-actualizando'
 import { VigiaVersionNueva } from './infra/version-nueva'
 import { type Puente, registrarPuente } from './ipc/puente'
 import { crearMotorFalso, crearMotorQueFalla, type Motor } from './motor/motor'
@@ -271,14 +272,20 @@ function carpetaRelease(): string | null {
   return basename(carpetaApp) === 'win-unpacked' ? dirname(carpetaApp) : null
 }
 const release = carpetaRelease()
+/** Un script de `tools/` que va con la app armada (sus recursos): el ayudante y la ventanita de la versión nueva. */
+const deTools = (archivo: string) =>
+  app.isPackaged ? join(process.resourcesPath, archivo) : join(app.getAppPath(), 'tools', archivo)
+/**
+ * La ventanita «Actualizando Iridium…» (T-128): con IRIDIUM_OCULTA, fuera de la pantalla como la ventana; con
+ * IRIDIUM_VENTANA_REGISTRO, anota ahí lo que muestra (`tools/probar-instalador.ts`).
+ */
+const ventanaActualizando: VentanaActualizando = {
+  script: deTools('ventana-actualizando.ps1'),
+  ...(oculta ? { afuera: true } : {}),
+  ...(process.env.IRIDIUM_VENTANA_REGISTRO ? { registro: process.env.IRIDIUM_VENTANA_REGISTRO } : {}),
+}
 const vigiaVersion = release
-  ? new VigiaVersionNueva(
-      release,
-      app.isPackaged
-        ? join(process.resourcesPath, 'cambiar-version.ps1')
-        : join(app.getAppPath(), 'tools', 'cambiar-version.ps1'),
-      tmpdir(),
-    )
+  ? new VigiaVersionNueva(release, deTools('cambiar-version.ps1'), tmpdir(), ventanaActualizando)
   : null
 /**
  * Una copia instalada (D-171) trae `resources/app-update.yml`, que le pone `tools/publicar.ts` al armar el instalador:
@@ -602,6 +609,15 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
           updater: actualizableElectron((t) => registro.escribir(t)),
           anotar: (t) => registro.escribir(t),
           ...(process.env.IRIDIUM_ACTUALIZAR_DESDE ? { primeraMs: 2000 } : {}),
+          ventana: {
+            ...ventanaActualizando,
+            carpeta: dirname(process.execPath),
+            pendiente: await carpetaDelActualizador(
+              join(process.resourcesPath, 'app-update.yml'),
+              process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'),
+            ),
+            temporal: tmpdir(),
+          },
         })
       : null
     const escritos = new ArchivoEscritos(join(carpetaDatos, 'escritos.json'))

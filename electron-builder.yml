@@ -18,12 +18,15 @@ files:
   - '!node_modules/node-pty/binding.gyp'
   - '!node_modules/node-pty/**/*.{pdb,test.js,map}'
 # La extensión de la Revisión va suelta: Iridium la copia a su carpeta fija al arrancar. El ayudante que pone la
-# versión nueva al cerrar (CO-I2) también: Iridium lo copia a la carpeta temporal y lo lanza.
+# versión nueva al cerrar (CO-I2) y la ventanita que lo muestra (T-128) también: Iridium los copia a la carpeta
+# temporal y los lanza.
 extraResources:
   - from: out/extension
     to: extension
   - from: tools/cambiar-version.ps1
     to: cambiar-version.ps1
+  - from: tools/ventana-actualizando.ps1
+    to: ventana-actualizando.ps1
   # Los complementos de las conversaciones (D-086): la skill de Iridium y la guía de hitos.
   - from: out/plugins
     to: plugins

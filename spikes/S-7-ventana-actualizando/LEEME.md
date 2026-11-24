@@ -12,3 +12,5 @@ start "" /min powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hid
 - El texto del error, largo, se corta en un renglón: va en dos, con la ventana un poco más alta.
 - En PowerShell, `$Error` y `$error` son la lista de errores de PowerShell: ni parámetro ni variable con ese nombre.
 - Lo que falle dentro del reloj de la ventana se pierde callado: va con `try`/`catch` que lo anota.
+
+**Construida (2026-11-24, T-128, D-187):** `tools/ventana-actualizando.ps1`. Se relanza sola con `Start-Process` para no heredar las conexiones de Iridium; lanzada como la lanza Iridium quedó visible, sin minimizar y en el centro: `construida.png`.

@@ -3580,3 +3580,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** A. Mientras se cambia la versión se ve una ventanita chica con «Actualizando Iridium…» y una barra; se cierra sola cuando abre la versión nueva, sin botones ni preguntas. Si la versión no entra, lo dice ahí antes de volver a abrir la de antes.
 **Motivo:** se ve que avanza y no suma pasos.
 **Consecuencias:** T-128 pasa a pendiente; va después de las consolas (I-10), con T-127 ya hecha.
+
+## D-187 — La ventanita también al cerrar con la X, y cómo sabe en qué paso va
+- **Fecha:** 2026-11-24
+- **Ámbito:** general: Actualizar y el cierre con una versión lista, en la app de uso diario y en las copias instaladas (T-128)
+- **Hito o paso:** 10, Q-280
+- **Estado:** vigente
+
+**Contexto:** la maqueta de la ventanita (Diseño › Actualizando Iridium) se veía siempre con Actualizar o Reiniciar ahora. Al cerrar con la X con una versión lista, la versión entraba callada (20 a 30 s en la app de uso diario) y si el usuario abría Iridium en ese rato no sabía que había que esperar.
+**Opciones consideradas:** A) también al cerrar: los dos primeros pasos y termina con «Lista: se abre la próxima vez», sin abrir Iridium · B) solo con Actualizar o Reiniciar ahora · C) cambiar cómo se ve.
+**Decisión:** A. Al construirla: en la app de uso diario los pasos los escribe el ayudante en un archivo temporal; en una copia instalada la ventanita los saca de mirar el Iridium que se cierra y el instalador. «Abriendo Iridium» termina cuando aparece una ventana de Iridium de esa carpeta, en lugar de que la Iridium nueva lo marque (como decía la propuesta): así funciona también con una versión que no sabe de la ventanita.
+**Motivo:** el usuario sabe cuándo puede abrir Iridium; mirar la ventana en vez de esperar una marca no depende de la versión que entra.
+**Consecuencias:** T-128 construida (`modulos/compartir/diseno-tecnico.md` › La ventanita). La primera vez que se ve es en la actualización siguiente a la que la trae: la ventanita la lanza la versión que se cierra.
