@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Actualizando Iridium</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* T-128, D-186: mientras se cambia la versión, Iridium está cerrado y se ve solo esta ventanita, en el medio de la
+     pantalla, sobre lo que haya abierto. Sin botones ni preguntas: se cierra sola cuando abre la versión nueva. En la
+     barra de tareas lleva el ícono de Iridium. Acá, sus tres momentos sobre un escritorio de muestra. */
+  body { min-height: 100vh; margin: 0; padding: var(--esp-6); background: var(--fondo); display: flex; flex-direction: column; gap: var(--esp-6); align-items: center; }
+  .momento { display: flex; flex-direction: column; gap: var(--esp-2); align-items: center; }
+  .momento .rotulo { font: var(--estilo-rotulo); color: var(--texto-3); }
+  .ventanita { width: 380px; box-sizing: border-box; padding: 22px var(--esp-5) var(--esp-5); background: var(--elevado); border: 1px solid var(--borde-fuerte); border-radius: 8px; }
+  .ventanita h1 { margin: 0; font: var(--estilo-titulo); color: var(--texto); }
+  .ventanita p { margin: 2px 0 0; font: var(--estilo-meta); color: var(--texto-3); }
+  .barra { height: 4px; margin-top: var(--esp-4); background: var(--borde); border-radius: 2px; overflow: hidden; }
+  .barra .lleno { height: 100%; background: var(--bien); border-radius: 2px; }
+  .ventanita.fallo .barra .lleno { background: var(--error); }
+</style>
+</head>
+<body data-marco="sin-marco">
+  <div class="momento">
+    <span class="rotulo">1 · Cerrando la versión de antes (también espera a que se cierre todo lo de Iridium)</span>
+    <div class="ventanita"><h1>Actualizando Iridium…</h1><p>Cerrando la versión de antes</p><div class="barra"><div class="lleno" style="width: 18%"></div></div></div>
+  </div>
+  <div class="momento">
+    <span class="rotulo">2 · Poniendo la versión nueva (la barra avanza sola dentro de cada paso y salta al terminarlo)</span>
+    <div class="ventanita"><h1>Actualizando Iridium…</h1><p>Poniendo la versión nueva · 1.0.42</p><div class="barra"><div class="lleno" style="width: 55%"></div></div></div>
+  </div>
+  <div class="momento">
+    <span class="rotulo">3 · Abriendo Iridium (se cierra sola cuando aparece la ventana de Iridium)</span>
+    <div class="ventanita"><h1>Actualizando Iridium…</h1><p>Abriendo Iridium</p><div class="barra"><div class="lleno" style="width: 90%"></div></div></div>
+  </div>
+  <div class="momento">
+    <span class="rotulo">Si no entra: lo dice unos segundos y abre la versión de antes (la nueva queda lista para el próximo cierre)</span>
+    <div class="ventanita fallo"><h1>La versión nueva no entró</h1><p>Windows no soltó la carpeta de la app. Se abre la de antes; la nueva queda lista para la próxima vez.</p><div class="barra"><div class="lleno" style="width: 55%"></div></div></div>
+  </div>
+<script src="../piezas.js"></script>
+</body>
+</html>
