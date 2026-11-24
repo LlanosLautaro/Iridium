@@ -195,6 +195,7 @@
 | D-186 | 2026-11-23 | general (Actualizar; T-128) | 10, Q-278 | Al actualizar, una ventanita con el progreso | vigente |
 | D-187 | 2026-11-24 | general (Actualizar y el cierre; T-128) | 10, Q-280 | La ventanita también al cerrar con la X, y cómo sabe en qué paso va | vigente |
 | D-188 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 2; Q-282 a Q-284 | Capacidades: el navegador es el del usuario con la extensión de Claude, y la definición queda aprobada | vigente |
+| D-189 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, pasos 4 y 5; Q-285, Q-286 | La PC con Windows-MCP, y cómo se construyen las Capacidades | vigente |
 
 ---
 
@@ -3607,3 +3608,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** el navegador, A. El usuario ya tiene la extensión en **Brave**, en su perfil «Lautaro»: Claude Code reconoce Brave además de Chrome y Edge, y en esta PC el puente de Brave ya está registrado; el interruptor va apagado de entrada. La definición de Capacidades queda aprobada (Q-284, A). La PC queda abierta: el usuario pidió averiguar antes si Claude Code la va a traer (Q-283); con lo averiguado se decide en Q-285.
 **Motivo:** es lo de Claude, sin instalar nada en Iridium, y usa las cuentas que el usuario ya tiene iniciadas.
 **Consecuencias:** sigue la UX de Capacidades (`modulos/paridad/ux.md` › Segunda parte). En la definición, «Chrome» se lee como el navegador del usuario donde está la extensión (Brave en esta PC); que ande con Brave de punta a punta se prueba en la construcción.
+
+## D-189 — La PC con Windows-MCP, y cómo se construyen las Capacidades
+- **Fecha:** 2026-11-24
+- **Ámbito:** Paridad, segunda parte (Capacidades, T-28)
+- **Hito o paso:** Paridad, pasos 4 y 5; Q-285 y Q-286
+- **Estado:** vigente
+
+**Contexto:** usar la PC no llega a Claude Code en Windows ni, por pedir una sesión interactiva, al Agent SDK (`modulos/paridad/investigacion.md` › La PC). S-8 mostró además que apagar un conector con `toggleMcpServer` queda guardado en la configuración de Claude Code de la carpeta.
+**Opciones consideradas:** para la PC, A) Windows-MCP con su interruptor · B) esperar · C) uno propio. Para apagar, `toggleMcpServer` o una negación por sesión.
+**Decisión:** la PC, A (Q-285): Windows-MCP instalado una vez como herramienta con uv, que Iridium suma solo a sus sesiones con el interruptor prendido, sin PowerShell, archivos ni registro y sin su aviso de uso. La UX de Capacidades, aprobada (Q-286). Apagar un conector es de Iridium: `config.json` y `deniedMcpServers` en cada sesión. El navegador, con `--chrome`. Conectar, en la consola de adentro con `claude "/mcp"`; los de claude.ai, en su página. Tres iteraciones: PA-I4 (ver y apagar), PA-I5 (el navegador) y PA-I6 (la PC).
+**Motivo:** lo que se prende en Iridium no cambia cómo anda Claude Code en VS Code ni en la terminal, y lo que puede hacer daño va apagado hasta que el usuario lo prende.
+**Consecuencias:** `modulos/paridad/diseno-tecnico.md` › Segunda parte; `05-arquitectura.md` (la frontera y `config.json`) y `04-ux.md` › W-17, al día. Sin piezas nuevas: el paso 6 no hace falta. Sigue PA-I4.

@@ -80,7 +80,7 @@ Respondidas en el spike S-5 (`investigacion.md`):
 # Segunda parte: Capacidades (T-28)
 
 **Fecha:** 2026-11-24
-**Estado:** aprobada (Q-284, D-188); el navegador, el del usuario con la extensión de Claude (Q-282: Brave); la PC, en Q-285
+**Estado:** aprobada (Q-284, D-188); el navegador, el del usuario con la extensión de Claude (Q-282: Brave); la PC, con Windows-MCP (Q-285, D-189)
 **Base:** D-166 y lo que mostró el spike S-8 (`investigacion.md` › Segunda parte; `research/capacidades-del-motor.md`).
 
 ## Objetivo
@@ -112,7 +112,6 @@ Que la IA de las sesiones de Iridium tenga **los complementos con sus conectores
 - Agregar o sacar complementos desde Iridium (hoy, desde claude.ai o `claude plugin`).
 
 ### Won't (por ahora)
-- La PC, salvo que Q-285 elija otra cosa.
 - Conectores sueltos que no vienen en un complemento ni en claude.ai (se suman con `claude mcp add`); el MCP de Iridium es T-118.
 - Un navegador dentro de Iridium.
 

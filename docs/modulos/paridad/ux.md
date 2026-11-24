@@ -158,7 +158,7 @@ El visor es el cuadro de siempre (PZ-8) con una foto o un texto adentro.
 # Segunda parte: Capacidades (T-28)
 
 **Fecha:** 2026-11-24
-**Estado:** propuesta; se aprueba en Q-286 (la PC, en Q-285)
+**Estado:** aprobada en Q-286; la PC, con Windows-MCP (Q-285, A)
 > Alcance: `definicion.md` › Segunda parte (D-188). Maqueta: Diseño › Paridad (propuesta) › Capacidades (`diseno/pantallas/paridad-capacidades.html`).
 
 ## Puntos de entrada y salida
@@ -187,7 +187,7 @@ Como usuario, prendo **Navegador**. En una conversación nueva le pido «abrí l
 ## Pantallas
 ### Ajustes › Capacidades (`paridad-capacidades.html`)
 - **Navegador:** el interruptor (apagado de entrada), debajo con qué navegador va («Brave, con la extensión «Claude»») y una línea: para las conversaciones nuevas, una página puede traer instrucciones escondidas, la extensión pide permiso por sitio.
-- **Usar la PC:** según Q-285 (si entra, un interruptor igual al del navegador, apagado de entrada).
+- **Usar la PC:** Windows-MCP (Q-285): un interruptor igual al del navegador, apagado de entrada. Si no está instalado, «Falta instalarlo» con **Instalar**, que corre la instalación en la consola de adentro, una vez.
 - **Complementos:** una fila por complemento: el nombre, quién lo hace y cuántas skills y conectores suma, y a la derecha «de tu cuenta» o «de Iridium». Debajo: «Se suman o se sacan en claude.ai.» No se abren: lo que suman se ve en «/» y en Skills.
 - **Conectores:** una fila por conector (de un complemento o de claude.ai): el nombre, de dónde sale, el estado en palabras y su interruptor. «Conectado» en verde con ✓; «falta iniciar sesión» en gris con **Conectar** (no frena nada: el ámbar queda para lo que frena); «no anda» en rojo con **Reintentar**; «apagado» en gris.
 
