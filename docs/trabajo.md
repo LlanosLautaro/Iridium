@@ -597,5 +597,6 @@ Construida el 2026-11-24 (Q-280 A, D-187): la ventanita sale al actualizar y tam
 Hecha el 2026-11-24: Q-281, todo bien (la ventanita con sus tres pasos al actualizar, «Lista: se abre la próxima vez» al cerrar con la X, y la versión nueva al abrir).
 
 ## T-129 — Las pruebas de git se pasan de 5 s con la suite completa
-Estado: pendiente · Idea: IA · Fecha: 2026-11-24 · Origen: T-128
+Estado: hecho · Idea: IA · Fecha: 2026-11-24 · Origen: T-128
 Con toda la suite de Vitest corriendo, tres pruebas de repositorios de verdad (`git.test.ts` y `d159-sincronia.test.ts`) se pasan de los 5 s y fallan; solas, o con menos archivos a la vez, pasan. Pasó también sin los cambios de T-128. Darles más tiempo o correrlas sin tanto en paralelo.
+Hecha el 2026-11-24: las pruebas con repositorios de verdad de esos dos archivos tienen 20 s; la suite entera pasó (1042).

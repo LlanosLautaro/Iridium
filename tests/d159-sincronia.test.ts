@@ -57,7 +57,8 @@ describe('reglas de la sincronización', () => {
   })
 })
 
-describe('con repositorios de verdad', () => {
+// T-129: con toda la suite en paralelo, cada git tarda más; solas pasan en 1–2 s.
+describe('con repositorios de verdad', { timeout: 20_000 }, () => {
   let base: string
   let nube: string
   let estaPc: string

@@ -114,7 +114,8 @@ describe('reglas de git', () => {
   })
 })
 
-describe('leer el git de un proyecto', () => {
+// T-129: con toda la suite en paralelo, cada git tarda más; solas pasan en 1–2 s.
+describe('leer el git de un proyecto', { timeout: 20_000 }, () => {
   let carpeta: string
   const git = (...args: string[]) =>
     execFileSync('git', ['-c', 'core.autocrlf=false', ...args], {
