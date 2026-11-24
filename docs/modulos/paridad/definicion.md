@@ -80,7 +80,7 @@ Respondidas en el spike S-5 (`investigacion.md`):
 # Segunda parte: Capacidades (T-28)
 
 **Fecha:** 2026-11-24
-**Estado:** borrador; el navegador (Q-282) y la PC (Q-283) los decidís vos, y el visto bueno va en Q-284
+**Estado:** aprobada (Q-284, D-188); el navegador, el del usuario con la extensión de Claude (Q-282: Brave); la PC, en Q-285
 **Base:** D-166 y lo que mostró el spike S-8 (`investigacion.md` › Segunda parte; `research/capacidades-del-motor.md`).
 
 ## Objetivo
@@ -101,7 +101,7 @@ Que la IA de las sesiones de Iridium tenga **los complementos con sus conectores
 ### Must
 - **Ver las capacidades** (Ajustes › IA › Capacidades): los complementos (nombre, de dónde salen, qué suman) y sus conectores con su estado; los de claude.ai, aparte. Sale del motor sin gastar y se refresca al abrir la pantalla.
 - **Conectar un conector** que pide sesión, desde la consola de adentro (T-116), y prender o apagar uno que no se usa (apagado, no carga en las sesiones).
-- **El navegador** (según Q-282): un interruptor en Ajustes › IA y, por proyecto, en Ajustes › Este proyecto; prendido, las sesiones nuevas lo tienen. Si falta la extensión, el aviso y el enlace para instalarla.
+- **El navegador** (D-188): el del usuario donde está la extensión «Claude» (en esta PC, Brave, perfil «Lautaro»). Un interruptor en Ajustes › IA y, por proyecto, en Ajustes › Este proyecto; prendido, las sesiones nuevas lo tienen. Si falta la extensión, el aviso y el enlace para instalarla.
 - **Por la frontera del motor:** el motor dice qué capacidades tiene y su estado; Iridium no sabe de MCP ni de Chrome.
 
 ### Should
@@ -112,7 +112,7 @@ Que la IA de las sesiones de Iridium tenga **los complementos con sus conectores
 - Agregar o sacar complementos desde Iridium (hoy, desde claude.ai o `claude plugin`).
 
 ### Won't (por ahora)
-- La PC, salvo que Q-283 elija otra cosa.
+- La PC, salvo que Q-285 elija otra cosa.
 - Conectores sueltos que no vienen en un complemento ni en claude.ai (se suman con `claude mcp add`); el MCP de Iridium es T-118.
 - Un navegador dentro de Iridium.
 
@@ -123,7 +123,7 @@ Que la IA de las sesiones de Iridium tenga **los complementos con sus conectores
 ## Impacto en el perfil
 Sube el cuidado, no el nivel: sigue P2. Con el navegador, la IA usa las cuentas iniciadas en el Chrome del usuario, y lo que lee de una página es contenido de terceros (una página puede traer instrucciones escondidas). Por eso el navegador va apagado hasta que el usuario lo prende, y la extensión de Chrome pide permiso por sitio. Un servidor de terceros para la PC tendría control total del escritorio (Q-283).
 
-## Términos nuevos (van al glosario general con el visto bueno)
+## Términos nuevos (ya en el glosario general)
 | Término | Significado |
 |---|---|
 | Complemento | Un paquete que suma skills, comandos y conectores a la IA (en Claude, *plugin*) |
@@ -134,5 +134,6 @@ Sube el cuidado, no el nivel: sigue P2. Con el navegador, la IA usa las cuentas 
 - [x] Objetivo, criterios de éxito y MoSCoW escritos
 - [x] Fuera de alcance y lo que queda como idea (T-118, T-120)
 - [x] Perfil revisado: sigue P2, con el navegador apagado de entrada
-- [ ] Términos nuevos en el glosario general (con el visto bueno)
-- [ ] Visto bueno del usuario (Q-284)
+- [x] Términos nuevos en el glosario general
+- [x] ¿Requirió cambios en los documentos generales? Sí: los tres términos en `02-definicion.md` › Glosario (aplicado)
+- [x] Visto bueno del usuario (Q-284, D-188)

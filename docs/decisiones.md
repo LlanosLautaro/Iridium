@@ -192,6 +192,9 @@
 | D-183 | 2026-11-23 | general (la conversación y Ajustes; T-52, T-119) | 10 | Iridium suena cuando la IA terminó su trabajo, no en cada turno | vigente |
 | D-184 | 2026-11-23 | general (Scripts y la barra de abajo; T-116) | 10, Q-272 | Las consolas van adentro de Iridium, como en VS Code | vigente (el punto 3, cambiado por D-185) |
 | D-185 | 2026-11-23 | general (Scripts y la barra de abajo; T-116) | 10, Q-276 | Cómo se construyen las consolas adentro, y Armar y Volver corren ahí | vigente |
+| D-186 | 2026-11-23 | general (Actualizar; T-128) | 10, Q-278 | Al actualizar, una ventanita con el progreso | vigente |
+| D-187 | 2026-11-24 | general (Actualizar y el cierre; T-128) | 10, Q-280 | La ventanita también al cerrar con la X, y cómo sabe en qué paso va | vigente |
+| D-188 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 2; Q-282 a Q-284 | Capacidades: el navegador es el del usuario con la extensión de Claude, y la definición queda aprobada | vigente |
 
 ---
 
@@ -3592,3 +3595,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** A. Al construirla: en la app de uso diario los pasos los escribe el ayudante en un archivo temporal; en una copia instalada la ventanita los saca de mirar el Iridium que se cierra y el instalador. «Abriendo Iridium» termina cuando aparece una ventana de Iridium de esa carpeta, en lugar de que la Iridium nueva lo marque (como decía la propuesta): así funciona también con una versión que no sabe de la ventanita.
 **Motivo:** el usuario sabe cuándo puede abrir Iridium; mirar la ventana en vez de esperar una marca no depende de la versión que entra.
 **Consecuencias:** T-128 construida (`modulos/compartir/diseno-tecnico.md` › La ventanita). La primera vez que se ve es en la actualización siguiente a la que la trae: la ventanita la lanza la versión que se cierra.
+
+## D-188 — Capacidades: el navegador es el del usuario con la extensión de Claude, y la definición queda aprobada
+- **Fecha:** 2026-11-24
+- **Ámbito:** Paridad, segunda parte (Capacidades, T-28)
+- **Hito o paso:** Paridad, paso 2; Q-282, Q-283 y Q-284
+- **Estado:** vigente
+
+**Contexto:** el spike S-8 mostró que los complementos ya cargan en las sesiones pero sus conectores piden iniciar sesión, que Claude Code trae Claude in Chrome y anda en Windows, y que usar la PC, en Windows, Claude Code no lo tiene.
+**Opciones consideradas:** para el navegador, A) el del usuario con la extensión «Claude» (Claude in Chrome) · B) uno aparte con Playwright · C) los dos. Para la PC, A) esperar · B) Windows-MCP, de terceros · C) uno propio.
+**Decisión:** el navegador, A. El usuario ya tiene la extensión en **Brave**, en su perfil «Lautaro»: Claude Code reconoce Brave además de Chrome y Edge, y en esta PC el puente de Brave ya está registrado; el interruptor va apagado de entrada. La definición de Capacidades queda aprobada (Q-284, A). La PC queda abierta: el usuario pidió averiguar antes si Claude Code la va a traer (Q-283); con lo averiguado se decide en Q-285.
+**Motivo:** es lo de Claude, sin instalar nada en Iridium, y usa las cuentas que el usuario ya tiene iniciadas.
+**Consecuencias:** sigue la UX de Capacidades (`modulos/paridad/ux.md` › Segunda parte). En la definición, «Chrome» se lee como el navegador del usuario donde está la extensión (Brave en esta PC); que ande con Brave de punta a punta se prueba en la construcción.

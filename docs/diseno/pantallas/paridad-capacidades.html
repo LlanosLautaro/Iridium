@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Capacidades</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Paridad, segunda parte (T-28, D-188): Ajustes › Capacidades. Lo de la ventana de Ajustes, como en ajustes.html. */
+  .fondo-grilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--esp-3); }
+  .fondo-grilla span { height: 168px; border-radius: var(--radio-tarjeta); background: var(--tarjeta); }
+  .cuerpo-ventana { overflow-y: auto; }
+  .cuerpo-ventana h3 { margin: 0 0 var(--esp-4); font-size: var(--tam-titulo); font-weight: 600; }
+  .cuerpo-ventana h4 { margin: var(--esp-5) 0 var(--esp-1); font-size: var(--tam-chico); font-weight: 600; color: var(--texto-3); }
+  .ajuste { display: grid; grid-template-columns: 220px 1fr; gap: var(--esp-5); padding: var(--esp-4) 0; }
+  .ajuste + .ajuste { border-top: 1px solid var(--borde-suave); }
+  .ajuste .que { display: flex; flex-direction: column; gap: var(--esp-1); }
+  .ajuste .que span { font-size: var(--tam-chico); color: var(--texto-3); }
+  .ajuste .control { display: flex; flex-direction: column; gap: var(--esp-2); align-items: flex-start; }
+  .control > .expl { display: block; font-size: var(--tam-chico); color: var(--texto-3); }
+  .cerrar-ventana { position: absolute; top: var(--esp-3); right: var(--esp-3); }
+</style>
+</head>
+<body data-marco="inicio" data-seccion="ajustes">
+<main class="seccion">
+  <div class="contenido"><div class="fondo-grilla"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <div class="velo">
+    <div class="ventana" role="dialog" aria-label="Ajustes">
+      <nav>
+        <h2>Ajustes</h2>
+        <div class="pestanas vertical">
+          <a class="pestana">Perfil</a>
+          <a class="pestana">IA</a>
+          <a class="pestana elegida">Capacidades</a>
+          <a class="pestana">Apariencia</a>
+          <a class="pestana">Notificaciones</a>
+          <a class="pestana">Proyectos</a>
+          <a class="pestana">Acerca de</a>
+        </div>
+      </nav>
+      <div class="cuerpo-ventana">
+        <a class="boton solo-icono cerrar-ventana" href="grilla.html" aria-label="Cerrar"><i data-ic="cerrar"></i></a>
+        <h3>Capacidades</h3>
+
+        <div class="ajuste"><div class="que">Navegador<span>La IA abre páginas, lee y hace clic en tu navegador, con tus cuentas</span></div>
+          <div class="control">
+            <label class="interruptor"><input type="checkbox">Apagado</label>
+            <span class="senal"><i data-ic="ok"></i>Brave, con la extensión «Claude»</span>
+            <span class="expl">Para las conversaciones nuevas. Una página puede traer instrucciones escondidas: prendelo cuando lo uses. La extensión te pide permiso por sitio.</span>
+          </div></div>
+
+        <div class="ajuste"><div class="que">Usar la PC<span>Mouse, teclado y capturas de pantalla</span></div>
+          <div class="control">
+            <span class="senal">Según Q-285</span>
+          </div></div>
+
+        <h4>Complementos</h4>
+        <div class="filas con-lineas">
+          <div class="fila con-detalle"><span class="icono-fila"><i data-ic="archivos"></i></span><span class="principal-fila"><span class="titulo-fila">engineering</span><span class="detalle">Anthropic · 10 skills · 7 conectores</span></span><span class="meta">de tu cuenta</span></div>
+          <div class="fila con-detalle"><span class="icono-fila"><i data-ic="archivos"></i></span><span class="principal-fila"><span class="titulo-fila">design</span><span class="detalle">Anthropic · 7 skills · 4 conectores</span></span><span class="meta">de tu cuenta</span></div>
+          <div class="fila con-detalle"><span class="icono-fila"><i data-ic="archivos"></i></span><span class="principal-fila"><span class="titulo-fila">impeccable</span><span class="detalle">Paul Bakaus · 1 skill</span></span><span class="meta">de tu cuenta</span></div>
+          <div class="fila con-detalle"><span class="icono-fila"><i data-ic="archivos"></i></span><span class="principal-fila"><span class="titulo-fila">iridium</span><span class="detalle">El framework · 2 skills</span></span><span class="meta">de Iridium</span></div>
+        </div>
+        <p class="gris-3" style="font-size:var(--tam-chico)">Se suman o se sacan en claude.ai.</p>
+
+        <h4>Conectores</h4>
+        <div class="filas con-lineas">
+          <div class="fila"><span class="principal-fila"><span class="titulo-fila">Claude Docs</span><span class="detalle">de claude.ai</span></span><span class="senal verde"><i data-ic="ok"></i>conectado</span><span class="acciones siempre"><label class="interruptor"><input type="checkbox" checked aria-label="Usar Claude Docs"></label></span></div>
+          <div class="fila"><span class="principal-fila"><span class="titulo-fila">Figma</span><span class="detalle">de design</span></span><span class="senal">falta iniciar sesión</span><span class="acciones siempre"><button class="boton chico">Conectar</button><label class="interruptor"><input type="checkbox" checked aria-label="Usar Figma"></label></span></div>
+          <div class="fila"><span class="principal-fila"><span class="titulo-fila">Slack</span><span class="detalle">de engineering</span></span><span class="senal">falta iniciar sesión</span><span class="acciones siempre"><button class="boton chico">Conectar</button><label class="interruptor"><input type="checkbox" checked aria-label="Usar Slack"></label></span></div>
+          <div class="fila"><span class="principal-fila"><span class="titulo-fila">Gmail</span><span class="detalle">de engineering</span></span><span class="senal rojo"><i data-ic="error"></i>no anda</span><span class="acciones siempre"><button class="boton sin-fondo chico">Reintentar</button><label class="interruptor"><input type="checkbox" checked aria-label="Usar Gmail"></label></span></div>
+          <div class="fila"><span class="principal-fila"><span class="titulo-fila">Linear</span><span class="detalle">de engineering</span></span><span class="senal">apagado</span><span class="acciones siempre"><label class="interruptor"><input type="checkbox" aria-label="Usar Linear"></label></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="../piezas.js"></script>
+</body>
+</html>

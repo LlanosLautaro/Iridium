@@ -44,6 +44,7 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Un comando escondido escrito a mano | Paridad (propuesta) | pantallas/paridad-escondido.html | — |
 | Adjuntos en los mensajes mandados | Paridad (propuesta) | pantallas/paridad-enviado.html | — |
 | Soltar archivos en la conversación | Paridad (propuesta) | pantallas/paridad-soltar.html | — |
+| Capacidades | Paridad (propuesta) | pantallas/paridad-capacidades.html | — |
 | Las consolas adentro | Un proyecto | pantallas/consolas.html | 2026-11-24 00:02 |
 | Actualizando Iridium | Actualizar | pantallas/actualizando.html | 2026-11-24 00:57 |
 

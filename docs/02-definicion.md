@@ -245,6 +245,9 @@ Además de lo que está en *Won't*:
 | Adjunto | Una foto, un archivo o un texto pegado que viaja con un mensaje del chat (frente Paridad) |
 | Texto pegado | Un pegado largo que queda como adjunto en vez de llenar el cuadro del chat (frente Paridad) |
 | Comando | Lo que se escribe con «/» al principio de un mensaje: de Claude Code, de una skill o de un complemento; la lista la da el motor (frente Paridad) |
+| Complemento | Un paquete que suma skills, comandos y conectores a la IA (en Claude, *plugin*) (frente Paridad) |
+| Conector | Lo que le da a la IA acceso a otro servicio (Slack, Gmail, Figma…); puede pedir iniciar sesión (frente Paridad) |
+| Capacidades | Lo que la IA de una sesión puede usar además de los archivos: complementos, conectores, el navegador y la PC (frente Paridad) |
 | Mapa | El dibujo del plan de un proyecto como cajas dentro de cajas: hitos con sus pasos (D-008) |
 | Paso | Una parte de un hito que el mapa muestra: un área, una iteración, un paso de un módulo |
 | Frente | Una línea de trabajo del proyecto con su propio estado: el núcleo o un módulo. Avanzan hasta dos a la vez (D-063) |

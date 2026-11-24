@@ -47,6 +47,12 @@
 | ¿Se puede usar el navegador? | Sí: Claude in Chrome viene con Claude Code (22 herramientas, anda en Windows); necesita la extensión «Claude» de Chrome, que en esta PC no está instalada |
 | ¿Se puede usar la PC? | En Windows, Claude Code no: es solo de Mac; en Windows lo tiene la app de escritorio de Claude. Quedan servidores de terceros o uno propio (Q-283) |
 
+## La PC: ¿va a llegar a Claude Code en Windows? (Q-283, 2026-11-24)
+- **Cuánto lleva:** Claude Code puede usar la PC en Mac desde fines de marzo de 2026 (vista previa), y la app de escritorio de Claude en Windows desde abril. Ocho meses después, la documentación sigue diciendo «Computer use in the CLI is not available on Linux or Windows. On Windows, use computer use in Desktop instead», sin planes anunciados, y el `claude.exe` de Windows lo corta («Computer control is macOS-only»). Los pedidos para que llegue a Windows siguen abiertos; uno se cerró solo por viejo.
+- **Y aunque llegara:** la documentación dice que pide una sesión interactiva y que no está con `-p`. Las sesiones de Iridium son del Agent SDK, que no son interactivas en ese sentido: ni en Mac lo tendrían. Es lo más claro de que no está pensado para el SDK.
+- **Conclusión:** esperar no tiene fecha y probablemente no llegue al SDK. Lo que anda hoy es un servidor de terceros.
+- **Windows-MCP** (CursorTouch, MIT): Windows 7 a 11, capturas, mouse, teclado, leer las ventanas y abrir programas. Se suma como cualquier conector (`claude mcp add … uv … windows-mcp`) y pide Python 3.13 y uv. Dice tener más de 2 millones de usuarios en las extensiones de la app de escritorio de Claude. En Reddit no se encontraron opiniones; el riesgo es el de siempre con esto: control total del escritorio.
+
 ## Impacto en la definición
 - Los complementos no hay que «sumarlos»: lo que falta es verlos, conectar sus conectores y saber cuándo no andan.
 - El navegador es una opción de la sesión: prenderlo es cambiar cómo se abre, no programar herramientas.

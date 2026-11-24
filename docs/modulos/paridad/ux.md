@@ -152,3 +152,57 @@ Enter con fichas ─→ el mensaje con sus adjuntos ─→ las fichas en mi mens
 | El borde de soltar (la conversación con borde punteado y «Suelta para adjuntar») | No hay nada que se arrastre sobre la conversación | sí: un estado de la conversación (`soltando`, de la sección, no pieza), con su maqueta `paridad-soltar.html` |
 
 El visor es el cuadro de siempre (PZ-8) con una foto o un texto adentro.
+
+---
+
+# Segunda parte: Capacidades (T-28)
+
+**Fecha:** 2026-11-24
+**Estado:** propuesta; se aprueba en Q-286 (la PC, en Q-285)
+> Alcance: `definicion.md` › Segunda parte (D-188). Maqueta: Diseño › Paridad (propuesta) › Capacidades (`diseno/pantallas/paridad-capacidades.html`).
+
+## Puntos de entrada y salida
+- **Dónde:** una sección nueva de Ajustes, **Capacidades**, después de IA (W-17). La definición la ponía dentro de IA, pero IA ya tiene la cuenta, el tono, el arranque y el avance solo: aparte se encuentra mejor y no alarga IA.
+- **Cómo se entra:** `Ctrl+,` y Capacidades; desde la línea de un error de un conector en la conversación («Conectar»), que abre Ajustes en Capacidades.
+- **Cómo se sale:** ✕ o `Esc`, como todo Ajustes; lo elegido vale para las conversaciones nuevas.
+
+## Historias de usuario
+### PA-7 — Ver qué tiene la IA
+Como usuario, abro Ajustes › Capacidades y veo arriba el navegador y la PC, y abajo mis complementos (de dónde salen, cuántas skills y conectores suman) y sus conectores con su estado en palabras: «conectado», «falta iniciar sesión», «no anda», «apagado». No gasta uso; se pone al día cada vez que abro la sección.
+
+### PA-8 — Conectar un conector
+Como usuario, toco **Conectar** en «Figma · falta iniciar sesión»: se abre la consola de adentro (W-18) con Claude Code en su pantalla de conectores; inicio sesión en el navegador como en cualquier sitio y, al cerrar la consola, la fila dice «conectado». Las conversaciones nuevas lo tienen.
+
+### PA-9 — Apagar un conector que no uso
+Como usuario, apago Linear con su interruptor: dice «apagado» y las conversaciones nuevas no lo cargan (así la IA no lo ofrece ni falla con él).
+
+### PA-10 — Que la IA use mi navegador
+Como usuario, prendo **Navegador**. En una conversación nueva le pido «abrí la página del proyecto y fijate si carga»: la IA trabaja en una pestaña de Brave y los pasos dicen «En el navegador: abrió …», como cualquier herramienta. La extensión me pide permiso la primera vez en cada sitio.
+
+## Flujos
+1. **Ver:** Ajustes › Capacidades → la sección pide al motor sus capacidades (sin gastar, unos segundos: siluetas mientras tanto) → navegador, PC, complementos y conectores.
+2. **Conectar:** Conectar → la consola de adentro se abre con su pestaña «Conectar Figma» → el usuario inicia sesión en el navegador → cierra la consola o termina → Capacidades vuelve a pedir el estado → «conectado» (o queda «falta iniciar sesión» si no terminó; no es un error).
+3. **Navegador:** prender → si no se encuentra la extensión, la fila lo dice (ver Estados) → las conversaciones nuevas lo tienen; las abiertas siguen como estaban hasta Nueva.
+
+## Pantallas
+### Ajustes › Capacidades (`paridad-capacidades.html`)
+- **Navegador:** el interruptor (apagado de entrada), debajo con qué navegador va («Brave, con la extensión «Claude»») y una línea: para las conversaciones nuevas, una página puede traer instrucciones escondidas, la extensión pide permiso por sitio.
+- **Usar la PC:** según Q-285 (si entra, un interruptor igual al del navegador, apagado de entrada).
+- **Complementos:** una fila por complemento: el nombre, quién lo hace y cuántas skills y conectores suma, y a la derecha «de tu cuenta» o «de Iridium». Debajo: «Se suman o se sacan en claude.ai.» No se abren: lo que suman se ve en «/» y en Skills.
+- **Conectores:** una fila por conector (de un complemento o de claude.ai): el nombre, de dónde sale, el estado en palabras y su interruptor. «Conectado» en verde con ✓; «falta iniciar sesión» en gris con **Conectar** (no frena nada: el ámbar queda para lo que frena); «no anda» en rojo con **Reintentar**; «apagado» en gris.
+
+## Estados y extremos
+- **Cargando:** siluetas de filas; si el motor tarda más de 15 s, «No se pudo saber qué tiene la IA» con Reintentar.
+- **Sin complementos ni conectores:** «La IA usa solo lo de Claude Code. Los complementos se suman en claude.ai.»
+- **Navegador sin la extensión:** al prender, si ningún navegador tiene la extensión «Claude», la fila dice en ámbar «No encontré la extensión «Claude» en Chrome, Brave ni Edge» con **Cómo instalarla** (abre la página de la extensión) y el interruptor queda prendido: vale cuando la instalen.
+- **El navegador cerrado** cuando la IA lo necesita: lo dice la IA en la conversación, como cualquier herramienta que falla; Iridium no agrega nada.
+- **Conectar sin terminar:** la fila sigue en «falta iniciar sesión»; no es un error.
+- **Motor sin capacidades** (otro motor, o el falso con `IRIDIUM_FALSO_CAPACIDADES=no`): la sección no aparece.
+- **Una conversación abierta** al cambiar algo: sigue como estaba; lo nuevo entra con Nueva o al abrir otra. La línea de abajo de la sección lo dice.
+
+## Accesibilidad y teclado
+- Cada interruptor dice qué prende («Usar Figma», «Usar el navegador»); el estado va en palabras, no solo en color.
+- Conectar y Reintentar se alcanzan con `Tab` en el orden de las filas.
+
+## Piezas de UI nuevas
+Ninguna: Ajuste, Fila (PZ), Señal e Interruptor del sistema. El control de estilos pasa con la maqueta.

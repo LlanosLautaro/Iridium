@@ -8,9 +8,9 @@
 | Paso | Estado | Documento |
 |---|---|---|
 | 1. Propuesta | hecho (Q-237 a Q-239, D-166) | `propuesta.md` |
-| 2. Definición | hecho (Q-243, Q-244, D-167) | `definicion.md` |
-| 3. Investigación | hecho (spike S-5) | `investigacion.md` |
-| 4. UX | hecho (Q-246, Q-247, D-168) | `ux.md` |
+| 2. Definición | hecho (Q-243, Q-244, D-167; Capacidades, Q-284, D-188) | `definicion.md` |
+| 3. Investigación | hecho (spikes S-5 y S-8) | `investigacion.md` |
+| 4. UX | hecho (Q-246, Q-247, D-168); Capacidades, propuesta (Q-286) | `ux.md` |
 | 5. Diseño técnico | hecho (D-169) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (D-170) | `06-ui.md` y `diseno/piezas.css` |
 | 7. Construcción | hecho (primera parte: PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258) | este archivo |
@@ -24,7 +24,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **PA-I2 hecha** (2026-11-22): el + (y `Ctrl+U`) suma archivos y fotos con el selector de Windows, arrastrarlos sobre la conversación también, y una captura pegada con `Ctrl+V` es una foto. Cada adjunto es una ficha arriba del cuadro (la foto, miniatura; un clic la abre grande), se guarda con lo escrito y sale con el mensaje: la foto dentro, el archivo como su ruta; en el hilo, las fichas quedan arriba de lo escrito, también al reabrir. Probada con el Claude Code real: vio la foto y abrió el archivo. Probada en Q-251, todo bien; pediste un clip en vez de la hoja en «Agregar archivos o fotos»: hecho. Sigue PA-I3, el texto largo pegado.
 **PA-I3 hecha** (2026-11-22): un texto pegado de más de 40 líneas o 2.000 caracteres queda como ficha «Texto pegado · 340 líneas»; un clic lo abre en el visor, la ✕ lo saca y `Ctrl+Z` justo después lo vuelve texto en el cuadro, donde se pegó. Va con el mensaje y queda en él, también al reabrir. «Sobre la skill» y las citas (Revisar, Idea…) pasaron a la Ficha, con su ícono, en la misma fila que los adjuntos. Probada en Q-258, todo bien.
 **Primera parte completa** (2026-11-22): la calidad está en la sección Calidad.
-**Segunda parte, Capacidades (T-28), empezada** (2026-11-24): definición en borrador e investigación hecha (S-8). Los complementos de la cuenta ya cargan en las sesiones; lo que falta es verlos y conectar sus conectores, que piden iniciar sesión. El navegador está a una opción (Claude in Chrome, con la extensión de Chrome). Usar la PC, en Windows, Claude Code no lo tiene. Se decide en Q-282 (el navegador), Q-283 (la PC) y Q-284 (el visto bueno).
+**Segunda parte, Capacidades (T-28), empezada** (2026-11-24): definición e investigación hechas (S-8). Los complementos de la cuenta ya cargan en las sesiones; lo que falta es verlos y conectar sus conectores, que piden iniciar sesión. El navegador está a una opción (Claude in Chrome, con la extensión de Chrome). Usar la PC, en Windows, Claude Code no lo tiene. Con Q-282 a Q-284 (D-188): el navegador es el Brave del usuario con la extensión de Claude, y la definición está aprobada. La PC, averiguada (Q-283), se decide en Q-285. La UX, con la maqueta de Ajustes › Capacidades, en Q-286.
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -72,6 +72,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - 2026-11-22 — Q-258: las seis casillas bien. PA-I3 probada; la construcción de la primera parte queda cerrada.
 - 2026-11-24 — Segunda parte, Capacidades (T-28): spike S-8 con el Claude Code real y sin gastar (`spikes/S-8-capacidades/`, `research/capacidades-del-motor.md`): los complementos de la cuenta ya cargan y sus conectores piden iniciar sesión; `--chrome` suma Claude in Chrome con 22 herramientas en Windows; *computer use* es solo de Mac en Claude Code. Definición en borrador al final de `definicion.md` e investigación al final de `investigacion.md`. Q-282, Q-283 y Q-284.
 
+- 2026-11-24 — Q-282 a Q-284 procesadas (D-188): el navegador, A, con Brave (la extensión ya está en el perfil «Lautaro» y Claude Code reconoce Brave); la definición, aprobada, con los tres términos en el glosario general. Q-283: averiguado por qué usar la PC no llegó a Claude Code en Windows (`investigacion.md` › La PC); se decide en Q-285. UX de Capacidades escrita (PA-7 a PA-10) con la maqueta `paridad-capacidades.html`: Capacidades es una sección propia de Ajustes. Q-286.
 ## Calidad (paso 8, primera parte, 2026-11-22)
 **Historias.** Cada criterio de la definición tiene su prueba: «/» y la lista (`pa1-comandos`), adjuntar con el +, `Ctrl+U`, arrastrar y pegar una captura (`pa2-adjuntos`), el texto largo pegado (`pa3-pegado`), lo mandado al reabrir, y un motor sin comandos ni fotos que no los ofrece. **Funciona igual en la General y en la de Skills:** `tests/e2e/pa-calidad.spec.ts` pega, abre, saca y manda en esas dos, como en la de un proyecto (la de Ideas es la General). Con el Claude Code real, lo probó el usuario en Q-250, Q-251 y Q-258, y `tools/probar-fotos.ts`. Sin probar con el real: un comando de una skill con una foto (D-169 › 7).
 
@@ -84,5 +85,5 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **Verificado:** `pnpm test` (964 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` entero (157 pasan; dos que fallaron por la carga de la tanda, `h8-teclado` › los menús y `i6-uso` › Detener angosto, pasan dos veces seguidas solas, y la tercera fue la del `Esc`, arreglada). `pa-calidad.spec.ts` suma 3.
 
 ## Próximo paso
-Con Q-282 a Q-284 respondidas: cerrar la definición de Capacidades (los términos al glosario, la decisión) y escribir la UX (Ajustes › IA › Capacidades, Conectar en la consola, el interruptor del navegador).
-**Leer antes:** `definicion.md` › Segunda parte y `research/capacidades-del-motor.md`.
+Con Q-285 y Q-286 respondidas: cerrar la UX de Capacidades y escribir su diseño técnico.
+**Leer antes:** `ux.md` › Segunda parte, `diseno-tecnico.md` y `research/capacidades-del-motor.md`.
