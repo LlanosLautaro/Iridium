@@ -1,0 +1,87 @@
+{
+  "chrome": true,
+  "comandos": 86,
+  "complementos": null,
+  "mcp": [
+    {
+      "nombre": "plugin:engineering:slack",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:engineering:linear",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:engineering:atlassian",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:engineering:notion",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:engineering:datadog",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:engineering:google calendar",
+      "estado": "failed",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:engineering:gmail",
+      "estado": "failed",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:design:figma",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:design:intercom",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:design:google calendar",
+      "estado": "failed",
+      "herramientas": null
+    },
+    {
+      "nombre": "plugin:design:gmail",
+      "estado": "failed",
+      "herramientas": null
+    },
+    {
+      "nombre": "claude-in-chrome",
+      "estado": "connected",
+      "herramientas": 22
+    },
+    {
+      "nombre": "claude.ai Claude Docs",
+      "estado": "connected",
+      "herramientas": 9
+    },
+    {
+      "nombre": "claude.ai Google Drive",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "claude.ai Gmail",
+      "estado": "needs-auth",
+      "herramientas": null
+    },
+    {
+      "nombre": "claude.ai Google Calendar",
+      "estado": "needs-auth",
+      "herramientas": null
+    }
+  ]
+}

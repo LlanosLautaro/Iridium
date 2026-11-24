@@ -1,7 +1,7 @@
 # Estado del módulo: Paridad
 
 **Tipo:** sección
-**Última actualización:** 2026-11-22
+**Última actualización:** 2026-11-24
 **Nivel de protección:** hereda P2
 
 ## Progreso
@@ -23,7 +23,8 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **PA-I1 hecha** (2026-11-21): «/» abre la lista arriba del compositor, elegir no manda, los usados hace poco van primero, un escondido escrito a mano no se manda y dice dónde está eso en Iridium, el + tiene Comandos y la lista se pone al día cuando la IA descubre una skill. Probada en Q-250: todo bien.
 **PA-I2 hecha** (2026-11-22): el + (y `Ctrl+U`) suma archivos y fotos con el selector de Windows, arrastrarlos sobre la conversación también, y una captura pegada con `Ctrl+V` es una foto. Cada adjunto es una ficha arriba del cuadro (la foto, miniatura; un clic la abre grande), se guarda con lo escrito y sale con el mensaje: la foto dentro, el archivo como su ruta; en el hilo, las fichas quedan arriba de lo escrito, también al reabrir. Probada con el Claude Code real: vio la foto y abrió el archivo. Probada en Q-251, todo bien; pediste un clip en vez de la hoja en «Agregar archivos o fotos»: hecho. Sigue PA-I3, el texto largo pegado.
 **PA-I3 hecha** (2026-11-22): un texto pegado de más de 40 líneas o 2.000 caracteres queda como ficha «Texto pegado · 340 líneas»; un clic lo abre en el visor, la ✕ lo saca y `Ctrl+Z` justo después lo vuelve texto en el cuadro, donde se pegó. Va con el mensaje y queda en él, también al reabrir. «Sobre la skill» y las citas (Revisar, Idea…) pasaron a la Ficha, con su ícono, en la misma fila que los adjuntos. Probada en Q-258, todo bien.
-**Primera parte completa** (2026-11-22): la calidad está en la sección Calidad. Queda la segunda parte, Capacidades (T-28, D-166); con Q-259 (D-173), va después de T-114, que ya está hecha.
+**Primera parte completa** (2026-11-22): la calidad está en la sección Calidad.
+**Segunda parte, Capacidades (T-28), empezada** (2026-11-24): definición en borrador e investigación hecha (S-8). Los complementos de la cuenta ya cargan en las sesiones; lo que falta es verlos y conectar sus conectores, que piden iniciar sesión. El navegador está a una opción (Claude in Chrome, con la extensión de Chrome). Usar la PC, en Windows, Claude Code no lo tiene. Se decide en Q-282 (el navegador), Q-283 (la PC) y Q-284 (el visto bueno).
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -69,6 +70,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - 2026-11-22 — PA-I3 construida. Pegar un texto largo (`esPegadoLargo`) lo deja como ficha en vez de en el cuadro; la ficha dice sus líneas (`textoLineas`: «1 línea», «340 líneas»), se abre en el visor de texto y tiene su ✕. `Ctrl+Z` mientras no se escribió otra cosa la saca y pone el texto donde estaba el cursor (o lo elegido). La marca `iridium-pegado` ya iba y volvía desde PA-I2: el mensaje mandado y el reabierto muestran la ficha. «Sobre la skill» y las citas son ahora la Ficha (PZ-16, `FichaCita`), con ícono por lo que citan, en la fila de las fichas; se fueron sus estilos propios de `skills.css` (el de la fila no se aplicaba: tenía mal el nombre). PZ-16 suma la ficha que se abre con un clic (`.abrir-ficha` fuera de la foto) y el nombre cortado. Vitest (1 nueva) y Playwright (`pa3-pegado.spec.ts`, 2 nuevas) en verde. Q-258: la prueba.
 
 - 2026-11-22 — Q-258: las seis casillas bien. PA-I3 probada; la construcción de la primera parte queda cerrada.
+- 2026-11-24 — Segunda parte, Capacidades (T-28): spike S-8 con el Claude Code real y sin gastar (`spikes/S-8-capacidades/`, `research/capacidades-del-motor.md`): los complementos de la cuenta ya cargan y sus conectores piden iniciar sesión; `--chrome` suma Claude in Chrome con 22 herramientas en Windows; *computer use* es solo de Mac en Claude Code. Definición en borrador al final de `definicion.md` e investigación al final de `investigacion.md`. Q-282, Q-283 y Q-284.
 
 ## Calidad (paso 8, primera parte, 2026-11-22)
 **Historias.** Cada criterio de la definición tiene su prueba: «/» y la lista (`pa1-comandos`), adjuntar con el +, `Ctrl+U`, arrastrar y pegar una captura (`pa2-adjuntos`), el texto largo pegado (`pa3-pegado`), lo mandado al reabrir, y un motor sin comandos ni fotos que no los ofrece. **Funciona igual en la General y en la de Skills:** `tests/e2e/pa-calidad.spec.ts` pega, abre, saca y manda en esas dos, como en la de un proyecto (la de Ideas es la General). Con el Claude Code real, lo probó el usuario en Q-250, Q-251 y Q-258, y `tools/probar-fotos.ts`. Sin probar con el real: un comando de una skill con una foto (D-169 › 7).
@@ -82,5 +84,5 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **Verificado:** `pnpm test` (964 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` entero (157 pasan; dos que fallaron por la carga de la tanda, `h8-teclado` › los menús y `i6-uso` › Detener angosto, pasan dos veces seguidas solas, y la tercera fue la del `Esc`, arreglada). `pa-calidad.spec.ts` suma 3.
 
 ## Próximo paso
-Empezar la segunda parte, Capacidades (T-28): la definición, que dice qué de los complementos, la PC y el navegador entra (`referencias/` del framework, paso 2), y su investigación.
-**Leer antes:** `definicion.md` › Fuera de alcance y `trabajo.md` › T-28.
+Con Q-282 a Q-284 respondidas: cerrar la definición de Capacidades (los términos al glosario, la decisión) y escribir la UX (Ajustes › IA › Capacidades, Conectar en la consola, el interruptor del navegador).
+**Leer antes:** `definicion.md` › Segunda parte y `research/capacidades-del-motor.md`.

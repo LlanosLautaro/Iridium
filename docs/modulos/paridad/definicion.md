@@ -47,7 +47,7 @@ Que el chat de Iridium tenga lo que el usuario da por sentado en el de Claude: *
 - Comandos propios de Iridium en la lista de «/» — los comandos son del motor; lo de Iridium tiene sus botones.
 
 ## Fuera de alcance
-- **Capacidades** (T-28: los complementos de Claude Code, usar la PC y el navegador desde las sesiones): es la segunda parte del frente (D-166) y se define al terminar esta.
+- **Capacidades** (T-28: los complementos de Claude Code, usar la PC y el navegador desde las sesiones): es la segunda parte del frente (D-166); su definición va al final de este archivo.
 - Otro motor (Codex u otros): no se programa; solo se deja la frontera lista.
 - Cambiar el chat de la extensión de la Revisión o el de Pendientes.
 
@@ -74,3 +74,65 @@ Respondidas en el spike S-5 (`investigacion.md`):
 - [x] Términos nuevos en el glosario general
 - [x] ¿Requirió cambios en los documentos generales? Sí: los casos C-64 a C-67 en `02-definicion.md` › Catálogo de casos de uso y los términos en su glosario (aplicados)
 - [x] Visto bueno del usuario (Q-244, D-167)
+
+---
+
+# Segunda parte: Capacidades (T-28)
+
+**Fecha:** 2026-11-24
+**Estado:** borrador; el navegador (Q-282) y la PC (Q-283) los decidís vos, y el visto bueno va en Q-284
+**Base:** D-166 y lo que mostró el spike S-8 (`investigacion.md` › Segunda parte; `research/capacidades-del-motor.md`).
+
+## Objetivo
+Que la IA de las sesiones de Iridium tenga **los complementos con sus conectores, el navegador y, si se puede, la PC**, como en la app de Claude, y que el usuario vea en Iridium qué tiene cada sesión y qué le falta para andar. Todo por la frontera del motor, como la primera parte.
+
+## Lo que mostró S-8
+- **Los complementos ya cargan** en las sesiones (sus skills y comandos están en «/»). Lo que falla son **sus conectores** (Slack, Figma, Gmail…): piden iniciar sesión y una sesión de Iridium no puede abrir esa ventana. El usuario hoy no se entera.
+- **El navegador está a una opción:** Claude in Chrome viene con Claude Code y anda en Windows; usa el Chrome del usuario con sus cuentas, con la extensión «Claude» de Chrome instalada una vez.
+- **La PC no:** en Windows, Claude Code no tiene *computer use* (solo la app de escritorio de Claude). Queda esperar, un servidor de terceros o uno propio (Q-283).
+
+## Criterios de éxito
+- En Ajustes › IA ve los complementos que tiene, con sus conectores y el estado de cada uno en palabras («conectado», «falta iniciar sesión», «no anda»), sin gastar uso.
+- Un conector que pide sesión se conecta desde Iridium: «Conectar» abre la consola de adentro con lo que hace falta, y al volver queda «conectado».
+- Con el navegador prendido, le pide a la IA «abrí tal página y fijate…» y la IA lo hace en su Chrome; si falta la extensión, Iridium lo dice y dice cómo instalarla.
+- Lo que el motor no tiene, no se muestra (el motor falso puede no tener navegador ni conectores).
+
+## Funcionalidades
+### Must
+- **Ver las capacidades** (Ajustes › IA › Capacidades): los complementos (nombre, de dónde salen, qué suman) y sus conectores con su estado; los de claude.ai, aparte. Sale del motor sin gastar y se refresca al abrir la pantalla.
+- **Conectar un conector** que pide sesión, desde la consola de adentro (T-116), y prender o apagar uno que no se usa (apagado, no carga en las sesiones).
+- **El navegador** (según Q-282): un interruptor en Ajustes › IA y, por proyecto, en Ajustes › Este proyecto; prendido, las sesiones nuevas lo tienen. Si falta la extensión, el aviso y el enlace para instalarla.
+- **Por la frontera del motor:** el motor dice qué capacidades tiene y su estado; Iridium no sabe de MCP ni de Chrome.
+
+### Should
+- En la conversación, cuando la IA usa el navegador, el paso dice «en Chrome: …» como cualquier herramienta, sin pantallas nuevas.
+- Si una sesión necesita un conector que no está conectado, la línea del error lo dice con «Conectar».
+
+### Could
+- Agregar o sacar complementos desde Iridium (hoy, desde claude.ai o `claude plugin`).
+
+### Won't (por ahora)
+- La PC, salvo que Q-283 elija otra cosa.
+- Conectores sueltos que no vienen en un complemento ni en claude.ai (se suman con `claude mcp add`); el MCP de Iridium es T-118.
+- Un navegador dentro de Iridium.
+
+## Fuera de alcance
+- El MCP propio de Iridium (T-118) y los comandos de Iridium (T-120): ideas aparte.
+- Otro motor: solo la frontera lista.
+
+## Impacto en el perfil
+Sube el cuidado, no el nivel: sigue P2. Con el navegador, la IA usa las cuentas iniciadas en el Chrome del usuario, y lo que lee de una página es contenido de terceros (una página puede traer instrucciones escondidas). Por eso el navegador va apagado hasta que el usuario lo prende, y la extensión de Chrome pide permiso por sitio. Un servidor de terceros para la PC tendría control total del escritorio (Q-283).
+
+## Términos nuevos (van al glosario general con el visto bueno)
+| Término | Significado |
+|---|---|
+| Complemento | Un paquete que suma skills, comandos y conectores a la IA (en Claude, *plugin*) |
+| Conector | Lo que le da a la IA acceso a otro servicio (Slack, Gmail, Figma…); puede pedir iniciar sesión |
+| Capacidades | Lo que la IA de una sesión puede usar además de los archivos: complementos, conectores, el navegador y la PC |
+
+## Portón
+- [x] Objetivo, criterios de éxito y MoSCoW escritos
+- [x] Fuera de alcance y lo que queda como idea (T-118, T-120)
+- [x] Perfil revisado: sigue P2, con el navegador apagado de entrada
+- [ ] Términos nuevos en el glosario general (con el visto bueno)
+- [ ] Visto bueno del usuario (Q-284)

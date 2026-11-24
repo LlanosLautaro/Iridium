@@ -30,3 +30,33 @@
 - [x] Las preguntas de la definición tienen respuesta
 - [x] Las notas están en `research/`, con el spike
 - [x] ¿Requirió cambios en los documentos generales? Sí: el spike S-5 en `05-arquitectura.md` › Spikes (aplicado)
+
+---
+
+# Segunda parte: Capacidades (T-28)
+
+**Fecha:** 2026-11-24
+**Spike:** S-8 (`spikes/S-8-capacidades/`); las notas, en `research/capacidades-del-motor.md`
+
+## Preguntas y respuestas
+| Pregunta | Respuesta |
+|---|---|
+| ¿Los complementos andan en las sesiones de Iridium? | Sí: los de la cuenta cargan solos y sus skills y comandos están en «/». Sus conectores, no: piden iniciar sesión (Slack, Figma…) o fallan (Gmail, Calendar) |
+| ¿Se sabe el estado de cada conector sin gastar? | Sí: una sesión sin mensajes da cada uno con su estado, y deja prenderlos, apagarlos y reconectarlos |
+| ¿Cómo se inicia sesión en un conector? | Desde Claude Code interactivo (`/mcp`), que abre el navegador; en Iridium, en la consola de adentro (falta probarlo de punta a punta) |
+| ¿Se puede usar el navegador? | Sí: Claude in Chrome viene con Claude Code (22 herramientas, anda en Windows); necesita la extensión «Claude» de Chrome, que en esta PC no está instalada |
+| ¿Se puede usar la PC? | En Windows, Claude Code no: es solo de Mac; en Windows lo tiene la app de escritorio de Claude. Quedan servidores de terceros o uno propio (Q-283) |
+
+## Impacto en la definición
+- Los complementos no hay que «sumarlos»: lo que falta es verlos, conectar sus conectores y saber cuándo no andan.
+- El navegador es una opción de la sesión: prenderlo es cambiar cómo se abre, no programar herramientas.
+- La PC queda fuera salvo que el usuario elija otra cosa en Q-283.
+
+## Riesgos aceptados
+- Claude in Chrome y el estado de los conectores son de Claude Code y pueden cambiar con cada versión: se revisan al subir el SDK, con `spikes/S-8-capacidades/mirar.ts`.
+- Con el navegador, una página puede traer instrucciones escondidas para la IA: el interruptor va apagado de entrada y la extensión pide permiso por sitio.
+
+## Portón
+- [x] Las preguntas de la definición tienen respuesta
+- [x] Las notas están en `research/`, con el spike
+- [x] ¿Requirió cambios en los documentos generales? Sí: el spike S-8 en `05-arquitectura.md` › Spikes (aplicado)

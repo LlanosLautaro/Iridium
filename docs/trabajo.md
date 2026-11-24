@@ -120,8 +120,9 @@ Estado: hecho · Fecha: 2026-10-30
 La ventana de Ajustes (D-065).
 
 ## T-28 — Más capacidades de Claude
-Estado: pendiente · Frente: Paridad · Fecha: 2026-10-30
+Estado: en curso · Frente: Paridad · Fecha: 2026-10-30
 Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Era el frente Capacidades (D-102); desde D-166 es la segunda parte de Paridad.
+2026-11-24: definición en borrador e investigación (S-8, `modulos/paridad/definicion.md` › Segunda parte). Se decide en Q-282 a Q-284.
 
 ## T-29 — Mantenimiento: subir los parches
 Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
