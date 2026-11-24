@@ -13,7 +13,7 @@
 | 4. UX | hecho (Q-246, Q-247, D-168; Capacidades, Q-286) | `ux.md` |
 | 5. Diseño técnico | hecho (D-169; Capacidades, D-189) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (D-170) | `06-ui.md` y `diseno/piezas.css` |
-| 7. Construcción | hecho (primera parte: PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258); segunda parte en curso (PA-I4 construida, se prueba en Q-287) | este archivo |
+| 7. Construcción | hecho (primera parte: PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258); segunda parte en curso (PA-I4 probada en Q-287; siguen PA-I5 y PA-I6) | este archivo |
 | 8. Calidad | hecho (2026-11-22, primera parte: los casos raros del texto pegado, los tres chats y el teclado; ver Calidad) | este archivo |
 | 9. Lanzamiento | hecho (primera parte; entra con Armar, como cada versión) | este archivo |
 
@@ -25,7 +25,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **PA-I3 hecha** (2026-11-22): un texto pegado de más de 40 líneas o 2.000 caracteres queda como ficha «Texto pegado · 340 líneas»; un clic lo abre en el visor, la ✕ lo saca y `Ctrl+Z` justo después lo vuelve texto en el cuadro, donde se pegó. Va con el mensaje y queda en él, también al reabrir. «Sobre la skill» y las citas (Revisar, Idea…) pasaron a la Ficha, con su ícono, en la misma fila que los adjuntos. Probada en Q-258, todo bien.
 **Primera parte completa** (2026-11-22): la calidad está en la sección Calidad.
 **Segunda parte, Capacidades (T-28), empezada** (2026-11-24): definición e investigación hechas (S-8). Los complementos de la cuenta ya cargan en las sesiones; lo que falta es verlos y conectar sus conectores, que piden iniciar sesión. El navegador está a una opción (Claude in Chrome, con la extensión de Chrome). Usar la PC, en Windows, Claude Code no lo tiene. Con Q-282 a Q-284 (D-188): el navegador es el Brave del usuario con la extensión de Claude, y la definición está aprobada. La PC, con Windows-MCP (Q-285), y la UX aprobada (Q-286). **Diseño técnico cerrado** (D-189): apagar un conector vale solo para Iridium, Conectar va por la consola de adentro, el navegador y la PC se prenden por sesión. Sigue PA-I4 (ver y apagar).
-**PA-I4 construida** (2026-11-24): Ajustes › Capacidades, después de IA, muestra los complementos (de tu cuenta o de Iridium, con sus skills y conectores) y los conectores con su estado en palabras; los que no andan, primero. **Conectar** corre `claude mcp login` en la consola de abajo, que abre el navegador; al terminar, la fila se pone al día (D-190: `/mcp` mostraba antes la bienvenida de Claude Code). El interruptor apaga un conector solo para las conversaciones nuevas de Iridium, sin tocar la configuración de Claude Code. Se prueba en Q-287.
+**PA-I4 construida** (2026-11-24): Ajustes › Capacidades, después de IA, muestra los complementos (de tu cuenta o de Iridium, con sus skills y conectores) y los conectores con su estado en palabras; los que no andan, primero. **Conectar** corre `claude mcp login` en la consola de abajo, que abre el navegador; al terminar, la fila se pone al día (D-190: `/mcp` mostraba antes la bienvenida de Claude Code). El interruptor apaga un conector solo para las conversaciones nuevas de Iridium, sin tocar la configuración de Claude Code. **Probada en Q-287**, todo bien. Como tardaba en cargar, ahora muestra enseguida la lista de la última vez con «Poniéndose al día…» y la cambia cuando llega la nueva. Sigue PA-I5 (el navegador).
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -54,7 +54,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 | PA-I1 | Los comandos con «/» | hecha (probada en Q-250) |
 | PA-I2 | Archivos y fotos | hecho (probada en Q-251) |
 | PA-I3 | El texto largo pegado | hecha (probada en Q-258) |
-| PA-I4 | Capacidades: ver y apagar | en curso (construida; se prueba en Q-287) |
+| PA-I4 | Capacidades: ver y apagar | hecha (probada en Q-287) |
 | PA-I5 | Capacidades: el navegador | pendiente |
 | PA-I6 | Capacidades: la PC | pendiente |
 
@@ -94,3 +94,4 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 ## Próximo paso
 Construir PA-I5, el navegador: el interruptor en Capacidades, `extraArgs: { chrome: null }` en `abrir` con `capacidades.navegador`, buscar la extensión «Claude» (`fcoeoabgfenejglbffodgkkbkcdhcgfn`) en los perfiles de Chrome, Brave y Edge con su aviso, y la prueba real con Brave (Haiku, gastando poco). Con Q-287, cerrar PA-I4 o arreglar lo que falle.
 **Leer antes:** `diseno-tecnico.md` › Segunda parte (decisión 4) y `ux.md` › Segunda parte (Navegador); `src/renderer/marco/ajustes/Capacidades.tsx`.
+- 2026-11-24 — Q-287: las cuatro casillas bien; PA-I4 probada. Comentaste que tardaba en cargar: la última lista queda en `capacidades.json` (en los datos de Iridium) y la sección la muestra al abrir, con «Poniéndose al día…», hasta que llega la nueva; si la nueva falla, queda la guardada y lo dice, con Reintentar. Vitest (1 nueva) y Playwright (1 nueva) en verde.

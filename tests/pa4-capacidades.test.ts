@@ -18,6 +18,7 @@ import {
 import { Capacidades } from '../src/main/app/capacidades'
 import { Conversaciones } from '../src/main/app/conversacion'
 import { leerPreguntasAbiertas } from '../src/main/app/proyectos'
+import { archivoCapacidades } from '../src/main/infra/capacidades'
 import { ArchivoConfig, preferenciasDe } from '../src/main/infra/config'
 import { ArchivoSesiones } from '../src/main/infra/sesiones'
 import { leerComplementos } from '../src/main/infra/skills'
@@ -230,6 +231,28 @@ describe('la app (PA-7 a PA-9)', () => {
     const falla = new Capacidades({ motor, apagados: async () => [], anotar: (t) => anotado.push(t) })
     expect(await falla.vista()).toEqual({ tipo: 'error' })
     expect(anotado[0]).toMatch(/no respondió/)
+  })
+
+  it('la última lista queda en capacidades.json y se ve al volver, con lo apagado de ahora (Q-287)', async () => {
+    const archivo = join(raiz, 'datos', 'capacidades.json')
+    let apagados: string[] = []
+    const nueva = () =>
+      new Capacidades({
+        motor: crearMotorFalso({ pasoMs: 1 }),
+        apagados: async () => apagados,
+        guardada: archivoCapacidades(archivo),
+      })
+    expect(await nueva().guardada()).toBeNull()
+    const vista = await nueva().vista()
+    // Otra Iridium (cerrar y abrir): la lista guardada, sin pedirla al motor.
+    apagados = ['plugin:engineering:linear']
+    const guardada = await nueva().guardada()
+    if (guardada?.tipo !== 'ok' || vista.tipo !== 'ok') throw new Error('sin lista')
+    expect(guardada.complementos).toEqual(vista.complementos)
+    expect(guardada.conectores.find((c) => c.nombre === 'plugin:engineering:linear')?.apagado).toBe(true)
+    // Rota, es como si no estuviera.
+    await writeFile(archivo, '{ "version": 1, "conectores": "x" }')
+    expect(await nueva().guardada()).toBeNull()
   })
 
   it('las sesiones nuevas se abren sin los apagados (D-189 › 2)', async () => {

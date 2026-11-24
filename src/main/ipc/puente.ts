@@ -87,6 +87,7 @@ import {
 } from '../infra/armados'
 import type { ArchivoArranques } from '../infra/arranques'
 import type { ArchivoBorradores } from '../infra/borradores'
+import { archivoCapacidades } from '../infra/capacidades'
 import {
   type CarpetasEnDisco,
   moverCarpeta,
@@ -209,6 +210,8 @@ export interface Servicios {
   vistos: ArchivoVistos
   /** Lo que pasó en cada momento del arranque (`arranques.json`, frente Arranque). */
   arranques: ArchivoArranques
+  /** La última lista de Ajustes › Capacidades (`capacidades.json`, Q-287); sin ella, no se recuerda entre aperturas. */
+  archivoCapacidades?: string
   /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento del arranque, a tantos segundos de abrir. */
   arranqueEnSegundos?: number
   /** Solo pruebas (`IRIDIUM_AVANCE_SIN_USAR`): los segundos sin usar del avance solo, que mira cada segundo. */
@@ -460,6 +463,7 @@ export function registrarPuente(s: Servicios): Puente {
     motor: s.motor,
     apagados: async () => (await s.config.leer()).capacidades.conectoresApagados,
     anotar: (t) => s.registro.escribir(t),
+    ...(s.archivoCapacidades ? { guardada: archivoCapacidades(s.archivoCapacidades) } : {}),
   })
 
   const conversaciones = new Conversaciones({
@@ -823,6 +827,7 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.capacidades, () => s.motor.capacidades())
   ipcMain.handle(CANALES.comandos, async (_, ruta: unknown) => comandos.de(await proyecto(ruta)))
   ipcMain.handle(CANALES.capacidadesSesion, () => (capacidades.disponible() ? capacidades.vista() : null))
+  ipcMain.handle(CANALES.capacidadesGuardadas, () => capacidades.guardada())
   ipcMain.handle(CANALES.conectar, (_, nombre: unknown) =>
     capacidades.disponible() ? capacidades.conectar(NombreConector.parse(nombre)) : null,
   )

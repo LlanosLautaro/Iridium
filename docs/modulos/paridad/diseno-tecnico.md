@@ -203,6 +203,6 @@ Descartado: `toggleMcpServer` (queda en la configuración de Claude Code, decisi
 ## Iteraciones
 | ID | Objetivo | Qué entra |
 |---|---|---|
-| PA-I4 | Ver y apagar | `capacidadesSesion`, la sección con complementos y conectores, apagar con `deniedMcpServers`, Conectar en la consola (y la prueba de `/mcp`) |
+| PA-I4 | Ver y apagar | `capacidadesSesion`, la sección con complementos y conectores, apagar con `deniedMcpServers`, Conectar en la consola (y la prueba de `/mcp`); con Q-287, la última lista guardada en `capacidades.json` se ve al abrir mientras llega la nueva |
 | PA-I5 | El navegador | El interruptor, `--chrome` en `abrir`, buscar la extensión y su aviso; prueba real con Brave |
 | PA-I6 | La PC | El interruptor, Instalar en la consola, `mcpServers.pc` en `abrir`; prueba real con una captura |

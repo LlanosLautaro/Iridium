@@ -367,6 +367,8 @@ function crearVentana(puente: Puente, guardada: VentanaGuardada | null, deFondo:
     titleBarOverlay: { color: colores.barra, symbolColor: colores.simbolos, height: ALTO_BARRA },
     webPreferences: {
       preload: join(import.meta.dirname, '../preload/index.cjs'),
+      // El número de la versión armada (R-107): el del `package.json` es siempre 1.0.0; el armado le pone 1.0.x.
+      additionalArguments: [`--iridium-version=${app.getVersion()}`],
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
@@ -672,6 +674,7 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       },
       segundosSinUso: () => uso.segundosSinUsar(),
       arranques: new ArchivoArranques(join(carpetaDatos, 'arranques.json')),
+      archivoCapacidades: join(carpetaDatos, 'capacidades.json'),
       // Abrir (AB-I2): las apps de escritorio de los proyectos se arman solas; la de Iridium, con D-122.
       armados: {
         archivo: new ArchivoArmados(join(carpetaDatos, 'armados.json')),

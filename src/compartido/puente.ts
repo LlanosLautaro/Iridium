@@ -984,6 +984,7 @@ export const CANALES = {
   comandosCambio: 'conversacion:comandos-cambio',
   capacidades: 'motor:capacidades',
   capacidadesSesion: 'capacidades:ver',
+  capacidadesGuardadas: 'capacidades:guardadas',
   conectar: 'capacidades:conectar',
   pendientes: 'pendientes:proyecto',
   responder: 'pendientes:responder',
@@ -1187,6 +1188,8 @@ export interface ApiIridium {
    * lo apagado, sin gastar; null si el motor no los dice (la sección no aparece).
    */
   capacidadesSesion(): Promise<VistaCapacidades | null>
+  /** La última lista que se supo, para mostrarla mientras llega la nueva (Q-287); null si nunca se supo. */
+  capacidadesGuardadas(): Promise<VistaCapacidades | null>
   /** Conectar (PA-8): el inicio de sesión del conector en la consola de adentro; al terminar, la lista de nuevo. */
   conectar(nombre: string): Promise<VistaCapacidades | null>
   /** La lista de «/» de un proyecto, con los usados hace poco (PA-1), sin gastar. */

@@ -123,6 +123,7 @@ La ventana de Ajustes (D-065).
 Estado: en curso · Frente: Paridad · Fecha: 2026-10-30
 Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Era el frente Capacidades (D-102); desde D-166 es la segunda parte de Paridad.
 2026-11-24: definición en borrador e investigación (S-8, `modulos/paridad/definicion.md` › Segunda parte). Se decide en Q-282 a Q-284.
+2026-11-24: PA-I4 (ver y apagar los conectores) probada en Q-287; siguen PA-I5 (el navegador) y PA-I6 (la PC).
 
 ## T-29 — Mantenimiento: subir los parches
 Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
@@ -424,7 +425,7 @@ Es la base del frente Paridad: el + del compositor con Agregar archivos o fotos 
 Hecho el 2026-11-22: la primera parte de Paridad (PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258): «/» con los comandos, el + con archivos y fotos, pegar fotos y el texto largo pegado como ficha. Lo que sigue del frente, Capacidades, es T-28. Quedó `pendiente` al cerrar esa parte; corregido el 2026-11-22 (T-117).
 
 ## T-97 — Mencionar un archivo con «@» en el chat
-Estado: nueva · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
+Estado: descartado · Frente: Paridad · Idea: IA · Fecha: 2026-11-21 · Origen: Q-238
 Como en Claude para VS Code: escribir «@» abre la lista de archivos del proyecto y el elegido viaja con el mensaje. Quedó fuera de la primera parte de Paridad (D-166).
 
 ## T-98 — Dictar un mensaje con el micrófono
@@ -604,3 +605,7 @@ Hecha el 2026-11-24: las pruebas con repositorios de verdad de esos dos archivos
 
 ## T-130 — Se retomó una sesión interrumpida porque se acabó la cuota, al retomarla manualmente esta hizo sonar el sonido de notifiacion de cuando termina de trabajar, pero estaba trabajando, además la tab de iridium no mostraba el texto de "trabajando"
 Estado: nueva · Idea: usuario · Fecha: 2026-11-24
+
+## T-131 — Pruebas que se pasan de tiempo con la suite entera
+Estado: pendiente · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
+Con `pnpm test` entero y la PC ocupada, a veces fallan por tiempo `d081-github.test.ts` (publicar), `gestor/calidad-casos-limite.test.ts` (300 proyectos) y `t128-ventana-actualizando.test.ts` (Reiniciar ahora); solas pasan. Como T-129: darles el tiempo que necesitan o medir sin competir con el resto. Tamaño: chico.

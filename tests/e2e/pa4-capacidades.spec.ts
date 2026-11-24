@@ -99,3 +99,20 @@ test('un motor sin complementos ni conectores: Capacidades no aparece en Ajustes
   await expect(ajustes.getByRole('button', { name: 'Capacidades' })).toHaveCount(0)
   await app.close()
 })
+
+test('al volver a abrir, la lista de la última vez se ve enseguida mientras se pone al día (Q-287)', async () => {
+  const { app, win } = await abrir()
+  const ajustes = await abrirCapacidades(win)
+  await expect(ajustes.getByText('Anthropic · 10 skills · 3 conectores')).toBeVisible()
+  await app.close()
+
+  // Claude Code tarda 4 s en decir la lista nueva: la guardada aparece antes, con «Poniéndose al día…».
+  const otra = await abrir({ IRIDIUM_FALSO_PASO_MS: '4000' })
+  const deNuevo = await abrirCapacidades(otra.win)
+  await expect(deNuevo.getByText('Anthropic · 10 skills · 3 conectores')).toBeVisible({ timeout: 2_000 })
+  await expect(deNuevo.getByText('Poniéndose al día…')).toBeVisible()
+  await otra.win.screenshot({ path: 'test-results/q287-guardada.png' })
+  await expect(deNuevo.getByText('Poniéndose al día…')).toHaveCount(0, { timeout: 15_000 })
+  await expect(deNuevo.getByText('Anthropic · 10 skills · 3 conectores')).toBeVisible()
+  await otra.app.close()
+})

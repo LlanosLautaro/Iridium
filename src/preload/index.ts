@@ -1,6 +1,5 @@
 // El puente seguro: la única API que ve la ventana (`window.iridium`). No expone nada de Node ni de Electron.
 import { contextBridge, ipcRenderer, webFrame, webUtils } from 'electron'
-import { version } from '../../package.json'
 import type { ConsolaVista, PedidoCierre, SalidaConsola } from '../compartido/consolas'
 import type { CambioDiseno } from '../compartido/diseno'
 import {
@@ -22,6 +21,10 @@ import {
 const ponerZoom = () => document.documentElement.style.setProperty('--zoom', String(webFrame.getZoomFactor()))
 window.addEventListener('DOMContentLoaded', ponerZoom)
 window.addEventListener('resize', ponerZoom)
+
+// El número de la versión armada, que le pasa el proceso principal (R-107); el del `package.json` se queda en 1.0.0.
+const version =
+  process.argv.find((a) => a.startsWith('--iridium-version='))?.slice('--iridium-version='.length) ?? ''
 
 function escuchar<T>(canal: string, f: (dato: T) => void): () => void {
   const manejar = (_: unknown, dato: T) => f(dato)
@@ -70,6 +73,7 @@ const api: ApiIridium = {
   capacidadesMotor: () => ipcRenderer.invoke(CANALES.capacidades),
   comandos: (ruta) => ipcRenderer.invoke(CANALES.comandos, ruta),
   capacidadesSesion: () => ipcRenderer.invoke(CANALES.capacidadesSesion),
+  capacidadesGuardadas: () => ipcRenderer.invoke(CANALES.capacidadesGuardadas),
   conectar: (nombre) => ipcRenderer.invoke(CANALES.conectar, nombre),
   alCambiarComandos: (f) => escuchar(CANALES.comandosCambio, f),
   pendientes: (ruta) => ipcRenderer.invoke(CANALES.pendientes, ruta),

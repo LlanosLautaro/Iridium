@@ -1,8 +1,9 @@
 // Ajustes › Capacidades (frente Paridad, segunda parte, T-28; ux.md › PA-7 a PA-9; maqueta
 // diseno/pantallas/paridad-capacidades.html): los complementos que cargan las sesiones de Iridium y sus conectores con
 // el estado en palabras, Conectar en la consola de abajo y un interruptor para apagarlos solo en Iridium. Se pide cada
-// vez que se abre la sección, sin gastar. El navegador y la PC llegan con PA-I5 y PA-I6.
-import { useCallback, useEffect, useState } from 'react'
+// vez que se abre la sección, sin gastar; mientras llega, va la última lista que se supo (Q-287), con «Poniéndose al
+// día…». El navegador y la PC llegan con PA-I5 y PA-I6.
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   accionDe,
   cambiarApagado,
@@ -24,13 +25,33 @@ export function Capacidades({ cambiar }: PropsSeccion) {
   const ajuste = usarEstado((e) => e.preferencias.capacidades)
   const [carga, setCarga] = useState<Carga>({ tipo: 'cargando' })
   const [conectando, setConectando] = useState<string | null>(null)
+  /** Se muestra la lista guardada y se está pidiendo la nueva (`poniendo`), o la nueva no llegó (`sin-poner`). */
+  const [alDia, setAlDia] = useState<'si' | 'poniendo' | 'sin-poner'>('si')
+  const llego = useRef(false)
 
   const pedir = useCallback(() => {
+    llego.current = false
     setCarga({ tipo: 'cargando' })
+    setAlDia('si')
+    // La guardada se ve solo si llega antes que la nueva.
+    void window.iridium
+      .capacidadesGuardadas()
+      .then((v) => {
+        if (v?.tipo !== 'ok' || llego.current) return
+        setCarga(v)
+        setAlDia('poniendo')
+      })
+      .catch(() => {})
     void window.iridium
       .capacidadesSesion()
-      .then((v) => setCarga(v ?? { tipo: 'error' }))
-      .catch(() => setCarga({ tipo: 'error' }))
+      .then((v) => v ?? { tipo: 'error' as const })
+      .catch(() => ({ tipo: 'error' as const }))
+      .then((v) => {
+        llego.current = true
+        // Si falla con la guardada a la vista, queda la guardada y lo dice.
+        setCarga((antes) => (v.tipo === 'error' && antes.tipo === 'ok' ? antes : v))
+        setAlDia((antes) => (v.tipo === 'error' && antes === 'poniendo' ? 'sin-poner' : 'si'))
+      })
   }, [])
   useEffect(pedir, [pedir])
 
@@ -90,7 +111,20 @@ export function Capacidades({ cambiar }: PropsSeccion) {
   // El orden es el de cuando se abrió: apagar uno no lo mueve de lugar.
   const conectores = ordenarConectores(carga.conectores)
   return (
-    <div className="capacidades">
+    <div className="capacidades" aria-busy={alDia === 'poniendo'}>
+      {alDia === 'poniendo' && (
+        <p className="nota-capacidades" role="status">
+          Poniéndose al día…
+        </p>
+      )}
+      {alDia === 'sin-poner' && (
+        <p className="nota-capacidades" role="status">
+          Es la lista de la última vez: no se pudo poner al día.{' '}
+          <button type="button" className="boton sin-fondo chico" onClick={pedir}>
+            Reintentar
+          </button>
+        </p>
+      )}
       {carga.complementos.length > 0 && (
         <>
           <h4>Complementos</h4>
