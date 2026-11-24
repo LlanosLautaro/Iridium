@@ -148,7 +148,8 @@ test('cada sección del proyecto lleva la misma cabecera, a la misma altura, con
 test('en el inicio, Proyectos usa la misma cabecera', async () => {
   const { app, win } = await abrir()
   const proyectos = win.locator('.grilla-proyectos .cabecera')
-  await expect(proyectos.locator('h1')).toHaveText('Proyectos')
+  // El h1 lleva la cuenta al lado («Proyectos 1»): se mira su título.
+  await expect(proyectos.locator('h1')).toHaveAttribute('title', 'Proyectos')
   await expect(proyectos.locator('.fila-cab h1 > .cuenta')).toHaveText('1')
   await expect(proyectos.getByRole('button', { name: 'Nuevo proyecto' })).toBeVisible()
   expect((await proyectos.boundingBox())?.height).toBe(ALTO)

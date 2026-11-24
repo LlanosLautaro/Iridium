@@ -195,7 +195,8 @@
 | D-186 | 2026-11-23 | general (Actualizar; T-128) | 10, Q-278 | Al actualizar, una ventanita con el progreso | vigente |
 | D-187 | 2026-11-24 | general (Actualizar y el cierre; T-128) | 10, Q-280 | La ventanita también al cerrar con la X, y cómo sabe en qué paso va | vigente |
 | D-188 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 2; Q-282 a Q-284 | Capacidades: el navegador es el del usuario con la extensión de Claude, y la definición queda aprobada | vigente |
-| D-189 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, pasos 4 y 5; Q-285, Q-286 | La PC con Windows-MCP, y cómo se construyen las Capacidades | vigente |
+| D-189 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, pasos 4 y 5; Q-285, Q-286 | La PC con Windows-MCP, y cómo se construyen las Capacidades | vigente (Conectar, cambiado por D-190) |
+| D-190 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 7 (PA-I4) | Conectar con `claude mcp login`, y los conectores sin configurar | vigente |
 
 ---
 
@@ -3620,3 +3621,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** la PC, A (Q-285): Windows-MCP instalado una vez como herramienta con uv, que Iridium suma solo a sus sesiones con el interruptor prendido, sin PowerShell, archivos ni registro y sin su aviso de uso. La UX de Capacidades, aprobada (Q-286). Apagar un conector es de Iridium: `config.json` y `deniedMcpServers` en cada sesión. El navegador, con `--chrome`. Conectar, en la consola de adentro con `claude "/mcp"`; los de claude.ai, en su página. Tres iteraciones: PA-I4 (ver y apagar), PA-I5 (el navegador) y PA-I6 (la PC).
 **Motivo:** lo que se prende en Iridium no cambia cómo anda Claude Code en VS Code ni en la terminal, y lo que puede hacer daño va apagado hasta que el usuario lo prende.
 **Consecuencias:** `modulos/paridad/diseno-tecnico.md` › Segunda parte; `05-arquitectura.md` (la frontera y `config.json`) y `04-ux.md` › W-17, al día. Sin piezas nuevas: el paso 6 no hace falta. Sigue PA-I4.
+
+## D-190 — Conectar con `claude mcp login`, y los conectores sin configurar
+- **Fecha:** 2026-11-24
+- **Ámbito:** Paridad, segunda parte (Capacidades, T-28)
+- **Hito o paso:** Paridad, paso 7 (PA-I4)
+- **Estado:** vigente
+
+**Contexto:** D-189 › 3 pedía probar primero que `claude "/mcp"` iniciara sesión desde la consola de adentro. Probado con la misma pieza de consola: el Claude Code que trae Iridium, abierto así, muestra antes la bienvenida (elegir colores, las notas de seguridad) y pregunta si confiar en la carpeta. Además, la lista real trae conectores de complementos sin dirección (Gmail y Calendar de engineering y design, «No URL configured»), que Claude Code da como fallados.
+**Opciones consideradas:** `/mcp` con sus pantallas · `claude mcp login "<conector>"` · para los de claude.ai, su página.
+**Decisión:** Conectar corre `claude mcp login "<conector>"` en la consola de adentro, que abre el navegador y espera la vuelta, sin pantallas antes; vale también para los de claude.ai (su página dice «conectado» a conectores que las sesiones del SDK ven sin sesión: el inicio lleva `product_surface=sdk-ts`). Los sin dirección dicen «sin configurar», sin botón, y los apagados en Claude Code, «apagado en Claude Code». Los interruptores se guardan como cualquier preferencia, sin un canal propio.
+**Motivo:** un paso menos y nada que el usuario tenga que contestar en una consola; y no mostrar como falla lo que no tiene arreglo desde Iridium.
+**Consecuencias:** `modulos/paridad/diseno-tecnico.md` (decisión 3, Datos, Qué expone, Conectar) y `ux.md` (los estados), al día. Que el inicio de sesión termine bien y la sesión de Iridium vea el conector lo prueba el usuario en Q-287.

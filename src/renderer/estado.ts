@@ -38,6 +38,7 @@ export type SeccionAjustes =
   | 'proyecto'
   | 'perfil'
   | 'ia'
+  | 'capacidades'
   | 'apariencia'
   | 'notificaciones'
   | 'proyectos'
@@ -346,6 +347,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     },
     avanceApagado: { proyectos: [], frentes: [] },
     sonido: { prendido: true, cual: 'campana', conAvance: false },
+    capacidades: { navegador: false, pc: false, conectoresApagados: [] },
   },
   skills: { elegida: null, avisosDe: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
   cambiarSkills: (cambio) => set((s) => ({ skills: { ...s.skills, ...cambio } })),

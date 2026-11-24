@@ -1,6 +1,7 @@
 // La interfaz `Motor` (D-025, 05-arquitectura.md › La interfaz `Motor`): lo que la app le pide al motor, en
 // palabras de la app. Nada fuera de `motor/` conoce los tipos del SDK.
 
+import type { CapacidadesSesion, ConectorSesion } from '../../compartido/capacidades'
 import { type CapacidadesMotor, type ComandoMotor, comandoDe, type Pisa } from '../../compartido/comandos'
 import type {
   AjusteIa,
@@ -110,6 +111,8 @@ export interface OpcionesSesion {
   ajuste: AjusteIa
   /** El estilo de respuesta de Claude Code (AJ-3, D-065); null = el que tenga el usuario en Claude Code. */
   tono: string | null
+  /** Los conectores apagados en Iridium (D-189 › 2): esta sesión no los carga. */
+  apagados?: string[]
 }
 
 export interface SesionMotor {
@@ -135,6 +138,16 @@ export interface Motor {
    * mandar mensajes; falla si no se pudieron leer.
    */
   comandos(carpeta: string): Promise<ComandoMotor[]>
+  /**
+   * Los complementos y los conectores de una sesión nueva con su estado, sin gastar y sin los apagados de Iridium
+   * (Capacidades, D-189 › 1); falla si no se pudo saber.
+   */
+  capacidadesSesion(): Promise<CapacidadesSesion>
+  /**
+   * Inicia sesión en un conector (D-189 › 3, PA-8): abre el navegador desde una consola y termina cuando el usuario
+   * terminó o la cerró. No dice si salió bien: eso lo dice `capacidadesSesion`.
+   */
+  conectar(nombre: string): Promise<void>
   /** Que Claude Code tenga sesión iniciada y use la suscripción, sin mandar mensajes al modelo; y el uso. */
   verificar(): Promise<VerificacionMotor>
   /**
@@ -175,6 +188,12 @@ export interface OpcionesFalso {
   comandos?: boolean
   /** false: un motor que no recibe fotos (PA-6). */
   fotos?: boolean
+  /** false: un motor sin complementos ni conectores (Capacidades no aparece). */
+  capacidades?: boolean
+  /** La consola de adentro: Conectar corre ahí un `echo`, como el real corre `claude mcp login`. */
+  consola?: (nombre: string, comando: string) => Promise<void>
+  /** Los conectores apagados con que se abre cada sesión (para las pruebas). */
+  alApagados?: (carpeta: string, apagados: string[]) => void
 }
 
 /** Los estilos que trae Claude Code (los nombres que usa él), como los informa el motor real. */
@@ -281,6 +300,21 @@ export const SKILL_NUEVA_FALSA: ComandoMotor = motorFalso(
   },
 )
 
+/** Los complementos del motor falso: dos de la cuenta, como los de S-8 (Capacidades, PA-7). */
+export const COMPLEMENTOS_FALSOS: CapacidadesSesion['complementos'] = [
+  { nombre: 'engineering', autor: 'Anthropic', origen: 'cuenta', skills: 10, conectores: 3 },
+  { nombre: 'design', autor: 'Anthropic', origen: 'cuenta', skills: 7, conectores: 1 },
+]
+
+/** Los conectores del motor falso, uno en cada estado; Conectar deja conectado al que lo pide. */
+export const CONECTORES_FALSOS: ConectorSesion[] = [
+  { nombre: 'claude.ai Claude Docs', estado: 'conectado' },
+  { nombre: 'plugin:design:figma', estado: 'falta-sesion' },
+  { nombre: 'plugin:engineering:linear', estado: 'falta-sesion' },
+  { nombre: 'plugin:engineering:datadog', estado: 'falla' },
+  { nombre: 'plugin:engineering:gmail', estado: 'sin-configurar' },
+]
+
 /** Los escondidos de una lista, por su nombre y sus otros nombres (D-169 › 3). */
 export function escondidosDe(lista: readonly ComandoMotor[]): Record<string, Pisa> {
   const salida: Record<string, Pisa> = {}
@@ -356,8 +390,12 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
   let comandos = [...COMANDOS_FALSOS]
   const conComandos = o.comandos ?? true
   const conFotos = o.fotos ?? true
+  const conCapacidades = o.capacidades ?? true
+  /** Los conectores con su estado: Conectar los deja conectados. */
+  const conectores = CONECTORES_FALSOS.map((c) => ({ ...c }))
   return {
     capacidades: () => ({
+      conectores: conCapacidades,
       comandos: conComandos,
       fotos: conFotos
         ? {
@@ -373,6 +411,22 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
       if (!conComandos) return []
       await new Promise((listo) => setTimeout(listo, paso))
       return [...comandos]
+    },
+
+    async capacidadesSesion() {
+      if (!conCapacidades) throw new Error('Este motor no tiene complementos ni conectores')
+      await new Promise((listo) => setTimeout(listo, paso))
+      return {
+        complementos: COMPLEMENTOS_FALSOS.map((c) => ({ ...c })),
+        conectores: conectores.map((c) => ({ ...c })),
+      }
+    },
+
+    async conectar(nombre) {
+      if (o.consola) await o.consola(`Conectar ${nombre}`, `echo Conectando ${nombre}`)
+      else await new Promise((listo) => setTimeout(listo, paso * 2))
+      const c = conectores.find((x) => x.nombre === nombre)
+      if (c) c.estado = 'conectado'
     },
 
     verificar: async () => {
@@ -395,8 +449,9 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
 
     estilos: async () => ((estadoFijo ?? { tipo: 'listo' }).tipo === 'listo' ? ESTILOS_FALSOS : null),
 
-    abrir({ carpeta, conversacion, ajuste, tono: tonoInicial }, alEvento) {
+    abrir({ carpeta, conversacion, ajuste, tono: tonoInicial, apagados }, alEvento) {
       let tono = tonoInicial
+      o.alApagados?.(carpeta, apagados ?? [])
       const id = conversacion ?? `falsa-${siguiente++}`
       const guardada = guardadas.get(id) ?? {
         carpeta,
@@ -645,10 +700,14 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
 /** Un motor que no puede arrancar (no se encuentra Claude Code): todo lo que se le pide falla con el motivo. */
 export function crearMotorQueFalla(motivo: string): Motor {
   return {
-    capacidades: () => ({ comandos: false, fotos: null, escondidos: {} }),
+    capacidades: () => ({ comandos: false, fotos: null, escondidos: {}, conectores: false }),
     comandos: async () => {
       throw new Error(motivo)
     },
+    capacidadesSesion: async () => {
+      throw new Error(motivo)
+    },
+    conectar: async () => {},
     verificar: async () => ({ estado: { tipo: 'falla', motivo }, uso: null }),
     iniciarSesion: async () => {},
     uso: async () => null,

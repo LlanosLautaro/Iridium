@@ -3,6 +3,7 @@
 
 import type { AdjuntoPedido, AdjuntoVista } from './adjuntos'
 import type { AnchosConversacion } from './ancho-conversacion'
+import type { VistaCapacidades } from './capacidades'
 import type { CapacidadesMotor, ComandoMotor, ListaComandos } from './comandos'
 import type { ConsolaVista, GuardadoConsola, PedidoCierre, SalidaConsola } from './consolas'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
@@ -133,6 +134,18 @@ export interface Preferencias {
   avanceApagado: AvanceApagado
   /** El sonido al terminar la IA su trabajo (T-52, D-183): prendido al principio. */
   sonido: AjusteSonido
+  /** Lo que tiene la IA en las sesiones de Iridium (Capacidades, D-189): todo apagado y ningún conector apagado. */
+  capacidades: AjusteCapacidades
+}
+
+/** Capacidades (T-28, D-189): el navegador, la PC y los conectores apagados, solo para las sesiones de Iridium. */
+export interface AjusteCapacidades {
+  /** Claude in Chrome (PA-I5). */
+  navegador: boolean
+  /** Windows-MCP (PA-I6). */
+  pc: boolean
+  /** Por el nombre con que los nombra Claude Code (`plugin:design:figma`). */
+  conectoresApagados: string[]
 }
 
 /** Los sonidos para elegir en Ajustes › Notificaciones (T-52); se arman en la ventana, sin archivos. */
@@ -970,6 +983,8 @@ export const CANALES = {
   comandos: 'conversacion:comandos',
   comandosCambio: 'conversacion:comandos-cambio',
   capacidades: 'motor:capacidades',
+  capacidadesSesion: 'capacidades:ver',
+  conectar: 'capacidades:conectar',
   pendientes: 'pendientes:proyecto',
   responder: 'pendientes:responder',
   aMedias: 'pendientes:a-medias',
@@ -1167,6 +1182,13 @@ export interface ApiIridium {
   alCambiarConversacion(escuchar: (cambio: CambioConversacion) => void): () => void
   /** Qué sabe hacer el motor (los comandos, las fotos y los comandos escondidos), sin gastar (PA-6). */
   capacidadesMotor(): Promise<CapacidadesMotor>
+  /**
+   * Ajustes › Capacidades (T-28, D-189): los complementos y los conectores de las sesiones de Iridium con su estado y
+   * lo apagado, sin gastar; null si el motor no los dice (la sección no aparece).
+   */
+  capacidadesSesion(): Promise<VistaCapacidades | null>
+  /** Conectar (PA-8): el inicio de sesión del conector en la consola de adentro; al terminar, la lista de nuevo. */
+  conectar(nombre: string): Promise<VistaCapacidades | null>
   /** La lista de «/» de un proyecto, con los usados hace poco (PA-1), sin gastar. */
   comandos(ruta: string): Promise<ListaComandos>
   /** La lista de un proyecto cambió mientras la IA trabajaba (una skill nueva). */

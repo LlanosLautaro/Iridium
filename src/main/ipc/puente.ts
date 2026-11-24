@@ -32,6 +32,7 @@ import type { PlanEliminacion } from '../../compartido/tipos'
 import { planDeArmado, VigiaArmados } from '../app/abrir'
 import { Arranque, candidatosDe } from '../app/arranque'
 import { AvanceSolo } from '../app/avance'
+import { Capacidades } from '../app/capacidades'
 import { Comandos } from '../app/comandos'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
@@ -133,6 +134,7 @@ import {
   MedidaConsola,
   MensajeCommit,
   Mime,
+  NombreConector,
   NombreProyecto,
   NotaReabrir,
   Pedido,
@@ -453,6 +455,13 @@ export function registrarPuente(s: Servicios): Puente {
     alCambio: (ruta, lista) => enviar(CANALES.comandosCambio, { ruta, comandos: lista }),
   })
 
+  // Ajustes › Capacidades (T-28, D-189): lo que tiene la IA y lo apagado en Iridium.
+  const capacidades = new Capacidades({
+    motor: s.motor,
+    apagados: async () => (await s.config.leer()).capacidades.conectoresApagados,
+    anotar: (t) => s.registro.escribir(t),
+  })
+
   const conversaciones = new Conversaciones({
     motor: s.motor,
     registro: s.sesiones,
@@ -485,6 +494,7 @@ export function registrarPuente(s: Servicios): Puente {
     instruccion: async (ruta) => instruccionRevision(await comentarios.abiertos(ruta)),
     ajuste: async (ruta) => (await s.config.leer()).ajustesIa[ruta] ?? { modelo: null, esfuerzo: null },
     tono: async () => (await s.config.leer()).tono || null,
+    apagados: async () => (await s.config.leer()).capacidades.conectoresApagados,
     motorListo,
     alPerderSesion: () => {
       if (estadoMotor.tipo === 'sin-sesion') return
@@ -812,6 +822,10 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.detener, async (_, ruta: unknown) => conversaciones.detener(await proyecto(ruta)))
   ipcMain.handle(CANALES.capacidades, () => s.motor.capacidades())
   ipcMain.handle(CANALES.comandos, async (_, ruta: unknown) => comandos.de(await proyecto(ruta)))
+  ipcMain.handle(CANALES.capacidadesSesion, () => (capacidades.disponible() ? capacidades.vista() : null))
+  ipcMain.handle(CANALES.conectar, (_, nombre: unknown) =>
+    capacidades.disponible() ? capacidades.conectar(NombreConector.parse(nombre)) : null,
+  )
   ipcMain.handle(CANALES.cerrarFicha, async (_, ruta: unknown) =>
     conversaciones.cerrarFicha(await proyecto(ruta)),
   )

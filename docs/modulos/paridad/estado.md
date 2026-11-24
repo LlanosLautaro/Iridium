@@ -13,7 +13,7 @@
 | 4. UX | hecho (Q-246, Q-247, D-168; Capacidades, Q-286) | `ux.md` |
 | 5. Diseño técnico | hecho (D-169; Capacidades, D-189) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (D-170) | `06-ui.md` y `diseno/piezas.css` |
-| 7. Construcción | hecho (primera parte: PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258) | este archivo |
+| 7. Construcción | hecho (primera parte: PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258); segunda parte en curso (PA-I4 construida, se prueba en Q-287) | este archivo |
 | 8. Calidad | hecho (2026-11-22, primera parte: los casos raros del texto pegado, los tres chats y el teclado; ver Calidad) | este archivo |
 | 9. Lanzamiento | hecho (primera parte; entra con Armar, como cada versión) | este archivo |
 
@@ -25,6 +25,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **PA-I3 hecha** (2026-11-22): un texto pegado de más de 40 líneas o 2.000 caracteres queda como ficha «Texto pegado · 340 líneas»; un clic lo abre en el visor, la ✕ lo saca y `Ctrl+Z` justo después lo vuelve texto en el cuadro, donde se pegó. Va con el mensaje y queda en él, también al reabrir. «Sobre la skill» y las citas (Revisar, Idea…) pasaron a la Ficha, con su ícono, en la misma fila que los adjuntos. Probada en Q-258, todo bien.
 **Primera parte completa** (2026-11-22): la calidad está en la sección Calidad.
 **Segunda parte, Capacidades (T-28), empezada** (2026-11-24): definición e investigación hechas (S-8). Los complementos de la cuenta ya cargan en las sesiones; lo que falta es verlos y conectar sus conectores, que piden iniciar sesión. El navegador está a una opción (Claude in Chrome, con la extensión de Chrome). Usar la PC, en Windows, Claude Code no lo tiene. Con Q-282 a Q-284 (D-188): el navegador es el Brave del usuario con la extensión de Claude, y la definición está aprobada. La PC, con Windows-MCP (Q-285), y la UX aprobada (Q-286). **Diseño técnico cerrado** (D-189): apagar un conector vale solo para Iridium, Conectar va por la consola de adentro, el navegador y la PC se prenden por sesión. Sigue PA-I4 (ver y apagar).
+**PA-I4 construida** (2026-11-24): Ajustes › Capacidades, después de IA, muestra los complementos (de tu cuenta o de Iridium, con sus skills y conectores) y los conectores con su estado en palabras; los que no andan, primero. **Conectar** corre `claude mcp login` en la consola de abajo, que abre el navegador; al terminar, la fila se pone al día (D-190: `/mcp` mostraba antes la bienvenida de Claude Code). El interruptor apaga un conector solo para las conversaciones nuevas de Iridium, sin tocar la configuración de Claude Code. Se prueba en Q-287.
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -53,7 +54,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 | PA-I1 | Los comandos con «/» | hecha (probada en Q-250) |
 | PA-I2 | Archivos y fotos | hecho (probada en Q-251) |
 | PA-I3 | El texto largo pegado | hecha (probada en Q-258) |
-| PA-I4 | Capacidades: ver y apagar | pendiente |
+| PA-I4 | Capacidades: ver y apagar | en curso (construida; se prueba en Q-287) |
 | PA-I5 | Capacidades: el navegador | pendiente |
 | PA-I6 | Capacidades: la PC | pendiente |
 
@@ -77,6 +78,8 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 
 - 2026-11-24 — Q-282 a Q-284 procesadas (D-188): el navegador, A, con Brave (la extensión ya está en el perfil «Lautaro» y Claude Code reconoce Brave); la definición, aprobada, con los tres términos en el glosario general. Q-283: averiguado por qué usar la PC no llegó a Claude Code en Windows (`investigacion.md` › La PC); se decide en Q-285. UX de Capacidades escrita (PA-7 a PA-10) con la maqueta `paridad-capacidades.html`: Capacidades es una sección propia de Ajustes. Q-286.
 - 2026-11-24 — Q-285 (A) y Q-286 (A) procesadas. Diseño técnico de Capacidades (D-189): S-8 mostró que `toggleMcpServer` se guarda en `~/.claude.json` (y que `deniedMcpServers` de la sesión no escribe nada); Windows-MCP se instala con `uv tool install` y se suma solo a las sesiones de Iridium, sin PowerShell, archivos ni registro. Tres iteraciones: PA-I4, PA-I5 y PA-I6.
+- 2026-11-24 — PA-I4 construida. Primero, la prueba de D-189 › 3: `claude "/mcp"` en una consola como la de adentro muestra la bienvenida de Claude Code (colores, notas de seguridad) y si confiar en la carpeta; `claude mcp login "<conector>"` abre el navegador y espera la vuelta, para los de complementos y los de claude.ai, sin nada antes (D-190). La frontera: `capacidadesSesion()` (sin gastar: `mcpServerStatus()` esperando a que ninguno siga conectando, hasta 15 s, y los `plugin.json` de la cuenta y de Iridium con `infra/skills.ts` › `leerComplementos`), `conectar(nombre)` en la consola, `abrir` con `apagados` como `managedSettings.deniedMcpServers` y `capacidades().conectores`. Las reglas en `compartido/capacidades.ts` (el nombre visible, de dónde sale, el estado en palabras, el botón, el orden; el nombre que puede ir a la consola). La app (`app/capacidades.ts`): Conectar acepta solo un nombre de la última lista. `config.json` con `capacidades` (todo apagado de entrada); los interruptores se guardan como cualquier preferencia (D-190). La ventana: `ajustes/Capacidades.tsx` con siluetas, el error con Reintentar, el vacío y la línea de las conversaciones nuevas; los estados nuevos «sin configurar» y «apagado en Claude Code» (D-190). Con el real, sin gastar: 4 complementos (engineering 10 skills · 7 conectores, design 7 · 4, impeccable 1, iridium 1) y 15 conectores en 2,5 s, como la maqueta. El motor falso suma complementos y conectores (`IRIDIUM_FALSO_CAPACIDADES=no`). Vitest (`pa4-capacidades.test.ts`, 18) y Playwright (`pa4-capacidades.spec.ts`, 2, captura `test-results/pa4-capacidades.png`) en verde; `pnpm test` entero (1060) y Playwright entero (181: cuatro que fallaron por la carga pasan solas, y `or2-cabecera` › Proyectos, que fallaba a veces desde antes porque comparaba el título con la cuenta al lado, ahora mira solo el título). Sin probar con el real: que el inicio de sesión de un conector termine bien y una conversación nueva lo use (Q-287). El navegador y la PC, en PA-I5 y PA-I6.
+
 ## Calidad (paso 8, primera parte, 2026-11-22)
 **Historias.** Cada criterio de la definición tiene su prueba: «/» y la lista (`pa1-comandos`), adjuntar con el +, `Ctrl+U`, arrastrar y pegar una captura (`pa2-adjuntos`), el texto largo pegado (`pa3-pegado`), lo mandado al reabrir, y un motor sin comandos ni fotos que no los ofrece. **Funciona igual en la General y en la de Skills:** `tests/e2e/pa-calidad.spec.ts` pega, abre, saca y manda en esas dos, como en la de un proyecto (la de Ideas es la General). Con el Claude Code real, lo probó el usuario en Q-250, Q-251 y Q-258, y `tools/probar-fotos.ts`. Sin probar con el real: un comando de una skill con una foto (D-169 › 7).
 
@@ -89,5 +92,5 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **Verificado:** `pnpm test` (964 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` entero (157 pasan; dos que fallaron por la carga de la tanda, `h8-teclado` › los menús y `i6-uso` › Detener angosto, pasan dos veces seguidas solas, y la tercera fue la del `Esc`, arreglada). `pa-calidad.spec.ts` suma 3.
 
 ## Próximo paso
-Construir PA-I4: `capacidadesSesion`, Ajustes › Capacidades con complementos y conectores, apagar con `deniedMcpServers` y Conectar en la consola (primero, probar que `claude "/mcp"` inicia sesión desde la consola de adentro).
-**Leer antes:** `diseno-tecnico.md` › Segunda parte y `ux.md` › Segunda parte.
+Construir PA-I5, el navegador: el interruptor en Capacidades, `extraArgs: { chrome: null }` en `abrir` con `capacidades.navegador`, buscar la extensión «Claude» (`fcoeoabgfenejglbffodgkkbkcdhcgfn`) en los perfiles de Chrome, Brave y Edge con su aviso, y la prueba real con Brave (Haiku, gastando poco). Con Q-287, cerrar PA-I4 o arreglar lo que falle.
+**Leer antes:** `diseno-tecnico.md` › Segunda parte (decisión 4) y `ux.md` › Segunda parte (Navegador); `src/renderer/marco/ajustes/Capacidades.tsx`.

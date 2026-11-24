@@ -138,6 +138,48 @@ async function deComplementos(raiz: string): Promise<CarpetaSkill[]> {
   return encontradas
 }
 
+/** Un complemento en disco, para Capacidades (T-28): su nombre, quién lo hace y cuántas skills trae. */
+export interface ComplementoEnDisco {
+  nombre: string
+  autor: string | null
+  origen: 'cuenta' | 'iridium'
+  skills: number
+}
+
+async function complementoEn(carpeta: string, porDefecto: string, origen: ComplementoEnDisco['origen']) {
+  const t = await texto(join(carpeta, '.claude-plugin', 'plugin.json'))
+  let autor: string | null = null
+  if (t !== null)
+    try {
+      const a = (JSON.parse(t) as { author?: { name?: unknown } | unknown }).author
+      const n = typeof a === 'string' ? a : (a as { name?: unknown } | null)?.name
+      if (typeof n === 'string' && n.trim() !== '') autor = n.trim()
+    } catch {
+      // Sin autor.
+    }
+  const skills = (await carpetas(join(carpeta, 'skills'))).length
+  return { nombre: await nombreDelComplemento(carpeta, porDefecto), autor, origen, skills }
+}
+
+/**
+ * Los complementos que cargan las sesiones de Iridium: los de la cuenta (`.claude\plugins\synced`, la generación más
+ * nueva de cada uno, como lee Skills) y los de Iridium (D-086). Uno sin `plugin.json` va con el nombre de su carpeta.
+ */
+export async function leerComplementos(
+  carpetaClaude: string,
+  deIridium: readonly string[],
+): Promise<ComplementoEnDisco[]> {
+  const raiz = join(carpetaClaude, 'plugins', 'synced')
+  const encontrados: Promise<ComplementoEnDisco>[] = []
+  for (const cuenta of await carpetas(raiz)) {
+    const base = join(raiz, cuenta.name)
+    for (const dir of generacionesNuevas((await carpetas(base)).map((e) => e.name)))
+      encontrados.push(complementoEn(join(base, dir), dir.replace(/~g\d+$/, ''), 'cuenta'))
+  }
+  for (const carpeta of deIridium) encontrados.push(complementoEn(carpeta, 'iridium', 'iridium'))
+  return Promise.all(encontrados)
+}
+
 export interface SkillsCrudas {
   carpetas: CarpetaSkill[]
   errores: { origenes: OrigenSkill[]; carpeta: string }[]

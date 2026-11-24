@@ -73,6 +73,8 @@ export interface DependenciasConversacion {
   ajuste?: (ruta: string) => Promise<AjusteIa>
   /** El tono de la IA en Iridium (AJ-3, D-065), igual para todos los proyectos. Sin esto, el de Claude Code. */
   tono?: () => Promise<string | null>
+  /** Los conectores apagados en Iridium (Capacidades, D-189 › 2): las sesiones nuevas no los cargan. */
+  apagados?: () => Promise<string[]>
   /**
    * El estado del motor antes de abrir una sesión: si no estaba listo, lo vuelve a verificar (el usuario pudo
    * iniciar sesión después de abrir la app). Sin esto, se abre siempre.
@@ -586,6 +588,7 @@ export class Conversaciones {
       const extra = await this.d.instruccion?.(ruta).catch(() => null)
       const ajuste = (await this.d.ajuste?.(ruta).catch(() => null)) ?? SIN_AJUSTE
       const tono = (await this.d.tono?.().catch(() => null)) ?? null
+      const apagados = (await this.d.apagados?.().catch(() => null)) ?? []
       const sesion = this.d.motor.abrir(
         {
           carpeta: ruta,
@@ -593,6 +596,7 @@ export class Conversaciones {
           instruccion: extra ? `${base} ${extra}` : base,
           ajuste,
           tono,
+          apagados,
         },
         (e) => this.alEvento(p, sesion, e),
       )

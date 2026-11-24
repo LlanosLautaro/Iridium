@@ -601,3 +601,6 @@ Hecha el 2026-11-24: Q-281, todo bien (la ventanita con sus tres pasos al actual
 Estado: hecho · Idea: IA · Fecha: 2026-11-24 · Origen: T-128
 Con toda la suite de Vitest corriendo, tres pruebas de repositorios de verdad (`git.test.ts` y `d159-sincronia.test.ts`) se pasan de los 5 s y fallan; solas, o con menos archivos a la vez, pasan. Pasó también sin los cambios de T-128. Darles más tiempo o correrlas sin tanto en paralelo.
 Hecha el 2026-11-24: las pruebas con repositorios de verdad de esos dos archivos tienen 20 s; la suite entera pasó (1042).
+
+## T-130 — Se retomó una sesión interrumpida porque se acabó la cuota, al retomarla manualmente esta hizo sonar el sonido de notifiacion de cuando termina de trabajar, pero estaba trabajando, además la tab de iridium no mostraba el texto de "trabajando"
+Estado: nueva · Idea: usuario · Fecha: 2026-11-24

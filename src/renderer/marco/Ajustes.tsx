@@ -7,6 +7,7 @@ import { type SeccionAjustes, usarEstado } from '../estado'
 import { Icono } from '../ui/Icono'
 import { AcercaDe } from './ajustes/AcercaDe'
 import { Apariencia } from './ajustes/Apariencia'
+import { Capacidades } from './ajustes/Capacidades'
 import { EsteProyecto } from './ajustes/EsteProyecto'
 import { Ia } from './ajustes/Ia'
 import { Notificaciones } from './ajustes/Notificaciones'
@@ -27,10 +28,13 @@ const SECCIONES_AJUSTES: {
   nombre: string
   Vista: ComponentType<PropsSeccion>
   soloEnProyecto?: boolean
+  /** Solo si el motor dice sus complementos y conectores (Capacidades, PA-6). */
+  conCapacidades?: boolean
 }[] = [
   { id: 'proyecto', nombre: 'Este proyecto', Vista: EsteProyecto, soloEnProyecto: true },
   { id: 'perfil', nombre: 'Perfil', Vista: Perfil },
   { id: 'ia', nombre: 'IA', Vista: Ia },
+  { id: 'capacidades', nombre: 'Capacidades', Vista: Capacidades, conCapacidades: true },
   { id: 'apariencia', nombre: 'Apariencia', Vista: Apariencia },
   { id: 'notificaciones', nombre: 'Notificaciones', Vista: Notificaciones },
   { id: 'proyectos', nombre: 'Proyectos', Vista: Proyectos },
@@ -47,7 +51,16 @@ export function Ajustes() {
   const ventana = useRef<HTMLDivElement>(null)
   const [error, setError] = useState(false)
   const enProyecto = usarEstado((s) => s.seccion === 'proyecto' && s.proyectoAbierto !== null)
-  const secciones = SECCIONES_AJUSTES.filter((s) => !s.soloEnProyecto || enProyecto)
+  const [conCapacidades, setConCapacidades] = useState(false)
+  useEffect(() => {
+    void window.iridium
+      .capacidadesMotor()
+      .then((c) => setConCapacidades(c.conectores))
+      .catch(() => {})
+  }, [])
+  const secciones = SECCIONES_AJUSTES.filter(
+    (s) => (!s.soloEnProyecto || enProyecto) && (!s.conCapacidades || conCapacidades),
+  )
 
   // Al abrir, el foco entra a la ventana; al cerrar, vuelve a donde estaba (el chat sigue con lo escrito).
   useEffect(() => {

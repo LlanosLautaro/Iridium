@@ -128,7 +128,7 @@ Cambios al modelo general: en `05-arquitectura.md` (La interfaz `Motor` y Modelo
 ## Las decisiones de este paso
 1. **El motor dice sus capacidades con su estado**, sin gastar: `capacidadesSesion()` abre una sesión sin mensajes (como `comandos`), con los ajustes del usuario y el complemento de Iridium, y devuelve los complementos (nombre, autor, de dónde salen, cuántas skills y conectores) y los conectores (nombre, de qué complemento o de claude.ai, estado: `conectado`, `falta-sesion`, `falla`). Sale de `mcpServerStatus()` y de los `plugin.json` de `.claude\plugins\synced` (la misma lectura que ya hace Skills). Se espera hasta que ningún conector esté «conectando», con un tope de 15 s.
 2. **Apagar un conector es de Iridium, no de Claude Code.** S-8 mostró que `toggleMcpServer` queda guardado en la configuración de Claude Code de esa carpeta (`~/.claude.json`): apagaría el conector también en VS Code y habría que hacerlo carpeta por carpeta. En su lugar, Iridium guarda los apagados en `config.json` (`conectoresApagados: string[]`) y cada sesión los recibe como `managedSettings: { deniedMcpServers }`, que vale solo para esa sesión y no escribe nada (probado: el conector no aparece y `~/.claude.json` no cambia). La lista de Capacidades se pide sin esa negación, así se ven también los apagados.
-3. **Conectar va por la consola de adentro** (T-116), con el Claude Code que trae Iridium: `claude "/mcp"` en una pestaña «Conectar Figma», con la carpeta de Iridium como lugar de trabajo. Al cerrarse la pestaña, Capacidades vuelve a pedir el estado. Los conectores de claude.ai (Gmail, Drive…) no se conectan así: **Conectar** abre `claude.ai/settings/connectors` en el navegador. Que `/mcp` termine bien un inicio de sesión desde la consola de adentro se prueba primero en la construcción; si no, la pestaña abre `claude` sin más y la línea dice «escribí /mcp».
+3. **Conectar va por la consola de adentro** (T-116), con el Claude Code que trae Iridium: `claude mcp login "<conector>"` en una pestaña «Conectar plugin:design:figma», que abre el navegador y espera la vuelta. Al terminar, Capacidades vuelve a pedir el estado. Sirve igual para los de claude.ai (Gmail, Drive…). *Cambiado en la construcción (D-190):* era `claude "/mcp"` y, para los de claude.ai, su página; probado en PA-I4, `claude` en la consola mostraba antes la bienvenida (elegir colores, las notas de seguridad) y si confiar en la carpeta, y la página de claude.ai dice «conectado» a un conector que las sesiones del SDK ven sin sesión (el inicio lleva `product_surface=sdk-ts`).
 4. **El navegador es una opción de la sesión:** con el interruptor prendido, `abrir` suma `extraArgs: { chrome: null }` (Claude in Chrome); Claude Code encuentra solo el navegador con la extensión (Brave en esta PC). Para la fila «Brave, con la extensión «Claude»», Iridium busca la extensión (`fcoeoabgfenejglbffodgkkbkcdhcgfn`) en las carpetas de perfiles de Chrome, Brave y Edge; sin encontrarla, el aviso de la UX.
 5. **La PC es Windows-MCP como conector de Iridium** (Q-285, A): con el interruptor prendido, `abrir` suma `mcpServers: { pc: { type: 'stdio', command: <windows-mcp.exe>, args: ['serve', '--exclude-tools', 'PowerShell,FileSystem,Registry'], env: { ANONYMIZED_TELEMETRY: 'false' } } }`. No se registra en Claude Code: solo lo tienen las sesiones de Iridium con el interruptor prendido. Se sacan PowerShell, archivos y registro porque Claude Code ya los tiene (y son lo que más daño hace por error); su aviso de uso a PostHog, apagado, como pide «todo local».
 6. **Instalar Windows-MCP lo guía Iridium**, una vez: si no está `%USERPROFILE%\.local\bin\windows-mcp.exe`, la fila dice «Falta instalarlo» con **Instalar**, que corre en la consola de adentro `winget install --id astral-sh.uv -e` (si falta uv) y `uv tool install windows-mcp` (uv baja el Python que pide, 3.14, sin tocar el de la PC). Se instala como herramienta y no con `uvx` porque el primer arranque con `uvx` pasa los 30 s que espera Claude Code. Al terminar, la fila se pone al día.
@@ -150,8 +150,9 @@ Descartado: `toggleMcpServer` (queda en la configuración de Claude Code, decisi
 | Función / evento / dato | Quién lo usa |
 |---|---|
 | Puente: `capacidades()` (la lista con su estado, el navegador y la PC encontrados) | Ajustes › Capacidades |
-| Puente: `cambiarCapacidad({ navegador? , pc?, conector?: { nombre, prendido } })` | Ajustes › Capacidades |
-| Puente: `conectar(nombre)` e `instalarPc()` (abren su consola) | Ajustes › Capacidades |
+| Puente: `capacidadesSesion()` (la lista con su estado y lo apagado; null si el motor no la dice) | Ajustes › Capacidades |
+| Las preferencias (`capacidades` en `Preferencias`): los interruptores y los apagados se guardan como cualquier ajuste, sin un canal propio (D-190) | Ajustes › Capacidades |
+| Puente: `conectar(nombre)` e `instalarPc()` (abren su consola; `conectar`, solo un nombre de la última lista) | Ajustes › Capacidades |
 
 ## Estructura interna
 | Pieza | Dónde | Qué hace |
@@ -164,7 +165,7 @@ Descartado: `toggleMcpServer` (queda en la configuración de Claude Code, decisi
 | La ventana | `renderer/marco/ajustes/Capacidades.tsx` | La sección, con las siluetas mientras carga |
 
 ## Datos
-- **`CapacidadesSesion`** (frontera): `{ complementos: { nombre, autor, origen: 'cuenta' | 'iridium', skills: number, conectores: number }[]; conectores: { nombre, de: string, estado: 'conectado' | 'falta-sesion' | 'falla' }[] }`.
+- **`CapacidadesSesion`** (frontera, `compartido/capacidades.ts`): `{ complementos: { nombre, autor, origen: 'cuenta' | 'iridium', skills: number, conectores: number }[]; conectores: { nombre, estado: 'conectado' | 'falta-sesion' | 'falla' | 'sin-configurar' | 'apagado-afuera' }[] }`. De qué complemento sale un conector se lee de su nombre (`plugin:design:figma`). `sin-configurar` es uno que el complemento trae sin dirección (Gmail y Calendar de engineering y design: «No URL configured»), que no es una falla ni tiene nada que conectar; `apagado-afuera`, uno apagado en la configuración de Claude Code (D-190).
 - **`abrir`** suma `navegador?: boolean`, `pc?: { ejecutable: string } | null` y `apagados?: string[]`.
 - **`config.json`** suma `capacidades: { navegador: boolean; pc: boolean; conectoresApagados: string[] }` (de entrada, todo apagado y la lista vacía).
 
@@ -174,8 +175,8 @@ Descartado: `toggleMcpServer` (queda en la configuración de Claude Code, decisi
 2. La ventana ordena con `compartido/capacidades.ts` y muestra; si pasan 15 s, el error con Reintentar.
 
 ### Conectar (PA-8)
-1. Un conector de complemento: `conectar(nombre)` abre una consola «Conectar <nombre>» con `claude "/mcp"` del Claude Code de Iridium. Uno de claude.ai: abre la página de conectores de claude.ai.
-2. Al cerrarse la consola (o al volver a la ventana, para los de claude.ai), la sección vuelve a pedir `capacidades()`.
+1. `conectar(nombre)` abre una consola «Conectar <nombre>» con `claude mcp login "<nombre>"` del Claude Code de Iridium (D-190), para un conector de un complemento y para uno de claude.ai.
+2. Al terminar la consola, la sección vuelve a pedir la lista.
 
 ### Abrir una sesión (todas)
 `abrir` lee `capacidades` de `config.json`: con el navegador, `extraArgs: { chrome: null }`; con la PC y el ejecutable encontrado, `mcpServers.pc`; siempre, `managedSettings.deniedMcpServers` con los apagados.

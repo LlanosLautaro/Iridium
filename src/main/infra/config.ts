@@ -45,6 +45,16 @@ export const AjusteSonido = z.object({
   conAvance: z.boolean(),
 })
 
+/** Capacidades (T-28, D-189): el navegador, la PC y los conectores apagados en Iridium. */
+export const AjusteCapacidades = z.object({
+  navegador: z.boolean(),
+  pc: z.boolean(),
+  conectoresApagados: z.array(z.string().min(1).max(200)).max(200),
+})
+
+/** De entrada, todo apagado y ningún conector apagado (P2). */
+export const CAPACIDADES_INICIALES = { navegador: false, pc: false, conectoresApagados: [] as string[] }
+
 /** Lo apagado del avance solo (FS-3). */
 export const AvanceApagado = z.object({
   proyectos: z.array(z.string().min(1).max(1024)).max(500),
@@ -139,6 +149,8 @@ const Config = z.object({
   avanceApagado: AvanceApagado.catch({ ...NINGUNO_APAGADO }),
   /** El sonido al terminar (T-52): prendido con la campana si falta o está roto. */
   sonido: AjusteSonido.catch({ ...AJUSTE_SONIDO_INICIAL }),
+  /** Capacidades (T-28): si falta o está roto, todo apagado. */
+  capacidades: AjusteCapacidades.catch({ ...CAPACIDADES_INICIALES, conectoresApagados: [] }),
   /** El tamaño de todo, con Ctrl+= y Ctrl+- (Defecto 17): 1 = normal. */
   zoom: z.number().min(0.5).max(3).catch(1),
   /** La ventana como quedó al cerrar (T-66): su lugar y tamaño sin maximizar, y si estaba maximizada. */
@@ -184,6 +196,7 @@ const PREDETERMINADA: Config = {
   avanceSolo: { ...AJUSTE_AVANCE_INICIAL },
   avanceApagado: { ...NINGUNO_APAGADO },
   sonido: { ...AJUSTE_SONIDO_INICIAL },
+  capacidades: { ...CAPACIDADES_INICIALES, conectoresApagados: [] },
   zoom: 1,
   ventana: null,
   abrirDeFondo: null,
@@ -218,6 +231,7 @@ export function preferenciasDe(c: Config): Preferencias {
     avanceSolo: c.avanceSolo as Preferencias['avanceSolo'],
     avanceApagado: c.avanceApagado,
     sonido: c.sonido as Preferencias['sonido'],
+    capacidades: c.capacidades,
   }
 }
 

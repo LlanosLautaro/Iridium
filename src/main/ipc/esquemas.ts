@@ -1,6 +1,7 @@
 // Esquemas que validan lo que llega desde la ventana (05-arquitectura.md › Seguridad: validar todo contenido externo).
 import { z } from 'zod'
 import { LARGO_ESCRITO, MAX_ADJUNTOS, PEGADO_MAXIMO } from '../../compartido/adjuntos'
+import { NOMBRE_CONECTOR } from '../../compartido/capacidades'
 import { LARGO_NOMBRE_REPO } from '../../compartido/github'
 import { ESTADOS_DESDE_IDEAS } from '../../compartido/ideas'
 import {
@@ -15,7 +16,14 @@ import { LARGO_MENSAJE } from '../../compartido/sincronia'
 import { ESTADOS } from '../../compartido/tipos'
 import { HORA_ARRANQUE } from '../core/arranque'
 import { LIMITE_NOMBRE_PROYECTO } from '../core/creacion'
-import { AjusteAvance, AjusteIa, AjusteSonido, AnchosConversacion, AvanceApagado } from '../infra/config'
+import {
+  AjusteAvance,
+  AjusteCapacidades,
+  AjusteIa,
+  AjusteSonido,
+  AnchosConversacion,
+  AvanceApagado,
+} from '../infra/config'
 
 export const CambioPreferencias = z
   .object({
@@ -43,9 +51,13 @@ export const CambioPreferencias = z
     avanceSolo: AjusteAvance.strict(),
     avanceApagado: AvanceApagado.strict(),
     sonido: AjusteSonido.strict(),
+    capacidades: AjusteCapacidades.strict(),
   })
   .partial()
   .strict()
+
+/** El nombre de un conector de Capacidades (después se comprueba que sea de la lista, D-189 › Seguridad). */
+export const NombreConector = z.string().regex(NOMBRE_CONECTOR)
 
 /** La carpeta de un proyecto (después se comprueba que esté en la carpeta de proyectos). */
 export const Ruta = z.string().min(1).max(1024)

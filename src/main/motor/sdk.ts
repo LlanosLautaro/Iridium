@@ -10,6 +10,7 @@ import {
   type AccountInfo,
   getSessionMessages,
   listSessions,
+  type McpServerStatus,
   type ModelInfo,
   type Options,
   type Query,
@@ -21,6 +22,13 @@ import {
   type SessionMessage,
   type SlashCommand,
 } from '@anthropic-ai/claude-agent-sdk'
+import {
+  type CapacidadesSesion,
+  type ConectorSesion,
+  complementoDe,
+  ESPERA_CONECTORES_MS,
+  NOMBRE_CONECTOR,
+} from '../../compartido/capacidades'
 import type { CapacidadesMotor, ComandoMotor, Pisa } from '../../compartido/comandos'
 // Solo tipos de la app: así las herramientas de `tools/` cargan este archivo sin compilar.
 import type {
@@ -35,6 +43,7 @@ import type {
 } from '../../compartido/puente'
 import { carpetaDeConversaciones } from '../core/carpeta-iridium'
 import { moverConversaciones } from '../infra/carpeta-iridium'
+import { type ComplementoEnDisco, leerComplementos } from '../infra/skills'
 import type { FallaMotor, FotoMotor, MensajeMotor, Motor, SesionMotor, UsoMotor } from './motor'
 
 const ESPERA_VERIFICAR_MS = 30_000
@@ -610,6 +619,47 @@ export function tonoDeSesion(tono: string | null): Pick<Options, 'settings'> {
   return tono ? { settings: { outputStyle: tono } } : {}
 }
 
+/**
+ * Los conectores apagados en Iridium como ajuste de la sesión (D-189 › 2): `managedSettings` vale solo para esa sesión
+ * y no escribe nada en la configuración de Claude Code (S-8). Sin apagados, nada.
+ */
+export function apagadosDeSesion(apagados: readonly string[] = []): Pick<Options, 'managedSettings'> {
+  return apagados.length
+    ? { managedSettings: { deniedMcpServers: apagados.map((serverName) => ({ serverName })) } }
+    : {}
+}
+
+/** El estado de un conector como lo dice Claude Code, en palabras de Iridium. Uno que sigue conectando, como falla. */
+export function conectorDe(s: Pick<McpServerStatus, 'name' | 'status' | 'error'>): ConectorSesion {
+  const estado: ConectorSesion['estado'] =
+    s.status === 'connected'
+      ? 'conectado'
+      : s.status === 'needs-auth'
+        ? 'falta-sesion'
+        : s.status === 'disabled'
+          ? 'apagado-afuera'
+          : // Los complementos traen algunos sin dirección, para que la ponga quien los usa (S-8).
+            s.status === 'failed' && /no url configured/i.test(s.error ?? '')
+            ? 'sin-configurar'
+            : 'falla'
+  return { nombre: s.name, estado }
+}
+
+/** Lo que tiene la IA: los complementos en disco con cuántos conectores suma cada uno, y los conectores. */
+export function capacidadesDe(
+  estados: readonly Pick<McpServerStatus, 'name' | 'status' | 'error'>[],
+  complementos: readonly ComplementoEnDisco[],
+): CapacidadesSesion {
+  const conectores = estados.map(conectorDe)
+  return {
+    complementos: complementos.map((c) => ({
+      ...c,
+      conectores: conectores.filter((x) => complementoDe(x.nombre) === c.nombre).length,
+    })),
+    conectores,
+  }
+}
+
 /** El `name` y la `description` del encabezado de un estilo propio (`~/.claude/output-styles/*.md`). */
 export function encabezadoDeEstilo(texto: string): { nombre: string | null; descripcion: string | null } {
   const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(texto)
@@ -709,7 +759,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
     return v
   }
   return {
-    capacidades: () => ({ comandos: true, fotos: FOTOS, escondidos: { ...ESCONDIDOS } }),
+    capacidades: () => ({ comandos: true, fotos: FOTOS, escondidos: { ...ESCONDIDOS }, conectores: true }),
 
     async comandos(carpeta) {
       // Como una conversación de esa carpeta (sus ajustes y los complementos de Iridium), sin mandar nada.
@@ -725,6 +775,44 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
         (s) => s.supportedCommands(),
       )
       return comandosDe(lista)
+    },
+
+    async capacidadesSesion() {
+      // Como una conversación nueva (los ajustes del usuario y los complementos de Iridium), sin los apagados: así se
+      // ven también ellos. Se espera a que ninguno siga conectando, con un tope.
+      const [estados, complementos] = await Promise.all([
+        sinMensajes(
+          {
+            cwd: homedir(),
+            settingSources: ['user', 'project', 'local'],
+            ...(opciones.plugins?.length
+              ? { plugins: opciones.plugins.map((path) => ({ type: 'local' as const, path })) }
+              : {}),
+            ...ejecutable,
+          },
+          async (s) => {
+            const desde = Date.now()
+            let lista = await s.mcpServerStatus()
+            while (lista.some((x) => x.status === 'pending') && Date.now() - desde < ESPERA_CONECTORES_MS) {
+              await new Promise((r) => setTimeout(r, 500))
+              lista = await s.mcpServerStatus()
+            }
+            return lista
+          },
+        ),
+        leerComplementos(join(homedir(), '.claude'), opciones.plugins ?? []),
+      ])
+      return capacidadesDe(estados, complementos)
+    },
+
+    async conectar(nombre) {
+      // `claude mcp login` abre el navegador y espera la vuelta, para un conector de un complemento y para uno de
+      // claude.ai (PA-I4; con `/mcp`, la consola mostraba antes la bienvenida y si confiar en la carpeta).
+      if (!NOMBRE_CONECTOR.test(nombre)) throw new Error(`Nombre de conector inválido: ${nombre}`)
+      const claude = opciones.rutaClaude ?? claudeDelSdk()
+      const comando = `"${claude}" mcp login "${nombre}"`
+      if (opciones.consola) return opciones.consola(`Conectar ${nombre}`, comando)
+      throw new Error('Conectar necesita la consola de Iridium')
     },
 
     async verificar() {
@@ -820,7 +908,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
       }
     },
 
-    abrir({ carpeta, conversacion, instruccion, ajuste, tono }, alEvento): SesionMotor {
+    abrir({ carpeta, conversacion, instruccion, ajuste, tono, apagados }, alEvento): SesionMotor {
       const cola: { texto: string; fotos: FotoMotor[] }[] = []
       let despertar: (() => void) | null = null
       let terminada = false
@@ -881,6 +969,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
         ...(conversacion ? { resume: conversacion } : {}),
         ...modeloYEsfuerzo(ajuste),
         ...tonoDeSesion(tono),
+        ...apagadosDeSesion(apagados),
         ...(opciones.modelo ? { model: opciones.modelo } : {}),
         ...ejecutable,
       }

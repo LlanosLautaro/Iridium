@@ -224,6 +224,9 @@ function crearMotor(): Motor {
       ...(process.env.IRIDIUM_FALSO_COMANDOS === 'no' ? { comandos: false } : {}),
       // IRIDIUM_FALSO_FOTOS=no: un motor que no recibe fotos (PA-6).
       ...(process.env.IRIDIUM_FALSO_FOTOS === 'no' ? { fotos: false } : {}),
+      // IRIDIUM_FALSO_CAPACIDADES=no: un motor sin complementos ni conectores (Capacidades no aparece).
+      ...(process.env.IRIDIUM_FALSO_CAPACIDADES === 'no' ? { capacidades: false } : {}),
+      ...(consolas.disponible() ? { consola: consolaDeIridium } : {}),
       ...(periodoCerrado
         ? {
             uso: {

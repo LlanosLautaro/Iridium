@@ -136,3 +136,28 @@
   bottom: 0;
   margin-top: var(--esp-4);
 }
+
+/* Capacidades (Paridad, T-28): los títulos de los grupos, la línea gris de abajo y las siluetas mientras lee */
+.capacidades h4 {
+  margin: var(--esp-5) 0 var(--esp-1);
+  font-size: var(--tam-chico);
+  font-weight: 600;
+  color: var(--texto-3);
+}
+.capacidades h4:first-child {
+  margin-top: 0;
+}
+.nota-capacidades {
+  margin: var(--esp-3) 0 0;
+  font-size: var(--tam-chico);
+  color: var(--texto-3);
+}
+.silueta-capacidad {
+  display: grid;
+  grid-template-columns: 30% 1fr;
+  gap: var(--esp-4);
+  padding: var(--esp-4) 0;
+}
+.silueta-capacidad + .silueta-capacidad {
+  border-top: 1px solid var(--borde-suave);
+}

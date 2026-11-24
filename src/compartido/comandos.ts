@@ -31,6 +31,8 @@ export interface CapacidadesMotor {
   fotos: { medios: string[]; maxBytes: number; maxLado: number } | null
   /** Los comandos escondidos, por nombre y por otro nombre: frenan lo escrito a mano aunque no haya lista. */
   escondidos: Record<string, Pisa>
+  /** Si dice sus complementos y conectores, se pueden apagar y conectar (Capacidades, T-28); sin eso, no hay sección. */
+  conectores: boolean
 }
 
 /** La lista de «/» de una carpeta, con los usados hace poco; `comandos` null si no se pudo leer. */
