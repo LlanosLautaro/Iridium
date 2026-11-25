@@ -356,7 +356,7 @@
   width: 13px;
   height: 13px;
   flex: none;
-  transition: transform 0.15s var(--sale);
+  transition: transform var(--dur-hover) var(--sale);
 }
 .detener > svg,
 .linea-aviso.detenida > svg {
@@ -369,7 +369,7 @@
   width: 13px;
   height: 13px;
   flex: none;
-  transition: transform 0.15s var(--sale);
+  transition: transform var(--dur-hover) var(--sale);
 }
 .proceso-ia[data-abierto] > .proceso-cab > svg {
   transform: rotate(90deg);
@@ -404,7 +404,7 @@
 .control-ia > button .ic:last-child {
   margin-left: auto;
   color: var(--texto-3);
-  transition: transform 0.12s var(--sale);
+  transition: transform var(--dur-hover) var(--sale);
 }
 .control-ia[data-abierto] > button .ic:last-child {
   transform: rotate(90deg);
@@ -435,11 +435,6 @@
   content: "! ";
   color: var(--texto);
   font-weight: 700;
-}
-@media (prefers-reduced-motion: reduce) {
-  .control-ia > button .ic:last-child {
-    transition: none;
-  }
 }
 
 /* Paridad (modulos/paridad/ux.md, maquetas paridad-comandos.html y paridad-escondido.html): la lista de «/» y el menú

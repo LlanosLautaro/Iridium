@@ -41,6 +41,11 @@
   color: var(--texto-2);
   border-right: 1px solid var(--borde);
 }
+.boton-menu {
+  transition:
+    background var(--dur-hover) var(--sale),
+    color var(--dur-hover) var(--sale);
+}
 .boton-menu:hover {
   color: var(--texto);
   background: var(--hover);
@@ -170,6 +175,9 @@
   place-items: center;
   color: var(--texto-3);
   border-radius: var(--radio-control);
+  transition:
+    background var(--dur-hover) var(--sale),
+    color var(--dur-hover) var(--sale);
 }
 .act .ic {
   width: 18px;
@@ -179,8 +187,13 @@
   color: var(--texto);
   background: var(--hover);
 }
+/* La sección elegida, en el acento y con su brillo (D-197) */
 .act.elegida {
-  color: var(--texto);
+  color: var(--acento);
+  background: var(--acento-tenue);
+}
+.act.elegida .ic {
+  filter: drop-shadow(0 0 4px var(--acento));
 }
 .act.elegida::before {
   content: "";
@@ -190,9 +203,10 @@
   bottom: 9px;
   width: 2px;
   border-radius: 2px;
-  background: var(--texto);
+  background: var(--acento);
+  box-shadow: var(--brillo-acento);
 }
-/* El punto de la Bandeja (R-103; ámbar si algo frena) y el de los comentarios abiertos de la Revisión, gris (R-50); el
+/* El punto de la Bandeja (R-103; en el acento si algo espera, naranja si algo frena, D-197) y el de los comentarios abiertos de la Revisión, gris (R-50); el
    número, al pasar el mouse */
 .act > span {
   position: absolute;

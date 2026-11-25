@@ -105,7 +105,7 @@
   width: 14px;
   height: 14px;
   color: var(--texto-3);
-  transition: rotate 0.15s var(--sale);
+  transition: rotate var(--dur-hover) var(--sale);
 }
 .git-pliega[aria-expanded="true"] .ic {
   rotate: 90deg;

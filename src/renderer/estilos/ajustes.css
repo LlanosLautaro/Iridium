@@ -9,21 +9,10 @@
 .capa-ajustes {
   z-index: 40;
 }
+/* Entra como los cuadros (PZ-8, D-197). */
 .ventana-ajustes {
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 48px);
-  animation: ajustes-entra 0.18s var(--sale);
-}
-@keyframes ajustes-entra {
-  from {
-    opacity: 0;
-    transform: translateY(6px) scale(0.99);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ventana-ajustes {
-    animation: none;
-  }
 }
 .cuerpo-ventana h3 {
   margin: 0 0 var(--esp-4);

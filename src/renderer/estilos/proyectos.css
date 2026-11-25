@@ -39,8 +39,8 @@
   text-align: left;
   cursor: pointer;
   transition:
-    border-color 0.12s var(--sale),
-    background 0.12s var(--sale);
+    border-color var(--dur-hover) var(--sale),
+    background var(--dur-hover) var(--sale);
 }
 .tarjeta:hover {
   border-color: var(--borde-fuerte);
@@ -92,6 +92,22 @@
   font-size: var(--tam-chico);
   color: var(--texto-3);
   white-space: nowrap;
+}
+/* El estado en su color (D-197); pausado, descontinuado y archivado quedan en gris. */
+.tarjeta .estado-t[data-color="uso"] {
+  color: var(--estado-uso);
+}
+.tarjeta .estado-t[data-color="desarrollo"] {
+  color: var(--estado-desarrollo);
+}
+.tarjeta .estado-t[data-color="idea"] {
+  color: var(--estado-idea);
+}
+.tarjeta .estado-t[data-color="rescate"] {
+  color: var(--estado-rescate);
+}
+.tarjeta .estado-t[data-color="eliminar"] {
+  color: var(--error);
 }
 .tarjeta .hacia {
   overflow: hidden;

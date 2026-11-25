@@ -105,7 +105,7 @@
 .titulo-q .ic {
   align-self: center;
   color: var(--texto-3);
-  transition: transform 0.12s var(--sale);
+  transition: transform var(--dur-hover) var(--sale);
 }
 .titulo-q:focus-visible {
   outline: 2px solid var(--texto);
@@ -124,7 +124,7 @@
   margin-left: calc(-1 * var(--esp-2));
 }
 .detalles-q .ic {
-  transition: transform 0.12s var(--sale);
+  transition: transform var(--dur-hover) var(--sale);
 }
 .detalles {
   display: flex;
@@ -259,7 +259,7 @@
   width: 14px;
   height: 14px;
   align-self: center;
-  transition: transform 0.12s var(--sale);
+  transition: transform var(--dur-hover) var(--sale);
 }
 .en-pausa .pregunta {
   opacity: 0.85;

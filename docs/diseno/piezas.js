@@ -159,7 +159,7 @@ function armarMarco() {
     <footer class="estado-barra">
       ${sinClaude ? `<a class="senal rojo" href="ajustes.html">${icono('error')}Claude sin sesión · Iniciar sesión</a>` : ''}
       ${enProyecto ? '<span>Hito 10 · Operación</span>' : ''}
-      ${cuerpo.dataset.consolas ? `<a class="senal" href="consolas.html" title="Consolas · Ctrl+ñ">${icono('seguir')}${cuerpo.dataset.consolas} corriendo</a>` : ''}
+      ${cuerpo.dataset.consolas ? `<a class="senal corriendo" href="consolas.html" title="Consolas · Ctrl+ñ">${icono('seguir')}${cuerpo.dataset.consolas} corriendo</a>` : ''}
       <span class="derecha">
         <span>5 h <span class="num">34 %</span></span>
         <span>Semana <span class="num">61 %</span></span>

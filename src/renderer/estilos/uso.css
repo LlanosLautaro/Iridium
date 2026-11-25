@@ -246,7 +246,7 @@
   border-radius: var(--radio-tarjeta);
   background: var(--elevado);
   box-shadow: var(--sombra-menu);
-  animation: llega-aviso 0.3s var(--sale) both;
+  animation: llega-aviso var(--dur-entrada) var(--sale) both;
 }
 .aviso-flotante[data-estado="espera"] {
   border-color: var(--espera-borde);
@@ -294,7 +294,7 @@
 @keyframes llega-aviso {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateX(16px);
   }
 }
 
@@ -371,10 +371,4 @@
 .medidor-uso[data-nivel="agotada"] .pc,
 .medidor-uso .libera {
   color: var(--error);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .aviso-flotante {
-    animation: none;
-  }
 }

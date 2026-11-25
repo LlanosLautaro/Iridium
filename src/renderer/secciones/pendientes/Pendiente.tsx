@@ -149,7 +149,7 @@ function Formulario({
         {p.puntos.map((punto, i) => (
           <div key={punto} className="fila punto-q">
             {/* La casilla marca; el texto no (puede tener enlaces): por eso no es un label. */}
-            <span className="casilla texto-punto">
+            <span className="casilla por-hacer texto-punto">
               <input
                 type="checkbox"
                 aria-labelledby={`${id}-p${i}`}

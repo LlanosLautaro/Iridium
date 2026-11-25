@@ -24,7 +24,7 @@ function BotonActividad({
   icono,
   n,
   queCuenta = 'abiertos',
-  ambar = false,
+  punto = 'gris',
   alTocar,
 }: {
   activa: boolean
@@ -34,8 +34,8 @@ function BotonActividad({
   n: number
   /** Qué cuenta el número, para el lector de pantalla. */
   queCuenta?: string
-  /** El punto en ámbar: algo frena el proyecto. */
-  ambar?: boolean
+  /** El color del punto: en el acento si algo espera al usuario, naranja si frena (D-197); gris si espera a la IA. */
+  punto?: 'gris' | 'acento' | 'ambar'
   alTocar: () => void
 }) {
   return (
@@ -48,9 +48,9 @@ function BotonActividad({
       onClick={alTocar}
     >
       <Icono nombre={icono} />
-      {/* Un punto, el número está en el nombre: la Bandeja, si algo espera al usuario (R-103; ámbar si frena, como el
-      inicio), y los comentarios abiertos de la Revisión, gris: esperan a la IA, no al usuario (R-50). */}
-      {n > 0 && <span className={ambar ? 'punto ambar' : 'punto'} />}
+      {/* Un punto, el número está en el nombre: la Bandeja, si algo espera al usuario (R-103; en el acento, naranja si
+      frena, como el inicio), y los comentarios abiertos de la Revisión, gris: esperan a la IA, no al usuario (R-50). */}
+      {n > 0 && <span className={punto === 'gris' ? 'punto' : `punto ${punto}`} />}
     </button>
   )
 }
@@ -101,7 +101,7 @@ function BarraActividad() {
         icono={s.icono}
         n={s.id === 'revision' ? revision : s.id === 'pendientes' ? sinResponder : 0}
         queCuenta={s.id === 'pendientes' ? 'sin responder' : revision === 1 ? 'abierto' : 'abiertos'}
-        ambar={s.id === 'pendientes' && frenan > 0}
+        punto={s.id === 'pendientes' ? (frenan > 0 ? 'ambar' : 'acento') : 'gris'}
         alTocar={() => irASeccion(ruta, s.id)}
       />
     )
@@ -209,7 +209,7 @@ function BotonInicio() {
       onClick={irAlInicio}
     >
       <Icono nombre="inicio" />
-      {n > 0 && <span className={frenan > 0 ? 'punto ambar' : 'punto'} />}
+      {n > 0 && <span className={frenan > 0 ? 'punto ambar' : 'punto acento'} />}
     </button>
   )
 }

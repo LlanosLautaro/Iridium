@@ -1,5 +1,5 @@
-/* Los tokens de Iridium: la dirección negra sin acento, único tema (D-103, D-104). Sale de modulos/diseno/negro.css.
-   Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo y lo marcado van
+/* Los tokens de Iridium: la dirección negra, único tema (D-104), con un acento para lo activo desde Pulido (D-197). Sale de modulos/diseno/negro.css.
+   Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo va en el acento y lo marcado
    en blanco; lo prendido (casillas, opciones, interruptores), en verde (R-60). Un solo color de acción: el verde del botón principal (Enviar, Continuar; D-109), en la letra y el borde sobre negro (R-49). Las señales: ámbar lo que
    espera del usuario (naranja desde D-197), rojo un error. Con color también los medidores (verde, naranja, rojo), los enlaces (azul) y el código (D-124).
    Cada token va en su línea con su uso después del `;` (D-114): Diseño › Sistema lo muestra y la IA elige el token
@@ -132,7 +132,7 @@
   /* Movimiento */
   --sale: cubic-bezier(.16, 1, .3, 1); /* la única curva: todo lo que aparece o se mueve */
 
-  /* Pulido (D-197): un aire de instrumento sobre el negro. Por ahora solo en su maqueta (pantallas/pulido.html). */
+  /* Pulido (D-197): un aire de instrumento sobre el negro. Elegir el acento en Ajustes llega con PU-I2; hasta entonces, cian. */
   --acento-cian: #38d6ff; /* el acento que viene elegido; uno de los que se eligen en Ajustes › Apariencia */
   --acento-verde: #3ce08f; /* un acento para elegir en Ajustes › Apariencia, el verde de antes */
   --acento-azul: #6c8cff; /* un acento para elegir en Ajustes › Apariencia */

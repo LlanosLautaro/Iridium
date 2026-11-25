@@ -15,7 +15,7 @@
   font: var(--estilo-boton); color: var(--texto);
   background: transparent; border: 1px solid transparent; border-radius: var(--radio-control);
   cursor: pointer; white-space: nowrap; text-decoration: none;
-  transition: background .12s var(--sale), color .12s var(--sale), border-color .12s var(--sale);
+  transition: background var(--dur-hover) var(--sale), color var(--dur-hover) var(--sale), border-color var(--dur-hover) var(--sale);
 }
 .boton .ic { width: 15px; height: 15px; }
 /* El principal va delineado, como Eliminar: fondo negro, letra y borde en verde (R-49); lleno se leía mal. */
@@ -45,6 +45,7 @@
   display: flex; align-items: center; gap: var(--esp-3);
   min-height: var(--alto-fila); padding: var(--esp-1) var(--esp-2);
   border-radius: var(--radio-fila); color: var(--texto); text-decoration: none; cursor: default;
+  transition: background var(--dur-hover) var(--sale);
 }
 a.fila, .fila.se-abre { cursor: pointer; }
 .fila:hover { background: var(--hover); }
@@ -56,7 +57,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .fila.con-detalle { padding-block: var(--esp-2); }
 .fila .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; }
 .fila .meta.fija { font-family: var(--mono); }
-.fila .acciones { display: flex; gap: var(--esp-1); opacity: 0; transition: opacity .12s var(--sale); }
+.fila .acciones { display: flex; gap: var(--esp-1); opacity: 0; transition: opacity var(--dur-hover) var(--sale); }
 .fila:hover .acciones, .fila:focus-within .acciones, .fila .acciones.siempre { opacity: 1; }
 .fila .icono-fila { width: 28px; height: 28px; border-radius: var(--radio-control); background: var(--elevado); display: grid; place-items: center; color: var(--texto-2); flex: none; }
 
@@ -100,7 +101,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
 /* ───────── PZ-5 · Campo ─────────
    Grupo: Acciones
    Para qué: escribir o elegir: texto, área, selector, casilla, opción e interruptor. Lo escrito se guarda solo.
-   Estados: normal, chico, sin borde (selector), al pasar, con el foco, marcado. */
+   Estados: normal, chico, sin borde (selector), al pasar, con el foco, marcado (con un golpe corto, D-197), por hacer (el texto se apaga al marcarla). */
 .campo, .selector, .area {
   height: var(--alto-campo); padding: 0 var(--esp-3); width: 100%;
   font: var(--estilo-control); color: var(--texto);
@@ -124,13 +125,17 @@ a.fila, .fila.se-abre { cursor: pointer; }
 }
 .casilla input { border-radius: 4px; }
 .opcion input { border-radius: 50%; }
-.casilla input { position: relative; }
-.casilla input:checked { background: var(--marcado); border-color: var(--marcado); }
-.casilla input:checked::after { content: ""; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid var(--sobre-principal); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.casilla input { position: relative; transition: background var(--dur-hover) var(--sale), border-color var(--dur-hover) var(--sale); }
+.casilla input:checked { background: var(--marcado); border-color: var(--marcado); animation: marcar var(--dur-entrada) var(--sale); }
+.casilla input:checked::after { content: ""; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid var(--sobre-principal); border-width: 0 2px 2px 0; transform: rotate(45deg); animation: tilde var(--dur-entrada) var(--sale); }
+.casilla.por-hacer input + span { transition: color var(--dur-entrada) var(--sale); }
+.casilla.por-hacer input:checked + span { color: var(--texto-3); }
+@keyframes marcar { 0% { transform: scale(.7); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+@keyframes tilde { from { opacity: 0; transform: rotate(45deg) scale(.4); } to { opacity: 1; transform: rotate(45deg) scale(1); } }
 .opcion input:checked { border-color: var(--marcado); box-shadow: inset 0 0 0 4px var(--fondo), inset 0 0 0 8px var(--marcado); }
 .interruptor { display: inline-flex; align-items: center; gap: var(--esp-2); cursor: pointer; color: var(--texto-2); }
-.interruptor input { appearance: none; margin: 0; width: 28px; height: 16px; border-radius: var(--radio-pildora); background: var(--borde-fuerte); position: relative; cursor: pointer; transition: background .15s var(--sale); }
-.interruptor input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--texto-2); transition: transform .15s var(--sale), background .15s var(--sale); }
+.interruptor input { appearance: none; margin: 0; width: 28px; height: 16px; border-radius: var(--radio-pildora); background: var(--borde-fuerte); position: relative; cursor: pointer; transition: background var(--dur-hover) var(--sale); }
+.interruptor input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--texto-2); transition: transform var(--dur-hover) var(--sale), background var(--dur-hover) var(--sale); }
 .interruptor input:checked { background: var(--marcado); }
 .interruptor input:checked::after { transform: translateX(12px); background: var(--sobre-principal); }
 
@@ -151,12 +156,14 @@ a.fila, .fila.se-abre { cursor: pointer; }
 
 /* ───────── PZ-7 · Cuenta y señal ─────────
    Grupo: Avisos
-   Para qué: un número o una marca chica que dice que hay algo, sin píldora. El ámbar es lo que frena, el rojo lo que falla y el verde lo que está andando (Trabajando, R-71); si nada falla, no se muestra (D-108).
-   Estados: cuenta, cuenta que frena, punto, punto ámbar, punto rojo, señal de texto (con o sin ícono), señal verde, señal blanca (lo que está listo: la bandeja toda respondida, R-81). */
+   Para qué: un número o una marca chica que dice que hay algo, sin píldora. El naranja es lo que frena (con su brillo, D-197), el acento lo que espera sin frenar, el rojo lo que falla y el verde lo que está andando (Trabajando, R-71); si nada falla, no se muestra (D-108).
+   Estados: cuenta, cuenta que frena, punto, punto en el acento, punto naranja, punto rojo, punto del color de su texto (el estado de una tarjeta), señal de texto (con o sin ícono), señal verde, señal blanca (lo que está listo: la bandeja toda respondida, R-81). */
 .cuenta { font: var(--estilo-codigo); color: var(--texto-3); }
 .cuenta.frena { color: var(--espera); }
 .punto { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--texto-3); flex: none; }
-.punto.ambar { background: var(--espera); }
+.punto.acento { background: var(--acento); box-shadow: var(--brillo-acento); }
+.punto.ambar { background: var(--espera); box-shadow: 0 0 6px var(--espera); }
+.punto.del-color { background: currentColor; box-shadow: 0 0 6px currentColor; }
 .punto.rojo { background: var(--error); }
 .punto.blanco { background: var(--texto); }
 .senal { display: inline-flex; gap: 6px; align-items: center; font-size: var(--tam-chico); color: var(--texto-3); white-space: nowrap; }
@@ -169,17 +176,17 @@ a.fila, .fila.se-abre { cursor: pointer; }
 /* ───────── PZ-8 · Menú, cuadro y ventana ─────────
    Grupo: Acciones
    Para qué: lo que flota sobre la pantalla: el menú (también con clic derecho), el cuadro que confirma o pide un dato y la ventana de Ajustes. Es lo único con sombra.
-   Estados: menú, menú en lista, arriba del compositor, con atajo, opción peligrosa, opción marcada, opción apagada, cuadro, ventana. */
+   Estados: menú, menú en lista, arriba del compositor, con atajo, opción peligrosa, opción marcada, opción apagada, cuadro, ventana. Entran en un cuarto de segundo en vez de aparecer de golpe (D-197). */
 .menu {
   position: absolute; z-index: 20; min-width: var(--ancho-menu); padding: var(--esp-1);
   background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu);
   display: none; flex-direction: column;
 }
-.menu.abierto { display: flex; }
+.menu.abierto { display: flex; animation: entra-menu var(--dur-entrada) var(--sale); transform-origin: top left; }
 .menu button, .menu a {
   display: flex; align-items: center; gap: var(--esp-2); height: var(--alto-control); padding: 0 var(--esp-2);
   background: none; border: 0; border-radius: var(--radio-control); text-align: left; text-decoration: none;
-  font: var(--estilo-control); color: var(--texto); cursor: pointer;
+  font: var(--estilo-control); color: var(--texto); cursor: pointer; transition: background var(--dur-hover) var(--sale);
 }
 .menu button:hover, .menu a:hover, .menu button:focus-visible, .menu a:focus-visible { background: var(--hover); outline: none; }
 .menu .atajo { margin-left: auto; color: var(--texto-3); font-size: var(--tam-chico); }
@@ -197,9 +204,13 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .menu.lista-menu .meta { color: var(--texto-3); font-size: var(--tam-chico); white-space: nowrap; align-self: flex-start; line-height: 1.4; }
 .menu.lista-menu .actual { background: var(--sel-fondo); }
 /* Arriba del compositor (frente Paridad): el menú del + y la lista de «/» se abren hacia arriba, pegados a él; `.ancho`, de su mismo ancho. */
-.menu.arriba { left: 0; bottom: calc(100% + var(--esp-2)); }
+.menu.arriba { left: 0; bottom: calc(100% + var(--esp-2)); transform-origin: bottom left; }
 .menu.arriba.ancho { right: 0; width: auto; max-height: 372px; overflow: auto; }
-.velo { position: fixed; inset: 0; z-index: 30; background: var(--velo); display: grid; place-items: center; }
+.velo { position: fixed; inset: 0; z-index: 30; background: var(--velo); display: grid; place-items: center; animation: entra-velo var(--dur-entrada) var(--sale); }
+.velo > .cuadro, .velo > .ventana { animation: entra-cuadro var(--dur-entrada) var(--sale); }
+@keyframes entra-menu { from { opacity: 0; transform: translateY(-4px) scale(.98); } }
+@keyframes entra-velo { from { opacity: 0; } }
+@keyframes entra-cuadro { from { opacity: 0; transform: translateY(8px) scale(.98); } }
 .cuadro {
   width: var(--ancho-cuadro); padding: var(--esp-5); display: flex; flex-direction: column; gap: var(--esp-4);
   background: var(--elevado); border-radius: var(--radio-tarjeta); box-shadow: var(--sombra-ventana);
@@ -235,6 +246,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
   display: inline-flex; align-items: center; gap: var(--esp-2); height: var(--alto-control); padding: 0 var(--esp-3);
   background: none; border: 0; border-radius: var(--radio-control);
   font: var(--estilo-control); color: var(--texto-2); cursor: pointer; text-decoration: none;
+  transition: background var(--dur-hover) var(--sale), color var(--dur-hover) var(--sale);
 }
 .pestana:hover { color: var(--texto); background: var(--hover); }
 .pestana.elegida { color: var(--texto); background: var(--sel-fondo); }
@@ -307,7 +319,7 @@ a.fila, .fila.se-abre { cursor: pointer; }
    Grupo: Contenido
    Para qué: una secuencia de pasos en orden, con sus ramas (el Mapa): un carril con un punto por paso, las ramas con
    su codo y la línea de plegados que despliega lo hecho antes. El nombre baja de renglón; la señal va a la derecha.
-   Estados: hecho, el que sigue, te espera, en pausa, descartado, lo que viene, sin entender, rama, plegado. */
+   Estados: hecho (en un verde apagado, R-111), el que sigue (en el acento, late como un radar, D-197), te espera (naranja), en pausa, descartado, lo que viene, sin entender, rama, plegado. */
 .camino { display: grid; grid-template-columns: 24px 24px minmax(0, 1fr); }
 .camino .tramo { display: contents; }
 .camino .carril { position: relative; min-height: 40px; }
@@ -323,8 +335,11 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .camino .carril.sigue::before { top: 0; bottom: 0; }
 .camino .carril.codo::before { content: ""; position: absolute; left: -13px; top: 0; width: 24px; height: 20px; border-left: 2px solid var(--borde-fuerte); border-bottom: 2px solid var(--borde-fuerte); border-bottom-left-radius: var(--radio-control); }
 .camino .punto-camino { position: absolute; left: 6px; top: 20px; width: 12px; height: 12px; margin-top: -6px; border-radius: var(--radio-pildora); border: 2px solid var(--borde-control); background: var(--fondo); z-index: 1; }
-.camino .hecho .punto-camino { background: var(--bien); border-color: var(--bien); }
-.camino .foco .punto-camino { left: 4px; width: 16px; height: 16px; margin-top: -8px; border-color: var(--texto); box-shadow: 0 0 0 4px var(--sel-fondo); }
+.camino .hecho .punto-camino { background: var(--bien-apagado); border-color: var(--bien-apagado); }
+.camino .foco .punto-camino { left: 4px; width: 16px; height: 16px; margin-top: -8px; border-color: var(--acento); box-shadow: var(--brillo-acento); }
+.camino .foco .punto-camino::before, .camino .foco .punto-camino::after { content: ""; position: absolute; inset: -2px; border-radius: var(--radio-pildora); border: 2px solid var(--acento); animation: radar var(--dur-pulso) var(--sale) infinite; pointer-events: none; }
+.camino .foco .punto-camino::after { animation-delay: calc(var(--dur-pulso) / 2); }
+@keyframes radar { from { transform: scale(1); opacity: .8; } to { transform: scale(2.8); opacity: 0; } }
 .camino .espera .punto-camino, .camino .pausa .punto-camino { border-color: var(--espera); }
 .camino .descartado .punto-camino, .camino .otro .punto-camino { border-color: var(--texto-apagado); }
 .camino .hecho .texto-tramo { color: var(--texto-2); }
@@ -369,5 +384,5 @@ a.fila, .fila.se-abre { cursor: pointer; }
 .info { position: relative; display: inline-grid; place-items: center; width: 22px; height: 22px; color: var(--texto-3); border-radius: var(--radio-pildora); cursor: help; }
 .info:hover, .info:focus-visible { color: var(--texto); }
 .info .ic { width: 15px; height: 15px; }
-.info .globo { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: max-content; max-width: var(--ancho-globo); padding: var(--esp-2) var(--esp-3); background: var(--elevado); box-shadow: var(--sombra-menu); border-radius: var(--radio-control); font-size: var(--tam-chico); color: var(--texto-2); line-height: 1.5; visibility: hidden; opacity: 0; transition: opacity .12s var(--sale); z-index: 20; }
+.info .globo { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); width: max-content; max-width: var(--ancho-globo); padding: var(--esp-2) var(--esp-3); background: var(--elevado); box-shadow: var(--sombra-menu); border-radius: var(--radio-control); font-size: var(--tam-chico); color: var(--texto-2); line-height: 1.5; visibility: hidden; opacity: 0; transition: opacity var(--dur-hover) var(--sale); z-index: 20; }
 .info:hover .globo, .info:focus-visible .globo { visibility: visible; opacity: 1; }

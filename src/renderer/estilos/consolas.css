@@ -114,7 +114,53 @@
   cursor: pointer;
 }
 .senal-consolas.corriendo {
-  color: var(--bien);
+  position: relative;
+  color: var(--acento);
+}
+/* Con las consolas plegadas (D-197): un punto que late en lugar del ▶ y una luz que cruza el texto y se desvanece en
+   los extremos (R-112), como en la maqueta (docs/diseno/piezas.css › El marco). Abiertas, se ven: no hace falta. */
+.senal-consolas.corriendo[aria-expanded="false"] {
+  padding-left: 14px;
+}
+.senal-consolas.corriendo[aria-expanded="false"] .ic {
+  display: none;
+}
+.senal-consolas.corriendo[aria-expanded="false"]::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: var(--radio-pildora);
+  background: var(--acento);
+  box-shadow: var(--brillo-acento);
+  animation: late var(--dur-pulso) ease-in-out infinite;
+}
+.senal-consolas.corriendo[aria-expanded="false"]::after {
+  content: "";
+  position: absolute;
+  inset: 0 -16px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--acento-tenue), transparent) no-repeat;
+  background-size: 45% 100%;
+  mask-image: linear-gradient(90deg, transparent, black 30%, black 70%, transparent);
+  animation: barrido var(--dur-pulso) linear infinite;
+}
+@keyframes late {
+  50% {
+    opacity: 0.35;
+    transform: scale(0.7);
+  }
+}
+@keyframes barrido {
+  from {
+    background-position: -80% 0;
+  }
+  to {
+    background-position: 180% 0;
+  }
 }
 .senal-consolas .ic {
   width: 12px;

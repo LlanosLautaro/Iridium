@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="../piezas.css">
 <style>
   /* Pulido (D-197): cada pedido del frente andando, para verlo antes de pasarlo a la app. Arriba se elige el acento;
-     todo lo demás lo toma de ahí. Lo que te espera va en naranja (Q-303). */
+     todo lo demás lo toma de ahí. Lo que te espera va en naranja (Q-303). Desde PU-I1, el color y el movimiento de las
+     piezas (la sección elegida, los puntos, el camino, la casilla, el menú y el cuadro, «corriendo») están en piezas.css;
+     acá queda solo lo de esta muestra. */
   .eleccion { display: flex; align-items: center; gap: var(--esp-3); }
   .eleccion .rotulo { font: var(--estilo-rotulo); color: var(--texto-3); }
   .muestra-color { display: inline-block; width: 8px; height: 8px; border-radius: var(--radio-pildora); background: var(--c); }
@@ -17,19 +19,12 @@
   .tablero .bloque { gap: var(--esp-3); }
 
   /* Al pasar el mouse: el fondo entra, no salta. */
-  .boton, .fila, .pestana, .act, .tarjeta-p { transition: background var(--dur-hover) var(--sale), color var(--dur-hover) var(--sale), border-color var(--dur-hover) var(--sale), box-shadow var(--dur-hover) var(--sale); }
-
-  /* El panel de la izquierda: el ícono de la sección elegida, en el acento y con su brillo. */
-  .act.elegida { color: var(--acento); background: var(--acento-tenue); }
-  .act.elegida .ic { filter: drop-shadow(0 0 4px var(--acento)); }
-  .act.elegida::before { background: var(--acento); box-shadow: var(--brillo-acento); }
-  .act .punto, .boton-menu .punto { box-shadow: 0 0 6px var(--espera); }
+  .tarjeta-p { transition: background var(--dur-hover) var(--sale), border-color var(--dur-hover) var(--sale); }
 
   /* Los puntos de pendientes: en el acento si algo espera sin frenar, en el color de lo que espera si frena. */
   .iconos { display: flex; gap: var(--esp-5); align-items: center; }
   .icono-p { display: flex; align-items: center; gap: var(--esp-3); color: var(--texto-2); font-size: var(--tam-chico); white-space: nowrap; }
   .icono-p .act { color: var(--texto-3); }
-  .punto.acento { background: var(--acento); box-shadow: var(--brillo-acento); }
 
   /* Las tarjetas de proyectos: el estado con su color. */
   .tarjetas-p { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-2); }
@@ -37,19 +32,8 @@
   .tarjeta-p:hover { border-color: var(--borde-fuerte); background: var(--tarjeta); }
   .tarjeta-p b { font-weight: 600; }
   .tarjeta-p .estado-t { display: flex; align-items: center; gap: 6px; font-size: var(--tam-chico); color: var(--c, var(--texto-3)); }
-  .tarjeta-p .estado-t .punto { background: currentColor; box-shadow: 0 0 6px currentColor; }
-  .tarjeta-p .estado-t.apagado .punto { box-shadow: none; }
 
-  /* El nivel activo del mapa: late como un punto de radar, en el acento. */
-  .camino .hecho .punto-camino { background: var(--bien-apagado); border-color: var(--bien-apagado); }
-  .camino .foco .punto-camino { border-color: var(--acento); box-shadow: var(--brillo-acento); }
-  .camino .foco .punto-camino::before, .camino .foco .punto-camino::after {
-    content: ""; position: absolute; inset: -2px; border-radius: var(--radio-pildora); border: 2px solid var(--acento);
-    animation: radar var(--dur-pulso) var(--sale) infinite;
-  }
-  .camino .foco .punto-camino::after { animation-delay: calc(var(--dur-pulso) / 2); }
-  @keyframes radar { from { transform: scale(1); opacity: .8; } to { transform: scale(2.8); opacity: 0; } }
-  .camino .espera .punto-camino { border-color: var(--espera); }
+  /* El nivel activo del mapa late como un radar (PZ-15); la señal de lo que espera, en naranja. */
   .camino .espera .senal { color: var(--espera); }
 
   /* Las pestañas: las demás se corren para dejarle lugar a la que arrastrás. */
@@ -57,23 +41,9 @@
   .pestanas.arrastrables .pestana { cursor: grab; transition: transform var(--dur-entrada) var(--sale), background var(--dur-hover) var(--sale), color var(--dur-hover) var(--sale); }
   .pestanas.arrastrables .pestana.arrastrada { cursor: grabbing; transition: none; z-index: 1; color: var(--texto); background: var(--acento-tenue); box-shadow: inset 0 0 0 1px var(--acento), var(--brillo-acento); }
 
-  /* Los pendientes: la casilla se marca con un golpe y el texto se apaga. */
   .pendientes { display: flex; flex-direction: column; gap: var(--esp-2); }
-  .pendientes .casilla span { transition: color var(--dur-entrada) var(--sale); }
-  .pendientes .casilla input:checked + span { color: var(--texto-3); }
-  .pendientes .casilla input { transition: background var(--dur-hover) var(--sale), border-color var(--dur-hover) var(--sale); }
-  .pendientes .casilla input:checked { animation: marcar var(--dur-entrada) var(--sale); box-shadow: 0 0 8px var(--marcado); }
-  .pendientes .casilla input:checked::after { animation: tilde var(--dur-entrada) var(--sale); }
-  @keyframes marcar { 0% { transform: scale(.7); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
-  @keyframes tilde { from { opacity: 0; transform: rotate(45deg) scale(.4); } to { opacity: 1; transform: rotate(45deg) scale(1); } }
 
   /* Lo que entra en vez de aparecer de golpe: menús, cuadros, avisos y paneles. */
-  .menu.abierto { animation: entra-menu var(--dur-entrada) var(--sale); transform-origin: top left; }
-  @keyframes entra-menu { from { opacity: 0; transform: translateY(-4px) scale(.98); } }
-  .velo:not([hidden]) { animation: entra-velo var(--dur-entrada) var(--sale); }
-  .velo:not([hidden]) .cuadro { animation: entra-cuadro var(--dur-entrada) var(--sale); }
-  @keyframes entra-velo { from { opacity: 0; } }
-  @keyframes entra-cuadro { from { opacity: 0; transform: translateY(8px) scale(.98); } }
   .aviso-esquina { position: fixed; right: calc(var(--ancho-conversacion) + var(--esp-4)); bottom: calc(var(--alto-estado) + var(--esp-4)); z-index: 25; width: var(--ancho-globo);
     padding: var(--esp-3) var(--esp-4); background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu); display: flex; gap: var(--esp-3); align-items: flex-start; }
   .aviso-esquina:not([hidden]) { animation: entra-aviso var(--dur-entrada) var(--sale); }
@@ -84,22 +54,6 @@
   .plegable > div { overflow: hidden; }
   .acciones-muestra { display: flex; gap: var(--esp-2); flex-wrap: wrap; position: relative; }
 
-  /* «Corriendo», con las consolas plegadas: un punto que late y una luz que cruza el texto. */
-  .estado-barra a[href="consolas.html"] { color: var(--acento); position: relative; padding-left: 14px; }
-  .estado-barra a[href="consolas.html"] .ic { display: none; }
-  .estado-barra a[href="consolas.html"]::before {
-    content: ""; position: absolute; left: 2px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: var(--radio-pildora);
-    background: var(--acento); box-shadow: var(--brillo-acento); animation: late var(--dur-pulso) ease-in-out infinite;
-  }
-  /* La luz cruza de punta a punta y se desvanece en los extremos (R-112): no se corta en el borde de una caja. */
-  .estado-barra a[href="consolas.html"]::after {
-    content: ""; position: absolute; inset: 0 -16px; pointer-events: none;
-    background: linear-gradient(90deg, transparent, var(--acento-tenue), transparent) no-repeat; background-size: 45% 100%;
-    mask-image: linear-gradient(90deg, transparent, black 30%, black 70%, transparent);
-    animation: barrido var(--dur-pulso) linear infinite;
-  }
-  @keyframes late { 50% { opacity: .35; transform: scale(.7); } }
-  @keyframes barrido { from { background-position: -80% 0; } to { background-position: 180% 0; } }
 </style>
 </head>
 <body data-marco="proyecto" data-seccion="mapa" data-consolas="2">
@@ -121,12 +75,12 @@
       <section class="bloque">
         <h2 class="bloque-titulo">Tarjetas de proyectos</h2>
         <div class="tarjetas-p">
-          <div class="tarjeta-p"><b>Iridium</b><span class="estado-t" style="--c: var(--estado-uso)"><span class="punto"></span>en uso</span></div>
-          <div class="tarjeta-p"><b>Alfa</b><span class="estado-t" style="--c: var(--estado-desarrollo)"><span class="punto"></span>en desarrollo</span></div>
-          <div class="tarjeta-p"><b>Gamma</b><span class="estado-t" style="--c: var(--estado-idea)"><span class="punto"></span>idea</span></div>
-          <div class="tarjeta-p"><b>Delta</b><span class="estado-t" style="--c: var(--estado-rescate)"><span class="punto"></span>en rescate</span></div>
+          <div class="tarjeta-p"><b>Iridium</b><span class="estado-t" style="--c: var(--estado-uso)"><span class="punto del-color"></span>en uso</span></div>
+          <div class="tarjeta-p"><b>Alfa</b><span class="estado-t" style="--c: var(--estado-desarrollo)"><span class="punto del-color"></span>en desarrollo</span></div>
+          <div class="tarjeta-p"><b>Gamma</b><span class="estado-t" style="--c: var(--estado-idea)"><span class="punto del-color"></span>idea</span></div>
+          <div class="tarjeta-p"><b>Delta</b><span class="estado-t" style="--c: var(--estado-rescate)"><span class="punto del-color"></span>en rescate</span></div>
           <div class="tarjeta-p"><b>Beta</b><span class="estado-t apagado"><span class="punto"></span>pausado</span></div>
-          <div class="tarjeta-p"><b>Épsilon, el catálogo de imágenes y videos</b><span class="estado-t" style="--c: var(--error)"><span class="punto"></span>para eliminar</span></div>
+          <div class="tarjeta-p"><b>Épsilon, el catálogo de imágenes y videos</b><span class="estado-t" style="--c: var(--error)"><span class="punto del-color"></span>para eliminar</span></div>
         </div>
       </section>
 
@@ -159,9 +113,9 @@
       <section class="bloque">
         <h2 class="bloque-titulo">Marcar un pendiente</h2>
         <div class="pendientes">
-          <label class="casilla"><input type="checkbox"><span>Las pestañas se corren al arrastrar una</span></label>
-          <label class="casilla"><input type="checkbox"><span>El nivel activo del mapa late</span></label>
-          <label class="casilla"><input type="checkbox"><span>«Corriendo», abajo a la izquierda, se mueve</span></label>
+          <label class="casilla por-hacer"><input type="checkbox"><span>Las pestañas se corren al arrastrar una</span></label>
+          <label class="casilla por-hacer"><input type="checkbox"><span>El nivel activo del mapa late</span></label>
+          <label class="casilla por-hacer"><input type="checkbox"><span>«Corriendo», abajo a la izquierda, se mueve</span></label>
         </div>
       </section>
 

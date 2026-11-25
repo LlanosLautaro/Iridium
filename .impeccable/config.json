@@ -224,6 +224,42 @@
         ],
         "createdAt": "2026-11-25T22:28:13.162Z",
         "reason": "no es texto que se desplaza: es una luz que cruza «corriendo» mientras corre algo; lo pidió el usuario en Q-300 A (D-197)"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/diseno/piezas.css",
+          "src/renderer/estilos/piezas.css",
+          "src/renderer/estilos/marco.css",
+          "src/renderer/estilos/consolas.css"
+        ],
+        "createdAt": "2026-11-25T22:52:42.772Z",
+        "reason": "el usuario pidió el brillo de las interfaces de ciencia ficción en Q-299 (B); pasa de la maqueta pulido.html a las piezas en PU-I1 (D-197)"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "docs/diseno/piezas.css",
+          "src/renderer/estilos/piezas.css",
+          "src/renderer/estilos/marco.css",
+          "src/renderer/estilos/consolas.css"
+        ],
+        "createdAt": "2026-11-25T22:52:42.772Z",
+        "reason": "late solo el nivel activo del mapa y «corriendo» mientras algo corre; lo pidió el usuario en Q-300 A (D-197), PU-I1"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "docs/diseno/piezas.css",
+          "src/renderer/estilos/piezas.css",
+          "src/renderer/estilos/marco.css",
+          "src/renderer/estilos/consolas.css"
+        ],
+        "createdAt": "2026-11-25T22:52:42.772Z",
+        "reason": "no es texto que se desplaza: es la luz que cruza «corriendo» mientras corre algo; Q-300 A (D-197), PU-I1"
       }
     ]
   }

@@ -15,17 +15,20 @@ import { SenalSesion } from '../../marco/Marco'
 import { Cuenta } from '../../ui/Cuenta'
 import { Icono } from '../../ui/Icono'
 
-/** El estado, con su punto (PZ-7): blanco lo que está en uso; en rescate, sin punto (dice a qué proyecto pasa). */
-const ESTADOS: Record<Estado, { nombre: string; punto: 'blanco' | 'gris' | null }> = {
-  'en-desarrollo': { nombre: 'en desarrollo', punto: 'gris' },
-  'en-uso': { nombre: 'en uso', punto: 'blanco' },
-  idea: { nombre: 'idea', punto: 'gris' },
-  pausado: { nombre: 'pausado', punto: 'gris' },
-  'en-rescate': { nombre: 'en rescate', punto: null },
-  descontinuado: { nombre: 'descontinuado', punto: 'gris' },
-  'para-eliminar': { nombre: 'para eliminar', punto: 'gris' },
+/**
+ * El estado, con su punto (PZ-7) y su color (D-197): en uso verde, en desarrollo azul, idea violeta, en rescate coral,
+ * para eliminar rojo; pausado y descontinuado, en gris y sin brillo.
+ */
+const ESTADOS: Record<Estado, { nombre: string; color: string | null }> = {
+  'en-desarrollo': { nombre: 'en desarrollo', color: 'desarrollo' },
+  'en-uso': { nombre: 'en uso', color: 'uso' },
+  idea: { nombre: 'idea', color: 'idea' },
+  pausado: { nombre: 'pausado', color: null },
+  'en-rescate': { nombre: 'en rescate', color: 'rescate' },
+  descontinuado: { nombre: 'descontinuado', color: null },
+  'para-eliminar': { nombre: 'para eliminar', color: 'eliminar' },
 }
-const SIN_FICHA = { nombre: 'sin clasificar', punto: null } as const
+const SIN_FICHA = { nombre: 'sin clasificar', color: null } as const
 
 export function textoPreguntas(p: TarjetaProyecto['preguntas']): string | null {
   if (p.sinResponder === 0) return null
@@ -168,12 +171,12 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
         <span className="logo">{p.icono ? <img src={p.icono} alt="" /> : p.inicial}</span>
         <span className="nombre-t">
           <span className="nombre">{p.nombre}</span>
-          <span className="estado-t">
+          <span className="estado-t" data-color={p.archivado ? undefined : (est.color ?? undefined)}>
             {p.archivado ? (
               archivadoDesde(p.archivadoEl)
             ) : (
               <>
-                {est.punto && <span className={est.punto === 'blanco' ? 'punto blanco' : 'punto'} />}
+                {p.estado && <span className={est.color ? 'punto del-color' : 'punto'} />}
                 {est.nombre}
                 {p.reemplazadoPor && <span className="hacia"> → {p.reemplazadoPor}</span>}
               </>

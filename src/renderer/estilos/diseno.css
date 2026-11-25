@@ -47,7 +47,7 @@
   border: 1px solid var(--borde);
   border-radius: var(--radio-bloque);
   background: var(--tarjeta);
-  transition: border-color 0.12s;
+  transition: border-color var(--dur-hover);
 }
 .di-marco iframe {
   position: absolute;

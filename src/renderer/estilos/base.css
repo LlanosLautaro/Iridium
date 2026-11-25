@@ -127,18 +127,6 @@ code,
   margin-top: 4px;
 }
 
-/* Si Windows pide menos movimiento, nada gira, respira ni se desliza */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    /* biome-ignore lint/complexity/noImportantStyles: tiene que ganarle a cualquier animación */
-    animation: none !important;
-    /* biome-ignore lint/complexity/noImportantStyles: ídem */
-    transition: none !important;
-  }
-}
-
 /* La cabecera de una sección es la pieza (PZ-9). Vacía, debajo, una línea de para qué es la sección. */
 .cab-vacia {
   flex: none;

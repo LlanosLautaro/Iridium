@@ -268,4 +268,22 @@ describe('el control de estilos (DI-I3)', () => {
   it('no quedan los tokens de antes: el puente tokens-viejos.css se borró al pasar la última sección', () => {
     expect(existsSync(join(ESTILOS, 'tokens-viejos.css'))).toBe(false)
   })
+
+  it('ninguna hoja sigue las animaciones apagadas de Windows (D-197): el movimiento se ve siempre', () => {
+    const malas = [...SECCIONES, 'piezas.css'].filter((f) =>
+      sinComentarios(texto(join(ESTILOS, f))).includes('prefers-reduced-motion'),
+    )
+    expect(malas).toEqual([])
+  })
+
+  it('las duraciones del movimiento salen de los tokens (D-197): ninguna hoja escribe .12s ni 0.15s', () => {
+    const malos: string[] = []
+    for (const f of [...SECCIONES, 'piezas.css'])
+      sinComentarios(texto(join(ESTILOS, f)))
+        .split('\n')
+        .forEach((l, i) => {
+          if (/\btransition\b[^;]*\b0?\.1\d?s\b/.test(l)) malos.push(`${f}:${i + 1} ${l.trim()}`)
+        })
+    expect(malos).toEqual([])
+  })
 })

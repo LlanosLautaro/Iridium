@@ -298,11 +298,6 @@
     opacity: 0.5;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .rv-silueta i {
-    animation: none;
-  }
-}
 
 /* W-R4: el comentario como mensaje del usuario en la conversación */
 .msg-com {
