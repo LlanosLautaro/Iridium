@@ -15,3 +15,4 @@
 | Arranque | sección | 2. Definición | `modulos/arranque/` |
 | Abrir | sección | 5. Diseño técnico | `modulos/abrir/` |
 | Paridad | sección | 1. Propuesta | `modulos/paridad/` |
+| Pulido | sección | 1. Propuesta | `modulos/pulido/` |
