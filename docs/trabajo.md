@@ -3,7 +3,7 @@
 Las ideas y los pendientes de la IA, cada uno con su estado (framework de Iridium). Pasado al framework el 2026-11-06: juntó «Ideas para después» de `00-idea.md`, «Ideas del brainstorming» de `01-exploracion.md`, «Ideas nuevas» de `07-construccion.md`, el Backlog de `10-operacion.md` y los «Pendientes» de `estado.md` y de los frentes. La prioridad del Backlog (Must, Should, Could) va en el texto.
 
 ## T-1 — La guía según el tipo de proyecto (app, herramienta, juego)
-Estado: nueva · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-13, Q-80
+Estado: pendiente · Idea: IA · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-13, Q-80
 Evaluada el 2026-11-25: una variante del framework por tipo de proyecto (la herramienta personal sin lanzamiento, el juego con su propio flujo) y los formularios para contestar antes de hablar con la IA. Grande, del frente Plantillas (T-81), que ya arma piezas por tipo de app. No va directo: hace falta que elijas qué tipo va primero, y el del juego conviene escribirlo cuando haya un juego de verdad para probarlo.
 Para juegos (historia, arte, música, mundo, motor propio) el flujo cambia desde la raíz; el framework preguntaría al empezar si es una app o un juego. Con formularios prearmados para contestar antes de hablar con la IA (Q-13; los formularios se verían en la Bandeja de entrada).
 Lo de la conversación del 2026-10-30 (Q-80): una herramienta personal no tiene lanzamiento real; el hito 9 se vuelve «ponerla en uso» (instalar, actualizar, copias de seguridad) y el 10 casi no aplica. Un juego cambia desde la raíz (documento de diseño, prueba de una porción jugable, motor y contenido como frentes paralelos sobre un motor estable); conviene escribir esa variante cuando haya un juego de verdad para probarla. La otra mitad de esa idea, los frentes en paralelo, se decidió en D-063 (el núcleo con un portón «estable», hasta dos frentes activos, el Mapa y la Bandeja por frente) y la sigue el frente Orden. Que el framework venga con Iridium ya está (D-086).
@@ -38,7 +38,7 @@ Estado: pendiente · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-003, D-005 · 
 APKs, archivos, textos, notificaciones; quizás instalar desde la PC. Should: del celular a la PC y la misma pieza para otro proyecto y otra app (C-41, C-42).
 
 ## T-9 — Iridium para Linux o para el celular
-Estado: nueva · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-30
+Estado: pendiente · Idea: IA · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-30
 Evaluada el 2026-11-25: Linux es mediano (Electron arma para Linux, pero hay que revisar lo que hoy es de Windows: el instalador, las rutas con variables, la consola de abajo y Usar la PC) y necesita una PC con Linux para probarlo. El celular es otra app que habla con la PC: grande, va con el Puente (T-8). Necesita que digas si alguna de las dos te sirve hoy.
 Linux sale casi gratis porque Electron es multiplataforma; el celular es otra app: pantalla chica y Claude Code no corre ahí, así que hablaría con la PC.
 
@@ -49,7 +49,8 @@ Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`
 - Para el puente, mirar primero lo que existe (LocalSend, KDE Connect, Syncthing, Taildrop, ADB por Wi-Fi): D-005.
 
 ## T-11 — Tareas como tarjetas que un agente toma
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Vibe Kanban)
+Estado: hecho · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Vibe Kanban)
+Hecho el 2026-11-25: es Frentes con el avance solo (FS-I1 a FS-I4): los pasos de cada frente son las tarjetas y la IA los toma sola por tamaño. Mover tarjetas a mano no se pidió; si hace falta, va como idea nueva.
 Evaluada el 2026-11-25: buena parte ya está: Frentes muestra los pasos como tareas y el avance solo los toma por tamaño (FS-I1 a FS-I4). Lo que quedaría (mover las tareas a mano o dárselas a la IA desde el tablero) es mediano, del frente Frentes. Necesita que digas si falta algo o si se cierra como hecha.
 Conectadas a las iteraciones del framework.
 
@@ -58,12 +59,12 @@ Estado: descartado · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.m
 Aunque la app principal sea propia.
 
 ## T-13 — Mandar tareas desde el celular con Dispatch
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
 Evaluada el 2026-11-25: usar Dispatch (mandarle tareas a Claude desde el celular) en vez de construir algo propio. Investigar si esas tareas llegan a Claude Code en esta PC y cómo las vería Iridium es chico, del Puente (T-8); usarlo necesita tu cuenta y tu celular, así que no va directo.
 Usar Dispatch en vez de construir algo propio para eso.
 
 ## T-14 — Puente: avisos y descargas de APK
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
 Evaluada el 2026-11-25: avisar con ntfy cuando se arma un APK y publicarlo en un lugar fijo para que Obtainium lo actualice en el celular. Mediano, del Puente (T-8), y se apoya en Abrir, que ya arma las apps solas. No va directo: necesita una app Android tuya que se arme y tu celular para probarlo.
 Avisar con ntfy cuando termina un APK, con el enlace para bajarlo; publicar los APK en un lugar fijo y que Obtainium los actualice solo en el celular.
 
@@ -73,17 +74,17 @@ Evaluada el 2026-11-25: «Recibir por enlace» es una función de LocalSend, cas
 Para mandar algo desde un celular ajeno sin instalar nada.
 
 ## T-16 — Comentar un documento párrafo por párrafo
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Plannotator), C-20
+Estado: descartado · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Plannotator), C-20
 Evaluada el 2026-11-25: hoy se comenta la app en Revisión, y los documentos solo se leen en Docs. Faltaría comentar un párrafo en Docs y que el comentario le llegue a la IA como los de Revisión. Mediano, del Núcleo (Docs, con la pieza de Revisión). Hace falta que apruebes dónde se ve el comentario; después puede ir sola.
 Comentar un documento del plan y devolvérselo a la IA. Could en `02-definicion.md`.
 
 ## T-17 — Revisión para las apps Android
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`, D-012
+Estado: descartado · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`, D-012
 Evaluada el 2026-11-25: comentar capturas de una app Android como hoy se comenta Iridium en Revisión (subir la captura, o sacarla del celular conectado, y marcar sobre ella). Mediano a grande, del frente Revisión. No va directo: necesita una app Android tuya en uso y tu celular para probarlo.
 Comentarios sobre capturas, más adelante.
 
 ## T-18 — Avisar cuando hay dos copias de la misma skill
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
 Evaluada el 2026-11-25: en Skills, avisar cuando la misma skill está en dos lugares (la carpeta de Skills, un plugin, la configuración global). Chico, del frente Skills, junto con T-44 (sacar las copias dobles). Puede ir directo a hacerse.
 En la sección Skills.
 
@@ -92,11 +93,11 @@ Estado: descartado · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
 El Gestor se descontinuó (D-062).
 
 ## T-20 — Tareas de cada iteración como archivos con un tablero encima
-Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Backlog.md)
+Estado: descartado · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Backlog.md)
 Para el hito 7. En parte lo cubre `trabajo.md` (D-094).
 
 ## T-21 — Una sección de aprobados provisionales
-Estado: nueva · Fecha: 2026-10-29 · Origen: Q-74
+Estado: descartado · Idea: IA · Fecha: 2026-10-29 · Origen: Q-74
 Could. Ver en Iridium, de todos los proyectos, lo que quedó aprobado provisional con sus pruebas a mano pendientes, y poder marcarlas cuando se hacen.
 
 ## T-22 — Un atajo a las ideas en la barra de la izquierda
@@ -175,7 +176,8 @@ Estado: hecho · Frente: Compartir · Origen: D-085
 Could. Pesa unos 280 MB: probar a comprimirlo más. Hecho el 2026-11-20 con D-161 (CO-I8): las copias bajan solo la pieza de la app (2 MB) cuando Electron y Claude Code no cambian; el `.zip` completo, 271 MB sin los idiomas que no se usan. La prueba al publicar, Q-225.
 
 ## T-38 — Número de versión y `CHANGELOG.md`
-Estado: pendiente · Frente: Compartir · Origen: D-077, Q-109
+Estado: hecho · Frente: Compartir · Origen: D-077, Q-109
+Hecho el 2026-11-25: la lista de cambios quedó resuelta de otra forma con D-192 (Q-290): cada versión nueva dice qué trae en el aviso de la esquina, sacado de sus commits, sin un `CHANGELOG.md` aparte.
 Could. La opción A de Q-109, cuando quieras. El número ya está (T-121, D-182): queda la lista de cambios.
 
 ## T-39 — Defecto 1: una prueba que falla a veces en la tanda completa
@@ -183,7 +185,8 @@ Estado: hecho (2026-11-25, el avance solo) · Origen: `08-calidad.md` › Defect
 Las veces que volvió fueron las tres de `r3-electron` (Defecto 7), con dos causas. Una, de la prueba: la app de muestra «Luna» guardaba sus datos en una carpeta fija de Windows que pasaba de una tanda a otra (la extensión con el puerto y el código de cuando se guardó, y lo que recuerda) y usaba los mismos puertos que `r2-revision`, que corre justo antes; ahora tiene carpeta de datos por tanda y puertos propios, y las tres van en serie: si una falla, las otras no corren en vez de fallar con un número que no es el suyo (el «R-1 donde esperaba R-2»). La otra, **del ayudante de Electron, que va en las apps de tus proyectos**: si la extensión terminaba de cargar con la página de la app a mitad de carga, la página recibía la capa de comentar pero no la parte que lee los componentes, y el comentario salía sin «Dónde» ni componentes. Ahora el ayudante lo mira cuando la página termina de cargar y, si le falta, la recarga una vez. La tanda completa también encontró que `pa1-comandos` cerraba la app con la IA a mitad de un turno (Iridium pregunta antes de cerrar y la prueba se quedaba esperando): ahora espera a que la IA termine. La de `d060` (Defecto 1 original) no se repitió desde el 2026-11-01; si vuelve, va en un T-n nuevo con su `error-context`.
 
 ## T-40 — Defecto 4: `minimatch` vulnerable dentro de `electron-builder`
-Estado: pendiente · Origen: `08-calidad.md` › Defectos
+Estado: descartado · Origen: `08-calidad.md` › Defectos
+Descartado el 2026-11-25: repetido, lo sigue T-79 (los avisos de `pnpm audit`, que incluyen este `minimatch`).
 No viaja en la app. Se cierra cuando `electron-builder` lo actualice (se mira en cada mantenimiento).
 
 ## T-41 — Deuda: lo copiado del Gestor sin usar y la ventana sin minificar
@@ -248,11 +251,11 @@ Estado: nueva · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `researc
 La IA escribe un bloque de datos (nodos, flechas, pasos) y Iridium dibuja un diagrama: pasar el mouse resalta lo conectado, un clic muestra el detalle y un recorrido explica una cosa por vez. En el chat, en los documentos y en los resúmenes de hito. Solo datos, sin código.
 
 ## T-56 — La prueba visible de lo hecho
-Estado: nueva · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
+Estado: pendiente · Idea: IA · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
 Lo que la IA produce mientras trabaja (capturas, resultados de pruebas) aparece en vivo y lo mejor queda adjunto a la iteración o a la `Q-n` de prueba como evidencia.
 
 ## T-57 — Dictado
-Estado: nueva · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Orca)
+Estado: descartado · Idea: IA · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Orca)
 Un atajo y se habla: el texto entra al mensaje para la IA. Para dirigir con ideas sueltas.
 
 ## T-58 — Lo que DI-I3 cambia en la app además de pasar las piezas
@@ -333,7 +336,7 @@ El usuario quiere rehacer el Mapa como un frente propio: arriba, un mapa por fre
 
 
 ## T-72 — La imagen y el color de cada IA en la conversación
-Estado: nueva · Idea: IA · Fecha: 2026-11-15 · Origen: R-64
+Estado: pendiente · Idea: IA · Fecha: 2026-11-15 · Origen: R-64
 El nombre de la IA en la conversación («Claudio») llevaría una imagen de perfil por fuente de IA (Claude, en este caso), elegida por el usuario, y un color también a elección. Va con Ajustes › Perfil (AJ-2, donde ya se elige el nombre) y con el color donde informa (D-124): hay que decidir si el color es libre o de una lista acotada para que no choque con el verde, el ámbar y el rojo, que ya dicen algo. Es una función nueva, no un arreglo: después de DI-I3.
 
 ## T-73 — ckryptickunal/OpenDesigner
@@ -355,7 +358,7 @@ Revisada con la IA el 2026-11-16:
 - **Cómo sería:** una carpeta `Tema` en la carpeta Iridium (como `Ideas` y `Skills`), con `tema.css`, la guía y un `CLAUDE.md` que le dice a la IA qué puede tocar. En Ajustes › Apariencia: «Tema propio: activo», **Editar con la IA** (abre su conversación ahí), **Quitar** (vuelve al negro) y un aviso si un color no pasa el contraste. El cambio se ve al guardar, sin reiniciar. Chico a mediano: una o dos iteraciones, en el frente Apariencia y ajustes, después de Ideas.
 
 ## T-76 — La miniatura del sitio en un enlace pegado
-Estado: nueva · Frente: Ideas · Idea: usuario · Fecha: 2026-11-17 · Origen: Q-189
+Estado: pendiente · Frente: Ideas · Idea: usuario · Fecha: 2026-11-17 · Origen: Q-189
 Al pegar una dirección en una idea (y en el campo de arriba), además de la Etiqueta de enlace, una tarjeta con la imagen, el título y la descripción del sitio, como en WhatsApp o Reddit. Para eso Iridium tiene que bajar la página que se pegó (su vista previa: `og:image`, `og:title`) y guardar la imagen con la idea, para que se vea sin internet. Es una conexión al sitio que el usuario pegó, nada más (P2). Una iteración, después de ID-I4.
 
 ## T-77 — Los proyectos ordenados por el último cambio
@@ -364,7 +367,8 @@ El usuario quiere la grilla de Proyectos ordenada por el último con cambios (ho
 Hecho el 2026-11-17 con Q-191 (A, D-136): todos juntos por el último cambio (lo más reciente entre el último commit y lo último escrito en `docs/`), los archivados al final; con sus pruebas (`tests/t77-ultimo-cambio.test.ts`, `tests/core-grilla.test.ts` y `tests/e2e/i1-esqueleto.spec.ts`).
 
 ## T-78 — un nuevo estado "implementada" para las ideas
-Estado: nueva · Idea: usuario · Fecha: 2026-11-17
+Estado: hecho · Idea: usuario · Fecha: 2026-11-17
+Hecho el 2026-11-22 (T-117, D-174): las ideas terminadas se ven como «Hechas» en Ideas, aparte de las aprobadas.
 
 ## T-79 — Paquetes con avisos de seguridad (hono, picomatch, minimatch)
 Estado: pendiente · Fecha: 2026-11-17
@@ -379,7 +383,7 @@ Estado: pendiente · Frente: Plantillas · Idea: usuario · Fecha: 2026-11-18 ·
 Evaluada el 2026-11-18; aprobada en Q-209 (D-150): frente Plantillas, piezas modulares por tipo de app; la primera, las pruebas sin ventanas. Detrás de Arranque, antes de Abrir. La app de la que habla también es de Electron, como Iridium, y abre la ventana de cada prueba a la vista. Electron no tiene un modo «sin ventana»: lo que hace Iridium (D-072) es una receta en su propio código, que se prende solo durante las pruebas (`IRIDIUM_OCULTA`): la ventana fuera de la pantalla, sin botón en la barra de tareas y sin foco, y las consolas escondidas. Se puede llevar a cualquier proyecto, pero cambia según el tipo de app: una página que se prueba con Playwright ya corre sin ventana con solo pedirlo; una app de escritorio de Electron necesita la receta; una herramienta de consola no abre ventanas; otras apps de escritorio, lo que su motor permita. Propuesta: una regla en el framework («las pruebas no ocupan la pantalla del usuario») con la receta por tipo en `referencias/08-calidad.md` y `07-construccion.md`, que la IA aplica al armar las pruebas de cualquier proyecto y al retomar uno que ya las tiene. El tipo de app es el mismo dato que va a declarar el frente Abrir (D-148); unas plantillas por tipo de app son una idea más grande, aparte.
 
 ## T-82 — una demo en vivo para cuando se instala la app por primera vez, muestra paso a paso qué hacer y como hacerlo, quizás con un proyecto pequeño de prueba y un modelo de los más baratos, haiku para Claude, luna para ChatGPT, etc
-Estado: nueva · Idea: usuario · Fecha: 2026-11-18
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-18
 
 ## T-83 — Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea
 Estado: pendiente · Frente: Ideas · Fecha: 2026-11-18 · Origen: R-90
@@ -406,7 +410,7 @@ Estado: hecho · Fecha: 2026-11-20 · Origen: D-159
 Pedido del usuario: un proyecto mostraba lo de antes de lo que se hizo en la otra PC, y Git no tenía cómo guardar y subir las respuestas. Iridium trae sola lo del remoto (al abrir, cada cinco minutos y al entrar a un proyecto) y Git suma Commit y subir y Sincronizar. Prueba en Q-224.
 
 ## T-89 — Subir solas las respuestas a las preguntas
-Estado: nueva · Idea: IA · Fecha: 2026-11-20 · Origen: D-159
+Estado: pendiente · Idea: IA · Fecha: 2026-11-20 · Origen: D-159
 Al responder una `Q-n` desde Iridium, que la respuesta se guarde en un commit y se suba sola (si el proyecto está en GitHub y la IA no trabaja en él), para que la otra PC la vea sin tocar Commit y subir.
 
 ## T-90 — Buscar un archivo en Archivos
@@ -418,7 +422,7 @@ Estado: descartado (D-163: la verificación final encuentra algo casi la mitad d
 Que Iridium corra las pruebas al terminar cada turno de la IA y solo le avise si algo falla, para ahorrar los pasos y la espera de la verificación final. Medido en `research/costo-de-pruebas.md`: las pruebas son el 14 % de los pasos, pero la verificación final encuentra algo casi la mitad de las veces. Decisión en Q-230.
 
 ## T-92 — Ordenar cómo corre las pruebas la IA
-Estado: nueva · Idea: IA · Fecha: 2026-11-20 · Origen: D-163
+Estado: descartado · Idea: IA · Fecha: 2026-11-20 · Origen: D-163
 Sin cambiar cuándo se verifica: un solo comando de cierre que corre todo y muestra solo lo que falla, Playwright nunca en segundo plano con sondeos, y probar si puede correr de a varias ventanas (hoy va de a una). Ahorra pasos y minutos de espera (`research/costo-de-pruebas.md`).
 
 ## T-93 — Al comparti Iridium sucedió un problema, la otra persona no tenía ni idea de como usarlo, quizás una demo programada sirva, como un recorrido de la app, es una idea ya mencionada, la otra cosa es que tampoco tenía ni la más de las palidas ideas sobre desarrollo, no tenia ni nocion de lo que es una app web, de lo que es una nativa, electron, rust, nada de nada. Como enfrentamos este segundo desafío? es que en realidad hay que hacerle saber estas cosas? definir plantillas predefinidas para ciertos tipos de apps dependiendo de algunos requisitos? como por ejemplo sincronizacion celular/desktop, etc.
@@ -429,7 +433,7 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-21 · Origen: una respuesta del
 Hoy un documento largo (como la clasificación MoSCoW de un hito 2) solo se puede leer y contestar con una pregunta: no hay forma cómoda de revisarlo y corregirlo. La idea es sumar cuestionarios o pantallas específicas para ciertas partes de ciertos hitos: por ejemplo, un tablero de decisiones del MVP con columnas (Must, Should, Could, Won't, postergar como idea) donde se arrastran los casos, o una pantalla de métricas para las fases de rendimiento. El usuario lo ve como un frente de mejora grande y casi sin costo.
 
 ## T-95 — plugins por proyecto, similares a los mods de claude desktop
-Estado: nueva · Idea: usuario · Fecha: 2026-11-21
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-21
 
 ## T-96 — una muestra de como se ve el chat de Claude desktop, el + despliega esas opciones, el resto nosotros lo tenemos parecido.
 Estado: hecho · Frente: Paridad · Idea: usuario · Fecha: 2026-11-21 · Origen: D-165
@@ -463,7 +467,7 @@ Hecho el 2026-11-21: sin conversación, la cabecera va sin título (el cuerpo ya
 Q-248 pidió que diga «Nueva conversación» (2026-11-21): dice eso, y sin conversación no muestra el botón Nueva, que no hacía nada (el chat ya está en blanco); así el título entra entero a 1440 y a 1024.
 
 ## T-102 — El ancho de lectura, en un solo lugar
-Estado: nueva · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: pendiente · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 Angosto · Normal · Ancho está en la cabecera de Docs y en Ajustes › Apariencia, que queda con solo eso desde que hay un tema (D-104). Propuesta: dejarlo en Docs, donde se usa, y sacar Apariencia de Ajustes hasta que tenga algo propio.
 
 ## T-103 — Git en blanco mientras lee
@@ -479,7 +483,7 @@ Ajustes › Acerca de copia el mensaje completo del último commit (doce líneas
 Hecho el 2026-11-21: la fecha y la primera frase del mensaje (cortada en una palabra si es muy larga); el mensaje entero, al pasar el mouse.
 
 ## T-105 — Docs: los archivos de la raíz mezclados con los de docs/
-Estado: nueva · Idea: IA · Frente: Diseño · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: pendiente · Idea: IA · Frente: Diseño · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 La lista de Docs pone `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md` y el `README.md` de la raíz entre los de `docs/`: quedan dos «README.md» iguales. Además, unas carpetas tienen nombre para el usuario (Hitos, Frentes) y otras el de la carpeta (diseno, ideas, research, revision). Propuesta: los de la raíz en un grupo aparte («Del proyecto») y todas las carpetas con nombre (Diseño, Ideas, Investigación, Revisión).
 
 ## T-106 — «Este proyecto no marca cómo se arma»
@@ -501,7 +505,7 @@ Con preguntas, la lista de la Bandeja va en la columna centrada (como el Mapa y 
 Hecho el 2026-11-21: el vacío va en la columna de las preguntas, como el de Revisión.
 
 ## T-109 — «Rechazada» en rojo, que es el color de los errores
-Estado: nueva · Idea: IA · Frente: Ideas · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: pendiente · Idea: IA · Frente: Ideas · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 En Ideas, una idea rechazada lleva «Rechazada» en rojo (Q-175). `06-ui.md` deja el rojo para un error, y en una lista larga las rechazadas llaman más la atención que las que esperan. Propuesta: la palabra en gris, con el título apagado como ahora; el verde de Aprobada queda.
 
 ## T-110 — Mirar los avisos juntos en la esquina
@@ -596,7 +600,7 @@ La tarjeta de un frente y su «Te espera» iban siempre en ámbar (D-180), aunqu
 Hecho el 2026-11-23: en Frentes la cuenta va en gris y pasa a ámbar solo si alguna de esas preguntas frena, como en la grilla. Con su prueba (Playwright del tablero y del Mapa). Se mira en Q-275.
 
 ## T-126 — Un título corto para las ideas del usuario al evaluarlas
-Estado: nueva · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2)
+Estado: pendiente · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2)
 Una idea que anotás queda con tu texto entero como título, y lo sigue teniendo al aprobarla: en Frentes, T-116 (las consolas adentro) ocupa cinco renglones en el Núcleo, y en Ideas varias se cortan a la mitad. Propuesta: al evaluarla, la IA le pone un título corto («Las consolas adentro de Iridium») y tu texto queda tal cual debajo, como «Tu idea: …», así no se pierde nada de lo que escribiste. Es un cambio del framework (cómo se escribe una idea evaluada) con su control; Iridium no cambia. Si no, se deja como está.
 
 ## T-127 — Una segunda Iridium abierta trabó la actualización
@@ -617,7 +621,8 @@ Con toda la suite de Vitest corriendo, tres pruebas de repositorios de verdad (`
 Hecha el 2026-11-24: las pruebas con repositorios de verdad de esos dos archivos tienen 20 s; la suite entera pasó (1042).
 
 ## T-130 — Se retomó una sesión interrumpida porque se acabó la cuota, al retomarla manualmente esta hizo sonar el sonido de notifiacion de cuando termina de trabajar, pero estaba trabajando, además la tab de iridium no mostraba el texto de "trabajando"
-Estado: nueva · Idea: usuario · Fecha: 2026-11-24
+Estado: hecho · Idea: usuario · Fecha: 2026-11-24
+Hecho el 2026-11-25: ya resuelto, como confirmaste al revisar las ideas. Va con D-194: una sesión que se queda sin uso ya no se da por terminada ni fallada, se retoma cuando se libera el período, y Iridium espera a leer el registro de conversaciones antes de decidir cómo terminó.
 
 ## T-131 — Pruebas que se pasan de tiempo con la suite entera
 Estado: pendiente · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
@@ -638,7 +643,7 @@ Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan co
 Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 
 ## T-134 — un modo de "apagar al finalizar". En configuraciones podríamos determinar una opcion que habilite el display o no de un botón en un chat, al tocar ese botón se configura que la computadora se apagará al terminar la tarea, esto sería independiente de la IA y podría reutilizar el mismo sistema de deteccion de tarea finalizada que usamos para las actualizaciones automáticas, de este modo podemos dejar a claude trabajando e irnos de la casa. Esto trae una ventaja, yo antes le pedía textualmente a claude que apague la pc al acabar cuando debía irme, pero si quería hacer que la apague y estaba a mitad de trabajo ya no tenía forma de hacerlo(ahora recuero que podemos añadir la funcionalidad de "en cola" para los mensajes, promts que van luego de que termine de hacer lo que est´ahora, es parte de paridad creo) e interrumpirla o pasarle otro prompt en cola pues cagaría contexto innecesario, esta funcionalidad evita todo eso, no gasta uso en lo más minimo tampoco
-Estado: nueva · Idea: usuario · Fecha: 2026-11-24
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-24
 
 ## T-135 — que iridium le avice a claude cuando haya ideas nuevas ¿? si es que no lo hace ahora
 Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
