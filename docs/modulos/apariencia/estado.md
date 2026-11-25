@@ -24,7 +24,7 @@ AP-I1 está aprobada (Q-88): la ventana de Ajustes, los dos temas, los nombres y
 - [x] Elegir el tamaño de la letra y el zoom
 - [x] Poner tu nombre y el de la IA
 - [x] Pasar Iridium al negro, como único tema
-- [ ] Hacer tu propio tema con tokens, desde Ajustes (T-75)
+- [ ] Hacer tu propio tema con tokens, desde Ajustes (T-75, grande; antes hace falta que apruebes cómo se ve en Ajustes)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

@@ -30,10 +30,10 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - [x] Armar solas las apps de escritorio con cambios, cuando están cerradas (AB-I2)
 - [x] Marcar tus proyectos (D-157)
 - [x] Probar Ejecutar y la actualización con una app tuya (Q-221)
-  - [ ] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86)
+  - [ ] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86, chico, sola)
 - [x] Abrir y actualizar sola tu app que se usa instalada (AB-I3)
-  - [ ] Ponerla al día también en la otra PC, desde sus versiones publicadas (T-87)
-- [ ] Revisar que Ejecutar y la actualización sean confiables
+  - [ ] Ponerla al día también en la otra PC, desde sus versiones publicadas (T-87, grande; cambia el armado de tu app, que es otro proyecto, y se prueba en la otra PC)
+- [ ] Revisar que Ejecutar y la actualización sean confiables (mediano, sola)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

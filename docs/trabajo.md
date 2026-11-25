@@ -4,11 +4,13 @@ Las ideas y los pendientes de la IA, cada uno con su estado (framework de Iridiu
 
 ## T-1 — La guía según el tipo de proyecto (app, herramienta, juego)
 Estado: nueva · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-13, Q-80
+Evaluada el 2026-11-25: una variante del framework por tipo de proyecto (la herramienta personal sin lanzamiento, el juego con su propio flujo) y los formularios para contestar antes de hablar con la IA. Grande, del frente Plantillas (T-81), que ya arma piezas por tipo de app. No va directo: hace falta que elijas qué tipo va primero, y el del juego conviene escribirlo cuando haya un juego de verdad para probarlo.
 Para juegos (historia, arte, música, mundo, motor propio) el flujo cambia desde la raíz; el framework preguntaría al empezar si es una app o un juego. Con formularios prearmados para contestar antes de hablar con la IA (Q-13; los formularios se verían en la Bandeja de entrada).
 Lo de la conversación del 2026-10-30 (Q-80): una herramienta personal no tiene lanzamiento real; el hito 9 se vuelve «ponerla en uso» (instalar, actualizar, copias de seguridad) y el 10 casi no aplica. Un juego cambia desde la raíz (documento de diseño, prueba de una porción jugable, motor y contenido como frentes paralelos sobre un motor estable); conviene escribir esa variante cuando haya un juego de verdad para probarla. La otra mitad de esa idea, los frentes en paralelo, se decidió en D-063 (el núcleo con un portón «estable», hasta dos frentes activos, el Mapa y la Bandeja por frente) y la sigue el frente Orden. Que el framework venga con Iridium ya está (D-086).
 
 ## T-2 — Un canvas para pensar una idea con la IA
 Estado: nueva · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-008
+Evaluada el 2026-11-25: un lienzo (Excalidraw) dentro de Iridium, con los dibujos como archivos del proyecto y la IA dibujando en vivo con el MCP de Excalidraw. Grande, cerca del frente Diseño o como sección propia. No va directo: D-008 lo postergó, y hace falta que digas si lo querés ahora y dónde va.
 Postergado por D-008. Candidato: Excalidraw dentro de la app, con los dibujos como archivos del proyecto. Variante del brainstorming: la IA dibuja en vivo en el canvas mientras se conversa (kit de agentes de tldraw, MCP de Excalidraw).
 
 ## T-3 — Vista del plan de cada proyecto
@@ -20,7 +22,7 @@ Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-010
 Las `Q-n` de todos los proyectos: es Pendientes (D-010, D-022); pasa a llamarse Bandeja de entrada con el frente Orden (D-097).
 
 ## T-5 — Biblioteca de diseño local
-Estado: en curso · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-011
+Estado: en curso · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-011 · Tamaño: grande
 Design systems, patrones y capturas de páginas de referencia; prototipos con comentarios. Es el frente Diseño, activo desde el 2026-11-07 como un «Claude Design» local (D-102, `modulos/diseno/`). Del brainstorming: que la biblioteca arranque con los design systems de los proyectos propios, y perillas en vivo dentro de los prototipos (C-34).
 
 ## T-6 — Revisión con comentarios sobre apps web y Electron
@@ -32,11 +34,12 @@ Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-064
 Las skills locales compartidas, verlas y administrarlas desde Iridium: el frente Skills (D-064, D-068). Elegir las skills de cada proyecto y adaptar las públicas siguen en T-33 (C-46 a C-48).
 
 ## T-8 — Puente PC–celular
-Estado: pendiente · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-003, D-005
+Estado: pendiente · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-003, D-005 · Tamaño: grande
 APKs, archivos, textos, notificaciones; quizás instalar desde la PC. Should: del celular a la PC y la misma pieza para otro proyecto y otra app (C-41, C-42).
 
 ## T-9 — Iridium para Linux o para el celular
 Estado: nueva · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-30
+Evaluada el 2026-11-25: Linux es mediano (Electron arma para Linux, pero hay que revisar lo que hoy es de Windows: el instalador, las rutas con variables, la consola de abajo y Usar la PC) y necesita una PC con Linux para probarlo. El celular es otra app que habla con la PC: grande, va con el Puente (T-8). Necesita que digas si alguna de las dos te sirve hoy.
 Linux sale casi gratis porque Electron es multiplataforma; el celular es otra app: pantalla chica y Claude Code no corre ahí, así que hablaría con la PC.
 
 ## T-10 — Las ideas técnicas del hito 0
@@ -47,6 +50,7 @@ Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`
 
 ## T-11 — Tareas como tarjetas que un agente toma
 Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Vibe Kanban)
+Evaluada el 2026-11-25: buena parte ya está: Frentes muestra los pasos como tareas y el avance solo los toma por tamaño (FS-I1 a FS-I4). Lo que quedaría (mover las tareas a mano o dárselas a la IA desde el tablero) es mediano, del frente Frentes. Necesita que digas si falta algo o si se cierra como hecha.
 Conectadas a las iteraciones del framework.
 
 ## T-12 — Un mod de Claude Code con el estado del proyecto al lado del chat
@@ -55,26 +59,32 @@ Aunque la app principal sea propia.
 
 ## T-13 — Mandar tareas desde el celular con Dispatch
 Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Evaluada el 2026-11-25: usar Dispatch (mandarle tareas a Claude desde el celular) en vez de construir algo propio. Investigar si esas tareas llegan a Claude Code en esta PC y cómo las vería Iridium es chico, del Puente (T-8); usarlo necesita tu cuenta y tu celular, así que no va directo.
 Usar Dispatch en vez de construir algo propio para eso.
 
 ## T-14 — Puente: avisos y descargas de APK
 Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Evaluada el 2026-11-25: avisar con ntfy cuando se arma un APK y publicarlo en un lugar fijo para que Obtainium lo actualice en el celular. Mediano, del Puente (T-8), y se apoya en Abrir, que ya arma las apps solas. No va directo: necesita una app Android tuya que se arme y tu celular para probarlo.
 Avisar con ntfy cuando termina un APK, con el enlace para bajarlo; publicar los APK en un lugar fijo y que Obtainium los actualice solo en el celular.
 
 ## T-15 — Puente: «Recibir por enlace» de LocalSend
 Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Evaluada el 2026-11-25: «Recibir por enlace» es una función de LocalSend, casi no hay que construir: a lo sumo un acceso desde Iridium y explicar cómo se usa. Chico, del Puente (T-8). Necesita que tengas LocalSend y lo pruebes con un celular ajeno.
 Para mandar algo desde un celular ajeno sin instalar nada.
 
 ## T-16 — Comentar un documento párrafo por párrafo
 Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md` (idea de Plannotator), C-20
+Evaluada el 2026-11-25: hoy se comenta la app en Revisión, y los documentos solo se leen en Docs. Faltaría comentar un párrafo en Docs y que el comentario le llegue a la IA como los de Revisión. Mediano, del Núcleo (Docs, con la pieza de Revisión). Hace falta que apruebes dónde se ve el comentario; después puede ir sola.
 Comentar un documento del plan y devolvérselo a la IA. Could en `02-definicion.md`.
 
 ## T-17 — Revisión para las apps Android
 Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`, D-012
+Evaluada el 2026-11-25: comentar capturas de una app Android como hoy se comenta Iridium en Revisión (subir la captura, o sacarla del celular conectado, y marcar sobre ella). Mediano a grande, del frente Revisión. No va directo: necesita una app Android tuya en uso y tu celular para probarlo.
 Comentarios sobre capturas, más adelante.
 
 ## T-18 — Avisar cuando hay dos copias de la misma skill
 Estado: nueva · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Evaluada el 2026-11-25: en Skills, avisar cuando la misma skill está en dos lugares (la carpeta de Skills, un plugin, la configuración global). Chico, del frente Skills, junto con T-44 (sacar las copias dobles). Puede ir directo a hacerse.
 En la sección Skills.
 
 ## T-19 — El Gestor como acceso rápido dentro de VS Code
@@ -129,23 +139,23 @@ Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el nave
 Hecho el 2026-11-25: PA-I6 probada en Q-292 y la calidad (paso 8) hecha: Conectar con la lista de la última vez a la vista no hacía nada (arreglado), la PC y el navegador juntos, Windows-MCP roto o desinstalado, la accesibilidad de la sección y la seguridad de la PC (`modulos/paridad/estado.md` › Calidad). Paridad completa, 1.1.0.
 
 ## T-29 — Mantenimiento: subir los parches
-Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
+Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento · Tamaño: mediano, sola
 Should. React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316, con las pruebas completas y armar.
 
 ## T-30 — Lo del Gestor que falta en Iridium
-Estado: pendiente · Origen: C-8, C-9
+Estado: pendiente · Origen: C-8, C-9 · Tamaño: grande
 Should. Búsqueda entre proyectos, grupos y filtros. El menú del clic derecho y Nuevo proyecto ya están (D-089).
 
 ## T-31 — Plan completo
-Estado: pendiente · Origen: C-15, C-16, C-18, C-19
+Estado: pendiente · Origen: C-15, C-16, C-18, C-19 · Tamaño: grande
 Should. Decisiones, módulos como caja, todos los planes en una vista, diagramas.
 
 ## T-32 — Respaldo de `.iridium` en GitHub
-Estado: pendiente · Fecha: 2026-11-04 · Origen: D-087
+Estado: pendiente · Fecha: 2026-11-04 · Origen: D-087 · Tamaño: mediano
 Should. Un botón en Ajustes › Proyectos que publique Ideas y Skills como repos privados y los suba solo; hoy se hace con Abrir como proyecto › Git › Publicar en GitHub.
 
 ## T-33 — Las Could de la definición
-Estado: pendiente · Origen: `02-definicion.md` › Funcionalidades
+Estado: pendiente · Origen: `02-definicion.md` › Funcionalidades · Tamaño: grande
 Could. C-17, C-20, C-27, C-34, C-43, C-46 a C-48 (entre ellas, elegir las skills de cada proyecto y adaptar las públicas, D-064).
 
 ## T-34 — Revisión: la línea «Página» con la ruta relativa
@@ -153,11 +163,11 @@ Estado: hecho (2026-11-20) · Frente: Revisión de la app · Origen: D-082
 Should. La línea «Página» de un comentario guarda la ruta entera de la app (con la carpeta de proyectos); en el repo de Iridium conviene que quede relativa al proyecto. Hecho el 2026-11-20: dentro del proyecto queda relativa (`docs/diseno/pantallas/grilla.html`); fuera, sin las carpetas de la PC (`…/app.asar/out/renderer/index.html`); los 94 comentarios de este repo, pasados.
 
 ## T-35 — Seguir a la IA, el cierre con comprobación y los avisos de Windows
-Estado: pendiente · Origen: C-4, C-6, C-51
+Estado: pendiente · Origen: C-4, C-6, C-51 · Tamaño: mediano
 Should.
 
 ## T-36 — Pendientes completos
-Estado: pendiente · Origen: C-24 a C-26, C-28
+Estado: pendiente · Origen: C-24 a C-26, C-28 · Tamaño: mediano
 Should. Adjuntos, formulario de arranque, respuestas que la IA toma sola, preguntas del chat que pasan a `Q-n`.
 
 ## T-37 — El `.zip` de `pnpm publicar`, más chico
@@ -169,7 +179,7 @@ Estado: pendiente · Frente: Compartir · Origen: D-077, Q-109
 Could. La opción A de Q-109, cuando quieras. El número ya está (T-121, D-182): queda la lista de cambios.
 
 ## T-39 — Defecto 1: una prueba que falla a veces en la tanda completa
-Estado: pendiente · Origen: `08-calidad.md` › Defectos
+Estado: pendiente · Origen: `08-calidad.md` › Defectos · Tamaño: chico, sola
 En observación: si vuelve, se guarda su `error-context` y se investiga. 2026-11-04: las tres de `r3-electron` fallaron juntas en una tanda completa; pasaron solas y en la tanda siguiente (81 de 81). 2026-11-04 (otra vez, en la tanda de D-087): las mismas tres; la tarjeta mostraba «Guardado en … R-1» cuando esperaba R-2, como si el número de comentario viniera de una prueba anterior. Pasaron solas. Pista: algo de la Revisión que queda entre una prueba y otra en la tanda completa.
 
 ## T-40 — Defecto 4: `minimatch` vulnerable dentro de `electron-builder`

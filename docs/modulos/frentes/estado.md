@@ -36,7 +36,7 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
   - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (T-122, mediano)
 - [x] Medir la calidad del tablero
 - [x] Que el avance solo revise ideas y frentes, y tome el Núcleo (T-135, T-136, FS-I4)
-- [ ] Probar la revisión una noche (T-135, T-136, Q-294)
+- [ ] Probar la revisión una noche (T-135, T-136, Q-294, chico; es tu prueba)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

@@ -23,7 +23,7 @@ La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivo
 ## Ruta
 - [x] Ver y poner al día las skills
 - [x] Que el framework reemplace a la guía vieja y a gestor-proyectos (T-43)
-- [ ] Traer las skills que la licencia permite (T-44)
+- [ ] Traer las skills que la licencia permite (T-44, mediano; se hace en la carpeta de Skills, fuera de este repo, y qué skills traer lo elegís vos)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

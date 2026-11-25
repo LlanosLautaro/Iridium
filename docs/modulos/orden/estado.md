@@ -25,8 +25,8 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 - [x] Armar la Bandeja de entrada (OR-I2)
 - [x] Anotar trabajo e ideas sin la IA (OR-I3)
 - [x] Pasar un proyecto viejo al framework (OR-I4)
-- [ ] Medir Orden con el diseño nuevo
-- [ ] Que un proyecto sepa cuándo el framework le pide algo (T-64)
+- [ ] Medir Orden con el diseño nuevo (grande, sola)
+- [ ] Que un proyecto sepa cuándo el framework le pide algo (T-64, grande; antes hace falta que apruebes cómo se ven las novedades en la tarjeta y en Skills)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

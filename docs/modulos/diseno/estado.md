@@ -40,7 +40,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
   - [x] Buscar un archivo en Archivos (T-90)
 - [x] Que la captura del detalle de Ideas salga en la auditoría (T-53)
 - [x] Escribir el diseño de Iridium desde lo construido (DESIGN.md y 06-ui.md)
-- [ ] Comparar dos versiones de una pantalla lado a lado (DI-I4)
+- [ ] Comparar dos versiones de una pantalla lado a lado (DI-I4, grande, sola)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
