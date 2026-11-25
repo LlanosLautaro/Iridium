@@ -220,9 +220,13 @@ describe('los pasos en la PC, en palabras', () => {
     expect(paso('Screenshot', {})).toBe('En la PC: sacó una captura')
     expect(paso('Snapshot', { use_vision: false })).toBe('En la PC: miró la pantalla')
     expect(paso('Click', { loc: [10, 20] })).toBe('En la PC: hizo clic')
-    expect(paso('App', { mode: 'launch', name: 'Bloc de notas' })).toBe(
-      'En la PC: abrió o cambió de programa Bloc de notas',
+    expect(paso('App', { mode: 'launch', name: 'Bloc de notas' })).toBe('En la PC: abrió Bloc de notas')
+    expect(paso('App', { name: 'Bloc de notas' })).toBe('En la PC: abrió Bloc de notas')
+    expect(paso('App', { mode: 'switch', name: 'Bedrock Studio' })).toBe('En la PC: pasó a Bedrock Studio')
+    expect(paso('App', { mode: 'resize', name: 'Bloc de notas' })).toBe(
+      'En la PC: cambió el tamaño de Bloc de notas',
     )
+    expect(paso('App', { mode: 'otro' })).toBe('En la PC: abrió o cambió de programa')
   })
   it('lo escrito y lo copiado no se muestran; una herramienta nueva, con su nombre', () => {
     expect(paso('Type', { text: 'mi-clave-secreta' })).toBe('En la PC: escribió')

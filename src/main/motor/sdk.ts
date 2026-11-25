@@ -546,8 +546,17 @@ const PASOS_PC: Record<string, string> = {
   ControlStatus: 'miró si puede usar la PC',
 }
 
+/** App hace cosas distintas según su `mode`: se dice la que hizo («pasó a Bedrock Studio», no «abrió o cambió»). */
+const MODOS_APP: Record<string, string> = {
+  launch: 'abrió',
+  launch_executable: 'abrió',
+  switch: 'pasó a',
+  resize: 'cambió el tamaño de',
+}
+
 function enLaPc(herramienta: string, e: Record<string, unknown>): { accion: string; objeto: string | null } {
-  const que = PASOS_PC[herramienta] ?? `usó ${herramienta}`
+  const modo = herramienta === 'App' ? MODOS_APP[typeof e.mode === 'string' ? e.mode : 'launch'] : undefined
+  const que = modo ?? PASOS_PC[herramienta] ?? `usó ${herramienta}`
   const objeto = herramienta === 'App' && typeof e.name === 'string' && e.name !== '' ? e.name : null
   return { accion: `En la PC: ${que}`, objeto: objeto === null ? null : corto(objeto) }
 }
