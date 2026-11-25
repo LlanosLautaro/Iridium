@@ -94,7 +94,7 @@ describe('las versiones viejas de GitHub', () => {
 
   it(`quedan las ${VERSIONES_PUBLICADAS} publicadas más nuevas; las de antes de D-182 también se van`, () => {
     const lista = [
-      ...Array.from({ length: 12 }, (_, i) => version(i + 1)),
+      ...Array.from({ length: VERSIONES_PUBLICADAS + 2 }, (_, i) => version(i + 1)),
       // De antes de D-182: su número parece más alto, pero se publicó antes.
       { tag_name: 'v2026.1122.1004', draft: false, published_at: '2026-10-22T10:04:00Z' },
       { tag_name: 'iridium-2026-11-04-1908-c012989', draft: false, published_at: '2026-10-04T19:08:00Z' },
@@ -104,7 +104,7 @@ describe('las versiones viejas de GitHub', () => {
   })
 
   it('un borrador (la que se está subiendo) no se toca ni cuenta', () => {
-    const lista = [...Array.from({ length: 10 }, (_, i) => version(i + 1)), version(11, true)]
+    const lista = [...Array.from({ length: VERSIONES_PUBLICADAS }, (_, i) => version(i + 1)), version(VERSIONES_PUBLICADAS + 1, true)]
     expect(versionesParaBorrar(lista)).toEqual([])
   })
 })

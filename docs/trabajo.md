@@ -622,3 +622,19 @@ Hecho el 2026-11-24:
 - **La otra PC:** revisado el camino entero (el repo es público, `latest.yml` y los `.blockmap` responden, los números crecen); lo que faltaba es que se publicara: la publicada era la 1.0.14 y la tuya, la 1.0.24. Con D-191, la versión en uso se publica sola.
 Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan con el de antes) y la barra en `co6-sin-armar.spec.ts`. Se prueba en Q-289.
 2026-11-24, probada en Q-289. Con Q-290 (D-192): en GitHub quedan las últimas 10 versiones y cada versión nueva dice qué trae en el aviso de la esquina. Y la publicación sola no había corrido nunca: los archivos de `docs/` sin commitear (tus respuestas) hacían que la versión se viera «con cambios sin commitear»; ya no cuentan. Se ve en Q-291.
+
+## T-133 — unn nuevo tipo de sesiones, quizás una skill o un comando, un tipo de sesion de trabajodonde el foco no es avanzar, sino resolver dudas y consultas para que luego la IA pueda trabajar sola por más tiempo, estas sesiones pueden ser un poco más largas supongo, incluso hasta gastar toda la cuota de 5hs, con eso listo, las siguientes 5hs o 10hs claude podrá trabajar solo, como un programador real que le rinde cuentas al cliente
+Estado: nueva · Idea: usuario · Fecha: 2026-11-24
+
+## T-134 — un modo de "apagar al finalizar". En configuraciones podríamos determinar una opcion que habilite el display o no de un botón en un chat, al tocar ese botón se configura que la computadora se apagará al terminar la tarea, esto sería independiente de la IA y podría reutilizar el mismo sistema de deteccion de tarea finalizada que usamos para las actualizaciones automáticas, de este modo podemos dejar a claude trabajando e irnos de la casa. Esto trae una ventaja, yo antes le pedía textualmente a claude que apague la pc al acabar cuando debía irme, pero si quería hacer que la apague y estaba a mitad de trabajo ya no tenía forma de hacerlo(ahora recuero que podemos añadir la funcionalidad de "en cola" para los mensajes, promts que van luego de que termine de hacer lo que est´ahora, es parte de paridad creo) e interrumpirla o pasarle otro prompt en cola pues cagaría contexto innecesario, esta funcionalidad evita todo eso, no gasta uso en lo más minimo tampoco
+Estado: nueva · Idea: usuario · Fecha: 2026-11-24
+
+## T-135 — que iridium le avice a claude cuando haya ideas nuevas ¿? si es que no lo hace ahora
+Estado: nueva · Idea: usuario · Fecha: 2026-11-25
+
+## T-136 — que así como claude ahora puede atacar algunos frentes cuando iridium está idle, pueda también revisar ideas, auditarlas, ver cuales pueden pasar directo a implemntación, anotarlo para no revisar las mismas una y otra vez, etc, lo mismo con los frentes, hay varios frentes que están algo estancados pero que la IA podría estarlos avanzando sola pero parece que no son candidatos pq no empiezan
+Estado: nueva · Idea: usuario · Fecha: 2026-11-25
+
+## T-137 — Iridium no arrancaba
+Estado: hecho · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
+Dos armados corrieron juntos en `release/nueva` y quedó puesta una app sin los archivos de Electron (Iridium.exe se cerraba al abrir). Ahora `actualizar.ps1` arma de a uno por carpeta y `cambiar-version.ps1` no pone una versión incompleta (sigue la de antes). En los commits del 2026-11-24 figura como T-133, número que ya tenía una idea tuya.

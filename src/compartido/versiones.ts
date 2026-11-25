@@ -35,8 +35,8 @@ export function completarLatest(texto: string, commit: string, mensaje: string):
   return `${sin}commit: ${JSON.stringify(commit)}\nreleaseNotes: ${JSON.stringify(mensaje)}\n`
 }
 
-/** Cuántas versiones publicadas quedan en GitHub (Q-290): cada una ocupa unos 220 MB. */
-export const VERSIONES_PUBLICADAS = 10
+/** Cuántas versiones publicadas quedan en GitHub (Q-290; 5 desde Q-291): cada una ocupa unos 220 MB. */
+export const VERSIONES_PUBLICADAS = 5
 
 /**
  * Las versiones de GitHub que sobran: las publicadas que no están entre las `quedan` más nuevas (por cuándo se

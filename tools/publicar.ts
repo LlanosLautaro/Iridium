@@ -3,7 +3,7 @@
 // Las copias instaladas la bajan solas con electron-updater (solo lo que cambió) y la ponen al cerrar Iridium.
 // Publica lo que marca `main` (lo que se armó por última vez, D-070); si `main` no está en GitHub, lo sube. Con
 // `--commit`, ese: la app de uso diario se publica sola con el commit de la versión en uso (T-132).
-// Después, borra de GitHub las versiones viejas: quedan las últimas 10 (Q-290, `versionesParaBorrar`).
+// Después, borra de GitHub las versiones viejas: quedan las últimas 5 (Q-290 y Q-291, `versionesParaBorrar`).
 // Con `--desde <carpeta>`, la versión armada en otra carpeta (`tools/actualizar.ps1 -Release <carpeta>`): la de
 // `nueva`, con el commit de su `lista.json`, o, si ya se puso, la de `win-unpacked` con `--commit`. Sirve para publicar
 // sin cambiar la app de uso diario.
@@ -79,7 +79,7 @@ const encabezados = {
   'X-GitHub-Api-Version': '2022-11-28',
 }
 
-/** Borra las versiones que pasan de las últimas 10 (la etiqueta queda); si no puede, lo dice y sigue. */
+/** Borra las versiones que pasan de las últimas 5 (la etiqueta queda); si no puede, lo dice y sigue. */
 async function borrarViejas(): Promise<void> {
   const r = await fetch(`${API}/repos/${repo}/releases?per_page=100`, { headers: encabezados })
   if (!r.ok) return console.log(`No se pudieron ver las versiones viejas: ${r.status}`)

@@ -198,7 +198,7 @@
 | D-189 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, pasos 4 y 5; Q-285, Q-286 | La PC con Windows-MCP, y cómo se construyen las Capacidades | vigente (Conectar, cambiado por D-190) |
 | D-190 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 7 (PA-I4) | Conectar con `claude mcp login`, y los conectores sin configurar | vigente |
 | D-191 | 2026-11-24 | general (Compartir) | 10, a pedido del usuario (T-132) | La versión en uso se publica sola en GitHub | vigente (precisa D-085 y D-171) |
-| D-192 | 2026-11-24 | general (Compartir) | 10 (Q-290) | En GitHub quedan las últimas 10 versiones y cada versión nueva dice qué trae | vigente (precisa D-191) |
+| D-192 | 2026-11-24 | general (Compartir) | 10 (Q-290) | En GitHub quedan las últimas 5 versiones (10 hasta Q-291) y cada versión nueva dice qué trae | vigente (precisa D-191) |
 
 ---
 
@@ -3648,7 +3648,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** lo publicado es siempre lo que el usuario usa, sin acordarse de nada; la otra PC baja solo lo que cambió (unos MB).
 **Consecuencias:** cada versión sube su instalador entero (unos 220 MB) a GitHub, en segundo plano. Una versión puesta con `pnpm volver` tiene un número menor: si ya estaba publicada no se repite, y la otra PC no vuelve atrás sola. `pnpm publicar` sigue para hacerlo ya.
 
-## D-192 — En GitHub quedan las últimas 10 versiones y cada versión nueva dice qué trae
+## D-192 — En GitHub quedan las últimas 5 versiones y cada versión nueva dice qué trae
 - **Fecha:** 2026-11-24
 - **Ámbito:** general (frente Compartir; precisa D-191)
 - **Hito o paso:** 10 (Q-290)
@@ -3659,3 +3659,4 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** B: después de publicar, `tools/publicar.ts` borra de GitHub las versiones publicadas que pasan de las 10 más nuevas (por fecha de publicación, también las de antes de D-182); la etiqueta queda. C: cada versión lleva sus últimos 40 commits; la primera vez que se abre en una PC (la de uso diario o una copia instalada), el aviso de la esquina «Iridium se actualizó a 1.0.x» muestra la primera frase de cada commit desde la última versión vista ahí (el mensaje entero al pasar el mouse) y Listo lo cierra; lo visto se anota en `novedades.json`. La primera vez en una PC no avisa. Y los cambios en `docs/` ya no cuentan como «sin commitear» al armar.
 **Motivo:** GitHub no se llena con versiones que nadie va a bajar, y lo que trae cada versión se ve sin abrir un archivo; los commits ya dicen qué cambió en palabras del usuario.
 **Consecuencias:** la primera frase de cada commit tiene que decir qué cambió para el usuario, no solo el código de la iteración. Una copia instalada en una versión borrada baja la próxima entera (no solo lo que cambió).
+**Ajuste (2026-11-25, Q-291):** probado, todo bien; el usuario pidió bajarlas a 5 (`VERSIONES_PUBLICADAS`).
