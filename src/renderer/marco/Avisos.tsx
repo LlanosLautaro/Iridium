@@ -2,7 +2,9 @@
 // sesiones trabajando (F-6).
 import { useEffect, useRef, useState } from 'react'
 import { textoDeCierre } from '../../compartido/consolas'
+import type { Novedades } from '../../compartido/novedades'
 import type { RenglonArranqueVista } from '../../compartido/puente'
+import { primeraFrase } from '../../compartido/versiones'
 import { type AvisoEjecutar, type AvisoSesion, tarjetaDe, usarEstado } from '../estado'
 import { armarProyecto } from '../secciones/proyecto/ejecutar'
 import { useAnchoConversacion } from '../ui/Divisor'
@@ -202,6 +204,53 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
   )
 }
 
+/** Lo que trae esta versión (Q-290), una vez: la primera vez que se abre. Esta PC lo pide al arrancar. */
+function useNovedades(): [Novedades | null, () => void] {
+  const [novedades, setNovedades] = useState<Novedades | null>(null)
+  useEffect(() => {
+    void window.iridium.novedades().then(setNovedades, () => {})
+  }, [])
+  const vistas = () => {
+    setNovedades(null)
+    void window.iridium.novedadesVistas()
+  }
+  return [novedades, vistas]
+}
+
+/**
+ * «Iridium se actualizó a 1.0.26» con lo que trae: la primera frase de cada cambio (el mensaje entero al pasar el
+ * mouse), del más nuevo al más viejo. Como el aviso al volver, no se va solo: Listo lo cierra hasta la próxima versión.
+ */
+function AvisoNovedades({ n, listo }: { n: Novedades; listo: () => void }) {
+  const [todas, setTodas] = useState(false)
+  const mostradas = todas ? n.cambios : n.cambios.slice(0, FILAS_ARRANQUE)
+  const resto = n.cambios.length - mostradas.length
+  return (
+    <div className="aviso-flotante fijo" data-estado="ok" role="status" aria-label="Lo nuevo de Iridium">
+      <Icono nombre="check" />
+      <b className="t">Iridium se actualizó a {n.version}</b>
+      <ul className="renglones-arranque">
+        {mostradas.map((c) => (
+          <li key={c.commit} className="novedad" title={c.mensaje}>
+            {primeraFrase(c.mensaje)}
+          </li>
+        ))}
+        {todas && n.mas && <li className="novedad">Y cambios anteriores.</li>}
+      </ul>
+      <div className="pie">
+        {resto > 0 && !todas && (
+          <button type="button" className="boton sin-fondo chico" onClick={() => setTodas(true)}>
+            y {resto} más
+          </button>
+        )}
+        <button type="button" className="boton principal chico" onClick={listo}>
+          Listo
+        </button>
+      </div>
+    </div>
+  )
+}
+
 /** Ejecutar Alfa no abrió (frente Abrir, AB-2): todavía no está armada, con Armar ahora, o un error. Se cierra a mano. */
 function AvisoDeEjecutar({ a }: { a: AvisoEjecutar }) {
   const poner = usarEstado((s) => s.ponerAvisoEjecutar)
@@ -248,6 +297,7 @@ export function Avisos() {
   const delArranque = usarEstado((s) => s.arranque?.aviso) ?? []
   const quitar = usarEstado((s) => s.quitarAviso)
   const deEjecutar = usarEstado((s) => s.avisoEjecutar)
+  const [novedades, novedadesVistas] = useNovedades()
   // A la izquierda de la conversación que esté a la vista (la del proyecto, la general o la de Skills): no tapa el
   // cuadro para escribir (D-032).
   const seccion = usarEstado((s) => s.seccion)
@@ -264,9 +314,10 @@ export function Avisos() {
     window.addEventListener('keydown', alTeclado)
     return () => window.removeEventListener('keydown', alTeclado)
   }, [avisos, quitar])
-  if (avisos.length === 0 && delArranque.length === 0 && !deEjecutar) return null
+  if (avisos.length === 0 && delArranque.length === 0 && !deEjecutar && !novedades) return null
   return (
     <section className="avisos" aria-label="Avisos de las sesiones" style={{ right: ancho + 12 }}>
+      {novedades && <AvisoNovedades n={novedades} listo={novedadesVistas} />}
       {delArranque.length > 0 && <AvisoArranque filas={delArranque} />}
       {avisos.map((a) => (
         <Aviso key={a.id} a={a} />

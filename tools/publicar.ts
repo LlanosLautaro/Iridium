@@ -3,6 +3,7 @@
 // Las copias instaladas la bajan solas con electron-updater (solo lo que cambió) y la ponen al cerrar Iridium.
 // Publica lo que marca `main` (lo que se armó por última vez, D-070); si `main` no está en GitHub, lo sube. Con
 // `--commit`, ese: la app de uso diario se publica sola con el commit de la versión en uso (T-132).
+// Después, borra de GitHub las versiones viejas: quedan las últimas 10 (Q-290, `versionesParaBorrar`).
 // Con `--desde <carpeta>`, la versión armada en otra carpeta (`tools/actualizar.ps1 -Release <carpeta>`): la de
 // `nueva`, con el commit de su `lista.json`, o, si ya se puso, la de `win-unpacked` con `--commit`. Sirve para publicar
 // sin cambiar la app de uso diario.
@@ -13,6 +14,7 @@ import { existsSync } from 'node:fs'
 import { mkdtemp, readFile, rm, stat } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, join } from 'node:path'
+import { VERSIONES_PUBLICADAS, versionesParaBorrar } from '../src/compartido/versiones.ts'
 import { armarInstalador, versionDeApp } from './instalador.ts'
 
 const API = 'https://api.github.com'
@@ -77,6 +79,25 @@ const encabezados = {
   'X-GitHub-Api-Version': '2022-11-28',
 }
 
+/** Borra las versiones que pasan de las últimas 10 (la etiqueta queda); si no puede, lo dice y sigue. */
+async function borrarViejas(): Promise<void> {
+  const r = await fetch(`${API}/repos/${repo}/releases?per_page=100`, { headers: encabezados })
+  if (!r.ok) return console.log(`No se pudieron ver las versiones viejas: ${r.status}`)
+  const viejas = versionesParaBorrar(
+    (await r.json()) as {
+      id: number
+      tag_name: string
+      draft: boolean
+      published_at: string | null
+    }[],
+  )
+  for (const v of viejas) {
+    const b = await fetch(`${API}/repos/${repo}/releases/${v.id}`, { method: 'DELETE', headers: encabezados })
+    console.log(b.ok ? `     Borrada ${v.tag_name}` : `     No se pudo borrar ${v.tag_name}: ${b.status}`)
+  }
+  if (viejas.length) console.log(`Quedan las últimas ${VERSIONES_PUBLICADAS} versiones.`)
+}
+
 // La etiqueta apunta al commit publicado: tiene que estar en GitHub. Con `--commit` y sin `--desde` (la app de uso
 // diario la publica sola, T-132), el commit de la versión en uso, que `main` ya puede haber pasado.
 if (!desde && largo === git('rev-parse', 'main')) {
@@ -96,7 +117,8 @@ if (!desde && largo === git('rev-parse', 'main')) {
 // La misma versión no se publica dos veces.
 const ya = await fetch(`${API}/repos/${repo}/releases/tags/${etiqueta}`, { headers: encabezados })
 if (ya.ok) {
-  console.log(`Esa versión ya está publicada (${etiqueta}). Nada que hacer.`)
+  console.log(`Esa versión ya está publicada (${etiqueta}). Nada que subir.`)
+  await borrarViejas()
   process.exit(0)
 }
 
@@ -158,6 +180,7 @@ try {
   console.log(
     'Las copias instaladas la bajan solas (al abrir y cada seis horas) y la ponen al cerrar Iridium.',
   )
+  await borrarViejas()
 } finally {
   await rm(temporal, { recursive: true, force: true })
 }

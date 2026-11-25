@@ -27,6 +27,7 @@ import { ArchivoEscritos } from './infra/escritos'
 import { Fotos } from './infra/fotos'
 import { imagenesElectron } from './infra/imagenes'
 import { abrirEnNavegador } from './infra/navegador'
+import { archivoNovedades } from './infra/novedades'
 import { publicarSola } from './infra/publicar-sola'
 import { cerrarPuentesDelNavegador } from './infra/puente-navegador'
 import { leerCarpetas } from './infra/raiz'
@@ -701,6 +702,15 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       segundosSinUso: () => uso.segundosSinUsar(),
       arranques: new ArchivoArranques(join(carpetaDatos, 'arranques.json')),
       archivoCapacidades: join(carpetaDatos, 'capacidades.json'),
+      // Lo nuevo de la versión (Q-290), en la app de uso diario y en las copias instaladas; las pruebas lo piden.
+      ...((app.isPackaged && !oculta) || process.env.IRIDIUM_NOVEDADES === 'si'
+        ? {
+            novedades: archivoNovedades(join(carpetaDatos, 'novedades.json'), {
+              version: app.getVersion(),
+              cambios: __ARMADO__.cambios,
+            }),
+          }
+        : {}),
       carpetaLocal:
         process.env.IRIDIUM_NAVEGADORES ?? process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'),
       // Abrir (AB-I2): las apps de escritorio de los proyectos se arman solas; la de Iridium, con D-122.

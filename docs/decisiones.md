@@ -198,6 +198,7 @@
 | D-189 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, pasos 4 y 5; Q-285, Q-286 | La PC con Windows-MCP, y cómo se construyen las Capacidades | vigente (Conectar, cambiado por D-190) |
 | D-190 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 7 (PA-I4) | Conectar con `claude mcp login`, y los conectores sin configurar | vigente |
 | D-191 | 2026-11-24 | general (Compartir) | 10, a pedido del usuario (T-132) | La versión en uso se publica sola en GitHub | vigente (precisa D-085 y D-171) |
+| D-192 | 2026-11-24 | general (Compartir) | 10 (Q-290) | En GitHub quedan las últimas 10 versiones y cada versión nueva dice qué trae | vigente (precisa D-191) |
 
 ---
 
@@ -3646,3 +3647,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** la app de uso diario publica sola la versión que está usando, cinco minutos después de abrir, con `tools/publicar.ts --commit <el de la versión>`, suelto y escondido (lo que escribe queda en `release/publicar.log`). No publica una versión armada con cambios sin commitear (ningún commit la describe) ni una que ya está publicada; si no pudo (sin internet), lo reintenta pasadas seis horas. Las copias instaladas nunca publican.
 **Motivo:** lo publicado es siempre lo que el usuario usa, sin acordarse de nada; la otra PC baja solo lo que cambió (unos MB).
 **Consecuencias:** cada versión sube su instalador entero (unos 220 MB) a GitHub, en segundo plano. Una versión puesta con `pnpm volver` tiene un número menor: si ya estaba publicada no se repite, y la otra PC no vuelve atrás sola. `pnpm publicar` sigue para hacerlo ya.
+
+## D-192 — En GitHub quedan las últimas 10 versiones y cada versión nueva dice qué trae
+- **Fecha:** 2026-11-24
+- **Ámbito:** general (frente Compartir; precisa D-191)
+- **Hito o paso:** 10 (Q-290)
+- **Estado:** vigente
+
+**Contexto:** con D-191 cada versión en uso se publica, unos 220 MB cada una, y quedaban todas; al abrir una versión nueva no se veía qué traía. Al revisarlo apareció además que la publicación sola no había corrido nunca: la versión se armaba con «cambios sin commitear» porque contaban los archivos de `docs/` (una respuesta del formulario, por ejemplo), que no van en la app.
+**Opciones consideradas:** A) que Acerca de diga qué versión está publicada · B) borrar solas las versiones viejas y dejar las últimas 10 · C) un aviso con lo que trae una versión nueva · D) nada. El usuario eligió B y C.
+**Decisión:** B: después de publicar, `tools/publicar.ts` borra de GitHub las versiones publicadas que pasan de las 10 más nuevas (por fecha de publicación, también las de antes de D-182); la etiqueta queda. C: cada versión lleva sus últimos 40 commits; la primera vez que se abre en una PC (la de uso diario o una copia instalada), el aviso de la esquina «Iridium se actualizó a 1.0.x» muestra la primera frase de cada commit desde la última versión vista ahí (el mensaje entero al pasar el mouse) y Listo lo cierra; lo visto se anota en `novedades.json`. La primera vez en una PC no avisa. Y los cambios en `docs/` ya no cuentan como «sin commitear» al armar.
+**Motivo:** GitHub no se llena con versiones que nadie va a bajar, y lo que trae cada versión se ve sin abrir un archivo; los commits ya dicen qué cambió en palabras del usuario.
+**Consecuencias:** la primera frase de cada commit tiene que decir qué cambió para el usuario, no solo el código de la iteración. Una copia instalada en una versión borrada baja la próxima entera (no solo lo que cambió).

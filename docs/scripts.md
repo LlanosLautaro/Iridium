@@ -16,7 +16,7 @@ Pone los últimos cambios en la app de uso diario (tarda un minuto). Sirve con I
 **Ejecutar:** `pnpm actualizar`
 
 ## Publicar la versión para compartir
-Iridium lo hace solo (D-191): cinco minutos después de abrir, sube a GitHub la versión que tenés en uso si todavía no está, y las copias instaladas (la otra PC) la bajan solas y entra cuando cierran Iridium (D-171); lo que pasó queda en `release/publicar.log`. Esto es para hacerlo ya. Armá antes si hay cambios sin armar; una versión armada con cambios sin commitear no se publica. Tarda unos minutos (sube unos 220 MB; las copias bajan solo lo que cambió, casi siempre unos MB). Si dice que esa versión ya está publicada, no hay nada nuevo que mandar; si dice que se armó sin número, armala de nuevo.
+Iridium lo hace solo (D-191): cinco minutos después de abrir, sube a GitHub la versión que tenés en uso si todavía no está, y las copias instaladas (la otra PC) la bajan solas y entra cuando cierran Iridium (D-171); lo que pasó queda en `release/publicar.log`; en GitHub quedan las últimas 10 versiones (D-192). Esto es para hacerlo ya. Armá antes si hay cambios sin armar; una versión armada con cambios sin commitear no se publica. Tarda unos minutos (sube unos 220 MB; las copias bajan solo lo que cambió, casi siempre unos MB). Si dice que esa versión ya está publicada, no hay nada nuevo que mandar; si dice que se armó sin número, armala de nuevo.
 **Ejecutar:** `pnpm publicar`
 
 ## Volver a la versión anterior

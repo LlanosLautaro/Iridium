@@ -7,6 +7,7 @@ import { actualizarSolo } from '../../compartido/actualizar'
 import { MAX_ADJUNTOS } from '../../compartido/adjuntos'
 import { sumarReciente } from '../../compartido/comandos'
 import type { PedidoCierre } from '../../compartido/consolas'
+import type { Novedades } from '../../compartido/novedades'
 import {
   type AjusteSonido,
   CANALES,
@@ -212,6 +213,8 @@ export interface Servicios {
   arranques: ArchivoArranques
   /** La última lista de Ajustes › Capacidades (`capacidades.json`, Q-287); sin ella, no se recuerda entre aperturas. */
   archivoCapacidades?: string
+  /** Lo nuevo de la versión (Q-290); sin él (en desarrollo y en las pruebas), no hay aviso. */
+  novedades?: { pendientes(): Promise<Novedades | null>; vistas(): Promise<void> }
   /** Donde se buscan los perfiles de los navegadores (`%LOCALAPPDATA%`; en las pruebas, `IRIDIUM_NAVEGADORES`). */
   carpetaLocal?: string
   /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento del arranque, a tantos segundos de abrir. */
@@ -658,6 +661,9 @@ export function registrarPuente(s: Servicios): Puente {
       throw new Error('arranqueVisto: hasta no es un número')
     return arranque.visto(hasta)
   })
+
+  ipcMain.handle(CANALES.novedades, () => s.novedades?.pendientes() ?? null)
+  ipcMain.handle(CANALES.novedadesVistas, () => s.novedades?.vistas())
 
   ipcMain.handle(CANALES.listarProyectos, () => listar())
 

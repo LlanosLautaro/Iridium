@@ -34,3 +34,23 @@ export function completarLatest(texto: string, commit: string, mensaje: string):
   const sin = texto.replace(/^(commit|releaseNotes):.*\n?/gm, '').replace(/\n*$/, '\n')
   return `${sin}commit: ${JSON.stringify(commit)}\nreleaseNotes: ${JSON.stringify(mensaje)}\n`
 }
+
+/** Cuántas versiones publicadas quedan en GitHub (Q-290): cada una ocupa unos 220 MB. */
+export const VERSIONES_PUBLICADAS = 10
+
+/**
+ * Las versiones de GitHub que sobran: las publicadas que no están entre las `quedan` más nuevas (por cuándo se
+ * publicaron: las de antes de D-182 tienen otras etiquetas, y una puesta con `pnpm volver` puede tener un número menor).
+ * Los borradores (una que se está subiendo) no se tocan. Las copias instaladas en una versión borrada siguen andando:
+ * la próxima la bajan entera en vez de solo lo que cambió.
+ */
+export function versionesParaBorrar<T extends { draft: boolean; published_at: string | null }>(
+  versiones: T[],
+  quedan = VERSIONES_PUBLICADAS,
+): T[] {
+  const cuando = (v: T) => Date.parse(v.published_at ?? '') || 0
+  return versiones
+    .filter((v) => !v.draft)
+    .sort((a, b) => cuando(b) - cuando(a))
+    .slice(quedan)
+}

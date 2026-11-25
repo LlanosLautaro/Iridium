@@ -102,8 +102,8 @@ $datos = [ordered]@{
   fecha   = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
   commit  = $commit
   mensaje = (& git log -1 --format=%s).Trim()
-  # Lo armado incluye los cambios sin commitear, si los había.
-  sinGuardar = [bool](& git status --porcelain)
+  # Lo armado incluye los cambios sin commitear, si los había; los de `docs/` no van en la app (D-191).
+  sinGuardar = [bool](& git status --porcelain -- . ':(exclude)docs')
 }
 # El número, para la ventanita «Actualizando Iridium…» (T-128); con -SinArmar no se calculó.
 if ($version) { $datos.version = $version }

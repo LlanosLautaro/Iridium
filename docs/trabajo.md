@@ -124,6 +124,7 @@ Estado: en curso · Frente: Paridad · Fecha: 2026-10-30
 Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Era el frente Capacidades (D-102); desde D-166 es la segunda parte de Paridad.
 2026-11-24: definición en borrador e investigación (S-8, `modulos/paridad/definicion.md` › Segunda parte). Se decide en Q-282 a Q-284.
 2026-11-24: PA-I4 (ver y apagar los conectores) probada en Q-287; siguen PA-I5 (el navegador) y PA-I6 (la PC).
+2026-11-24: PA-I5 (el navegador) probada en Q-288; sigue PA-I6 (la PC).
 
 ## T-29 — Mantenimiento: subir los parches
 Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
@@ -619,3 +620,4 @@ Hecho el 2026-11-24:
 - **El navegador (PA-I5) y las actualizaciones:** el puente de la extensión de Claude corre desde la carpeta de la app y sigue vivo con Brave abierto: habría trabado cada actualización acá («Iridium sigue abierto») y el instalador en la otra PC. Se cierra antes de poner la versión nueva (Brave lo vuelve a abrir cuando lo necesita).
 - **La otra PC:** revisado el camino entero (el repo es público, `latest.yml` y los `.blockmap` responden, los números crecen); lo que faltaba es que se publicara: la publicada era la 1.0.14 y la tuya, la 1.0.24. Con D-191, la versión en uso se publica sola.
 Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan con el de antes) y la barra en `co6-sin-armar.spec.ts`. Se prueba en Q-289.
+2026-11-24, probada en Q-289. Con Q-290 (D-192): en GitHub quedan las últimas 10 versiones y cada versión nueva dice qué trae en el aviso de la esquina. Y la publicación sola no había corrido nunca: los archivos de `docs/` sin commitear (tus respuestas) hacían que la versión se viera «con cambios sin commitear»; ya no cuentan. Se ve en Q-291.

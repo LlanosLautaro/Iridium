@@ -9,6 +9,7 @@ import type { ConsolaVista, GuardadoConsola, PedidoCierre, SalidaConsola } from 
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
 import type { EstadoDesdeIdeas, IdeasDeProyecto, NotaIdea, ResultadoIdea } from './ideas'
 import type { ImagenDelPortapapeles, ImagenPegada } from './notas'
+import type { Novedades } from './novedades'
 import type { Borrador } from './respuestas'
 import type { ListaSkills, ProyectoFramework, SkillProyecto } from './skills'
 import type { Estado, PlanEliminacion } from './tipos'
@@ -1049,6 +1050,8 @@ export const CANALES = {
   arranqueCambio: 'arranque:cambio',
   terminoTrabajo: 'sonido:termino',
   arranqueVisto: 'arranque:visto',
+  novedades: 'app:novedades',
+  novedadesVistas: 'app:novedades-vistas',
   cancelarArmado: 'app:cancelar-armado',
   verConsolaArmado: 'app:ver-consola-armado',
   leerEscritos: 'escritos:leer',
@@ -1142,6 +1145,10 @@ export interface ApiIridium {
   alTerminarTrabajo(escuchar: (sonido: SonidoFin) => void): () => void
   /** Listo en el aviso al volver (AR-4): lo mostrado hasta `hasta` no vuelve a aparecer. */
   arranqueVisto(hasta: number): Promise<void>
+  /** Lo que trae esta versión desde la que se usaba antes en esta PC (Q-290); null si nada o la primera vez. */
+  novedades(): Promise<Novedades | null>
+  /** Listo en el aviso de lo nuevo: no vuelve a aparecer hasta la próxima versión. */
+  novedadesVistas(): Promise<void>
   /** Se quiso cerrar la ventana con sesiones trabajando o consolas corriendo (F-6, I-10). */
   alPedirCierre(escuchar: (pedido: PedidoCierre) => void): () => void
   /** «Cerrar igual» (F-6): frena las sesiones y cierra; las conversaciones quedan para Seguí. */

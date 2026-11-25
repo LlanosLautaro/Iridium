@@ -319,7 +319,8 @@
 .aviso-flotante .renglones-arranque li {
   display: contents;
 }
-.aviso-flotante .renglones-arranque .sin-arrancar {
+.aviso-flotante .renglones-arranque .sin-arrancar,
+.aviso-flotante .renglones-arranque .novedad {
   display: block;
   grid-column: 1 / -1;
   padding: 3px 0;
