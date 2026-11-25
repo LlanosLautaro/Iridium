@@ -913,7 +913,12 @@ export class Conversaciones {
         })
     }
     this.emitir(p, avisos)
-    this.d.alTerminar?.(ruta, { resultado, fondo: p.fondo.length, avance: p.avance })
+    this.d.alTerminar?.(ruta, {
+      resultado,
+      fondo: p.fondo.length,
+      avance: p.avance,
+      ...(falla?.tipo === 'uso-agotado' ? { agotado: { libera: falla.libera } } : {}),
+    })
 
     const fin = this.ahora()
     p.usoCentro = fin

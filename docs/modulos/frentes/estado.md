@@ -81,6 +81,13 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - `core/trabajo.ts` y el control: `Tamaño:` en la línea de datos de un `T-n` (`chico`, `mediano, sola`…); el control avisa uno mal escrito y uno con `Frente:` (va en su ruta). El framework explica la revisión, el `Tamaño:` del Núcleo y que solo el usuario pausa un frente.
 - Pruebas: Vitest `fs4-revision.test.ts` (11) y `fs2-avance.test.ts` al día.
 
+### Arreglo: las sesiones que fallaban sin uso (2026-11-25, D-194)
+- Visto la noche del 2026-11-25: con el período al 95 y 99 %, el avance solo abrió tres pasos chicos que fallaron por el uso agotado; uno, 21 segundos después de la falla anterior (al terminar una sesión mira enseguida, y el uso leído seguía diciendo 99 %, no agotado). Los tres quedaban «tomados» por 12 horas y el aviso decía «falló».
+- `core/avance.ts`: lo chico pide más de 10 libre. `app/avance.ts`: `sinUso(ruta, libera)` frena el motor hasta que se libera y marca el renglón `agotado`; la fila no lo cuenta como tomado. `conversacion.ts` avisa en `alTerminar` si el turno se cortó por el uso.
+- Encontrado al probar: al abrir Iridium, el registro de conversaciones (`infra/sesiones.ts`) le contestaba vacío a las que se pedían mientras se leía; el aviso al volver podía decir «falló» de una sesión terminada. Ahora esperan la misma lectura.
+- R-108: la lista de «Mientras no estabas» se desplaza cuando no entra.
+- Pruebas: Vitest `fs2-avance.test.ts` (2 nuevas y el límite de lo chico), `ar2-arranque.test.ts` (1); Playwright `ar2-arranque.spec.ts` (1).
+
 ## Calidad del motor (paso 8, 2026-11-23)
 La tomó el avance solo. Cubre el motor (FS-1 a FS-5); el tablero (FS-6 a FS-8) tiene su paso aparte.
 

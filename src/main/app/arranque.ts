@@ -188,6 +188,7 @@ export class Arranque {
         frenan: c?.frenan ?? 0,
       },
       ...avance,
+      ...(r.agotado ? { agotado: true } : {}),
     }
   }
 

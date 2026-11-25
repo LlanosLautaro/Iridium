@@ -44,8 +44,11 @@ export function conProyecto(a: AvanceApagado, ruta: string, prendido: boolean): 
 
 // Las reglas con que decide (D-178 › 3 y 4).
 
-/** Lo que tiene que quedar del período para cada tamaño (D-178 › 3): lo grande, con el período casi entero. */
-const HACE_FALTA: Record<TamanoPaso, number> = { chico: 0, mediano: 40, grande: 70 }
+/**
+ * Lo que tiene que quedar del período para cada tamaño (D-178 › 3): lo grande, con el período casi entero. Lo chico
+ * gastó de 3 a 13 % (D-194): con menos de 10 libre, se queda sin uso a mitad de camino.
+ */
+const HACE_FALTA: Record<TamanoPaso, number> = { chico: 10, mediano: 40, grande: 70 }
 
 /** Un paso que se tomó y sigue sin hacer no se vuelve a tomar en este tiempo: algo lo frenó (D-178 › 4). */
 export const NO_REPETIR_MS = 12 * 3_600_000

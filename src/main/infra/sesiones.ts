@@ -59,17 +59,24 @@ const Archivo = z.object({
 
 export class ArchivoSesiones {
   private actual: Map<string, ResumenSesion> | null = null
+  private leyendo: Promise<Map<string, ResumenSesion>> | null = null
   private escribiendo: Promise<void> = Promise.resolve()
 
   constructor(private readonly archivo: string) {}
 
   private async todas(): Promise<Map<string, ResumenSesion>> {
     if (this.actual) return this.actual
-    this.actual = new Map()
-    // Sin archivo o roto, se arranca vacío (el roto queda aparte).
-    const datos = await leerDatos(this.archivo, (t) => Archivo.parse(JSON.parse(t)))
-    for (const [id, r] of Object.entries(datos?.conversaciones ?? {})) if (r) this.actual.set(id, r)
-    return this.actual
+    // Las que piden a la vez esperan la misma lectura: antes, mientras se leía, las demás recibían el registro vacío y
+    // el aviso al volver daba por fallada una conversación que había terminado.
+    this.leyendo ??= (async () => {
+      const todas = new Map<string, ResumenSesion>()
+      // Sin archivo o roto, se arranca vacío (el roto queda aparte).
+      const datos = await leerDatos(this.archivo, (t) => Archivo.parse(JSON.parse(t)))
+      for (const [id, r] of Object.entries(datos?.conversaciones ?? {})) if (r) todas.set(id, r)
+      this.actual ??= todas
+      return this.actual
+    })()
+    return this.leyendo
   }
 
   async de(id: string): Promise<ResumenSesion | null> {

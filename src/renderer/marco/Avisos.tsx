@@ -126,6 +126,8 @@ function FilaArranque({ r }: { r: RenglonArranqueVista }) {
       </li>
     )
   const p = r.proyecto
+  // Se cortó por el uso (D-194): no falló el trabajo, se retoma cuando se libera.
+  const sinUso = r.agotado && p.estado === 'error'
   return (
     <li>
       <b>{p.nombre}</b>
@@ -133,8 +135,12 @@ function FilaArranque({ r }: { r: RenglonArranqueVista }) {
       <span>
         {/* Lo que tomó el avance solo (FS-5): el paso; sus respuestas de la Bandeja, como el Arranque. */}
         {r.avance && <>avanzó «{r.avance.texto}» · </>}
-        <span className={p.frenan > 0 ? 'cuenta frena' : p.estado === 'error' ? 'fallo' : undefined}>
-          {queDejo(p)}
+        <span
+          className={
+            sinUso ? 'sin-uso' : p.frenan > 0 ? 'cuenta frena' : p.estado === 'error' ? 'fallo' : undefined
+          }
+        >
+          {sinUso ? 'se quedó sin uso, sigue cuando se libere' : queDejo(p)}
         </span>
       </span>
       <button
@@ -162,8 +168,8 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
   const mostradas = todas ? filas : filas.slice(-FILAS_ARRANQUE)
   const resto = filas.length - mostradas.length
   // Rojo si una conversación falló; ámbar si dejó preguntas o algo no arrancó.
-  const falla = filas.some((r) => r.proyecto?.estado === 'error')
-  const espera = filas.some((r) => !r.proyecto || r.proyecto.preguntas > 0)
+  const falla = filas.some((r) => r.proyecto?.estado === 'error' && !r.agotado)
+  const espera = filas.some((r) => !r.proyecto || r.proyecto.preguntas > 0 || r.agotado)
   return (
     <div
       className="aviso-flotante fijo"

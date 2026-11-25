@@ -541,11 +541,14 @@ export function registrarPuente(s: Servicios): Puente {
         : controlarProyecto(ruta),
     registrar: (texto) => s.registro.escribir(texto),
     // El sonido al terminar (T-52, D-183): la ventana lo toca; acá se decide si toca.
-    alTerminar: (_ruta, fin) =>
+    alTerminar: (ruta, fin) => {
+      // Sin uso, el avance solo espera a que se libere en vez de seguir abriendo sesiones que fallan (D-194).
+      if (fin.agotado) avance.sinUso(ruta, fin.agotado.libera)
       void s.config.leer().then((c) => {
         const sonido = sonidoAlTerminar(c.sonido as AjusteSonido, fin)
         if (sonido) enviar(CANALES.terminoTrabajo, sonido)
-      }),
+      })
+    },
     // Los mensajes de la IA con los códigos y las citas del proyecto como enlaces (F-4).
     html: async (ruta) => {
       const d = await docs.de(ruta)

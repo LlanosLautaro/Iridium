@@ -24,6 +24,9 @@ import type { ArchivoArranques, RenglonArranque } from '../infra/arranques'
 /** Cada cuánto mira (D-178 › 2): las condiciones cambian con el uso de la PC y con las sesiones, no con el reloj. */
 const CADA_MS = 60_000
 
+/** Si una sesión se quedó sin uso y no se sabe cuándo se libera, cuánto espera antes de volver a mirar. */
+const ESPERA_SIN_HORA_MS = 30 * 60_000
+
 export interface DependenciasAvance {
   ajuste: () => Promise<AjusteAvance>
   apagados: () => Promise<AvanceApagado>
@@ -65,6 +68,10 @@ export class AvanceSolo {
   private cerrado = false
   /** Lo que tomó y sigue trabajando: al terminar se anota lo gastado. */
   private tomado: { ruta: string; cuando: number } | null = null
+  /** Lo último que tomó, aunque ya haya terminado: si se cortó sin uso, se lo marca (D-194). */
+  private ultimo: { ruta: string; cuando: number } | null = null
+  /** Hasta cuándo no toma nada: una sesión se quedó sin uso y el período todavía no se liberó (D-194). */
+  private esperaHasta = 0
   private readonly ahora: () => number
 
   constructor(private readonly d: DependenciasAvance) {
@@ -98,6 +105,28 @@ export class AvanceSolo {
     }
   }
 
+  /**
+   * Una sesión se cortó por el uso agotado (D-194): no toma nada hasta que se libere (sin la hora, media hora) y, si era
+   * la suya, la marca para que no cuente como tomada y el aviso diga que se quedó sin uso.
+   */
+  sinUso(ruta: string, libera: number | null): void {
+    const ahora = this.ahora()
+    this.esperaHasta = Math.max(
+      this.esperaHasta,
+      libera && libera > ahora ? libera : ahora + ESPERA_SIN_HORA_MS,
+    )
+    this.d.registrar?.(
+      `Avance solo: sin uso, espera hasta ${new Date(this.esperaHasta).toLocaleTimeString()}`,
+    )
+    const u = this.ultimo
+    if (!u || u.ruta !== ruta) return
+    this.ultimo = null
+    void this.d.archivo
+      .cambiar(u.cuando, { agotado: true })
+      .then(() => this.d.alCambio?.())
+      .catch(() => {})
+  }
+
   /** La sesión que abrió terminó: lee el uso y anota el de después (D-178 › 6). */
   private async terminado(): Promise<void> {
     const t = this.tomado
@@ -111,6 +140,7 @@ export class AvanceSolo {
   }
 
   private async tomar(): Promise<void> {
+    if (this.ahora() < this.esperaHasta) return
     const ajuste = await this.d.ajuste()
     const condiciones = {
       ajuste,
@@ -166,7 +196,8 @@ export class AvanceSolo {
     const ahora = this.ahora()
     const tomados = new Set<string>()
     for (const m of datos.momentos) {
-      if (m.momento !== 'avance' || !m.proyecto) continue
+      // Lo que se quedó sin uso no lo frenó nada del proyecto: se vuelve a tomar cuando se libera.
+      if (m.momento !== 'avance' || !m.proyecto || m.agotado) continue
       const k = clave(m.proyecto.ruta, m.paso, m.proyecto.preguntas)
       const cada = k === claveRevision(m.proyecto.ruta) ? REVISAR_CADA_MS : NO_REPETIR_MS
       if (m.cuando >= ahora - cada) tomados.add(k)
@@ -211,6 +242,7 @@ export class AvanceSolo {
     // Se anota antes de arrancar: si arrancar falla, no se insiste con el mismo paso en 12 horas.
     await this.d.archivo.anotar(renglon).catch(() => {})
     this.tomado = { ruta, cuando }
+    this.ultimo = { ruta, cuando }
     this.d.registrar?.(
       `Avance solo: ${renglon.proyecto?.nombre}${paso ? ` — «${paso.texto}» (${paso.frente}, ${paso.tamano})` : ' — sus respuestas'}`,
     )

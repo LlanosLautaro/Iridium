@@ -32,6 +32,8 @@ const Renglon = z.object({
     .catch(undefined),
   /** El uso al empezar y al terminar (% del período y de la semana): lo gastado, para compararlo con el tamaño. */
   uso: z.object({ antes: UsoAnotado, despues: UsoAnotado.nullable() }).optional().catch(undefined),
+  /** La sesión del avance solo se quedó sin uso (D-194): no cuenta como tomado y el aviso no la da por fallada. */
+  agotado: z.boolean().optional().catch(undefined),
 })
 export type RenglonArranque = z.infer<typeof Renglon>
 

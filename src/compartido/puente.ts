@@ -214,6 +214,8 @@ export interface RenglonArranqueVista {
   } | null
   /** Lo tomó el avance solo (FS-5): el paso, si no fueron las respuestas de la Bandeja. */
   avance?: { frente: string; texto: string } | null
+  /** Se quedó sin uso (D-194): se vuelve a tomar cuando se libera. */
+  agotado?: boolean
 }
 
 /** El arranque para la ventana: el detalle del uso y el aviso al volver. */

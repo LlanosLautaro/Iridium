@@ -15,6 +15,8 @@ export interface FinDeTrabajo {
   fondo: number
   /** Lo tomó el avance solo (D-178). */
   avance: boolean
+  /** Se cortó por el uso agotado (D-194): cuándo se libera, si se sabe. */
+  agotado?: { libera: number | null }
 }
 
 /** El sonido que toca, o null: solo cuando terminó bien, sin nada de fondo y si el ajuste lo deja. */

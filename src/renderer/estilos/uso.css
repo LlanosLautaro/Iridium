@@ -315,6 +315,10 @@
   list-style: none;
   font-size: var(--tam-chico);
   color: var(--texto-2);
+  /* R-108: con muchos renglones, la lista se desplaza y el título y Listo quedan a la vista */
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .aviso-flotante .renglones-arranque li {
   display: contents;
@@ -335,6 +339,9 @@
 }
 .aviso-flotante .renglones-arranque .fallo {
   color: var(--error);
+}
+.aviso-flotante .renglones-arranque .sin-uso {
+  color: var(--espera);
 }
 
 /* Lo más específico, al final: Biome pide las reglas de menor a mayor especificidad */

@@ -4,7 +4,7 @@
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { AjusteAvance, UsoSuscripcion } from '../src/compartido/puente'
 import { Arranque } from '../src/main/app/arranque'
 import { AvanceSolo, type DependenciasAvance } from '../src/main/app/avance'
@@ -81,13 +81,14 @@ describe('cuánto puede usar (D-178 › 3)', () => {
     expect(disponible(uso(10, 79), { ...prendido, semana: 80 }, A_LAS_3)).toBe(90)
   })
 
-  it('lo grande con más de 70, lo mediano con más de 40, lo chico con algo; y solo los tamaños elegidos', () => {
+  it('lo grande con más de 70, lo mediano con más de 40, lo chico con más de 10; y solo los tamaños elegidos', () => {
     expect(cabe('grande', 71, prendido)).toBe(true)
     expect(cabe('grande', 70, prendido)).toBe(false)
     expect(cabe('mediano', 41, prendido)).toBe(true)
     expect(cabe('mediano', 40, prendido)).toBe(false)
-    expect(cabe('chico', 1, prendido)).toBe(true)
-    expect(cabe('chico', 0, prendido)).toBe(false)
+    // Lo chico gastó de 3 a 13 % (D-194): con el período al 95 o 99 % se quedaba sin uso a mitad de camino.
+    expect(cabe('chico', 11, prendido)).toBe(true)
+    expect(cabe('chico', 10, prendido)).toBe(false)
     expect(cabe('grande', 100, { ...prendido, tamanos: ['chico'] })).toBe(false)
   })
 })
@@ -504,6 +505,41 @@ describe('AvanceSolo', () => {
       ])
       // Lo anotó igual: el aviso al volver lo cuenta (sin conversación guardada, «falló»).
       expect((await archivo.leer()).momentos).toHaveLength(2)
+    })
+
+    it('una sesión que se quedó sin uso: espera a que se libere, no la da por tomada y la retoma (D-194)', async () => {
+      const { a, archivo, arrancados, trabajando, pasar } = armar({ pasos: async () => [paso()] })
+      await a.mirar()
+      trabajando.clear()
+      // Al terminar la sesión con el uso agotado: el período se libera en dos horas.
+      a.sinUso('C:\\P\\Alfa', A_LAS_3 + 2 * HORA)
+      await a.mirar()
+      await vi.waitFor(async () => expect((await archivo.leer()).momentos[0]?.agotado).toBe(true))
+      // Aunque el uso leído todavía diga que hay lugar, no abre otra hasta que se libere.
+      pasar(HORA)
+      await a.mirar()
+      expect(arrancados).toHaveLength(1)
+      // Liberado, retoma el mismo paso: no cuenta como tomado.
+      pasar(HORA + MIN)
+      await a.mirar()
+      expect(arrancados.map((x) => x.texto)).toEqual([
+        expect.stringContaining('Cargar el tema propio'),
+        expect.stringContaining('Cargar el tema propio'),
+      ])
+    })
+
+    it('sin saber cuándo se libera, espera media hora; la sesión de otro no se marca', async () => {
+      const { a, archivo, arrancados, trabajando, pasar } = armar()
+      await a.mirar()
+      trabajando.clear()
+      a.sinUso('C:\\P\\Gamma', null)
+      pasar(29 * MIN)
+      await a.mirar()
+      expect(arrancados).toHaveLength(1)
+      expect((await archivo.leer()).momentos[0]?.agotado).toBeUndefined()
+      pasar(2 * MIN)
+      await a.mirar()
+      expect(arrancados).toHaveLength(2)
     })
 
     it('la semana que llega a su tope mientras trabaja frena el siguiente', async () => {

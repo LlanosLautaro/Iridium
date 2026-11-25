@@ -301,3 +301,73 @@ test('con el usuario delante no hay aviso y la conversación dice que la empezó
   await expect(win.locator('.detalle-uso')).not.toContainText('Lo usan todas las sesiones')
   await app.close()
 })
+
+test('con muchas sesiones de noche, la lista se desplaza y Listo queda a la vista; la cortada por el uso no dice «falló» (R-108, D-194)', async () => {
+  await proyecto('Alfa')
+  const alfa = join(raiz, 'Alfa')
+  const ahora = Date.now()
+  const avance = (i: number, agotado = false) => ({
+    cuando: ahora - (20 - i) * 60_000,
+    momento: 'avance',
+    resultado: 'arranco',
+    proyecto: { ruta: alfa, nombre: 'Alfa', preguntas: [] },
+    sinUsarIridium: 3600,
+    paso: {
+      frente: 'Núcleo',
+      carpeta: '',
+      texto: `Un paso largo de la noche, el número ${i}`,
+      tamano: 'chico',
+      linea: i,
+    },
+    ...(agotado ? { agotado: true } : {}),
+  })
+  await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz }))
+  await writeFile(
+    join(datos, 'arranques.json'),
+    JSON.stringify({
+      version: 1,
+      vistoHasta: null,
+      programado: null,
+      momentos: [...Array.from({ length: 13 }, (_, i) => avance(i)), avance(13, true)],
+    }),
+  )
+  // Las trece primeras terminaron; la última no llegó a guardar su conversación.
+  const conversaciones = Object.fromEntries(
+    Array.from({ length: 13 }, (_, i) => [
+      `conv-${i}`,
+      {
+        ruta: alfa,
+        empezadaEn: 'iridium',
+        ultimoUso: avance(i).cuando + 30_000,
+        detenida: false,
+        ultimoEstado: 'terminada',
+        preguntas: [],
+        arranque: avance(i).cuando,
+      },
+    ]),
+  )
+  await writeFile(join(datos, 'sesiones.json'), JSON.stringify({ version: 1, conversaciones }))
+  const { win } = await abrir()
+  await win.setViewportSize({ width: 1280, height: 640 })
+  const aviso = win.getByRole('status', { name: 'Lo que hizo Iridium mientras no estabas' })
+  await expect(aviso).toBeVisible()
+  // Sin conversación guardada sería «falló»; cortada por el uso, dice que sigue y el aviso va en ámbar.
+  await expect(aviso).toContainText('se quedó sin uso, sigue cuando se libere')
+  await expect(aviso).toHaveAttribute('data-estado', 'espera')
+  await aviso.getByRole('button', { name: /^y \d+ más$/ }).click()
+  await expect(aviso.locator('.renglones-arranque li')).toHaveCount(14)
+  const lista = aviso.locator('.renglones-arranque')
+  const medidas = await lista.evaluate((el) => ({ alto: el.clientHeight, todo: el.scrollHeight }))
+  expect(medidas.todo).toBeGreaterThan(medidas.alto)
+  // El aviso entero entra en la ventana: el título arriba y Listo abajo.
+  const caja = await aviso.boundingBox()
+  expect(caja?.y ?? -1).toBeGreaterThanOrEqual(0)
+  expect((caja?.y ?? 0) + (caja?.height ?? 0)).toBeLessThanOrEqual(640)
+  await expect(aviso.getByRole('button', { name: 'Listo' })).toBeInViewport()
+  await win.screenshot({ path: 'test-results/r108-aviso-largo.png' })
+  await lista.evaluate((el) => {
+    el.scrollTop = el.scrollHeight
+  })
+  await expect(aviso.getByText('se quedó sin uso, sigue cuando se libere')).toBeInViewport()
+  await win.screenshot({ path: 'test-results/r108-aviso-largo-abajo.png' })
+})

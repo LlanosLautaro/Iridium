@@ -214,3 +214,29 @@ describe('la conversación arrancada', () => {
     otra.cerrarTodo()
   })
 })
+
+describe('el registro de conversaciones al abrir', () => {
+  it('las que se piden a la vez esperan la misma lectura: ninguna sale vacía (D-194)', async () => {
+    const archivo = join(datos, 'sesiones.json')
+    const conversaciones = Object.fromEntries(
+      Array.from({ length: 8 }, (_, i) => [
+        `conv-${i}`,
+        {
+          ruta: ALFA,
+          empezadaEn: 'iridium',
+          ultimoUso: A_LAS_3 + i * MIN + 30_000,
+          detenida: false,
+          ultimoEstado: 'terminada',
+          preguntas: [],
+          arranque: A_LAS_3 + i * MIN,
+        },
+      ]),
+    )
+    await writeFile(archivo, JSON.stringify({ version: 1, conversaciones }))
+    const registro = new ArchivoSesiones(archivo)
+    const halladas = await Promise.all(
+      Array.from({ length: 8 }, (_, i) => registro.deArranque(ALFA, A_LAS_3 + i * MIN)),
+    )
+    expect(halladas.map((r) => r?.ultimoEstado)).toEqual(Array(8).fill('terminada'))
+  })
+})
