@@ -1,17 +1,33 @@
 // La sección Diseño (frente Diseño, DS-11 a DS-13; `modulos/diseno/diseno-tecnico.md`): arma lo que se ve desde
-// `docs/diseno/` del proyecto — los grupos de maquetas con su estado, el sistema — y marca lo que ya se miró.
+// `docs/diseno/` del proyecto — los grupos de maquetas con su estado y sus versiones, el sistema — y marca lo que ya
+// se miró. Quedarse con una versión (DI-I4) es lo único que Iridium escribe ahí.
 import { createHash } from 'node:crypto'
 import { readdir, readFile, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import type { GrupoMaquetas, MaquetaVista, SistemaDiseno, VistaDiseno } from '../../compartido/diseno'
+import type {
+  GrupoMaquetas,
+  MaquetaVista,
+  SistemaDiseno,
+  VersionVista,
+  VistaDiseno,
+} from '../../compartido/diseno'
 import { leerIndice } from '../core/diseno/indice'
-import { esDeLaRed, noEsArchivo, referenciasDe, resolverReferencia, tituloDe } from '../core/diseno/maquetas'
+import {
+  descripcionDe,
+  esDeLaRed,
+  noEsArchivo,
+  referenciasDe,
+  resolverReferencia,
+  tituloDe,
+} from '../core/diseno/maquetas'
 import { tieneCodigo } from '../core/diseno/pedidos'
 import { leerFichas, variablesPropias } from '../core/diseno/piezas'
 import { leerTokens } from '../core/diseno/tokens'
+import { carpetaVersiones, letraDe, reubicar, sinDescripcion, versionesDe } from '../core/diseno/versiones'
 import { carpetaDiseno, listarDiseno } from '../infra/diseno/archivos'
 import type { ArchivoVistos } from '../infra/diseno/vistos'
+import { escribirAtomico } from '../infra/escritura'
 
 interface Marca {
   ms: number
@@ -111,7 +127,25 @@ async function maqueta(
     rota,
     enLaApp,
     pendiente: pasada === null || ultimo > pasada,
+    versiones: [],
   }
+}
+
+/** Las versiones de una maqueta del índice, cada una con su letra y la frase con que se pidió. */
+async function versiones(
+  c: Carpeta,
+  archivo: string,
+  nombre: string,
+  vistos: ReadonlyMap<string, string> | null,
+): Promise<VersionVista[]> {
+  return Promise.all(
+    versionesDe(archivo, c.existentes).map(async (v) => {
+      const letra = letraDe(v)
+      const html = await c.leer(v)
+      const m = await maqueta(c, v, `${nombre} · versión ${letra}`, null, vistos)
+      return { ...m, pendiente: false, letra, descripcion: html ? descripcionDe(html) : null }
+    }),
+  )
 }
 
 async function sistema(c: Carpeta, vistos: ReadonlyMap<string, string> | null): Promise<SistemaDiseno> {
@@ -174,6 +208,7 @@ export async function vistaDiseno(
   for (const p of indice?.pantallas ?? []) {
     if (!p.archivo) continue
     const m = await maqueta(c, p.archivo, p.nombre, p.enLaApp, anteriores)
+    m.versiones = await versiones(c, p.archivo, m.nombre, anteriores)
     const seccion = p.seccion || 'Pantallas'
     let g = grupos.find((x) => x.seccion === seccion)
     if (!g) {
@@ -185,7 +220,10 @@ export async function vistaDiseno(
   const sis = await sistema(c, anteriores)
   // La primera vez (sin nada guardado) todo cuenta como visto (`diseno-tecnico.md` › Redibujar).
   if (anteriores === null) {
-    const todas = [...grupos.flatMap((g) => g.maquetas), ...(sis.piezas ? [sis.piezas] : [])]
+    const todas = [
+      ...grupos.flatMap((g) => g.maquetas.flatMap((m) => [m, ...m.versiones])),
+      ...(sis.piezas ? [sis.piezas] : []),
+    ]
     await vistos.marcar(proyecto, Object.fromEntries(todas.map((m) => [m.archivo, m.huella])))
   }
   return {
@@ -205,4 +243,29 @@ export async function marcarVista(proyecto: string, archivo: string, vistos: Arc
   const c = await abrirCarpeta(proyecto, lista)
   const m = await maqueta(c, archivo, '', null, null)
   await vistos.marcar(proyecto, { [archivo]: m.huella })
+}
+
+/**
+ * Quedarme con esta (DS-5, `diseno-tecnico.md` › Lo que Iridium escribe): con una versión, esa pasa a ser la maqueta
+ * (con sus enlaces reescritos para su carpeta y sin la frase del pedido) y la de antes va a la papelera; con null, la de
+ * hoy queda como está. En los dos casos la carpeta de las versiones va a la papelera: nada se pierde sin Git.
+ */
+export async function quedarmeConVersion(
+  proyecto: string,
+  archivo: string,
+  version: string | null,
+  papelera: (ruta: string) => Promise<void>,
+): Promise<void> {
+  const carpeta = carpetaVersiones(archivo)
+  const lista = await listarDiseno(proyecto)
+  if (!carpeta || !lista?.includes(archivo)) throw new Error('Esa maqueta ya no está')
+  const todas = versionesDe(archivo, lista)
+  const base = carpetaDiseno(proyecto)
+  if (version !== null) {
+    if (!todas.includes(version)) throw new Error('Esa versión ya no está')
+    const html = await readFile(join(base, version), 'utf8')
+    await papelera(join(base, ...archivo.split('/')))
+    await escribirAtomico(join(base, archivo), sinDescripcion(reubicar(html, version, archivo)))
+  }
+  if (todas.length > 0) await papelera(join(base, ...carpeta.split('/').filter(Boolean)))
 }

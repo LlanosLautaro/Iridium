@@ -16,6 +16,16 @@ export interface MaquetaVista {
   enLaApp: string | null
   /** Sin pasar al código, o cambió después de pasarla. */
   pendiente: boolean
+  /** Sus otras versiones (`versiones/<maqueta>/`, DI-I4), en orden; vacío si no tiene o no puede tener. */
+  versiones: VersionVista[]
+}
+
+/** Otra versión de una maqueta (DS-5): se mira lado a lado con la de hoy. */
+export interface VersionVista extends MaquetaVista {
+  /** `A`, `B`…: el nombre del archivo. */
+  letra: string
+  /** La frase con que se pidió (`<meta name="descripcion">`), o null. */
+  descripcion: string | null
 }
 
 export interface GrupoMaquetas {
@@ -82,8 +92,8 @@ export type VistaDiseno =
       problemaIndice: string | null
     }
 
-/** Los pedidos a la IA de la sección (gastan uso; la ventana lo dice antes). */
-export type PedidoDiseno = 'empezar'
+/** Los pedidos a la IA de la sección (gastan uso; la ventana lo dice antes): empezar el diseño u otra versión. */
+export type PedidoDiseno = 'empezar' | { tipo: 'version'; maqueta: string; frase: string }
 
 /** El evento del puente: cambió algo de `docs/diseno/` de un proyecto. */
 export interface CambioDiseno {

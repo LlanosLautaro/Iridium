@@ -4,6 +4,7 @@
 import { COLUMNAS_INDICE, esSinPasar, FECHA_EN_LA_APP, leerIndice } from '../diseno/indice'
 import {
   coloresEscritos,
+  descripcionDe,
   esDeLaRed,
   estilosDe,
   medidasRepetidas,
@@ -203,5 +204,13 @@ export const reglaDiseno: Regla = (a) => {
   for (const c of carpetas)
     if (!d.existentes.has(`pantallas/${c}.html`))
       av(`versiones/${c}/`, null, `son versiones de \`pantallas/${c}.html\`, que no existe`)
+  // Cada versión dice con qué frase se pidió: Iridium la muestra arriba de ella, lado a lado (DI-I4).
+  for (const t of d.textos)
+    if (/^versiones\/[^/]+\/[^/]+\.html?$/i.test(t.ruta) && !descripcionDe(t.texto))
+      av(
+        t.ruta,
+        null,
+        'a la versión le falta la frase con que se pidió: `<meta name="descripcion" content="…">` en su `<head>`',
+      )
   return avisos
 }

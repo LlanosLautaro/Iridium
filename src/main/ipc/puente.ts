@@ -38,7 +38,7 @@ import { Comandos } from '../app/comandos'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
 import { crearProyecto } from '../app/creacion'
-import { marcarVista, vistaDiseno } from '../app/diseno'
+import { marcarVista, quedarmeConVersion, vistaDiseno } from '../app/diseno'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
 import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
@@ -64,7 +64,8 @@ import { trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
-import { pedidoEmpezar, tieneCodigo } from '../core/diseno/pedidos'
+import { pedidoEmpezar, pedidoOtraVersion, tieneCodigo } from '../core/diseno/pedidos'
+import { carpetaVersiones, fraseLimpia, proximaLetra, versionesDe } from '../core/diseno/versiones'
 import {
   INSTRUCCION_CENTRO,
   INSTRUCCION_SKILLS,
@@ -97,6 +98,7 @@ import {
 } from '../infra/carpeta-iridium'
 import { type ArchivoConfig, preferenciasDe } from '../infra/config'
 import type { Consolas } from '../infra/consolas'
+import { listarDiseno } from '../infra/diseno/archivos'
 import { ESQUEMA_MAQUETA, type MaquetasAbiertas } from '../infra/diseno/protocolo'
 import type { ArchivoVistos } from '../infra/diseno/vistos'
 import { type EnConsola, ejecutarPlan } from '../infra/ejecutar'
@@ -379,6 +381,14 @@ export function registrarPuente(s: Servicios): Puente {
     if ((!deIridium && dirname(ruta) !== (await raiz())) || !(await existeCarpeta(ruta)))
       throw new Error('Ese proyecto no está en la carpeta de proyectos')
     return ruta
+  }
+
+  /** La papelera de Windows; en las pruebas, la carpeta `IRIDIUM_PAPELERA` (Eliminar y Quedarme con esta). */
+  const aLaPapelera = async (p: string): Promise<void> => {
+    const prueba = process.env.IRIDIUM_PAPELERA
+    if (!prueba) return shell.trashItem(p)
+    await mkdir(prueba, { recursive: true })
+    await rename(p, join(prueba, `${Date.now()}-${basename(p)}`))
   }
 
   const docs = new Documentos()
@@ -1132,13 +1142,38 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.marcarVista, async (_, ruta: unknown, archivo: unknown) =>
     marcarVista(await proyecto(ruta), ArchivoMaqueta.parse(archivo), s.vistos),
   )
-  // Los pedidos a la IA (DS-1): el texto lo arma este lado y cita el framework; la ventana solo dice cuál.
-  ipcMain.handle(CANALES.pedirDiseno, async (_, ruta: unknown, pedido: unknown) => {
+  // Los pedidos a la IA (DS-1, DS-5): el texto lo arma este lado y cita el framework; la ventana solo dice cuál.
+  ipcMain.handle(CANALES.pedirDiseno, async (_, ruta: unknown, dato: unknown): Promise<string | null> => {
     const r = await proyecto(ruta)
-    PedidoDisenoEsquema.parse(pedido)
+    const pedido = PedidoDisenoEsquema.parse(dato)
     if (conversaciones.enMarcha().includes(r)) throw new Error('La IA de ese proyecto está trabajando')
-    const raiz = await readdir(r).catch(() => [] as string[])
-    await conversaciones.seguir(r, { texto: pedidoEmpezar(tieneCodigo(raiz)) })
+    if (pedido === 'empezar') {
+      const raiz = await readdir(r).catch(() => [] as string[])
+      await conversaciones.seguir(r, { texto: pedidoEmpezar(tieneCodigo(raiz)) })
+      return null
+    }
+    // Otra versión: la próxima letra libre de la carpeta de sus versiones.
+    const carpeta = carpetaVersiones(pedido.maqueta)
+    const lista = await listarDiseno(r)
+    if (!carpeta || !lista?.includes(pedido.maqueta)) throw new Error('Esa maqueta ya no está')
+    const letra = proximaLetra(versionesDe(pedido.maqueta, lista))
+    if (!letra) throw new Error('Esa maqueta ya tiene 26 versiones: quedate con una antes de pedir otra')
+    const version = `${carpeta}${letra}.html`
+    await conversaciones.seguir(r, {
+      texto: pedidoOtraVersion(pedido.maqueta, version, fraseLimpia(pedido.frase)),
+    })
+    return version
+  })
+  // Quedarme con esta (DS-5): lo de antes queda en Git y lo que se borra va a la papelera (o a `IRIDIUM_PAPELERA`).
+  ipcMain.handle(CANALES.quedarmeConVersion, async (_, ruta: unknown, maqueta: unknown, version: unknown) => {
+    const r = await proyecto(ruta)
+    if (conversaciones.enMarcha().includes(r)) throw new Error('La IA de ese proyecto está trabajando')
+    await quedarmeConVersion(
+      r,
+      ArchivoMaqueta.parse(maqueta),
+      version === null ? null : ArchivoMaqueta.parse(version),
+      aLaPapelera,
+    )
   })
 
   // El menú de la tarjeta y Nuevo proyecto (R-7, D-089). Solo sobre carpetas de la carpeta de proyectos (no Ideas ni
@@ -1220,15 +1255,8 @@ export function registrarPuente(s: Servicios): Puente {
       return { tipo: 'error', mensaje: 'Primero hay que revisar la carpeta: vuelve a elegir Eliminar.' }
     if (trabajando(r))
       return { tipo: 'error', mensaje: 'La IA de ese proyecto está trabajando: frenala primero.' }
-    const prueba = process.env.IRIDIUM_PAPELERA
-    const papelera = prueba
-      ? async (p: string) => {
-          await mkdir(prueba, { recursive: true })
-          await rename(p, join(prueba, `${Date.now()}-${basename(p)}`))
-        }
-      : (p: string) => shell.trashItem(p)
     s.registro.escribir(`Eliminar: ${basename(r)}`)
-    return ficha(await ejecutarEliminacion(await raiz(), r, plan, undefined, papelera))
+    return ficha(await ejecutarEliminacion(await raiz(), r, plan, undefined, aLaPapelera))
   })
   ipcMain.handle(CANALES.nuevoProyecto, async (_, nombre: unknown): Promise<ResultadoNuevo> => {
     const creado = await crearProyecto(await raiz(), NombreProyecto.parse(nombre), s.plantillas)

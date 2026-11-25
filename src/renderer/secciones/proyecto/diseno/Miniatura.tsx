@@ -1,5 +1,6 @@
 // Una maqueta viva y achicada en el lienzo (DS-3, S-4): un `iframe` aislado (sin `allow-same-origin`) que carga por
 // `maqueta://` y no recibe el ratón: tocarla la agranda. Solo carga cuando está a la vista. Rota, muestra el motivo.
+// Si tiene otras versiones (DI-I4), lo dice junto al nombre; una versión nueva sin mirar también lleva el punto.
 import { useEffect, useRef, useState } from 'react'
 import type { MaquetaVista } from '../../../../compartido/diseno'
 
@@ -38,7 +39,10 @@ export function Miniatura({
     return () => o.disconnect()
   }, [])
 
-  const etiqueta = `${maqueta.nombre}${maqueta.cambiada ? ' (cambió)' : ''}${maqueta.rota ? `: ${maqueta.rota}` : ''}`
+  const n = maqueta.versiones.length
+  const versiones = n === 0 ? null : n === 1 ? '1 versión' : `${n} versiones`
+  const cambio = maqueta.cambiada || maqueta.versiones.some((v) => v.cambiada)
+  const etiqueta = `${maqueta.nombre}${versiones ? `, ${versiones}` : ''}${cambio ? ' (cambió)' : ''}${maqueta.rota ? `: ${maqueta.rota}` : ''}`
   return (
     <button
       ref={boton}
@@ -72,7 +76,8 @@ export function Miniatura({
       </div>
       <span className="di-nombre">
         {maqueta.nombre}
-        {maqueta.cambiada && <span className="di-punto" aria-hidden="true" />}
+        {versiones && <span className="di-nversiones">{versiones}</span>}
+        {cambio && <span className="di-punto" aria-hidden="true" />}
       </span>
     </button>
   )

@@ -401,6 +401,7 @@ describe('el control de docs/diseno/', () => {
     ).toEqual([
       'docs/diseno/direcciones/azul.css una dirección tiene las mismas variables que `tokens.css`; le faltan --texto; sobran --acento',
       'docs/diseno/versiones/z/ son versiones de `pantallas/z.html`, que no existe',
+      'docs/diseno/versiones/z/a.html a la versión le falta la frase con que se pidió: `<meta name="descripcion" content="…">` en su `<head>`',
     ])
   })
   it('la muestra de pruebas: la rota y la que pide algo a internet', async () => {

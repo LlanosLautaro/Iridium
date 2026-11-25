@@ -1,7 +1,7 @@
 # Estado del módulo: Diseño
 
 **Tipo:** sección (un «Claude Design» local dentro de Iridium; T-5, D-102)
-**Última actualización:** 2026-11-21
+**Última actualización:** 2026-11-25
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -13,7 +13,7 @@
 | 4. UX | hecho (2026-11-08; Q-151 → D-106) | `ux.md` |
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
-| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso: tanda 1 probada en Q-162, tanda 2 en Q-163, tanda 3 en Q-164, tanda 4 en Q-165, tanda 5 en Q-166, tanda 6 en Q-170 y tanda 7 en Q-171; el color de D-124 en Q-172; las pestañas y las casillas verdes en Q-173; la tanda 8, Ideas como bloc de notas, quedó sin probar: el usuario la dio por descontinuada en Q-174, la reemplaza el frente Ideas; reactivado el 2026-11-18 por D-151; tanda 9, Skills, probada en Q-212; tanda 10, Revisión, en Q-213; tanda 11, Docs, en Q-214; en pausa del 2026-11-19 al 2026-11-20 por D-153, vuelve por D-162; tanda 12, Archivos, probada en Q-228; tanda 13, Git, probada en Q-229 y su visor en Q-231; tanda 14, Scripts, probada en Q-232; tanda 15, Ajustes, probada en Q-233; tanda 16, la Cabecera y los cuadros, probada en Q-234; tanda 17, la grilla de Proyectos, probada en Q-235; tanda 18, los menús de la barra y del uso, probada en Q-236; tanda 19, lo que no son piezas (T-58, T-90, T-53), probada en Q-240; **DI-I3 hecha el 2026-11-21**, con `DESIGN.md` y `06-ui.md` escritos desde lo construido; DI-I4, más adelante) | este archivo |
+| 7. Construcción | en curso (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso: tanda 1 probada en Q-162, tanda 2 en Q-163, tanda 3 en Q-164, tanda 4 en Q-165, tanda 5 en Q-166, tanda 6 en Q-170 y tanda 7 en Q-171; el color de D-124 en Q-172; las pestañas y las casillas verdes en Q-173; la tanda 8, Ideas como bloc de notas, quedó sin probar: el usuario la dio por descontinuada en Q-174, la reemplaza el frente Ideas; reactivado el 2026-11-18 por D-151; tanda 9, Skills, probada en Q-212; tanda 10, Revisión, en Q-213; tanda 11, Docs, en Q-214; en pausa del 2026-11-19 al 2026-11-20 por D-153, vuelve por D-162; tanda 12, Archivos, probada en Q-228; tanda 13, Git, probada en Q-229 y su visor en Q-231; tanda 14, Scripts, probada en Q-232; tanda 15, Ajustes, probada en Q-233; tanda 16, la Cabecera y los cuadros, probada en Q-234; tanda 17, la grilla de Proyectos, probada en Q-235; tanda 18, los menús de la barra y del uso, probada en Q-236; tanda 19, lo que no son piezas (T-58, T-90, T-53), probada en Q-240; **DI-I3 hecha el 2026-11-21**, con `DESIGN.md` y `06-ui.md` escritos desde lo construido; DI-I4 en curso: las versiones lado a lado hechas el 2026-11-25, a probar en Q-295; falta Probar una dirección) | este archivo |
 | 8. Calidad | pendiente (con DI-I4; anotado: el borde de los controles, a 1,9:1, y la extensión de la Revisión al negro, T-99) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -40,7 +40,8 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
   - [x] Buscar un archivo en Archivos (T-90)
 - [x] Que la captura del detalle de Ideas salga en la auditoría (T-53)
 - [x] Escribir el diseño de Iridium desde lo construido (DESIGN.md y 06-ui.md)
-- [ ] Comparar dos versiones de una pantalla lado a lado (DI-I4, grande, sola)
+- [x] Comparar dos versiones de una pantalla lado a lado (DI-I4, Q-295)
+- [ ] Probar una dirección sobre todo el lienzo y elegirla o descartarla (DI-I4, grande, sola)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -54,7 +55,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 | El framework | El formato `docs/diseno/` (maquetas), con su lector y su control; `referencias/06-ui.md` dice cómo se arman las maquetas; el campo **Maqueta** del `R-n.md` (con DI-I1) | D-086, D-102, D-105 | sí |
 | `05-arquitectura.md` › Spikes y › Puntos de extensión | S-4 y las páginas web dentro de la app (B-5) resueltas | D-106 | sí |
 | `05-arquitectura.md` › Modelo de datos | `diseno.json` en los datos del Centro; las maquetas y el campo Maqueta del comentario (DI-I1) | D-105, D-106 | sí |
-| `05-arquitectura.md` › Seguridad | Iridium escribe en `docs/diseno/` (DI-I4) | D-105 | no |
+| `05-arquitectura.md` › Seguridad | Iridium escribe en `docs/diseno/` (DI-I4) | D-105 | sí, Quedarme con esta (2026-11-25); elegir o descartar una dirección, con su paso |
 | `CLAUDE.md` | La variable `IRIDIUM_AYUDANTE` (con DI-I1) | D-106 | sí |
 | `02-definicion.md` › Glosario | «Pantallas» son maquetas; suma «Maqueta» | D-105 | sí |
 
@@ -64,11 +65,20 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 | DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | hecho (Q-152, 2026-11-09) |
 | DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | hecho (Q-157, 2026-11-09) |
 | DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | hecho (2026-11-21: diecinueve tandas, probadas de Q-162 a Q-240; la 8 la reemplazó el frente Ideas) |
-| DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | pendiente |
+| DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | en curso (las versiones, 2026-11-25, a probar en Q-295; falta Probar una dirección) |
 
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### DI-I4 — 2026-11-25 — las versiones de una pantalla, lado a lado (avance solo)
+- **Otra versión:** en la grande de una pantalla del índice, **Otra versión** abre un cuadro con «Qué probar» (una frase) que dice que gasta uso; **Pedírsela** manda a la conversación del proyecto el pedido con la próxima letra libre (`versiones/<maqueta>/<letra>.html`), sin tocar la de hoy ni el índice. Se pasa solo a las versiones lado a lado, con el lugar de la nueva y su frase («La IA está escribiendo la versión…»); si la IA termina su turno sin escribirla, lo dice, y el aviso se va si aparece después. Mientras la IA trabaja, el botón espera.
+- **Lado a lado:** **Versiones · N** en la grande (y «N versiones» junto al nombre en el lienzo, con el punto si llegó una sin mirar) muestra la de hoy y cada versión vivas, del mismo ancho y con su frase; se pueden usar (clics, menús). **Agrandar** pasa esa a la grande (el único `webview`, donde anda `F8`): las flechas recorren la de hoy y sus versiones y Esc vuelve a las versiones. **Guardar para después** vuelve a la grande y las deja.
+- **Quedarme con esta:** un cuadro dice qué pasa; la versión elegida pasa a ser la maqueta con sus enlaces reescritos para `pantallas/` (las hojas de `../../` a `../`, un enlace a otra pantalla) y sin su frase. Distinto de lo escrito en el diseño técnico: **la maqueta de antes también va a la papelera** junto con la carpeta de las versiones, porque «Git deshace» no alcanza en un proyecto sin Git (`diseno-tecnico.md` al día). Con la de hoy, solo se van las versiones.
+- **El framework y el control (D-086):** `referencias/06-ui.md` dice cómo se escribe una versión (las hojas a dos carpetas, la frase, no tocar la de hoy ni el índice) y `SKILL.md`, que lleva su frase; el control avisa de una versión sin `<meta name="descripcion">`.
+- **Encontrado al probar:** Esc en un cuadro de encima (Otra versión, Quedarme con esta) cerraba también la grande; ahora cierra solo el cuadro.
+- **Lo que no se pudo cerrar solo:** la prueba con tus manos (Q-295).
+- **Pruebas:** `tests/di4-versiones.test.ts` (Vitest, 11: la carpeta y la letra, el pedido, reescribir los enlaces, la vista con sus versiones y el punto, Quedarme con esta con una versión y con la de hoy, lo que ya no está, el control y el framework) y `tests/e2e/di4-versiones.spec.ts` (la app abierta, 2). Capturas en `test-results/di4-*.png`. Vitest entero 1129 de 1130 (`ar1-arranque`, por tiempo con la suite entera; sola pasa: sumada a T-131), Playwright de Diseño (7), typecheck y lint en verde.
+
 ### DI-I3 — 2026-11-21 — cierre: el diseño escrito desde lo construido
 - **Q-242:** todo bien: Desarchivar vuelve al instante a su lugar entre los demás, con su estado. El pedido de Q-240 queda probado entero.
 - **Q-241:** el estado y archivar, al instante; Desarchivar todavía tardaba. La tarjeta cambiaba enseguida, pero se quedaba al final con los archivados hasta que llegaba la grilla leída del disco. Arreglo: el orden de la grilla pasa a `compartido/grilla.ts` y la ventana reordena al cambiar la tarjeta, así vuelve a su lugar en el momento. `r7-r8-proyectos` lo comprueba; Vitest (910), Playwright de Proyectos (5), typecheck y lint en verde. Q-242: la prueba.
@@ -423,5 +433,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-Frente en pausa con DI-I3 hecha. Al volver: DI-I4 (otra versión de una pantalla, lado a lado) y el paso 8, con el borde de los controles (`06-ui.md` › Contraste) y T-99.
-**Leer antes:** `diseno-tecnico.md` › Iteraciones › DI-I4.
+Las versiones lado a lado esperan la prueba del usuario (Q-295). Sin esperarla: Probar una dirección (el resto de DI-I4: `direcciones/<nombre>.css` sobre todo el lienzo, Hoy · Dirección, Elegir con su cuadro y Descartar) y después el paso 8, con el borde de los controles (`06-ui.md` › Contraste) y T-99.
+**Leer antes:** `diseno-tecnico.md` › Mostrarlas vivas (punto 5 y la grande), Lo que Iridium escribe y Los pedidos a la IA; `ux.md` › DS-5, DS-9 y DS-11.

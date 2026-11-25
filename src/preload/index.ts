@@ -166,6 +166,8 @@ const api: ApiIridium = {
   abrirDiseno: (ruta) => ipcRenderer.invoke(CANALES.abrirDiseno, ruta),
   marcarVista: (ruta, archivo) => ipcRenderer.invoke(CANALES.marcarVista, ruta, archivo),
   pedirDiseno: (ruta, pedido) => ipcRenderer.invoke(CANALES.pedirDiseno, ruta, pedido),
+  quedarmeConVersion: (ruta, maqueta, version) =>
+    ipcRenderer.invoke(CANALES.quedarmeConVersion, ruta, maqueta, version),
   alCambiarDiseno: (f) => escuchar<CambioDiseno>(CANALES.disenoCambio, f),
   alEscapeDiseno: (f) => escuchar<null>(CANALES.disenoEscape, () => f()),
   alFlechaDiseno: (f) => escuchar<1 | -1>(CANALES.disenoFlecha, f),

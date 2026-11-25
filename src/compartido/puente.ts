@@ -1093,6 +1093,7 @@ export const CANALES = {
   abrirDiseno: 'diseno:abrir',
   marcarVista: 'diseno:marcar-vista',
   pedirDiseno: 'diseno:pedir',
+  quedarmeConVersion: 'diseno:quedarme-version',
   disenoCambio: 'diseno:cambio',
   disenoEscape: 'diseno:escape',
   disenoFlecha: 'diseno:flecha',
@@ -1380,8 +1381,16 @@ export interface ApiIridium {
   abrirDiseno(ruta: string): Promise<VistaDiseno>
   /** Agrandar una maqueta la marca vista (DS-3: se va el punto). */
   marcarVista(ruta: string, archivo: string): Promise<void>
-  /** Manda a la conversación del proyecto un pedido de Diseño (gasta uso; la ventana lo dice antes). */
-  pedirDiseno(ruta: string, pedido: PedidoDiseno): Promise<void>
+  /**
+   * Manda a la conversación del proyecto un pedido de Diseño (gasta uso; la ventana lo dice antes). De otra versión,
+   * devuelve el archivo que va a escribir la IA (`versiones/bandeja/b.html`), para mostrar su lugar mientras tanto.
+   */
+  pedirDiseno(ruta: string, pedido: PedidoDiseno): Promise<string | null>
+  /**
+   * Quedarme con esta (DS-5): la versión (o null, la de hoy) queda como la maqueta y la carpeta de sus versiones va a
+   * la papelera.
+   */
+  quedarmeConVersion(ruta: string, maqueta: string, version: string | null): Promise<void>
   /** Avisa qué archivos de `docs/diseno/` cambiaron en un proyecto. */
   alCambiarDiseno(escuchar: (cambio: CambioDiseno) => void): () => void
   /** Esc dentro de la maqueta grande, fuera del modo comentar: la sección vuelve al lienzo (DS-4). */

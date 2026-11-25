@@ -78,7 +78,7 @@ Las maquetas de la interfaz (D-105). Se miran en Iridium › Diseño.
 - **Los colores salen de los tokens:** en `piezas.css` y en los `<style>` de las maquetas no van colores escritos (`#…`, `rgb()`, `hsl()`): así cambiar un token cambia todas.
 - Tienen los clics que la IA les ponga (abrir un menú, pasar a otra pantalla); no guardan datos ni hablan con la app (Won't de `definicion.md`).
 - **Las clases de `piezas.css` son las del código** cuando la app las tiene (en Iridium, desde DI-I3, las de `src/renderer/ui/`): así pasar al código es copiar, no traducir.
-- Una versión (`versiones/<maqueta>/<letra>.html`) es una maqueta más, con `<meta name="descripcion" content="la bandeja como una sola lista">`: la frase con que se pidió.
+- Una versión (`versiones/<maqueta>/<letra>.html`) es una maqueta más, con `<meta name="descripcion" content="la bandeja como una sola lista">`: la frase con que se pidió. Está dos carpetas abajo: sus hojas son `../../tokens.css` y `../../piezas.css`, y un enlace a otra pantalla, `../../pantallas/mapa.html`.
 - Una dirección (`direcciones/<nombre>.css`) es un `tokens.css` entero con otros valores: las mismas variables.
 
 ## Mostrarlas vivas (S-4)
@@ -131,7 +131,7 @@ Todos van a la conversación del proyecto como **Pasar al framework** (`app/conv
 
 ## Lo que Iridium escribe en `docs/diseno/` (DI-I4)
 Sin la IA, con escritura atómica; lo que se borra va a la papelera de Windows (como Eliminar, D-090). Git deshace todo lo demás.
-- **Quedarme con esta:** la versión elegida reemplaza a la maqueta y la carpeta `versiones/<maqueta>/` va a la papelera (si la elegida es la de hoy, solo va la carpeta).
+- **Quedarme con esta:** la versión elegida reemplaza a la maqueta, con sus enlaces reescritos para `pantallas/` y sin su `<meta name="descripcion">`; la maqueta de antes y la carpeta `versiones/<maqueta>/` van a la papelera, así nada se pierde en un proyecto sin Git (si la elegida es la de hoy, solo va la carpeta).
 - **Guardar para después:** nada; las versiones quedan.
 - **Elegir una dirección:** `tokens.css` pasa a `direcciones/anterior-AAAA-MM-DD.css` y la dirección pasa a ser `tokens.css`. Se puede volver eligiendo la anterior.
 - **Descartar una dirección:** su archivo va a la papelera.
@@ -160,7 +160,7 @@ Cada token muestra su uso debajo de la muestra (colores) o a la derecha (el rest
 4. `tokens.css` existe y tiene variables en `:root`, cada una con su uso (D-114; los que faltan, en un solo aviso con la línea del primero). Cada `--estilo-*` se entiende como atajo `font` y sus `var(--…)` existen (D-116; un aviso por estilo). Cada `--alto-*` y `--ancho-*` es una sola medida (D-119).
 5. En maquetas, versiones, `piezas.*` y direcciones: nada de la red (`http://`, `https://`, `//`), nada fuera de `docs/diseno/` y nada que falte.
 6. Sin colores escritos en `piezas.css` ni en los `<style>` de las maquetas.
-7. Cada dirección tiene las mismas variables que `tokens.css`; cada carpeta de `versiones/` es de una maqueta que existe.
+7. Cada dirección tiene las mismas variables que `tokens.css`; cada carpeta de `versiones/` es de una maqueta que existe y cada versión tiene su `<meta name="descripcion">` (DI-I4).
 8. `piezas.css` tiene fichas (un aviso si no tiene ninguna), cada una con `Grupo:` y `Para qué:`, y cada `var(--…)` sin otro valor es un token de `tokens.css` o una variable que define la misma hoja (T-62, D-117). Una medida de 20px o más escrita a mano en el tamaño de tres reglas o más va como medida fija; si ya hay un token con ese valor, el aviso lo nombra (T-63, D-119).
 
 Se le devuelve a la IA como los demás avisos del control (una vez por turno). El framework suma, en el mismo cambio (DI-I1): `SKILL.md` › Los formatos, un apartado corto de `docs/diseno/` que remite a `referencias/06-ui.md` › Maquetas (cómo se arman: tokens, piezas, una maqueta por pantalla y por estado, 1440×900, todo local, contenido creíble en el idioma de la app); `referencias/06-ui.md` dice que en una app nueva las maquetas son la UI del hito 6 (D-105); y una plantilla `plantillas/diseno/README.md`.

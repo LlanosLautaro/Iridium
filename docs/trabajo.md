@@ -621,7 +621,7 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 
 ## T-131 — Pruebas que se pasan de tiempo con la suite entera
 Estado: pendiente · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
-Con `pnpm test` entero y la PC ocupada, a veces fallan por tiempo `d081-github.test.ts` (publicar), `gestor/calidad-casos-limite.test.ts` (300 proyectos) y `t128-ventana-actualizando.test.ts` (Reiniciar ahora); solas pasan. Como T-129: darles el tiempo que necesitan o medir sin competir con el resto. Tamaño: chico.
+Con `pnpm test` entero y la PC ocupada, a veces fallan por tiempo `d081-github.test.ts` (publicar), `gestor/calidad-casos-limite.test.ts` (300 proyectos), `t128-ventana-actualizando.test.ts` (Reiniciar ahora) y, una vez el 2026-11-25, `ar1-arranque.test.ts` (el arranque después del vencimiento: no arrancó a tiempo); solas pasan. Como T-129: darles el tiempo que necesitan o medir sin competir con el resto. Tamaño: chico.
 
 ## T-132 — Las actualizaciones: el botón que seguía, «Actualizando…» antes de tiempo y la otra PC
 Estado: hecho · Frente: Núcleo · Idea: usuario · Fecha: 2026-11-24 · Origen: el usuario en el chat

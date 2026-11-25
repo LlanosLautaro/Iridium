@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I10, Iridium instalado, probada en Q-270) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 hecha el 2026-11-21; DI-I4 y el paso 8 siguen; fuera de pausa por D-193) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | 7. Construcción (DI-I3 hecha el 2026-11-21; DI-I4: las versiones lado a lado hechas, a probar en Q-295; siguen Probar una dirección y el paso 8; fuera de pausa por D-193) | en curso |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | 8. Calidad (OR-I4 probada en Q-146; el paso 8 es el Próximo paso; fuera de pausa por D-193) | en curso |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
@@ -58,6 +58,14 @@ Ideas sin evaluar: T-76, T-78, T-89, T-93 (cómo lo usa alguien sin nociones té
   - [ ] En Frentes, los pasos de Orden, Abrir, Diseño y los demás tienen tamaño, y el robot aparece donde la IA puede seguir sola
   - [ ] Después de revisar, el avance solo tomó algún paso de esos frentes o un trabajo del Núcleo
   - [ ] No pausó ni frenó ningún frente por su cuenta
+- **Q-295 — Probá las versiones de una pantalla, lado a lado**
+  Tipo: prueba · Frente: Diseño
+  Contexto: `modulos/diseno/estado.md` › Log › DI-I4. Con Iridium actualizado, en Diseño de un proyecto con maquetas (el de Iridium sirve), agrandá una pantalla. Pedir la versión gasta un poco de uso.
+  - [ ] **Otra versión** pide una frase y avisa que gasta uso; al mandarla se ven lado a lado la de hoy y el lugar de la nueva, con tu frase
+  - [ ] Cuando la IA la escribe, aparece viva al lado, del mismo ancho, y se puede usar
+  - [ ] **Agrandar** la muestra grande, F8 la comenta y Esc vuelve a las versiones
+  - [ ] **Guardar para después** vuelve a la pantalla y, al volver al lienzo, junto a su nombre dice «1 versión»
+  - [ ] **Quedarme con esta** (con la versión) la deja como la pantalla, se ve bien y lo de antes está en la papelera de Windows
 
 ## Próximo paso
 Sin esperar a Q-294 (la revisión se mira con el avance solo): el paso 8 del frente Orden (D-166: después de Paridad), sobre la interfaz negra: la corrida completa, el recorrido con los proyectos reales, la accesibilidad de las pantallas nuevas y los tiempos. Después, Abrir (paso 8 y T-87) y Plantillas.

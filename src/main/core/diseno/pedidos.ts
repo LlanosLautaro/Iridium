@@ -21,3 +21,14 @@ export function pedidoEmpezar(conCodigo: boolean): string {
     'Guardá cada maqueta apenas esté lista: aparecen de a una en Iridium › Diseño.',
   ].join('\n\n')
 }
+
+/**
+ * DS-5: otra versión de una maqueta (`pantallas/bandeja.html`) en `version` (`versiones/bandeja/b.html`), con la frase
+ * del usuario. La de hoy y el índice no se tocan: Iridium las pone lado a lado y el usuario elige.
+ */
+export function pedidoOtraVersion(maqueta: string, version: string, frase: string): string {
+  return [
+    `Escribí otra versión de la maqueta \`docs/diseno/${maqueta}\` en \`docs/diseno/${version}\`, como dice el framework (\`referencias/06-ui.md\` › Maquetas): «${frase}».`,
+    `Es una maqueta más, con las hojas a dos carpetas (\`../../tokens.css\`, \`../../piezas.css\`) y la frase en \`<meta name="descripcion" content="…">\`. No cambies la maqueta de hoy ni el índice: Iridium las muestra lado a lado y el usuario elige con cuál quedarse.`,
+  ].join('\n\n')
+}

@@ -1,6 +1,7 @@
 // Una maqueta grande (DS-12, S-4): a todo el lienzo, viva, en un `<webview>` con `file://` donde entra la extensión de
 // la Revisión (F8). Arriba, Volver, el nombre, el número y Comentar; a los costados (y con ← →, también comentando), la
-// anterior y la siguiente; Esc vuelve. Si un enlace de la maqueta lleva a otra, la cabecera la sigue.
+// anterior y la siguiente; Esc vuelve. Si un enlace de la maqueta lleva a otra, la cabecera la sigue. Una pantalla del
+// índice ofrece Otra versión y, si tiene, Versiones · N, que las pone lado a lado (DI-I4).
 import { useEffect, useRef, useState } from 'react'
 import type { MaquetaVista } from '../../../../compartido/diseno'
 import { Icono } from '../../../ui/Icono'
@@ -34,6 +35,11 @@ export function Grande({
   archivo,
   elegir,
   volver,
+  quieto = false,
+  versiones = 0,
+  verVersiones = null,
+  otraVersion = null,
+  trabajando = false,
 }: {
   /** La carpeta `docs/diseno/` como `file://…/`. */
   carpeta: string
@@ -42,6 +48,15 @@ export function Grande({
   archivo: string
   elegir: (archivo: string) => void
   volver: () => void
+  /** Hay un cuadro abierto encima: Esc y las flechas son suyos. */
+  quieto?: boolean
+  /** Cuántas versiones tiene la pantalla que se ve. */
+  versiones?: number
+  verVersiones?: (() => void) | null
+  /** Pedir otra versión; null si no se puede (no es una pantalla del índice). */
+  otraVersion?: (() => void) | null
+  /** La IA del proyecto está trabajando: Otra versión espera. */
+  trabajando?: boolean
 }) {
   const vista = useRef<Webview>(null)
   // La que se ve: cambia si un enlace de la maqueta lleva a otra (puede no estar en el índice).
@@ -91,6 +106,7 @@ export function Grande({
 
   // Las flechas del teclado pasan de maqueta con el foco en Iridium o adentro de la maqueta (R-24).
   useEffect(() => {
+    if (quieto) return
     const alTeclado = (e: KeyboardEvent) => {
       if (e.key === 'Escape') volver()
       else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !e.altKey && !e.ctrlKey && !e.shiftKey) {
@@ -109,7 +125,7 @@ export function Grande({
       window.removeEventListener('keydown', alTeclado)
       for (const q of quitar) q()
     }
-  }, [volver])
+  }, [volver, quieto])
 
   // Comentar es F8 con el foco en la maqueta: el botón lo pone ahí, para no comentar Iridium sin querer (Q-152).
   const [comentando, setComentando] = useState(false)
@@ -140,6 +156,33 @@ export function Grande({
           <b>{nombre}</b>
           {numero && <span className="sub"> · {numero}</span>}
         </span>
+        {verVersiones && versiones > 0 && (
+          <button
+            type="button"
+            className="boton sin-fondo chico"
+            title="La de hoy y sus versiones, lado a lado"
+            onClick={verVersiones}
+          >
+            <Icono nombre="cuadro" />
+            Versiones · {versiones}
+          </button>
+        )}
+        {otraVersion && (
+          <button
+            type="button"
+            className="boton sin-fondo chico"
+            disabled={trabajando}
+            title={
+              trabajando
+                ? 'Su IA está trabajando'
+                : 'Le pide a la IA otra versión de esta pantalla: gasta uso'
+            }
+            onClick={otraVersion}
+          >
+            <Icono nombre="mas" />
+            Otra versión
+          </button>
+        )}
         <button
           type="button"
           className="boton sin-fondo chico"

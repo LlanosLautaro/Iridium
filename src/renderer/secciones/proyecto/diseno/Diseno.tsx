@@ -1,19 +1,42 @@
 // Diseño de un proyecto (frente Diseño, DS-8 a DS-13; D-105): las maquetas HTML de `docs/diseno/` vivas en un lienzo,
 // agrupadas por sección (Pantallas), los tokens y las piezas (Sistema) y una maqueta grande para usarla y comentarla
 // con F8. Se redibuja sola cuando la IA cambia algo; lo que cambió y no se miró lleva un punto. Sin `docs/diseno/`,
-// ofrece pedírselo a la IA (gasta uso: lo dice antes).
+// ofrece pedírselo a la IA (gasta uso: lo dice antes). Una maqueta puede tener otras versiones (DI-I4): se piden desde
+// la grande, se miran lado a lado y se elige con cuál quedarse.
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { MaquetaVista, VistaDiseno } from '../../../../compartido/diseno'
 import { fichaDe, tarjetaDe, usarEstado, vistaDe } from '../../../estado'
 import { Cabecera, Filtros } from '../../../ui/Cabecera'
 import { Icono } from '../../../ui/Icono'
 import { mismaRuta } from '../enlaces'
+import { ConfirmarQuedarme, OtraVersion } from './CuadrosVersion'
 import { Grande } from './Grande'
 import { Miniatura } from './Miniatura'
 import { Sistema } from './Sistema'
+import { Versiones } from './Versiones'
 
 const ANCHOS = { chico: 240, grande: 400 } as const
 type Tamano = keyof typeof ANCHOS
+
+/** La vista sin el punto en esos archivos (maquetas, versiones o piezas). */
+function sinPunto(v: VistaDiseno | null, archivos: ReadonlySet<string>): VistaDiseno | null {
+  if (v?.tipo !== 'diseno') return v
+  const quitar = <T extends MaquetaVista>(m: T): T =>
+    archivos.has(m.archivo) ? { ...m, cambiada: false } : m
+  return {
+    ...v,
+    grupos: v.grupos.map((g) => ({
+      ...g,
+      maquetas: g.maquetas.map((m) => ({ ...quitar(m), versiones: m.versiones.map(quitar) })),
+    })),
+    sistema: { ...v.sistema, piezas: v.sistema.piezas ? quitar(v.sistema.piezas) : null },
+  }
+}
+
+/** La letra de una versión por su archivo: `versiones/bandeja/b.html` → `B`. */
+function letraDe(version: string): string {
+  return (version.split('/').pop() ?? '').replace(/\.html?$/i, '').toUpperCase()
+}
 
 /** El cuadro antes de un pedido a la IA: dice qué hace y que gasta uso. */
 function ConfirmarPedido({
@@ -81,6 +104,13 @@ export function Diseno({ ruta }: { ruta: string }) {
   const [noEsta, setNoEsta] = useState<string | null>(null)
   const botones = useRef(new Map<string, HTMLButtonElement>())
   const volverA = useRef<string | null>(null)
+  // Las versiones (DI-I4): la maqueta que se mira lado a lado, la versión que está escribiendo la IA y los cuadros.
+  const [comparar, setComparar] = useState<string | null>(null)
+  const [pidiendo, setPidiendo] = useState<{ archivo: string; frase: string } | null>(null)
+  const [noLlego, setNoLlego] = useState<string | null>(null)
+  const [errorVersion, setErrorVersion] = useState<string | null>(null)
+  const [pedirVersion, setPedirVersion] = useState<string | null>(null)
+  const [quedarme, setQuedarme] = useState<{ maqueta: string; version: string | null } | null>(null)
 
   const leer = useCallback(() => {
     void window.iridium.abrirDiseno(ruta).then(
@@ -100,38 +130,35 @@ export function Diseno({ ruta }: { ruta: string }) {
       : []
   const enLienzo = vista?.tipo === 'diseno' ? vista.grupos.flatMap((g) => g.maquetas) : []
 
-  /** Agrandar marca vista la maqueta (se va el punto). */
+  /** La maqueta del índice de un archivo: ella misma o, si es una versión, la suya. */
+  const deLienzo = (archivo: string | null) =>
+    archivo === null
+      ? undefined
+      : enLienzo.find((m) => m.archivo === archivo || m.versiones.some((v) => v.archivo === archivo))
+
+  /** Mirar unas maquetas las marca vistas (se va el punto). */
+  const marcar = useCallback(
+    (archivos: readonly string[]) => {
+      if (archivos.length === 0) return
+      setVista((v) => sinPunto(v, new Set(archivos)))
+      for (const a of archivos) void window.iridium.marcarVista(ruta, a).catch(() => {})
+    },
+    [ruta],
+  )
+  /** Agrandar marca vista la maqueta. */
   const agrandar = useCallback(
     (archivo: string) => {
       setGrande(archivo)
-      setVista((v) =>
-        v?.tipo === 'diseno'
-          ? {
-              ...v,
-              grupos: v.grupos.map((g) => ({
-                ...g,
-                maquetas: g.maquetas.map((m) => (m.archivo === archivo ? { ...m, cambiada: false } : m)),
-              })),
-              sistema: {
-                ...v.sistema,
-                piezas:
-                  v.sistema.piezas?.archivo === archivo
-                    ? { ...v.sistema.piezas, cambiada: false }
-                    : v.sistema.piezas,
-              },
-            }
-          : v,
-      )
-      void window.iridium.marcarVista(ruta, archivo).catch(() => {})
+      marcar([archivo])
     },
-    [ruta],
+    [marcar],
   )
   // Desde un comentario de la Revisión: esa maqueta grande o, si ya no está, el aviso.
   useEffect(() => {
     if (!pedida || vista?.tipo !== 'diseno') return
     cambiarVista(ruta, { maqueta: null })
     const existe = [
-      ...vista.grupos.flatMap((g) => g.maquetas),
+      ...vista.grupos.flatMap((g) => g.maquetas.flatMap((m) => [m, ...m.versiones])),
       ...(vista.sistema.piezas ? [vista.sistema.piezas] : []),
     ].some((m) => m.archivo === pedida)
     if (existe) {
@@ -140,12 +167,71 @@ export function Diseno({ ruta }: { ruta: string }) {
     } else setNoEsta(pedida)
   }, [pedida, vista, ruta, cambiarVista, agrandar])
 
+  // Volver desde la grande lleva al lienzo o, si se agrandó desde las versiones, a ellas.
   const volver = useCallback(() => {
     setGrande((g) => {
       volverA.current = g
       return null
     })
   }, [])
+
+  // Lado a lado, las versiones que se ven quedan vistas; también las que llegan mientras se mira.
+  const hoy = deLienzo(comparar)
+  const sinMirar = hoy?.versiones.filter((v) => v.cambiada).map((v) => v.archivo) ?? []
+  const claveSinMirar = sinMirar.join('|')
+  useEffect(() => {
+    if (comparar && !grande && claveSinMirar) marcar(claveSinMirar.split('|'))
+  }, [comparar, grande, claveSinMirar, marcar])
+
+  // La versión pedida: llegó (se deja de esperar) o la IA terminó su turno sin escribirla (se dice).
+  const huboTrabajo = useRef(false)
+  const llego =
+    pidiendo !== null && enLienzo.some((m) => m.versiones.some((v) => v.archivo === pidiendo.archivo))
+  useEffect(() => {
+    if (!pidiendo) return
+    if (llego) {
+      setPidiendo(null)
+      huboTrabajo.current = false
+    } else if (trabajando) huboTrabajo.current = true
+    else if (huboTrabajo.current) {
+      setNoLlego(pidiendo.archivo)
+      setPidiendo(null)
+      huboTrabajo.current = false
+    }
+  }, [pidiendo, llego, trabajando])
+
+  const verVersiones = useCallback((archivo: string) => {
+    setErrorVersion(null)
+    setGrande(null)
+    setComparar(archivo)
+  }, [])
+  /** Guardar para después: las versiones quedan y se vuelve a la grande de hoy. */
+  const dejarVersiones = useCallback(() => {
+    const a = comparar
+    setComparar(null)
+    setNoLlego(null)
+    setErrorVersion(null)
+    if (a) agrandar(a)
+  }, [comparar, agrandar])
+  const pedirOtra = async (maqueta: string, frase: string) => {
+    const version = await window.iridium.pedirDiseno(ruta, { tipo: 'version', maqueta, frase })
+    setNoLlego(null)
+    huboTrabajo.current = false
+    if (version) setPidiendo({ archivo: version, frase })
+    verVersiones(maqueta)
+  }
+  const confirmarQuedarme = (maqueta: string, version: string | null) => {
+    setErrorVersion(null)
+    window.iridium.quedarmeConVersion(ruta, maqueta, version).then(
+      () => {
+        setComparar(null)
+        setNoLlego(null)
+        agrandar(maqueta)
+        leer()
+      },
+      (e: unknown) => setErrorVersion(`No se pudo: ${e instanceof Error ? e.message : String(e)}`),
+    )
+  }
   // Al volver, el foco queda en la miniatura que se agrandó.
   useEffect(() => {
     if (grande || !volverA.current) return
@@ -172,15 +258,76 @@ export function Diseno({ ruta }: { ruta: string }) {
     lista[Math.min(lista.length - 1, Math.max(0, i + paso))]?.focus()
   }
 
-  if (vista?.tipo === 'diseno' && grande)
+  const paraQuedarme = deLienzo(quedarme?.maqueta ?? null)
+  const cuadrosVersion = (
+    <>
+      {pedirVersion && (
+        <OtraVersion
+          nombre={deLienzo(pedirVersion)?.nombre ?? pedirVersion}
+          pedir={(frase) => pedirOtra(pedirVersion, frase)}
+          cerrar={() => setPedirVersion(null)}
+        />
+      )}
+      {quedarme && (
+        <ConfirmarQuedarme
+          nombre={paraQuedarme?.nombre ?? quedarme.maqueta}
+          letra={quedarme.version === null ? null : letraDe(quedarme.version)}
+          cuantas={paraQuedarme?.versiones.length ?? 0}
+          quedarme={() => confirmarQuedarme(quedarme.maqueta, quedarme.version)}
+          cerrar={() => setQuedarme(null)}
+        />
+      )}
+    </>
+  )
+  /** Con un cuadro abierto, Esc es del cuadro. */
+  const quieto = pedirVersion !== null || quedarme !== null
+
+  if (vista?.tipo === 'diseno' && grande) {
+    // Una versión, o la de hoy agrandada desde las versiones: las flechas recorren la de hoy y sus versiones.
+    const suya = deLienzo(grande)
+    const conVersiones = suya !== undefined && (comparar === suya.archivo || suya.archivo !== grande)
     return (
-      <Grande
-        carpeta={vista.carpeta}
-        maquetas={grande === 'piezas.html' ? maquetas.filter((m) => m.archivo === grande) : enLienzo}
-        archivo={grande}
-        elegir={agrandar}
-        volver={volver}
-      />
+      <>
+        <Grande
+          carpeta={vista.carpeta}
+          maquetas={
+            grande === 'piezas.html'
+              ? maquetas.filter((m) => m.archivo === grande)
+              : conVersiones
+                ? [suya, ...suya.versiones]
+                : enLienzo
+          }
+          archivo={grande}
+          elegir={agrandar}
+          volver={volver}
+          quieto={quieto}
+          versiones={suya?.versiones.length ?? 0}
+          verVersiones={suya ? () => verVersiones(suya.archivo) : null}
+          otraVersion={suya?.archivo.startsWith('pantallas/') ? () => setPedirVersion(suya.archivo) : null}
+          trabajando={trabajando}
+        />
+        {cuadrosVersion}
+      </>
+    )
+  }
+  if (vista?.tipo === 'diseno' && hoy)
+    return (
+      <>
+        <Versiones
+          base={vista.base}
+          hoy={hoy}
+          pidiendo={pidiendo}
+          noLlego={noLlego && !hoy.versiones.some((v) => v.archivo === noLlego) ? letraDe(noLlego) : null}
+          error={errorVersion}
+          trabajando={trabajando}
+          quieto={quieto}
+          agrandar={agrandar}
+          quedarme={(version) => setQuedarme({ maqueta: hoy.archivo, version })}
+          otraVersion={() => setPedirVersion(hoy.archivo)}
+          volver={dejarVersiones}
+        />
+        {cuadrosVersion}
+      </>
     )
 
   const sinDiseno = vista?.tipo === 'sin-diseno'
