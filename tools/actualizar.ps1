@@ -75,6 +75,32 @@ function Fallo([string]$mensaje) {
   exit 1
 }
 
+# Un solo armado a la vez por carpeta `release` (T-133): el 2026-11-24 dos armaron juntos en `nueva`, uno borró lo
+# que el otro copiaba y quedó puesta una app sin los archivos de Electron, que no abría. El segundo espera al primero
+# y después arma (así lleva también lo último). El nombre sale de la ruta: los nombres de Windows no aceptan «\».
+$sha = [Security.Cryptography.SHA256]::Create()
+$huella = [BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Release.ToLowerInvariant()))).Replace('-', '').Substring(0, 16)
+$turno = New-Object Threading.Mutex($false, "Local\IridiumArmar-$huella")
+try {
+  if (-not $turno.WaitOne(0)) {
+    Write-Host 'Ya se está armando otra versión: esta espera a que termine...' -ForegroundColor Yellow
+    if (-not $turno.WaitOne([TimeSpan]::FromMinutes(15))) {
+      Write-Host 'El otro armado no terminó en 15 minutos: este no hace nada.' -ForegroundColor Red
+      exit 1
+    }
+  }
+} catch [Threading.AbandonedMutexException] {
+  # El anterior se cortó sin soltar el turno: el turno queda de este.
+}
+
+# Lo que tiene que estar en una app armada para que abra: sin alguno, Electron no arranca (T-133).
+function AppCompleta([string]$carpeta) {
+  foreach ($f in @('Iridium.exe', 'icudtl.dat', 'resources.pak', 'v8_context_snapshot.bin', 'ffmpeg.dll', 'resources\app.asar')) {
+    if (-not (Test-Path -LiteralPath (Join-Path $carpeta $f))) { return $false }
+  }
+  $true
+}
+
 if (Test-Path -LiteralPath $falloArmado) { Remove-Item -LiteralPath $falloArmado -Force }
 $marca = [ordered]@{ pid = $PID; desde = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss') }
 [IO.File]::WriteAllText($armando, ($marca | ConvertTo-Json), [Text.UTF8Encoding]::new($false))
@@ -96,6 +122,7 @@ if (-not $SinArmar) {
   if ((Correr { pnpm exec electron-builder --win --config electron-builder.yml "-c.directories.output=$nueva" "-c.extraMetadata.version=$version" }) -ne 0) { Fallo 'No se pudo armar la versión nueva. Iridium quedó como estaba.' }
 }
 if (-not (Test-Path -LiteralPath (Join-Path $nueva 'win-unpacked\Iridium.exe'))) { Fallo "No está la versión nueva en $nueva." }
+if (-not (AppCompleta (Join-Path $nueva 'win-unpacked'))) { Fallo 'La versión nueva quedó incompleta (le faltan archivos de Electron). Iridium quedó como estaba.' }
 
 $commit = (& git rev-parse --short HEAD).Trim()
 $datos = [ordered]@{

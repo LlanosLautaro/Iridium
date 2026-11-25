@@ -143,6 +143,16 @@ if (-not (Test-Path -LiteralPath $lista) -or -not (Test-Path -LiteralPath (Join-
   exit 0
 }
 
+# Una versión a la que le faltan los archivos de Electron no abre (T-133): no se pone, sigue la de antes.
+foreach ($f in @('Iridium.exe', 'icudtl.dat', 'resources.pak', 'v8_context_snapshot.bin', 'ffmpeg.dll', 'resources\app.asar')) {
+  if (-not (Test-Path -LiteralPath (Join-Path $nueva "win-unpacked\$f"))) {
+    NoEntro "La versión nueva está incompleta (falta $f): sigue la de antes; se arma de nuevo."
+    Remove-Item -LiteralPath $lista -Force -ErrorAction SilentlyContinue
+    AbrirSiCorresponde
+    exit 1
+  }
+}
+
 # Iridium se está cerrando: termina en un momento. Si en un minuto sigue algo abierto, se deja para el próximo cierre.
 $limite = (Get-Date).AddSeconds(60)
 while (@(ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) {
