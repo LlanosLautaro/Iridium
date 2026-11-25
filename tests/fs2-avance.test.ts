@@ -163,8 +163,9 @@ describe('la fila (D-176, D-178 › 4)', () => {
   it('después, del frente en curso, el primer paso que cabe', () => {
     const grande = paso({ tamano: 'grande', enCurso: true, texto: 'El motor' })
     const mediano = paso({ tamano: 'mediano', enCurso: true, texto: 'El aviso' })
-    // Un mediano de un frente que no está en curso no entra.
+    // Un mediano de un frente que no está en curso va después de los del frente en curso (D-193).
     const otro = paso({ tamano: 'mediano', texto: 'Lejos' })
+    expect(elegirPaso([], [otro], 60, prendido, new Set())).toEqual({ tipo: 'paso', paso: otro })
     expect(elegirPaso([], [otro, grande, mediano], 100, prendido, new Set())).toEqual({
       tipo: 'paso',
       paso: grande,
@@ -213,7 +214,7 @@ const escribir = async (relativa: string, texto: string) => {
 }
 
 describe('los pasos de un proyecto', () => {
-  it('los `[ ]` con `sola` y tamaño, también en ramas, sin preguntas abiertas ni frentes hechos', async () => {
+  it('los `[ ]` con `sola` y tamaño, también en ramas y en frentes hechos, sin preguntas abiertas', async () => {
     await escribir('docs/README.md', '# Docs\n\n**Framework:** 2026-11-17\n')
     await escribir(
       'docs/estado.md',
@@ -252,6 +253,8 @@ describe('los pasos de un proyecto', () => {
         actualizado: new Date(2026, 10, 20).getTime(),
       },
       expect.objectContaining({ texto: 'Probarlo en el celular', tamano: 'chico', linea: 8 }),
+      // Un frente hecho con algo por hacer también entra (D-193).
+      expect.objectContaining({ frente: 'Notas', texto: 'Una más', enCurso: false }),
     ])
   })
 })

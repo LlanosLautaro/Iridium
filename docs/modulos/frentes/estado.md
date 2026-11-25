@@ -1,7 +1,7 @@
 # Estado del módulo: Frentes
 
 **Tipo:** sección (el Mapa pasa a ser Frentes y el Arranque suma el avance solo; T-112, T-113)
-**Última actualización:** 2026-11-23
+**Última actualización:** 2026-11-25
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -35,6 +35,8 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - [x] Probar el tablero con los frentes de verdad (T-112, Q-267)
   - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (T-122, mediano)
 - [x] Medir la calidad del tablero
+- [x] Que el avance solo revise ideas y frentes, y tome el Núcleo (T-135, T-136, FS-I4)
+- [ ] Probar la revisión una noche (T-135, T-136, Q-294)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -49,6 +51,7 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 | FS-I1 | Las marcas en la ruta, el Mapa que las muestra, los ajustes y los interruptores (FS-1 a FS-3) | hecho |
 | FS-I2 | El motor que toma pasos y el aviso al volver (FS-4, FS-5) | hecho (probado una noche en Q-264) |
 | FS-I3 | El tablero Frentes con la forma B (FS-6 a FS-8) | hecho (probado en Q-267) |
+| FS-I4 | La revisión de ideas y frentes, el Núcleo y los frentes en pausa (D-193) | en curso (se prueba en Q-294) |
 
 ## Log de iteraciones
 ### FS-I1 — Las marcas, los ajustes y los interruptores (2026-11-22)
@@ -70,6 +73,13 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 - `Mapa.tsx`: la columna de tarjetas (pestañas, con las flechas), el que cambió último arriba y el Núcleo debajo; el robot solo si la IA va a tomar algo de ese frente, «apagada» con el frente apagado; al centro, la cabecera con el interruptor, «Te esperan N» y el camino con el código, el tamaño y «sola» al pie. El resaltado del camino es el mismo paso que dice la tarjeta (el primero que la IA puede hacer, camino o rama). Con la sección de menos de 900 px, las tarjetas son una barra arriba con los nombres. `frentes.ts`: lo que sigue, sin la interfaz.
 - Pruebas: Vitest `fs3-tablero.test.ts` (4), Playwright `fs3-tablero.spec.ts` (3, con capturas) y las del Mapa pasadas a las tarjetas (`ma2-mapa`, `fs1-avance`, `i8-frentes` y los nombres de la sección en las demás).
 - Q-267: probado, salvo el robot (necesita el avance solo prendido; pasa a Q-264). R-105: «Te esperan N» muestra cada pregunta como en la Bandeja (opciones o casillas, nota, Enviar), la más nueva arriba y sin repetir el frente; mientras la Bandeja no se leyó, las filas de antes.
+
+### FS-I4 — La revisión, el Núcleo y lo en pausa (2026-11-25, D-193)
+- `core/avance.ts`: la fila suma la revisión de un proyecto (después de la Bandeja, antes de lo chico, como un paso chico) si tiene ideas `nueva` sin evaluar, pasos `[ ]` sin tamaño o `T-n` del Núcleo sin tamaño; lo mediano y lo grande sale de cualquier frente (el en curso primero). Una revisión lleva hasta 10 ideas y 10 trabajos del Núcleo (con los 36 y 16 de este proyecto, era demasiado para algo chico). El mensaje: «Avance solo: revisión. Revisá, sin hacer el trabajo, …» con lo que hay.
+- `app/mapa.ts`: `revisionDe` lee lo que hay para revisar (una idea con «Evaluada el AAAA-MM-DD» ya está revisada; un paso con tamaño, también); `pasosSolos` y `revisionDe` no tocan un frente en pausa y sí uno hecho al que le queda algo en la ruta (Apariencia, Compartir, Skills) y suma los `T-n` del Núcleo con `Tamaño: …, sola` («seguí con T-n «…» del Núcleo»).
+- `app/avance.ts`: la revisión se anota en `arranques.json` como un paso «Revisar las ideas y los frentes» sin carpeta, y no se repite en el día. El tablero no muestra el robot en un frente en pausa.
+- `core/trabajo.ts` y el control: `Tamaño:` en la línea de datos de un `T-n` (`chico`, `mediano, sola`…); el control avisa uno mal escrito y uno con `Frente:` (va en su ruta). El framework explica la revisión, el `Tamaño:` del Núcleo y que solo el usuario pausa un frente.
+- Pruebas: Vitest `fs4-revision.test.ts` (11) y `fs2-avance.test.ts` al día.
 
 ## Calidad del motor (paso 8, 2026-11-23)
 La tomó el avance solo. Cubre el motor (FS-1 a FS-5); el tablero (FS-6 a FS-8) tiene su paso aparte.
@@ -102,5 +112,5 @@ La tomó el avance solo. Cubre el tablero (FS-6 a FS-8).
 **Verificado:** `pnpm test` (1010 pasan), `pnpm typecheck`, `pnpm lint`, el control (0 avisos) y Playwright de lo tocado (`fs3-tablero`, con la prueba nueva y su captura `fs3-muchos.png`; `ma2-mapa`, `fs1-avance`, `i8-frentes`, `or4-mapa`: 17 pasan).
 
 ## Próximo paso
-En operación, con el hito 10. Con varias noches anotadas en `arranques.json`, T-122 (avisar si los tamaños no coinciden con lo gastado). Lo que falle del avance solo o del tablero se anota como `T-n` con `Frente: Frentes`.
+Q-294: ver una noche la revisión (las ideas evaluadas, los pasos marcados y lo que tomó después); con eso, FS-I4 y T-135 y T-136 pasan a hecho y el frente vuelve a hecho. En operación, con el hito 10. Con varias noches anotadas en `arranques.json`, T-122 (avisar si los tamaños no coinciden con lo gastado). Lo que falle del avance solo o del tablero se anota como `T-n` con `Frente: Frentes`.
 **Leer antes:** `modulos/frentes/estado.md` › Calidad del motor; D-179.

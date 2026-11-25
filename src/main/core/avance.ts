@@ -118,10 +118,12 @@ export interface PasoSolo {
   carpeta: string
   texto: string
   tamano: TamanoPaso
-  /** Desde 1, en `docs/modulos/<carpeta>/estado.md`. */
+  /** Desde 1, en `docs/modulos/<carpeta>/estado.md` (en `docs/trabajo.md`, los del Núcleo). */
   linea: number
-  /** Su frente está en curso. */
+  /** Su frente está en curso: va antes que los demás para lo mediano y lo grande. */
   enCurso: boolean
+  /** Un `T-n` del Núcleo (D-193): sin frente, con su `Tamaño:` en `docs/trabajo.md`; la carpeta va vacía. */
+  codigo?: string
   /** La fecha de `**Última actualización:**` del `estado.md` del frente (ms); null si no la tiene. */
   actualizado: number | null
 }
@@ -135,7 +137,34 @@ export interface RespuestasSolas {
   desde: number
 }
 
-export type Eleccion = { tipo: 'bandeja'; candidato: RespuestasSolas } | { tipo: 'paso'; paso: PasoSolo }
+/**
+ * Lo que un proyecto tiene para revisar (D-193): sus ideas `nueva` sin evaluar, los pasos sin tamaño de los frentes que
+ * no están en pausa ni hechos (cuántos por frente) y los `T-n` del Núcleo pendientes sin tamaño.
+ */
+export interface RevisionSola {
+  ruta: string
+  nombre: string
+  ideas: string[]
+  pasos: { frente: string; cuantos: number }[]
+  nucleo: string[]
+  /** Los frentes que no están en pausa ni hechos y no tienen nada por hacer en su ruta. */
+  sinPasos: string[]
+}
+
+export type Eleccion =
+  | { tipo: 'bandeja'; candidato: RespuestasSolas }
+  | { tipo: 'revision'; revision: RevisionSola }
+  | { tipo: 'paso'; paso: PasoSolo }
+
+/** El texto con que se anota la revisión en `arranques.json` y se ve en el aviso al volver. */
+export const TEXTO_REVISION = 'Revisar las ideas y los frentes'
+
+/** Una revisión por proyecto y por día, como mucho (D-193). */
+export const REVISAR_CADA_MS = 24 * 3_600_000
+
+/** Si hay algo para revisar: los frentes sin pasos solos no la piden (si la IA no pudo sumarles, se repetiría cada día). */
+export const hayQueRevisar = (r: RevisionSola): boolean =>
+  r.ideas.length > 0 || r.pasos.length > 0 || r.nucleo.length > 0
 
 /**
  * La clave con que se recuerda lo que se tomó, para no repetirlo en 12 horas: el paso por su texto (la línea cambia
@@ -149,16 +178,23 @@ export function clave(
   return paso ? `${ruta}|${paso.carpeta}|${paso.texto}` : `${ruta}|bandeja|${[...preguntas].sort().join(',')}`
 }
 
+/** La clave de la revisión de un proyecto: la de un paso sin carpeta con `TEXTO_REVISION`. */
+export const claveRevision = (ruta: string): string => clave(ruta, { carpeta: '', texto: TEXTO_REVISION }, [])
+
 export function claveDe(e: Eleccion): string {
   return e.tipo === 'bandeja'
     ? clave(e.candidato.ruta, null, e.candidato.preguntas)
-    : clave(e.paso.ruta, e.paso, [])
+    : e.tipo === 'revision'
+      ? claveRevision(e.revision.ruta)
+      : clave(e.paso.ruta, e.paso, [])
 }
 
 /**
- * Qué toma (D-176, D-178 › 4), en orden: las respuestas de la Bandeja (como un paso chico), la que espera hace más;
- * después el paso chico del frente que hace más que no se toca; después, del frente en curso, el primer paso que
- * cabe. Lo apagado ya viene sacado; `tomados`, las claves de lo que se tomó hace menos de 12 horas.
+ * Qué toma (D-176, D-178 › 4, D-193), en orden: las respuestas de la Bandeja (como un paso chico), la que espera hace
+ * más; después la revisión de un proyecto con algo para revisar (también chica); después el paso chico del frente que
+ * hace más que no se toca; después el primer paso que cabe, del frente en curso primero y de los demás (y del Núcleo)
+ * después. Lo apagado y lo en pausa ya vienen sacados; `tomados`, las claves de lo que se tomó hace menos de 12 horas
+ * (las revisiones, de un día).
  */
 export function elegirPaso(
   bandeja: readonly RespuestasSolas[],
@@ -166,6 +202,7 @@ export function elegirPaso(
   libre: number,
   ajuste: AjusteAvance,
   tomados: ReadonlySet<string>,
+  revisiones: readonly RevisionSola[] = [],
 ): Eleccion | null {
   const nuevo = (e: Eleccion) => !tomados.has(claveDe(e))
   if (cabe('chico', libre, ajuste)) {
@@ -174,6 +211,11 @@ export function elegirPaso(
       .map((candidato): Eleccion => ({ tipo: 'bandeja', candidato }))
       .find(nuevo)
     if (respuestas) return respuestas
+    const revision = revisiones
+      .filter(hayQueRevisar)
+      .map((revision): Eleccion => ({ tipo: 'revision', revision }))
+      .find(nuevo)
+    if (revision) return revision
     const viejo = (p: PasoSolo) => p.actualizado ?? Number.NEGATIVE_INFINITY
     // Estable: a igual fecha, el orden de los proyectos y de la ruta.
     const chico = pasos
@@ -185,8 +227,8 @@ export function elegirPaso(
     if (chico) return chico
   }
   return (
-    pasos
-      .filter((p) => p.enCurso && cabe(p.tamano, libre, ajuste))
+    [...pasos.filter((p) => p.enCurso), ...pasos.filter((p) => !p.enCurso)]
+      .filter((p) => cabe(p.tamano, libre, ajuste))
       .map((paso): Eleccion => ({ tipo: 'paso', paso }))
       .find(nuevo) ?? null
   )
@@ -195,7 +237,21 @@ export function elegirPaso(
 /** El primer mensaje de la conversación (FS-4): nombra el paso, su frente y dónde está; las respuestas, como el Arranque. */
 export function textoDe(e: Eleccion): string {
   if (e.tipo === 'bandeja') return MENSAJE_SEGUI
+  if (e.tipo === 'revision') {
+    const r = e.revision
+    const partes = [
+      r.ideas.length ? `ideas nuevas sin evaluar: ${r.ideas.join(', ')}` : null,
+      r.pasos.length
+        ? `pasos sin tamaño en ${r.pasos.map((p) => `${p.frente} (${p.cuantos})`).join(', ')}`
+        : null,
+      r.nucleo.length ? `trabajos del Núcleo sin tamaño: ${r.nucleo.join(', ')}` : null,
+      r.sinPasos.length ? `frentes sin nada por hacer en su ruta: ${r.sinPasos.join(', ')}` : null,
+    ].filter(Boolean)
+    return `Avance solo: revisión. Revisá, sin hacer el trabajo, ${partes.join('; ')}.`
+  }
   const p = e.paso
+  if (p.codigo)
+    return `Avance solo: seguí con ${p.codigo} «${p.texto}» del Núcleo (\`docs/trabajo.md\`, ${p.tamano}).`
   return (
     `Avance solo: seguí con «${p.texto}» del frente ${p.frente} ` +
     `(\`docs/modulos/${p.carpeta}/estado.md\`, línea ${p.linea}, ${p.tamano}).`

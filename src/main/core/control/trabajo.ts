@@ -1,6 +1,6 @@
 // `docs/trabajo.md` (D-094): cada ítem con código, `Estado:` del vocabulario y `Frente:` válido; ningún código
 // repetido. Las ideas (D-130): `Idea:` con un valor conocido, un enlace con su dirección y cada nota de `docs/ideas/`
-// con su `T-n`.
+// con su `T-n`. El `Tamaño:` de los del Núcleo (D-193).
 import { ESTADOS } from '../estados'
 import { leerTrabajo } from '../trabajo'
 import { type Aviso, type Regla, sinAcentos } from './tipos'
@@ -39,6 +39,14 @@ export const reglaTrabajo: Regla = (a) => {
     if (i.ideaTexto && i.idea === null) av(`«Idea: ${i.ideaTexto}» no se entiende (usuario, IA o enlace)`)
     if (i.idea === 'enlace' && !/^https?:\/\/\S+$/i.test(i.enlace ?? ''))
       av('un enlace para revisar lleva «Enlace: https://…» en su línea de datos')
+    if (i.tamanoTexto && i.tamano === null)
+      av(
+        `«Tamaño: ${i.tamanoTexto}» no se entiende: \`chico\`, \`mediano\` o \`grande\`, y \`, sola\` si la IA lo hace sola`,
+      )
+    if (i.tamanoTexto && i.frente)
+      av(
+        'el tamaño de un trabajo de un frente va en la ruta de su frente, no en `trabajo.md` (solo el Núcleo lo lleva acá)',
+      )
   }
   for (const d of a.documentos) {
     const m = /^docs\/ideas\/T-0*(\d{1,4})\.md$/.exec(d.ruta)

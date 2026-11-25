@@ -631,17 +631,18 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 
 ## T-135 — que iridium le avice a claude cuando haya ideas nuevas ¿? si es que no lo hace ahora
-Estado: nueva · Idea: usuario · Fecha: 2026-11-25
-Revisado el 2026-11-25: hoy no le avisa. Una idea que anotás queda en `trabajo.md` como `nueva` y la IA solo se entera si abre ese archivo o si una sesión anterior la sumó a mano a «Ideas sin evaluar» de `estado.md`; ni la conversación nueva, ni el Arranque, ni el avance solo nombran las ideas nuevas. Va junto con T-136 (Q-293).
+Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
+Revisado el 2026-11-25: hoy no le avisa. Una idea que anotás queda en `trabajo.md` como `nueva` y la IA solo se entera si abre ese archivo o si una sesión anterior la sumó a mano a «Ideas sin evaluar» de `estado.md`; ni la conversación nueva, ni el Arranque, ni el avance solo nombran las ideas nuevas. Va junto con T-136 (Q-293): la revisión le pasa las ideas nuevas.
 
 ## T-136 — que así como claude ahora puede atacar algunos frentes cuando iridium está idle, pueda también revisar ideas, auditarlas, ver cuales pueden pasar directo a implemntación, anotarlo para no revisar las mismas una y otra vez, etc, lo mismo con los frentes, hay varios frentes que están algo estancados pero que la IA podría estarlos avanzando sola pero parece que no son candidatos pq no empiezan
-Estado: nueva · Idea: usuario · Fecha: 2026-11-25
+Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
 Revisado el 2026-11-25. Por qué los frentes parados no son candidatos:
 - El avance solo toma únicamente pasos marcados con su tamaño y `sola`, y de los 8 pasos que esperan en las rutas (Abrir, Apariencia, Compartir, Diseño, Orden con dos, Skills) **ninguno está marcado**. La regla de D-175 es marcarlos «al pasar», sin reescribir una ruta solo para eso: un frente que nadie toca nunca se marca y nunca se toma.
 - Los 24 `T-n` pendientes del Núcleo (por ejemplo T-131, que ya dice «Tamaño: chico») no están en ninguna ruta, así que el motor no los ve.
 - Lo mediano y lo grande solo se toma del frente en curso, y hoy no hay ninguno en curso (Orden, el Próximo paso, figura en pausa).
 - Las ideas `nueva` no entran a la fila: nadie las evalúa sin vos (T-135).
 La propuesta y sus opciones, en Q-293. Se relaciona con T-133 (sesiones para resolver dudas antes de que la IA trabaje sola).
+Construido el 2026-11-25 (Q-293 A, D-193; FS-I4): con el avance solo prendido, una vez por día y proyecto, si hay ideas sin evaluar, pasos sin tamaño o trabajos del Núcleo sin tamaño, la IA los revisa sin hacer el trabajo: deja cada idea con «Evaluada el …» (qué haría falta, tamaño, si puede ir directo; aprobarla sigue siendo tuyo), marca los pasos y los trabajos del Núcleo que puede hacer sola y suma pasos a los frentes vacíos. Los trabajos del Núcleo con «Tamaño: chico, sola» ya entran al avance solo, lo mediano y lo grande sale de cualquier frente, y un frente en pausa es solo el que pausaste vos (Orden, Abrir y Diseño salieron de pausa). Se prueba en Q-294.
 
 ## T-137 — Iridium no arrancaba
 Estado: hecho · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24

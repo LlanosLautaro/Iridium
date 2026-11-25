@@ -6,13 +6,17 @@ import type { AjusteAvance, AvanceApagado, UsoSuscripcion } from '../../comparti
 import {
   apagado,
   clave,
+  claveRevision,
   disponible,
   type Eleccion,
   elegirPaso,
   NO_REPETIR_MS,
   type PasoSolo,
   puedeMirar,
+  REVISAR_CADA_MS,
   type RespuestasSolas,
+  type RevisionSola,
+  TEXTO_REVISION,
   textoDe,
 } from '../core/avance'
 import type { ArchivoArranques, RenglonArranque } from '../infra/arranques'
@@ -31,6 +35,8 @@ export interface DependenciasAvance {
   bandeja: () => Promise<RespuestasSolas[]>
   /** Los pasos `[ ]` marcados `sola` de los proyectos que se pueden tocar, en el orden de los proyectos y la ruta. */
   pasos: () => Promise<PasoSolo[]>
+  /** Lo que cada proyecto que se puede tocar tiene para revisar (D-193); sin esto, no revisa. */
+  revisiones?: () => Promise<RevisionSola[]>
   /** Los proyectos con la IA trabajando en Iridium. */
   enMarcha: () => string[]
   /** Hay sesión de Claude para abrir una conversación. */
@@ -118,7 +124,8 @@ export class AvanceSolo {
     // La fila primero, con el uso que ya se conoce (sin él, como con el período entero): leer el uso abre Claude Code,
     // y sin nada para tomar no se lo abre cada minuto toda la noche (paso 8).
     const fila = await this.fila()
-    const elegir = (libre: number) => elegirPaso(fila.bandeja, fila.pasos, libre, ajuste, fila.tomados)
+    const elegir = (libre: number) =>
+      elegirPaso(fila.bandeja, fila.pasos, libre, ajuste, fila.tomados, fila.revisiones)
     if (!elegir(conocido ? (disponible(conocido, ajuste, this.ahora()) ?? 0) : 100)) return
     const uso = await this.d.leerUso()
     const libre = disponible(uso, ajuste, this.ahora())
@@ -139,30 +146,56 @@ export class AvanceSolo {
     await this.empezar(elegido, uso)
   }
 
-  /** Lo que podría tomar, sin mirar el uso: lo que no está apagado y las claves de lo tomado hace menos de 12 horas. */
-  private async fila(): Promise<{ bandeja: RespuestasSolas[]; pasos: PasoSolo[]; tomados: Set<string> }> {
-    const [apagados, bandeja, pasos, datos] = await Promise.all([
+  /**
+   * Lo que podría tomar, sin mirar el uso: lo que no está apagado y las claves de lo tomado hace menos de 12 horas (las
+   * revisiones, de un día).
+   */
+  private async fila(): Promise<{
+    bandeja: RespuestasSolas[]
+    pasos: PasoSolo[]
+    revisiones: RevisionSola[]
+    tomados: Set<string>
+  }> {
+    const [apagados, bandeja, pasos, revisiones, datos] = await Promise.all([
       this.d.apagados(),
       this.d.bandeja(),
       this.d.pasos(),
+      this.d.revisiones?.() ?? Promise.resolve([]),
       this.d.archivo.leer().catch(() => ({ momentos: [] as RenglonArranque[] })),
     ])
-    const desde = this.ahora() - NO_REPETIR_MS
-    const tomados = new Set(
-      datos.momentos
-        .filter((m) => m.momento === 'avance' && m.cuando >= desde && m.proyecto)
-        .map((m) => clave(m.proyecto?.ruta ?? '', m.paso, m.proyecto?.preguntas ?? [])),
-    )
+    const ahora = this.ahora()
+    const tomados = new Set<string>()
+    for (const m of datos.momentos) {
+      if (m.momento !== 'avance' || !m.proyecto) continue
+      const k = clave(m.proyecto.ruta, m.paso, m.proyecto.preguntas)
+      const cada = k === claveRevision(m.proyecto.ruta) ? REVISAR_CADA_MS : NO_REPETIR_MS
+      if (m.cuando >= ahora - cada) tomados.add(k)
+    }
     return {
       bandeja: bandeja.filter((c) => !apagado(apagados, c.ruta)),
       pasos: pasos.filter((p) => !apagado(apagados, p.ruta, p.carpeta)),
+      revisiones: revisiones.filter((r) => !apagado(apagados, r.ruta)),
       tomados,
     }
   }
 
   private async empezar(e: Eleccion, uso: UsoSuscripcion | null): Promise<void> {
     const cuando = this.ahora()
-    const ruta = e.tipo === 'bandeja' ? e.candidato.ruta : e.paso.ruta
+    const ruta =
+      e.tipo === 'bandeja' ? e.candidato.ruta : e.tipo === 'revision' ? e.revision.ruta : e.paso.ruta
+    // La revisión se anota como un paso chico sin carpeta (D-193): así el aviso al volver la cuenta como los demás.
+    const paso =
+      e.tipo === 'paso'
+        ? {
+            frente: e.paso.frente,
+            carpeta: e.paso.carpeta,
+            texto: e.paso.texto,
+            tamano: e.paso.tamano,
+            linea: e.paso.linea,
+          }
+        : e.tipo === 'revision'
+          ? { frente: 'Revisión', carpeta: '', texto: TEXTO_REVISION, tamano: 'chico' as const, linea: 0 }
+          : null
     const renglon: RenglonArranque = {
       cuando,
       momento: 'avance',
@@ -170,26 +203,16 @@ export class AvanceSolo {
       proyecto:
         e.tipo === 'bandeja'
           ? { ruta, nombre: e.candidato.nombre, preguntas: e.candidato.preguntas }
-          : { ruta, nombre: e.paso.proyecto, preguntas: [] },
+          : { ruta, nombre: e.tipo === 'revision' ? e.revision.nombre : e.paso.proyecto, preguntas: [] },
       sinUsarIridium: this.d.segundosSinUsar(),
-      ...(e.tipo === 'paso'
-        ? {
-            paso: {
-              frente: e.paso.frente,
-              carpeta: e.paso.carpeta,
-              texto: e.paso.texto,
-              tamano: e.paso.tamano,
-              linea: e.paso.linea,
-            },
-          }
-        : {}),
+      ...(paso ? { paso } : {}),
       uso: { antes: usoAnotado(uso), despues: null },
     }
     // Se anota antes de arrancar: si arrancar falla, no se insiste con el mismo paso en 12 horas.
     await this.d.archivo.anotar(renglon).catch(() => {})
     this.tomado = { ruta, cuando }
     this.d.registrar?.(
-      `Avance solo: ${renglon.proyecto?.nombre}${e.tipo === 'paso' ? ` — «${e.paso.texto}» (${e.paso.frente}, ${e.paso.tamano})` : ' — sus respuestas'}`,
+      `Avance solo: ${renglon.proyecto?.nombre}${paso ? ` — «${paso.texto}» (${paso.frente}, ${paso.tamano})` : ' — sus respuestas'}`,
     )
     await this.d.arrancar(ruta, cuando, e.tipo === 'bandeja' ? null : textoDe(e)).catch((err) => {
       this.d.registrar?.(

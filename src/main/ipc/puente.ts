@@ -54,7 +54,7 @@ import {
   moverIdea,
   pegarImagenIdea,
 } from '../app/ideas'
-import { mapaDe, pasosSolos } from '../app/mapa'
+import { mapaDe, pasosSolos, revisionDe } from '../app/mapa'
 import { Pendientes } from '../app/pendientes'
 import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
@@ -609,6 +609,25 @@ export function registrarPuente(s: Servicios): Puente {
       }
     },
   })
+  // Lo que cada proyecto que se puede tocar le da al avance solo: sus pasos `sola` y lo que tiene para revisar (D-193).
+  const paraElAvance = async () => {
+    const lista = await listar()
+    if (lista.tipo !== 'lista') return []
+    const trabajando = new Set(conversaciones.enMarcha())
+    const r: { pasos: ReturnType<typeof pasosSolos>; revision: ReturnType<typeof revisionDe> }[] = []
+    for (const t of lista.proyectos) {
+      if (t.archivado || t.framework === null || t.framework === 'viejo' || trabajando.has(t.ruta)) continue
+      if (await conversaciones.usadaAfuera(t.ruta)) continue
+      try {
+        const [d, preguntas] = await Promise.all([docs.de(t.ruta), leerPreguntasAbiertas(t.ruta)])
+        const proyecto = { ruta: t.ruta, nombre: t.nombre }
+        r.push({ pasos: pasosSolos(d, preguntas, proyecto), revision: revisionDe(d, proyecto) })
+      } catch {
+        // Un proyecto que no se puede leer no frena a los demás.
+      }
+    }
+    return r
+  }
   // El avance solo (frente Frentes, D-178): con Iridium sin usar, toma de a un paso marcado `sola`.
   const avance = new AvanceSolo({
     ajuste: async () => (await s.config.leer()).avanceSolo,
@@ -616,23 +635,8 @@ export function registrarPuente(s: Servicios): Puente {
     usoActual: () => uso.get(),
     leerUso: () => leerUsoDeNuevo(),
     bandeja: () => candidatosListos(),
-    pasos: async () => {
-      const lista = await listar()
-      if (lista.tipo !== 'lista') return []
-      const trabajando = new Set(conversaciones.enMarcha())
-      const pasos: ReturnType<typeof pasosSolos> = []
-      for (const t of lista.proyectos) {
-        if (t.archivado || t.framework === null || t.framework === 'viejo' || trabajando.has(t.ruta)) continue
-        if (await conversaciones.usadaAfuera(t.ruta)) continue
-        try {
-          const [d, preguntas] = await Promise.all([docs.de(t.ruta), leerPreguntasAbiertas(t.ruta)])
-          pasos.push(...pasosSolos(d, preguntas, { ruta: t.ruta, nombre: t.nombre }))
-        } catch {
-          // Un proyecto que no se puede leer no frena a los demás.
-        }
-      }
-      return pasos
-    },
+    pasos: async () => (await paraElAvance()).flatMap((p) => p.pasos),
+    revisiones: async () => (await paraElAvance()).map((p) => p.revision),
     enMarcha: () => conversaciones.enMarcha(),
     sesionLista: async () => {
       const e = await motorListo()

@@ -4,6 +4,7 @@
 //   Estado: pendiente · Frente: Orden · Fecha: 2026-11-05 · Origen: D-091
 //   Con filtros arriba, no una pestaña por frente.
 import { type Estado, leerEstado } from './estados'
+import type { TamanoPaso } from './ruta'
 import { partirLineas, titulos } from './visor/lineas'
 
 export interface ItemTrabajo {
@@ -24,6 +25,11 @@ export interface ItemTrabajo {
   ideaTexto: string | null
   /** La dirección de `Enlace:` (un enlace para revisar); null si no tiene. */
   enlace: string | null
+  /** `Tamaño:` de un `T-n` del Núcleo (D-193): lo que cuesta y si la IA lo hace sola; null si no tiene o no se entiende. */
+  tamano: TamanoPaso | null
+  sola: boolean
+  /** `Tamaño:` tal como está escrito; null si no tiene. */
+  tamanoTexto: string | null
   texto: string
   /** Línea del título (desde 0). */
   linea: number
@@ -41,6 +47,12 @@ export type TipoIdea = 'usuario' | 'IA' | 'enlace'
 function leerIdea(texto: string): TipoIdea | null {
   const t = texto.trim().toLowerCase()
   return t === 'usuario' ? 'usuario' : t === 'ia' ? 'IA' : t === 'enlace' ? 'enlace' : null
+}
+
+/** `chico`, `mediano, sola`… (D-193): el tamaño, y `sola` después de una coma. */
+export function leerTamano(texto: string): { tamano: TamanoPaso; sola: boolean } | null {
+  const m = /^(chico|mediano|grande)(?:\s*,\s*(sola))?$/.exec(texto.trim())
+  return m?.[1] ? { tamano: m[1] as TamanoPaso, sola: m[2] === 'sola' } : null
 }
 
 const CABEZA = /^T-0*(\d{1,4})\s*(?:—|–|-|:)\s*(.+)$/
@@ -65,6 +77,7 @@ export function leerTrabajo(texto: string): TrabajoLeido {
     const codigo = `T-${Number(m[1])}`
     if (!datos.has('estado')) problemas.push({ linea: t.n, texto: `${codigo} no tiene la línea «Estado: …»` })
     const estadoTexto = datos.get('estado') ?? ''
+    const tamano = leerTamano(datos.get('tamano') ?? '')
     items.push({
       codigo,
       titulo: m[2].trim(),
@@ -76,6 +89,9 @@ export function leerTrabajo(texto: string): TrabajoLeido {
       idea: leerIdea(datos.get('idea') ?? ''),
       ideaTexto: datos.get('idea') || null,
       enlace: datos.get('enlace')?.replace(/^<(.*)>$/, '$1') || null,
+      tamano: tamano?.tamano ?? null,
+      sola: tamano?.sola ?? false,
+      tamanoTexto: datos.get('tamano') || null,
       texto: (datos.size ? cuerpo.slice(iDatos + 1) : cuerpo).join('\n').trim(),
       linea: t.n,
     })

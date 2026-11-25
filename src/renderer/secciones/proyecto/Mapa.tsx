@@ -182,9 +182,11 @@ function useAvance(ruta: string): (f: FrenteMapa) => Tarjeta['avance'] {
   const ajuste = usarEstado((s) => s.preferencias.avanceSolo)
   const apagados = usarEstado((s) => s.preferencias.avanceApagado)
   return (f) => {
-    if (f.estado === 'en uso' || f.error) return null
+    // Un frente hecho entra si le queda algo por hacer (D-193).
+    if (f.error || (f.estado === 'en uso' && !queSigue(f.pasos))) return null
     if (apagados.frentes.some((x) => x.ruta === ruta && x.carpeta === f.clave)) return 'apagada'
-    if (!ajuste.prendido || apagados.proyectos.includes(ruta)) return null
+    // Un frente en pausa lo pausó el usuario: el motor no lo toca (D-193).
+    if (!ajuste.prendido || apagados.proyectos.includes(ruta) || f.estado === 'en pausa') return null
     return tieneParaSola(f.pasos, ajuste.tamanos) ? 'sola' : null
   }
 }
@@ -498,7 +500,7 @@ function VistaFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
         <span className={f.estado === 'otro' ? 'estado-frente fuera' : 'estado-frente'}>
           {archivado(f) ? 'Archivado' : ESTADO_FRENTE[f.estado] || f.estadoTexto}
         </span>
-        {f.estado !== 'en uso' && <InterruptorAvance ruta={ruta} carpeta={f.clave} />}
+        {(f.estado !== 'en uso' || queSigue(f.pasos)) && <InterruptorAvance ruta={ruta} carpeta={f.clave} />}
       </div>
       <PreguntasFrente ruta={ruta} preguntas={f.preguntas} />
       {f.error && (

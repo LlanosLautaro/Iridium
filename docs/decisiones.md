@@ -199,6 +199,7 @@
 | D-190 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 7 (PA-I4) | Conectar con `claude mcp login`, y los conectores sin configurar | vigente |
 | D-191 | 2026-11-24 | general (Compartir) | 10, a pedido del usuario (T-132) | La versión en uso se publica sola en GitHub | vigente (precisa D-085 y D-171) |
 | D-192 | 2026-11-24 | general (Compartir) | 10 (Q-290) | En GitHub quedan las últimas 5 versiones (10 hasta Q-291) y cada versión nueva dice qué trae | vigente (precisa D-191) |
+| D-193 | 2026-11-25 | Frentes (T-135, T-136) | 10 (Q-293) | El avance solo revisa ideas y frentes, y un frente solo se pausa si lo pide el usuario | vigente (precisa D-175, D-176 y D-166) |
 
 ---
 
@@ -3660,3 +3661,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Motivo:** GitHub no se llena con versiones que nadie va a bajar, y lo que trae cada versión se ve sin abrir un archivo; los commits ya dicen qué cambió en palabras del usuario.
 **Consecuencias:** la primera frase de cada commit tiene que decir qué cambió para el usuario, no solo el código de la iteración. Una copia instalada en una versión borrada baja la próxima entera (no solo lo que cambió).
 **Ajuste (2026-11-25, Q-291):** probado, todo bien; el usuario pidió bajarlas a 5 (`VERSIONES_PUBLICADAS`).
+
+## D-193 — El avance solo revisa ideas y frentes, y un frente solo se pausa si lo pide el usuario
+- **Fecha:** 2026-11-25
+- **Ámbito:** el frente Frentes (T-135, T-136), el framework y el orden de los frentes (precisa D-166, D-175 y D-176)
+- **Hito o paso:** 10 (Q-293)
+- **Estado:** vigente
+
+**Contexto:** los frentes parados nunca entraban al avance solo: sus pasos no tenían tamaño ni `sola` (se marcaban solo al trabajar el frente, D-175), los `T-n` del Núcleo no estaban en ninguna ruta, lo mediano y lo grande solo salía del frente en curso, y nada le avisaba a la IA de las ideas nuevas (`trabajo.md` › T-136).
+**Opciones consideradas:** A) una revisión chica dentro del avance solo · B) solo avisarle a cada conversación las ideas nuevas · C) marcar todo a mano una vez. El usuario eligió A y agregó: un frente se para solo si lo hablan o con su interruptor (la IA no frena frentes sin consultar), y la idea es maximizar el trabajo disponible, dejando pasos en todos los frentes cuando se pueda; no cuando un frente depende de otro o lo que cambie en otro obligaría a rehacerlo.
+**Decisión:** (1) **La revisión:** después de la Bandeja, si un proyecto tiene ideas `nueva` sin evaluar, pasos `[ ]` sin tamaño en frentes que no están en pausa ni hechos, o `T-n` del Núcleo pendientes sin tamaño, el avance solo abre una conversación «Avance solo: revisión», como un paso chico, a lo sumo una por día y proyecto y con hasta 10 ideas y 10 `T-n` del Núcleo por vez (los más viejos; el resto, al día siguiente). La IA no hace el trabajo: evalúa cada idea con una línea `Evaluada el AAAA-MM-DD: …` (sin cambiarle el estado: aprobar es del usuario), pone tamaño (y `sola` si puede) a cada paso y a cada `T-n` del Núcleo, y suma pasos a los frentes que no tienen. Lo revisado queda escrito en los documentos (la línea, el tamaño), así que no se vuelve a revisar. (2) **El Núcleo:** un `T-n` sin frente lleva `Tamaño: chico` (o `chico, sola`) en su línea de datos y el avance solo lo toma como un paso más. (3) **Lo mediano y lo grande** sale de cualquier frente que no esté en pausa (el en curso primero) y del Núcleo; un frente hecho al que le queda algo por hacer en su ruta también entra. (4) **En pausa** es solo lo que pidió el usuario; el avance solo no toca un frente en pausa. El orden entre frentes (D-166) dice qué va primero cuando trabajan juntos, no frena a los demás: Orden, Abrir y Diseño pasan a en curso.
+**Motivo:** el avance solo tiene más para tomar sin que el usuario prepare nada, y lo que la IA no puede hacer sola queda dicho en el paso, no frenado en silencio.
+**Consecuencias:** el framework, los lectores de la ruta y de `trabajo.md`, el control y sus pruebas cambian juntos (D-086); la revisión gasta un poco de cuota por proyecto y día. FS-I4 en el frente Frentes.

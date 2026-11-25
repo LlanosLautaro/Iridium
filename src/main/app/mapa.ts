@@ -10,7 +10,7 @@ import type {
   PreguntaMapa,
   PreguntaNueva,
 } from '../../compartido/puente'
-import type { PasoSolo } from '../core/avance'
+import type { PasoSolo, RevisionSola } from '../core/avance'
 import { tieneFramework } from '../core/control'
 import { leerGuia } from '../core/guia'
 import {
@@ -320,9 +320,10 @@ function pasosDelMetodo(
 }
 
 /**
- * Los pasos que el avance solo puede tomar de un proyecto (Frentes, D-178 › 4): los `[ ]` marcados `sola` con su
- * tamaño (camino o rama), que no nombran una pregunta sin responder, de los frentes que no están hechos. En el orden
- * del Mapa (el frente en curso primero) y de la ruta.
+ * Los pasos que el avance solo puede tomar de un proyecto (Frentes, D-178 › 4, D-193): los `[ ]` marcados `sola` con
+ * su tamaño (camino o rama), que no nombran una pregunta sin responder, de los frentes que no están en pausa
+ * (también los hechos con algo por hacer), en el orden del Mapa (el frente en curso primero) y de la ruta; después, los `T-n` del Núcleo pendientes con
+ * `Tamaño: …, sola`.
  */
 export function pasosSolos(
   d: DocumentosProyecto,
@@ -334,7 +335,7 @@ export function pasosSolos(
   const abiertas = new Set(preguntas.map((q) => q.codigo))
   const r: PasoSolo[] = []
   for (const f of mapa.frentes) {
-    if (f.estado === 'en uso' || f.error) continue
+    if (f.estado === 'en pausa' || f.error) continue
     const texto = d.texto(f.documento)
     const ruta = texto ? leerRuta(texto) : null
     if (!texto || !ruta) continue
@@ -358,6 +359,89 @@ export function pasosSolos(
       }
     }
     juntar(ruta.pasos)
+  }
+  for (const i of nucleoAbierto(d))
+    if (
+      i.sola &&
+      i.tamano &&
+      ![...`${i.titulo} ${i.texto}`.matchAll(/\bQ-\d+\b/g)].some((m) => abiertas.has(m[0]))
+    )
+      r.push({
+        ruta: proyecto.ruta,
+        proyecto: proyecto.nombre,
+        frente: 'Núcleo',
+        carpeta: '',
+        texto: i.titulo,
+        tamano: i.tamano,
+        linea: i.linea + 1,
+        enCurso: false,
+        actualizado: i.fecha ? new Date(`${i.fecha}T00:00:00`).getTime() : null,
+        codigo: i.codigo,
+      })
+  return r
+}
+
+/** Los `T-n` del Núcleo (sin frente) que esperan: pendientes o en curso. */
+function nucleoAbierto(d: DocumentosProyecto) {
+  const texto = d.texto(TRABAJO)
+  if (!texto) return []
+  return leerTrabajo(texto).items.filter(
+    (i) => !i.frente && (i.estado === 'pendiente' || i.estado === 'en curso'),
+  )
+}
+
+/** Cuántas ideas y cuántos `T-n` del Núcleo entran en una revisión: el resto, en la del día siguiente (sigue siendo chica). */
+export const POR_REVISION = 10
+
+/** La línea con que la IA deja evaluada una idea en la revisión (D-193). */
+const EVALUADA = /^\s*Evaluada el \d{4}-\d{2}-\d{2}/m
+
+/**
+ * Lo que un proyecto tiene para revisar (D-193): las ideas `nueva` sin «Evaluada el …» y los `T-n` del Núcleo que
+ * esperan sin `Tamaño:` (hasta `POR_REVISION` de cada uno, los más viejos), los pasos `[ ]` sin tamaño de los frentes
+ * que no están en pausa y los frentes sin terminar que no tienen nada por hacer. Lo revisado queda escrito en los
+ * documentos: no se vuelve a pedir.
+ */
+export function revisionDe(d: DocumentosProyecto, proyecto: { ruta: string; nombre: string }): RevisionSola {
+  const r: RevisionSola = {
+    ruta: proyecto.ruta,
+    nombre: proyecto.nombre,
+    ideas: [],
+    pasos: [],
+    nucleo: [],
+    sinPasos: [],
+  }
+  const trabajo = d.texto(TRABAJO)
+  if (trabajo)
+    r.ideas = leerTrabajo(trabajo)
+      .items.filter((i) => i.estado === 'nueva' && !EVALUADA.test(i.texto))
+      .map((i) => i.codigo)
+      .slice(0, POR_REVISION)
+  r.nucleo = nucleoAbierto(d)
+    .filter((i) => !i.tamanoTexto)
+    .map((i) => i.codigo)
+    .slice(0, POR_REVISION)
+  const mapa = mapaDe(d, [])
+  if (mapa.tipo !== 'mapa') return r
+  for (const f of mapa.frentes) {
+    if (f.estado === 'en pausa' || f.error) continue
+    const texto = d.texto(f.documento)
+    const ruta = texto ? leerRuta(texto) : null
+    if (!ruta) continue
+    let vienen = 0
+    let sinTamano = 0
+    const contar = (pasos: PasoRuta[]) => {
+      for (const p of pasos) {
+        if (p.marca === 'viene') {
+          vienen++
+          if (!p.tamano) sinTamano++
+        }
+        contar(p.ramas)
+      }
+    }
+    contar(ruta.pasos)
+    if (sinTamano) r.pasos.push({ frente: f.nombre, cuantos: sinTamano })
+    if (!vienen && f.estado !== 'en uso') r.sinPasos.push(f.nombre)
   }
   return r
 }
