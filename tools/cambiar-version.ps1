@@ -6,7 +6,9 @@
 param(
   [Parameter(Mandatory = $true)][string]$Release,
   [switch]$Abrir,
-  [string]$Estado
+  [string]$Estado,
+  # El proceso del Iridium que se cierra y lo lanzó.
+  [int]$Iridium
 )
 $ErrorActionPreference = 'Stop'
 $Release = [IO.Path]::GetFullPath($Release).TrimEnd('\')
@@ -153,14 +155,31 @@ foreach ($f in @('Iridium.exe', 'icudtl.dat', 'resources.pak', 'v8_context_snaps
   }
 }
 
-# Iridium se está cerrando: termina en un momento. Si en un minuto sigue algo abierto, se deja para el próximo cierre.
+# Iridium se está cerrando: termina en un momento. Con -Iridium (el que se cierra), lo que siga abierto unos segundos
+# después de que termine quedó de otro lado; sin él, lo que siga a los 60 s. Eso se cierra a la fuerza: antes la
+# versión quedaba «lista para cuando lo cierres del todo» y el 2026-11-25 un Iridium escondido de una prueba de la IA
+# (`tools/auditoria-ux.ts`, con sus datos aparte) la trabó en «Cerrando la versión de antes» cada vez que se cerraba.
 $limite = (Get-Date).AddSeconds(60)
+$sinEl = $null
 while (@(ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) {
   CerrarHuerfanos $app
+  if ($Iridium -gt 0 -and -not $sinEl -and -not (Get-Process -Id $Iridium -ErrorAction SilentlyContinue)) { $sinEl = Get-Date }
+  if ($sinEl -and ((Get-Date) - $sinEl).TotalSeconds -gt 8) { break }
   Start-Sleep -Milliseconds 300
 }
+$quedan = @(ProcesosDeLaApp)
+if ($quedan.Count -gt 0) {
+  foreach ($p in $quedan) {
+    $cual = if ($p.CommandLine -match '--type=') { 'un proceso interno' } elseif ($p.Name -ieq 'Iridium.exe') { 'un Iridium' } else { $p.Name }
+    Anotar "Cierra $cual que seguía abierto desde la app ($($p.ProcessId))."
+    Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+  $limite = (Get-Date).AddSeconds(10)
+  while (@(ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) { Start-Sleep -Milliseconds 300 }
+}
 if (@(ProcesosDeLaApp).Count -gt 0) {
-  NoEntro 'Iridium sigue abierto (¿otra ventana de Iridium?): la versión nueva queda lista para cuando lo cierres del todo.'
+  NoEntro 'No se pudo cerrar lo que quedó abierto de Iridium: la versión nueva queda lista para el próximo cierre.'
+  AbrirSiCorresponde
   exit 1
 }
 

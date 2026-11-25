@@ -218,3 +218,62 @@ describe('con una sola Iridium terminando de cerrarse', () => {
     expect(log).toContain('Versión nueva puesta: abc1234')
   }, 90_000)
 })
+
+describe('con otro Iridium abierto desde la app (el escondido de una prueba, 2026-11-25)', () => {
+  it('el ayudante lo cierra unos segundos después de que termina el que se cierra y pone la versión nueva', async () => {
+    const release = await temporal()
+    const app = join(release, 'win-unpacked')
+    await armarVersion(join(release, 'nueva', 'win-unpacked'))
+    await writeFile(
+      join(release, 'nueva', 'lista.json'),
+      JSON.stringify({
+        fecha: '2026-11-25T19:57:58',
+        commit: 'abc1234',
+        mensaje: 'PU-I1',
+        sinGuardar: false,
+      }),
+    )
+    await mkdir(app, { recursive: true })
+    // Un «Iridium.exe» de la app que no se va a cerrar solo (antes: un minuto en «Cerrando» y «Iridium sigue abierto»).
+    await copyFile(
+      String.raw`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`,
+      join(app, 'Iridium.exe'),
+    )
+    const escondido = spawn(join(app, 'Iridium.exe'), ['-NoProfile', '-Command', 'Start-Sleep 120'], {
+      cwd: app,
+      stdio: 'ignore',
+      windowsHide: true,
+    })
+    procesos.push(escondido)
+    // El Iridium que se cierra y lanza el ayudante: termina en un par de segundos.
+    const seCierra = spawn('powershell.exe', ['-NoProfile', '-Command', 'Start-Sleep 2'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    })
+    procesos.push(seCierra)
+    await new Promise((r) => setTimeout(r, 1000))
+    const inicio = Date.now()
+    const ayudante = spawn(
+      'powershell.exe',
+      [
+        '-NoProfile',
+        '-ExecutionPolicy',
+        'Bypass',
+        '-File',
+        join(import.meta.dirname, '..', 'tools', 'cambiar-version.ps1'),
+        '-Release',
+        release,
+        '-Iridium',
+        String(seCierra.pid),
+      ],
+      { stdio: 'ignore', windowsHide: true },
+    )
+    await termino(ayudante)
+    await termino(escondido)
+    expect(Date.now() - inicio).toBeLessThan(30_000)
+    const log = await readFile(join(release, 'actualizacion.log'), 'utf8')
+    expect(log).toContain('Cierra un Iridium que seguía abierto desde la app')
+    expect(log).toContain('Versión nueva puesta: abc1234')
+    expect(log).not.toContain('sigue abierto (')
+  }, 60_000)
+})

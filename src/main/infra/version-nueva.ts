@@ -110,6 +110,7 @@ export class VigiaVersionNueva {
     await lanzarSuelto(
       comandoPowershell(copia, [
         `-Release "${this.release}"`,
+        `-Iridium ${process.pid}`,
         abrir && '-Abrir',
         conVentana && `-Estado "${estado}"`,
       ]),
