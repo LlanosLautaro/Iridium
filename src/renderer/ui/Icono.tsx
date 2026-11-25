@@ -210,6 +210,8 @@ const TRAZOS = {
     </>
   ),
   atras: <path d="M19 12H5M12 19l-7-7 7-7" />,
+  // Apagar al terminar (T-134): el botón de encendido.
+  apagar: <path d="M12 3v8M6.4 6.6a8 8 0 1 0 11.2 0" />,
   circulo: <circle cx="12" cy="12" r="8" />,
   // Adjuntar archivos o fotos en el chat (PA-2, Q-251): un clip.
   clip: (

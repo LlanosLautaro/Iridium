@@ -51,6 +51,7 @@ export const CambioPreferencias = z
     avanceSolo: AjusteAvance.strict(),
     avanceApagado: AvanceApagado.strict(),
     sonido: AjusteSonido.strict(),
+    botonApagar: z.boolean(),
     capacidades: AjusteCapacidades.strict(),
   })
   .partial()

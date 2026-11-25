@@ -55,6 +55,8 @@ export interface DependenciasAvance {
   ahora?: () => number
   /** Cambió lo que se muestra en el aviso al volver. */
   alCambio?: () => void
+  /** La PC se apaga al terminar (T-134): no toma nada nuevo. */
+  quieto?: () => boolean
 }
 
 const usoAnotado = (u: UsoSuscripcion | null) => ({
@@ -140,7 +142,7 @@ export class AvanceSolo {
   }
 
   private async tomar(): Promise<void> {
-    if (this.ahora() < this.esperaHasta) return
+    if (this.ahora() < this.esperaHasta || this.d.quieto?.()) return
     const ajuste = await this.d.ajuste()
     const condiciones = {
       ajuste,

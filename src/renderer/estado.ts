@@ -15,6 +15,7 @@ import {
   type Destino,
   type Entrada,
   type EscritoGuardado,
+  type EstadoApagar,
   type EstadoArranque,
   type EstadoMotor,
   type FichaSesion,
@@ -214,6 +215,9 @@ interface EstadoApp {
   /** El arranque del período (frente Arranque): el detalle del uso y el aviso al volver; null hasta que se lee. */
   arranque: EstadoArranque | null
   ponerArranque(arranque: EstadoArranque): void
+  /** Apagar al terminar (T-134, D-195): si está armado y la cuenta antes de apagar. */
+  apagar: EstadoApagar
+  ponerApagar(apagar: EstadoApagar): void
   /** La actualización automática de los proyectos que se arman solos (frente Abrir, AB-3, AB-4), por ruta. */
   actualizaciones: Record<string, ActualizacionProyecto>
   ponerActualizaciones(a: Record<string, ActualizacionProyecto>): void
@@ -347,6 +351,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     },
     avanceApagado: { proyectos: [], frentes: [] },
     sonido: { prendido: true, cual: 'campana', conAvance: false },
+    botonApagar: false,
     capacidades: { navegador: false, pc: false, conectoresApagados: [] },
   },
   skills: { elegida: null, avisosDe: null, plegados: null, sinSobre: null, enviados: [], archivos: {} },
@@ -428,6 +433,8 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
   ponerUso: (uso) => set({ uso }),
   arranque: null,
   ponerArranque: (arranque) => set({ arranque }),
+  apagar: { armado: false, apagaEn: null, esperando: 0 },
+  ponerApagar: (apagar) => set({ apagar }),
   actualizaciones: {},
   ponerActualizaciones: (actualizaciones) => set({ actualizaciones }),
   avisos: [],

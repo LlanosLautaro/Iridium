@@ -785,6 +785,42 @@ const SIN_CITAS: Cita[] = []
 const SIN_ADJUNTOS: AdjuntoPedido[] = []
 
 /** El ícono de la ficha de una cita, por lo que cita (Revisar, Idea, Comentario, Frente). */
+/**
+ * Apagar al terminar (T-134, D-195): con el ajuste prendido, un botón al lado de Enviar. Armado, Iridium apaga la PC
+ * cuando ninguna IA trabaja ni espera lo de fondo, sin pasar por la IA ni gastar uso; tocarlo de nuevo lo desarma.
+ */
+function BotonApagar() {
+  const visible = usarEstado((s) => s.preferencias.botonApagar)
+  const armado = usarEstado((s) => s.apagar.armado)
+  if (!visible && !armado) return null
+  const poner = (si: boolean) => void window.iridium.ponerApagar(si)
+  if (armado)
+    return (
+      <button
+        type="button"
+        className="boton secundario chico apagar"
+        aria-pressed="true"
+        title="Iridium apaga la PC cuando la IA termine. Tocalo para que no la apague."
+        onClick={() => poner(false)}
+      >
+        <Icono nombre="apagar" />
+        Se apaga al terminar
+      </button>
+    )
+  return (
+    <button
+      type="button"
+      className="boton solo-icono chico apagar"
+      aria-pressed="false"
+      aria-label="Apagar la PC al terminar"
+      title="Apagar la PC cuando la IA termine (no gasta uso)"
+      onClick={() => poner(true)}
+    >
+      <Icono nombre="apagar" />
+    </button>
+  )
+}
+
 function iconoDeCita(tipo: string): 'revision' | 'idea' | 'comentar' | 'mapa' | 'ficha' {
   return tipo === 'Revisar'
     ? 'revision'
@@ -1523,6 +1559,7 @@ export function Conversacion({
           <ModeloYEsfuerzo ruta={ruta} />
           {hayConversacion && c?.contexto && <MedidorContexto contexto={c.contexto} />}
           <div className="enviar">
+            <BotonApagar />
             {(trabajando || esperandoFondo) && (
               <button
                 type="button"

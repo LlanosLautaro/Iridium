@@ -643,7 +643,8 @@ Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan co
 Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 
 ## T-134 — un modo de "apagar al finalizar". En configuraciones podríamos determinar una opcion que habilite el display o no de un botón en un chat, al tocar ese botón se configura que la computadora se apagará al terminar la tarea, esto sería independiente de la IA y podría reutilizar el mismo sistema de deteccion de tarea finalizada que usamos para las actualizaciones automáticas, de este modo podemos dejar a claude trabajando e irnos de la casa. Esto trae una ventaja, yo antes le pedía textualmente a claude que apague la pc al acabar cuando debía irme, pero si quería hacer que la apague y estaba a mitad de trabajo ya no tenía forma de hacerlo(ahora recuero que podemos añadir la funcionalidad de "en cola" para los mensajes, promts que van luego de que termine de hacer lo que est´ahora, es parte de paridad creo) e interrumpirla o pasarle otro prompt en cola pues cagaría contexto innecesario, esta funcionalidad evita todo eso, no gasta uso en lo más minimo tampoco
-Estado: pendiente · Idea: usuario · Fecha: 2026-11-24
+Estado: en curso · Idea: usuario · Fecha: 2026-11-24 · Origen: D-195
+Construido el 2026-11-25 (D-195): el botón al lado de Enviar, la cuenta de un minuto con No apagar y el apagado sin pasar por la IA; falta que lo pruebes apagando de verdad (Q-296). Los mensajes «en cola», aparte en T-138.
 
 ## T-135 — que iridium le avice a claude cuando haya ideas nuevas ¿? si es que no lo hace ahora
 Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
@@ -662,3 +663,7 @@ Construido el 2026-11-25 (Q-293 A, D-193; FS-I4): con el avance solo prendido, u
 ## T-137 — Iridium no arrancaba
 Estado: hecho · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
 Dos armados corrieron juntos en `release/nueva` y quedó puesta una app sin los archivos de Electron (Iridium.exe se cerraba al abrir). Ahora `actualizar.ps1` arma de a uno por carpeta y `cambiar-version.ps1` no pone una versión incompleta (sigue la de antes). En los commits del 2026-11-24 figura como T-133, número que ya tenía una idea tuya. El 2026-11-25, la suite entera mostró 10 pruebas de las actualizaciones en rojo por ese cambio (sus versiones de muestra no tenían los archivos de Electron): ahora los tienen, y una prueba nueva mira que una versión incompleta no se pone.
+
+## T-138 — Mensajes en cola: lo que escribís mientras la IA trabaja sale cuando termina
+Estado: nueva · Idea: IA · Fecha: 2026-11-25 · Origen: T-134
+Lo mencionaste en T-134: escribir el próximo pedido con la IA a mitad de un trabajo y que Iridium lo mande solo al terminar el turno, sin interrumpirla. Sería parte de Paridad (Claude Code lo tiene).

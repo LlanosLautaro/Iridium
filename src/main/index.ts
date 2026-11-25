@@ -16,6 +16,7 @@ import { comoAbrir, type VentanaGuardada } from './core/ventana'
 import { zoomSiguiente } from './core/zoom'
 import { Actualizador } from './infra/actualizador'
 import { actualizableElectron } from './infra/actualizador-electron'
+import { apagadorDePc } from './infra/apagar-pc'
 import { ArchivoArmados } from './infra/armados'
 import { ArchivoArranques } from './infra/arranques'
 import { ArchivoBorradores } from './infra/borradores'
@@ -746,6 +747,19 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
         excluida: release ? dirname(release) : app.getAppPath(),
       },
       consolas,
+      // Apagar al terminar (T-134): las pruebas nunca apagan; con IRIDIUM_APAGAR lo anotan en ese archivo.
+      apagarPc: apagadorDePc({
+        anotarEn: process.env.IRIDIUM_APAGAR ?? null,
+        prueba: process.env.IRIDIUM_DATOS !== undefined,
+        cerrarIridium: () => {
+          cerrarSinPreguntar = true
+          ventana?.close()
+        },
+        registrar: (t) => registro.escribir(t),
+      }),
+      ...(process.env.IRIDIUM_APAGAR_SEG
+        ? { apagarCuentaMs: Number(process.env.IRIDIUM_APAGAR_SEG) * 1000 }
+        : {}),
       // Solo pruebas: el primer momento del arranque, a tantos segundos de abrir.
       ...(process.env.IRIDIUM_ARRANQUE_EN
         ? { arranqueEnSegundos: Number(process.env.IRIDIUM_ARRANQUE_EN) }

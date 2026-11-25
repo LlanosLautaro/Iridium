@@ -135,6 +135,8 @@ export interface Preferencias {
   avanceApagado: AvanceApagado
   /** El sonido al terminar la IA su trabajo (T-52, D-183): prendido al principio. */
   sonido: AjusteSonido
+  /** El botón «Apagar al terminar» en la conversación (T-134, D-195): escondido al principio. */
+  botonApagar: boolean
   /** Lo que tiene la IA en las sesiones de Iridium (Capacidades, D-189): todo apagado y ningún conector apagado. */
   capacidades: AjusteCapacidades
 }
@@ -158,6 +160,17 @@ export interface AjusteSonido {
   cual: SonidoFin
   /** También cuando termina un paso del avance solo (apagado al principio: suele ser de noche). */
   conAvance: boolean
+}
+
+/** Apagar al terminar (T-134, D-195): si está armado y, con todo quieto, cuándo se apaga la PC. */
+export interface EstadoApagar {
+  armado: boolean
+  /** Cuándo termina la cuenta (ms); null mientras alguna IA trabaja o espera lo de fondo. */
+  apagaEn: number | null
+  /** Cuántas conversaciones trabajan o esperan lo de fondo: hasta que terminen, no cuenta. */
+  esperando: number
+  /** No se pudo apagar: queda desarmado. */
+  fallo?: string
 }
 
 /** Cuánto cuesta un paso de la ruta (Frentes, D-175): una iteración, no el frente entero. */
@@ -1053,6 +1066,9 @@ export const CANALES = {
   arranque: 'arranque:leer',
   arranqueCambio: 'arranque:cambio',
   terminoTrabajo: 'sonido:termino',
+  apagar: 'apagar:leer',
+  apagarPoner: 'apagar:poner',
+  apagarCambio: 'apagar:cambio',
   arranqueVisto: 'arranque:visto',
   novedades: 'app:novedades',
   novedadesVistas: 'app:novedades-vistas',
@@ -1148,6 +1164,11 @@ export interface ApiIridium {
   alCambiarArranque(escuchar: (estado: EstadoArranque) => void): () => void
   /** La IA terminó su trabajo y toca sonar (T-52, D-183): con qué sonido. */
   alTerminarTrabajo(escuchar: (sonido: SonidoFin) => void): () => void
+  /** Apagar al terminar (T-134, D-195): si está armado y la cuenta antes de apagar. */
+  apagar(): Promise<EstadoApagar>
+  /** Arma o desarma el apagado al terminar (el botón de la conversación, Cancelar en el aviso). */
+  ponerApagar(armado: boolean): Promise<void>
+  alCambiarApagar(escuchar: (e: EstadoApagar) => void): () => void
   /** Listo en el aviso al volver (AR-4): lo mostrado hasta `hasta` no vuelve a aparecer. */
   arranqueVisto(hasta: number): Promise<void>
   /** Lo que trae esta versión desde la que se usaba antes en esta PC (Q-290); null si nada o la primera vez. */

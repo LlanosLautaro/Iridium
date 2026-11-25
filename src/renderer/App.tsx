@@ -15,6 +15,7 @@ function useConexion() {
   const aplicarCambio = usarEstado((s) => s.aplicarCambio)
   const ponerUso = usarEstado((s) => s.ponerUso)
   const ponerArranque = usarEstado((s) => s.ponerArranque)
+  const ponerApagar = usarEstado((s) => s.ponerApagar)
   const ponerActualizaciones = usarEstado((s) => s.ponerActualizaciones)
   const ponerCierre = usarEstado((s) => s.ponerCierre)
   const ponerVersionNueva = usarEstado((s) => s.ponerVersionNueva)
@@ -36,6 +37,7 @@ function useConexion() {
     void api.estadoMotor().then(ponerMotor)
     void api.uso().then((u) => u && ponerUso(u))
     void api.arranque().then(ponerArranque)
+    void api.apagar().then(ponerApagar)
     void api.actualizaciones().then(ponerActualizaciones)
     void api.versionNueva().then(ponerVersionNueva)
     void api.sinArmar().then(ponerSinArmar)
@@ -48,6 +50,7 @@ function useConexion() {
       api.alCambiarConversacion(aplicarCambio),
       api.alCambiarUso(ponerUso),
       api.alCambiarArranque(ponerArranque),
+      api.alCambiarApagar(ponerApagar),
       api.alTerminarTrabajo(tocarSonido),
       api.alCambiarActualizaciones(ponerActualizaciones),
       api.alPedirCierre(ponerCierre),
@@ -65,6 +68,7 @@ function useConexion() {
     aplicarCambio,
     ponerUso,
     ponerArranque,
+    ponerApagar,
     ponerActualizaciones,
     ponerCierre,
     ponerVersionNueva,

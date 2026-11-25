@@ -149,6 +149,8 @@ const Config = z.object({
   avanceApagado: AvanceApagado.catch({ ...NINGUNO_APAGADO }),
   /** El sonido al terminar (T-52): prendido con la campana si falta o está roto. */
   sonido: AjusteSonido.catch({ ...AJUSTE_SONIDO_INICIAL }),
+  /** El botón «Apagar al terminar» (T-134): escondido si falta o está roto. */
+  botonApagar: z.boolean().catch(false),
   /** Capacidades (T-28): si falta o está roto, todo apagado. */
   capacidades: AjusteCapacidades.catch({ ...CAPACIDADES_INICIALES, conectoresApagados: [] }),
   /** El tamaño de todo, con Ctrl+= y Ctrl+- (Defecto 17): 1 = normal. */
@@ -196,6 +198,7 @@ const PREDETERMINADA: Config = {
   avanceSolo: { ...AJUSTE_AVANCE_INICIAL },
   avanceApagado: { ...NINGUNO_APAGADO },
   sonido: { ...AJUSTE_SONIDO_INICIAL },
+  botonApagar: false,
   capacidades: { ...CAPACIDADES_INICIALES, conectoresApagados: [] },
   zoom: 1,
   ventana: null,
@@ -231,6 +234,7 @@ export function preferenciasDe(c: Config): Preferencias {
     avanceSolo: c.avanceSolo as Preferencias['avanceSolo'],
     avanceApagado: c.avanceApagado,
     sonido: c.sonido as Preferencias['sonido'],
+    botonApagar: c.botonApagar,
     capacidades: c.capacidades,
   }
 }

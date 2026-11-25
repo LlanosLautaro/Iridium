@@ -298,12 +298,70 @@ function AvisoDeEjecutar({ a }: { a: AvisoEjecutar }) {
 }
 
 /** Abajo a la derecha, sobre todo lo demás; `Esc` cierra el último. */
+/** «0:45»: lo que falta de la cuenta antes de apagar. */
+function cuentaRegresiva(ms: number): string {
+  const s = Math.max(0, Math.ceil(ms / 1000))
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+}
+
+/**
+ * Apagar al terminar (T-134, D-195): con todo quieto, la cuenta antes de apagar, con Cancelar (no se va sola: es lo
+ * último que se ve). Si Windows no dejó apagar, lo dice.
+ */
+function AvisoApagar() {
+  const apagar = usarEstado((s) => s.apagar)
+  const ponerApagar = usarEstado((s) => s.ponerApagar)
+  const [ahora, setAhora] = useState(() => Date.now())
+  useEffect(() => {
+    if (apagar.apagaEn === null) return
+    setAhora(Date.now())
+    const t = setInterval(() => setAhora(Date.now()), 500)
+    return () => clearInterval(t)
+  }, [apagar.apagaEn])
+  if (apagar.fallo)
+    return (
+      <div className="aviso-flotante" data-estado="error" role="alert">
+        <Icono nombre="error" />
+        <b className="t">No se pudo apagar la PC</b>
+        <button
+          type="button"
+          className="x"
+          aria-label="Cerrar el aviso"
+          onClick={() => ponerApagar({ armado: false, apagaEn: null, esperando: 0 })}
+        >
+          <Icono nombre="x" />
+        </button>
+        <span className="d">{apagar.fallo}</span>
+      </div>
+    )
+  if (!apagar.armado || apagar.apagaEn === null) return null
+  return (
+    <div className="aviso-flotante fijo" data-estado="espera" role="alert" aria-label="La PC se va a apagar">
+      <Icono nombre="apagar" />
+      <b className="t">La IA terminó: la PC se apaga en {cuentaRegresiva(apagar.apagaEn - ahora)}</b>
+      <span className="d">
+        Iridium se cierra y Windows apaga la PC. Lo que no guardaste en otros programas se pierde.
+      </span>
+      <div className="pie">
+        <button
+          type="button"
+          className="boton principal chico"
+          onClick={() => void window.iridium.ponerApagar(false)}
+        >
+          No apagar
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function Avisos() {
   const avisos = usarEstado((s) => s.avisos)
   const delArranque = usarEstado((s) => s.arranque?.aviso) ?? []
   const quitar = usarEstado((s) => s.quitarAviso)
   const deEjecutar = usarEstado((s) => s.avisoEjecutar)
   const [novedades, novedadesVistas] = useNovedades()
+  const apagar = usarEstado((s) => (s.apagar.armado && s.apagar.apagaEn !== null) || !!s.apagar.fallo)
   // A la izquierda de la conversación que esté a la vista (la del proyecto, la general o la de Skills): no tapa el
   // cuadro para escribir (D-032).
   const seccion = usarEstado((s) => s.seccion)
@@ -320,9 +378,10 @@ export function Avisos() {
     window.addEventListener('keydown', alTeclado)
     return () => window.removeEventListener('keydown', alTeclado)
   }, [avisos, quitar])
-  if (avisos.length === 0 && delArranque.length === 0 && !deEjecutar && !novedades) return null
+  if (avisos.length === 0 && delArranque.length === 0 && !deEjecutar && !novedades && !apagar) return null
   return (
     <section className="avisos" aria-label="Avisos de las sesiones" style={{ right: ancho + 12 }}>
+      {apagar && <AvisoApagar />}
       {novedades && <AvisoNovedades n={novedades} listo={novedadesVistas} />}
       {delArranque.length > 0 && <AvisoArranque filas={delArranque} />}
       {avisos.map((a) => (

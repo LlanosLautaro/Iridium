@@ -31,6 +31,7 @@ import {
 import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/skills'
 import type { PlanEliminacion } from '../../compartido/tipos'
 import { planDeArmado, VigiaArmados } from '../app/abrir'
+import { ApagarAlTerminar } from '../app/apagar'
 import { Arranque, candidatosDe } from '../app/arranque'
 import { AvanceSolo } from '../app/avance'
 import { Capacidades } from '../app/capacidades'
@@ -235,6 +236,10 @@ export interface Servicios {
   armados?: { archivo: ArchivoArmados; carpetaDatos: string; excluida: string | null }
   /** Las consolas adentro (T-116, D-184); sin ellas, Scripts abre una ventana de consola como antes. */
   consolas?: Consolas
+  /** Apaga la PC (T-134, D-195); en las pruebas, `IRIDIUM_APAGAR` lo anota en vez de apagar. */
+  apagarPc: () => Promise<void>
+  /** Solo pruebas (`IRIDIUM_APAGAR_SEG`): la cuenta antes de apagar, en vez de un minuto. */
+  apagarCuentaMs?: number
 }
 
 export interface Puente {
@@ -487,6 +492,20 @@ export function registrarPuente(s: Servicios): Puente {
     ...(s.pc ? { pc: s.pc } : {}),
   })
 
+  // Apagar al terminar (T-134, D-195): mira las conversaciones de todos los proyectos, no solo la del botón.
+  const apagado = new ApagarAlTerminar({
+    ocupadas: () => conversaciones.ocupadas(),
+    apagar: () => s.apagarPc(),
+    alCambio: (e) => enviar(CANALES.apagarCambio, e),
+    registrar: (t) => s.registro.escribir(t),
+    ...(s.apagarCuentaMs !== undefined ? { cuentaMs: s.apagarCuentaMs } : {}),
+  })
+  ipcMain.handle(CANALES.apagar, () => apagado.estado())
+  ipcMain.handle(CANALES.apagarPoner, (_, armado: unknown) => {
+    if (typeof armado !== 'boolean') throw new Error('ponerApagar: armado no es sí o no')
+    apagado.poner(armado)
+  })
+
   const conversaciones = new Conversaciones({
     motor: s.motor,
     registro: s.sesiones,
@@ -509,6 +528,7 @@ export function registrarPuente(s: Servicios): Puente {
         void avance.mirar()
         armados?.alTerminarTurno(c.ruta)
       }
+      apagado.revisar()
     },
     instruccionBase: (ruta) =>
       ruta === enDisco.rutas.ideas
@@ -544,6 +564,7 @@ export function registrarPuente(s: Servicios): Puente {
     alTerminar: (ruta, fin) => {
       // Sin uso, el avance solo espera a que se libere en vez de seguir abriendo sesiones que fallan (D-194).
       if (fin.agotado) avance.sinUso(ruta, fin.agotado.libera)
+      apagado.revisar()
       void s.config.leer().then((c) => {
         const sonido = sonidoAlTerminar(c.sonido as AjusteSonido, fin)
         if (sonido) enviar(CANALES.terminoTrabajo, sonido)
@@ -668,6 +689,7 @@ export function registrarPuente(s: Servicios): Puente {
     registrar: (t) => s.registro.escribir(t),
     ...(s.avanceSinUsarS !== undefined ? { sinUsarS: s.avanceSinUsarS } : {}),
     alCambio: () => avisarArranque(),
+    quieto: () => apagado.estaArmado,
   })
 
   /** Lo que muestra el arranque cambió: se manda a la ventana (una vez aunque lo pidan varios juntos). */
@@ -1370,6 +1392,7 @@ export function registrarPuente(s: Servicios): Puente {
     cerrar() {
       arranque.cerrar()
       avance.cerrar()
+      apagado.cerrar()
       armados?.cerrar()
       sincronia.cerrar()
       uso.cerrar()

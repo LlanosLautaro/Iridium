@@ -667,6 +667,11 @@ export class Conversaciones {
     return [...this.proyectos.values()].filter((p) => this.trabajando(p)).map((p) => p.ruta)
   }
 
+  /** Cuántas trabajan o esperan lo que dejaron de fondo (apagar al terminar, T-134). */
+  ocupadas(): number {
+    return [...this.proyectos.values()].filter((p) => this.trabajando(p) || p.fondo.length > 0).length
+  }
+
   /**
    * Se olvida de una carpeta que se mudó (D-083): cierra su sesión, si no trabaja, y la próxima vez se carga de la
    * ruta nueva. false si la IA está trabajando ahí.

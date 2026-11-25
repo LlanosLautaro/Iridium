@@ -32,13 +32,19 @@ Como usuario quiero oír cuándo la IA terminó su trabajo, sin avisos de Window
 - [x] Suena una vez cuando la IA terminó de verdad: después de lo que dejó corriendo de fondo y del control; no al dejar las pruebas corriendo, ni si la detuve o falló.
 - [x] En Notificaciones lo apago, elijo entre Campana, Dos notas, Gota y Acorde (elegir uno lo hace sonar) y decido si suena también con el avance solo (apagado al principio).
 
+### AJ-5 — Apagar la PC al terminar (T-134, D-195)
+Como usuario quiero dejar a la IA trabajando, irme, y que la PC se apague sola cuando termine, sin interrumpirla ni gastar uso.
+- [ ] En Notificaciones prendo «Apagar la PC al terminar» y aparece un botón de encendido al lado de Enviar.
+- [ ] Lo toco con la IA trabajando y dice «Se apaga al terminar»; tocándolo de nuevo, se desarma.
+- [ ] Cuando ninguna IA trabaja ni espera lo de fondo, un aviso cuenta un minuto con No apagar, y después la PC se apaga.
+
 ## Flujos
 ```
 ◇ o Ctrl+,  →  ventana de Ajustes (última sección)
                  ├─ Perfil      → escribir nombre → se ve en la conversación
                  ├─ IA          → nombre (opcional) · tono → mensajes siguientes
                  ├─ Apariencia  → tocar un tema → toda la app cambia
-                 └─ Notificaciones → el sonido al terminar: prendido, cuál, con el avance solo
+                 └─ Notificaciones → el sonido al terminar: prendido, cuál, con el avance solo · el botón de apagar
 Esc · ✕ · clic afuera  →  vuelve a donde estaba
 ```
 - **Error al guardar** (la carpeta de datos no se puede escribir): aviso chico abajo en la ventana, «No se pudo guardar; sigue como antes», y el cambio se deshace en pantalla.
