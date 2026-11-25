@@ -148,6 +148,11 @@ test('el + › Comandos escribe la «/» y abre la lista; una skill nueva la pon
 
   await cuadro.fill('Armá una skill nueva')
   await cuadro.press('Enter')
+  // Hasta que la IA termina: recién mandado, «.ahora» todavía no está y se cerraba la app a mitad del turno, que a veces
+  // no cerraba (T-39).
+  await expect(win.locator('.hilo .texto-doc').last()).toContainText('Listo: dejé el estado al día', {
+    timeout: 10_000,
+  })
   await expect(win.locator('.ahora')).toHaveCount(0, { timeout: 10_000 })
   await cuadro.pressSequentially('/skill-n')
   await expect(lista.getByRole('option')).toHaveText([/^\/skill-nueva/])

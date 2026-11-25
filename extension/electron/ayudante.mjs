@@ -308,11 +308,17 @@ export async function revision({
       await (s.extensions ?? s).loadExtension(CARPETA, { allowFileAccess: true })
       cargada = true
       // Una ventana que cargó antes que la extensión no tiene sus scripts (falta la marca de `pagina.js`): se recarga
-      // una vez. Las que todavía cargan los reciben solas.
-      for (const wc of webContents.getAllWebContents()) {
-        if (wc.session !== s || !LOCAL.test(wc.getURL()) || wc.isLoading()) continue
+      // una vez. Una que estaba a mitad de carga puede haber recibido el selector y no `pagina.js` (que entra al
+      // empezar), y los comentarios salían sin componentes ni «Dónde» (T-39): se mira cuando termina de cargar.
+      const revisar = async (wc) => {
+        if (wc.isDestroyed() || !LOCAL.test(wc.getURL())) return
         const tiene = await wc.executeJavaScript(`!!window[Symbol.for('iridium-revision')]`).catch(() => true)
-        if (!tiene) wc.reload()
+        if (!tiene && !wc.isDestroyed()) wc.reload()
+      }
+      for (const wc of webContents.getAllWebContents()) {
+        if (wc.session !== s) continue
+        if (wc.isLoading()) wc.once('did-finish-load', () => void revisar(wc))
+        else await revisar(wc)
       }
     } catch (e) {
       console.warn('Revisión de Iridium: no se pudo cargar la extensión', e)

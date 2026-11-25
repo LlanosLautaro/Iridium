@@ -7,6 +7,10 @@ import { dirname, join, normalize } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { app, BrowserWindow, protocol } from 'electron'
 
+// Los datos de la app (la extensión y su service worker, lo que recuerda) en la carpeta de la tanda: en la de siempre
+// quedaban de una tanda a otra y la extensión podía seguir con un puerto o un estado viejos (T-39).
+if (process.env.LUNA_DATOS) app.setPath('userData', process.env.LUNA_DATOS)
+
 const propia = process.env.LUNA_PROPIA
 if (propia)
   protocol.registerSchemesAsPrivileged([

@@ -7,8 +7,10 @@ import { type ElectronApplication, _electron as electron, expect, type Page, tes
 import react from '@vitejs/plugin-react'
 import { build, createServer, type ViteDevServer } from 'vite'
 
-const PUERTO = 47391
-const PUERTO_APP = 5293
+// Puertos propios (T-39): con los de r2-revision, que corre justo antes, la primera prueba a veces hablaba con lo que
+// quedaba de aquella tanda y fallaba.
+const PUERTO = 47392
+const PUERTO_APP = 5294
 const SALIDA = join(process.cwd(), 'tools', 'salida')
 
 let base: string
@@ -57,6 +59,10 @@ async function esperarModoComentar(): Promise<void> {
     )
     .toBe(true)
 }
+
+// Cada prueba sigue a la anterior (R-1, R-2, R-3 y la app armada): si una falla, las que siguen no corren, en vez de
+// fallar de nuevo en una tanda limpia con un número que no es el suyo (T-39).
+test.describe.configure({ mode: 'serial' })
 
 test.beforeAll(async () => {
   await mkdir(join(process.cwd(), 'tests', 'e2e', '.tmp'), { recursive: true })
@@ -116,6 +122,7 @@ test.beforeAll(async () => {
       ...process.env,
       IRIDIUM_AYUDANTE: join(extension, 'electron', 'ayudante.mjs'),
       IRIDIUM_REVISION_PUERTO: String(PUERTO),
+      LUNA_DATOS: join(base, 'luna-datos'),
       LUNA_URL: `http://localhost:${PUERTO_APP}/`,
     }),
   })
@@ -171,6 +178,7 @@ test('en la versión armada (desde un archivo, instalada fuera de los proyectos)
         ...process.env,
         IRIDIUM_AYUDANTE: join(extension, 'electron', 'ayudante.mjs'),
         IRIDIUM_REVISION_PUERTO: String(PUERTO),
+        LUNA_DATOS: join(base, 'luna-datos'),
         LUNA_ARCHIVO: join(instalada, 'dist', 'index.html'),
       }),
     })
@@ -208,6 +216,7 @@ test('en una interfaz propia (luna-app://, como Alfa instalada) el ayudante la m
       ...process.env,
       IRIDIUM_AYUDANTE: join(extension, 'electron', 'ayudante.mjs'),
       IRIDIUM_REVISION_PUERTO: String(PUERTO),
+      LUNA_DATOS: join(base, 'luna-datos'),
       LUNA_PROPIA: join(instalada, 'dist', 'index.html'),
     }),
   })
