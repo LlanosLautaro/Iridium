@@ -172,3 +172,12 @@ export function cambiarApagado(apagados: readonly string[], nombre: string, pren
   const sin = apagados.filter((n) => n !== nombre)
   return prendido ? sin : [...sin, nombre]
 }
+
+/** El nombre con que la PC (Windows-MCP) entra en las sesiones de Iridium: sus herramientas son `mcp__pc__…` (D-189 › 5). */
+export const CONECTOR_PC = 'pc'
+
+/**
+ * Lo que se le saca a Windows-MCP (D-189 › 5): Claude Code ya corre comandos y lee archivos, y son lo que más daño hace
+ * por error.
+ */
+export const HERRAMIENTAS_SACADAS_PC = ['PowerShell', 'FileSystem', 'Registry'] as const

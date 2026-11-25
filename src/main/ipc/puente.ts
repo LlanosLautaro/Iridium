@@ -88,7 +88,7 @@ import {
 } from '../infra/armados'
 import type { ArchivoArranques } from '../infra/arranques'
 import type { ArchivoBorradores } from '../infra/borradores'
-import { archivoCapacidades, navegadoresConClaude } from '../infra/capacidades'
+import { archivoCapacidades, navegadoresConClaude, type PcEnLaPc } from '../infra/capacidades'
 import {
   type CarpetasEnDisco,
   moverCarpeta,
@@ -215,6 +215,11 @@ export interface Servicios {
   archivoCapacidades?: string
   /** Lo nuevo de la versión (Q-290); sin él (en desarrollo y en las pruebas), no hay aviso. */
   novedades?: { pendientes(): Promise<Novedades | null>; vistas(): Promise<void> }
+  /** La PC (PA-I6, D-189 › 5 y 6): buscar Windows-MCP y uv, y correr su instalación en la consola de abajo. */
+  pc?: {
+    buscar(): Promise<PcEnLaPc>
+    consola(nombre: string, comando: string): Promise<void>
+  }
   /** Donde se buscan los perfiles de los navegadores (`%LOCALAPPDATA%`; en las pruebas, `IRIDIUM_NAVEGADORES`). */
   carpetaLocal?: string
   /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento del arranque, a tantos segundos de abrir. */
@@ -469,6 +474,7 @@ export function registrarPuente(s: Servicios): Puente {
     apagados: async () => (await s.config.leer()).capacidades.conectoresApagados,
     anotar: (t) => s.registro.escribir(t),
     ...(s.archivoCapacidades ? { guardada: archivoCapacidades(s.archivoCapacidades) } : {}),
+    ...(s.pc ? { pc: s.pc } : {}),
   })
 
   const conversaciones = new Conversaciones({
@@ -505,6 +511,11 @@ export function registrarPuente(s: Servicios): Puente {
     tono: async () => (await s.config.leer()).tono || null,
     apagados: async () => (await s.config.leer()).capacidades.conectoresApagados,
     navegador: async () => (await s.config.leer()).capacidades.navegador,
+    pc: async () => {
+      if (!(await s.config.leer()).capacidades.pc) return null
+      const ejecutable = (await s.pc?.buscar())?.ejecutable
+      return ejecutable ? { ejecutable } : null
+    },
     motorListo,
     alPerderSesion: () => {
       if (estadoMotor.tipo === 'sin-sesion') return
@@ -843,6 +854,8 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.navegadoresConClaude, () =>
     s.carpetaLocal ? navegadoresConClaude(s.carpetaLocal).catch(() => []) : [],
   )
+  ipcMain.handle(CANALES.pcInstalada, () => capacidades.pcInstalada())
+  ipcMain.handle(CANALES.instalarPc, () => capacidades.instalarPc())
   ipcMain.handle(CANALES.cerrarFicha, async (_, ruta: unknown) =>
     conversaciones.cerrarFicha(await proyecto(ruta)),
   )

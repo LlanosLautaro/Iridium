@@ -1,8 +1,22 @@
 // Ajustes › Capacidades (frente Paridad, segunda parte, T-28; D-189): lo que tiene la IA en las sesiones de Iridium,
 // con lo apagado en Iridium, y Conectar. Se le pide al motor cada vez que se abre la sección, sin gastar; mientras
-// tanto, la sección muestra la última lista que se supo (Q-287: pedirla tarda unos segundos), guardada en disco.
+// tanto, la sección muestra la última lista que se supo (Q-287: pedirla tarda unos segundos), guardada en disco. Y
+// usar la PC (PA-I6, D-189 › 5 y 6): si está Windows-MCP e Instalar, en la consola de abajo, una vez.
 import type { CapacidadesSesion, VistaCapacidades } from '../../compartido/capacidades'
+import type { PcEnLaPc } from '../infra/capacidades'
 import type { Motor } from '../motor/motor'
+
+/** Instalar uv, si falta (D-189 › 6): con winget, que ya trae Windows. */
+export const INSTALAR_UV =
+  'winget install --id astral-sh.uv -e --accept-source-agreements --accept-package-agreements'
+
+/**
+ * Instalar Windows-MCP como herramienta con uv (D-189 › 6), que baja el Python que pide sin tocar el de la PC. Con
+ * `uvx` el primer arranque pasaba los 30 s que espera Claude Code.
+ */
+export function instalarWindowsMcp(uv: string): string {
+  return `"${uv}" tool install windows-mcp`
+}
 
 export interface DependenciasCapacidades {
   motor: Motor
@@ -14,6 +28,11 @@ export interface DependenciasCapacidades {
     leer(): Promise<CapacidadesSesion | null>
     guardar(lista: CapacidadesSesion): Promise<void>
   }
+  /** La PC (D-189 › 5 y 6): buscar Windows-MCP y uv, y correr una instalación en la consola de abajo hasta que termine. */
+  pc?: {
+    buscar(): Promise<PcEnLaPc>
+    consola(nombre: string, comando: string): Promise<void>
+  }
 }
 
 export class Capacidades {
@@ -21,6 +40,7 @@ export class Capacidades {
   private conocidos = new Set<string>()
   private pidiendo: Promise<VistaCapacidades> | null = null
   private ultima: CapacidadesSesion | null = null
+  private instalando: Promise<boolean> | null = null
 
   constructor(private readonly d: DependenciasCapacidades) {}
 
@@ -84,5 +104,48 @@ export class Capacidades {
     }
     // Una lista nueva, no la que se estaba pidiendo antes de conectar.
     return this.pedir()
+  }
+
+  /** Si Windows-MCP está instalado (la fila de la PC). */
+  async pcInstalada(): Promise<boolean> {
+    const b = await this.d.pc?.buscar().catch(() => null)
+    return Boolean(b?.ejecutable)
+  }
+
+  /**
+   * Instalar (D-189 › 6): uv con winget si falta y después Windows-MCP, cada uno en su consola, uno detrás del otro. Solo
+   * esos dos comandos fijos; dice si al final quedó instalado.
+   */
+  instalarPc(): Promise<boolean> {
+    this.instalando ??= this.instalar().finally(() => {
+      this.instalando = null
+    })
+    return this.instalando
+  }
+
+  private async instalar(): Promise<boolean> {
+    const pc = this.d.pc
+    if (!pc) return false
+    try {
+      let b = await pc.buscar()
+      if (b.ejecutable) return true
+      if (!b.uv) {
+        this.d.anotar?.('Capacidades: instalar uv')
+        await pc.consola('Instalar uv', INSTALAR_UV)
+        b = await pc.buscar()
+        if (!b.uv) {
+          this.d.anotar?.('Capacidades: uv no quedó instalado')
+          return false
+        }
+      }
+      this.d.anotar?.('Capacidades: instalar Windows-MCP')
+      await pc.consola('Instalar Windows-MCP', instalarWindowsMcp(b.uv))
+      const listo = Boolean((await pc.buscar()).ejecutable)
+      if (!listo) this.d.anotar?.('Capacidades: Windows-MCP no quedó instalado')
+      return listo
+    } catch (e) {
+      this.d.anotar?.(`Capacidades: no se pudo instalar Windows-MCP (${e instanceof Error ? e.message : e})`)
+      return false
+    }
   }
 }

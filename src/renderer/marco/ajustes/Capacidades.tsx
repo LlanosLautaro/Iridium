@@ -2,8 +2,8 @@
 // diseno/pantallas/paridad-capacidades.html): los complementos que cargan las sesiones de Iridium y sus conectores con
 // el estado en palabras, Conectar en la consola de abajo y un interruptor para apagarlos solo en Iridium. Se pide cada
 // vez que se abre la sección, sin gastar; mientras llega, va la última lista que se supo (Q-287), con «Poniéndose al
-// día…». Arriba, el navegador (PA-I5, PA-10): un interruptor para las conversaciones nuevas y con qué navegador va. La
-// PC llega con PA-I6.
+// día…». Arriba, el navegador (PA-I5, PA-10): un interruptor para las conversaciones nuevas y con qué navegador va; y la
+// PC (PA-I6, D-189 › 5 y 6): Windows-MCP, con Instalar en la consola de abajo si falta.
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import {
   accionDe,
@@ -34,6 +34,7 @@ export function Capacidades({ cambiar }: PropsSeccion) {
   return (
     <div className="capacidades">
       <FilaNavegador prendido={ajuste.navegador} poner={(navegador) => poner({ navegador })} />
+      <FilaPc prendido={ajuste.pc} poner={(pc) => poner({ pc })} />
       <Lista ajuste={ajuste} poner={poner} />
     </div>
   )
@@ -90,6 +91,91 @@ function FilaNavegador({ prendido, poner }: { prendido: boolean; poner: (prendid
       <span className="expl">
         Para las conversaciones nuevas. Una página puede traer instrucciones escondidas: prendelo cuando lo
         uses. La extensión te pide permiso por sitio.
+      </span>
+    </Ajuste>
+  )
+}
+
+/**
+ * Usar la PC (D-189 › 5 y 6): Windows-MCP. Sin instalar, el interruptor no se puede prender y la fila tiene Instalar,
+ * que corre en la consola de abajo; al terminar, la fila se pone al día.
+ */
+function FilaPc({ prendido, poner }: { prendido: boolean; poner: (prendido: boolean) => void }) {
+  const [instalada, setInstalada] = useState<boolean | null>(null)
+  const [instalando, setInstalando] = useState(false)
+  /** Se intentó y no quedó instalado. */
+  const [fallo, setFallo] = useState(false)
+  useEffect(() => {
+    void window.iridium
+      .pcInstalada()
+      .catch(() => false)
+      .then(setInstalada)
+  }, [])
+  const instalar = () => {
+    setInstalando(true)
+    setFallo(false)
+    void window.iridium
+      .instalarPc()
+      .catch(() => false)
+      .then((listo) => {
+        setInstalada(listo)
+        setFallo(!listo)
+        // Recién instalado, queda prendido: para eso se instaló.
+        if (listo && !prendido) poner(true)
+      })
+      .finally(() => setInstalando(false))
+  }
+  // Prendido de antes y sin instalar (lo desinstalaron): se ve prendido, pero las sesiones van sin la PC.
+  const falta = instalada === false
+  return (
+    <Ajuste
+      titulo="Usar la PC"
+      detalle="Mouse, teclado y capturas de pantalla"
+      id="ajuste-pc"
+      atributos={{ 'data-pc': prendido ? 'prendido' : 'apagado' }}
+    >
+      <label className="interruptor">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-label="Usar la PC"
+          aria-checked={prendido}
+          checked={prendido}
+          disabled={falta && !prendido}
+          onChange={(e) => poner(e.target.checked)}
+        />
+        {prendido ? 'Prendido' : 'Apagado'}
+      </label>
+      {instalada && (
+        <span className="senal">
+          <Icono nombre="check" />
+          Windows-MCP, instalado
+        </span>
+      )}
+      {falta && (
+        <>
+          <span className={prendido ? 'senal ambar' : 'senal'} role={prendido ? 'status' : undefined}>
+            {prendido && <Icono nombre="espera" />}
+            Windows-MCP · falta instalarlo
+          </span>
+          <button type="button" className="boton chico" disabled={instalando} onClick={instalar}>
+            {instalando ? 'Instalando…' : 'Instalar'}
+          </button>
+        </>
+      )}
+      {instalando && (
+        <span className="expl" role="status">
+          Se está instalando en la consola de abajo; al terminar, esta fila se pone al día.
+        </span>
+      )}
+      {fallo && !instalando && (
+        <span className="expl" role="status">
+          No quedó instalado: mirá en la consola de abajo qué pasó y probá Instalar de nuevo.
+        </span>
+      )}
+      <span className="expl">
+        Se instala una vez, en la consola de abajo. Con la PC prendida, la IA mueve el mouse y escribe:
+        prendelo solo cuando lo uses.
       </span>
     </Ajuste>
   )

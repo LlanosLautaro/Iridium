@@ -77,6 +77,8 @@ export interface DependenciasConversacion {
   apagados?: () => Promise<string[]>
   /** Si las sesiones nuevas van con el navegador del usuario (Capacidades, D-189 › 4). */
   navegador?: () => Promise<boolean>
+  /** Con qué Windows-MCP van las sesiones nuevas (Capacidades, D-189 › 5); null si la PC está apagada o falta instalarla. */
+  pc?: () => Promise<{ ejecutable: string } | null>
   /**
    * El estado del motor antes de abrir una sesión: si no estaba listo, lo vuelve a verificar (el usuario pudo
    * iniciar sesión después de abrir la app). Sin esto, se abre siempre.
@@ -592,6 +594,7 @@ export class Conversaciones {
       const tono = (await this.d.tono?.().catch(() => null)) ?? null
       const apagados = (await this.d.apagados?.().catch(() => null)) ?? []
       const navegador = (await this.d.navegador?.().catch(() => null)) ?? false
+      const pc = (await this.d.pc?.().catch(() => null)) ?? null
       const sesion = this.d.motor.abrir(
         {
           carpeta: ruta,
@@ -601,6 +604,7 @@ export class Conversaciones {
           tono,
           apagados,
           navegador,
+          pc,
         },
         (e) => this.alEvento(p, sesion, e),
       )

@@ -988,6 +988,8 @@ export const CANALES = {
   capacidadesGuardadas: 'capacidades:guardadas',
   conectar: 'capacidades:conectar',
   navegadoresConClaude: 'capacidades:navegadores',
+  pcInstalada: 'capacidades:pc',
+  instalarPc: 'capacidades:instalar-pc',
   pendientes: 'pendientes:proyecto',
   responder: 'pendientes:responder',
   aMedias: 'pendientes:a-medias',
@@ -1202,6 +1204,10 @@ export interface ApiIridium {
   conectar(nombre: string): Promise<VistaCapacidades | null>
   /** Los navegadores con la extensión «Claude» en algún perfil (Chrome, Brave, Edge; D-189 › 4), mirando solo carpetas. */
   navegadoresConClaude(): Promise<Navegador[]>
+  /** Si Windows-MCP está instalado (usar la PC, D-189 › 5). */
+  pcInstalada(): Promise<boolean>
+  /** Instalar (D-189 › 6): uv si falta y Windows-MCP, en la consola de abajo; dice si quedó instalado. */
+  instalarPc(): Promise<boolean>
   /** La lista de «/» de un proyecto, con los usados hace poco (PA-1), sin gastar. */
   comandos(ruta: string): Promise<ListaComandos>
   /** La lista de un proyecto cambió mientras la IA trabajaba (una skill nueva). */

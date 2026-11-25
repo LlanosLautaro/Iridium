@@ -19,6 +19,7 @@ import { actualizableElectron } from './infra/actualizador-electron'
 import { ArchivoArmados } from './infra/armados'
 import { ArchivoArranques } from './infra/arranques'
 import { ArchivoBorradores } from './infra/borradores'
+import { buscarPc } from './infra/capacidades'
 import { ArchivoConfig } from './infra/config'
 import { Consolas } from './infra/consolas'
 import { ESQUEMA_MAQUETA, MaquetasAbiertas } from './infra/diseno/protocolo'
@@ -215,6 +216,31 @@ async function consolaDeIridium(nombre: string, comando: string): Promise<void> 
   if (!consolas.disponible()) throw new Error('La consola de Iridium no cargó.')
   const c = consolas.abrir({ nombre, proyecto: null, cwd: homedir(), comando })
   await consolas.esperar(c.id)
+}
+
+/** Donde se buscan los perfiles de los navegadores y uv (`%LOCALAPPDATA%`; en las pruebas, `IRIDIUM_NAVEGADORES`). */
+const carpetaLocal =
+  process.env.IRIDIUM_NAVEGADORES ?? process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local')
+
+/**
+ * Usar la PC (PA-I6, D-189 › 5 y 6): Windows-MCP y uv en la PC, y su instalación en la consola de abajo. En las pruebas
+ * (`IRIDIUM_PC_INICIO`, una carpeta de muestra en lugar de `%USERPROFILE%`) con el motor falso, Instalar no baja nada:
+ * corre un `echo` y deja un ejecutable de muestra.
+ */
+function crearPc() {
+  const prueba = process.env.IRIDIUM_PC_INICIO
+  const inicio = prueba ?? homedir()
+  const falsa = prueba !== undefined && process.env.IRIDIUM_MOTOR === 'falso'
+  return {
+    buscar: () => buscarPc(inicio, carpetaLocal, falsa ? '' : (process.env.PATH ?? '')),
+    async consola(nombre: string, comando: string) {
+      if (!falsa) return consolaDeIridium(nombre, comando)
+      await consolaDeIridium(nombre, `echo ${nombre}`)
+      const bin = join(inicio, '.local', 'bin')
+      await mkdir(bin, { recursive: true })
+      await writeFile(join(bin, comando.startsWith('winget') ? 'uv.exe' : 'windows-mcp.exe'), '')
+    },
+  }
 }
 
 function crearMotor(): Motor {
@@ -711,8 +737,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
             }),
           }
         : {}),
-      carpetaLocal:
-        process.env.IRIDIUM_NAVEGADORES ?? process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'),
+      carpetaLocal,
+      ...(consolas.disponible() ? { pc: crearPc() } : {}),
       // Abrir (AB-I2): las apps de escritorio de los proyectos se arman solas; la de Iridium, con D-122.
       armados: {
         archivo: new ArchivoArmados(join(carpetaDatos, 'armados.json')),

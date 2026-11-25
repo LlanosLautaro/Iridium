@@ -1,6 +1,7 @@
 // Capacidades en el disco (Paridad, T-28): `capacidades.json` (Q-287), la última lista de Ajustes › Capacidades, para
 // mostrarla al abrir la sección mientras Claude Code dice la nueva, que tarda unos segundos (es un recuerdo: si no está
-// o está roto, se pide como siempre); y en qué navegadores está la extensión «Claude» (D-189 › 4).
+// o está roto, se pide como siempre); en qué navegadores está la extensión «Claude» (D-189 › 4); y si están Windows-MCP
+// y uv (D-189 › 5 y 6).
 import { mkdir, readdir, stat } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { z } from 'zod'
@@ -36,6 +37,42 @@ export async function navegadoresConClaude(local: string): Promise<Navegador[]> 
   }
   const con = await Promise.all(NAVEGADORES.map(tiene))
   return NAVEGADORES.filter((_, i) => con[i])
+}
+
+/** Lo que hay en la PC para usarla (D-189 › 5 y 6): Windows-MCP instalado y uv, con que se instala. */
+export interface PcEnLaPc {
+  /** `windows-mcp.exe`; null si falta instalarlo. */
+  ejecutable: string | null
+  /** `uv.exe`; null si falta (Instalar lo baja antes con winget). */
+  uv: string | null
+}
+
+/**
+ * Busca Windows-MCP donde lo deja `uv tool install` (`%USERPROFILE%\.local\bin`) y uv en el PATH y donde lo dejan winget
+ * y sus instaladores. Recién instalado con winget, uv no está en el PATH de Iridium (es de antes): por eso se mira
+ * también en sus carpetas. `inicio` es `%USERPROFILE%` y `local`, `%LOCALAPPDATA%`.
+ */
+export async function buscarPc(inicio: string, local: string, path = ''): Promise<PcEnLaPc> {
+  const esArchivo = async (r: string) => (await stat(r).catch(() => null))?.isFile() ?? false
+  const primero = async (rutas: string[]) => {
+    for (const r of rutas) if (await esArchivo(r)) return r
+    return null
+  }
+  const winget = join(local, 'Microsoft', 'WinGet', 'Packages')
+  const paquetes = await readdir(winget, { withFileTypes: true }).catch(() => [])
+  const uv = await primero([
+    ...path
+      .split(';')
+      .filter((d) => d.trim() !== '')
+      .map((d) => join(d.trim(), 'uv.exe')),
+    join(local, 'Microsoft', 'WinGet', 'Links', 'uv.exe'),
+    ...paquetes
+      .filter((p) => p.isDirectory() && p.name.startsWith('astral-sh.uv_'))
+      .map((p) => join(winget, p.name, 'uv.exe')),
+    join(inicio, '.local', 'bin', 'uv.exe'),
+    join(inicio, '.cargo', 'bin', 'uv.exe'),
+  ])
+  return { ejecutable: await primero([join(inicio, '.local', 'bin', 'windows-mcp.exe')]), uv }
 }
 
 const Lista = z.object({

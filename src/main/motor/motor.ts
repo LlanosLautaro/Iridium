@@ -115,6 +115,8 @@ export interface OpcionesSesion {
   apagados?: string[]
   /** El navegador del usuario con la extensión «Claude» (Claude in Chrome, D-189 › 4): apagado si no se dice. */
   navegador?: boolean
+  /** Windows-MCP para usar la PC (D-189 › 5), con su ejecutable; null o sin decir, la sesión va sin él. */
+  pc?: { ejecutable: string } | null
 }
 
 export interface SesionMotor {
@@ -198,6 +200,8 @@ export interface OpcionesFalso {
   alApagados?: (carpeta: string, apagados: string[]) => void
   /** Si cada sesión se abre con el navegador (para las pruebas). */
   alNavegador?: (carpeta: string, navegador: boolean) => void
+  /** Con qué Windows-MCP se abre cada sesión; null, sin la PC (para las pruebas). */
+  alPc?: (carpeta: string, pc: { ejecutable: string } | null) => void
 }
 
 /** Los estilos que trae Claude Code (los nombres que usa él), como los informa el motor real. */
@@ -453,10 +457,11 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
 
     estilos: async () => ((estadoFijo ?? { tipo: 'listo' }).tipo === 'listo' ? ESTILOS_FALSOS : null),
 
-    abrir({ carpeta, conversacion, ajuste, tono: tonoInicial, apagados, navegador }, alEvento) {
+    abrir({ carpeta, conversacion, ajuste, tono: tonoInicial, apagados, navegador, pc }, alEvento) {
       let tono = tonoInicial
       o.alApagados?.(carpeta, apagados ?? [])
       o.alNavegador?.(carpeta, navegador ?? false)
+      o.alPc?.(carpeta, pc ?? null)
       const id = conversacion ?? `falsa-${siguiente++}`
       const guardada = guardadas.get(id) ?? {
         carpeta,

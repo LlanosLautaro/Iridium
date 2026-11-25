@@ -24,9 +24,11 @@ import {
 } from '@anthropic-ai/claude-agent-sdk'
 import {
   type CapacidadesSesion,
+  CONECTOR_PC,
   type ConectorSesion,
   complementoDe,
   ESPERA_CONECTORES_MS,
+  HERRAMIENTAS_SACADAS_PC,
   NOMBRE_CONECTOR,
 } from '../../compartido/capacidades'
 import type { CapacidadesMotor, ComandoMotor, Pisa } from '../../compartido/comandos'
@@ -457,6 +459,8 @@ export function describirHerramienta(
     default: {
       const navegador = /^mcp__claude-in-chrome__(.+)$/.exec(nombre)?.[1]
       if (navegador) return enElNavegador(navegador, e)
+      const pc = new RegExp(`^mcp__${CONECTOR_PC}__(.+)$`).exec(nombre)?.[1]
+      if (pc) return enLaPc(pc, e)
       return { accion: 'Usó', objeto: nombre.replace(/^mcp__/, '').replace(/__/g, ' · ') }
     }
   }
@@ -515,6 +519,37 @@ function enElNavegador(
       : (PASOS_NAVEGADOR[herramienta] ?? `usó ${herramienta}`)
   const objeto = herramienta === 'navigate' ? texto('url') : herramienta === 'find' ? texto('query') : null
   return { accion: `En el navegador: ${que}`, objeto: objeto === null ? null : corto(objeto) }
+}
+
+/**
+ * Lo que hizo la IA con cada herramienta de Windows-MCP, en palabras (D-189 › 5: «En la PC: sacó una captura»). Lo
+ * escrito y lo copiado no se muestran: puede ser una clave.
+ */
+const PASOS_PC: Record<string, string> = {
+  Screenshot: 'sacó una captura',
+  Snapshot: 'miró la pantalla',
+  Click: 'hizo clic',
+  Type: 'escribió',
+  MultiEdit: 'escribió en varios campos',
+  MultiSelect: 'eligió varias cosas',
+  Scroll: 'se desplazó',
+  Move: 'movió el mouse',
+  Shortcut: 'usó un atajo',
+  Wait: 'esperó',
+  WaitFor: 'esperó',
+  App: 'abrió o cambió de programa',
+  Process: 'miró los programas abiertos',
+  Clipboard: 'usó el portapapeles',
+  Scrape: 'leyó una página',
+  Notification: 'mostró un aviso',
+  DisplayInventory: 'miró las pantallas',
+  ControlStatus: 'miró si puede usar la PC',
+}
+
+function enLaPc(herramienta: string, e: Record<string, unknown>): { accion: string; objeto: string | null } {
+  const que = PASOS_PC[herramienta] ?? `usó ${herramienta}`
+  const objeto = herramienta === 'App' && typeof e.name === 'string' && e.name !== '' ? e.name : null
+  return { accion: `En la PC: ${que}`, objeto: objeto === null ? null : corto(objeto) }
 }
 
 /** Un comando mandado, como lo guarda Claude Code: `<command-name>/compact</command-name>` y `<command-args>`. */
@@ -693,6 +728,24 @@ export function apagadosDeSesion(apagados: readonly string[] = []): Pick<Options
  */
 export function navegadorDeSesion(prendido = false): Pick<Options, 'extraArgs'> {
   return prendido ? { extraArgs: { chrome: null } } : {}
+}
+
+/**
+ * La PC como conector de la sesión (D-189 › 5): Windows-MCP con el nombre `pc`, sin PowerShell, archivos ni registro
+ * (Claude Code ya los tiene) y sin su aviso de uso. No se registra en Claude Code: lo tiene solo esta sesión.
+ */
+export function pcDeSesion(pc: { ejecutable: string } | null = null): Pick<Options, 'mcpServers'> {
+  if (!pc) return {}
+  return {
+    mcpServers: {
+      [CONECTOR_PC]: {
+        type: 'stdio',
+        command: pc.ejecutable,
+        args: ['serve', '--transport', 'stdio', '--exclude-tools', HERRAMIENTAS_SACADAS_PC.join(',')],
+        env: { ANONYMIZED_TELEMETRY: 'false' },
+      },
+    },
+  }
 }
 
 /** El estado de un conector como lo dice Claude Code, en palabras de Iridium. Uno que sigue conectando, como falla. */
@@ -974,7 +1027,10 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
       }
     },
 
-    abrir({ carpeta, conversacion, instruccion, ajuste, tono, apagados, navegador }, alEvento): SesionMotor {
+    abrir(
+      { carpeta, conversacion, instruccion, ajuste, tono, apagados, navegador, pc },
+      alEvento,
+    ): SesionMotor {
       const cola: { texto: string; fotos: FotoMotor[] }[] = []
       let despertar: (() => void) | null = null
       let terminada = false
@@ -1037,6 +1093,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
         ...tonoDeSesion(tono),
         ...apagadosDeSesion(apagados),
         ...navegadorDeSesion(navegador),
+        ...pcDeSesion(pc),
         ...(opciones.modelo ? { model: opciones.modelo } : {}),
         ...ejecutable,
       }

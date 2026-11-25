@@ -125,6 +125,7 @@ Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el nave
 2026-11-24: definición en borrador e investigación (S-8, `modulos/paridad/definicion.md` › Segunda parte). Se decide en Q-282 a Q-284.
 2026-11-24: PA-I4 (ver y apagar los conectores) probada en Q-287; siguen PA-I5 (el navegador) y PA-I6 (la PC).
 2026-11-24: PA-I5 (el navegador) probada en Q-288; sigue PA-I6 (la PC).
+2026-11-24: PA-I6 (la PC, con Windows-MCP) construida; se prueba en Q-292.
 
 ## T-29 — Mantenimiento: subir los parches
 Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
