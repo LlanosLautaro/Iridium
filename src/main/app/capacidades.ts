@@ -54,6 +54,8 @@ export class Capacidades {
     if (!this.disponible()) return null
     this.ultima ??= (await this.d.guardada?.leer().catch(() => null)) ?? null
     if (!this.ultima) return null
+    // Conectar se puede tocar con la guardada a la vista, antes de que llegue la nueva (paso 8 de Capacidades).
+    if (this.conocidos.size === 0) this.conocidos = new Set(this.ultima.conectores.map((c) => c.nombre))
     const apagados = await this.d.apagados().catch((): string[] => [])
     return this.conApagados(this.ultima, apagados)
   }

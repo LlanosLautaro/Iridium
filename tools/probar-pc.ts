@@ -2,15 +2,16 @@
 // instalado (el de `%USERPROFILE%\.local\bin` o el que se pase con `--exe`). Sin `--gastar`, no gasta: abre una sesión
 // con las opciones que pone Iridium con la PC prendida y dice el estado de `pc` y qué herramientas trae (sin PowerShell,
 // archivos ni registro). Con `--gastar <carpeta vacía fuera de este repo>`, abre una conversación con Haiku que le pide
-// a la IA sacar una captura de la pantalla y decir en una línea qué programa está adelante; gasta un poco de uso.
-// Uso: npx jiti tools/probar-pc.ts [--exe <windows-mcp.exe>] [--gastar <carpeta>]
+// a la IA sacar una captura de la pantalla y decir en una línea qué programa está adelante; gasta un poco de uso. Con
+// `--navegador`, la sesión sin gastar lleva también el navegador (los dos juntos) y dice el estado de `claude-in-chrome`.
+// Uso: npx jiti tools/probar-pc.ts [--exe <windows-mcp.exe>] [--navegador] [--gastar <carpeta>]
 import { mkdir } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { query } from '@anthropic-ai/claude-agent-sdk'
 import { INSTRUCCION_CENTRO } from '../src/main/core/sesiones.ts'
 import type { EventoMotor } from '../src/main/motor/motor.ts'
-import { crearMotorSdk, pcDeSesion } from '../src/main/motor/sdk.ts'
+import { crearMotorSdk, navegadorDeSesion, pcDeSesion } from '../src/main/motor/sdk.ts'
 
 const t0 = Date.now()
 const log = (...a: unknown[]) => console.log(`[${((Date.now() - t0) / 1000).toFixed(1)}s]`, ...a)
@@ -32,7 +33,12 @@ if (carpeta === null) {
   }
   const q = query({
     prompt: entrada(),
-    options: { cwd: homedir(), settingSources: ['user', 'project', 'local'], ...pcDeSesion({ ejecutable }) },
+    options: {
+      cwd: homedir(),
+      settingSources: ['user', 'project', 'local'],
+      ...pcDeSesion({ ejecutable }),
+      ...navegadorDeSesion(process.argv.includes('--navegador')),
+    },
   })
   const termino = (async () => {
     for await (const _ of q) {
@@ -51,6 +57,14 @@ if (carpeta === null) {
         ? JSON.stringify({ estado: pc.status, error: pc.error, herramientas: pc.tools?.map((t) => t.name) })
         : 'sin pc',
     )
+    if (process.argv.includes('--navegador')) {
+      const chrome = lista.find((s) => s.name === 'claude-in-chrome')
+      log(
+        chrome
+          ? JSON.stringify({ navegador: chrome.status, herramientas: chrome.tools?.length })
+          : 'sin navegador',
+      )
+    }
   } finally {
     soltar()
     await termino

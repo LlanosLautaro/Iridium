@@ -14,8 +14,8 @@
 | 5. Diseño técnico | hecho (D-169; Capacidades, D-189) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (D-170) | `06-ui.md` y `diseno/piezas.css` |
 | 7. Construcción | hecho (primera parte: PA-I1 a PA-I3, probadas en Q-250, Q-251 y Q-258); segunda parte, hecho (PA-I4 a PA-I6 probadas en Q-287, Q-288 y Q-292) | este archivo |
-| 8. Calidad | primera parte, hecho (2026-11-22: los casos raros del texto pegado, los tres chats y el teclado; ver Calidad); segunda parte, en curso | este archivo |
-| 9. Lanzamiento | hecho (primera parte; entra con Armar, como cada versión) | este archivo |
+| 8. Calidad | hecho (primera parte, 2026-11-22: los casos raros del texto pegado, los tres chats y el teclado; segunda parte, 2026-11-25: los casos raros de la PC y el navegador, la accesibilidad de Capacidades y la seguridad de la PC; ver Calidad) | este archivo |
+| 9. Lanzamiento | hecho (las dos partes; entran con Armar, como cada versión; con Capacidades, 1.1.0, D-182) | este archivo |
 
 ## En qué estamos ahora
 Definición aprobada e investigación hecha (2026-11-21): los cuatro pedidos entran como Must y todo lo del motor pasa por su frontera; la lista de «/» esconde los comandos que pisan a Iridium y los de la terminal (D-167). La ronda de UX (T-100) y su tanda ya están (2026-11-21).
@@ -28,6 +28,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 **PA-I4 construida** (2026-11-24): Ajustes › Capacidades, después de IA, muestra los complementos (de tu cuenta o de Iridium, con sus skills y conectores) y los conectores con su estado en palabras; los que no andan, primero. **Conectar** corre `claude mcp login` en la consola de abajo, que abre el navegador; al terminar, la fila se pone al día (D-190: `/mcp` mostraba antes la bienvenida de Claude Code). El interruptor apaga un conector solo para las conversaciones nuevas de Iridium, sin tocar la configuración de Claude Code. **Probada en Q-287**, todo bien. Como tardaba en cargar, ahora muestra enseguida la lista de la última vez con «Poniéndose al día…» y la cambia cuando llega la nueva.
 **PA-I5 construida** (2026-11-24): arriba de Capacidades, el interruptor del navegador (apagado de entrada) con qué navegador va o, sin la extensión, el aviso con «Cómo instalarla»; las conversaciones nuevas lo tienen (`--chrome`) y sus pasos se leen «En el navegador: …». **Probada en Q-288**, todo bien: con Brave abierto, la IA abrió example.com en una pestaña y dijo el título. Sigue PA-I6 (la PC).
 **PA-I6 construida** (2026-11-24): debajo del navegador, «Usar la PC» (Windows-MCP): sin instalar, el interruptor no se prende y la fila dice «Windows-MCP · falta instalarlo» con **Instalar**, que corre en la consola de abajo uv (con winget, si falta) y después Windows-MCP; al terminar dice «Windows-MCP, instalado» y queda prendido. Las conversaciones nuevas lo tienen sin PowerShell, archivos ni registro, y sus pasos se leen «En la PC: sacó una captura». Con el real y Haiku, la IA sacó una captura y dijo qué programa estaba adelante. **Probada en Q-292**, todo bien: instalar, la captura y que apagada ya no la tenga. La construcción de Capacidades queda cerrada; sigue su paso 8.
+**Paridad, completa** (2026-11-25): la calidad de Capacidades encontró que Conectar no hacía nada (sin aviso) si se tocaba con la lista de la última vez a la vista, antes de que llegara la nueva: arreglado. Lo demás, en Calidad. Se sube a 1.1.0 (D-182).
 
 ## Ruta
 - [x] Elegir qué del chat de Claude entra y cuándo (D-166)
@@ -39,7 +40,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - [x] Medir la calidad de la primera parte (paso 8)
 - [x] Usar los plugins de Claude Code desde las sesiones (T-28; PA-I4)
 - [x] Usar la PC y el navegador desde las sesiones (T-28; PA-I5 y PA-I6)
-- [ ] Medir la calidad de Capacidades (paso 8, mediano, sola)
+- [x] Medir la calidad de Capacidades (paso 8)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -87,6 +88,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - 2026-11-24 — Q-288: las tres casillas bien; PA-I5 probada con Brave abierto.
 - 2026-11-24 — PA-I6 construida. `infra/capacidades.ts` › `buscarPc`: `windows-mcp.exe` donde lo deja `uv tool install` y uv en el PATH, en `WinGet/Links`, en su paquete de winget o donde lo dejan sus instaladores (recién instalado con winget no está en el PATH de Iridium). La app (`app/capacidades.ts`): `pcInstalada` e `instalarPc`, que corre `INSTALAR_UV` (winget, si falta) y `instalarWindowsMcp(uv)` en dos consolas, una detrás de la otra, solo esos dos comandos, y dice si quedó; dos clics instalan una vez. La frontera: `abrir` con `pc` suma `mcpServers.pc` (`pcDeSesion`: `serve --transport stdio --exclude-tools PowerShell,FileSystem,Registry` y `ANONYMIZED_TELEMETRY=false`); las conversaciones lo reciben solo con `capacidades.pc` prendido y el ejecutable encontrado (si no se puede leer, va sin la PC). Los pasos de Windows-MCP en palabras (`enLaPc`: «En la PC: sacó una captura», «escribió» sin lo escrito, el portapapeles sin lo copiado). La ventana: `FilaPc` como la maqueta, con «Instalando…», la línea de la consola y, si no quedó, qué hacer; recién instalado se prende solo. En las pruebas, `IRIDIUM_PC_INICIO` con el motor falso: Instalar corre un `echo` y deja ejecutables de muestra. Con el real, con un Windows-MCP 0.9.0 en una carpeta temporal (la PC del usuario queda sin instalar, para probar Instalar en Q-292; `tools/probar-pc.ts`): sin gastar, la sesión carga `pc` conectado con 18 herramientas y sin las tres sacadas; con Haiku, «En la PC: sacó una captura» y la IA dijo qué programa estaba adelante. Vitest (`pa6-pc.test.ts`, 19) y Playwright (`pa6-pc.spec.ts`, capturas `test-results/pa6-*.png`) en verde.
 - 2026-11-25 — Q-292: las cuatro casillas bien; PA-I6 probada. La construcción de la segunda parte queda cerrada.
+- 2026-11-25 — Paso 8 de Capacidades (lo tomó el avance solo): ver Calidad, segunda parte. Al correr la suite entera aparecieron 10 pruebas de las actualizaciones en rojo desde T-137 (`cambiar-version.ps1` ya no pone una versión sin los archivos de Electron y las muestras no los tenían): las muestras los llevan ahora (`tests/muestras/version-armada.ts`) y una prueba nueva mira que una versión incompleta no se pone. Paridad completa; 1.1.0.
 
 ## Calidad (paso 8, primera parte, 2026-11-22)
 **Historias.** Cada criterio de la definición tiene su prueba: «/» y la lista (`pa1-comandos`), adjuntar con el +, `Ctrl+U`, arrastrar y pegar una captura (`pa2-adjuntos`), el texto largo pegado (`pa3-pegado`), lo mandado al reabrir, y un motor sin comandos ni fotos que no los ofrece. **Funciona igual en la General y en la de Skills:** `tests/e2e/pa-calidad.spec.ts` pega, abre, saca y manda en esas dos, como en la de un proyecto (la de Ideas es la General). Con el Claude Code real, lo probó el usuario en Q-250, Q-251 y Q-258, y `tools/probar-fotos.ts`. Sin probar con el real: un comando de una skill con una foto (D-169 › 7).
@@ -99,6 +101,21 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 
 **Verificado:** `pnpm test` (964 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` entero (157 pasan; dos que fallaron por la carga de la tanda, `h8-teclado` › los menús y `i6-uso` › Detener angosto, pasan dos veces seguidas solas, y la tercera fue la del `Esc`, arreglada). `pa-calidad.spec.ts` suma 3.
 
+## Calidad (paso 8, segunda parte: Capacidades, 2026-11-25)
+**Historias.** Cada criterio de la definición de Capacidades tiene su prueba: ver y apagar (`pa4-capacidades`), el navegador (`pa5-navegador`) y la PC (`pa6-pc`), en Vitest y con la app abierta. Con el Claude Code real, lo probó el usuario en Q-287, Q-288 y Q-292, y la IA usó la PC desde Iridium (captura, mirada completa, ventanas, mouse y teclado).
+
+**Casos raros.** `tests/e2e/pa-capacidades-calidad.spec.ts` (4 nuevas) y, con el real y sin gastar, `tools/probar-pc.ts` (ahora con `--navegador`):
+- **La PC y el navegador juntos:** con el real, la sesión carga los dos conectados (Windows-MCP con 17 herramientas, Claude in Chrome con 22); en la app, los dos interruptores quedan prendidos y cada fila dice lo suyo.
+- **Windows-MCP desinstalado con el interruptor prendido:** la fila lo dice en ámbar con Instalar, el interruptor se puede apagar (y no se vuelve a prender sin instalar) y las sesiones van sin la PC ni el aviso de los atajos. Con el real, un `windows-mcp.exe` roto o borrado deja el conector «falló» en 1,5 s y la sesión abre igual.
+- **winget sin red o sin winget:** Instalar corre la consola, no encuentra uv y la fila dice «No quedó instalado: mirá en la consola de abajo qué pasó» (prueba de PA-I6); cerrar la consola a mitad de camino termina igual (la consola resuelve al cortarla).
+- **Un conector que falla al conectar:** la consola de `claude mcp login` termina y la lista se pide de nuevo; el conector sigue «falta iniciar sesión». **Encontrado y arreglado (menor):** si la lista de después no llegaba, el error reemplazaba toda la sección; ahora queda la de antes con «Es la lista de la última vez: no se pudo poner al día» y Reintentar, como al abrir.
+- **Encontrado y arreglado (medio):** con la lista de la última vez a la vista (Q-287), Conectar no hacía nada y no decía nada hasta que llegaba la nueva: Iridium aceptaba solo los conectores de una lista recién pedida. Ahora acepta también los de la guardada (los nombres siguen pasando por la regla que no deja romper la línea de la consola). Prueba en Vitest y con la app; la de la app falla sin el arreglo.
+
+**Accesibilidad y UI.** Cada botón e interruptor de la sección tiene nombre («Usar la PC», «Conectar Figma», «Usar Linear»…); `Tab` pasa por todos sin salir del diálogo y `Esc` lo cierra. **Arreglado (menor):** el aviso «falta instalarlo» de la PC y «No encontré la extensión» del navegador no se oían junto al interruptor; ahora lo describen (`aria-describedby`). La nota de abajo, que dice «Iniciá sesión en el navegador que se abrió», es una región viva: se oye al tocar Conectar. Sin piezas ni colores nuevos: el control de estilos pasa.
+
+**Seguridad (P2).** Mirado en el Windows-MCP instalado (0.9.0): con `ANONYMIZED_TELEMETRY=false`, que pone Iridium, no arranca su aviso de uso a PostHog; las capturas quedan en memoria y no se guardan en disco; corre por `stdio`, sin abrir un puerto. Lo que suma la PC no da permisos que la IA no tenga ya: en las sesiones de Iridium ya corre comandos (por eso se sacaron PowerShell, archivos y registro); la herramienta `Process` puede cerrar programas, igual que un comando. El riesgo nuevo es lo que la IA lee en pantalla (puede traer instrucciones), y el límite es el interruptor, apagado de entrada y por sesión, con la línea que lo dice. Instalar corre solo dos comandos fijos; Conectar, solo un nombre de la lista.
+
+**Verificado:** `pnpm test` (1109: 1108 pasan y 1 se salta, como siempre), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` entero (255 pasan, en dos tandas porque la primera se cortó por tiempo; cinco de versión nueva y Actualizar caían por T-137 y quedaron arregladas con las muestras completas; `h8-teclado` › los menús y `or2-ancho`, que fallan a veces con la tanda cargada, pasan solas). El control del framework, sin avisos (marcó Q-291 y Q-292 sin su línea «Procesada»: agregada).
+
 ## Próximo paso
-El paso 8 de Capacidades: los casos raros (Windows-MCP desinstalado con el interruptor prendido, winget sin red, la PC y el navegador juntos, un conector que falla al conectar), la accesibilidad de la sección y la seguridad de la PC (P2). Con eso, Paridad completa y se sube el número del medio (D-182, con el ok del usuario si fuera el primero).
-**Leer antes:** `diseno-tecnico.md` › Segunda parte › Pruebas.
+Paridad completa. Lo que queda abierto, sin fecha: un comando de una skill con una foto con el real (D-169 › 7).

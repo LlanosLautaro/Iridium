@@ -104,7 +104,10 @@ describe('las versiones viejas de GitHub', () => {
   })
 
   it('un borrador (la que se está subiendo) no se toca ni cuenta', () => {
-    const lista = [...Array.from({ length: VERSIONES_PUBLICADAS }, (_, i) => version(i + 1)), version(VERSIONES_PUBLICADAS + 1, true)]
+    const lista = [
+      ...Array.from({ length: VERSIONES_PUBLICADAS }, (_, i) => version(i + 1)),
+      version(VERSIONES_PUBLICADAS + 1, true),
+    ]
     expect(versionesParaBorrar(lista)).toEqual([])
   })
 })

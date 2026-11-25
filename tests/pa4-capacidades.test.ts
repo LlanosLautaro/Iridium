@@ -250,6 +250,11 @@ describe('la app (PA-7 a PA-9)', () => {
     if (guardada?.tipo !== 'ok' || vista.tipo !== 'ok') throw new Error('sin lista')
     expect(guardada.complementos).toEqual(vista.complementos)
     expect(guardada.conectores.find((c) => c.nombre === 'plugin:engineering:linear')?.apagado).toBe(true)
+    // Con la guardada a la vista, Conectar anda antes de que llegue la nueva (paso 8); uno que no está, no.
+    const otra = nueva()
+    await otra.guardada()
+    expect((await otra.conectar('plugin:design:figma')).tipo).toBe('ok')
+    await expect(nueva().conectar('plugin:design:figma')).rejects.toThrow('No es un conector de la lista')
     // Rota, es como si no estuviera.
     await writeFile(archivo, '{ "version": 1, "conectores": "x" }')
     expect(await nueva().guardada()).toBeNull()

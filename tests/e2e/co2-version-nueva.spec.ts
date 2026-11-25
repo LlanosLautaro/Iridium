@@ -5,6 +5,7 @@ import { copyFile, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
+import { armarVersion, propios } from '../muestras/version-armada'
 
 let raiz: string
 let datos: string
@@ -23,7 +24,7 @@ const estado = '# Estado\n\n## Hito actual\n7 — Construcción\n\n## Preguntas 
 
 // Un «Iridium.exe» que se puede abrir sin que se vea nada: rundll32 sin argumentos termina en el acto.
 async function app(carpeta: string, archivo: string) {
-  await mkdir(carpeta, { recursive: true })
+  await armarVersion(carpeta)
   await copyFile('C:\\Windows\\System32\\rundll32.exe', join(carpeta, 'Iridium.exe'))
   await writeFile(join(carpeta, archivo), archivo)
 }
@@ -39,7 +40,7 @@ async function versionLista() {
 /** Espera a que el ayudante (que sigue vivo después de Iridium) termine de poner la versión nueva. */
 async function puesta(): Promise<string> {
   await expect
-    .poll(async () => (await readdir(join(release, 'win-unpacked'))).sort(), { timeout: 20_000 })
+    .poll(async () => propios(join(release, 'win-unpacked')), { timeout: 20_000 })
     .toEqual(['Iridium.exe', 'nueva.txt'])
   return readFile(join(release, 'actualizacion.log'), 'utf8')
 }

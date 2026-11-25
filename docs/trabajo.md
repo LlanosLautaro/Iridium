@@ -120,12 +120,13 @@ Estado: hecho · Fecha: 2026-10-30
 La ventana de Ajustes (D-065).
 
 ## T-28 — Más capacidades de Claude
-Estado: en curso · Frente: Paridad · Fecha: 2026-10-30
+Estado: hecho · Frente: Paridad · Fecha: 2026-10-30
 Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el navegador desde las sesiones de Iridium. Era el frente Capacidades (D-102); desde D-166 es la segunda parte de Paridad.
 2026-11-24: definición en borrador e investigación (S-8, `modulos/paridad/definicion.md` › Segunda parte). Se decide en Q-282 a Q-284.
 2026-11-24: PA-I4 (ver y apagar los conectores) probada en Q-287; siguen PA-I5 (el navegador) y PA-I6 (la PC).
 2026-11-24: PA-I5 (el navegador) probada en Q-288; sigue PA-I6 (la PC).
 2026-11-24: PA-I6 (la PC, con Windows-MCP) construida; se prueba en Q-292.
+Hecho el 2026-11-25: PA-I6 probada en Q-292 y la calidad (paso 8) hecha: Conectar con la lista de la última vez a la vista no hacía nada (arreglado), la PC y el navegador juntos, Windows-MCP roto o desinstalado, la accesibilidad de la sección y la seguridad de la PC (`modulos/paridad/estado.md` › Calidad). Paridad completa, 1.1.0.
 
 ## T-29 — Mantenimiento: subir los parches
 Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
@@ -637,4 +638,4 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-25
 
 ## T-137 — Iridium no arrancaba
 Estado: hecho · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
-Dos armados corrieron juntos en `release/nueva` y quedó puesta una app sin los archivos de Electron (Iridium.exe se cerraba al abrir). Ahora `actualizar.ps1` arma de a uno por carpeta y `cambiar-version.ps1` no pone una versión incompleta (sigue la de antes). En los commits del 2026-11-24 figura como T-133, número que ya tenía una idea tuya.
+Dos armados corrieron juntos en `release/nueva` y quedó puesta una app sin los archivos de Electron (Iridium.exe se cerraba al abrir). Ahora `actualizar.ps1` arma de a uno por carpeta y `cambiar-version.ps1` no pone una versión incompleta (sigue la de antes). En los commits del 2026-11-24 figura como T-133, número que ya tenía una idea tuya. El 2026-11-25, la suite entera mostró 10 pruebas de las actualizaciones en rojo por ese cambio (sus versiones de muestra no tenían los archivos de Electron): ahora los tienen, y una prueba nueva mira que una versión incompleta no se pone.

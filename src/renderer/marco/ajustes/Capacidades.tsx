@@ -63,6 +63,7 @@ function FilaNavegador({ prendido, poner }: { prendido: boolean; poner: (prendid
           role="switch"
           aria-label="Usar el navegador"
           aria-checked={prendido}
+          aria-describedby={encontrados && !con && prendido ? 'navegador-falta' : undefined}
           checked={prendido}
           onChange={(e) => poner(e.target.checked)}
         />
@@ -76,7 +77,7 @@ function FilaNavegador({ prendido, poner }: { prendido: boolean; poner: (prendid
       )}
       {encontrados && !con && prendido && (
         <>
-          <span className="senal ambar" role="status">
+          <span id="navegador-falta" className="senal ambar" role="status">
             <Icono nombre="espera" />
             No encontré la extensión «Claude»
           </span>
@@ -140,6 +141,7 @@ function FilaPc({ prendido, poner }: { prendido: boolean; poner: (prendido: bool
           role="switch"
           aria-label="Usar la PC"
           aria-checked={prendido}
+          aria-describedby={falta ? 'pc-falta' : undefined}
           checked={prendido}
           disabled={falta && !prendido}
           onChange={(e) => poner(e.target.checked)}
@@ -154,7 +156,11 @@ function FilaPc({ prendido, poner }: { prendido: boolean; poner: (prendido: bool
       )}
       {falta && (
         <>
-          <span className={prendido ? 'senal ambar' : 'senal'} role={prendido ? 'status' : undefined}>
+          <span
+            id="pc-falta"
+            className={prendido ? 'senal ambar' : 'senal'}
+            role={prendido ? 'status' : undefined}
+          >
             {prendido && <Icono nombre="espera" />}
             Windows-MCP · falta instalarlo
           </span>
@@ -225,7 +231,14 @@ function Lista({
     setConectando(nombre)
     void window.iridium
       .conectar(nombre)
-      .then((v) => v && setCarga(v))
+      .then((v) => {
+        // Si la lista de después no llega, queda la de antes y lo dice, como al abrir.
+        if (!v || v.tipo === 'error') setAlDia('sin-poner')
+        else {
+          setCarga(v)
+          setAlDia('si')
+        }
+      })
       .catch(() => {})
       .finally(() => setConectando(null))
   }
@@ -366,7 +379,7 @@ function Lista({
           </div>
         </>
       )}
-      <p className="nota-capacidades">
+      <p className="nota-capacidades" aria-live="polite">
         Vale para las conversaciones nuevas: las abiertas siguen como estaban hasta Nueva.
         {conectando && ' Iniciá sesión en el navegador que se abrió; al terminar, esta lista se pone al día.'}
       </p>

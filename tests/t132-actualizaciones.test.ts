@@ -9,6 +9,7 @@ import { debePublicar, REINTENTO_PUBLICAR_MS } from '../src/compartido/actualiza
 import { type Actualizable, Actualizador } from '../src/main/infra/actualizador'
 import { publicarSola } from '../src/main/infra/publicar-sola'
 import { cerrarPuentesDelNavegador } from '../src/main/infra/puente-navegador'
+import { armarVersion, propios } from './muestras/version-armada'
 
 const carpetas: string[] = []
 const procesos: ChildProcess[] = []
@@ -136,8 +137,7 @@ describe('la app de uso diario con el puente del navegador abierto', () => {
   it('el ayudante lo cierra y pone la versión nueva (antes esperaba un minuto y decía «Iridium sigue abierto»)', async () => {
     const release = await temporal()
     const app = join(release, 'win-unpacked')
-    await mkdir(join(release, 'nueva', 'win-unpacked'), { recursive: true })
-    await writeFile(join(release, 'nueva', 'win-unpacked', 'Iridium.exe'), '')
+    await armarVersion(join(release, 'nueva', 'win-unpacked'))
     await writeFile(
       join(release, 'nueva', 'lista.json'),
       JSON.stringify({
@@ -176,8 +176,7 @@ describe('con una sola Iridium terminando de cerrarse', () => {
   it('el ayudante la espera y pone la versión nueva (antes la contaba como ninguna y «Windows no soltó la carpeta»)', async () => {
     const release = await temporal()
     const app = join(release, 'win-unpacked')
-    await mkdir(join(release, 'nueva', 'win-unpacked'), { recursive: true })
-    await writeFile(join(release, 'nueva', 'win-unpacked', 'Iridium.exe'), '')
+    await armarVersion(join(release, 'nueva', 'win-unpacked'))
     await writeFile(
       join(release, 'nueva', 'lista.json'),
       JSON.stringify({

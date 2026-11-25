@@ -9,6 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Actualizador } from '../src/main/infra/actualizador'
 import { carpetaDelActualizador, lanzarVentana } from '../src/main/infra/ventana-actualizando'
 import { VigiaVersionNueva } from '../src/main/infra/version-nueva'
+import { armarVersion, propios } from './muestras/version-armada'
 
 const tools = join(import.meta.dirname, '..', 'tools')
 const POWERSHELL = String.raw`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`
@@ -53,11 +54,7 @@ describe('en la app de uso diario', { timeout: 120_000 }, () => {
     version: '1.0.42',
   }
 
-  async function armar(carpeta: string, archivo: string) {
-    await mkdir(carpeta, { recursive: true })
-    await writeFile(join(carpeta, 'Iridium.exe'), '')
-    await writeFile(join(carpeta, archivo), archivo)
-  }
+  const armar = armarVersion
 
   beforeEach(async () => {
     release = join(trabajo, 'release')

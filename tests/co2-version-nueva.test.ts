@@ -6,15 +6,12 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { leerVersionNueva, VigiaVersionNueva } from '../src/main/infra/version-nueva'
+import { armarVersion, propios } from './muestras/version-armada'
 
 let release: string
 const lista = { fecha: '2026-11-01T14:05:00', commit: 'abc1234', mensaje: 'CO-I2', sinGuardar: false }
 
-async function armar(carpeta: string, archivo: string) {
-  await mkdir(carpeta, { recursive: true })
-  await writeFile(join(carpeta, 'Iridium.exe'), '')
-  await writeFile(join(carpeta, archivo), archivo)
-}
+const armar = armarVersion
 
 function cambiar() {
   execFileSync(
@@ -69,17 +66,26 @@ describe('el ayudante que la pone', { timeout: 30_000 }, () => {
     await armar(join(release, 'nueva', 'win-unpacked'), 'nueva.txt')
     await writeFile(join(release, 'nueva', 'lista.json'), JSON.stringify(lista))
     cambiar()
-    expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'nueva.txt'])
+    expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'nueva.txt'])
     expect((await readdir(release)).sort()).toEqual(['actualizacion.log', 'win-unpacked'])
     expect(await readFile(join(release, 'actualizacion.log'), 'utf8')).toContain(
       'Versión nueva puesta: abc1234 del 2026-11-01T14:05:00.',
     )
   })
 
+  it('una versión a la que le falta un archivo de Electron no se pone: sigue la de antes (T-137)', async () => {
+    await armar(join(release, 'nueva', 'win-unpacked'), 'nueva.txt')
+    await rm(join(release, 'nueva', 'win-unpacked', 'icudtl.dat'))
+    await writeFile(join(release, 'nueva', 'lista.json'), JSON.stringify(lista))
+    expect(() => cambiar()).toThrow()
+    expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'vieja.txt'])
+    expect(await readFile(join(release, 'actualizacion.log'), 'utf8')).toContain('falta icudtl.dat')
+  })
+
   it('sin `lista.json` no toca nada', async () => {
     await armar(join(release, 'nueva', 'win-unpacked'), 'nueva.txt')
     cambiar()
-    expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'vieja.txt'])
+    expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'vieja.txt'])
     expect(await readFile(join(release, 'actualizacion.log'), 'utf8')).toContain(
       'No hay una versión nueva lista',
     )
@@ -112,7 +118,7 @@ describe('el ayudante con la versión anterior trabada (Q-101, reporte)', () => 
     await new Promise((r) => setTimeout(r, 1500))
     try {
       cambiar()
-      expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'nueva.txt'])
+      expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'nueva.txt'])
       const log = await readFile(join(release, 'actualizacion.log'), 'utf8')
       expect(log).toContain('Cierra un proceso suelto de una versión anterior')
       expect(log).toContain('Versión nueva puesta: abc1234')
@@ -138,7 +144,7 @@ describe('el ayudante con la versión anterior trabada (Q-101, reporte)', () => 
     await new Promise((r) => traba.stdout?.once('data', r))
     try {
       cambiar()
-      expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'nueva.txt'])
+      expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'nueva.txt'])
       // La trabada sigue; la que se acaba de sacar se pudo borrar.
       expect((await readdir(release)).filter((c) => c.startsWith('anterior'))).toEqual(['anterior'])
       const log = await readFile(join(release, 'actualizacion.log'), 'utf8')
@@ -173,7 +179,7 @@ describe('la versión que no entró (Defecto 3)', () => {
       traba.kill()
       await new Promise((r) => traba.once('exit', r))
     }
-    expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'vieja.txt'])
+    expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'vieja.txt'])
     const v = await leerVersionNueva(release)
     expect(v?.commit).toBe('abc1234')
     expect(v?.noEntro).toEqual({
@@ -183,7 +189,7 @@ describe('la versión que no entró (Defecto 3)', () => {
 
     // Al próximo cierre entra y el aviso se va con la carpeta `nueva`.
     cambiar()
-    expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'nueva.txt'])
+    expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'nueva.txt'])
     expect(await leerVersionNueva(release)).toBeNull()
   }, 60_000)
 
@@ -219,7 +225,7 @@ describe('una segunda Iridium (T-127)', { timeout: 60_000 }, () => {
     await armar(join(release, 'nueva', 'win-unpacked'), 'nueva.txt')
     await writeFile(join(release, 'nueva', 'lista.json'), JSON.stringify(lista))
     await Promise.all([cambiarAparte(), cambiarAparte()])
-    expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'nueva.txt'])
+    expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'nueva.txt'])
     const log = await readFile(join(release, 'actualizacion.log'), 'utf8')
     expect(log.match(/Versión nueva puesta/g)).toHaveLength(1)
     expect(log.match(/No hay una versión nueva lista/g)).toHaveLength(1)
@@ -265,8 +271,7 @@ describe('Iridium al cerrarse', () => {
     )
     expect(await vigia.ponerAlCerrar(false)).toBe(true)
     await vi.waitFor(
-      async () =>
-        expect((await readdir(join(release, 'win-unpacked'))).sort()).toEqual(['Iridium.exe', 'nueva.txt']),
+      async () => expect(await propios(join(release, 'win-unpacked'))).toEqual(['Iridium.exe', 'nueva.txt']),
       { timeout: 15_000, interval: 300 },
     )
     // El ayudante corre desde esa carpeta y sigue unos segundos después de cambiar las carpetas: se espera a poder borrarla.

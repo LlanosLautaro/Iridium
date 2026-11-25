@@ -4,10 +4,11 @@
 // falla, «No se pudo actualizar» con Reintentar y Ver la consola. Mientras la IA de ese proyecto trabaja, Actualizar
 // queda deshabilitado.
 import { execFileSync } from 'node:child_process'
-import { copyFile, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { type ElectronApplication, _electron as electron, expect, type Page, test } from '@playwright/test'
+import { armarVersion, propios } from '../muestras/version-armada'
 
 let raiz: string
 let datos: string
@@ -79,7 +80,7 @@ test.afterEach(async () => {
 
 // Un «Iridium.exe» que se puede abrir sin que se vea nada: rundll32 sin argumentos termina en el acto.
 async function versionLista(commit: string) {
-  await mkdir(join(release, 'nueva', 'win-unpacked'), { recursive: true })
+  await armarVersion(join(release, 'nueva', 'win-unpacked'))
   await copyFile('C:\\Windows\\System32\\rundll32.exe', join(release, 'nueva', 'win-unpacked', 'Iridium.exe'))
   await writeFile(
     join(release, 'nueva', 'lista.json'),
@@ -125,7 +126,7 @@ test('con commits sin armar aparece Actualizar; arma, se puede cancelar y, con l
   await versionLista(hash)
   await cerrada
   await expect
-    .poll(async () => readdir(join(release, 'win-unpacked')).catch(() => []), { timeout: 20_000 })
+    .poll(async () => propios(join(release, 'win-unpacked')).catch(() => []), { timeout: 20_000 })
     .toEqual(['Iridium.exe'])
   const log = await readFile(join(release, 'actualizacion.log'), 'utf8')
   expect(log).toContain(`Versión nueva puesta: ${hash}`)
@@ -189,7 +190,7 @@ test('solo: con la IA libre arma sin tocar nada y, con la versión lista e Iridi
   await versionLista(ultimo)
   await cerrada
   await expect
-    .poll(async () => readdir(join(release, 'win-unpacked')).catch(() => []), { timeout: 20_000 })
+    .poll(async () => propios(join(release, 'win-unpacked')).catch(() => []), { timeout: 20_000 })
     .toEqual(['Iridium.exe'])
   expect(await readFile(join(release, 'actualizacion.log'), 'utf8')).toContain(
     `Versión nueva puesta: ${ultimo}`,
