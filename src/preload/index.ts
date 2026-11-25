@@ -75,6 +75,7 @@ const api: ApiIridium = {
   capacidadesSesion: () => ipcRenderer.invoke(CANALES.capacidadesSesion),
   capacidadesGuardadas: () => ipcRenderer.invoke(CANALES.capacidadesGuardadas),
   conectar: (nombre) => ipcRenderer.invoke(CANALES.conectar, nombre),
+  navegadoresConClaude: () => ipcRenderer.invoke(CANALES.navegadoresConClaude),
   alCambiarComandos: (f) => escuchar(CANALES.comandosCambio, f),
   pendientes: (ruta) => ipcRenderer.invoke(CANALES.pendientes, ruta),
   responder: (ruta, pedido) => ipcRenderer.invoke(CANALES.responder, ruta, pedido),

@@ -61,6 +61,8 @@ export class Actualizador {
        * electron-updater (el instalador corre desde ahí) y `temporal` donde se copia.
        */
       ventana?: VentanaActualizando & { carpeta: string; pendiente: string; temporal: string }
+      /** Lo que hay que cerrar antes de que corra el instalador: lo que traba la carpeta de la app (T-132). */
+      antesDeInstalar?: () => Promise<void>
     },
   ) {
     o.updater.alBajar((info) => {
@@ -108,6 +110,7 @@ export class Actualizador {
    */
   async ponerAlCerrar(abrir: boolean): Promise<boolean> {
     if (!this.actual) return false
+    await this.o.antesDeInstalar?.().catch(() => {})
     const v = this.o.ventana
     if (v)
       await lanzarVentana(v, {

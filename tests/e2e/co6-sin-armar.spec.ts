@@ -169,13 +169,22 @@ test('solo: con la IA libre arma sin tocar nada y, con la versión lista e Iridi
   await writeFile(join(codigo, 'cambio.txt'), 'a medias')
   await expect(barra.getByRole('button', { name: 'Actualizar' })).toBeVisible({ timeout: 15_000 })
   await win.waitForTimeout(3000)
-  await expect(barra).not.toContainText('Actualizando…')
+  await expect(barra.getByRole('button', { name: 'Actualizar' })).not.toHaveAttribute('title', /Preparando/)
 
   // Commiteado, arma solo; con la versión lista, se reinicia solo con ella.
   git('-c', 'user.name=Prueba', '-c', 'user.email=prueba@ejemplo', 'commit', '-qam', 'T-67: listo')
   const ultimo = git('rev-parse', '--short', 'HEAD')
   expect(ultimo).not.toBe(hash)
-  await expect(barra).toContainText('Actualizando…', { timeout: 20_000 })
+  // Mientras la prepara solo, la barra no dice «Actualizando…»: sigue el botón, que la pondría apenas esté (T-132).
+  await expect(barra.getByRole('button', { name: 'Actualizar' })).toHaveAttribute(
+    'title',
+    /^Preparando la versión nueva/,
+    {
+      timeout: 20_000,
+    },
+  )
+  await expect(barra).not.toContainText('Actualizando…')
+  await win.screenshot({ path: 'test-results/t132-preparando.png' })
   const cerrada = a.waitForEvent('close', { timeout: 70_000 })
   await versionLista(ultimo)
   await cerrada

@@ -454,9 +454,67 @@ export function describirHerramienta(
       return { accion: 'Ordenó sus tareas', objeto: null }
     case 'Skill':
       return { accion: 'Usó la skill', objeto: texto('skill') ?? texto('command') }
-    default:
+    default: {
+      const navegador = /^mcp__claude-in-chrome__(.+)$/.exec(nombre)?.[1]
+      if (navegador) return enElNavegador(navegador, e)
       return { accion: 'Usó', objeto: nombre.replace(/^mcp__/, '').replace(/__/g, ' · ') }
+    }
   }
+}
+
+/** Lo que hizo la IA con cada herramienta de Claude in Chrome, en palabras (`ux.md` › PA-10: «En el navegador: abrió …»). */
+const PASOS_NAVEGADOR: Record<string, string> = {
+  navigate: 'abrió',
+  tabs_create_mcp: 'abrió una pestaña',
+  tabs_close_mcp: 'cerró una pestaña',
+  tabs_context_mcp: 'miró las pestañas',
+  read_page: 'leyó la página',
+  get_page_text: 'leyó la página',
+  find: 'buscó en la página',
+  form_input: 'completó un campo',
+  javascript_tool: 'corrió código en la página',
+  read_console_messages: 'leyó la consola',
+  read_network_requests: 'miró lo que pidió la página',
+  gif_creator: 'grabó la pantalla',
+  upload_image: 'subió una imagen',
+  file_upload: 'subió un archivo',
+  resize_window: 'cambió el tamaño de la ventana',
+  browser_batch: 'hizo varios pasos',
+  shortcuts_list: 'miró los atajos',
+  shortcuts_execute: 'usó un atajo',
+  switch_browser: 'eligió el navegador',
+  select_browser: 'eligió el navegador',
+  list_connected_browsers: 'miró los navegadores',
+}
+
+/** Lo que hizo el mouse o el teclado (`computer`); lo escrito no se muestra: puede ser una clave. */
+const PASOS_COMPUTER: Record<string, string> = {
+  screenshot: 'sacó una captura',
+  zoom: 'sacó una captura',
+  left_click: 'hizo clic',
+  right_click: 'hizo clic',
+  double_click: 'hizo clic',
+  triple_click: 'hizo clic',
+  left_click_drag: 'arrastró',
+  type: 'escribió',
+  key: 'apretó una tecla',
+  scroll: 'se desplazó',
+  scroll_to: 'se desplazó',
+  hover: 'pasó el mouse',
+  wait: 'esperó',
+}
+
+function enElNavegador(
+  herramienta: string,
+  e: Record<string, unknown>,
+): { accion: string; objeto: string | null } {
+  const texto = (k: string) => (typeof e[k] === 'string' && e[k] !== '' ? (e[k] as string) : null)
+  const que =
+    herramienta === 'computer'
+      ? (PASOS_COMPUTER[texto('action') ?? ''] ?? 'usó el mouse y el teclado')
+      : (PASOS_NAVEGADOR[herramienta] ?? `usó ${herramienta}`)
+  const objeto = herramienta === 'navigate' ? texto('url') : herramienta === 'find' ? texto('query') : null
+  return { accion: `En el navegador: ${que}`, objeto: objeto === null ? null : corto(objeto) }
 }
 
 /** Un comando mandado, como lo guarda Claude Code: `<command-name>/compact</command-name>` y `<command-args>`. */
@@ -627,6 +685,14 @@ export function apagadosDeSesion(apagados: readonly string[] = []): Pick<Options
   return apagados.length
     ? { managedSettings: { deniedMcpServers: apagados.map((serverName) => ({ serverName })) } }
     : {}
+}
+
+/**
+ * El navegador del usuario como opción de la sesión (D-189 › 4): `--chrome` suma Claude in Chrome, y Claude Code busca
+ * solo el navegador con la extensión «Claude» (S-8). Apagado, nada.
+ */
+export function navegadorDeSesion(prendido = false): Pick<Options, 'extraArgs'> {
+  return prendido ? { extraArgs: { chrome: null } } : {}
 }
 
 /** El estado de un conector como lo dice Claude Code, en palabras de Iridium. Uno que sigue conectando, como falla. */
@@ -908,7 +974,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
       }
     },
 
-    abrir({ carpeta, conversacion, instruccion, ajuste, tono, apagados }, alEvento): SesionMotor {
+    abrir({ carpeta, conversacion, instruccion, ajuste, tono, apagados, navegador }, alEvento): SesionMotor {
       const cola: { texto: string; fotos: FotoMotor[] }[] = []
       let despertar: (() => void) | null = null
       let terminada = false
@@ -970,6 +1036,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
         ...modeloYEsfuerzo(ajuste),
         ...tonoDeSesion(tono),
         ...apagadosDeSesion(apagados),
+        ...navegadorDeSesion(navegador),
         ...(opciones.modelo ? { model: opciones.modelo } : {}),
         ...ejecutable,
       }

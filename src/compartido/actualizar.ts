@@ -90,3 +90,29 @@ export function queHacerSolo(d: DatosSolo): 'armar' | 'reiniciar' | null {
   if (d.version && !d.version.noEntro && !d.algunaOcupada) return 'reiniciar'
   return null
 }
+
+/** Cuánto se espera para volver a intentar publicar la misma versión (sin internet, GitHub caído). */
+export const REINTENTO_PUBLICAR_MS = 6 * 60 * 60 * 1000
+
+/** La última versión que se mandó a publicar sola, y cuándo. */
+export interface IntentoPublicar {
+  version: string
+  fecha: number
+}
+
+/**
+ * Publicar sola (T-132): la versión que está en uso se sube a GitHub para las copias instaladas, así lo publicado es
+ * siempre lo que el usuario usa. No si se armó con cambios sin commitear (ningún commit la describe) o sin número; la
+ * misma versión no se vuelve a mandar hasta un rato después (si ya está publicada, `tools/publicar.ts` no hace nada).
+ */
+export function debePublicar(d: {
+  version: string
+  commit: string
+  sinGuardar: boolean
+  ultimo: IntentoPublicar | null
+  ahora: number
+}): boolean {
+  if (d.sinGuardar || !/^[0-9a-f]{4,40}$/.test(d.commit)) return false
+  if (!/^\d+\.\d+\.\d+$/.test(d.version) || d.version === '0.1.0') return false
+  return !(d.ultimo?.version === d.version && d.ahora - d.ultimo.fecha < REINTENTO_PUBLICAR_MS)
+}

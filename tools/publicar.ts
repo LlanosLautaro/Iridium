@@ -1,12 +1,13 @@
 // Publica la app de uso diario como versión de GitHub (D-085, D-171, scripts.md › Publicar la versión para compartir):
 // arma su instalador desde `release/win-unpacked` (`tools/instalador.ts`) y lo sube con su `.blockmap` y `latest.yml`.
 // Las copias instaladas la bajan solas con electron-updater (solo lo que cambió) y la ponen al cerrar Iridium.
-// Publica lo que marca `main` (lo que se armó por última vez, D-070); si `main` no está en GitHub, lo sube.
+// Publica lo que marca `main` (lo que se armó por última vez, D-070); si `main` no está en GitHub, lo sube. Con
+// `--commit`, ese: la app de uso diario se publica sola con el commit de la versión en uso (T-132).
 // Con `--desde <carpeta>`, la versión armada en otra carpeta (`tools/actualizar.ps1 -Release <carpeta>`): la de
 // `nueva`, con el commit de su `lista.json`, o, si ya se puso, la de `win-unpacked` con `--commit`. Sirve para publicar
 // sin cambiar la app de uso diario.
 // La sesión de GitHub es la de git (D-081): si no hay, git abre su ventana.
-// Uso: node --experimental-strip-types tools/publicar.ts [--repo dueño/nombre] [--desde carpeta [--commit c]]
+// Uso: node --experimental-strip-types tools/publicar.ts [--repo dueño/nombre] [--commit c] [--desde carpeta]
 import { execFileSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { mkdtemp, readFile, rm, stat } from 'node:fs/promises'
@@ -76,8 +77,9 @@ const encabezados = {
   'X-GitHub-Api-Version': '2022-11-28',
 }
 
-// La etiqueta apunta al commit publicado: tiene que estar en GitHub.
-if (!desde) {
+// La etiqueta apunta al commit publicado: tiene que estar en GitHub. Con `--commit` y sin `--desde` (la app de uso
+// diario la publica sola, T-132), el commit de la versión en uso, que `main` ya puede haber pasado.
+if (!desde && largo === git('rev-parse', 'main')) {
   const remoto = execFileSync('git', ['ls-remote', 'origin', 'refs/heads/main'], { encoding: 'utf8' }).split(
     '\t',
   )[0]

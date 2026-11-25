@@ -2,27 +2,107 @@
 // diseno/pantallas/paridad-capacidades.html): los complementos que cargan las sesiones de Iridium y sus conectores con
 // el estado en palabras, Conectar en la consola de abajo y un interruptor para apagarlos solo en Iridium. Se pide cada
 // vez que se abre la sección, sin gastar; mientras llega, va la última lista que se supo (Q-287), con «Poniéndose al
-// día…». El navegador y la PC llegan con PA-I5 y PA-I6.
-import { useCallback, useEffect, useRef, useState } from 'react'
+// día…». Arriba, el navegador (PA-I5, PA-10): un interruptor para las conversaciones nuevas y con qué navegador va. La
+// PC llega con PA-I6.
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import {
   accionDe,
   cambiarApagado,
   deDonde,
   detalleComplemento,
   estadoEnPalabras,
+  type Navegador,
   nombreVisible,
   ordenarComplementos,
   ordenarConectores,
+  PAGINA_EXTENSION_CLAUDE,
+  textoNavegador,
   type VistaCapacidades,
 } from '../../../compartido/capacidades'
+import type { AjusteCapacidades } from '../../../compartido/puente'
 import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
 import type { PropsSeccion } from '../Ajustes'
+import { Ajuste } from './Ajuste'
 
 type Carga = { tipo: 'cargando' } | VistaCapacidades
 
 export function Capacidades({ cambiar }: PropsSeccion) {
   const ajuste = usarEstado((e) => e.preferencias.capacidades)
+  const poner = (cambio: Partial<AjusteCapacidades>) =>
+    void cambiar({ capacidades: { ...ajuste, ...cambio } })
+  return (
+    <div className="capacidades">
+      <FilaNavegador prendido={ajuste.navegador} poner={(navegador) => poner({ navegador })} />
+      <Lista ajuste={ajuste} poner={poner} />
+    </div>
+  )
+}
+
+/** El navegador (PA-10, D-189 › 4): el interruptor, con qué navegador va y, si ninguno tiene la extensión, el aviso. */
+function FilaNavegador({ prendido, poner }: { prendido: boolean; poner: (prendido: boolean) => void }) {
+  const [encontrados, setEncontrados] = useState<Navegador[] | null>(null)
+  useEffect(() => {
+    void window.iridium
+      .navegadoresConClaude()
+      .catch((): Navegador[] => [])
+      .then(setEncontrados)
+  }, [])
+  const con = encontrados && textoNavegador(encontrados)
+  return (
+    <Ajuste
+      titulo="Navegador"
+      detalle="La IA abre páginas, lee y hace clic en tu navegador, con tus cuentas"
+      id="ajuste-navegador"
+      atributos={{ 'data-navegador': prendido ? 'prendido' : 'apagado' }}
+    >
+      <label className="interruptor">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-label="Usar el navegador"
+          aria-checked={prendido}
+          checked={prendido}
+          onChange={(e) => poner(e.target.checked)}
+        />
+        {prendido ? 'Prendido' : 'Apagado'}
+      </label>
+      {con && (
+        <span className="senal">
+          <Icono nombre="check" />
+          {con}
+        </span>
+      )}
+      {encontrados && !con && prendido && (
+        <>
+          <span className="senal ambar" role="status">
+            <Icono nombre="espera" />
+            No encontré la extensión «Claude»
+          </span>
+          <span className="expl">
+            La busqué en Chrome, Brave y Edge. El interruptor queda prendido: vale cuando la instales.
+          </span>
+          <a className="boton chico" href={PAGINA_EXTENSION_CLAUDE} target="_blank" rel="noreferrer">
+            Cómo instalarla
+          </a>
+        </>
+      )}
+      <span className="expl">
+        Para las conversaciones nuevas. Una página puede traer instrucciones escondidas: prendelo cuando lo
+        uses. La extensión te pide permiso por sitio.
+      </span>
+    </Ajuste>
+  )
+}
+
+/** Los complementos y los conectores (PA-7 a PA-9). */
+function Lista({
+  ajuste,
+  poner,
+}: {
+  ajuste: AjusteCapacidades
+  poner: (cambio: Partial<AjusteCapacidades>) => void
+}): ReactNode {
   const [carga, setCarga] = useState<Carga>({ tipo: 'cargando' })
   const [conectando, setConectando] = useState<string | null>(null)
   /** Se muestra la lista guardada y se está pidiendo la nueva (`poniendo`), o la nueva no llegó (`sin-poner`). */
@@ -65,16 +145,11 @@ export function Capacidades({ cambiar }: PropsSeccion) {
   }
 
   const usar = (nombre: string, prendido: boolean) =>
-    void cambiar({
-      capacidades: {
-        ...ajuste,
-        conectoresApagados: cambiarApagado(ajuste.conectoresApagados, nombre, prendido),
-      },
-    })
+    poner({ conectoresApagados: cambiarApagado(ajuste.conectoresApagados, nombre, prendido) })
 
   if (carga.tipo === 'cargando')
     return (
-      <div className="capacidades" role="status" aria-busy="true" aria-label="Leyendo lo que tiene la IA">
+      <div role="status" aria-busy="true" aria-label="Leyendo lo que tiene la IA">
         {[0, 1, 2, 3].map((n) => (
           <div key={n} className="silueta-capacidad">
             <span className="linea-silueta" />
@@ -101,17 +176,15 @@ export function Capacidades({ cambiar }: PropsSeccion) {
 
   if (carga.complementos.length === 0 && carga.conectores.length === 0)
     return (
-      <div className="capacidades">
-        <p className="nota-capacidades">
-          La IA usa solo lo de Claude Code. Los complementos se suman en claude.ai.
-        </p>
-      </div>
+      <p className="nota-capacidades">
+        La IA usa solo lo de Claude Code. Los complementos se suman en claude.ai.
+      </p>
     )
 
   // El orden es el de cuando se abrió: apagar uno no lo mueve de lugar.
   const conectores = ordenarConectores(carga.conectores)
   return (
-    <div className="capacidades" aria-busy={alDia === 'poniendo'}>
+    <div aria-busy={alDia === 'poniendo'}>
       {alDia === 'poniendo' && (
         <p className="nota-capacidades" role="status">
           Poniéndose al día…

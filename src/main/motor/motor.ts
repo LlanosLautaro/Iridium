@@ -113,6 +113,8 @@ export interface OpcionesSesion {
   tono: string | null
   /** Los conectores apagados en Iridium (D-189 › 2): esta sesión no los carga. */
   apagados?: string[]
+  /** El navegador del usuario con la extensión «Claude» (Claude in Chrome, D-189 › 4): apagado si no se dice. */
+  navegador?: boolean
 }
 
 export interface SesionMotor {
@@ -194,6 +196,8 @@ export interface OpcionesFalso {
   consola?: (nombre: string, comando: string) => Promise<void>
   /** Los conectores apagados con que se abre cada sesión (para las pruebas). */
   alApagados?: (carpeta: string, apagados: string[]) => void
+  /** Si cada sesión se abre con el navegador (para las pruebas). */
+  alNavegador?: (carpeta: string, navegador: boolean) => void
 }
 
 /** Los estilos que trae Claude Code (los nombres que usa él), como los informa el motor real. */
@@ -449,9 +453,10 @@ export function crearMotorFalso(o: OpcionesFalso = {}): Motor {
 
     estilos: async () => ((estadoFijo ?? { tipo: 'listo' }).tipo === 'listo' ? ESTILOS_FALSOS : null),
 
-    abrir({ carpeta, conversacion, ajuste, tono: tonoInicial, apagados }, alEvento) {
+    abrir({ carpeta, conversacion, ajuste, tono: tonoInicial, apagados, navegador }, alEvento) {
       let tono = tonoInicial
       o.alApagados?.(carpeta, apagados ?? [])
+      o.alNavegador?.(carpeta, navegador ?? false)
       const id = conversacion ?? `falsa-${siguiente++}`
       const guardada = guardadas.get(id) ?? {
         carpeta,

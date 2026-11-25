@@ -478,12 +478,12 @@ function Actualizar() {
 
   const armar = async () => {
     setError(null)
-    ponerPedido({ antes: version?.fecha ?? null })
+    const antes = version?.fecha ?? null
+    // El pedido va después: con Reintentar, el fallo de la vez anterior todavía está y lo borraría en el acto. Cuando
+    // `armar` responde, el estado nuevo (armando) ya llegó.
     const r = await window.iridium.armar()
-    if (r.tipo === 'error') {
-      setError(r.mensaje)
-      ponerPedido(null)
-    }
+    if (r.tipo === 'error') setError(r.mensaje)
+    else ponerPedido({ antes })
   }
   const actualizar = () => {
     if (estado.tipo === 'disponible' && estado.lista) reiniciarAhora()
@@ -513,15 +513,36 @@ function Actualizar() {
         </button>
       </span>
     )
+  // «Actualizando…» solo cuando de verdad empezó: tocaste Actualizar o Iridium se está reiniciando. Mientras la versión
+  // nueva se prepara sola, el botón sigue ahí: tocarlo la pone apenas esté.
+  if (reiniciando)
+    return (
+      <span className="it actualizar-it">
+        <span className="armando">
+          <Icono nombre="sync" gira />
+          Actualizando…
+        </span>
+      </span>
+    )
+  if (estado.tipo === 'armando' && !pedido)
+    return (
+      <span className="it actualizar-it">
+        <button
+          type="button"
+          className="boton secundario chico"
+          title={`Preparando la versión nueva (${tiempoArmando(estado.desde, ahora) || 'recién empieza'}); entra sola cuando ninguna IA trabaje y no uses Iridium un rato. Actualizar la pone apenas esté lista`}
+          onClick={() => void armar()}
+        >
+          <Icono nombre="bajar" />
+          Actualizar
+        </button>
+      </span>
+    )
   if (estado.tipo === 'armando')
     return (
       <span
         className="it actualizar-it"
-        title={
-          pedido
-            ? 'La app se sigue usando; al terminar, se reinicia sola'
-            : 'La app se sigue usando; la versión nueva entra sola cuando ninguna IA trabaje y no uses Iridium un rato'
-        }
+        title="La app se sigue usando; al terminar de prepararla, se reinicia sola"
       >
         <span className="armando">
           <Icono nombre="sync" gira />
@@ -540,7 +561,7 @@ function Actualizar() {
       <button
         type="button"
         className="boton secundario chico"
-        disabled={bloqueado || reiniciando}
+        disabled={bloqueado}
         title={
           bloqueado
             ? 'Espera a que la IA de Iridium termine'
@@ -550,10 +571,14 @@ function Actualizar() {
         }
         onClick={actualizar}
       >
-        <Icono nombre={reiniciando ? 'sync' : 'bajar'} gira={reiniciando} />
-        {reiniciando ? 'Reiniciando…' : 'Actualizar'}
+        <Icono nombre="bajar" />
+        Actualizar
       </button>
       {bloqueado && <span className="motivo">espera a que la IA de Iridium termine</span>}
+      {/* Ya se intentó y no entró: sin esto, el botón parece prometer algo que acaba de fallar. */}
+      {estado.tipo === 'disponible' && version?.noEntro && !alTerminar && (
+        <span className="motivo">la última vez no entró</span>
+      )}
       {alTerminar && <span className="motivo">se reinicia cuando terminen las sesiones</span>}
     </span>
   )

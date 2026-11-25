@@ -145,6 +145,28 @@ export function detalleComplemento(c: ComplementoSesion): string {
   return partes.filter((p): p is string => p !== null).join(' · ')
 }
 
+/** La extensión «Claude» de Anthropic, la que usa Claude in Chrome (D-189 › 4): por su id se la busca en los perfiles. */
+export const ID_EXTENSION_CLAUDE = 'fcoeoabgfenejglbffodgkkbkcdhcgfn'
+
+/** La página de la extensión, para «Cómo instalarla» (`ux.md` › Navegador sin la extensión). */
+export const PAGINA_EXTENSION_CLAUDE = `https://chromewebstore.google.com/detail/${ID_EXTENSION_CLAUDE}`
+
+/** Los navegadores donde se busca la extensión, en el orden en que se nombran. */
+export const NAVEGADORES = ['Chrome', 'Brave', 'Edge'] as const
+export type Navegador = (typeof NAVEGADORES)[number]
+
+/**
+ * Con qué navegador va la IA, en palabras: «Brave, con la extensión «Claude»»; con dos, «Brave y Edge, …». null si
+ * ninguno la tiene (la fila muestra el aviso).
+ */
+export function textoNavegador(encontrados: readonly Navegador[]): string | null {
+  if (encontrados.length === 0) return null
+  const nombres = NAVEGADORES.filter((n) => encontrados.includes(n))
+  const lista =
+    nombres.length === 1 ? nombres[0] : `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`
+  return `${lista}, con la extensión «Claude»`
+}
+
 /** La lista de apagados con uno prendido (sale) o apagado (entra, una sola vez). */
 export function cambiarApagado(apagados: readonly string[], nombre: string, prendido: boolean): string[] {
   const sin = apagados.filter((n) => n !== nombre)

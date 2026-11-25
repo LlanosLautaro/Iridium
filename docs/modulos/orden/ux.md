@@ -116,7 +116,10 @@ Cada pantalla con su wireframe y sus estados. Los wireframes dicen qué va y dó
 |---|---|---|
 | Al día | nada | — |
 | Hay cambios sin armar, o una versión nueva lista (armada, o bajada de GitHub en una copia compartida) | **▲ Actualizar**, con el detalle en el título («Trae «…» (abc123) y lo anterior que falte») | Arma si hace falta y reinicia |
-| Armando | «Actualizando… · 1 min» con el ícono girando y **Cancelar** | La app se sigue usando; al terminar, reinicia sola |
+| Armando solo (T-67) | **Actualizar**, con «Preparando la versión nueva» en el título (T-132) | Tocarlo la pone apenas esté |
+| Armando después de tocar Actualizar | «Actualizando… · 1 min», con el ícono girando, y **Cancelar** | La app se sigue usando; al terminar, reinicia sola |
+| Reiniciando | «Actualizando…» | Se cierra y la ventanita de T-128 sigue |
+| La versión lista ya no entró una vez | **Actualizar** y, al lado, «la última vez no entró» (el motivo en el título) | Se reintenta al tocarlo o al cerrar |
 | Hay sesiones trabajando al reiniciar | La confirmación de F-6, con **Esperar** y **Reiniciar igual** | Esperar deja la versión lista y reinicia sola cuando terminan |
 | Falló el armado | chip rojo «No se pudo actualizar», el motivo en el título, **Reintentar** y **Ver la consola** | — |
 | La IA de Iridium está trabajando | **Actualizar** deshabilitado: «Espera a que la IA de Iridium termine» | No arma a mitad de camino (como hoy) |

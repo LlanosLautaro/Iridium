@@ -27,6 +27,8 @@ import { ArchivoEscritos } from './infra/escritos'
 import { Fotos } from './infra/fotos'
 import { imagenesElectron } from './infra/imagenes'
 import { abrirEnNavegador } from './infra/navegador'
+import { publicarSola } from './infra/publicar-sola'
+import { cerrarPuentesDelNavegador } from './infra/puente-navegador'
 import { leerCarpetas } from './infra/raiz'
 import { Registro } from './infra/registro'
 import { ArchivoRevision } from './infra/revision/datos'
@@ -73,6 +75,10 @@ protocol.registerSchemesAsPrivileged([
   { scheme: ESQUEMA_MAQUETA, privileges: { standard: true, supportFetchAPI: false } },
 ])
 if (process.env.IRIDIUM_DATOS) app.setPath('userData', join(carpetaDatos, 'electron'))
+// La app armada arranca parada en su carpeta (el acceso directo, el ayudante que la abre) y lo que lanza la hereda: un
+// VS Code o una consola que siga abierta después de Iridium traba esa carpeta y la versión nueva no entra («Windows no
+// soltó la carpeta», T-132). Se para en la carpeta del usuario, que ninguna actualización mueve.
+if (app.isPackaged) process.chdir(homedir())
 
 /**
  * Las carpetas por defecto (D-083): la de proyectos y la carpeta Iridium, en Documentos. Con IRIDIUM_DATOS, dentro de
@@ -275,6 +281,8 @@ function carpetaRelease(): string | null {
   return basename(carpetaApp) === 'win-unpacked' ? dirname(carpetaApp) : null
 }
 const release = carpetaRelease()
+/** Cuánto después de abrir se publica sola la versión en uso (T-132). */
+const PUBLICAR_DESPUES_MS = 5 * 60_000
 /** Un script de `tools/` que va con la app armada (sus recursos): el ayudante y la ventanita de la versión nueva. */
 const deTools = (archivo: string) =>
   app.isPackaged ? join(process.resourcesPath, archivo) : join(app.getAppPath(), 'tools', archivo)
@@ -609,6 +617,20 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
     const leida = await config.leer()
     zoom = leida.zoom
     if (release) vigiaSinArmar = new VigiaSinArmar(dirname(release), release)
+    // La versión en uso se publica sola para la otra PC (T-132), un rato después de abrir: que no compita con el
+    // arranque. Las pruebas no publican (corren sin armar o escondidas).
+    if (release && app.isPackaged && !oculta && process.env.IRIDIUM_PUBLICAR !== 'no')
+      setTimeout(() => {
+        void publicarSola({
+          codigo: dirname(release),
+          archivo: join(carpetaDatos, 'publicar.json'),
+          version: app.getVersion(),
+          commit: __ARMADO__.commit,
+          sinGuardar: __ARMADO__.sinGuardar,
+        })
+          .then((l) => l && registro.escribir(`Publicar: manda ${app.getVersion()} a GitHub`))
+          .catch((e) => registro.escribir(`Publicar: no se pudo lanzar (${e})`))
+      }, PUBLICAR_DESPUES_MS)
     const actualizador = instalada
       ? new Actualizador({
           updater: actualizableElectron((t) => registro.escribir(t)),
@@ -622,6 +644,10 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
               process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'),
             ),
             temporal: tmpdir(),
+          },
+          antesDeInstalar: async () => {
+            const n = await cerrarPuentesDelNavegador(dirname(process.execPath))
+            if (n) registro.escribir(`Actualizaciones: cerrado el puente del navegador (${n})`)
           },
         })
       : null
@@ -675,6 +701,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
       segundosSinUso: () => uso.segundosSinUsar(),
       arranques: new ArchivoArranques(join(carpetaDatos, 'arranques.json')),
       archivoCapacidades: join(carpetaDatos, 'capacidades.json'),
+      carpetaLocal:
+        process.env.IRIDIUM_NAVEGADORES ?? process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'),
       // Abrir (AB-I2): las apps de escritorio de los proyectos se arman solas; la de Iridium, con D-122.
       armados: {
         archivo: new ArchivoArmados(join(carpetaDatos, 'armados.json')),

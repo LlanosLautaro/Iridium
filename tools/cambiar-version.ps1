@@ -51,13 +51,27 @@ function DeLaCarpeta($proceso, [string]$carpeta) {
   $ruta -and $ruta.StartsWith("$carpeta\", [StringComparison]::OrdinalIgnoreCase)
 }
 
+# Se cuenta siempre como `@(ProcesosDeLaApp).Count`: con un solo proceso, PowerShell devuelve el proceso suelto y su
+# `.Count` sale vacío. Así, con Iridium terminando de cerrarse (queda solo él), el ayudante no lo esperaba y Windows no
+# soltaba la carpeta (T-132).
 function ProcesosDeLaApp([string]$carpeta = $app) {
   @(Get-CimInstance Win32_Process | Where-Object { DeLaCarpeta $_ $carpeta })
 }
 
+# El puente de la extensión de Claude con el navegador (PA-I5): lo abre el navegador con el Claude Code de la app y
+# sigue vivo mientras el navegador esté abierto, aunque Iridium se cierre. Se cierra: el navegador lo vuelve a abrir
+# cuando lo necesita, ya desde la versión nueva (la ruta es la misma).
+function CerrarAnfitriones([string]$carpeta) {
+  foreach ($p in @(ProcesosDeLaApp $carpeta | Where-Object { $_.CommandLine -match '--chrome-native-host' })) {
+    Anotar "Cierra el puente del navegador ($($p.ProcessId))."
+    Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+  }
+}
+
 # Los procesos internos de Electron (`--type=…`) que quedaron sin su Iridium: sin él no hacen nada y traban la carpeta.
 function CerrarHuerfanos([string]$carpeta) {
-  $todos = ProcesosDeLaApp $carpeta
+  CerrarAnfitriones $carpeta
+  $todos = @(ProcesosDeLaApp $carpeta)
   if (@($todos | Where-Object { $_.CommandLine -notmatch '--type=' }).Count -gt 0) { return }
   foreach ($p in $todos) {
     Anotar "Cierra un proceso suelto de una versión anterior ($($p.ProcessId))."
@@ -77,9 +91,10 @@ function QuitarAnteriores {
 
 # Mover una carpeta falla mientras Windows no suelta los archivos de un proceso que recién terminó: se reintenta.
 # Con `Directory.Move`, que la cambia de nombre entera o no la toca: `Move-Item`, si un archivo está trabado, mueve
-# los demás de a uno y deja la app partida en dos, sin su Iridium.exe (Defecto 3).
+# los demás de a uno y deja la app partida en dos, sin su Iridium.exe (Defecto 3). Hasta 20 s: la publicación sola
+# (T-132) copia la app y la tiene unos segundos.
 function Mover([string]$desde, [string]$hasta) {
-  for ($i = 0; $i -lt 20; $i++) {
+  for ($i = 0; $i -lt 40; $i++) {
     try { [IO.Directory]::Move($desde, $hasta); return $true } catch { Start-Sleep -Milliseconds 500 }
   }
   $false
@@ -130,11 +145,11 @@ if (-not (Test-Path -LiteralPath $lista) -or -not (Test-Path -LiteralPath (Join-
 
 # Iridium se está cerrando: termina en un momento. Si en un minuto sigue algo abierto, se deja para el próximo cierre.
 $limite = (Get-Date).AddSeconds(60)
-while ((ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) {
+while (@(ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) {
   CerrarHuerfanos $app
   Start-Sleep -Milliseconds 300
 }
-if ((ProcesosDeLaApp).Count -gt 0) {
+if (@(ProcesosDeLaApp).Count -gt 0) {
   NoEntro 'Iridium sigue abierto (¿otra ventana de Iridium?): la versión nueva queda lista para cuando lo cierres del todo.'
   exit 1
 }

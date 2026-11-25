@@ -197,6 +197,7 @@
 | D-188 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 2; Q-282 a Q-284 | Capacidades: el navegador es el del usuario con la extensión de Claude, y la definición queda aprobada | vigente |
 | D-189 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, pasos 4 y 5; Q-285, Q-286 | La PC con Windows-MCP, y cómo se construyen las Capacidades | vigente (Conectar, cambiado por D-190) |
 | D-190 | 2026-11-24 | Paridad (Capacidades, T-28) | Paridad, paso 7 (PA-I4) | Conectar con `claude mcp login`, y los conectores sin configurar | vigente |
+| D-191 | 2026-11-24 | general (Compartir) | 10, a pedido del usuario (T-132) | La versión en uso se publica sola en GitHub | vigente (precisa D-085 y D-171) |
 
 ---
 
@@ -3633,3 +3634,15 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** Conectar corre `claude mcp login "<conector>"` en la consola de adentro, que abre el navegador y espera la vuelta, sin pantallas antes; vale también para los de claude.ai (su página dice «conectado» a conectores que las sesiones del SDK ven sin sesión: el inicio lleva `product_surface=sdk-ts`). Los sin dirección dicen «sin configurar», sin botón, y los apagados en Claude Code, «apagado en Claude Code». Los interruptores se guardan como cualquier preferencia, sin un canal propio.
 **Motivo:** un paso menos y nada que el usuario tenga que contestar en una consola; y no mostrar como falla lo que no tiene arreglo desde Iridium.
 **Consecuencias:** `modulos/paridad/diseno-tecnico.md` (decisión 3, Datos, Qué expone, Conectar) y `ux.md` (los estados), al día. Que el inicio de sesión termine bien y la sesión de Iridium vea el conector lo prueba el usuario en Q-287.
+
+## D-191 — La versión en uso se publica sola en GitHub
+- **Fecha:** 2026-11-24
+- **Ámbito:** general (frente Compartir; precisa D-085 y D-171)
+- **Hito o paso:** 10, a pedido del usuario (T-132)
+- **Estado:** vigente
+
+**Contexto:** la otra PC se actualiza desde las versiones publicadas en GitHub (D-171), pero publicar era `pnpm publicar` a mano: el 2026-11-24 la publicada era la 1.0.14 y el usuario usaba la 1.0.24. El usuario: «mejor que siempre se suba a GitHub lo último, tal como lo que yo uso».
+**Opciones consideradas:** publicar cada versión en cuanto entra en uso · publicar una vez por día · seguir a mano.
+**Decisión:** la app de uso diario publica sola la versión que está usando, cinco minutos después de abrir, con `tools/publicar.ts --commit <el de la versión>`, suelto y escondido (lo que escribe queda en `release/publicar.log`). No publica una versión armada con cambios sin commitear (ningún commit la describe) ni una que ya está publicada; si no pudo (sin internet), lo reintenta pasadas seis horas. Las copias instaladas nunca publican.
+**Motivo:** lo publicado es siempre lo que el usuario usa, sin acordarse de nada; la otra PC baja solo lo que cambió (unos MB).
+**Consecuencias:** cada versión sube su instalador entero (unos 220 MB) a GitHub, en segundo plano. Una versión puesta con `pnpm volver` tiene un número menor: si ya estaba publicada no se repite, y la otra PC no vuelve atrás sola. `pnpm publicar` sigue para hacerlo ya.

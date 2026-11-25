@@ -87,7 +87,7 @@ import {
 } from '../infra/armados'
 import type { ArchivoArranques } from '../infra/arranques'
 import type { ArchivoBorradores } from '../infra/borradores'
-import { archivoCapacidades } from '../infra/capacidades'
+import { archivoCapacidades, navegadoresConClaude } from '../infra/capacidades'
 import {
   type CarpetasEnDisco,
   moverCarpeta,
@@ -212,6 +212,8 @@ export interface Servicios {
   arranques: ArchivoArranques
   /** La última lista de Ajustes › Capacidades (`capacidades.json`, Q-287); sin ella, no se recuerda entre aperturas. */
   archivoCapacidades?: string
+  /** Donde se buscan los perfiles de los navegadores (`%LOCALAPPDATA%`; en las pruebas, `IRIDIUM_NAVEGADORES`). */
+  carpetaLocal?: string
   /** Solo pruebas (`IRIDIUM_ARRANQUE_EN`): el primer momento del arranque, a tantos segundos de abrir. */
   arranqueEnSegundos?: number
   /** Solo pruebas (`IRIDIUM_AVANCE_SIN_USAR`): los segundos sin usar del avance solo, que mira cada segundo. */
@@ -499,6 +501,7 @@ export function registrarPuente(s: Servicios): Puente {
     ajuste: async (ruta) => (await s.config.leer()).ajustesIa[ruta] ?? { modelo: null, esfuerzo: null },
     tono: async () => (await s.config.leer()).tono || null,
     apagados: async () => (await s.config.leer()).capacidades.conectoresApagados,
+    navegador: async () => (await s.config.leer()).capacidades.navegador,
     motorListo,
     alPerderSesion: () => {
       if (estadoMotor.tipo === 'sin-sesion') return
@@ -830,6 +833,9 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.capacidadesGuardadas, () => capacidades.guardada())
   ipcMain.handle(CANALES.conectar, (_, nombre: unknown) =>
     capacidades.disponible() ? capacidades.conectar(NombreConector.parse(nombre)) : null,
+  )
+  ipcMain.handle(CANALES.navegadoresConClaude, () =>
+    s.carpetaLocal ? navegadoresConClaude(s.carpetaLocal).catch(() => []) : [],
   )
   ipcMain.handle(CANALES.cerrarFicha, async (_, ruta: unknown) =>
     conversaciones.cerrarFicha(await proyecto(ruta)),

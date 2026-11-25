@@ -3,7 +3,7 @@
 
 import type { AdjuntoPedido, AdjuntoVista } from './adjuntos'
 import type { AnchosConversacion } from './ancho-conversacion'
-import type { VistaCapacidades } from './capacidades'
+import type { Navegador, VistaCapacidades } from './capacidades'
 import type { CapacidadesMotor, ComandoMotor, ListaComandos } from './comandos'
 import type { ConsolaVista, GuardadoConsola, PedidoCierre, SalidaConsola } from './consolas'
 import type { CambioDiseno, PedidoDiseno, VistaDiseno } from './diseno'
@@ -986,6 +986,7 @@ export const CANALES = {
   capacidadesSesion: 'capacidades:ver',
   capacidadesGuardadas: 'capacidades:guardadas',
   conectar: 'capacidades:conectar',
+  navegadoresConClaude: 'capacidades:navegadores',
   pendientes: 'pendientes:proyecto',
   responder: 'pendientes:responder',
   aMedias: 'pendientes:a-medias',
@@ -1192,6 +1193,8 @@ export interface ApiIridium {
   capacidadesGuardadas(): Promise<VistaCapacidades | null>
   /** Conectar (PA-8): el inicio de sesión del conector en la consola de adentro; al terminar, la lista de nuevo. */
   conectar(nombre: string): Promise<VistaCapacidades | null>
+  /** Los navegadores con la extensión «Claude» en algún perfil (Chrome, Brave, Edge; D-189 › 4), mirando solo carpetas. */
+  navegadoresConClaude(): Promise<Navegador[]>
   /** La lista de «/» de un proyecto, con los usados hace poco (PA-1), sin gastar. */
   comandos(ruta: string): Promise<ListaComandos>
   /** La lista de un proyecto cambió mientras la IA trabajaba (una skill nueva). */

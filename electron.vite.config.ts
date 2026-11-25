@@ -16,8 +16,12 @@ function armado() {
   return { fecha: Date.now(), commit, mensaje, sinGuardar: git('status --porcelain') !== '' }
 }
 
+// El mismo para la ventana y para el proceso principal, que lo usa para publicar la versión en uso (T-132).
+const ARMADO = JSON.stringify(armado())
+
 export default defineConfig({
   main: {
+    define: { __ARMADO__: ARMADO },
     build: {
       rollupOptions: {
         input: { index: resolve('src/main/index.ts') },
@@ -39,7 +43,7 @@ export default defineConfig({
   renderer: {
     root: 'src/renderer',
     plugins: [react()],
-    define: { __ARMADO__: JSON.stringify(armado()) },
+    define: { __ARMADO__: ARMADO },
     build: {
       rollupOptions: { input: { index: resolve('src/renderer/index.html') } },
     },

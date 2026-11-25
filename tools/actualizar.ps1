@@ -27,17 +27,19 @@ $falloArmado = Join-Path $Release 'armado-fallo.json'
 $log = Join-Path $Release 'armado.log'
 if ($Codigo) { Set-Location $Codigo } else { Set-Location $raiz }
 
-# Todo lo que corre desde la carpeta de la app (Iridium y el Claude Code de sus sesiones) la bloquea.
+# Todo lo que corre desde la carpeta de la app (Iridium y el Claude Code de sus sesiones) la bloquea. El puente del
+# navegador (PA-I5) no cuenta como Iridium abierto: sigue vivo con el navegador y `cambiar-version.ps1` lo cierra.
 function ProcesosDeLaApp {
   @(Get-CimInstance Win32_Process | Where-Object {
-      $_.ExecutablePath -and $_.ExecutablePath.StartsWith("$app\", [StringComparison]::OrdinalIgnoreCase)
+      $_.ExecutablePath -and $_.ExecutablePath.StartsWith("$app\", [StringComparison]::OrdinalIgnoreCase) -and
+      $_.CommandLine -notmatch '--chrome-native-host'
     })
 }
 
 function Esperar([int]$segundos) {
   $limite = (Get-Date).AddSeconds($segundos)
-  while ((ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) { Start-Sleep -Milliseconds 500 }
-  (ProcesosDeLaApp).Count -eq 0
+  while (@(ProcesosDeLaApp).Count -gt 0 -and (Get-Date) -lt $limite) { Start-Sleep -Milliseconds 500 }
+  @(ProcesosDeLaApp).Count -eq 0
 }
 
 function Anotar([string]$texto) {
@@ -120,7 +122,7 @@ if ($prueba) {
 }
 
 Decir ''
-$abierto = (ProcesosDeLaApp).Count -gt 0
+$abierto = @(ProcesosDeLaApp).Count -gt 0
 if ($abierto -and (Test-Path -LiteralPath (Join-Path $app 'resources\cambiar-version.ps1'))) {
   Decir '3/3  Listo: la versión nueva entra cuando cierres Iridium, o con «Actualizar» abajo en Iridium.' 'Green'
   Decir 'Podés cerrar esta ventana.' 'Green'

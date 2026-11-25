@@ -609,3 +609,13 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 ## T-131 — Pruebas que se pasan de tiempo con la suite entera
 Estado: pendiente · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
 Con `pnpm test` entero y la PC ocupada, a veces fallan por tiempo `d081-github.test.ts` (publicar), `gestor/calidad-casos-limite.test.ts` (300 proyectos) y `t128-ventana-actualizando.test.ts` (Reiniciar ahora); solas pasan. Como T-129: darles el tiempo que necesitan o medir sin competir con el resto. Tamaño: chico.
+
+## T-132 — Las actualizaciones: el botón que seguía, «Actualizando…» antes de tiempo y la otra PC
+Estado: hecho · Frente: Núcleo · Idea: usuario · Fecha: 2026-11-24 · Origen: el usuario en el chat
+«Ahora supuestamente está actualizado pero aún aparece el botón de actualizar», «suele aparecer "actualizando" pero en realidad estaba esperando que yo deje de trabajar», «revisar si las actualizaciones llegarán bien a la otra computadora» y «que siempre se suba a GitHub lo último, tal como lo que yo uso».
+Hecho el 2026-11-24:
+- **El botón que seguía:** la versión armada a las 21:15 no entró dos veces («Windows no soltó la carpeta de la app») y quedó lista con el mismo commit que la que estaba en uso. Dos causas: con un solo proceso de Iridium terminando de cerrarse, el ayudante lo contaba como ninguno (una rareza de PowerShell) y movía la carpeta sin esperarlo; y la app armada arrancaba parada en su propia carpeta, así que un VS Code o una consola que abriera y siguiera abierta también la trababa. Ahora el ayudante espera de verdad y la app arranca parada en la carpeta del usuario. Si igual no entra, al lado del botón dice «la última vez no entró».
+- **«Actualizando…»:** mientras Iridium prepara solo la versión nueva, la barra muestra **Actualizar** (tocarlo la pone apenas esté); «Actualizando…» sale solo al tocarlo o al reiniciarse.
+- **El navegador (PA-I5) y las actualizaciones:** el puente de la extensión de Claude corre desde la carpeta de la app y sigue vivo con Brave abierto: habría trabado cada actualización acá («Iridium sigue abierto») y el instalador en la otra PC. Se cierra antes de poner la versión nueva (Brave lo vuelve a abrir cuando lo necesita).
+- **La otra PC:** revisado el camino entero (el repo es público, `latest.yml` y los `.blockmap` responden, los números crecen); lo que faltaba es que se publicara: la publicada era la 1.0.14 y la tuya, la 1.0.24. Con D-191, la versión en uso se publica sola.
+Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan con el de antes) y la barra en `co6-sin-armar.spec.ts`. Se prueba en Q-289.
