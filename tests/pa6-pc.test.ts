@@ -11,7 +11,7 @@ import { leerPreguntasAbiertas } from '../src/main/app/proyectos'
 import { buscarPc, type PcEnLaPc } from '../src/main/infra/capacidades'
 import { ArchivoSesiones } from '../src/main/infra/sesiones'
 import { crearMotorFalso } from '../src/main/motor/motor'
-import { describirHerramienta, pcDeSesion } from '../src/main/motor/sdk'
+import { AVISO_PC, describirHerramienta, instruccionDeSesion, pcDeSesion } from '../src/main/motor/sdk'
 
 let raiz: string
 let inicio: string
@@ -179,6 +179,12 @@ describe('la sesión (D-189 › 5)', () => {
     })
     expect(pcDeSesion(null)).toEqual({})
     expect(pcDeSesion()).toEqual({})
+  })
+
+  it('con la PC, la IA sabe que los atajos de Windows en español cambian (Ctrl+A abría un archivo); sin ella, no', () => {
+    expect(instruccionDeSesion('Base.', { ejecutable: 'C:\\w.exe' })).toBe(`Base. ${AVISO_PC}`)
+    expect(AVISO_PC).toContain('Ctrl+E selecciona todo')
+    expect(instruccionDeSesion('Base.', null)).toBe('Base.')
   })
 
   async function sesionCon(pc: () => Promise<{ ejecutable: string } | null>) {

@@ -757,6 +757,20 @@ export function pcDeSesion(pc: { ejecutable: string } | null = null): Pick<Optio
   }
 }
 
+/**
+ * Lo que la IA tiene que saber al usar la PC: con Windows en español, los atajos de las apps cambian (probado: en el
+ * Bloc de notas `Ctrl+A` abre un archivo y seleccionar todo es `Ctrl+E`).
+ */
+export const AVISO_PC =
+  'Al usar la PC (conector `pc`): Windows puede estar en español y los atajos de las apps cambian (en el Bloc de ' +
+  'notas, Ctrl+A abre un archivo y Ctrl+E selecciona todo). Ante la duda, usá el menú o mirá con una captura antes ' +
+  'de seguir.'
+
+/** La instrucción de la sesión, con el aviso de la PC si la sesión la tiene. */
+export function instruccionDeSesion(instruccion: string, pc: { ejecutable: string } | null = null): string {
+  return pc ? `${instruccion} ${AVISO_PC}` : instruccion
+}
+
 /** El estado de un conector como lo dice Claude Code, en palabras de Iridium. Uno que sigue conectando, como falla. */
 export function conectorDe(s: Pick<McpServerStatus, 'name' | 'status' | 'error'>): ConectorSesion {
   const estado: ConectorSesion['estado'] =
@@ -1091,7 +1105,7 @@ export function crearMotorSdk(opciones: OpcionesSdk = {}): Motor {
         permissionMode: 'bypassPermissions',
         allowDangerouslySkipPermissions: true,
         disallowedTools: ['AskUserQuestion'],
-        systemPrompt: { type: 'preset', preset: 'claude_code', append: instruccion },
+        systemPrompt: { type: 'preset', preset: 'claude_code', append: instruccionDeSesion(instruccion, pc) },
         // Solo en las conversaciones de Iridium: el Claude de VS Code o de la terminal no los ve (D-086).
         ...(opciones.plugins?.length
           ? { plugins: opciones.plugins.map((path) => ({ type: 'local' as const, path })) }
