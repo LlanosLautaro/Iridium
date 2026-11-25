@@ -41,10 +41,10 @@
 | Abrir (`modulos/abrir/estado.md`) | sección | 7. Construcción (AB-I1 a AB-I3 probadas; el paso 8 y la otra PC, T-87, siguen; fuera de pausa por D-193) | en curso |
 | Paridad (`modulos/paridad/estado.md`) | sección | en operación (con el hito 10; las dos partes probadas y con su calidad, la última el 2026-11-25) | hecho |
 | Frentes (`modulos/frentes/estado.md`) | sección | en operación (con el hito 10; FS-I4, la revisión del avance solo, probada en Q-294; D-194 se mira otra noche en Q-298) | hecho |
-| Pulido (`modulos/pulido/estado.md`) | sección | 2. Definición y 6. UI (D-197; la maqueta viva espera Q-302 y el color de lo que espera, Q-303) | en curso |
+| Pulido (`modulos/pulido/estado.md`) | sección | 7. Construcción (D-197; maqueta probada en Q-302, naranja en Q-303; PU-I1 y PU-I2, las dos `sola`) | en curso |
 
 ## En qué estamos ahora
-**Pulido** (D-197, 2026-11-25): un aire de instrumento futurista sobre el negro: acento elegible con brillo, estados de tarjetas con color, otro color para lo que espera (Q-303) y movimiento sutil; `definicion.md` escrita y la maqueta viva en Diseño, para mirar en Q-302.
+**Pulido** (D-197, 2026-11-25): un aire de instrumento futurista sobre el negro: acento elegible con brillo, estados de tarjetas con color, otro color para lo que espera (Q-303) y movimiento sutil; maqueta viva probada (Q-302); lo que te espera pasa a naranja (Q-303); R-111 a R-113 cerrados. UX y diseño técnico escritos; la construcción va en PU-I1 y PU-I2.
 **Ronda de UX 1 hecha** (2026-11-21, T-100) **y su tanda también**: el chat sin conversación ya no muestra un título cortado (T-101), Git con siluetas al leer (T-103), Acerca de con una frase (T-104), Este proyecto en palabras del usuario (T-106), `04-ux.md` al día con la app (T-107), la Bandeja vacía en su columna (T-108) y los avisos de la esquina medidos juntos (T-110), que encontró los botones de un aviso desarmados: arreglado. Probada en Q-248; el chat sin conversación ya dice «Nueva conversación». R-101: Mandar a la IA, desde Revisión, ahora cita el comentario en la conversación en vez de enviarlo; probado en Q-249. R-93: en la Bandeja, «Respondida, sin procesar» va en verde (T-85). Los `nueva` (T-102, T-105, T-109), en Ideas para aprobar.
 **Paridad** (D-165, D-166, en pausa por Frentes): definición aprobada (Q-244, D-167). La UX está aprobada (Q-247, D-168) y el diseño técnico, cerrado (D-169): tres iteraciones, PA-I1 (comandos), PA-I2 (archivos y fotos) y PA-I3 (texto pegado). La UI también (D-170). **PA-I1 hecha**: «/» abre la lista de comandos arriba del cuadro, elegir no manda, los usados hace poco van primero y un comando escondido (`/clear`, `/model`…) no se manda y dice dónde está eso en Iridium; probada en Q-250. **PA-I2 hecha y probada** (Q-251): archivos y fotos con el +, `Ctrl+U`, arrastrándolos o pegando una captura; el + ahora lleva un clip, como pediste. **T-111 (la otra PC en negro):** CO-I9 arregló el actualizador trabado y deja rastro de las fallas de la ventana; con Q-255 (A, D-171), **CO-I10**: Iridium se instala como una app (escritorio, menú Inicio, «Aplicaciones instaladas») y se actualiza solo bajando solo lo que cambió. Probado de punta a punta acá con instaladores de verdad; la otra PC lo instala una vez a mano (Q-270). **PA-I3 hecha**: un texto largo pegado queda como ficha «Texto pegado» que se lee en el visor, y `Ctrl+Z` lo vuelve texto; «Sobre la skill» y las citas son ahora fichas como los adjuntos. Probada en Q-258. **Primera parte de Paridad completa** (2026-11-22): la calidad encontró que un pegado de más de 1 MB no se guardaba ni se mandaba, sin aviso (ahora no entra y dice qué hacer), y que al cerrar el visor se perdía el foco: arreglados. Con Q-259 (A, D-173), antes de la segunda parte va **T-114, hecha** (D-172): la sincronía con GitHub empieza a los 2 s de abrir, el proyecto al que entrás pasa primero, y mandarle algo a la IA, Arranque y Commit esperan a que ese proyecto haya traído lo del remoto (lo escrito queda en el cuadro con «Poniéndose al día con GitHub…» y sale solo; sin conexión o pasados 15 s, sale igual y lo dice). Probada en Q-260. Después: Capacidades (T-28), Orden (paso 8), **Abrir** (paso 8 y T-87) y Plantillas.
 **T-117 hecha** (D-174, 2026-11-22): las ideas terminadas que seguían como Aprobadas eran un olvido de la IA, no de Iridium; T-70 (Arranque) y T-96 (el + y los comandos) pasan a Hechas, el framework dice cuándo se cierra una idea y el control avisa si la IA se olvida.
@@ -56,25 +56,10 @@ Ideas sin evaluar: T-143 (un catálogo de estilos y de movimiento para los desig
   Tipo: prueba · Frente: Frentes
   Contexto: D-194. La noche del 2026-11-25 corrió la 1.1.2, anterior al arreglo. Con el avance solo prendido, dejá Iridium sin usar una noche.
   - [ ] Si el período se terminó de noche, no hay sesiones en rojo «falló» por eso: a lo sumo una dice «se quedó sin uso, sigue cuando se libere» en ámbar
-- **Q-302 — Mirá la maqueta viva de Pulido**
-  Tipo: prueba · Frente: Pulido
-  Contexto: Diseño › Pulido (propuesta) › Movimiento y color (`docs/diseno/pantallas/pulido.html`; D-197). Arriba se elige el acento y el color de lo que te espera; lo demás los toma de ahí. Lo que entra y lo que no, en `modulos/pulido/definicion.md` › Funcionalidades.
-  - [ ] El ícono de la sección elegida (a la izquierda) se ve en el acento, con su brillo, y cambia al elegir otro acento
-  - [ ] El nivel activo del mapa late como un radar y se lee bien
-  - [ ] «2 corriendo», abajo a la izquierda, late y lo cruza una luz sin cansar
-  - [ ] Al arrastrar una pestaña, las demás se corren para dejarle lugar
-  - [ ] Los estados de las tarjetas se distinguen por su color
-  - [ ] Marcar un pendiente se siente bien
-  - [ ] El menú, el cuadro, el aviso y el panel entran en vez de aparecer de golpe
-  - [ ] Lo que entra y lo que no (la definición) es lo que querés
-- **Q-303 — ¿Qué color reemplaza al ámbar de lo que te espera?**
-  Tipo: decisión · Frente: Pulido
-  Contexto: D-197. Es el color de las preguntas, las pruebas y lo que frena en toda la app. Probalos en la maqueta de Q-302 (arriba, «Lo que te espera»). Tiene que distinguirse del acento, de los estados de las tarjetas y del rojo de un error.
-  Opciones: A) Naranja (recomendada: se lee como «atención» en cualquier tablero y no se confunde con el cian ni con el rojo) · B) Magenta · C) Seguir con el ámbar
 
 ## Próximo paso
-Sin esperar a Q-298: el paso 8 del frente Orden (D-166: después de Paridad), sobre la interfaz negra: la corrida completa, el recorrido con los proyectos reales, la accesibilidad de las pantallas nuevas y los tiempos. Después, Abrir (paso 8 y T-87) y Plantillas. Con Q-302 y Q-303 respondidas, Pulido: `modulos/pulido/estado.md` › Próximo paso.
-**Leer antes:** `modulos/orden/estado.md` › Próximo paso.
+Construir PU-I1 (Pulido): el color y el movimiento de la maqueta en las piezas y las secciones de la app. Sin esperar a Q-298. Después PU-I2, y el paso 8 de Orden, Abrir (paso 8 y T-87) y Plantillas.
+**Leer antes:** `modulos/pulido/estado.md` › Próximo paso.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

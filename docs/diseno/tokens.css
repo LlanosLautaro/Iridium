@@ -1,7 +1,7 @@
 /* Los tokens de Iridium: la dirección negra sin acento, único tema (D-103, D-104). Sale de modulos/diseno/negro.css.
    Fondo negro puro, superficies casi negras, líneas apenas visibles y tres grises de texto. Lo activo y lo marcado van
    en blanco; lo prendido (casillas, opciones, interruptores), en verde (R-60). Un solo color de acción: el verde del botón principal (Enviar, Continuar; D-109), en la letra y el borde sobre negro (R-49). Las señales: ámbar lo que
-   espera del usuario, rojo un error. Con color también los medidores (verde, ámbar, rojo), los enlaces (azul) y el código (D-124).
+   espera del usuario (naranja desde D-197), rojo un error. Con color también los medidores (verde, naranja, rojo), los enlaces (azul) y el código (D-124).
    Cada token va en su línea con su uso después del `;` (D-114): Diseño › Sistema lo muestra y la IA elige el token
    por lo que dice, no por cómo se ve.
    Desde DI-I3 la app lo importa tal cual: cambiar un token cambia las maquetas y la app. */
@@ -35,17 +35,16 @@
   --sobre-principal: #000000; /* lo que va sobre lo marcado: el tilde de una casilla, la perilla de un interruptor */
   --marcado: #4cc38a; /* lo prendido: casillas, opciones e interruptores, en el verde de los medidores (R-60); no es un color de acción */
 
-  /* Señales: ámbar lo que espera del usuario, rojo un error */
-  --espera-ambar: #d9a441; /* el ámbar de lo que espera al usuario, el de hoy; candidato en Q-303 */
-  --espera: var(--espera-ambar); /* lo que espera al usuario: la cuenta de preguntas, una prueba pendiente */
-  --espera-fondo: #0d0a04; /* el fondo de un aviso que espera al usuario */
-  --espera-borde: #3a2f15; /* el borde de un aviso que espera al usuario */
+  /* Señales: naranja lo que espera del usuario (Q-303), rojo un error */
+  --espera: #ff9f1c; /* lo que espera al usuario: la cuenta de preguntas, una prueba pendiente */
+  --espera-fondo: #120b02; /* el fondo de un aviso que espera al usuario */
+  --espera-borde: #4d3008; /* el borde de un aviso que espera al usuario */
   --error: #e5484d; /* un error y lo que borra: el aviso, el botón de Eliminar */
   --error-fondo: #0f0506; /* el fondo de un aviso de error */
   --error-borde: #3d1a1c; /* el borde de un aviso de error */
   --seleccion: #ffffff2e; /* el texto seleccionado con el mouse */
   --bien: #4cc38a; /* lo que tiene margen en un medidor (el uso de la suscripción, el contexto; se pone ámbar y rojo al llenarse, R-56), la ruedita y la señal de Trabajando (R-63, R-71) y el tilde de lo que funciona (R-69) */
-  --recomendada: #f2c94c; /* la estrella de la opción recomendada en una pregunta (R-85); no es el ámbar de lo que espera */
+  --recomendada: #f2c94c; /* la estrella de la opción recomendada en una pregunta (R-85); no es el naranja de lo que espera */
   --enlace: #6cb6ff; /* un enlace dentro de un texto: los documentos, el Próximo paso, la Bandeja, la conversación (Q-171) */
 
   /* Código */
@@ -141,8 +140,7 @@
   --acento: var(--acento-cian); /* lo activo: el ícono de la sección elegida, el nivel del mapa en el que estás, la pestaña que arrastrás, el punto de pendientes cuando nada frena */
   --acento-tenue: color-mix(in srgb, var(--acento) 14%, transparent); /* el fondo de lo activo en el acento: la pestaña que arrastrás, el ícono elegido */
   --brillo-acento: 0 0 10px color-mix(in srgb, var(--acento) 55%, transparent); /* el brillo alrededor de lo activo; nunca en texto para leer */
-  --espera-naranja: #ff9f1c; /* candidato para lo que espera al usuario (Q-303); se va al decidir */
-  --espera-magenta: #ff4fd8; /* candidato para lo que espera al usuario (Q-303); se va al decidir */
+  --bien-apagado: color-mix(in srgb, var(--bien) 45%, var(--fondo)); /* lo ya hecho en un camino (el punto de un paso terminado), para que lo vivo sea lo actual (R-111) */
   --estado-uso: #4cc38a; /* el punto de un proyecto en uso, en su tarjeta */
   --estado-desarrollo: #5b9dff; /* el punto de un proyecto en desarrollo, en su tarjeta */
   --estado-idea: #c39bff; /* el punto de un proyecto que es una idea, en su tarjeta */

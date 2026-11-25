@@ -3723,7 +3723,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **El negro sigue siendo la base** y la legibilidad manda: el texto para leer no lleva brillo ni color nuevo.
 - **Un acento** para lo activo (el ícono de la sección elegida, el nivel del mapa en el que estás, la pestaña que arrastrás, el punto de pendientes cuando nada frena), con un brillo suave alrededor. Se elige en Ajustes › Apariencia entre cian (el que viene), verde, azul y violeta.
 - **Los estados de las tarjetas, con color:** en uso verde, en desarrollo azul, idea violeta, en rescate coral, para eliminar rojo; pausado y descontinuado, en gris.
-- **El ámbar de lo que te espera se reemplaza** por otro color, que el usuario elige mirando la maqueta (Q-303).
+- **El ámbar de lo que te espera se reemplaza por naranja**, elegido mirando la maqueta (Q-303, R-113: «mejor que el ámbar con amplia diferencia»). Lo hecho en un camino va en un verde apagado, para que lo vivo sea lo actual (R-111).
 - **Movimiento sutil** (Q-300 A): transiciones de un cuarto de segundo y solo dos cosas que laten: el nivel activo del mapa (como un radar) y «corriendo» con las consolas plegadas (un punto que late y una luz que lo cruza).
 - **Entra lo que sumó la IA** (Q-301 A): menús, cuadros, avisos y paneles entran en vez de aparecer de golpe, y el fondo al pasar el mouse cambia con una transición.
 - **Iridium no sigue el ajuste de animaciones de Windows** (Q-301, a pedido del usuario): se mueve aunque estén apagadas. Hoy cinco hojas de estilo lo respetan; se sacan al construir.

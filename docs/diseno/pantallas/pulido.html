@@ -6,14 +6,9 @@
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../piezas.css">
 <style>
-  /* Pulido (D-197): cada pedido del frente andando, para verlo antes de pasarlo a la app. Arriba se elige el acento y
-     el color de lo que te espera; todo lo demás los toma de ahí. */
-  :root {
-    --espera-fondo: color-mix(in srgb, var(--espera) 7%, var(--fondo));
-    --espera-borde: color-mix(in srgb, var(--espera) 30%, var(--fondo));
-  }
+  /* Pulido (D-197): cada pedido del frente andando, para verlo antes de pasarlo a la app. Arriba se elige el acento;
+     todo lo demás lo toma de ahí. Lo que te espera va en naranja (Q-303). */
   .eleccion { display: flex; align-items: center; gap: var(--esp-3); }
-  .eleccion + .eleccion { margin-left: var(--esp-4); }
   .eleccion .rotulo { font: var(--estilo-rotulo); color: var(--texto-3); }
   .muestra-color { display: inline-block; width: 8px; height: 8px; border-radius: var(--radio-pildora); background: var(--c); }
 
@@ -46,6 +41,7 @@
   .tarjeta-p .estado-t.apagado .punto { box-shadow: none; }
 
   /* El nivel activo del mapa: late como un punto de radar, en el acento. */
+  .camino .hecho .punto-camino { background: var(--bien-apagado); border-color: var(--bien-apagado); }
   .camino .foco .punto-camino { border-color: var(--acento); box-shadow: var(--brillo-acento); }
   .camino .foco .punto-camino::before, .camino .foco .punto-camino::after {
     content: ""; position: absolute; inset: -2px; border-radius: var(--radio-pildora); border: 2px solid var(--acento);
@@ -89,19 +85,21 @@
   .acciones-muestra { display: flex; gap: var(--esp-2); flex-wrap: wrap; position: relative; }
 
   /* «Corriendo», con las consolas plegadas: un punto que late y una luz que cruza el texto. */
-  .estado-barra a[href="consolas.html"] { color: var(--acento); position: relative; overflow: hidden; padding-left: 14px; }
+  .estado-barra a[href="consolas.html"] { color: var(--acento); position: relative; padding-left: 14px; }
   .estado-barra a[href="consolas.html"] .ic { display: none; }
   .estado-barra a[href="consolas.html"]::before {
     content: ""; position: absolute; left: 2px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: var(--radio-pildora);
     background: var(--acento); box-shadow: var(--brillo-acento); animation: late var(--dur-pulso) ease-in-out infinite;
   }
+  /* La luz cruza de punta a punta y se desvanece en los extremos (R-112): no se corta en el borde de una caja. */
   .estado-barra a[href="consolas.html"]::after {
-    content: ""; position: absolute; inset: 0; width: 40%;
-    background: linear-gradient(90deg, transparent, var(--acento-tenue), transparent);
+    content: ""; position: absolute; inset: 0 -16px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--acento-tenue), transparent) no-repeat; background-size: 45% 100%;
+    mask-image: linear-gradient(90deg, transparent, black 30%, black 70%, transparent);
     animation: barrido var(--dur-pulso) linear infinite;
   }
   @keyframes late { 50% { opacity: .35; transform: scale(.7); } }
-  @keyframes barrido { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+  @keyframes barrido { from { background-position: -80% 0; } to { background-position: 180% 0; } }
 </style>
 </head>
 <body data-marco="proyecto" data-seccion="mapa" data-consolas="2">
@@ -115,12 +113,6 @@
             <button class="filtro" data-valor="--acento-verde"><span class="muestra-color" style="--c: var(--acento-verde)"></span>Verde</button>
             <button class="filtro" data-valor="--acento-azul"><span class="muestra-color" style="--c: var(--acento-azul)"></span>Azul</button>
             <button class="filtro" data-valor="--acento-violeta"><span class="muestra-color" style="--c: var(--acento-violeta)"></span>Violeta</button>
-          </span></span>
-        <span class="eleccion" data-token="--espera"><span class="rotulo">Lo que te espera</span>
-          <span class="filtros">
-            <button class="filtro elegido" data-valor="--espera-ambar"><span class="muestra-color" style="--c: var(--espera-ambar)"></span>Ámbar</button>
-            <button class="filtro" data-valor="--espera-naranja"><span class="muestra-color" style="--c: var(--espera-naranja)"></span>Naranja</button>
-            <button class="filtro" data-valor="--espera-magenta"><span class="muestra-color" style="--c: var(--espera-magenta)"></span>Magenta</button>
           </span></span>
       </span></div>
   </header>
@@ -143,7 +135,7 @@
         <div class="camino">
           <div class="tramo principal hecho"><div class="carril abajo"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Decidir cuánto color y cuánto movimiento lleva</span></div></div>
           <div class="tramo principal foco"><div class="carril arriba abajo"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Ver las animaciones y los colores en una maqueta viva</span></div></div>
-          <div class="tramo principal espera"><div class="carril arriba abajo"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Elegir el color de lo que te espera</span><span class="senal">Te espera · Q-303</span></div></div>
+          <div class="tramo principal espera"><div class="carril arriba abajo"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Probar Pulido en la app</span><span class="senal">Te espera · Q-304</span></div></div>
           <div class="tramo principal"><div class="carril arriba"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Las pestañas se corren para dejar lugar mientras arrastrás una</span></div></div>
         </div>
       </section>

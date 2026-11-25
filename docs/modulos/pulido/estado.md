@@ -8,32 +8,26 @@
 | Paso | Estado | Documento |
 |---|---|---|
 | 1. Propuesta | hecho (D-197) | `propuesta.md` |
-| 2. Definición | en curso (espera Q-302) | `definicion.md` |
+| 2. Definición | hecho (Q-302) | `definicion.md` |
 | 3. Investigación | descartado (no hay dominio de terceros) | — |
-| 4. UX | pendiente | `ux.md` |
-| 5. Diseño técnico | pendiente | `diseno-tecnico.md` |
-| 6. UI (solo si hay piezas nuevas) | en curso (la maqueta viva, `docs/diseno/pantallas/pulido.html`; espera Q-302 y Q-303) | `docs/diseno/pantallas/pulido.html` |
-| 7. Construcción | pendiente | este archivo |
+| 4. UX | hecho | `ux.md` |
+| 5. Diseño técnico | hecho | `diseno-tecnico.md` |
+| 6. UI (solo si hay piezas nuevas) | hecho (la maqueta viva, probada en Q-302; el naranja, Q-303) | `docs/diseno/pantallas/pulido.html` |
+| 7. Construcción | en curso (PU-I1) | este archivo |
 | 8. Calidad | pendiente | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
-Abierto el 2026-11-25. Decidido en D-197 (aire de instrumento futurista sobre el negro): un acento elegible con brillo para lo activo, estados de tarjetas con color, otro color para lo que espera, movimiento sutil con dos pulsos y sin seguir las animaciones apagadas de Windows. `definicion.md` escrita; la maqueta viva (`docs/diseno/pantallas/pulido.html`, en Diseño) tiene cada efecto andando, con el acento y el color de lo que espera para elegir arriba. Espera Q-302 (mirarla) y Q-303 (el color de lo que espera).
+Decidido en D-197 y aprobado en Q-302: la maqueta viva (`docs/diseno/pantallas/pulido.html`) tiene todo; lo que te espera pasa a naranja (Q-303, ya en `tokens.css`: la app lo toma al armarse). Con R-111 lo hecho en un camino va en verde apagado, y con R-112 la luz de «corriendo» se desvanece en los extremos. `ux.md` y `diseno-tecnico.md` escritos; sigue la construcción en dos iteraciones.
 
 ## Ruta
 - [x] Decidir cuánto color y cuánto movimiento lleva, y qué entra (Q-299, Q-300, Q-301)
-- [ ] Ver las animaciones y los colores en una maqueta viva, antes de pasarlos a la app (Q-302)
-- [ ] Elegir el color de lo que te espera (Q-303)
-- [ ] Las pestañas se corren para dejar lugar mientras arrastrás una (chico)
-- [ ] El estado de cada tarjeta de proyecto, con su color (chico)
-- [ ] El nivel activo del mapa late como un radar (chico)
-- [ ] Un acento para el ícono activo del panel izquierdo, elegido en Ajustes (mediano)
-- [ ] «Corriendo» se mueve con las consolas plegadas (chico)
-- [ ] El punto de pendientes en los íconos, con color (chico)
-- [ ] Marcar la casilla de un pendiente, con una animación (chico)
-- [ ] Menús, cuadros, avisos y paneles que entran en vez de aparecer de golpe (mediano)
-- [ ] Se mueve aunque las animaciones de Windows estén apagadas (chico)
-- [ ] Medir la calidad: la app no se pone lenta con el movimiento (chico)
+- [x] Ver las animaciones y los colores en una maqueta viva, antes de pasarlos a la app (Q-302)
+- [x] Elegir el color de lo que te espera: naranja (Q-303)
+- [ ] Color y movimiento en toda la app: el acento en lo activo, las tarjetas, el mapa que late, «corriendo», las casillas y lo que entra (PU-I1, mediano, sola)
+- [ ] Elegir el acento en Ajustes y las pestañas que se corren al arrastrar una (PU-I2, mediano, sola)
+- [ ] Probarlo en la app
+- [ ] Medir la calidad: la app no se pone lenta con el movimiento (chico, sola)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -44,10 +38,12 @@ Abierto el 2026-11-25. Decidido en D-197 (aire de instrumento futurista sobre el
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
+| PU-I1 | Color y movimiento en las piezas y las secciones: el acento en lo activo, lo hecho apagado, el naranja, las tarjetas, el mapa que late, «corriendo», las casillas, lo que entra y el hover; sin seguir las animaciones apagadas de Windows | pendiente |
+| PU-I2 | El acento en Ajustes › Apariencia y las pestañas de la barra que se corren al arrastrar | pendiente |
 
 ## Log de iteraciones
 (Todavía ninguna.)
 
 ## Próximo paso
-Con Q-302 y Q-303 respondidas: corregir la maqueta con lo que diga, sacar los candidatos de `tokens.css`, y escribir `ux.md` (corto: dónde va el selector del acento en Ajustes › Apariencia) y `diseno-tecnico.md` (cómo se corren las pestañas y dónde van los tokens en la app).
-**Leer antes:** las respuestas de Q-302 y Q-303; `modulos/pulido/definicion.md`.
+Construir PU-I1: pasar a `piezas.css` (maqueta y app) y a las hojas de las secciones lo de la maqueta, según `diseno-tecnico.md` › Estructura interna.
+**Leer antes:** `modulos/pulido/diseno-tecnico.md`; `modulos/pulido/ux.md` › Pantallas; el `<style>` de `docs/diseno/pantallas/pulido.html`.
