@@ -47,4 +47,4 @@ Es un frente porque toca casi todas las secciones y cambia reglas del design sys
 - **Una librería de animaciones** (Framer Motion u otra): para pestañas que se corren al arrastrar puede ayudar; el resto alcanza con CSS. Se decide en el diseño técnico, por peso y por lo que cuesta mantener.
 
 ## Decisión
-Espera a Q-299 (el color), Q-300 (el movimiento) y Q-301 (la lista).
+Aprobada el 2026-11-25 (D-197): color en todo lo pedido, más vivo, con un aire de instrumento futurista (Q-299 B); movimiento sutil (Q-300 A); entra lo que suma la IA, menos respetar las animaciones apagadas de Windows (Q-301 A). Sigue en `definicion.md`.

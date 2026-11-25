@@ -106,15 +106,15 @@
 | D-097 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-137) | Lo que espera del usuario se llama «Bandeja de entrada» | vigente |
 | D-098 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-136) | La conversación queda siempre a la vista, más angosta | vigente |
 | D-099 | 2026-11-06 | general | 10, frente Orden, paso 4 (Q-139) | El marco se llama «framework» | vigente |
-| D-100 | 2026-11-06 | general | 10, frente Orden, paso 6 (Q-140) | El ámbar es solo para lo que frena y el botón principal es claro | vigente |
+| D-100 | 2026-11-06 | general | 10, frente Orden, paso 6 (Q-140) | El ámbar es solo para lo que frena y el botón principal es claro | reemplazada en parte por D-197 (el color ya no es solo para avisar) |
 | D-101 | 2026-11-07 | general | 10 (R-14) | Nuevo proyecto arma la plantilla básica, sin la IA | vigente |
 | D-102 | 2026-11-07 | general | 10, a pedido del usuario | Diseño pasa adelante, como un «Claude Design» dentro de Iridium, y la dirección visual cambia a negro | vigente |
-| D-103 | 2026-11-07 | general | 10, frente Diseño, paso 1 (Q-147 y Q-148) | El mínimo de Diseño empieza por las piezas compartidas, y el negro va sin acento | vigente |
+| D-103 | 2026-11-07 | general | 10, frente Diseño, paso 1 (Q-147 y Q-148) | El mínimo de Diseño empieza por las piezas compartidas, y el negro va sin acento | reemplazada en parte por D-197 (el negro lleva un acento elegible) |
 | D-104 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-149) | Un solo tema: el negro reemplaza a Iridium y Carbón | vigente |
 | D-105 | 2026-11-07 | general | 10, frente Diseño, paso 4 (Q-150) | Las pantallas de Diseño son maquetas HTML que escribe la IA, y se comentan con F8 | vigente |
 | D-106 | 2026-11-08 | general | 10, frente Diseño, pasos 4 y 5 (Q-151) | Primero la sección, después el rediseño de Iridium en maquetas; miniaturas en un iframe aislado y la grande en un webview | vigente |
 | D-107 | 2026-11-08 | Diseño | 10, frente Diseño, paso 7 | DI-I1 se prueba sobre las maquetas de Iridium (DI-I2), no en un proyecto aparte; el marco de las maquetas lo arma `piezas.js` | vigente |
-| D-108 | 2026-11-09 | Diseño | 10, frente Diseño, paso 7 (DI-I2) | Diseño: sin ruido; lo que anda no se anuncia | vigente |
+| D-108 | 2026-11-09 | Diseño | 10, frente Diseño, paso 7 (DI-I2) | Diseño: sin ruido; lo que anda no se anuncia | reemplazada en parte por D-197 (los estados de las tarjetas, con color) |
 | D-109 | 2026-11-09 | Diseño | 10, frente Diseño, paso 7 (DI-I2) | Diseño: el botón principal es verde | vigente (cambia el punto «sin acento» de D-103 y D-104; ajustada por D-120) |
 | D-110 | 2026-11-09 | producto | 10, frente Diseño, paso 7 (DI-I2) | Los textos de la app en español neutro | vigente |
 | D-111 | 2026-11-09 | producto | 10, frente Diseño, paso 7 (DI-I2) | Sin la Bandeja de todos | vigente (deja sin efecto la vista general de D-010 y D-022) |
@@ -200,6 +200,10 @@
 | D-191 | 2026-11-24 | general (Compartir) | 10, a pedido del usuario (T-132) | La versión en uso se publica sola en GitHub | vigente (precisa D-085 y D-171) |
 | D-192 | 2026-11-24 | general (Compartir) | 10 (Q-290) | En GitHub quedan las últimas 5 versiones (10 hasta Q-291) y cada versión nueva dice qué trae | vigente (precisa D-191) |
 | D-193 | 2026-11-25 | Frentes (T-135, T-136) | 10 (Q-293) | El avance solo revisa ideas y frentes, y un frente solo se pausa si lo pide el usuario | vigente (precisa D-175, D-176 y D-166) |
+| D-194 | 2026-11-25 | Frentes | 10 (lo que reportó el usuario) | El avance solo no arranca lo chico con el período casi gastado y espera si se queda sin uso | vigente (precisa D-178) |
+| D-195 | 2026-11-25 | Apariencia y ajustes (T-134) | 10 (T-134) | Apagar la PC al terminar: un botón en la conversación que no pasa por la IA | vigente |
+| D-196 | 2026-11-25 | general | 10 (Q-295) | Los pedidos a la IA desde una sección quedan citados en la conversación | vigente |
+| D-197 | 2026-11-25 | general | 10, frente Pulido, paso 1 (Q-299 a Q-301) | Pulido: un aire de instrumento sobre el negro, con acento, colores de estado y movimiento sutil | vigente (corrige en parte D-100, D-103 y D-108) |
 
 ---
 
@@ -2392,7 +2396,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-06
 - **Ámbito:** general
 - **Hito o paso:** 10, frente Orden, paso 6 (Q-140)
-- **Estado:** vigente
+- **Estado:** reemplazada en parte por D-197 (el color ya no es solo para avisar)
 
 **Contexto:** hasta ahora el ámbar marcaba todo lo que espera al usuario y el botón que lo responde iba en ámbar lleno (`DESIGN.md` › The Ámbar Llama Rule). Con la Bandeja de entrada (D-097) casi todo espera algo del usuario, y el ámbar en todas partes dejó de distinguir lo urgente (`modulos/orden/auditoria.md` › A-2). La hoja de piezas (`ui/vista-orden.html`) propuso dejar el ámbar solo para lo que frena y dos opciones para el botón principal: claro, sin color, o del color de lo activo.
 
@@ -2448,7 +2452,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-07
 - **Ámbito:** general (design system y frente Diseño)
 - **Hito o paso:** 10; frente Diseño, paso 1 (Q-147 y Q-148)
-- **Estado:** vigente
+- **Estado:** reemplazada en parte por D-197 (el negro lleva un acento elegible)
 
 **Contexto:** D-102 activó Diseño y dejó dos cosas para decidir: qué entra en el mínimo (Q-147) y si la muestra negra, con el azul de X para lo activo, era la dirección (Q-148).
 
@@ -2556,7 +2560,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-09
 - **Ámbito:** Diseño
 - **Hito o paso:** 10; frente Diseño, paso 7 (DI-I2)
-- **Estado:** vigente
+- **Estado:** reemplazada en parte por D-197 (los estados de las tarjetas, con color)
 
 **Contexto:** con Q-152 el usuario recorrió las maquetas y marcó con `F8` como «ruido visual» la cuenta al lado de «Proyectos», la ruta de la carpeta, el detalle y la bienvenida de la conversación de Inicio, «Sin sesiones abiertas», la hora y «Claude · max» (R-15 a R-21), y pidió para Claude «un indicador en caso de fallo».
 
@@ -3707,3 +3711,23 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** un pedido a la IA desde una sección **nunca se manda solo ni con un cuadro propio para escribirlo**: queda citado arriba del campo de la conversación del proyecto (una ficha con ✕, `citar`), sin enviar, y sale con lo que el usuario escriba, en esa conversación o en una nueva. El texto lo sigue armando Iridium (cita el framework). Diseño ya lo hace: **Otra versión** cita el pedido con la letra de la versión y pasa a las versiones lado a lado con su lugar («Citada en la conversación: escribí qué probar y mandala»), y **Pedírselo a la IA** (empezar el diseño) cita el pedido; los cuadros que avisaban del uso se van, porque el envío es del usuario. Quedan afuera lo que el usuario dispara fuera de un proyecto (Pasar al framework desde la grilla o Skills: T-139 lo trae a la regla) y lo que manda Iridium sola (el Arranque, el avance solo).
 **Motivo:** el usuario dirige la conversación: elegir el chat (contexto contra costo) y sumar lo suyo es suyo; un pedido que sale solo gasta uso en el chat que no eligió.
 **Consecuencias:** la regla está en el `CLAUDE.md` del proyecto, para que la siga cada sección nueva (Probar una dirección y Pasar al código, de Diseño, ya nacen así). `pedirDiseno` pasa a `citaDiseno` (devuelve el texto, no manda nada). Pruebas: `tests/e2e/di4-versiones.spec.ts` y `tests/e2e/di1-diseno.spec.ts`.
+
+## D-197 — Pulido: un aire de instrumento sobre el negro, con acento, colores de estado y movimiento sutil
+- **Fecha:** 2026-11-25
+- **Ámbito:** toda la app (frente Pulido): el design system, las tarjetas, el marco, Frentes, las consolas y Ajustes › Apariencia
+- **Hito o paso:** 10, frente Pulido, paso 1 (Q-299 B, Q-300 A, Q-301 A)
+- **Estado:** vigente
+
+**Contexto:** el usuario abrió Pulido porque Iridium se siente quieta y gris. Con D-100, D-103 y D-108 el color solo avisaba y el negro iba sin acento. En Q-299 eligió color en todo lo que pidió, más vivo, y contó la idea de fondo: que Iridium se sienta como el tablero de una nave o un aparato de un juego futurista (lo que se llama FUI, interfaces de ficción, y HUD): luces de estado que laten, brillo en lo activo, cosas que reaccionan. Era la idea detrás del verde original, que se cambió por el negro por legibilidad; quiere mantener lo tecnológico sin saturar.
+**Decisión:**
+- **El negro sigue siendo la base** y la legibilidad manda: el texto para leer no lleva brillo ni color nuevo.
+- **Un acento** para lo activo (el ícono de la sección elegida, el nivel del mapa en el que estás, la pestaña que arrastrás, el punto de pendientes cuando nada frena), con un brillo suave alrededor. Se elige en Ajustes › Apariencia entre cian (el que viene), verde, azul y violeta.
+- **Los estados de las tarjetas, con color:** en uso verde, en desarrollo azul, idea violeta, en rescate coral, para eliminar rojo; pausado y descontinuado, en gris.
+- **El ámbar de lo que te espera se reemplaza** por otro color, que el usuario elige mirando la maqueta (Q-303).
+- **Movimiento sutil** (Q-300 A): transiciones de un cuarto de segundo y solo dos cosas que laten: el nivel activo del mapa (como un radar) y «corriendo» con las consolas plegadas (un punto que late y una luz que lo cruza).
+- **Entra lo que sumó la IA** (Q-301 A): menús, cuadros, avisos y paneles entran en vez de aparecer de golpe, y el fondo al pasar el mouse cambia con una transición.
+- **Iridium no sigue el ajuste de animaciones de Windows** (Q-301, a pedido del usuario): se mueve aunque estén apagadas. Hoy cinco hojas de estilo lo respetan; se sacan al construir.
+- **Lo que no va, por ahora:** el «glitch», las líneas de barrido de pantalla, los anillos que giran y los números que corren: distraen mientras se lee. Quedan para el catálogo de estilos (T-143).
+- Los colores y las duraciones son tokens (`--acento`, `--brillo-acento`, `--estado-…`, `--dur-hover`, `--dur-entrada`, `--dur-pulso`), no números sueltos.
+**Motivo:** el usuario quiere que la app se sienta viva y tecnológica; un solo acento con brillo en lo activo y dos pulsos dan ese aire sin cansar al leer, y el negro de base conserva lo que se ganó en legibilidad.
+**Consecuencias:** corrige en parte D-100 (el color ya no es solo para avisar), D-103 (el negro lleva un acento) y D-108 (los estados de las tarjetas se ven con color). Los tokens nuevos están en `tokens.css` y se ven en la maqueta `docs/diseno/pantallas/pulido.html`; `DESIGN.md` y `06-ui.md` se ponen al día al pasarlo a la app. Quien tenga apagadas las animaciones de Windows las va a ver igual.

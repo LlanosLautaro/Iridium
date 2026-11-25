@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pulido: movimiento y color</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../piezas.css">
+<style>
+  /* Pulido (D-197): cada pedido del frente andando, para verlo antes de pasarlo a la app. Arriba se elige el acento y
+     el color de lo que te espera; todo lo demás los toma de ahí. */
+  :root {
+    --espera-fondo: color-mix(in srgb, var(--espera) 7%, var(--fondo));
+    --espera-borde: color-mix(in srgb, var(--espera) 30%, var(--fondo));
+  }
+  .eleccion { display: flex; align-items: center; gap: var(--esp-3); }
+  .eleccion + .eleccion { margin-left: var(--esp-4); }
+  .eleccion .rotulo { font: var(--estilo-rotulo); color: var(--texto-3); }
+  .muestra-color { display: inline-block; width: 8px; height: 8px; border-radius: var(--radio-pildora); background: var(--c); }
+
+  .tablero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-6) var(--esp-7); max-width: var(--ancho-lista); }
+  .tablero .bloque + .bloque { margin-top: 0; }
+  .tablero .bloque { gap: var(--esp-3); }
+
+  /* Al pasar el mouse: el fondo entra, no salta. */
+  .boton, .fila, .pestana, .act, .tarjeta-p { transition: background var(--dur-hover) var(--sale), color var(--dur-hover) var(--sale), border-color var(--dur-hover) var(--sale), box-shadow var(--dur-hover) var(--sale); }
+
+  /* El panel de la izquierda: el ícono de la sección elegida, en el acento y con su brillo. */
+  .act.elegida { color: var(--acento); background: var(--acento-tenue); }
+  .act.elegida .ic { filter: drop-shadow(0 0 4px var(--acento)); }
+  .act.elegida::before { background: var(--acento); box-shadow: var(--brillo-acento); }
+  .act .punto, .boton-menu .punto { box-shadow: 0 0 6px var(--espera); }
+
+  /* Los puntos de pendientes: en el acento si algo espera sin frenar, en el color de lo que espera si frena. */
+  .iconos { display: flex; gap: var(--esp-5); align-items: center; }
+  .icono-p { display: flex; align-items: center; gap: var(--esp-3); color: var(--texto-2); font-size: var(--tam-chico); white-space: nowrap; }
+  .icono-p .act { color: var(--texto-3); }
+  .punto.acento { background: var(--acento); box-shadow: var(--brillo-acento); }
+
+  /* Las tarjetas de proyectos: el estado con su color. */
+  .tarjetas-p { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-2); }
+  .tarjeta-p { border: 1px solid var(--borde); border-radius: var(--radio-bloque); padding: var(--esp-3) var(--esp-4); display: flex; flex-direction: column; gap: 2px; cursor: pointer; }
+  .tarjeta-p:hover { border-color: var(--borde-fuerte); background: var(--tarjeta); }
+  .tarjeta-p b { font-weight: 600; }
+  .tarjeta-p .estado-t { display: flex; align-items: center; gap: 6px; font-size: var(--tam-chico); color: var(--c, var(--texto-3)); }
+  .tarjeta-p .estado-t .punto { background: currentColor; box-shadow: 0 0 6px currentColor; }
+  .tarjeta-p .estado-t.apagado .punto { box-shadow: none; }
+
+  /* El nivel activo del mapa: late como un punto de radar, en el acento. */
+  .camino .foco .punto-camino { border-color: var(--acento); box-shadow: var(--brillo-acento); }
+  .camino .foco .punto-camino::before, .camino .foco .punto-camino::after {
+    content: ""; position: absolute; inset: -2px; border-radius: var(--radio-pildora); border: 2px solid var(--acento);
+    animation: radar var(--dur-pulso) var(--sale) infinite;
+  }
+  .camino .foco .punto-camino::after { animation-delay: calc(var(--dur-pulso) / 2); }
+  @keyframes radar { from { transform: scale(1); opacity: .8; } to { transform: scale(2.8); opacity: 0; } }
+  .camino .espera .punto-camino { border-color: var(--espera); }
+  .camino .espera .senal { color: var(--espera); }
+
+  /* Las pestañas: las demás se corren para dejarle lugar a la que arrastrás. */
+  .pestanas.arrastrables { position: relative; user-select: none; }
+  .pestanas.arrastrables .pestana { cursor: grab; transition: transform var(--dur-entrada) var(--sale), background var(--dur-hover) var(--sale), color var(--dur-hover) var(--sale); }
+  .pestanas.arrastrables .pestana.arrastrada { cursor: grabbing; transition: none; z-index: 1; color: var(--texto); background: var(--acento-tenue); box-shadow: inset 0 0 0 1px var(--acento), var(--brillo-acento); }
+
+  /* Los pendientes: la casilla se marca con un golpe y el texto se apaga. */
+  .pendientes { display: flex; flex-direction: column; gap: var(--esp-2); }
+  .pendientes .casilla span { transition: color var(--dur-entrada) var(--sale); }
+  .pendientes .casilla input:checked + span { color: var(--texto-3); }
+  .pendientes .casilla input { transition: background var(--dur-hover) var(--sale), border-color var(--dur-hover) var(--sale); }
+  .pendientes .casilla input:checked { animation: marcar var(--dur-entrada) var(--sale); box-shadow: 0 0 8px var(--marcado); }
+  .pendientes .casilla input:checked::after { animation: tilde var(--dur-entrada) var(--sale); }
+  @keyframes marcar { 0% { transform: scale(.7); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  @keyframes tilde { from { opacity: 0; transform: rotate(45deg) scale(.4); } to { opacity: 1; transform: rotate(45deg) scale(1); } }
+
+  /* Lo que entra en vez de aparecer de golpe: menús, cuadros, avisos y paneles. */
+  .menu.abierto { animation: entra-menu var(--dur-entrada) var(--sale); transform-origin: top left; }
+  @keyframes entra-menu { from { opacity: 0; transform: translateY(-4px) scale(.98); } }
+  .velo:not([hidden]) { animation: entra-velo var(--dur-entrada) var(--sale); }
+  .velo:not([hidden]) .cuadro { animation: entra-cuadro var(--dur-entrada) var(--sale); }
+  @keyframes entra-velo { from { opacity: 0; } }
+  @keyframes entra-cuadro { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+  .aviso-esquina { position: fixed; right: calc(var(--ancho-conversacion) + var(--esp-4)); bottom: calc(var(--alto-estado) + var(--esp-4)); z-index: 25; width: var(--ancho-globo);
+    padding: var(--esp-3) var(--esp-4); background: var(--elevado); border-radius: var(--radio-bloque); box-shadow: var(--sombra-menu); display: flex; gap: var(--esp-3); align-items: flex-start; }
+  .aviso-esquina:not([hidden]) { animation: entra-aviso var(--dur-entrada) var(--sale); }
+  .aviso-esquina .ic { color: var(--bien); margin-top: 2px; }
+  @keyframes entra-aviso { from { opacity: 0; transform: translateX(16px); } }
+  .plegable { display: grid; grid-template-rows: 1fr; transition: grid-template-rows var(--dur-entrada) var(--sale), opacity var(--dur-entrada) var(--sale); }
+  .plegable.cerrado { grid-template-rows: 0fr; opacity: 0; }
+  .plegable > div { overflow: hidden; }
+  .acciones-muestra { display: flex; gap: var(--esp-2); flex-wrap: wrap; position: relative; }
+
+  /* «Corriendo», con las consolas plegadas: un punto que late y una luz que cruza el texto. */
+  .estado-barra a[href="consolas.html"] { color: var(--acento); position: relative; overflow: hidden; padding-left: 14px; }
+  .estado-barra a[href="consolas.html"] .ic { display: none; }
+  .estado-barra a[href="consolas.html"]::before {
+    content: ""; position: absolute; left: 2px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: var(--radio-pildora);
+    background: var(--acento); box-shadow: var(--brillo-acento); animation: late var(--dur-pulso) ease-in-out infinite;
+  }
+  .estado-barra a[href="consolas.html"]::after {
+    content: ""; position: absolute; inset: 0; width: 40%;
+    background: linear-gradient(90deg, transparent, var(--acento-tenue), transparent);
+    animation: barrido var(--dur-pulso) linear infinite;
+  }
+  @keyframes late { 50% { opacity: .35; transform: scale(.7); } }
+  @keyframes barrido { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+</style>
+</head>
+<body data-marco="proyecto" data-seccion="mapa" data-consolas="2">
+<main class="seccion">
+  <header class="cabecera">
+    <div class="fila-cab"><h1>Pulido</h1>
+      <span class="acciones-cab">
+        <span class="eleccion" data-token="--acento"><span class="rotulo">Acento</span>
+          <span class="filtros">
+            <button class="filtro elegido" data-valor="--acento-cian"><span class="muestra-color" style="--c: var(--acento-cian)"></span>Cian</button>
+            <button class="filtro" data-valor="--acento-verde"><span class="muestra-color" style="--c: var(--acento-verde)"></span>Verde</button>
+            <button class="filtro" data-valor="--acento-azul"><span class="muestra-color" style="--c: var(--acento-azul)"></span>Azul</button>
+            <button class="filtro" data-valor="--acento-violeta"><span class="muestra-color" style="--c: var(--acento-violeta)"></span>Violeta</button>
+          </span></span>
+        <span class="eleccion" data-token="--espera"><span class="rotulo">Lo que te espera</span>
+          <span class="filtros">
+            <button class="filtro elegido" data-valor="--espera-ambar"><span class="muestra-color" style="--c: var(--espera-ambar)"></span>Ámbar</button>
+            <button class="filtro" data-valor="--espera-naranja"><span class="muestra-color" style="--c: var(--espera-naranja)"></span>Naranja</button>
+            <button class="filtro" data-valor="--espera-magenta"><span class="muestra-color" style="--c: var(--espera-magenta)"></span>Magenta</button>
+          </span></span>
+      </span></div>
+  </header>
+  <div class="contenido">
+    <div class="tablero">
+      <section class="bloque">
+        <h2 class="bloque-titulo">Tarjetas de proyectos</h2>
+        <div class="tarjetas-p">
+          <div class="tarjeta-p"><b>Iridium</b><span class="estado-t" style="--c: var(--estado-uso)"><span class="punto"></span>en uso</span></div>
+          <div class="tarjeta-p"><b>Alfa</b><span class="estado-t" style="--c: var(--estado-desarrollo)"><span class="punto"></span>en desarrollo</span></div>
+          <div class="tarjeta-p"><b>Gamma</b><span class="estado-t" style="--c: var(--estado-idea)"><span class="punto"></span>idea</span></div>
+          <div class="tarjeta-p"><b>Delta</b><span class="estado-t" style="--c: var(--estado-rescate)"><span class="punto"></span>en rescate</span></div>
+          <div class="tarjeta-p"><b>Beta</b><span class="estado-t apagado"><span class="punto"></span>pausado</span></div>
+          <div class="tarjeta-p"><b>Épsilon, el catálogo de imágenes y videos</b><span class="estado-t" style="--c: var(--error)"><span class="punto"></span>para eliminar</span></div>
+        </div>
+      </section>
+
+      <section class="bloque">
+        <h2 class="bloque-titulo">El nivel activo del mapa</h2>
+        <div class="camino">
+          <div class="tramo principal hecho"><div class="carril abajo"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Decidir cuánto color y cuánto movimiento lleva</span></div></div>
+          <div class="tramo principal foco"><div class="carril arriba abajo"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Ver las animaciones y los colores en una maqueta viva</span></div></div>
+          <div class="tramo principal espera"><div class="carril arriba abajo"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Elegir el color de lo que te espera</span><span class="senal">Te espera · Q-303</span></div></div>
+          <div class="tramo principal"><div class="carril arriba"><span class="punto-camino"></span></div><div class="texto-tramo"><span class="nombre-tramo">Las pestañas se corren para dejar lugar mientras arrastrás una</span></div></div>
+        </div>
+      </section>
+
+      <section class="bloque">
+        <h2 class="bloque-titulo">Pestañas: arrastrá una</h2>
+        <nav class="pestanas arrastrables" aria-label="Pestañas de prueba">
+          <span class="pestana elegida">Bandeja</span><span class="pestana">Frentes</span><span class="pestana">Docs</span><span class="pestana">Diseño</span><span class="pestana">Git</span><span class="pestana">Scripts</span>
+        </nav>
+      </section>
+
+      <section class="bloque">
+        <h2 class="bloque-titulo">Los puntos de pendientes</h2>
+        <div class="iconos">
+          <span class="icono-p"><span class="act"><i data-ic="bandeja"></i><span class="punto acento"></span></span>Algo espera, sin frenar</span>
+          <span class="icono-p"><span class="act"><i data-ic="bandeja"></i><span class="punto ambar"></span></span>Algo frena</span>
+          <span class="icono-p"><span class="cuenta frena">2</span>preguntas que frenan</span>
+        </div>
+      </section>
+
+      <section class="bloque">
+        <h2 class="bloque-titulo">Marcar un pendiente</h2>
+        <div class="pendientes">
+          <label class="casilla"><input type="checkbox"><span>Las pestañas se corren al arrastrar una</span></label>
+          <label class="casilla"><input type="checkbox"><span>El nivel activo del mapa late</span></label>
+          <label class="casilla"><input type="checkbox"><span>«Corriendo», abajo a la izquierda, se mueve</span></label>
+        </div>
+      </section>
+
+      <section class="bloque">
+        <h2 class="bloque-titulo">Lo que entra en vez de aparecer de golpe</h2>
+        <div class="acciones-muestra">
+          <button class="boton secundario" data-abre="menu-muestra">Abrir un menú</button>
+          <button class="boton secundario" data-velo="velo-muestra">Abrir un cuadro</button>
+          <button class="boton secundario" id="mostrar-aviso">Mostrar un aviso</button>
+          <button class="boton secundario" id="plegar">Plegar el panel</button>
+          <div class="menu" id="menu-muestra" role="menu">
+            <button>Abrir en el explorador</button><button>Copiar la ruta</button><hr><button class="peligroso">Eliminar</button>
+          </div>
+        </div>
+        <div class="plegable" id="panel-plegable"><div>
+          <div class="filas con-lineas">
+            <a class="fila"><span class="codigo">T-142</span><span class="principal-fila"><span class="titulo-fila">El control avisa de una línea Ejecutar: que no se lee</span></span></a>
+            <a class="fila"><span class="codigo">T-141</span><span class="principal-fila"><span class="titulo-fila">Decir en vivo qué hace la IA</span></span></a>
+            <a class="fila"><span class="codigo">T-140</span><span class="principal-fila"><span class="titulo-fila">Lo que la IA dice mientras trabaja, aparte de su respuesta</span></span></a>
+          </div>
+        </div></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div class="velo" id="velo-muestra" hidden data-se-cierra>
+  <div class="cuadro">
+    <h2>¿Eliminar la conversación?</h2>
+    <p>«Pulido: la maqueta viva» se borra de la lista de conversaciones anteriores.</p>
+    <div class="pie"><button class="boton sin-fondo" data-velo="velo-muestra">Cancelar</button><button class="boton principal peligroso" data-velo="velo-muestra">Eliminar la conversación</button></div>
+  </div>
+</div>
+<div class="aviso-esquina" id="aviso-muestra" hidden><i data-ic="ok"></i><span>La IA terminó «Pulido: la maqueta viva».</span></div>
+
+<script src="../piezas.js"></script>
+<script src="pulido.js"></script>
+</body>
+</html>

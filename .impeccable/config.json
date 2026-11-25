@@ -197,6 +197,15 @@
         ],
         "createdAt": "2026-11-22T19:58:05.578Z",
         "reason": "Claude triage: spacing comes from the project's token scale and varies by what it separates (--esp-1 inside a task up to --esp-5 inside the open frente); same false positive as frentes-a/b"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/pulido.html"
+        ],
+        "createdAt": "2026-11-25T22:22:08.714Z",
+        "reason": "el usuario pidió el brillo (glow) de las interfaces de ciencia ficción en Q-299 (B); la maqueta es para que lo vea y lo juzgue"
       }
     ]
   }

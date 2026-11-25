@@ -38,6 +38,7 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Conversaciones anteriores | La conversación | pantallas/conversaciones.html | 2026-11-21 08:52 |
 | La IA no respondió | La conversación | pantallas/error-ia.html | — |
 | Claude sin sesión | La conversación | pantallas/sin-sesion.html | — |
+| Movimiento y color | Pulido (propuesta) | pantallas/pulido.html | — |
 | Un proyecto en ancho chico | La conversación | pantallas/ancho-chico.html | — |
 | La lista de «/» | Paridad (propuesta) | pantallas/paridad-comandos.html | — |
 | Adjuntos en el compositor | Paridad (propuesta) | pantallas/paridad-adjuntos.html | — |
