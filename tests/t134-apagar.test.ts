@@ -27,6 +27,14 @@ beforeEach(() => {
 })
 afterEach(() => vi.useRealTimers())
 
+/** Una IA trabaja un turno y termina. */
+const trabajaYTermina = (a: ApagarAlTerminar) => {
+  ocupadas = 1
+  a.revisar()
+  ocupadas = 0
+  a.revisar()
+}
+
 describe('apagar al terminar', () => {
   it('sin armar no hace nada aunque todo esté quieto', async () => {
     const a = nuevo()
@@ -57,9 +65,27 @@ describe('apagar al terminar', () => {
     expect(apagadas).toBe(1)
   })
 
+  it('armado con todo quieto no cuenta: espera a que una IA trabaje y termine (Q-296)', async () => {
+    const a = nuevo()
+    a.poner(true)
+    expect(a.estado()).toMatchObject({ armado: true, apagaEn: null })
+    await vi.advanceTimersByTimeAsync(CUENTA_MS * 5)
+    a.revisar()
+    expect(apagadas).toBe(0)
+    expect(a.estado().apagaEn).toBeNull()
+    ocupadas = 1
+    a.revisar()
+    ocupadas = 0
+    a.revisar()
+    expect(a.estado().apagaEn).not.toBeNull()
+    await vi.advanceTimersByTimeAsync(CUENTA_MS)
+    expect(apagadas).toBe(1)
+  })
+
   it('si una IA vuelve a trabajar durante la cuenta, la corta y vuelve a contar al terminar', async () => {
     const a = nuevo()
     a.poner(true)
+    trabajaYTermina(a)
     await vi.advanceTimersByTimeAsync(CUENTA_MS / 2)
     ocupadas = 1
     a.revisar()
@@ -75,6 +101,7 @@ describe('apagar al terminar', () => {
   it('desarmar durante la cuenta no apaga', async () => {
     const a = nuevo()
     a.poner(true)
+    trabajaYTermina(a)
     await vi.advanceTimersByTimeAsync(CUENTA_MS / 2)
     a.poner(false)
     await vi.advanceTimersByTimeAsync(CUENTA_MS * 2)
@@ -86,6 +113,7 @@ describe('apagar al terminar', () => {
     apagar = () => Promise.reject(new Error('acceso denegado'))
     const a = nuevo()
     a.poner(true)
+    trabajaYTermina(a)
     await vi.advanceTimersByTimeAsync(CUENTA_MS)
     expect(a.estado().armado).toBe(false)
     expect(avisos.at(-1)?.fallo).toBeTruthy()

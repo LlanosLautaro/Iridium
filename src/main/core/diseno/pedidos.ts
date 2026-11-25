@@ -23,12 +23,13 @@ export function pedidoEmpezar(conCodigo: boolean): string {
 }
 
 /**
- * DS-5: otra versión de una maqueta (`pantallas/bandeja.html`) en `version` (`versiones/bandeja/b.html`), con la frase
- * del usuario. La de hoy y el índice no se tocan: Iridium las pone lado a lado y el usuario elige.
+ * DS-5: otra versión de una maqueta (`pantallas/bandeja.html`) en `version` (`versiones/bandeja/b.html`). Va citado en
+ * la conversación (D-196): lo que se prueba lo escribe el usuario después de la cita. La de hoy y el índice no se
+ * tocan: Iridium las pone lado a lado y el usuario elige.
  */
-export function pedidoOtraVersion(maqueta: string, version: string, frase: string): string {
+export function pedidoOtraVersion(maqueta: string, version: string): string {
   return [
-    `Escribí otra versión de la maqueta \`docs/diseno/${maqueta}\` en \`docs/diseno/${version}\`, como dice el framework (\`referencias/06-ui.md\` › Maquetas): «${frase}».`,
-    `Es una maqueta más, con las hojas a dos carpetas (\`../../tokens.css\`, \`../../piezas.css\`) y la frase en \`<meta name="descripcion" content="…">\`. No cambies la maqueta de hoy ni el índice: Iridium las muestra lado a lado y el usuario elige con cuál quedarse.`,
+    `Escribí otra versión de la maqueta \`docs/diseno/${maqueta}\` en \`docs/diseno/${version}\`, como dice el framework (\`referencias/06-ui.md\` › Maquetas), con lo que te pido después de esta cita; si no pido nada, probá una dirección distinta de la de hoy.`,
+    `Es una maqueta más, con las hojas a dos carpetas (\`../../tokens.css\`, \`../../piezas.css\`) y en \`<meta name="descripcion" content="…">\` una frase corta con lo que prueba. No cambies la maqueta de hoy ni el índice: Iridium las muestra lado a lado y el usuario elige con cuál quedarse.`,
   ].join('\n\n')
 }

@@ -175,7 +175,7 @@ export function Grande({
             title={
               trabajando
                 ? 'Su IA está trabajando'
-                : 'Le pide a la IA otra versión de esta pantalla: gasta uso'
+                : 'Deja el pedido citado en la conversación: lo mandás con lo que quieras probar'
             }
             onClick={otraVersion}
           >

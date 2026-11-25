@@ -1,7 +1,7 @@
 // DI-I4 con la app abierta y el motor falso: las versiones de una maqueta (DS-5, DS-9, DS-12) sobre la muestra
 // `tests/muestras/diseno` — el lienzo dice cuántas tiene, la grande las pone lado a lado, una versión se agranda (en el
 // `webview`, para comentarla) y vuelve, Quedarme con esta la vuelve la maqueta con lo de antes en la papelera, y Otra
-// versión pide una frase, dice que gasta uso y muestra su lugar mientras la IA la escribe.
+// versión queda citada en la conversación (D-196) y muestra su lugar mientras la IA la escribe.
 import { cp, mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -162,30 +162,31 @@ test('lado a lado: el lienzo las cuenta, se agranda una versión y Quedarme con 
   await app.close()
 })
 
-test('Otra versión: la frase, el aviso de uso, su lugar mientras la IA escribe y la versión cuando llega', async () => {
+test('Otra versión: queda citada en la conversación, su lugar mientras la IA escribe y la versión cuando llega', async () => {
   const { app, win } = await abrir()
   const diseno = await entrarADiseno(win)
   await diseno.locator('.di-mini[data-archivo="pantallas/nota.html"]').click()
   await expect(diseno.locator('.di-grande-t')).toHaveText('Nota abierta · 2 de 3')
   await expect(diseno.getByRole('button', { name: /^Versiones/ })).toHaveCount(0)
+  // D-196 (Q-295): sin cuadro propio; el pedido queda citado arriba del campo de la conversación, sin mandar.
   await diseno.getByRole('button', { name: 'Otra versión' }).click()
-  const cuadro = win.getByRole('dialog', { name: 'Otra versión de Nota abierta' })
-  await expect(cuadro).toContainText('Gasta uso')
-  await expect(cuadro.getByRole('button', { name: 'Pedírsela' })).toBeDisabled()
-  // Esc cierra el cuadro, no la grande.
-  await win.keyboard.press('Escape')
-  await expect(cuadro).toHaveCount(0)
-  await expect(diseno.locator('.di-grande-t')).toHaveText('Nota abierta · 2 de 3')
-  await diseno.getByRole('button', { name: 'Otra versión' }).click()
-  await cuadro.getByLabel('Qué probar').fill('la nota con el texto más grande')
-  await win.screenshot({ path: 'test-results/di4-otra-version.png' })
-  await cuadro.getByRole('button', { name: 'Pedírsela' }).click()
-
-  // Lado a lado, con el lugar de la versión A mientras la IA trabaja; el pedido llegó a la conversación.
+  await expect(win.getByRole('dialog')).toHaveCount(0)
+  const cita = win.locator('.compositor .citado')
+  await expect(cita).toHaveCount(1)
+  await expect(cita).toContainText('Otra versión Nota abierta')
   const nueva = diseno.getByRole('region', { name: 'Versión nueva' })
-  await expect(nueva).toContainText('La IA está escribiendo la versión…')
   await expect(nueva).toContainText('Versión A')
-  await expect(nueva).toContainText('la nota con el texto más grande')
+  await expect(nueva).toContainText('Citada en la conversación')
+  await expect(win.locator('.hilo .turno')).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/di4-otra-version.png' })
+  // Lo que se prueba lo escribe el usuario en la conversación, con la cita.
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo.fill('la nota con el texto más grande')
+  await campo.press('Enter')
+  await expect(cita).toHaveCount(0)
+
+  // Mandada: el lugar de la versión A mientras la IA trabaja; el pedido llegó a la conversación.
+  await expect(nueva).toContainText('La IA está escribiendo la versión…')
   // La de hoy, viva al lado.
   await expect
     .poll(() =>

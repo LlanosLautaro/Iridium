@@ -97,15 +97,20 @@ test('No apagar en la cuenta lo desarma y no apaga; tocar el botón armado tambi
   const boton = win.getByRole('button', { name: 'Apagar la PC al terminar' })
   const aviso = win.getByRole('alert', { name: 'La PC se va a apagar' })
 
-  // Con la IA quieta, armar empieza la cuenta enseguida.
+  // Q-296: con la IA quieta, armar no cuenta; espera a que trabaje y termine.
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await boton.click()
-  await expect(aviso).toBeVisible()
+  await expect(win.getByRole('button', { name: 'Se apaga al terminar' })).toBeVisible()
+  await win.waitForTimeout(1500)
+  await expect(aviso).toHaveCount(0)
+  await campo.fill('Algo corto')
+  await campo.press('Enter')
+  await expect(aviso).toBeVisible({ timeout: 30_000 })
   await aviso.getByRole('button', { name: 'No apagar' }).click()
   await expect(aviso).toHaveCount(0)
   await expect(boton).toHaveAttribute('aria-pressed', 'false')
 
   // Armado mientras trabaja y desarmado con el mismo botón: al terminar no cuenta.
-  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
   await campo.fill('Hacé algo lento')
   await campo.press('Enter')
   await boton.click()

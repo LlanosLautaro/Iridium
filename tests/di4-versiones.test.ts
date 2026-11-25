@@ -59,15 +59,12 @@ describe('las versiones de una maqueta', () => {
     const todas = Array.from({ length: 26 }, (_, i) => `versiones/x/${String.fromCharCode(97 + i)}.html`)
     expect(proximaLetra(todas)).toBeNull()
   })
-  it('el pedido dice dónde escribirla, con la frase y sin tocar la de hoy', () => {
-    const p = pedidoOtraVersion(
-      'pantallas/bandeja.html',
-      'versiones/bandeja/b.html',
-      fraseLimpia('  la bandeja\n como   una sola lista '),
-    )
+  it('el pedido dice dónde escribirla, que lo que se prueba va después de la cita, y sin tocar la de hoy', () => {
+    const p = pedidoOtraVersion('pantallas/bandeja.html', 'versiones/bandeja/b.html')
     expect(p).toContain('`docs/diseno/pantallas/bandeja.html`')
     expect(p).toContain('`docs/diseno/versiones/bandeja/b.html`')
-    expect(p).toContain('«la bandeja como una sola lista»')
+    expect(p).toContain('lo que te pido después de esta cita')
+    expect(fraseLimpia('  la bandeja\n como   una sola lista ')).toBe('la bandeja como una sola lista')
     expect(p).toContain('`../../tokens.css`')
     expect(p).toContain('<meta name="descripcion"')
     expect(p).toContain('No cambies la maqueta de hoy ni el índice')

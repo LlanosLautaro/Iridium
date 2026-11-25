@@ -36,7 +36,7 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
   - [ ] Avisar si los tamaños estimados no coinciden con lo gastado, cuando haya varias noches anotadas (T-122, mediano)
 - [x] Medir la calidad del tablero
 - [x] Que el avance solo revise ideas y frentes, y tome el Núcleo (T-135, T-136, FS-I4)
-- [ ] Probar la revisión una noche (T-135, T-136, Q-294, chico; es tu prueba)
+- [x] Probar la revisión una noche (T-135, T-136, Q-294)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -51,7 +51,7 @@ Abierto el 2026-11-22 (D-175), antes de Capacidades, para usar la cuota que qued
 | FS-I1 | Las marcas en la ruta, el Mapa que las muestra, los ajustes y los interruptores (FS-1 a FS-3) | hecho |
 | FS-I2 | El motor que toma pasos y el aviso al volver (FS-4, FS-5) | hecho (probado una noche en Q-264) |
 | FS-I3 | El tablero Frentes con la forma B (FS-6 a FS-8) | hecho (probado en Q-267) |
-| FS-I4 | La revisión de ideas y frentes, el Núcleo y los frentes en pausa (D-193) | en curso (se prueba en Q-294) |
+| FS-I4 | La revisión de ideas y frentes, el Núcleo y los frentes en pausa (D-193) | hecho (probado una noche en Q-294) |
 
 ## Log de iteraciones
 ### FS-I1 — Las marcas, los ajustes y los interruptores (2026-11-22)
@@ -119,5 +119,5 @@ La tomó el avance solo. Cubre el tablero (FS-6 a FS-8).
 **Verificado:** `pnpm test` (1010 pasan), `pnpm typecheck`, `pnpm lint`, el control (0 avisos) y Playwright de lo tocado (`fs3-tablero`, con la prueba nueva y su captura `fs3-muchos.png`; `ma2-mapa`, `fs1-avance`, `i8-frentes`, `or4-mapa`: 17 pasan).
 
 ## Próximo paso
-Q-294: ver una noche la revisión (las ideas evaluadas, los pasos marcados y lo que tomó después); con eso, FS-I4 y T-135 y T-136 pasan a hecho y el frente vuelve a hecho. En operación, con el hito 10. Con varias noches anotadas en `arranques.json`, T-122 (avisar si los tamaños no coinciden con lo gastado). Lo que falle del avance solo o del tablero se anota como `T-n` con `Frente: Frentes`.
+FS-I4 hecha (Q-294, 2026-11-25): la revisión evaluó las ideas, marcó los pasos y después el avance solo tomó pasos de esos frentes y del Núcleo, sin pausar ninguno. Las sesiones en «falló» de esa noche fueron con la 1.1.2, antes de D-194: el arreglo se mira otra noche en Q-298. En operación, con el hito 10. Con varias noches anotadas en `arranques.json`, T-122 (avisar si los tamaños no coinciden con lo gastado). Lo que falle del avance solo o del tablero se anota como `T-n` con `Frente: Frentes`.
 **Leer antes:** `modulos/frentes/estado.md` › Calidad del motor; D-179.

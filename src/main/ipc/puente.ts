@@ -66,7 +66,7 @@ import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
 import { pedidoEmpezar, pedidoOtraVersion, tieneCodigo } from '../core/diseno/pedidos'
-import { carpetaVersiones, fraseLimpia, proximaLetra, versionesDe } from '../core/diseno/versiones'
+import { carpetaVersiones, proximaLetra, versionesDe } from '../core/diseno/versiones'
 import {
   INSTRUCCION_CENTRO,
   INSTRUCCION_SKILLS,
@@ -1167,15 +1167,14 @@ export function registrarPuente(s: Servicios): Puente {
   ipcMain.handle(CANALES.marcarVista, async (_, ruta: unknown, archivo: unknown) =>
     marcarVista(await proyecto(ruta), ArchivoMaqueta.parse(archivo), s.vistos),
   )
-  // Los pedidos a la IA (DS-1, DS-5): el texto lo arma este lado y cita el framework; la ventana solo dice cuál.
-  ipcMain.handle(CANALES.pedirDiseno, async (_, ruta: unknown, dato: unknown): Promise<string | null> => {
+  // Los pedidos a la IA (DS-1, DS-5): el texto lo arma este lado y cita el framework; la ventana lo deja citado en la
+  // conversación, sin mandarlo (D-196): el usuario elige si va en esa conversación o en una nueva, y qué agrega.
+  ipcMain.handle(CANALES.citaDiseno, async (_, ruta: unknown, dato: unknown) => {
     const r = await proyecto(ruta)
     const pedido = PedidoDisenoEsquema.parse(dato)
-    if (conversaciones.enMarcha().includes(r)) throw new Error('La IA de ese proyecto está trabajando')
     if (pedido === 'empezar') {
       const raiz = await readdir(r).catch(() => [] as string[])
-      await conversaciones.seguir(r, { texto: pedidoEmpezar(tieneCodigo(raiz)) })
-      return null
+      return { texto: pedidoEmpezar(tieneCodigo(raiz)), archivo: null }
     }
     // Otra versión: la próxima letra libre de la carpeta de sus versiones.
     const carpeta = carpetaVersiones(pedido.maqueta)
@@ -1184,10 +1183,7 @@ export function registrarPuente(s: Servicios): Puente {
     const letra = proximaLetra(versionesDe(pedido.maqueta, lista))
     if (!letra) throw new Error('Esa maqueta ya tiene 26 versiones: quedate con una antes de pedir otra')
     const version = `${carpeta}${letra}.html`
-    await conversaciones.seguir(r, {
-      texto: pedidoOtraVersion(pedido.maqueta, version, fraseLimpia(pedido.frase)),
-    })
-    return version
+    return { texto: pedidoOtraVersion(pedido.maqueta, version), archivo: version }
   })
   // Quedarme con esta (DS-5): lo de antes queda en Git y lo que se borra va a la papelera (o a `IRIDIUM_PAPELERA`).
   ipcMain.handle(CANALES.quedarmeConVersion, async (_, ruta: unknown, maqueta: unknown, version: unknown) => {

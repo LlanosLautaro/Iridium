@@ -198,9 +198,13 @@ test('responder una decisión y una prueba, también a medias (H-10, H-11, F-3)'
   // Corregir una respondida (plegada al pasar a Respondidas).
   await abrirPregunta(q7)
   await q7.getByRole('button', { name: 'Corregir' }).click()
+  // R-109: mientras se corrige ya no dice «Respondida, sin procesar».
+  await expect(q7.locator('.cab-q')).toContainText('Corrigiendo, sin enviar')
+  await expect(q7.locator('.cab-q')).not.toContainText('Respondida, sin procesar')
   await q7.getByText('3D', { exact: true }).click()
   await q7.getByRole('button', { name: 'Enviar' }).click()
   await expect(q7.locator('.resumen-q')).toContainText('3D')
+  await expect(q7.locator('.cab-q')).toContainText('Respondida, sin procesar')
   expect(await readFile(join(raiz, 'Alfa', 'docs', 'respuestas', 'Q-7.md'), 'utf8')).toContain('A) 3D')
   await app.close()
 })

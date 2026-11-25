@@ -92,8 +92,8 @@ export type VistaDiseno =
       problemaIndice: string | null
     }
 
-/** Los pedidos a la IA de la sección (gastan uso; la ventana lo dice antes): empezar el diseño u otra versión. */
-export type PedidoDiseno = 'empezar' | { tipo: 'version'; maqueta: string; frase: string }
+/** Los pedidos a la IA de la sección, que quedan citados en la conversación (D-196): empezar el diseño u otra versión. */
+export type PedidoDiseno = 'empezar' | { tipo: 'version'; maqueta: string }
 
 /** El evento del puente: cambió algo de `docs/diseno/` de un proyecto. */
 export interface CambioDiseno {

@@ -821,7 +821,8 @@ function BotonApagar() {
   )
 }
 
-function iconoDeCita(tipo: string): 'revision' | 'idea' | 'comentar' | 'mapa' | 'ficha' {
+function iconoDeCita(tipo: string): 'revision' | 'idea' | 'comentar' | 'mapa' | 'diseno' | 'ficha' {
+  if (tipo === 'Diseño' || tipo === 'Otra versión') return 'diseno'
   return tipo === 'Revisar'
     ? 'revision'
     : tipo === 'Idea'

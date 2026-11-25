@@ -59,8 +59,11 @@ export function Versiones({
   base: string
   /** La maqueta del índice, con sus versiones. */
   hoy: MaquetaVista
-  /** La versión que está escribiendo la IA (`versiones/bandeja/b.html`) con la frase que se le pidió, o null. */
-  pidiendo: { archivo: string; frase: string } | null
+  /**
+   * La versión pedida (`versiones/bandeja/b.html`), o null: citada en la conversación sin mandar todavía, o ya mandada
+   * y la IA escribiéndola (D-196).
+   */
+  pidiendo: { archivo: string; citada: boolean } | null
   /** La IA terminó sin escribir la versión pedida: su letra, o null. */
   noLlego: string | null
   error: string | null
@@ -109,7 +112,7 @@ export function Versiones({
           type="button"
           className="boton sin-fondo chico"
           disabled={trabajando}
-          title={ocupado ?? 'Le pide a la IA otra versión de esta pantalla: gasta uso'}
+          title={ocupado ?? 'Deja el pedido citado en la conversación: lo mandás con lo que quieras probar'}
           onClick={otraVersion}
         >
           <Icono nombre="mas" />
@@ -187,8 +190,10 @@ export function Versiones({
                     {(esperando.archivo.split('/').pop() ?? '').replace(/\.html?$/i, '').toUpperCase()}
                   </b>
                 </span>
-                <span className="di-version-frase" title={esperando.frase}>
-                  {esperando.frase}
+                <span className="di-version-frase">
+                  {esperando.citada
+                    ? 'Citada en la conversación: escribí qué probar y mandala'
+                    : 'Pedida en la conversación'}
                 </span>
               </div>
             </div>
@@ -197,7 +202,11 @@ export function Versiones({
               style={{ aspectRatio: `${ANCHO_MAQUETA} / ${ALTO_MAQUETA}` }}
               role="status"
             >
-              <span>La IA está escribiendo la versión…</span>
+              <span>
+                {esperando.citada
+                  ? 'Aparece acá cuando la IA la escriba'
+                  : 'La IA está escribiendo la versión…'}
+              </span>
             </div>
           </section>
         )}

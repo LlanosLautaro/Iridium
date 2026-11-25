@@ -406,7 +406,9 @@ export function Pendiente({
             Frena
           </span>
         )}
-        {p.estado === 'respondida' && (
+        {/* R-109: mientras se corrige, la respuesta de antes no cuenta; vuelve a decir «sin procesar» al Enviar o Cancelar. */}
+        {corrigiendo && <span className="senal">Corrigiendo, sin enviar</span>}
+        {p.estado === 'respondida' && !corrigiendo && (
           <span className="senal verde">
             <Icono nombre="check" />
             {p.postergada ? 'Postergada, sin procesar' : 'Respondida, sin procesar'}

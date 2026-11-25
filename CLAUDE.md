@@ -11,6 +11,7 @@ Este proyecto se trabaja desde Iridium con su framework (la skill `iridium`): el
 ## Reglas propias de este proyecto
 - Los estilos salen del design system: los tokens de `docs/diseno/tokens.css` (el negro, único tema, D-104) y las piezas de `docs/diseno/piezas.css`, que la app tiene en `src/renderer/estilos/piezas.css`; la base, en `src/renderer/estilos/base.css`. El control de estilos (`tests/estilos.test.ts`) marca un color escrito o una pieza rehecha en una sección.
 - La lógica de dominio va separada de la interfaz, como define la arquitectura.
+- Un pedido a la IA desde una sección nunca se manda solo ni con un cuadro propio: queda citado en la conversación del proyecto (`citar`) y lo manda el usuario, en ese chat o en uno nuevo (D-196).
 - El framework (`recursos/plugins/iridium`) se cambia junto con lo que Iridium lee y su control (D-086, D-092): un formato nuevo o distinto va en el mismo cambio que el lector, el control y sus pruebas.
 - Un error de formato que se repite se arregla en el framework y en el control, nunca con un parche en un proyecto.
 - Al cerrar un frente, subí el número del medio del `version` del `package.json` (1.0.0 → 1.1.0) en el mismo commit; el primero, solo con el ok del usuario (D-182).

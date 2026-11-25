@@ -1,15 +1,16 @@
 // Diseño de un proyecto (frente Diseño, DS-8 a DS-13; D-105): las maquetas HTML de `docs/diseno/` vivas en un lienzo,
 // agrupadas por sección (Pantallas), los tokens y las piezas (Sistema) y una maqueta grande para usarla y comentarla
 // con F8. Se redibuja sola cuando la IA cambia algo; lo que cambió y no se miró lleva un punto. Sin `docs/diseno/`,
-// ofrece pedírselo a la IA (gasta uso: lo dice antes). Una maqueta puede tener otras versiones (DI-I4): se piden desde
-// la grande, se miran lado a lado y se elige con cuál quedarse.
+// ofrece pedírselo a la IA. Una maqueta puede tener otras versiones (DI-I4): se piden desde la grande, se miran lado a
+// lado y se elige con cuál quedarse. Los pedidos quedan citados en la conversación, sin mandar (D-196): el usuario
+// agrega lo suyo y elige si van en esa conversación o en una nueva.
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { MaquetaVista, VistaDiseno } from '../../../../compartido/diseno'
 import { fichaDe, tarjetaDe, usarEstado, vistaDe } from '../../../estado'
 import { Cabecera, Filtros } from '../../../ui/Cabecera'
 import { Icono } from '../../../ui/Icono'
 import { mismaRuta } from '../enlaces'
-import { ConfirmarQuedarme, OtraVersion } from './CuadrosVersion'
+import { ConfirmarQuedarme } from './CuadrosVersion'
 import { Grande } from './Grande'
 import { Miniatura } from './Miniatura'
 import { Sistema } from './Sistema'
@@ -33,58 +34,12 @@ function sinPunto(v: VistaDiseno | null, archivos: ReadonlySet<string>): VistaDi
   }
 }
 
+/** La clave de la cita de otra versión: una por maqueta; pedir otra vez la reemplaza. */
+const claveVersion = (maqueta: string) => `diseno:version:${maqueta}`
+
 /** La letra de una versión por su archivo: `versiones/bandeja/b.html` → `B`. */
 function letraDe(version: string): string {
   return (version.split('/').pop() ?? '').replace(/\.html?$/i, '').toUpperCase()
-}
-
-/** El cuadro antes de un pedido a la IA: dice qué hace y que gasta uso. */
-function ConfirmarPedido({
-  conCodigo,
-  pedir,
-  cerrar,
-}: {
-  conCodigo: boolean
-  pedir: () => void
-  cerrar: () => void
-}) {
-  const primero = useRef<HTMLButtonElement>(null)
-  useEffect(() => primero.current?.focus(), [])
-  return (
-    <div className="velo capa-cuadro">
-      <div
-        className="cuadro"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="di-pedir-t"
-        aria-describedby="di-pedir-d"
-        onKeyDown={(e) => e.key === 'Escape' && cerrar()}
-      >
-        <h2 id="di-pedir-t">Pedirle el diseño a la IA</h2>
-        <p id="di-pedir-d">
-          {conCodigo
-            ? 'La IA dibuja las pantallas como están hoy en la app, desde su código, con los tokens y las piezas.'
-            : 'La IA dibuja las pantallas desde la UX del proyecto (04-ux.md), con los tokens y las piezas.'}{' '}
-          Van apareciendo acá a medida que las guarda. Gasta uso de tu suscripción.
-        </p>
-        <div className="pie">
-          <button ref={primero} type="button" className="boton sin-fondo" onClick={cerrar}>
-            Cancelar
-          </button>
-          <button
-            type="button"
-            className="boton principal"
-            onClick={() => {
-              pedir()
-              cerrar()
-            }}
-          >
-            Pedírselo
-          </button>
-        </div>
-      </div>
-    </div>
-  )
 }
 
 export function Diseno({ ruta }: { ruta: string }) {
@@ -93,8 +48,9 @@ export function Diseno({ ruta }: { ruta: string }) {
   const [pestana, setPestana] = useState<'pantallas' | 'sistema'>('pantallas')
   const [tamano, setTamano] = useState<Tamano>('chico')
   const [grande, setGrande] = useState<string | null>(null)
-  const [confirmar, setConfirmar] = useState(false)
   const [pedido, setPedido] = useState<string | null>(null)
+  const citar = usarEstado((s) => s.citar)
+  const citas = usarEstado((s) => s.citas[ruta])
   const trabajando = usarEstado((s) => fichaDe(s.fichas, ruta)?.estado === 'trabajando')
   const comentarios = usarEstado((s) => tarjetaDe(s.lista, ruta)?.revision ?? 0)
   const abrirSeccion = usarEstado((s) => s.abrirSeccion)
@@ -106,10 +62,9 @@ export function Diseno({ ruta }: { ruta: string }) {
   const volverA = useRef<string | null>(null)
   // Las versiones (DI-I4): la maqueta que se mira lado a lado, la versión que está escribiendo la IA y los cuadros.
   const [comparar, setComparar] = useState<string | null>(null)
-  const [pidiendo, setPidiendo] = useState<{ archivo: string; frase: string } | null>(null)
+  const [pidiendo, setPidiendo] = useState<{ archivo: string; maqueta: string } | null>(null)
   const [noLlego, setNoLlego] = useState<string | null>(null)
   const [errorVersion, setErrorVersion] = useState<string | null>(null)
-  const [pedirVersion, setPedirVersion] = useState<string | null>(null)
   const [quedarme, setQuedarme] = useState<{ maqueta: string; version: string | null } | null>(null)
 
   const leer = useCallback(() => {
@@ -183,22 +138,29 @@ export function Diseno({ ruta }: { ruta: string }) {
     if (comparar && !grande && claveSinMirar) marcar(claveSinMirar.split('|'))
   }, [comparar, grande, claveSinMirar, marcar])
 
-  // La versión pedida: llegó (se deja de esperar) o la IA terminó su turno sin escribirla (se dice).
+  // La versión pedida: citada, espera a que el usuario la mande; mandada, llegó (se deja de esperar) o la IA terminó su
+  // turno sin escribirla (se dice). Si la cita se sacó sin mandarla, se deja de esperar.
   const huboTrabajo = useRef(false)
   const llego =
     pidiendo !== null && enLienzo.some((m) => m.versiones.some((v) => v.archivo === pidiendo.archivo))
+  const citada = pidiendo !== null && (citas ?? []).some((c) => c.clave === claveVersion(pidiendo.maqueta))
   useEffect(() => {
     if (!pidiendo) return
     if (llego) {
       setPidiendo(null)
       huboTrabajo.current = false
-    } else if (trabajando) huboTrabajo.current = true
+    } else if (citada) huboTrabajo.current = false
+    else if (trabajando) huboTrabajo.current = true
     else if (huboTrabajo.current) {
       setNoLlego(pidiendo.archivo)
       setPidiendo(null)
       huboTrabajo.current = false
+    } else {
+      // Sin la cita y sin trabajo: se mandó y el turno todavía no arrancó, o se sacó. Se espera un poco.
+      const t = setTimeout(() => setPidiendo(null), 5000)
+      return () => clearTimeout(t)
     }
-  }, [pidiendo, llego, trabajando])
+  }, [pidiendo, llego, citada, trabajando])
 
   const verVersiones = useCallback((archivo: string) => {
     setErrorVersion(null)
@@ -213,12 +175,24 @@ export function Diseno({ ruta }: { ruta: string }) {
     setErrorVersion(null)
     if (a) agrandar(a)
   }, [comparar, agrandar])
-  const pedirOtra = async (maqueta: string, frase: string) => {
-    const version = await window.iridium.pedirDiseno(ruta, { tipo: 'version', maqueta, frase })
-    setNoLlego(null)
-    huboTrabajo.current = false
-    if (version) setPidiendo({ archivo: version, frase })
-    verVersiones(maqueta)
+  /** Otra versión (D-196): el pedido queda citado en la conversación y se pasa a las versiones, con su lugar. */
+  const pedirOtra = (maqueta: string) => {
+    setErrorVersion(null)
+    window.iridium.citaDiseno(ruta, { tipo: 'version', maqueta }).then(
+      ({ texto, archivo }) => {
+        citar(ruta, {
+          clave: claveVersion(maqueta),
+          tipo: 'Otra versión',
+          nombre: deLienzo(maqueta)?.nombre ?? maqueta,
+          texto,
+        })
+        setNoLlego(null)
+        huboTrabajo.current = false
+        if (archivo) setPidiendo({ archivo, maqueta })
+        verVersiones(maqueta)
+      },
+      (e: unknown) => setErrorVersion(`No se pudo: ${e instanceof Error ? e.message : String(e)}`),
+    )
   }
   const confirmarQuedarme = (maqueta: string, version: string | null) => {
     setErrorVersion(null)
@@ -239,11 +213,17 @@ export function Diseno({ ruta }: { ruta: string }) {
     volverA.current = null
   }, [grande])
 
+  /** Pedírselo a la IA (D-196): queda citado en la conversación; las maquetas aparecen cuando lo mande. */
   const pedir = () => {
     setPedido(null)
-    window.iridium.pedirDiseno(ruta, 'empezar').then(
-      () => setPedido('La IA está armando el diseño: las maquetas aparecen a medida que las guarda.'),
-      (e: unknown) => setPedido(`No se pudo mandar el pedido: ${e instanceof Error ? e.message : String(e)}`),
+    window.iridium.citaDiseno(ruta, 'empezar').then(
+      ({ texto }) => {
+        citar(ruta, { clave: 'diseno:empezar', tipo: 'Diseño', nombre: 'Armar el diseño', texto })
+        setPedido(
+          'El pedido quedó citado en la conversación: mandalo cuando quieras. Las maquetas aparecen acá a medida que la IA las guarda.',
+        )
+      },
+      (e: unknown) => setPedido(`No se pudo armar el pedido: ${e instanceof Error ? e.message : String(e)}`),
     )
   }
 
@@ -261,13 +241,6 @@ export function Diseno({ ruta }: { ruta: string }) {
   const paraQuedarme = deLienzo(quedarme?.maqueta ?? null)
   const cuadrosVersion = (
     <>
-      {pedirVersion && (
-        <OtraVersion
-          nombre={deLienzo(pedirVersion)?.nombre ?? pedirVersion}
-          pedir={(frase) => pedirOtra(pedirVersion, frase)}
-          cerrar={() => setPedirVersion(null)}
-        />
-      )}
       {quedarme && (
         <ConfirmarQuedarme
           nombre={paraQuedarme?.nombre ?? quedarme.maqueta}
@@ -280,7 +253,7 @@ export function Diseno({ ruta }: { ruta: string }) {
     </>
   )
   /** Con un cuadro abierto, Esc es del cuadro. */
-  const quieto = pedirVersion !== null || quedarme !== null
+  const quieto = quedarme !== null
 
   if (vista?.tipo === 'diseno' && grande) {
     // Una versión, o la de hoy agrandada desde las versiones: las flechas recorren la de hoy y sus versiones.
@@ -303,7 +276,7 @@ export function Diseno({ ruta }: { ruta: string }) {
           quieto={quieto}
           versiones={suya?.versiones.length ?? 0}
           verVersiones={suya ? () => verVersiones(suya.archivo) : null}
-          otraVersion={suya?.archivo.startsWith('pantallas/') ? () => setPedirVersion(suya.archivo) : null}
+          otraVersion={suya?.archivo.startsWith('pantallas/') ? () => pedirOtra(suya.archivo) : null}
           trabajando={trabajando}
         />
         {cuadrosVersion}
@@ -316,14 +289,14 @@ export function Diseno({ ruta }: { ruta: string }) {
         <Versiones
           base={vista.base}
           hoy={hoy}
-          pidiendo={pidiendo}
+          pidiendo={pidiendo && { archivo: pidiendo.archivo, citada }}
           noLlego={noLlego && !hoy.versiones.some((v) => v.archivo === noLlego) ? letraDe(noLlego) : null}
           error={errorVersion}
           trabajando={trabajando}
           quieto={quieto}
           agrandar={agrandar}
           quedarme={(version) => setQuedarme({ maqueta: hoy.archivo, version })}
-          otraVersion={() => setPedirVersion(hoy.archivo)}
+          otraVersion={() => pedirOtra(hoy.archivo)}
           volver={dejarVersiones}
         />
         {cuadrosVersion}
@@ -411,9 +384,11 @@ export function Diseno({ ruta }: { ruta: string }) {
                 className="boton secundario chico"
                 disabled={trabajando}
                 title={
-                  trabajando ? 'Su IA está trabajando' : 'Le manda el pedido a la IA del proyecto: gasta uso'
+                  trabajando
+                    ? 'Su IA está trabajando'
+                    : 'Deja el pedido citado en la conversación: lo mandás cuando quieras'
                 }
-                onClick={() => setConfirmar(true)}
+                onClick={pedir}
               >
                 Pedírselo a la IA
               </button>
@@ -466,14 +441,7 @@ export function Diseno({ ruta }: { ruta: string }) {
           ancho={ANCHOS.grande}
           agrandar={agrandar}
           abrirTokens={() => abrirArchivo(ruta, 'docs/diseno/tokens.css')}
-          pedir={trabajando ? null : () => setConfirmar(true)}
-        />
-      )}
-      {confirmar && (
-        <ConfirmarPedido
-          conCodigo={vista?.tipo === 'sin-diseno' ? vista.conCodigo : true}
-          pedir={pedir}
-          cerrar={() => setConfirmar(false)}
+          pedir={trabajando ? null : pedir}
         />
       )}
     </>

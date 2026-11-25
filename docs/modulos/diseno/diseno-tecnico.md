@@ -118,7 +118,7 @@ La extensión y el ayudante no cambian (S-4). Cambia Iridium:
 5. **Las pruebas:** con `IRIDIUM_DATOS` Iridium no carga el ayudante. La prueba de `F8` sobre una maqueta lo carga con `IRIDIUM_AYUDANTE=1` (variable nueva, solo para esa prueba) y el receptor en otro puerto (`IRIDIUM_REVISION_PUERTO`, ya existe).
 
 ## Los pedidos a la IA
-Todos van a la conversación del proyecto como **Pasar al framework** (`app/conversacion.ts` › `seguir` con texto), después de un cuadro que dice que gasta uso. El texto lo arma `core/diseno/pedidos.ts` y cita el framework, no repite el formato:
+Todos quedan citados en la conversación del proyecto, sin mandar (D-196): `citaDiseno` devuelve el texto y la ventana lo cita (`citar`); lo manda el usuario, con lo suyo, en esa conversación o en una nueva. El texto lo arma `core/diseno/pedidos.ts` y cita el framework, no repite el formato:
 
 | Pedido | Lo que dice (en corto) | Iteración |
 |---|---|---|

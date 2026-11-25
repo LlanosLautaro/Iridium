@@ -169,7 +169,7 @@ const api: ApiIridium = {
   skillsProyecto: (ruta) => ipcRenderer.invoke(CANALES.skillsProyecto, ruta),
   abrirDiseno: (ruta) => ipcRenderer.invoke(CANALES.abrirDiseno, ruta),
   marcarVista: (ruta, archivo) => ipcRenderer.invoke(CANALES.marcarVista, ruta, archivo),
-  pedirDiseno: (ruta, pedido) => ipcRenderer.invoke(CANALES.pedirDiseno, ruta, pedido),
+  citaDiseno: (ruta, pedido) => ipcRenderer.invoke(CANALES.citaDiseno, ruta, pedido),
   quedarmeConVersion: (ruta, maqueta, version) =>
     ipcRenderer.invoke(CANALES.quedarmeConVersion, ruta, maqueta, version),
   alCambiarDiseno: (f) => escuchar<CambioDiseno>(CANALES.disenoCambio, f),

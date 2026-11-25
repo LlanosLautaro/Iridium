@@ -643,15 +643,18 @@ Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan co
 Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 
 ## T-134 — un modo de "apagar al finalizar". En configuraciones podríamos determinar una opcion que habilite el display o no de un botón en un chat, al tocar ese botón se configura que la computadora se apagará al terminar la tarea, esto sería independiente de la IA y podría reutilizar el mismo sistema de deteccion de tarea finalizada que usamos para las actualizaciones automáticas, de este modo podemos dejar a claude trabajando e irnos de la casa. Esto trae una ventaja, yo antes le pedía textualmente a claude que apague la pc al acabar cuando debía irme, pero si quería hacer que la apague y estaba a mitad de trabajo ya no tenía forma de hacerlo(ahora recuero que podemos añadir la funcionalidad de "en cola" para los mensajes, promts que van luego de que termine de hacer lo que est´ahora, es parte de paridad creo) e interrumpirla o pasarle otro prompt en cola pues cagaría contexto innecesario, esta funcionalidad evita todo eso, no gasta uso en lo más minimo tampoco
-Estado: en curso · Idea: usuario · Fecha: 2026-11-24 · Origen: D-195
-Construido el 2026-11-25 (D-195): el botón al lado de Enviar, la cuenta de un minuto con No apagar y el apagado sin pasar por la IA; falta que lo pruebes apagando de verdad (Q-296). Los mensajes «en cola», aparte en T-138.
+Estado: hecho · Idea: usuario · Fecha: 2026-11-24 · Origen: D-195
+Construido el 2026-11-25 (D-195): el botón al lado de Enviar, la cuenta de un minuto con No apagar y el apagado sin pasar por la IA. Los mensajes «en cola», aparte en T-138.
+Hecho el 2026-11-25: probado apagando de verdad (Q-296). Con lo que dijiste ahí, armado con la IA quieta ya no apaga al minuto: espera a que una IA trabaje y termine, así lo armás antes de escribir el pedido (se mira en Q-297).
 
 ## T-135 — que iridium le avice a claude cuando haya ideas nuevas ¿? si es que no lo hace ahora
-Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
+Estado: hecho · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
+Hecho el 2026-11-25: la revisión del avance solo le pasa a la IA las ideas nuevas y les deja «Evaluada el …» (FS-I4, probada una noche en Q-294).
 Revisado el 2026-11-25: hoy no le avisa. Una idea que anotás queda en `trabajo.md` como `nueva` y la IA solo se entera si abre ese archivo o si una sesión anterior la sumó a mano a «Ideas sin evaluar» de `estado.md`; ni la conversación nueva, ni el Arranque, ni el avance solo nombran las ideas nuevas. Va junto con T-136 (Q-293): la revisión le pasa las ideas nuevas.
 
 ## T-136 — que así como claude ahora puede atacar algunos frentes cuando iridium está idle, pueda también revisar ideas, auditarlas, ver cuales pueden pasar directo a implemntación, anotarlo para no revisar las mismas una y otra vez, etc, lo mismo con los frentes, hay varios frentes que están algo estancados pero que la IA podría estarlos avanzando sola pero parece que no son candidatos pq no empiezan
-Estado: en curso · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
+Estado: hecho · Frente: Frentes · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-293
+Hecho el 2026-11-25: el avance solo revisa las ideas y los frentes una vez por día, les pone tamaño y `sola`, y después tomó pasos de esos frentes y del Núcleo (FS-I4, probada en Q-294).
 Revisado el 2026-11-25. Por qué los frentes parados no son candidatos:
 - El avance solo toma únicamente pasos marcados con su tamaño y `sola`, y de los 8 pasos que esperan en las rutas (Abrir, Apariencia, Compartir, Diseño, Orden con dos, Skills) **ninguno está marcado**. La regla de D-175 es marcarlos «al pasar», sin reescribir una ruta solo para eso: un frente que nadie toca nunca se marca y nunca se toma.
 - Los 24 `T-n` pendientes del Núcleo (por ejemplo T-131, que ya dice «Tamaño: chico») no están en ninguna ruta, así que el motor no los ve.
@@ -667,3 +670,15 @@ Dos armados corrieron juntos en `release/nueva` y quedó puesta una app sin los 
 ## T-138 — Mensajes en cola: lo que escribís mientras la IA trabaja sale cuando termina
 Estado: nueva · Idea: IA · Fecha: 2026-11-25 · Origen: T-134
 Lo mencionaste en T-134: escribir el próximo pedido con la IA a mitad de un trabajo y que Iridium lo mande solo al terminar el turno, sin interrumpirla. Sería parte de Paridad (Claude Code lo tiene).
+
+## T-139 — Pasar al framework también queda citado en la conversación
+Estado: pendiente · Idea: IA · Fecha: 2026-11-25 · Origen: D-196 · Tamaño: chico, sola
+Desde el menú de la tarjeta, Skills › Framework y Archivos, Pasar al framework todavía manda el pedido solo, en una conversación nueva. Con D-196 tendría que abrir el proyecto y dejar el pedido citado en su conversación, con «conviene una conversación nueva» dicho al lado.
+
+## T-140 — Los mensajes intermedios de la IA, con otra letra que la respuesta final
+Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: R-110 · Tamaño: chico
+Hoy lo que la IA dice mientras trabaja («Ahora edito…») se ve igual que su respuesta final. Como en Claude Code o Codex, los intermedios irían más chicos o apagados, como si fuera respondiendo a medida que avanza; la respuesta final queda como está. Se prueba primero en una maqueta de la conversación.
+
+## T-141 — Decir en vivo qué hace la IA («Buscando», «Leyendo», «Editando código»)
+Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: R-110 · Tamaño: mediano
+Primero Iridium anota, en todas las sesiones, qué herramientas y qué comandos usa la IA (`cd`, `grep`, escribir un archivo…). En unos días se revisa lo más usado y a cada cosa se le pone un texto según su uso más probable; mientras trabaja, el paso dice «Buscando» o «Editando código» en vez de «Usó N herramientas», y al terminar queda como hoy.

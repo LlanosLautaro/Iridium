@@ -192,14 +192,10 @@ export const ArchivoMaqueta = z
   .max(512)
   .refine((r) => !r.split('/').includes('..') && !r.includes(':') && !r.includes('\\') && !r.startsWith('/'))
 
-/** Lo más largo que puede ser la frase de otra versión: una idea, no un documento. */
-export const LIMITE_FRASE_VERSION = 500
-
 export const PedidoDisenoEsquema = z.union([
   z.literal('empezar'),
   z.object({
     tipo: z.literal('version'),
     maqueta: ArchivoMaqueta,
-    frase: z.string().trim().min(1).max(LIMITE_FRASE_VERSION),
   }),
 ])

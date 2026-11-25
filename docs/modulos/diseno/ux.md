@@ -88,7 +88,7 @@ Con D-105 la sección es un «Claude Design» local: **las pantallas son maqueta
 #### DS-1 — Empezar el diseño de un proyecto
 - Como usuario quiero pedirle a la IA el diseño de un proyecto que todavía no lo tiene para tener sus pantallas a la vista sin armar nada.
   - Criterios de aceptación:
-    - [ ] Sin `docs/diseno/`, la sección lo dice con un recuadro punteado y ofrece **Pedírselo a la IA** (gasta uso, lo dice).
+    - [ ] Sin `docs/diseno/`, la sección lo dice con un recuadro punteado y ofrece **Pedírselo a la IA**, que deja el pedido citado en la conversación (D-196).
     - [ ] En una app ya armada, la IA dibuja las pantallas como están hoy (sale de su código y de su `06-ui.md`); en una app nueva, sale de su `04-ux.md`. El pedido lo dice.
     - [ ] Mientras la IA escribe, cada maqueta aparece en el lienzo al quedar guardada.
 
@@ -115,7 +115,7 @@ Con D-105 la sección es un «Claude Design» local: **las pantallas son maqueta
 #### DS-5 — Pedir otra versión o probar una dirección
 - Como usuario quiero pedir otra versión de una pantalla, o cambiar el aspecto de todas a la vez, para comparar dos ideas mirándolas.
   - Criterios de aceptación:
-    - [ ] En una maqueta agrandada, **Otra versión** pide a la IA una alternativa con una frase («la bandeja como una sola lista»); gasta uso y lo dice.
+    - [ ] En una maqueta agrandada, **Otra versión** deja citado en la conversación el pedido de una alternativa; el usuario escribe ahí qué probar («la bandeja como una sola lista») y la manda (D-196).
     - [ ] Las versiones de una pantalla se ven lado a lado; **Quedarme con esta** deja esa y borra las otras, o **Guardar para después** las deja guardadas.
     - [ ] **Probar una dirección** cambia los tokens de todas las maquetas a la vez: una guardada en `docs/diseno/direcciones/` o una nueva pedida con una frase («el negro con un azul muy apagado»). Se ve todo el lienzo con la dirección, y **Hoy · Dirección** alterna o pone las dos lado a lado.
     - [ ] **Elegir** una dirección la vuelve los tokens de las maquetas, con un cuadro que dice qué cambia.
@@ -123,7 +123,7 @@ Con D-105 la sección es un «Claude Design» local: **las pantallas son maqueta
 #### DS-6 — Pasar al código
 - Como usuario quiero pasar a la app lo que aprobé en las maquetas para que la interfaz real quede igual.
   - Criterios de aceptación:
-    - [ ] **Pasar al código** (en la cabecera de Pantallas) manda a la IA del proyecto el pedido con las maquetas cambiadas desde el último pase; gasta uso y lo dice.
+    - [ ] **Pasar al código** (en la cabecera de Pantallas) deja citado en la conversación del proyecto el pedido con las maquetas cambiadas desde el último pase (D-196).
     - [ ] Cada maqueta pasada queda marcada como «en la app» con la fecha; una que cambió después vuelve a contarse como pendiente.
 
 #### DS-7 — Comparar con la app de hoy (donde haya capturas)
@@ -149,7 +149,7 @@ flowchart TD
 #### DS-9 — Otra versión y otra dirección
 ```mermaid
 flowchart TD
-  A[Maqueta grande: Otra versión] --> B[Una frase a la IA; avisa que gasta uso] --> C[Las versiones lado a lado]
+  A[Maqueta grande: Otra versión] --> B[El pedido, citado en la conversación; el usuario escribe qué probar y lo manda] --> C[Las versiones lado a lado]
   C -- Quedarme con esta --> D[Las otras se borran]
   C -- Guardar para después --> E[Quedan guardadas]
   F[Pantallas: Probar una dirección] --> G{¿Cuál?}
@@ -162,7 +162,7 @@ flowchart TD
 #### DS-10 — Pasar al código
 ```mermaid
 flowchart TD
-  A[Pantallas: Pasar al código · 6] --> B[Cuadro: qué maquetas pasan y que gasta uso] --> C[El pedido va a la conversación del proyecto]
+  A[Pantallas: Pasar al código · 6] --> B[El pedido, citado en la conversación con las maquetas que pasan] --> C[El usuario lo manda]
   C --> D[La IA construye y marca las maquetas como «en la app»]
   D -- algo queda distinto --> E[Se comenta la app con F8, como siempre]
 ```
@@ -219,7 +219,7 @@ flowchart TD
 - Estados: sin piezas («Las piezas todavía no están dibujadas» con Pedírselo a la IA); un archivo dañado (recuadro de error con el archivo y la línea).
 
 ### Principios de interacción
-- **Lo que gasta uso lo dice antes**: empezar el diseño, otra versión, una dirección nueva y pasar al código. Mirar, usar y comentar no gastan.
+- **Los pedidos a la IA quedan citados en la conversación** (D-196): empezar el diseño, otra versión, una dirección nueva y pasar al código. Los manda el usuario. Mirar, usar y comentar no gastan.
 - **Nada cambia sin un cuadro** cuando toca más de una maqueta (elegir una dirección, pasar al código). Todo queda en `docs/`, así que Git lo deshace.
 - **Las maquetas no tocan la app**: son archivos de `docs/diseno/`; la app cambia solo con Pasar al código.
 - **Comentar es igual en todos lados**: `F8` en una maqueta, en Iridium o en la app de un proyecto, y todo llega a la Revisión.

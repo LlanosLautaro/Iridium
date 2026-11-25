@@ -41,7 +41,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 - [x] Que la captura del detalle de Ideas salga en la auditoría (T-53)
 - [x] Escribir el diseño de Iridium desde lo construido (DESIGN.md y 06-ui.md)
 - [x] Comparar dos versiones de una pantalla lado a lado (DI-I4, Q-295)
-- [ ] Probar una dirección sobre todo el lienzo y elegirla o descartarla (DI-I4, grande, sola)
+- [ ] Probar una dirección sobre todo el lienzo y elegirla o descartarla; el pedido queda citado en la conversación, D-196 (DI-I4, grande, sola)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -65,7 +65,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 | DI-I1 | El formato `docs/diseno/` (con su lector y su control) y la sección Diseño: Pantallas con las maquetas vivas, Sistema y `F8` sobre una maqueta | hecho (Q-152, 2026-11-09) |
 | DI-I2 | El rediseño de Iridium en maquetas: tokens en negro, las 12 piezas y sus pantallas, revisadas en la sección | hecho (Q-157, 2026-11-09) |
 | DI-I3 | Pasar al código: las piezas en `src/renderer/ui/`, las secciones pasadas a ellas, el negro como único tema y la app de antes y de ahora lado a lado | hecho (2026-11-21: diecinueve tandas, probadas de Q-162 a Q-240; la 8 la reemplazó el frente Ideas) |
-| DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | en curso (las versiones, 2026-11-25, a probar en Q-295; falta Probar una dirección) |
+| DI-I4 | Otra versión de una pantalla y Probar una dirección, lado a lado, y quedarse con una | en curso (las versiones, 2026-11-25, probadas en Q-295; Otra versión citada en la conversación, D-196, se mira en Q-297; falta Probar una dirección) |
 
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
@@ -77,6 +77,7 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **El framework y el control (D-086):** `referencias/06-ui.md` dice cómo se escribe una versión (las hojas a dos carpetas, la frase, no tocar la de hoy ni el índice) y `SKILL.md`, que lleva su frase; el control avisa de una versión sin `<meta name="descripcion">`.
 - **Encontrado al probar:** Esc en un cuadro de encima (Otra versión, Quedarme con esta) cerraba también la grande; ahora cierra solo el cuadro.
 - **Lo que no se pudo cerrar solo:** la prueba con tus manos (Q-295).
+- **Probada en Q-295** (2026-11-25), todo bien, con un cambio: Otra versión no tiene que abrir su propio cuadro sino dejar el pedido adjunto en el chat, como Ideas y Revisión (D-196). Ahora **Otra versión** cita el pedido en la conversación (la ficha «Otra versión Nota abierta») y pasa a las versiones lado a lado con el lugar de la nueva («Citada en la conversación: escribí qué probar y mandala»); lo que se prueba lo escribe el usuario en el chat, en esa conversación o en una nueva. **Pedírselo a la IA** (empezar el diseño) también queda citado. Se fueron los dos cuadros que avisaban del uso. Si la cita se saca sin mandarla, el lugar se va. Pruebas: `di4-versiones.spec.ts` y `di1-diseno.spec.ts` al día. Se mira en Q-297.
 - **Pruebas:** `tests/di4-versiones.test.ts` (Vitest, 11: la carpeta y la letra, el pedido, reescribir los enlaces, la vista con sus versiones y el punto, Quedarme con esta con una versión y con la de hoy, lo que ya no está, el control y el framework) y `tests/e2e/di4-versiones.spec.ts` (la app abierta, 2). Capturas en `test-results/di4-*.png`. Vitest entero 1129 de 1130 (`ar1-arranque`, por tiempo con la suite entera; sola pasa: sumada a T-131), Playwright de Diseño (7), typecheck y lint en verde.
 
 ### DI-I3 — 2026-11-21 — cierre: el diseño escrito desde lo construido
@@ -433,5 +434,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-Las versiones lado a lado esperan la prueba del usuario (Q-295). Sin esperarla: Probar una dirección (el resto de DI-I4: `direcciones/<nombre>.css` sobre todo el lienzo, Hoy · Dirección, Elegir con su cuadro y Descartar) y después el paso 8, con el borde de los controles (`06-ui.md` › Contraste) y T-99.
+Las versiones lado a lado, probadas (Q-295); el pedido citado (D-196) se mira en Q-297. Sigue Probar una dirección, con su pedido citado en la conversación (D-196) (el resto de DI-I4: `direcciones/<nombre>.css` sobre todo el lienzo, Hoy · Dirección, Elegir con su cuadro y Descartar) y después el paso 8, con el borde de los controles (`06-ui.md` › Contraste) y T-99.
 **Leer antes:** `diseno-tecnico.md` › Mostrarlas vivas (punto 5 y la grande), Lo que Iridium escribe y Los pedidos a la IA; `ux.md` › DS-5, DS-9 y DS-11.

@@ -1,6 +1,6 @@
 // DI-I1 con la app abierta y el motor falso: la sección Diseño (DS-11 a DS-13) sobre la muestra `tests/muestras/diseno`
 // — el lienzo con las maquetas vivas y agrupadas, la rota con su motivo, el redibujo con su punto, la grande con un
-// enlace a otra maqueta, las flechas y Esc, que nada salga a la red, Sistema y Pedírselo a la IA sin `docs/diseno/`.
+// enlace a otra maqueta, las flechas y Esc, que nada salga a la red, Sistema y Pedírselo a la IA sin `docs/diseno/`, que queda citado (D-196).
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { createServer, type Server } from 'node:http'
 import type { AddressInfo } from 'node:net'
@@ -252,17 +252,18 @@ test('Sistema: los colores, la letra, los tamaños y las piezas vivas (DS-13)', 
   await app.close()
 })
 
-test('sin docs/diseno/: el recuadro y Pedírselo a la IA con el cuadro antes (DS-1)', async () => {
+test('sin docs/diseno/: el recuadro y Pedírselo a la IA, que queda citado en la conversación (DS-1, D-196)', async () => {
   const { app, win } = await abrir()
   const diseno = await entrarADiseno(win, 'Beta')
   const recuadro = diseno.locator('.di-falta')
   await expect(recuadro).toContainText('Este proyecto todavía no tiene su diseño')
   await recuadro.getByRole('button', { name: 'Pedírselo a la IA' }).click()
-  const cuadro = win.getByRole('dialog', { name: 'Pedirle el diseño a la IA' })
-  await expect(cuadro).toContainText('Gasta uso')
-  await expect(cuadro).toContainText('desde la UX del proyecto')
+  const cita = win.locator('.compositor .citado')
+  await expect(cita).toContainText('Diseño Armar el diseño')
+  await expect(diseno.getByRole('status')).toContainText('quedó citado en la conversación')
+  await expect(win.locator('.hilo .turno')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/di1-pedir.png' })
-  await cuadro.getByRole('button', { name: 'Pedírselo' }).click()
+  await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
   await expect(win.getByRole('complementary', { name: 'Conversación' })).toContainText(
     'Armá el diseño de este proyecto en',
     { timeout: 10_000 },
