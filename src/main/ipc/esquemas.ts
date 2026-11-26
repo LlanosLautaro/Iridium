@@ -33,6 +33,7 @@ export const CambioPreferencias = z
     anchoListaIdeas: z.number().int().min(ANCHO_LISTA_IDEAS.minimo).max(ANCHO_LISTA_IDEAS.maximo),
     altoConsolas: z.number().int().min(ALTO_CONSOLAS.minimo).max(ALTO_CONSOLAS.maximo),
     anchoHoja: z.enum(['angosto', 'normal', 'ancho']),
+    acento: z.enum(['cian', 'verde', 'azul', 'violeta']),
     pestanas: z.array(z.string().min(1).max(1024)).max(50),
     ajustesIa: z.record(z.string().min(1).max(1024), AjusteIa.strict()),
     filtrosBandeja: z

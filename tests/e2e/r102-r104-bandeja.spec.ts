@@ -110,6 +110,30 @@ test('las pestañas se ordenan arrastrándolas y el orden queda al volver a abri
     .dragTo(alfa, { targetPosition: { x: 8, y: 10 } })
   await expect(nombres).toHaveText(['Beta', 'Alfa'])
   await win.screenshot({ path: 'test-results/r102-pestanas.png' })
+  // Pulido (D-197): mientras se arrastra, la otra se corre para dejarle lugar; Escape la vuelve a su lugar.
+  const beta = pestanas(win).locator('.proy', { hasText: 'Beta' })
+  const cajaBeta = await beta.boundingBox()
+  const cajaAlfa = await pestanas(win).locator('.proy', { hasText: 'Alfa' }).boundingBox()
+  if (!cajaBeta || !cajaAlfa) throw new Error('sin pestañas')
+  await win.mouse.move(cajaBeta.x + 10, cajaBeta.y + 10)
+  await win.mouse.down()
+  await win.mouse.move(cajaAlfa.x + cajaAlfa.width - 4, cajaBeta.y + 10, { steps: 6 })
+  await expect(beta).toHaveClass(/arrastrada/)
+  await expect
+    .poll(() =>
+      pestanas(win)
+        .locator('.proy', { hasText: 'Alfa' })
+        .evaluate((x) => (x as HTMLElement).style.transform),
+    )
+    .toMatch(/translateX\(-/)
+  await win.screenshot({ path: 'test-results/pu2-pestanas-arrastrando.png' })
+  await win.keyboard.press('Escape')
+  await win.mouse.up()
+  await expect(beta).not.toHaveClass(/arrastrada/)
+  await expect(nombres).toHaveText(['Beta', 'Alfa'])
+  // Un clic sigue eligiendo la pestaña.
+  await pestanas(win).locator('.proy', { hasText: 'Alfa' }).getByRole('tab').click()
+  await expect(pestanas(win).locator('.proy', { hasText: 'Alfa' })).toHaveClass(/elegido/)
   await cerrar(app)
 
   const otra = await abrir()

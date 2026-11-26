@@ -37,7 +37,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - [x] Instalar Iridium como una app que se actualiza sola (T-111, CO-I10; Q-270)
 - [x] Numerar las versiones 1.0.x (T-121, D-182)
 - [x] La lista de cambios de cada versión (T-38, D-192)
-- [ ] Tu Iridium instalado como el de la otra PC (CO-I11, D-198; Q-306)
+- [x] Tu Iridium instalado como el de la otra PC (CO-I11, D-198; Q-306)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -56,7 +56,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I8 | Achicar lo que se baja en cada versión: las piezas (D-161, T-37) | hecho (probada publicando, Q-225) |
 | CO-I9 | La otra PC en negro (T-111): el actualizador que se trababa con `app.asar` y las fallas de la ventana, al registro y a una pantalla | hecho (el instalador, Q-255, pasó a CO-I10; la prueba en la otra PC va con Q-256) |
 | CO-I10 | Iridium instalado: el instalador y electron-updater (D-171, T-111) | hecho, aprobada (Q-270, 2026-11-24: la otra PC lo instaló y abre normal) |
-| CO-I11 | El Iridium de esta PC instalado, con el instalador de cada armado (Q-304 A, D-198) | en curso (espera Q-306) |
+| CO-I11 | El Iridium de esta PC instalado, con el instalador de cada armado (Q-304 A, D-198) | hecho, aprobada (Q-306, 2026-11-26: abre instalado, con sus datos, se actualiza y el navegador anda) |
 
 ## Log de iteraciones
 ### CO-I11 — El Iridium de esta PC, instalado (2026-11-26, Q-304 A, D-198)
@@ -136,5 +136,4 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - `master` pasó a `dev` y `main` nació en el mismo commit; las dos están en `LlanosLautaro/Iridium`, que sigue privado (desde afuera da 404). Git ya tenía guardada la cuenta: no hizo falta el paso a mano.
 
 ## Próximo paso
-Con Q-306 respondida: si el Iridium instalado abre y se actualiza, CO-I11 queda hecha; si no, leer `release/armado.log` y el registro del día.
-**Leer antes:** `diseno-tecnico.md` › Iridium instalado en esta PC.
+Nada en curso: el frente sigue en operación y recibe lo que aparezca.

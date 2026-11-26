@@ -331,6 +331,7 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
     anchoListaIdeas: ANCHO_LISTA_IDEAS.inicial,
     altoConsolas: ALTO_CONSOLAS.inicial,
     anchoHoja: 'normal',
+    acento: 'cian',
     pestanas: [],
     ajustesIa: {},
     filtrosBandeja: {},

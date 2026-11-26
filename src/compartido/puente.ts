@@ -108,6 +108,8 @@ export interface Preferencias {
   altoConsolas: number
   /** Ancho del texto en el lector de Docs (D-035, Q-51). */
   anchoHoja: AnchoHoja
+  /** El color de lo activo (frente Pulido, D-197), elegido en Ajustes › Apariencia. */
+  acento: Acento
   /** Los proyectos abiertos como pestañas, en orden (D-043): quedan aunque no trabajen. */
   pestanas: string[]
   /** El modelo y el esfuerzo que eligió cada proyecto (C-58), por ruta. */
@@ -271,6 +273,7 @@ export const CARPETA_GENERAL = 'Ideas'
 export const CARPETA_SKILLS = 'Skills'
 
 export type AnchoHoja = 'angosto' | 'normal' | 'ancho'
+export type Acento = 'cian' | 'verde' | 'azul' | 'violeta'
 
 /** La lista de Skills se arrastra de su borde derecho (R-6). */
 export const ANCHO_LISTA_SKILLS = { minimo: 200, inicial: 264, maximo: 640 } as const

@@ -132,7 +132,7 @@
   /* Movimiento */
   --sale: cubic-bezier(.16, 1, .3, 1); /* la única curva: todo lo que aparece o se mueve */
 
-  /* Pulido (D-197): un aire de instrumento sobre el negro. Elegir el acento en Ajustes llega con PU-I2; hasta entonces, cian. */
+  /* Pulido (D-197): un aire de instrumento sobre el negro. El acento se elige en Ajustes › Apariencia: la app pone --acento: var(--acento-<nombre>) en la raíz; cian si no se eligió. */
   --acento-cian: #38d6ff; /* el acento que viene elegido; uno de los que se eligen en Ajustes › Apariencia */
   --acento-verde: #3ce08f; /* un acento para elegir en Ajustes › Apariencia, el verde de antes */
   --acento-azul: #6c8cff; /* un acento para elegir en Ajustes › Apariencia */

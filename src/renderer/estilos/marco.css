@@ -98,19 +98,25 @@
   padding: 0 var(--esp-2) 0 var(--esp-3);
   color: inherit;
 }
-/* Arrastrar una pestaña para cambiarla de lugar (R-102): la que se mueve, apagada; una raya donde va a quedar */
+/* Arrastrar una pestaña para cambiarla de lugar (R-102), como la maqueta de Pulido (D-197): la que arrastrás sigue al
+   mouse en el acento con su brillo y las que pasa se corren para dejarle lugar. */
+.barra-proyectos .proy {
+  position: relative;
+  transition:
+    transform var(--dur-entrada) var(--sale),
+    background var(--dur-hover) var(--sale),
+    color var(--dur-hover) var(--sale);
+}
 .barra-proyectos .proy.arrastrada {
-  opacity: 0.5;
-}
-.barra-proyectos .proy.soltar-antes {
+  z-index: 1;
+  transition: none;
+  color: var(--texto);
+  background: var(--acento-tenue);
   box-shadow:
-    inset 2px 0 0 var(--texto),
-    inset 0 0 0 1px var(--borde-fuerte);
-}
-.barra-proyectos .proy.soltar-despues {
-  box-shadow:
-    inset -2px 0 0 var(--texto),
-    inset 0 0 0 1px var(--borde-fuerte);
+    inset 0 0 0 1px var(--acento),
+    var(--brillo-acento);
+  clip-path: none;
+  cursor: grabbing;
 }
 .barra-proyectos .ico-proy {
   flex: none;

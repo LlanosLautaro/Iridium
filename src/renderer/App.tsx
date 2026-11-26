@@ -158,9 +158,18 @@ function useFocoAlCambiar(seccion: string, ruta: string | null) {
   }, [seccion, ruta])
 }
 
+/** El acento elegido en Ajustes › Apariencia (Pulido, D-197): todo lo demás (el brillo, el fondo tenue) sale de `--acento`. */
+function useAcento() {
+  const acento = usarEstado((s) => s.preferencias.acento)
+  useEffect(() => {
+    document.documentElement.style.setProperty('--acento', `var(--acento-${acento})`)
+  }, [acento])
+}
+
 export function App() {
   useConexion()
   useAtajos()
+  useAcento()
   const seccion = usarEstado((s) => s.seccion)
   const ruta = usarEstado((s) => s.proyectoAbierto)
   const Vista = SECCIONES.find((s) => s.id === seccion)?.Vista

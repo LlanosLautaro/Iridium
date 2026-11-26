@@ -125,6 +125,8 @@ const Config = z.object({
     .max(ANCHO_LISTA_IDEAS.maximo)
     .catch(ANCHO_LISTA_IDEAS.inicial),
   anchoHoja: z.enum(['angosto', 'normal', 'ancho']).catch('normal'),
+  /** El acento (Pulido, D-197): cian si falta o está roto. */
+  acento: z.enum(['cian', 'verde', 'azul', 'violeta']).catch('cian'),
   pestanas: z.array(z.string()).max(50).catch([]),
   /** El modelo y el esfuerzo de cada proyecto (C-58), por ruta; uno roto se descarta solo. */
   ajustesIa: z.record(z.string(), AjusteIa.optional().catch(undefined)).catch({}),
@@ -186,6 +188,7 @@ const PREDETERMINADA: Config = {
   anchoListaIdeas: ANCHO_LISTA_IDEAS.inicial,
   altoConsolas: ALTO_CONSOLAS.inicial,
   anchoHoja: 'normal',
+  acento: 'cian',
   pestanas: [],
   ajustesIa: {},
   filtrosBandeja: {},
@@ -215,6 +218,7 @@ export function preferenciasDe(c: Config): Preferencias {
     anchoListaIdeas: c.anchoListaIdeas,
     altoConsolas: c.altoConsolas,
     anchoHoja: c.anchoHoja,
+    acento: c.acento,
     pestanas: c.pestanas,
     ajustesIa: Object.fromEntries(
       Object.entries(c.ajustesIa).filter((e): e is [string, z.infer<typeof AjusteIa>] => e[1] !== undefined),

@@ -1,6 +1,6 @@
 // Lo que está siempre (04-ux.md › W-1, D-041), como el marco de las maquetas (DI-I3, tanda 4): arriba el inicio y la
 // barra de proyectos, a la izquierda la de secciones (cambia entre el inicio y el proyecto abierto) y abajo la de estado.
-import { type ReactNode, useEffect, useState } from 'react'
+import { type PointerEvent as EventoPuntero, type ReactNode, useEffect, useRef, useState } from 'react'
 import { estadoActualizar, queHacerSolo, tiempoArmando } from '../../compartido/actualizar'
 import { textoDeCuenta } from '../../compartido/cuentas'
 import type { ActualizarSolo, EstadoMotor, FichaSesion } from '../../compartido/puente'
@@ -248,62 +248,118 @@ function BarraTitulo() {
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
   const cerrarPestana = usarEstado((s) => s.cerrarPestana)
   const guardarPreferencias = usarEstado((s) => s.guardarPreferencias)
-  const [arrastrada, setArrastrada] = useState<string | null>(null)
-  const [destino, setDestino] = useState<{ ruta: string; despues: boolean } | null>(null)
+  const fila = useRef<HTMLDivElement>(null)
+  const recienArrastrada = useRef(false)
   // Las guardadas que siguen en la carpeta, más las sesiones que arrancaron sin abrir el proyecto y el abierto.
   const rutas = guardadas.filter((r) => lista?.tipo !== 'lista' || tarjetaDe(lista, r))
   for (const r of [...fichas.map((f) => f.ruta), ...(abierto ? [abierto] : [])])
     if (!rutas.includes(r)) rutas.push(r)
-  const soltar = () => {
-    if (arrastrada && destino && arrastrada !== destino.ruta) {
-      const sin = rutas.filter((r) => r !== arrastrada)
-      const i = sin.indexOf(destino.ruta) + (destino.despues ? 1 : 0)
-      guardarPreferencias({ pestanas: [...sin.slice(0, i), arrastrada, ...sin.slice(i)] })
+  /**
+   * El arrastre propio de las pestañas (Pulido, D-197), como la maqueta (`pulido.js`): la pestaña sigue al mouse y las
+   * que pasa se corren para dejarle lugar; al soltar queda ahí y el orden se guarda; Escape la vuelve a su lugar.
+   * Empieza después de unos píxeles, así un clic sigue eligiendo la pestaña.
+   */
+  const empezarArrastre = (e: EventoPuntero<HTMLDivElement>, ruta: string) => {
+    if (e.button !== 0 || (e.target as HTMLElement).closest('.cerrar') || !fila.current) return
+    const p = e.currentTarget
+    const pestanas = [...fila.current.children] as HTMLElement[]
+    const inicio = pestanas.indexOf(p)
+    const cajas = pestanas.map((x) => x.getBoundingClientRect())
+    const caja = cajas[inicio]
+    if (inicio < 0 || !caja) return
+    const paso = caja.width + 2
+    const x0 = e.clientX
+    const id = e.pointerId
+    const minimo = (cajas[0]?.left ?? caja.left) - caja.left
+    const maximo = (cajas.at(-1)?.right ?? caja.right) - caja.right
+    let destino = inicio
+    let arrastrando = false
+    let cancelado = false
+    const correr = (dx: number) => {
+      p.style.transform = `translateX(${dx}px)`
+      const centro = caja.left + caja.width / 2 + dx
+      destino = cajas.findIndex((c) => centro < c.right)
+      if (destino < 0) destino = pestanas.length - 1
+      pestanas.forEach((x, i) => {
+        if (x === p) return
+        const corre = inicio < destino ? i > inicio && i <= destino : i >= destino && i < inicio
+        x.style.transform = corre ? `translateX(${inicio < destino ? -paso : paso}px)` : ''
+      })
     }
-    setArrastrada(null)
-    setDestino(null)
+    const mover = (ev: PointerEvent) => {
+      if (ev.pointerId !== id || cancelado) return
+      // No pasa de la primera ni de la última: la barra corta lo que sale.
+      const dx = Math.min(Math.max(ev.clientX - x0, minimo), maximo)
+      if (!arrastrando) {
+        if (Math.abs(ev.clientX - x0) < 5) return
+        arrastrando = true
+        p.classList.add('arrastrada')
+        p.setPointerCapture(id)
+      }
+      correr(dx)
+    }
+    /** Todas vuelven a su lugar con su transición (Escape, o soltar donde estaba). */
+    const volver = () => {
+      p.classList.remove('arrastrada')
+      for (const x of pestanas) x.style.transform = ''
+    }
+    const terminar = (ev: PointerEvent) => {
+      if (ev.pointerId !== id) return
+      window.removeEventListener('pointermove', mover)
+      window.removeEventListener('pointerup', terminar)
+      window.removeEventListener('pointercancel', terminar)
+      window.removeEventListener('keydown', alTeclado, true)
+      if (!arrastrando) return
+      if (p.hasPointerCapture(id)) p.releasePointerCapture(id)
+      // El clic que llega al soltar no elige la pestaña.
+      recienArrastrada.current = true
+      setTimeout(() => {
+        recienArrastrada.current = false
+      })
+      if (cancelado || ev.type === 'pointercancel' || destino === inicio) {
+        volver()
+        return
+      }
+      // El orden nuevo entra antes de pintar: se sacan los corrimientos sin transición y React las pone en su lugar.
+      p.classList.remove('arrastrada')
+      for (const x of pestanas) {
+        x.style.transition = 'none'
+        x.style.transform = ''
+      }
+      const sin = rutas.filter((r) => r !== ruta)
+      guardarPreferencias({ pestanas: [...sin.slice(0, destino), ruta, ...sin.slice(destino)] })
+      requestAnimationFrame(() => {
+        for (const x of pestanas) x.style.transition = ''
+      })
+    }
+    const alTeclado = (ev: KeyboardEvent) => {
+      if (ev.key !== 'Escape' || !arrastrando || cancelado) return
+      ev.preventDefault()
+      ev.stopPropagation()
+      cancelado = true
+      volver()
+    }
+    window.addEventListener('pointermove', mover)
+    window.addEventListener('pointerup', terminar)
+    window.addEventListener('pointercancel', terminar)
+    window.addEventListener('keydown', alTeclado, true)
   }
   return (
     <header className="titulo">
       <BotonInicio />
-      <div className="barra-proyectos" role="tablist" aria-label="Proyectos abiertos">
+      <div className="barra-proyectos" role="tablist" aria-label="Proyectos abiertos" ref={fila}>
         {rutas.map((ruta) => {
           const tarjeta = tarjetaDe(lista, ruta)
           const ficha = fichas.find((f) => f.ruta === ruta) ?? null
           const nombre = tarjeta?.nombre ?? ruta.split(/[\\/]/).pop() ?? ruta
           const activa = seccion === 'proyecto' && abierto === ruta
-          const marca =
-            arrastrada && destino?.ruta === ruta && arrastrada !== ruta
-              ? destino.despues
-                ? ' soltar-despues'
-                : ' soltar-antes'
-              : ''
           return (
-            // biome-ignore lint/a11y/noStaticElementInteractions: arrastrar para ordenar es del mouse; las pestañas de adentro son botones.
             <div
               key={ruta}
-              className={`${activa ? 'proy elegido' : 'proy'}${arrastrada === ruta ? ' arrastrada' : ''}${marca}`}
-              draggable
-              onDragStart={(e) => {
-                e.dataTransfer.effectAllowed = 'move'
-                e.dataTransfer.setData('text/plain', nombre)
-                setArrastrada(ruta)
-              }}
-              onDragOver={(e) => {
-                if (!arrastrada) return
-                e.preventDefault()
-                e.dataTransfer.dropEffect = 'move'
-                const caja = e.currentTarget.getBoundingClientRect()
-                const despues = e.clientX > caja.left + caja.width / 2
-                if (destino?.ruta !== ruta || destino.despues !== despues) setDestino({ ruta, despues })
-              }}
-              onDrop={(e) => {
-                e.preventDefault()
-                soltar()
-              }}
-              onDragEnd={() => {
-                setArrastrada(null)
-                setDestino(null)
+              className={activa ? 'proy elegido' : 'proy'}
+              onPointerDown={(e) => empezarArrastre(e, ruta)}
+              onClickCapture={(e) => {
+                if (recienArrastrada.current) e.stopPropagation()
               }}
             >
               <button

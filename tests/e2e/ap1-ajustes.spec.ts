@@ -119,6 +119,34 @@ test('un solo tema, el negro; Apariencia elige el ancho de lectura y sigue al vo
   await app.close()
 })
 
+test('Apariencia elige el acento: cambia el color de la sección elegida y sigue al volver a abrir (Pulido, D-197)', async () => {
+  let { app, win } = await abrir()
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  const colorElegida = () =>
+    win.evaluate(() => {
+      const el = document.querySelector('.act.elegida, .actividad [aria-current="page"]')
+      return el ? getComputedStyle(el).color : ''
+    })
+  const cian = await colorElegida()
+  expect(cian).toBe('rgb(56, 214, 255)')
+  await win.keyboard.press('Control+,')
+  await win.getByRole('dialog').getByRole('button', { name: 'Apariencia' }).click()
+  const acentos = win.getByRole('group', { name: 'Acento' })
+  await expect(acentos.getByRole('button', { name: 'Cian' })).toHaveAttribute('aria-pressed', 'true')
+  await acentos.getByRole('button', { name: 'Violeta' }).click()
+  await expect(acentos.getByRole('button', { name: 'Violeta' })).toHaveAttribute('aria-pressed', 'true')
+  await win.screenshot({ path: 'test-results/pu2-acento.png' })
+  await win.keyboard.press('Escape')
+  await expect.poll(colorElegida).toBe('rgb(180, 140, 255)')
+  await expect.poll(async () => (await leerConfig()).acento).toBe('violeta')
+  await app.close()
+
+  ;({ app, win } = await abrir())
+  await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
+  await expect.poll(colorElegida).toBe('rgb(180, 140, 255)')
+  await app.close()
+})
+
 test('los nombres aparecen en la conversación y el tono llega a la sesión (AJ-2, AJ-3)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()

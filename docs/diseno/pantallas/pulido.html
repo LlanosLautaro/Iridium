@@ -12,7 +12,6 @@
      acá queda solo lo de esta muestra. */
   .eleccion { display: flex; align-items: center; gap: var(--esp-3); }
   .eleccion .rotulo { font: var(--estilo-rotulo); color: var(--texto-3); }
-  .muestra-color { display: inline-block; width: 8px; height: 8px; border-radius: var(--radio-pildora); background: var(--c); }
 
   .tablero { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--esp-6) var(--esp-7); max-width: var(--ancho-lista); }
   .tablero .bloque + .bloque { margin-top: 0; }
@@ -63,10 +62,10 @@
       <span class="acciones-cab">
         <span class="eleccion" data-token="--acento"><span class="rotulo">Acento</span>
           <span class="filtros">
-            <button class="filtro elegido" data-valor="--acento-cian"><span class="muestra-color" style="--c: var(--acento-cian)"></span>Cian</button>
-            <button class="filtro" data-valor="--acento-verde"><span class="muestra-color" style="--c: var(--acento-verde)"></span>Verde</button>
-            <button class="filtro" data-valor="--acento-azul"><span class="muestra-color" style="--c: var(--acento-azul)"></span>Azul</button>
-            <button class="filtro" data-valor="--acento-violeta"><span class="muestra-color" style="--c: var(--acento-violeta)"></span>Violeta</button>
+            <button class="filtro elegido" data-valor="--acento-cian"><span class="muestra-color" style="background: var(--acento-cian)"></span>Cian</button>
+            <button class="filtro" data-valor="--acento-verde"><span class="muestra-color" style="background: var(--acento-verde)"></span>Verde</button>
+            <button class="filtro" data-valor="--acento-azul"><span class="muestra-color" style="background: var(--acento-azul)"></span>Azul</button>
+            <button class="filtro" data-valor="--acento-violeta"><span class="muestra-color" style="background: var(--acento-violeta)"></span>Violeta</button>
           </span></span>
       </span></div>
   </header>
