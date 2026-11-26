@@ -134,7 +134,9 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar
   await campo.press('Enter')
   await expect(cita).toHaveCount(0)
   await expect(recuadro).toHaveCount(0, { timeout: 15_000 })
-  await expect(win.locator('.turno').first()).toContainText('pasar-al-framework.md')
+  await expect(win.locator('.turno').first().locator('.ficha.citado')).toHaveText(
+    'Framework Pasar al framework',
+  )
   await expect(win.locator('.turno', { hasText: 'Charla vieja' })).toHaveCount(0)
   await expect(barra.getByRole('button', { name: 'Frentes' })).toBeVisible()
   await expect(win.getByRole('button', { name: 'Continuar' })).toBeVisible()
@@ -155,7 +157,9 @@ test('Actualizar al framework desde el menú de la tarjeta: queda citado (OR-8, 
   await expect(win.getByText('· conversación nueva')).toBeVisible()
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Gamma' })).toBeVisible()
   await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
-  await expect(win.locator('.turno').first()).toContainText('pasar-al-framework.md')
+  await expect(win.locator('.turno').first().locator('.ficha.citado')).toHaveText(
+    'Framework Pasar al framework',
+  )
   await win.keyboard.press('Control+1')
   await expect(gamma).not.toContainText('framework viejo', { timeout: 15_000 })
 

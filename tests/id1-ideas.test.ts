@@ -242,11 +242,14 @@ describe('lo que va a la conversación (ID-4, ID-6)', () => {
     if (!enlace) throw new Error('falta T-4')
     const citas = [citaRevisar(enlace, 'Alfa'), citaHablar({ codigo: 'T-3', titulo: 'Una mía aprobada' })]
     expect(mensajeConCitas(citas, 'Me interesan los hooks')).toBe(
-      '> Revisá https://github.com/anthropics/claude-code (T-4): ¿qué podemos sacar de ahí para Alfa?\n>\n> Mirar los hooks.\n\n' +
-        '> Sobre la idea T-3 «Una mía aprobada»\n\nMe interesan los hooks',
+      `> <!-- cita: Revisar · ${citas[0]?.nombre} -->\n` +
+        '> Revisá https://github.com/anthropics/claude-code (T-4): ¿qué podemos sacar de ahí para Alfa?\n>\n> Mirar los hooks.\n\n' +
+        '> <!-- cita: Idea · Una mía aprobada -->\n> Sobre la idea T-3 «Una mía aprobada»\n\nMe interesan los hooks',
     )
     // Sin nada escrito, salen solas.
-    expect(mensajeConCitas(citas.slice(1), '  ')).toBe('> Sobre la idea T-3 «Una mía aprobada»')
+    expect(mensajeConCitas(citas.slice(1), '  ')).toBe(
+      '> <!-- cita: Idea · Una mía aprobada -->\n> Sobre la idea T-3 «Una mía aprobada»',
+    )
     expect(mensajeConCitas([], 'Hola')).toBe('Hola')
   })
 
@@ -266,16 +269,36 @@ describe('leer las citas de un mensaje enviado (Q-182)', () => {
     ]
     expect(leerCitas(mensajeConCitas(citas, 'Hola\n\n> esto no es cita del principio'))).toEqual({
       citas: ['Sobre la idea T-3 «Una mía»', 'Sobre la idea T-1 «Otra»'],
+      etiquetas: [
+        { tipo: 'Idea', nombre: 'Una mía' },
+        { tipo: 'Idea', nombre: 'Otra' },
+      ],
       texto: 'Hola\n\n> esto no es cita del principio',
     })
+    // Una de antes, sin marca: sin etiqueta.
     expect(leerCitas('> Revisá algo\n>\n> Con su descripción')).toEqual({
       citas: ['Revisá algo\n\nCon su descripción'],
+      etiquetas: [null],
       texto: '',
     })
   })
 
   it('un mensaje sin citas queda tal cual', () => {
-    expect(leerCitas('Hola\n\nChau')).toEqual({ citas: [], texto: 'Hola\n\nChau' })
+    expect(leerCitas('Hola\n\nChau')).toEqual({ citas: [], etiquetas: [], texto: 'Hola\n\nChau' })
+  })
+
+  it('una cita con marca se lee como ficha: tipo y nombre en una línea, sin cerrar la marca antes (Q-309)', () => {
+    const cita = {
+      clave: 'diseno:direccion',
+      tipo: 'Diseño',
+      nombre: 'Una dirección --> nueva\ncon salto',
+      texto: 'Escribí una dirección.\n\nCon esto.',
+    }
+    expect(leerCitas(mensajeConCitas([cita], 'el negro con un azul apagado'))).toEqual({
+      citas: ['Escribí una dirección.\n\nCon esto.'],
+      etiquetas: [{ tipo: 'Diseño', nombre: 'Una dirección → nueva con salto' }],
+      texto: 'el negro con un azul apagado',
+    })
   })
 })
 

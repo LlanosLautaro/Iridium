@@ -133,9 +133,9 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await win.screenshot({ path: 'test-results/id2-revisar.png' })
     await mensaje.fill('Me interesan las flechas')
     await mensaje.press('Enter')
-    await expect(win.locator('.hilo')).toContainText(
-      'Revisá https://github.com/tldraw/tldraw (T-7): ¿qué podemos sacar de ahí para Alfa?',
-    )
+    // Q-309: en el hilo, la cita va como una ficha corta; el pedido entero le llega a la IA.
+    await expect(win.locator('.hilo .turno.usuario .ficha.citado')).toContainText('Revisar tldraw/tldraw')
+    await expect(win.locator('.hilo')).not.toContainText('Revisá https://github.com/tldraw/tldraw')
     await expect(win.locator('.hilo')).toContainText('Me interesan las flechas')
     await expect(citas).toHaveCount(0)
     await revisar.getByRole('button', { name: 'Marcar como revisado' }).click()

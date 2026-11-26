@@ -438,7 +438,8 @@ Usarla.
     const mensaje = win.getByRole('textbox', { name: 'Mensaje para la IA' })
     await mensaje.fill('Primero el PDF')
     await mensaje.press('Enter')
-    await expect(win.locator('.hilo')).toContainText('Empieza el frente Exportar')
+    // Q-309: la cita va en el hilo como una ficha corta («Frente Exportar»).
+    await expect(win.locator('.hilo .turno.usuario .ficha.citado')).toHaveText('Frente Exportar')
     await expect(win.locator('.hilo')).toContainText('Primero el PDF')
     await expect(citas).toHaveCount(0)
     // Se cierra con la conversación quieta: después del turno, el que le devuelve el control (la muestra tiene avisos).

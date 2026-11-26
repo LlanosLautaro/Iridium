@@ -214,10 +214,17 @@ test('Una nueva: queda citada en la conversación y se pone sola cuando la IA la
   await campo.press('Enter')
   await expect(cita).toHaveCount(0)
   await expect(diseno.getByText('La IA está escribiendo la dirección…')).toBeVisible()
-  await expect(win.getByRole('complementary', { name: 'Conversación' })).toContainText(
-    'Escribí una dirección nueva para todas las maquetas',
-    { timeout: 10_000 },
-  )
+  // Q-309: en el hilo, lo citado es una ficha corta, como la llamada a una skill; un clic muestra lo que le llegó.
+  const conversacion = win.getByRole('complementary', { name: 'Conversación' })
+  const enviada = conversacion.locator('.turno.usuario .ficha.citado')
+  await expect(enviada).toContainText('Dirección nueva', { timeout: 10_000 })
+  await expect(conversacion.locator('.turno.usuario')).not.toContainText('Escribí una dirección nueva')
+  await expect(conversacion.locator('.turno.usuario')).toContainText('el negro con un verde apagado')
+  await win.screenshot({ path: 'test-results/di4-cita-enviada.png' })
+  await enviada.click()
+  await expect(win.getByRole('dialog')).toContainText('Escribí una dirección nueva para todas las maquetas')
+  await win.keyboard.press('Escape')
+  await expect(win.getByRole('dialog')).toHaveCount(0)
   await expect(win.getByRole('button', { name: 'Detener' })).toHaveCount(0, { timeout: 20_000 })
   await expect(diseno.getByText('La IA terminó sin escribir la dirección')).toBeVisible()
 

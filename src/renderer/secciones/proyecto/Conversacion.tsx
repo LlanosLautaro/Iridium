@@ -20,11 +20,12 @@ import {
   adjuntoDeRuta,
   esPegadoLargo,
   LARGO_ESCRITO,
+  lineasDe,
   MAX_ADJUNTOS,
   PEGADO_MAXIMO,
   sumarAdjuntos,
 } from '../../../compartido/adjuntos'
-import { type Cita, leerCitas, mensajeConCitas } from '../../../compartido/citas'
+import { type Cita, type EtiquetaCita, leerCitas, mensajeConCitas } from '../../../compartido/citas'
 import {
   type ComandoMotor,
   comandoDe,
@@ -64,7 +65,10 @@ function primerMensaje(entradas: readonly Entrada[]): string | null {
   const com = leerMensaje(e.texto) ?? (sinCitas.citas[0] ? leerMensaje(sinCitas.citas[0]) : null)
   const texto = com
     ? `${com.codigo}: ${com.texto}`
-    : sinCitas.texto.trim() || sinCitas.citas.join(' ') || e.texto
+    : sinCitas.texto.trim() ||
+      (sinCitas.etiquetas[0] ? `${sinCitas.etiquetas[0].tipo}: ${sinCitas.etiquetas[0].nombre}` : '') ||
+      sinCitas.citas.join(' ') ||
+      e.texto
   return texto.replace(/\s+/g, ' ').trim().slice(0, 120) || null
 }
 
@@ -492,6 +496,55 @@ function TarjetaComentario({ ruta, com }: { ruta: string; com: MensajeComentario
 }
 
 /**
+ * Lo citado en un mensaje mandado. Con su marca (Q-309), una ficha corta como la del cuadro («Diseño Una dirección
+ * nueva»), como la llamada a una skill: un clic abre en el visor lo que le llegó a la IA. Sin marca (las de antes),
+ * el texto en gris con la línea a la izquierda.
+ */
+function CitasEnviadas({ citas, etiquetas }: { citas: string[]; etiquetas: (EtiquetaCita | null)[] }) {
+  const [enVisor, setEnVisor] = useState<EnVisor | null>(null)
+  if (!citas.length) return null
+  const conFicha = citas.some((_, i) => etiquetas[i])
+  return (
+    <>
+      {conFicha && (
+        <div className="fichas enviadas">
+          {citas.map((c, i) => {
+            const e = etiquetas[i]
+            return (
+              e && (
+                <button
+                  // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
+                  key={i}
+                  type="button"
+                  className="ficha citado"
+                  title="Ver lo que le llegó a la IA"
+                  onClick={() => setEnVisor({ tipo: 'texto', texto: c, lineas: lineasDe(c) })}
+                >
+                  <Icono nombre={iconoDeCita(e.tipo)} />
+                  <span className="nombre-ficha">
+                    {e.tipo} <b>{e.nombre}</b>
+                  </span>
+                </button>
+              )
+            )
+          })}
+        </div>
+      )}
+      {citas.map(
+        (c, i) =>
+          !etiquetas[i] && (
+            // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
+            <p key={i} className="citado-en-mensaje">
+              {c}
+            </p>
+          ),
+      )}
+      {enVisor && <Visor que={enVisor} cerrar={() => setEnVisor(null)} />}
+    </>
+  )
+}
+
+/**
  * Lo que escribió el usuario. Un comentario de la Revisión, enviado desde la extensión o citado desde la sección
  * (R-101), se ve como tarjeta; lo demás citado, como cita arriba de lo escrito.
  */
@@ -514,7 +567,7 @@ function MensajePropio({
   if (comandoDe(texto)) {
     const [linea = '', ...resto] = texto.trim().split(/\n{2,}/)
     const cmd = comandoDe(linea)
-    const { citas: citadas, texto: escrito } = leerCitas(resto.join('\n\n'))
+    const { citas: citadas, etiquetas: rotulos, texto: escrito } = leerCitas(resto.join('\n\n'))
     return (
       <div className="mensaje-yo con-citas" title={quien}>
         {fichas}
@@ -522,18 +575,13 @@ function MensajePropio({
           <code className="cmd">/{cmd?.nombre}</code>
           {cmd?.resto && ` ${cmd.resto}`}
         </p>
-        {citadas.map((c, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
-          <p key={i} className="citado-en-mensaje">
-            {c}
-          </p>
-        ))}
+        <CitasEnviadas citas={citadas} etiquetas={rotulos} />
         {escrito.trim() && <p>{escrito}</p>}
       </div>
     )
   }
-  // Lo citado al enviar (Q-182) se ve como cita, arriba de lo escrito.
-  const { citas, texto: escrito } = leerCitas(texto)
+  // Lo citado al enviar (Q-182) se ve como cita, arriba de lo escrito; con su marca (Q-309), como una ficha corta.
+  const { citas, etiquetas, texto: escrito } = leerCitas(texto)
   if (!citas.length)
     return fichas ? (
       <div className="mensaje-yo con-citas" title={quien}>
@@ -547,18 +595,14 @@ function MensajePropio({
     )
   const comentarios = citas.map((c) => leerMensaje(c))
   const otras = citas.filter((_, i) => !comentarios[i])
+  const rotulos = etiquetas.filter((_, i) => !comentarios[i])
   return (
     <>
       {comentarios.map((c) => c && <TarjetaComentario key={c.codigo} ruta={ruta} com={c} />)}
       {otras.length > 0 || fichas ? (
         <div className="mensaje-yo con-citas" title={quien}>
           {fichas}
-          {otras.map((c, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: las citas de un mensaje enviado no cambian de orden.
-            <p key={i} className="citado-en-mensaje">
-              {c}
-            </p>
-          ))}
+          <CitasEnviadas citas={otras} etiquetas={rotulos} />
           {escrito.trim() && <p>{escrito}</p>}
         </div>
       ) : (
@@ -822,7 +866,7 @@ function BotonApagar() {
 }
 
 function iconoDeCita(tipo: string): 'revision' | 'idea' | 'comentar' | 'mapa' | 'diseno' | 'marca' | 'ficha' {
-  if (tipo === 'Diseño' || tipo === 'Otra versión') return 'diseno'
+  if (tipo === 'Diseño' || tipo === 'Otra versión' || tipo === 'Dirección nueva') return 'diseno'
   // Pasar al framework (T-139): la marca, como en el menú de la tarjeta.
   if (tipo === 'Framework') return 'marca'
   return tipo === 'Revisar'
