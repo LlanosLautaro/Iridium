@@ -33,10 +33,16 @@ esbuild.buildSync({
 const c = await import(pathToFileURL(salida).href)
 await rm(temporal, { recursive: true, force: true })
 
+const t0 = performance.now()
 const archivos = await c.leerArchivosControl(proyecto)
+const t1 = performance.now()
 const avisos: { regla: string; archivo: string; linea: number | null; texto: string }[] =
   c.correrControl(archivos)
+const t2 = performance.now()
 const readme = archivos.documentos.find((d: { ruta: string }) => d.ruta === 'docs/README.md')?.texto ?? null
 console.log(c.tieneFramework(readme) ? 'Con framework.' : 'Framework viejo (el control no corre en la app).')
 for (const a of avisos) console.log(`- [${a.regla}] ${c.dondeDe(a)} — ${a.texto}`)
 console.log(`${avisos.length} aviso${avisos.length === 1 ? '' : 's'}.`)
+console.log(
+  `Leído en ${Math.round(t1 - t0)} ms y revisado en ${Math.round(t2 - t1)} ms (${archivos.documentos.length} documentos).`,
+)

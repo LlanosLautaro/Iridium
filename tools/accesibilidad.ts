@@ -263,7 +263,8 @@ for (const tema of ['negro']) {
     const win = abierta.win
     await pantalla(win, tema, 'proyectos')
     await win.keyboard.press('Control+2')
-    await win.waitForSelector('.sk-columna .sk-fila', { timeout: 30_000 })
+    // Con skills, la lista; en una copia sin la carpeta de Skills, alcanza con el título.
+    await win.getByRole('heading', { name: 'Skills', level: 1 }).waitFor({ timeout: 30_000 })
     await pantalla(win, tema, 'skills')
     // Ajustes, con Ctrl+, y cada pestaña; Escape cierra y devuelve el foco.
     await win.keyboard.press('Control+1')
@@ -281,8 +282,8 @@ for (const tema of ['negro']) {
       .then(() => true)
       .catch(() => false)
     // Un proyecto con todas sus secciones.
-    await win.locator('.tarjeta[title^="Centro de Desarrollo"]').click()
-    await win.waitForSelector('.zona-principal > .cab-proyecto h1')
+    await win.locator('.tarjeta[title^="Centro de Desarrollo"], .tarjeta[title^="Iridium"]').first().click()
+    await win.getByRole('navigation', { name: 'Secciones del proyecto' }).waitFor()
     const nav = win.getByRole('navigation', { name: 'Secciones del proyecto' })
     const nombres = await nav
       .locator('button')

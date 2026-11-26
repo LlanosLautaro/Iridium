@@ -26,7 +26,7 @@ export interface TipoLeido {
  * ahí, una línea `Frente:` debajo. Un tipo que no se entiende queda como consulta.
  */
 export function leerTipo(contexto: string): TipoLeido {
-  const [primera = '', segunda = ''] = contexto.split('\n', 2)
+  const [primera = '', segunda = ''] = contexto.split(/\r?\n/, 2)
   const m = /^\s*Tipo:\s*(.+)$/i.exec(primera)
   const propia = /^\s*Frente:\s*(.+?)\s*$/i.exec(m ? segunda : primera)?.[1] ?? null
   if (!m?.[1]) return { tipo: 'consulta', frena: false, enPausa: false, frente: limpiarFrente(propia) }
