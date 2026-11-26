@@ -16,7 +16,6 @@
     "volver": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/volver.ps1",
     "extension": "node extension/armar.mjs && node --experimental-strip-types tools/instalar-extension.ts",
     "claude": "node --experimental-strip-types tools/claude.ts",
-    "acceso-directo": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/acceso-directo.ps1",
     "test": "vitest run",
     "test:watch": "vitest",
     "cobertura": "vitest run --coverage",

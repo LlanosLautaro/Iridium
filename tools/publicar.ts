@@ -9,6 +9,7 @@
 // sin cambiar la app de uso diario.
 // La sesión de GitHub es la de git (D-081): si no hay, git abre su ventana.
 // Uso: node --experimental-strip-types tools/publicar.ts [--repo dueño/nombre] [--commit c] [--desde carpeta]
+//      [--version número]
 import { execFileSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { mkdtemp, readFile, rm, stat } from 'node:fs/promises'
@@ -63,6 +64,15 @@ const commit = git('rev-parse', '--short', base)
 const largo = git('rev-parse', base)
 const mensaje = git('log', '-1', '--format=%s', base)
 const version = versionDeApp(app)
+// Con `--version` (la que se publica sola, T-132): desde D-198 `win-unpacked` puede tener un armado que el Iridium
+// instalado todavía no puso. Se publica lo que está en uso, así que ese espera a entrar.
+const enUso = opcion('--version')
+if (enUso && enUso !== version) {
+  console.log(
+    `La versión armada (${version}) todavía no es la que está en uso (${enUso}): se publica cuando entre.`,
+  )
+  process.exit(0)
+}
 // Las versiones armadas antes de D-171 no tienen número: electron-updater no sabría si es más nueva.
 if (version === '0.1.0')
   throw new Error('Esa app se armó sin número de versión: armala de nuevo (pnpm actualizar).')

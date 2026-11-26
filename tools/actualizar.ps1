@@ -1,6 +1,9 @@
 ﻿# Arma la última versión de la app de uso diario (scripts.md › Armar la última versión, CO-I2). Arma en
 # `release\nueva` sin tocar la app y mueve `main` al commit armado (D-070). Con Iridium cerrado, la pone en el acto;
 # abierto, la deja lista: Iridium la ve y la pone al cerrarse o con Actualizar (tools/cambiar-version.ps1, R-12). Una versión de Iridium anterior a CO-I2 no sabe hacerlo: a esa se la cierra, como antes.
+# Desde D-198 (Q-304 A) la app de uso diario está instalada como en la otra PC: cada armado deja también su instalador
+# en `release\instalador`. Con el Iridium instalado cerrado, lo instala en el acto; abierto, Iridium lo baja de ahí y
+# entra al cerrarlo o con Actualizar. `win-unpacked` sigue al día (de ahí se publica) y, abierta, pasa a la instalada.
 # -Release y -SinArmar son para probar con otra carpeta (no mueve `main`): -SinArmar usa la `nueva\win-unpacked` que
 # ya esté. -Codigo arma otra copia del código (un commit anterior, `tools/volver.ps1`, D-078) y mueve `main` hacia atrás.
 param(
@@ -123,6 +126,12 @@ if (-not $SinArmar) {
 }
 if (-not (Test-Path -LiteralPath (Join-Path $nueva 'win-unpacked\Iridium.exe'))) { Fallo "No está la versión nueva en $nueva." }
 if (-not (AppCompleta (Join-Path $nueva 'win-unpacked'))) { Fallo 'La versión nueva quedó incompleta (le faltan archivos de Electron). Iridium quedó como estaba.' }
+# El instalador de la versión, para el Iridium instalado de esta PC (D-198). Las pruebas con otra carpeta no lo arman.
+$instalador = Join-Path $Release 'instalador'
+if (-not $SinArmar -and -not $prueba) {
+  Decir 'Armando el instalador...' 'Cyan'
+  if ((Correr { node --experimental-strip-types (Join-Path $PSScriptRoot 'instalador-local.ts') --app (Join-Path $nueva 'win-unpacked') --salida $instalador }) -ne 0) { Fallo 'No se pudo armar el instalador. Iridium quedó como estaba.' }
+}
 
 $commit = (& git rev-parse --short HEAD).Trim()
 $datos = [ordered]@{
@@ -149,6 +158,43 @@ if ($prueba) {
 }
 
 Decir ''
+if (-not $prueba) {
+  # Dónde está el código: el Iridium instalado de esta PC baja de acá sus versiones (D-198).
+  $datosIridium = Join-Path $env:APPDATA 'Centro de Desarrollo'
+  New-Item -ItemType Directory -Force -Path $datosIridium | Out-Null
+  [IO.File]::WriteAllText((Join-Path $datosIridium 'codigo.json'), (@{ carpeta = $raiz } | ConvertTo-Json), [Text.UTF8Encoding]::new($false))
+  $instalada = Join-Path $env:LOCALAPPDATA 'Programs\iridium'
+  $deAntes = @(ProcesosDeLaApp).Count -gt 0
+  # Con la app de antes abierta (la de `win-unpacked`), la versión queda lista ahí: entra al cerrarla y, al abrirse,
+  # pasa a la instalada. Si no, `win-unpacked` se pone al día ya.
+  if (-not $deAntes) {
+    & $cambiar -Release $Release
+    if ($LASTEXITCODE -ne 0) { Decir 'No se pudo poner al día release\win-unpacked (detalle en releasectualizacion.log); sigue igual.' 'Yellow' }
+  }
+  $abierta = @(Get-CimInstance Win32_Process | Where-Object {
+      $_.ExecutablePath -and $_.ExecutablePath.StartsWith("$instalada\", [StringComparison]::OrdinalIgnoreCase) -and
+      $_.CommandLine -notmatch '--chrome-native-host'
+    }).Count -gt 0
+  if ($abierta) {
+    Decir '3/3  Listo: la versión nueva entra cuando cierres Iridium, o con «Actualizar» abajo en Iridium.' 'Green'
+  } else {
+    Decir '3/3  Iridium está cerrado: instalando la versión nueva...' 'Cyan'
+    $setup = Get-ChildItem -LiteralPath $instalador -Filter 'Iridium-Setup-*.exe' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if (-not $setup) { Fallo "No está el instalador en $instalador." }
+    $proceso = Start-Process -FilePath $setup.FullName -ArgumentList '/S' -Wait -PassThru
+    if ($proceso.ExitCode -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $instalada 'Iridium.exe'))) {
+      Fallo "No se pudo instalar la versión nueva (el instalador terminó con $($proceso.ExitCode))."
+    }
+    if ($deAntes) {
+      Decir 'Listo: Iridium quedó instalado. Al cerrar el de ahora, se abre el instalado.' 'Green'
+    } else {
+      Decir 'Listo: Iridium está al día.' 'Green'
+    }
+  }
+  Decir 'Podés cerrar esta ventana.' 'Green'
+  Terminar
+  exit 0
+}
 $abierto = @(ProcesosDeLaApp).Count -gt 0
 if ($abierto -and (Test-Path -LiteralPath (Join-Path $app 'resources\cambiar-version.ps1'))) {
   Decir '3/3  Listo: la versión nueva entra cuando cierres Iridium, o con «Actualizar» abajo en Iridium.' 'Green'

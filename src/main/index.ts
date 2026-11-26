@@ -1,4 +1,5 @@
 // Ventana, menú y ciclo de vida de la app (05-arquitectura.md › Estructura del repo).
+import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
@@ -42,6 +43,7 @@ import { ArchivoSesiones } from './infra/sesiones'
 import { VigiaSinArmar } from './infra/sin-armar'
 import { carpetaDelActualizador, type VentanaActualizando } from './infra/ventana-actualizando'
 import { VigiaVersionNueva } from './infra/version-nueva'
+import { exeInstalado, leerCodigoLocal, servirVersiones, vigilarArchivo } from './infra/versiones-locales'
 import { type Puente, registrarPuente } from './ipc/puente'
 import { crearMotorFalso, crearMotorQueFalla, type Motor } from './motor/motor'
 import { crearMotorSdk } from './motor/sdk'
@@ -298,15 +300,24 @@ let cerrarSinPreguntar = false
 /** Se cerró con Actualizar y una versión lista (CO-I2, R-12): la versión nueva se abre sola al ponerse. */
 let reiniciar = false
 
+/** Corre desde `release/win-unpacked`: la app de uso diario de antes de D-198, o una prueba con la app armada. */
+const desdeWinUnpacked = app.isPackaged && basename(dirname(process.execPath)) === 'win-unpacked'
 /**
- * La carpeta `release` de la app de uso diario (la que tiene `win-unpacked`), donde `tools/actualizar.ps1` deja la
- * versión nueva (CO-I2). En desarrollo no hay; las pruebas usan una de muestra (IRIDIUM_RELEASE).
+ * Una copia instalada (D-171) trae `resources/app-update.yml`, que le pone `tools/instalador.ts` al armar el instalador:
+ * baja sus versiones nuevas con electron-updater. La de `win-unpacked` nunca lo trae.
+ */
+const instalada =
+  app.isPackaged && !desdeWinUnpacked && existsSync(join(process.resourcesPath, 'app-update.yml'))
+/**
+ * La carpeta `release` del código de Iridium, donde `tools/actualizar.ps1` deja cada armado (CO-I2) y su instalador
+ * (D-198): la de `win-unpacked` o, instalado en la PC donde se arma, la de `codigo.json`. En desarrollo y en la otra
+ * PC no hay; las pruebas usan una de muestra (IRIDIUM_RELEASE).
  */
 function carpetaRelease(): string | null {
   if (process.env.IRIDIUM_RELEASE) return process.env.IRIDIUM_RELEASE
-  if (!app.isPackaged) return null
-  const carpetaApp = dirname(process.execPath)
-  return basename(carpetaApp) === 'win-unpacked' ? dirname(carpetaApp) : null
+  if (desdeWinUnpacked) return dirname(dirname(process.execPath))
+  const codigo = instalada ? leerCodigoLocal(carpetaDatos) : null
+  return codigo ? join(codigo, 'release') : null
 }
 const release = carpetaRelease()
 /** Cuánto después de abrir se publica sola la versión en uso (T-132). */
@@ -323,14 +334,10 @@ const ventanaActualizando: VentanaActualizando = {
   ...(oculta ? { afuera: true } : {}),
   ...(process.env.IRIDIUM_VENTANA_REGISTRO ? { registro: process.env.IRIDIUM_VENTANA_REGISTRO } : {}),
 }
-const vigiaVersion = release
-  ? new VigiaVersionNueva(release, deTools('cambiar-version.ps1'), tmpdir(), ventanaActualizando)
-  : null
-/**
- * Una copia instalada (D-171) trae `resources/app-update.yml`, que le pone `tools/publicar.ts` al armar el instalador:
- * baja sus versiones nuevas de GitHub con electron-updater. La del usuario corre desde `win-unpacked` y nunca lo trae.
- */
-const instalada = app.isPackaged && !release && existsSync(join(process.resourcesPath, 'app-update.yml'))
+const vigiaVersion =
+  release && !instalada
+    ? new VigiaVersionNueva(release, deTools('cambiar-version.ps1'), tmpdir(), ventanaActualizando)
+    : null
 /** El código de Iridium es la carpeta de `release` (CO-I6). */
 let vigiaSinArmar: VigiaSinArmar | null = null
 
@@ -629,8 +636,23 @@ function ponerZoom(nuevo: number): void {
   pintarVentana()
 }
 
-// Una sola ventana de la app instalada; en desarrollo puede convivir con ella.
-if (app.isPackaged && !app.requestSingleInstanceLock()) {
+/**
+ * La app de uso diario está instalada (D-198): la de `win-unpacked` (el acceso directo de antes, «Volver a la versión
+ * anterior», el ayudante de una versión vieja) abre la instalada y se cierra. Las pruebas con la app armada no pasan.
+ */
+const instaladaEnEstaPc = exeInstalado(process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'))
+const pasarALaInstalada =
+  desdeWinUnpacked &&
+  !oculta &&
+  !process.env.IRIDIUM_DATOS &&
+  !process.env.IRIDIUM_RELEASE &&
+  existsSync(instaladaEnEstaPc)
+
+if (pasarALaInstalada) {
+  spawn(instaladaEnEstaPc, [], { detached: true, stdio: 'ignore', cwd: homedir() }).unref()
+  app.exit(0)
+} else if (app.isPackaged && !app.requestSingleInstanceLock()) {
+  // Una sola ventana de la app instalada; en desarrollo puede convivir con ella.
   app.quit()
 } else {
   app.on('second-instance', () => {
@@ -659,9 +681,14 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
           .then((l) => l && registro.escribir(`Publicar: manda ${app.getVersion()} a GitHub`))
           .catch((e) => registro.escribir(`Publicar: no se pudo lanzar (${e})`))
       }, PUBLICAR_DESPUES_MS)
+    // En la PC donde se arma (D-198), las versiones salen de `release/instalador`, servida acá mismo.
+    const locales = instalada && release ? join(release, 'instalador') : null
+    const servidor = locales ? await servirVersiones(locales).catch(() => null) : null
+    if (locales)
+      registro.escribir(`Actualizaciones: desde ${locales}${servidor ? '' : ' (no se pudo servir)'}`)
     const actualizador = instalada
       ? new Actualizador({
-          updater: actualizableElectron((t) => registro.escribir(t)),
+          updater: actualizableElectron((t) => registro.escribir(t), servidor?.url),
           anotar: (t) => registro.escribir(t),
           ...(process.env.IRIDIUM_ACTUALIZAR_DESDE ? { primeraMs: 2000 } : {}),
           ventana: {
@@ -679,6 +706,11 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
           },
         })
       : null
+    // Cada armado nuevo se baja enseguida, sin esperar la vuelta de las seis horas.
+    const dejarDeMirar =
+      actualizador && servidor && locales
+        ? vigilarArchivo(join(locales, 'latest.yml'), () => void actualizador.mirar(true))
+        : null
     const escritos = new ArchivoEscritos(join(carpetaDatos, 'escritos.json'))
     // Las fotos pegadas sin mandar viven en los datos hasta mandarlas; al abrir se borran las que ningún escrito nombra.
     const fotos = new Fotos(join(carpetaDatos, 'pegadas'), imagenesElectron)
@@ -799,6 +831,8 @@ if (app.isPackaged && !app.requestSingleInstanceLock()) {
           vigiaVersion?.cerrar()
           vigiaSinArmar?.cerrar()
           actualizador?.cerrar()
+          dejarDeMirar?.()
+          servidor?.cerrar()
           await (vigiaVersion ?? actualizador)
             ?.ponerAlCerrar(reiniciar)
             .then(

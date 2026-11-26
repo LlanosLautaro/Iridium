@@ -1,7 +1,7 @@
 # Estado del módulo: Compartir
 
 **Tipo:** sección
-**Última actualización:** 2026-11-24
+**Última actualización:** 2026-11-26
 **Nivel de protección:** hereda P2; el repo es público desde el 2026-11-16 (D-132).
 
 ## Progreso
@@ -37,6 +37,7 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - [x] Instalar Iridium como una app que se actualiza sola (T-111, CO-I10; Q-270)
 - [x] Numerar las versiones 1.0.x (T-121, D-182)
 - [x] La lista de cambios de cada versión (T-38, D-192)
+- [ ] Tu Iridium instalado como el de la otra PC (CO-I11, D-198; Q-306)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -55,8 +56,13 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 | CO-I8 | Achicar lo que se baja en cada versión: las piezas (D-161, T-37) | hecho (probada publicando, Q-225) |
 | CO-I9 | La otra PC en negro (T-111): el actualizador que se trababa con `app.asar` y las fallas de la ventana, al registro y a una pantalla | hecho (el instalador, Q-255, pasó a CO-I10; la prueba en la otra PC va con Q-256) |
 | CO-I10 | Iridium instalado: el instalador y electron-updater (D-171, T-111) | hecho, aprobada (Q-270, 2026-11-24: la otra PC lo instaló y abre normal) |
+| CO-I11 | El Iridium de esta PC instalado, con el instalador de cada armado (Q-304 A, D-198) | en curso (espera Q-306) |
 
 ## Log de iteraciones
+### CO-I11 — El Iridium de esta PC, instalado (2026-11-26, Q-304 A, D-198)
+- **Por qué:** la app de uso diario corría desde `release/win-unpacked` y cualquier cosa abierta desde ahí trababa la versión nueva (seis arreglos de lo mismo). Q-305: el arreglo del 2026-11-25 entró bien dos veces.
+- **Hecho:** cada armado arma también el instalador en `release/instalador` y anota dónde está el código; con Iridium cerrado lo instala en el acto, abierto lo baja Iridium de esa carpeta (servida por él mismo) y entra al cerrar o con Actualizar, como en la otra PC. La app de `win-unpacked` abre la instalada y se cierra; publicar sola sube solo la versión en uso. Se va `pnpm acceso-directo`. Detalle en `diseno-tecnico.md` › Iridium instalado en esta PC.
+- **Pruebas:** `tests/d198-instalada-aca.test.ts` (7); Vitest 1151 (1 omitida), typecheck y lint en verde.
 ### CO-I10 — Iridium instalado (2026-11-22, T-111, D-171)
 - **Cerrada el 2026-11-24 (Q-270):** la otra PC instaló la `v1.0.0` con el instalador, abre normal con sus proyectos, tiene el acceso en el escritorio y en el menú Inicio, y se borró la carpeta vieja. Desde acá se actualiza sola. Con T-128 (D-187), al actualizar se ve la ventanita «Actualizando Iridium…» (`diseno-tecnico.md` › La ventanita).
 - **Q-255:** A, el instalador con el actualizador estándar. Diseño en `diseno-tecnico.md` › Iridium instalado.
@@ -130,5 +136,5 @@ La construcción y la calidad (hito 8) están completas. Lanzado con el hito 9 (
 - `master` pasó a `dev` y `main` nació en el mismo commit; las dos están en `LlanosLautaro/Iridium`, que sigue privado (desde afuera da 404). Git ya tenía guardada la cuenta: no hizo falta el paso a mano.
 
 ## Próximo paso
-Con Q-270 respondida: si la otra PC instaló y abrió bien, CO-I10 queda hecha; si sigue en negro, leer su registro (Q-270 › Otro) y arreglar la causa.
-**Leer antes:** `diseno-tecnico.md` › Iridium instalado.
+Con Q-306 respondida: si el Iridium instalado abre y se actualiza, CO-I11 queda hecha; si no, leer `release/armado.log` y el registro del día.
+**Leer antes:** `diseno-tecnico.md` › Iridium instalado en esta PC.

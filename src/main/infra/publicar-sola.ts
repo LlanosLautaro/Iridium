@@ -6,11 +6,14 @@ import { dirname } from 'node:path'
 import { debePublicar, type IntentoPublicar } from '../../compartido/actualizar'
 import { lanzarSuelto } from './ventana-actualizando'
 
-/** El comando que publica `commit`; las pruebas ponen otro (IRIDIUM_PUBLICAR) para no subir nada. */
-export function comandoPublicar(commit: string): string {
+/**
+ * El comando que publica `commit` si la app armada es la `version` en uso (D-198); las pruebas ponen otro
+ * (IRIDIUM_PUBLICAR) para no subir nada.
+ */
+export function comandoPublicar(commit: string, version: string): string {
   return [
     'powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command',
-    `"& node --experimental-strip-types tools/publicar.ts --commit ${commit} 2>&1 | Out-File -Encoding utf8 release/publicar.log"`,
+    `"& node --experimental-strip-types tools/publicar.ts --commit ${commit} --version ${version} 2>&1 | Out-File -Encoding utf8 release/publicar.log"`,
   ].join(' ')
 }
 
@@ -35,7 +38,7 @@ export async function publicarSola(o: {
   version: string
   commit: string
   sinGuardar: boolean
-  comando?: (commit: string) => string
+  comando?: (commit: string, version: string) => string
   lanzar?: (comando: string, carpeta: string) => Promise<void>
   ahora?: number
 }): Promise<boolean> {
@@ -45,6 +48,6 @@ export async function publicarSola(o: {
     return false
   await mkdir(dirname(o.archivo), { recursive: true })
   await writeFile(o.archivo, JSON.stringify({ version: o.version, fecha: ahora }))
-  await (o.lanzar ?? lanzarSuelto)((o.comando ?? comandoPublicar)(o.commit), o.codigo)
+  await (o.lanzar ?? lanzarSuelto)((o.comando ?? comandoPublicar)(o.commit, o.version), o.codigo)
   return true
 }

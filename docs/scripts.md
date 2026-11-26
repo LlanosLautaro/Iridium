@@ -3,16 +3,12 @@
 > Lo que el usuario ejecuta a mano. Lo mantiene la IA (ver la skill › Scripts del usuario). Cada script: título `##`, una línea de para qué sirve y una línea **Ejecutar:** (un comando, en la raíz del proyecto salvo que una línea **Carpeta:** diga otra, o un instalador o programa del proyecto, que se ejecuta con Windows) o **Abrir:** (una carpeta o un archivo para ver, relativa a la raíz). Lo más usado primero.
 
 ## Abrir Iridium
-La app de uso diario, la última versión armada.
-**Ejecutar:** `release/win-unpacked/Iridium.exe`
+La app de uso diario, instalada como en la otra PC (D-198), con su acceso en el escritorio y en el menú Inicio.
+**Ejecutar:** `%LOCALAPPDATA%\Programs\iridium\Iridium.exe`
 **Marca:** ejecutar · escritorio
 
-## Crear el acceso directo
-Pone «Iridium» en el escritorio, apuntando a la app armada. Alcanza con hacerlo una vez.
-**Ejecutar:** `pnpm acceso-directo`
-
 ## Armar la última versión
-Pone los últimos cambios en la app de uso diario (tarda un minuto). Sirve con Iridium cerrado o abierto, también desde su sección Scripts. Con Iridium abierto no lo cierra: al terminar, abajo aparece **Actualizar**, y la versión entra la próxima vez que lo cerrás o ya, tocándolo. Lo más simple es no correr esto a mano: cuando hay commits sin armar, Iridium arma solo (D-122) en cuanto la IA de Iridium queda libre, sin consola a la vista (abajo sigue **Actualizar**, que la pone apenas esté), y se reinicia solo cuando ninguna IA trabaja y no usás Iridium unos minutos. «Actualizando…» aparece solo cuando de verdad empieza: al tocar **Actualizar** (con **Cancelar** mientras la termina de armar) o al reiniciarse. Con Iridium cerrado, la pone en el acto. También mueve `main` en GitHub a lo que se armó. Lo que pasó al armar queda en `release/armado.log` (**Ver la consola**, si falla) y lo de poner la versión en `release/actualizacion.log`.
+Pone los últimos cambios en la app de uso diario (tarda un par de minutos: arma la app y su instalador, en `release/instalador`). Sirve con Iridium cerrado o abierto, también desde su sección Scripts. Con Iridium cerrado, la instala en el acto; abierto, no lo cierra: Iridium la baja de esa carpeta, abajo aparece **Actualizar**, y la versión entra la próxima vez que lo cerrás o ya, tocándolo (D-198). Lo más simple es no correr esto a mano: cuando hay commits sin armar, Iridium arma solo (D-122) en cuanto la IA de Iridium queda libre, sin consola a la vista (abajo sigue **Actualizar**, que la pone apenas esté), y se reinicia solo cuando ninguna IA trabaja y no usás Iridium unos minutos. «Actualizando…» aparece solo cuando de verdad empieza: al tocar **Actualizar** (con **Cancelar** mientras la termina de armar) o al reiniciarse. Con Iridium cerrado, la pone en el acto. También mueve `main` en GitHub a lo que se armó. Lo que pasó al armar queda en `release/armado.log` (**Ver la consola**, si falla) y lo de poner la versión en `release/actualizacion.log`.
 **Ejecutar:** `pnpm actualizar`
 
 ## Publicar la versión para compartir

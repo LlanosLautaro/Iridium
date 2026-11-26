@@ -3731,3 +3731,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - Los colores y las duraciones son tokens (`--acento`, `--brillo-acento`, `--estado-…`, `--dur-hover`, `--dur-entrada`, `--dur-pulso`), no números sueltos.
 **Motivo:** el usuario quiere que la app se sienta viva y tecnológica; un solo acento con brillo en lo activo y dos pulsos dan ese aire sin cansar al leer, y el negro de base conserva lo que se ganó en legibilidad.
 **Consecuencias:** corrige en parte D-100 (el color ya no es solo para avisar), D-103 (el negro lleva un acento) y D-108 (los estados de las tarjetas se ven con color). Los tokens nuevos están en `tokens.css` y se ven en la maqueta `docs/diseno/pantallas/pulido.html`; `DESIGN.md` y `06-ui.md` se ponen al día al pasarlo a la app. Quien tenga apagadas las animaciones de Windows las va a ver igual.
+
+## D-198 — El Iridium de esta PC también va instalado, con el mismo instalador que la otra
+- **Fecha:** 2026-11-26
+- **Ámbito:** frente Compartir: cómo se arma, se pone y se publica la app de uso diario
+- **Hito o paso:** 10, frente Compartir (Q-304 A)
+- **Estado:** vigente
+
+**Contexto:** desde D-171 solo la otra PC usaba el instalador; la app del usuario corría desde `release/win-unpacked`, en la carpeta del código, y cada versión nueva reemplazaba esa carpeta. Cualquier cosa que corriera desde ahí (un Iridium escondido de una prueba de la IA, una consola, el puente del navegador) la trababa: seis arreglos de lo mismo (Q-101, T-127, T-132, T-133, T-137 y el del 2026-11-25).
+**Decisión:** la app de uso diario se instala como en la otra PC (`%LOCALAPPDATA%\Programs\iridium`, acceso en el escritorio y el menú Inicio). Cada armado (`pnpm actualizar`, y el de D-122) arma también el instalador, el mismo que se publica, en `release/instalador`. Con Iridium cerrado lo instala en el acto; abierto, Iridium lo baja de esa carpeta con electron-updater (la sirve él mismo en 127.0.0.1) y entra al cerrarlo o con Actualizar, con la ventanita de siempre. Dónde está el código lo anota el armado en los datos (`codigo.json`): sin ese archivo, una copia instalada es la otra PC y baja de GitHub. La app de `win-unpacked` sigue al día (de ahí se publica) y, si alguien la abre, abre la instalada y se cierra.
+**Motivo:** un solo camino para las dos PC, probado de punta a punta; el instalador estándar de Windows cierra lo suyo antes de copiar, y la app queda fuera de la carpeta del código, donde las pruebas de la IA no la tocan.
+**Consecuencias:** armar tarda unos 45 s más. Se publica sola solo la versión que está en uso: un armado que todavía no entró espera (`publicar.ts --version`). «Volver a la versión anterior» arma un número más bajo y entra igual (la copia de esta PC acepta bajar de versión). Se va `pnpm acceso-directo` (el instalador pone el acceso). La ayuda de CO-I2 (`cambiar-version.ps1`, `lista.json`) queda para pasar de la app vieja a la instalada. Pruebas: `tests/d198-instalada-aca.test.ts`.

@@ -86,9 +86,12 @@ export class Actualizador {
     )
   }
 
-  /** Una vuelta: sin internet o con GitHub caído, lo anota y vuelve a probar en la próxima. */
-  async mirar(): Promise<void> {
-    if (this.actual) return
+  /**
+   * Una vuelta: sin internet o con GitHub caído, lo anota y vuelve a probar en la próxima. Con una versión ya bajada no
+   * mira más, salvo con `otra`: en la PC donde se arma (D-198), un armado nuevo reemplaza al bajado.
+   */
+  async mirar(otra = false): Promise<void> {
+    if (this.actual && !otra) return
     try {
       await this.o.updater.buscar()
     } catch (e) {

@@ -61,8 +61,8 @@ win:
       arch: x64
   icon: build/icon.png
   signAndEditExecutable: true
-# El instalador de las copias compartidas (D-171): lo arma `pnpm publicar` desde la app ya armada (`--prepackaged`,
-# `--win nsis`); el armado de todos los días sigue siendo la carpeta de arriba. Un doble clic instala para el usuario,
+# El instalador (D-171, D-198): lo arma `tools/instalador.ts` desde la app ya armada (`--prepackaged`, `--win nsis`), en
+# cada armado para el Iridium instalado de esta PC y al publicar para la otra. Un doble clic instala para el usuario,
 # sin pedir permisos, en %LOCALAPPDATA%\Programs\iridium, con acceso en el escritorio y en el menú Inicio; los datos de
 # Iridium (%APPDATA%\Centro de Desarrollo) no se tocan. `store-asar`: el app.asar va guardado tal cual y lo demás sin
 # comprimir junto, así una versión nueva baja solo lo que cambió (el .blockmap).
