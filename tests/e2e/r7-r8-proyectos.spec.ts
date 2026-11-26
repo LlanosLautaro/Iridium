@@ -140,7 +140,10 @@ test('el clic derecho en una tarjeta cambia el estado, archiva al instante, camb
   await expect(menuGamma.getByRole('menuitem', { name: 'Cambiar ícono…' })).toBeDisabled()
   await menuGamma.getByRole('menuitemradio', { name: 'En desarrollo' }).click()
   await expect(gamma).toContainText('en desarrollo')
-  expect(await leerFicha('Gamma')).toMatchObject({ version: 1, estado: 'en-desarrollo', descripcion: '' })
+  // La tarjeta cambia antes de que la ficha nueva esté en el disco: se espera a que esté.
+  await expect
+    .poll(() => leerFicha('Gamma').catch(() => null), { timeout: 10_000 })
+    .toMatchObject({ version: 1, estado: 'en-desarrollo', descripcion: '' })
 
   // Cambiar ícono: el cuadro de Windows se reemplaza por uno que elige el logo del proyecto.
   const logo = join(raiz, 'Alfa', 'logo.svg')

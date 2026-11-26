@@ -9,7 +9,7 @@ import { debePublicar, REINTENTO_PUBLICAR_MS } from '../src/compartido/actualiza
 import { type Actualizable, Actualizador } from '../src/main/infra/actualizador'
 import { publicarSola } from '../src/main/infra/publicar-sola'
 import { cerrarPuentesDelNavegador } from '../src/main/infra/puente-navegador'
-import { armarVersion, propios } from './muestras/version-armada'
+import { armarVersion } from './muestras/version-armada'
 
 const carpetas: string[] = []
 const procesos: ChildProcess[] = []

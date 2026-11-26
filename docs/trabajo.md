@@ -141,8 +141,9 @@ Los complementos (plugins) de Claude Code, usar la PC (*computer use*) y el nave
 Hecho el 2026-11-25: PA-I6 probada en Q-292 y la calidad (paso 8) hecha: Conectar con la lista de la última vez a la vista no hacía nada (arreglado), la PC y el navegador juntos, Windows-MCP roto o desinstalado, la accesibilidad de la sección y la seguridad de la PC (`modulos/paridad/estado.md` › Calidad). Paridad completa, 1.1.0.
 
 ## T-29 — Mantenimiento: subir los parches
-Estado: pendiente · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento · Tamaño: mediano, sola
+Estado: hecho · Fecha: 2026-11-02 · Origen: `10-operacion.md` › Mantenimiento
 Should. React 19.3.1, Zustand, Vitest, Playwright 1.64 y el SDK de Claude Code 0.3.316, con las pruebas completas y armar.
+Hecho el 2026-11-26: subieron los parches y versiones menores (React, Zustand, Vitest, Playwright, Biome, Electron 44, Vite 7; el SDK ya estaba al día por T-79), con las pruebas completas y armar en verde. Sin cambios a la vista. Las versiones mayores (Electron 45, Vite 8) quedan para cuando hagan falta (`10-operacion.md` › Mantenimiento).
 
 ## T-30 — Lo del Gestor que falta en Iridium
 Estado: pendiente · Origen: C-8, C-9 · Tamaño: grande

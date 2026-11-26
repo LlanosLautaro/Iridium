@@ -108,7 +108,7 @@ export function leerHitos(estado: string, framework = false): HitoLeido[] {
   )
   if (!tabla) return []
   const col = (nombre: string) => tabla.columnas.indexOf(nombre)
-  const iNum = col('#') >= 0 ? col('#') : 0
+  const iNum = Math.max(col('#'), 0)
   const iHito = col('hito')
   const iEstado = col('estado')
   const iDoc = col('documento')

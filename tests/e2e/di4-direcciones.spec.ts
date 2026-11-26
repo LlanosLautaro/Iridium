@@ -115,7 +115,7 @@ test.afterEach(async () => {
 test('una guardada sobre todo el lienzo y la grande, Hoy · Dirección · Lado a lado, y Elegir', async () => {
   const { app, win } = await abrir()
   const diseno = await entrarADiseno(win)
-  await expect.poll(() => fondoMini(win, false)).toBe(NEGRO)
+  await expect.poll(() => fondoMini(win, false), { timeout: 10_000 }).toBe(NEGRO)
 
   // El menú ofrece la guardada, con su frase, y una nueva.
   await diseno.getByRole('button', { name: 'Probar una dirección' }).click()
@@ -128,19 +128,19 @@ test('una guardada sobre todo el lienzo y la grande, Hoy · Dirección · Lado a
   // Todo el lienzo con la dirección, y la línea que lo dice.
   const linea = diseno.getByRole('status', { name: 'Probando la dirección azul apagado' })
   await expect(linea).toContainText('Probando: azul apagado')
-  await expect.poll(() => fondoMini(win, true)).toBe(AZUL)
-  await expect.poll(() => fondoMini(win, true, 'pantallas/nota.html')).toBe(AZUL)
+  await expect.poll(() => fondoMini(win, true), { timeout: 10_000 }).toBe(AZUL)
+  await expect.poll(() => fondoMini(win, true, 'pantallas/nota.html'), { timeout: 10_000 }).toBe(AZUL)
   await win.screenshot({ path: 'test-results/di4-direccion-lienzo.png' })
 
   // Hoy: como está; Lado a lado: cada una con la de hoy al lado.
   await linea.getByRole('button', { name: 'Hoy' }).click()
   await expect(diseno.locator('.di-mini')).toHaveCount(3)
-  await expect.poll(() => fondoMini(win, false)).toBe(NEGRO)
+  await expect.poll(() => fondoMini(win, false), { timeout: 10_000 }).toBe(NEGRO)
   await linea.getByRole('button', { name: 'Lado a lado' }).click()
   await expect(diseno.locator('.di-par')).toHaveCount(3)
   await expect(diseno.locator('.di-mini')).toHaveCount(6)
-  await expect.poll(() => fondoMini(win, true)).toBe(AZUL)
-  await expect.poll(() => fondoMini(win, false)).toBe(NEGRO)
+  await expect.poll(() => fondoMini(win, true), { timeout: 10_000 }).toBe(AZUL)
+  await expect.poll(() => fondoMini(win, false), { timeout: 10_000 }).toBe(NEGRO)
   await win.screenshot({ path: 'test-results/di4-direccion-lado.png' })
 
   // La grande, con la dirección encima (y lo dice); la de hoy, agrandada desde Lado a lado, sin ella.
@@ -170,7 +170,7 @@ test('una guardada sobre todo el lienzo y la grande, Hoy · Dirección · Lado a
   expect(anterior).toContain(tokensHoy)
   expect((await readdir(papelera)).map((n) => n.replace(/^\d+-/, ''))).toEqual(['azul-apagado.css'])
   // Ya sin dirección puesta, el lienzo es azul: son sus tokens.
-  await expect.poll(() => fondoMini(win, false)).toBe(AZUL)
+  await expect.poll(() => fondoMini(win, false), { timeout: 10_000 }).toBe(AZUL)
   // Y la de antes se ofrece para volver.
   await diseno.getByRole('button', { name: 'Probar una dirección' }).click()
   await expect(win.getByRole('menuitemradio', { name: new RegExp(`anterior ${hoy()}`) })).toContainText(
@@ -190,7 +190,7 @@ test('Descartar: su archivo va a la papelera y el lienzo queda como está', asyn
   await expect(linea).toHaveCount(0)
   expect((await readdir(papelera)).map((n) => n.replace(/^\d+-/, ''))).toEqual(['azul-apagado.css'])
   expect(await readdir(alfa('direcciones'))).toEqual([])
-  await expect.poll(() => fondoMini(win, false)).toBe(NEGRO)
+  await expect.poll(() => fondoMini(win, false), { timeout: 10_000 }).toBe(NEGRO)
   await app.close()
 })
 

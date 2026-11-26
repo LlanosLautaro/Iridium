@@ -103,7 +103,7 @@ describe('la fila con la revisión (D-193)', () => {
     expect(elegirPaso([respuestas], [p], 50, prendido, new Set(), [r])).toMatchObject({ tipo: 'bandeja' })
     expect(elegirPaso([], [p], 50, prendido, new Set(), [r])).toEqual({ tipo: 'revision', revision: r })
     // Ya revisado (en el día): sigue con el paso.
-    expect(elegirPaso([], [p], 50, prendido, new Set(['C:\\P\\Alfa||' + TEXTO_REVISION]), [r])).toEqual({
+    expect(elegirPaso([], [p], 50, prendido, new Set([`C:\\P\\Alfa||${TEXTO_REVISION}`]), [r])).toEqual({
       tipo: 'paso',
       paso: p,
     })

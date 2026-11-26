@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Actualizador } from '../src/main/infra/actualizador'
 import { carpetaDelActualizador, lanzarVentana } from '../src/main/infra/ventana-actualizando'
 import { VigiaVersionNueva } from '../src/main/infra/version-nueva'
-import { armarVersion, propios } from './muestras/version-armada'
+import { armarVersion } from './muestras/version-armada'
 
 const tools = join(import.meta.dirname, '..', 'tools')
 const POWERSHELL = String.raw`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`
