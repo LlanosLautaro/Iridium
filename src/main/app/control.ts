@@ -5,6 +5,7 @@ import { join, relative } from 'node:path'
 import { type ArchivosControl, type Aviso, correrControl, tieneFramework } from '../core/control'
 import type { ArchivoLeido } from '../core/control/tipos'
 import { leerFrentes, nombreDeModulo } from '../core/mapa'
+import { RUTA_NOVEDADES_EN_REPO } from '../core/novedades-framework'
 import { leerArchivosDiseno } from '../infra/diseno/archivos'
 
 async function textoSiExiste(ruta: string): Promise<string | null> {
@@ -69,6 +70,7 @@ export async function leerArchivosControl(ruta: string): Promise<ArchivosControl
     documentos: todos,
     frentes,
     diseno: await leerArchivosDiseno(ruta),
+    novedades: await textoSiExiste(join(ruta, ...RUTA_NOVEDADES_EN_REPO.split('/'))),
   }
 }
 

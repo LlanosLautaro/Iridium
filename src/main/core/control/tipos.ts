@@ -19,6 +19,8 @@ export interface ArchivosControl {
   frentes: readonly { carpeta: string; nombre: string }[]
   /** `docs/diseno/` (frente Diseño, D-105), o null/ausente si el proyecto no lo tiene. */
   diseno?: ArchivosDiseno | null
+  /** `novedades.md` del framework, solo en el repo que lo trae (T-64); null/ausente en los demás. */
+  novedades?: string | null
 }
 
 export interface ArchivosDiseno {

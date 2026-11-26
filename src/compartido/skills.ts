@@ -56,8 +56,8 @@ export interface ListaSkills {
  * control, de framework viejo (con la fecha del formato de la guía, si la dice) o carpeta simple (sin `estado.md`).
  */
 export type EstadoFramework =
-  | { tipo: 'al-dia'; fecha: string | null }
-  | { tipo: 'avisos'; fecha: string | null; avisos: string[] }
+  | { tipo: 'al-dia'; fecha: string | null; novedades?: NovedadFramework[] }
+  | { tipo: 'avisos'; fecha: string | null; avisos: string[]; novedades?: NovedadFramework[] }
   | { tipo: 'viejo'; fecha: string | null }
   | { tipo: 'carpeta' }
 
@@ -67,6 +67,61 @@ export interface ProyectoFramework {
   inicial: string
   icono: string | null
   estado: EstadoFramework
+}
+
+/**
+ * Una novedad del framework (T-64, D-118): un cambio que le pide algo a los proyectos, con su fecha. Sale de
+ * `novedades.md` del framework; un proyecto la tiene si es más nueva que su `**Framework:**` y le toca.
+ */
+export interface NovedadFramework {
+  fecha: string
+  /** Qué cambió, en una línea. */
+  titulo: string
+  /** Qué le pide al proyecto (markdown corto). */
+  texto: string
+  /** Solo les toca a los proyectos que tienen este archivo o carpeta (relativo, con `/`); null, a todos. */
+  soloSi: string | null
+}
+
+/** Las novedades que tiene un proyecto (al día o con avisos); vacío si no tiene. */
+export function novedadesDe(e: EstadoFramework): NovedadFramework[] {
+  return e.tipo === 'al-dia' || e.tipo === 'avisos' ? (e.novedades ?? []) : []
+}
+
+/** «1 novedad», «2 novedades». */
+export function cuentaNovedades(n: number): string {
+  return n === 1 ? '1 novedad' : `${n} novedades`
+}
+
+/** El texto de una novedad para mirar, sin las comillas del código. */
+export function textoParaMirar(t: string): string {
+  return t.replace(/`([^`]*)`/g, '$1').replace(/\*\*([^*]+)\*\*/g, '$1')
+}
+
+/**
+ * El pedido de Ponerse al día (T-64, D-118, D-196): lo que pide cada novedad, y al terminar la fecha del framework a la
+ * de la última. Se cita en la conversación del proyecto y lo manda el usuario.
+ */
+export function mensajePonerseAlDia(novedades: readonly NovedadFramework[]): string {
+  const ultima = novedades.reduce((m, n) => (n.fecha > m ? n.fecha : m), '')
+  const lista = novedades.map((n) => `- **${n.fecha} — ${n.titulo}.** ${n.texto.replace(/\s*\n\s*/g, ' ')}`)
+  return [
+    `Ponete al día con el framework de Iridium (la skill \`iridium\`): ${novedades.length === 1 ? 'cambió una cosa que le pide algo' : `cambiaron ${novedades.length} cosas que le piden algo`} a este proyecto desde la fecha de \`**Framework:**\` de \`docs/README.md\`.`,
+    '',
+    ...lista,
+    '',
+    `Hacé lo que pide cada una (si alguna no aplica, decí por qué), y al terminar poné \`**Framework:** ${ultima}\` en \`docs/README.md\`. Si algo necesita una decisión mía, dejalo como pregunta.`,
+  ].join('\n')
+}
+
+/** Ponerse al día como cita (D-196): queda arriba del campo de la conversación del proyecto. */
+export function citaPonerseAlDia(novedades: readonly NovedadFramework[]): Cita {
+  return {
+    clave: 'framework:ponerse-al-dia',
+    tipo: 'Framework',
+    nombre: `Ponerse al día · ${cuentaNovedades(novedades.length)}`,
+    texto: mensajePonerseAlDia(novedades),
+  }
 }
 
 /** Fuera del framework: de framework viejo o con avisos. Las carpetas simples no cuentan (W-13). */

@@ -48,8 +48,8 @@ Las maquetas de la interfaz de Iridium (D-105): el rediseño en negro sin acento
 | Capacidades | Paridad (propuesta) | pantallas/paridad-capacidades.html | — |
 | Las consolas adentro | Un proyecto | pantallas/consolas.html | 2026-11-24 00:02 |
 | Actualizando Iridium | Actualizar | pantallas/actualizando.html | 2026-11-24 00:57 |
-| Novedades en la tarjeta | Orden (propuesta) | pantallas/novedades-tarjeta.html | — |
-| Novedades en Skills › Framework | Orden (propuesta) | pantallas/novedades-skills.html | — |
+| Novedades en la tarjeta | Orden (propuesta) | pantallas/novedades-tarjeta.html | 2026-11-26 19:20 |
+| Novedades en Skills › Framework | Orden (propuesta) | pantallas/novedades-skills.html | 2026-11-26 19:20 |
 
 ## Cómo están hechas
 - **El sistema:** `tokens.css` (la dirección negra; desde DI-I3 la app lo importa tal cual), `piezas.css` con las doce piezas (PZ-1 a PZ-12, `modulos/diseno/ux.md` › Las piezas) y `piezas.html`, que las muestra con sus variantes.

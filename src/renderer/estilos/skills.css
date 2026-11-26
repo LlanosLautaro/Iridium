@@ -155,6 +155,28 @@
 .sk-lista-avisos li + li {
   margin-top: var(--esp-1);
 }
+/* Las novedades del framework de un proyecto (T-64): la fecha, qué cambió y qué le pide */
+.sk-novedades {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+.sk-novedades .fecha {
+  font-size: var(--tam-chico);
+  color: var(--texto-3);
+}
+.sk-novedades .que {
+  font-weight: 600;
+}
+.sk-novedades p {
+  margin: 2px 0 0;
+  font-size: var(--tam-chico);
+  color: var(--texto-2);
+  overflow-wrap: anywhere;
+}
 .sk-todos {
   font-size: var(--tam-base);
   color: var(--texto-2);

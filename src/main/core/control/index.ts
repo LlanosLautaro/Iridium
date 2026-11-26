@@ -3,6 +3,7 @@
 import { reglaDibujos } from './dibujos'
 import { reglaDiseno } from './diseno'
 import { reglaEstados } from './estado'
+import { reglaNovedades } from './novedades-framework'
 import { reglaPreguntas } from './preguntas'
 import { reglaRespuestas } from './respuestas'
 import { reglaRevision } from './revision'
@@ -23,6 +24,7 @@ export const REGLAS: readonly Regla[] = [
   reglaDiseno,
   reglaRuta,
   reglaScripts,
+  reglaNovedades,
 ]
 
 export function correrControl(archivos: ArchivosControl): Aviso[] {

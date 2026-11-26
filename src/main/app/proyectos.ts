@@ -1,5 +1,6 @@
 // Caso de uso de la sección Proyectos (H-1): leer la carpeta de proyectos y armar las tarjetas de la grilla.
 // Nunca escribe nada: el Centro solo lee las fichas y los `estado.md` (05-arquitectura.md › Modelo de datos).
+import { existsSync } from 'node:fs'
 import { readdir, readFile } from 'node:fs/promises'
 import { basename, extname, join } from 'node:path'
 import type { CarpetasIridium, ListaProyectos, PreguntaNueva, TarjetaProyecto } from '../../compartido/puente'
@@ -7,11 +8,14 @@ import { queEjecuta } from '../core/abrir'
 import { dondeDe } from '../core/control'
 import { armarTarjeta, ordenarTarjetas } from '../core/grilla'
 import { rutaIconoSegura } from '../core/metadatos'
+import { novedadesDelProyecto } from '../core/novedades-framework'
 import { contarPendientes, preguntasSinResponder } from '../core/pendientes'
 import type { CarpetaProyecto } from '../core/proyectos'
 import { CARPETA_REVISION, leerComentario } from '../core/revision/comentario'
+import { fechaDelFramework } from '../core/skills'
 import { leerScripts, RUTA_SCRIPTS } from '../core/visor/scripts'
 import type { CarpetasEnDisco } from '../infra/carpeta-iridium'
+import { novedadesDelFramework } from '../infra/novedades-framework'
 import { leerArchivoGuia, leerArchivoMetadatos, leerCarpetas, RaizNoEncontrada } from '../infra/raiz'
 import { skillsEnProyecto } from '../infra/skills'
 import { leerUltimoCambio } from '../infra/ultimo-cambio'
@@ -110,11 +114,21 @@ export async function contarRevisionAbiertos(ruta: string): Promise<number> {
   return n
 }
 
-/** Los avisos del control, que se calculan al leer la tarjeta y no se guardan (W-2); `'viejo'` sin framework. */
+/**
+ * Los avisos del control, que se calculan al leer la tarjeta y no se guardan (W-2), y las novedades del framework que
+ * le tocan (T-64); `'viejo'` sin framework.
+ */
 async function leerFramework(c: CarpetaProyecto): Promise<TarjetaProyecto['framework']> {
   if (c.guia === null) return null
-  const avisos = await controlarProyecto(c.ruta)
-  return avisos === null ? 'viejo' : { avisos: avisos.map((a) => `${dondeDe(a)} — ${a.texto}`) }
+  const [avisos, readme, todas] = await Promise.all([
+    controlarProyecto(c.ruta),
+    textoSiExiste(join(c.ruta, 'docs', 'README.md')),
+    novedadesDelFramework(),
+  ])
+  if (avisos === null) return 'viejo'
+  const fecha = readme === null ? null : fechaDelFramework(readme)
+  const novedades = novedadesDelProyecto(todas, fecha, (r) => existsSync(join(c.ruta, ...r.split('/'))))
+  return { avisos: avisos.map((a) => `${dondeDe(a)} — ${a.texto}`), novedades }
 }
 
 /** Lo que abre el proyecto (frente Abrir, AB-1): el script marcado `ejecutar` de `docs/scripts.md`, o null. */

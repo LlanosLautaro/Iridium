@@ -11,7 +11,7 @@ import type { EstadoDesdeIdeas, IdeasDeProyecto, NotaIdea, ResultadoIdea } from 
 import type { ImagenDelPortapapeles, ImagenPegada } from './notas'
 import type { Novedades } from './novedades'
 import type { Borrador } from './respuestas'
-import type { ListaSkills, ProyectoFramework, SkillProyecto } from './skills'
+import type { ListaSkills, NovedadFramework, ProyectoFramework, SkillProyecto } from './skills'
 import type { Estado, PlanEliminacion } from './tipos'
 import type { TrabajoProyecto } from './trabajo'
 import type { ContenidoDocumento, OpcionPregunta, ScriptVista } from './visor'
@@ -50,9 +50,10 @@ export interface TarjetaProyecto {
   skills: number
   /**
    * El framework (frente Orden, W-2): con él, lo que el control encuentra mal escrito ahora, como lo ve la IA
-   * (`docs/estado.md:12 — …`); `'viejo'`, todavía no pasó; null, sin `docs/estado.md`.
+   * (`docs/estado.md:12 — …`) y las novedades del framework que le tocan (T-64, D-118); `'viejo'`, todavía no pasó;
+   * null, sin `docs/estado.md`.
    */
-  framework: { avisos: string[] } | 'viejo' | null
+  framework: { avisos: string[]; novedades?: NovedadFramework[] } | 'viejo' | null
   /**
    * El último cambio del proyecto (ms), que ordena la grilla (D-136): el último commit o lo último escrito en `docs/`,
    * lo más reciente de los dos; null si no tiene ninguno.

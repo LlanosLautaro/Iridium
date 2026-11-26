@@ -1,6 +1,12 @@
 // Reglas de la sección Skills (modulos/skills/diseno-tecnico.md): entender un SKILL.md, decidir de dónde llega cada
 // skill, encontrar las copias dobles y saber cómo está cada proyecto con el framework (W-13). Sin disco.
-import type { CopiaDoble, EstadoFramework, OrigenSkill, Skill } from '../../compartido/skills'
+import type {
+  CopiaDoble,
+  EstadoFramework,
+  NovedadFramework,
+  OrigenSkill,
+  Skill,
+} from '../../compartido/skills'
 import type { Estado } from '../../compartido/tipos'
 import { tieneFramework } from './control'
 import { campo } from './guia'
@@ -192,6 +198,8 @@ export interface DatosFramework {
   readme: string | null
   /** Lo que el control encuentra mal escrito (ya calculado para la tarjeta); null sin framework. */
   avisos: readonly string[] | null
+  /** Las novedades del framework que le tocan (T-64, ya calculadas para la tarjeta). */
+  novedades?: readonly NovedadFramework[]
 }
 
 /** La fecha de `**Framework:** AAAA-MM-DD` del `docs/README.md` de un proyecto; null si no la tiene. */
@@ -209,9 +217,11 @@ export function estadoConFramework(d: DatosFramework): EstadoFramework | null {
   if (d.archivado || d.estado === 'descontinuado' || d.reemplazadoPor !== null) return null
   if (!d.tieneEstado) return { tipo: 'carpeta' }
   const fecha = d.readme === null ? null : fechaDelFramework(d.readme)
-  if (d.readme !== null && tieneFramework(d.readme))
+  if (d.readme !== null && tieneFramework(d.readme)) {
+    const novedades = d.novedades?.length ? { novedades: [...d.novedades] } : {}
     return d.avisos && d.avisos.length > 0
-      ? { tipo: 'avisos', fecha, avisos: [...d.avisos] }
-      : { tipo: 'al-dia', fecha }
+      ? { tipo: 'avisos', fecha, avisos: [...d.avisos], ...novedades }
+      : { tipo: 'al-dia', fecha, ...novedades }
+  }
   return { tipo: 'viejo', fecha: d.readme === null ? null : formatoDelProyecto(d.readme) }
 }

@@ -42,6 +42,13 @@ export function textoAvisos(f: TarjetaProyecto['framework']): string | null {
   return `${n > 99 ? '99+' : n} ${n === 1 ? 'aviso' : 'avisos'} del framework`
 }
 
+/** «2 novedades del framework» (T-64, D-118): lo que el framework le pide desde su fecha; null sin novedades. */
+export function textoNovedades(f: TarjetaProyecto['framework']): string | null {
+  const n = f === null || f === 'viejo' ? 0 : (f.novedades?.length ?? 0)
+  if (n === 0) return null
+  return `${n} ${n === 1 ? 'novedad' : 'novedades'} del framework`
+}
+
 export function textoHito(h: NonNullable<TarjetaProyecto['hito']>): string {
   if (h.numero === null) return h.nombre ?? 'Sin hito'
   return `Hito ${h.numero}${h.nombre ? ` · ${h.nombre}` : ''}`
@@ -131,6 +138,8 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
   const est = p.estado ? ESTADOS[p.estado] : SIN_FICHA
   const preguntas = textoPreguntas(p.preguntas)
   const avisos = textoAvisos(p.framework)
+  const novedades = p.archivado ? null : textoNovedades(p.framework)
+  const listaNovedades = p.framework !== null && p.framework !== 'viejo' ? (p.framework.novedades ?? []) : []
   const enQue = textoFrente(p.hito)
   // Al pie, solo el frente en curso: el hito y el Próximo paso no van en la tarjeta (R-83, R-84); se leen en el
   // proyecto y en el nombre de la tarjeta.
@@ -149,6 +158,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
     enQue,
     preguntas ?? (marca !== 'cuenta' && TEXTO_MARCA[marca]),
     avisos,
+    novedades,
     ficha && PALABRA_SESION[ficha.estado],
     actualizacion?.armando != null && 'actualizando',
     actualizacion?.fallo && 'no se pudo actualizar',
@@ -166,7 +176,9 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
       aria-haspopup="menu"
       // Los avisos del pie llevan a su lista (T-48); el resto de la tarjeta abre el proyecto. Con el teclado, la
       // lista está en el menú de la tarjeta.
-      onClick={(e) => ((e.target as Element).closest('.avisos-t') && verAvisos ? verAvisos() : abrir())}
+      onClick={(e) =>
+        (e.target as Element).closest('.avisos-t, .novedades-t') && verAvisos ? verAvisos() : abrir()
+      }
       onContextMenu={menu}
     >
       <div className="cab-t">
@@ -216,7 +228,7 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
         </span>
       </div>
       <p className="desc">{p.descripcion}</p>
-      {(frente || conSenales || conAvisos) && (
+      {(frente || conSenales || conAvisos || novedades) && (
         <div className="pie-t">
           {frente && (
             <span className="linea en-que" title={frente}>
@@ -230,6 +242,17 @@ export function Tarjeta({ p, ficha, abrir, verAvisos, menu }: Props) {
               title={`${p.framework.avisos.join('\n')}\n\nToca para ver la lista en Skills › Framework`}
             >
               ! {avisos}
+            </span>
+          )}
+          {novedades && (
+            // En blanco, no en ámbar: no frena nada (Q-311). Lleva a la lista en Skills › Framework.
+            <span
+              className="linea senal blanco novedades-t"
+              title={`El framework cambió desde que este proyecto se puso al día:\n${listaNovedades
+                .map((n) => `· ${n.titulo}`)
+                .join('\n')}\n\nToca para verlas en Skills › Framework`}
+            >
+              {novedades}
             </span>
           )}
           {conSenales && (

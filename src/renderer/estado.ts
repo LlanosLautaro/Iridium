@@ -29,7 +29,7 @@ import {
   type VersionNueva,
 } from '../compartido/puente'
 import type { Borrador } from '../compartido/respuestas'
-import { CITA_PASAR_AL_FRAMEWORK } from '../compartido/skills'
+import { CITA_PASAR_AL_FRAMEWORK, citaPonerseAlDia, type NovedadFramework } from '../compartido/skills'
 import { seccionDeEntrada } from './secciones/proyecto/entrada'
 import { guardarLuego } from './ui/guardarLuego'
 
@@ -204,6 +204,8 @@ interface EstadoApp {
    * en `skills.enviados` para que Skills › Framework diga «Actualizando…» cuando lo mande.
    */
   citarPasarAlFramework(ruta: string): void
+  /** Ponerse al día con las novedades del framework (T-64, D-118): lo mismo, con el pedido de sus novedades. */
+  citarPonerseAlDia(ruta: string, novedades: readonly NovedadFramework[]): void
   /** Lo escrito en el cuadro de cada conversación y no enviado, por ruta (D-060): se guarda en disco. */
   escritos: Record<string, string>
   /** Los adjuntos sin mandar de cada conversación (PA-I2): se guardan con lo escrito. */
@@ -325,6 +327,17 @@ interface EstadoApp {
   guardarPreferencias(cambio: Partial<Preferencias>): void
 }
 
+/**
+ * Un pedido del framework citado en una conversación nueva del proyecto (D-196, T-139, T-64): lo marca como mandado
+ * desde Skills › Framework para que diga «Actualizando…» cuando el usuario lo envíe.
+ */
+function citarEnNueva(s: EstadoApp, ruta: string, cita: Cita): void {
+  s.cambiarSkills({ enviados: [...s.skills.enviados.filter((r) => r !== ruta), ruta] })
+  s.abrirProyecto(ruta)
+  s.cambiarVista(ruta, { enBlanco: true })
+  s.citar(ruta, cita)
+}
+
 export const usarEstado = create<EstadoApp>((set, get) => ({
   seccion: 'proyectos',
   proyectoAbierto: null,
@@ -400,13 +413,8 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
       const { [ruta]: _, ...resto } = s.citas
       return { citas: quedan.length ? { ...resto, [ruta]: quedan } : resto }
     }),
-  citarPasarAlFramework: (ruta) => {
-    const { enviados } = get().skills
-    get().cambiarSkills({ enviados: [...enviados.filter((r) => r !== ruta), ruta] })
-    get().abrirProyecto(ruta)
-    get().cambiarVista(ruta, { enBlanco: true })
-    get().citar(ruta, CITA_PASAR_AL_FRAMEWORK)
-  },
+  citarPasarAlFramework: (ruta) => citarEnNueva(get(), ruta, CITA_PASAR_AL_FRAMEWORK),
+  citarPonerseAlDia: (ruta, novedades) => citarEnNueva(get(), ruta, citaPonerseAlDia(novedades)),
   escritos: {},
   adjuntos: {},
   // Lo que ya se escribió antes de que llegue lo guardado no se pisa.

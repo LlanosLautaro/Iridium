@@ -4,6 +4,7 @@
 import { ordenarTarjetas } from '../../../compartido/grilla'
 import { diaDe } from '../../../compartido/notas'
 import type { ListaProyectos, ResultadoFicha, TarjetaProyecto } from '../../../compartido/puente'
+import { cuentaNovedades } from '../../../compartido/skills'
 import { ESTADOS, type Estado, NOMBRE_ESTADO } from '../../../compartido/tipos'
 import { usarEstado } from '../../estado'
 import { Icono } from '../../ui/Icono'
@@ -48,11 +49,17 @@ export function MenuTarjeta({
 }) {
   const verFramework = usarEstado((s) => s.verFramework)
   const citarPasarAlFramework = usarEstado((s) => s.citarPasarAlFramework)
+  const citarPonerseAlDia = usarEstado((s) => s.citarPonerseAlDia)
   const danada = p.problema !== null
   // Actualizar al framework (OR-8): de framework viejo o una carpeta simple; la ventana del proceso principal lo vuelve a
   // comprobar (archivados y reemplazados no cuentan).
   const pasable = !danada && !p.archivado && (p.framework === 'viejo' || p.framework === null)
   const conAvisos = p.framework !== null && p.framework !== 'viejo' && p.framework.avisos.length > 0
+  // Ponerse al día (T-64, D-118): con novedades del framework, el pedido citado en una conversación nueva (D-196).
+  const novedades =
+    !danada && !p.archivado && p.framework !== null && p.framework !== 'viejo'
+      ? (p.framework.novedades ?? [])
+      : []
   /** La ficha se toca desde acá solo si existe y está sana (el estado la crea). */
   const sinFicha = danada
     ? 'La ficha está dañada: pide a la IA que la arregle'
@@ -133,7 +140,18 @@ export function MenuTarjeta({
           {nombreEjecutar(p)}
         </button>
       )}
-      {(pasable || conAvisos) && <hr />}
+      {(pasable || conAvisos || novedades.length > 0) && <hr />}
+      {novedades.length > 0 && (
+        <button
+          type="button"
+          role="menuitem"
+          title="Abre el proyecto con el pedido citado en una conversación nueva, sin enviar (D-196)"
+          onClick={hacer(async () => citarPonerseAlDia(p.ruta, novedades))}
+        >
+          <Icono nombre="marca" />
+          Ponerse al día · {cuentaNovedades(novedades.length)}
+        </button>
+      )}
       {pasable && (
         <button
           type="button"

@@ -3,7 +3,13 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { TarjetaProyecto } from '../../compartido/puente'
-import type { ListaSkills, ProyectoFramework, SkillProyecto } from '../../compartido/skills'
+import {
+  type EstadoFramework,
+  type ListaSkills,
+  novedadesDe,
+  type ProyectoFramework,
+  type SkillProyecto,
+} from '../../compartido/skills'
 import { estadoConFramework, leerEncabezado, marcarDobles, ordenarSkills, skillDe } from '../core/skills'
 import { leerSkills, SKILLS_DEL_PROYECTO, skillsEnProyecto, textoSkillDelProyecto } from '../infra/skills'
 
@@ -27,8 +33,16 @@ export async function leerSeccionSkills(
   return { carpetaClaude, skills: ordenarSkills(skills), errores: crudas.errores }
 }
 
-/** El orden de Skills › Framework (W-13): los de afuera primero, después las carpetas y al final los que están al día. */
-const ORDEN_FRAMEWORK = { viejo: 0, avisos: 1, carpeta: 2, 'al-dia': 3 } as const
+/**
+ * El orden de Skills › Framework (W-13): los de afuera primero, después los que tienen novedades (T-64), las carpetas y
+ * al final los que están al día.
+ */
+function ordenFramework(e: EstadoFramework): number {
+  if (e.tipo === 'viejo') return 0
+  if (e.tipo === 'avisos') return 1
+  if (novedadesDe(e).length > 0) return 2
+  return e.tipo === 'carpeta' ? 3 : 4
+}
 
 /**
  * Cómo está cada proyecto con el framework (W-13), con los avisos que la tarjeta ya calculó: los que cuentan, en el
@@ -46,6 +60,7 @@ export async function proyectosConFramework(
         reemplazadoPor: p.reemplazadoPor,
         readme: p.framework === null ? null : await textoSiExiste(join(p.ruta, 'docs', 'README.md')),
         avisos: p.framework === null || p.framework === 'viejo' ? null : p.framework.avisos,
+        novedades: p.framework === null || p.framework === 'viejo' ? [] : (p.framework.novedades ?? []),
       })
       return estado && { ruta: p.ruta, nombre: p.nombre, inicial: p.inicial, icono: p.icono, estado }
     }),
@@ -53,7 +68,7 @@ export async function proyectosConFramework(
   return filas
     .filter((f) => f !== null)
     .map((f, i) => ({ f, i }))
-    .sort((a, b) => ORDEN_FRAMEWORK[a.f.estado.tipo] - ORDEN_FRAMEWORK[b.f.estado.tipo] || a.i - b.i)
+    .sort((a, b) => ordenFramework(a.f.estado) - ordenFramework(b.f.estado) || a.i - b.i)
     .map((x) => x.f)
 }
 

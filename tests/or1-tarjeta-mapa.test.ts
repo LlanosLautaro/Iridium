@@ -75,7 +75,7 @@ describe('La tarjeta: el framework y sus avisos (W-2)', () => {
     const alfa = de('Alfa')
     expect(alfa).toMatchObject({ avisos: [expect.stringMatching(/^docs\/estado\.md:\d+ — .*Q-1/)] })
     expect(de('Beta')).toBe('viejo')
-    expect(de('Gamma')).toEqual({ avisos: [] })
+    expect(de('Gamma')).toEqual({ avisos: [], novedades: [] })
     expect(de('Delta')).toBeNull()
   })
 })

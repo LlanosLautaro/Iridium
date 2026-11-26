@@ -154,10 +154,12 @@
 .tarjeta .en-que .fr {
   color: var(--texto-2);
 }
-.tarjeta .avisos-t {
+.tarjeta .avisos-t,
+.tarjeta .novedades-t {
   display: block;
 }
-.tarjeta .avisos-t:hover {
+.tarjeta .avisos-t:hover,
+.tarjeta .novedades-t:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }

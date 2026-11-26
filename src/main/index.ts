@@ -31,6 +31,7 @@ import { Fotos } from './infra/fotos'
 import { imagenesElectron } from './infra/imagenes'
 import { abrirEnNavegador } from './infra/navegador'
 import { archivoNovedades } from './infra/novedades'
+import { fijarCarpetaFramework } from './infra/novedades-framework'
 import { publicarSola } from './infra/publicar-sola'
 import { cerrarPuentesDelNavegador } from './infra/puente-navegador'
 import { leerCarpetas } from './infra/raiz'
@@ -711,6 +712,11 @@ if (pasarALaInstalada) {
       actualizador && servidor && locales
         ? vigilarArchivo(join(locales, 'latest.yml'), () => void actualizador.mirar(true))
         : null
+    // Las novedades del framework (T-64): las lee del `novedades.md` del framework que trae esta versión; las pruebas
+    // usan una carpeta de muestra (IRIDIUM_NOVEDADES).
+    fijarCarpetaFramework(
+      process.env.IRIDIUM_NOVEDADES ?? join(carpetaPlugins(), 'iridium', 'skills', 'iridium'),
+    )
     const escritos = new ArchivoEscritos(join(carpetaDatos, 'escritos.json'))
     // Las fotos pegadas sin mandar viven en los datos hasta mandarlas; al abrir se borran las que ningún escrito nombra.
     const fotos = new Fotos(join(carpetaDatos, 'pegadas'), imagenesElectron)

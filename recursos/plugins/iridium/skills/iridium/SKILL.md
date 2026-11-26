@@ -292,6 +292,19 @@ La tarjeta sale de `.proyecto.json` en la raíz. Sin ficha o con el JSON roto, d
 - El usuario cambia `estado`, `archivado` e `icono` desde el menú de la tarjeta: releé la ficha antes de tocarla. Al cerrar un hito, revisá que el estado y la descripción sigan siendo ciertos.
 - Cómo se llena cada campo (la descripción, las etiquetas, qué estado sigue al hito y cuáles decide el usuario) y el repaso de todos los proyectos: `referencias/ficha.md`.
 
+### Las novedades del framework: `novedades.md`
+El framework anota con fecha, en su `novedades.md`, los cambios que les piden algo a los proyectos que ya lo siguen (D-118). Iridium los compara con la fecha `**Framework:**` del `docs/README.md` de cada proyecto y muestra «N novedades del framework» en la tarjeta y en Skills › Framework; **Ponerse al día** deja citado el pedido en la conversación del proyecto.
+
+```markdown
+## 2026-11-12 — Las piezas del design system llevan ficha
+Solo si: docs/diseno/piezas.css
+Cada pieza de `docs/diseno/piezas.css` empieza con su ficha…
+```
+
+- Una por `## AAAA-MM-DD — Qué cambió`, del más viejo al más nuevo; `Solo si:` (opcional, la línea siguiente) es un archivo o carpeta del proyecto, relativo: solo les toca a los que lo tienen; debajo, qué tiene que hacer el proyecto.
+- **Al cambiar el framework** de una forma que le pide algo a un proyecto que ya lo sigue (un formato nuevo, una regla nueva del control que hay que cumplir a mano), sumá su novedad al final, en el mismo cambio.
+- **Al ponerte al día** (te llega el pedido con la lista): hacé lo que pide cada una y al terminar poné en `**Framework:**` la fecha de la última. Si una no aplica, decilo; si necesita una decisión del usuario, una `Q-n`.
+
 ## El control
 
 Al terminar cada turno en el chat de un proyecto con framework, Iridium revisa lo que escribiste con los mismos lectores de la pantalla: las preguntas (formato, `Tipo:`, opciones y casillas, frentes), las respuestas sin «Procesada», `trabajo.md` (estado, frente, códigos repetidos, `Idea:` y `Enlace:`, notas de `docs/ideas/` sin su `T-n`), las tablas de estados y los campos de `estado.md`, la `## Ruta` de cada frente (las marcas, las ramas, sus códigos, que el frente en curso la tenga y que un `T-n` hecho en la ruta, o el de un frente hecho, no siga abierto), los comentarios de la Revisión anotados (que citen su `T-n` y que no sigan anotados con el `T-n` hecho), los dibujos en texto, las marcas de `docs/scripts.md` y las maquetas de `docs/diseno/`. Si algo está mal, te lo devuelve en un mensaje que empieza «El control de Iridium encontró esto mal escrito»: **corregí solo eso**, sin cambiar lo que se pregunta ni hacer otra cosa. Te lo devuelve una sola vez por turno; lo que quede se ve en la tarjeta como «! N avisos del framework».
@@ -329,4 +342,5 @@ Al pasar un portón o terminar una iteración, cerrá así. Un chat nuevo se pag
 - `referencias/integraciones.md`: las skills externas (`impeccable`) en los hitos 4, 6, 7, 8 y 10.
 - `referencias/ronda-ux.md`: la ronda de UX de la operación.
 - `referencias/pasar-al-framework.md`: cómo pasar un proyecto de la guía de hitos (o una carpeta simple) al framework.
+- `novedades.md`: los cambios del framework que les piden algo a los proyectos, con fecha.
 - `plantillas/`: `estado.md`, `trabajo.md`, `README-docs.md`, `decisiones.md`, `perfil-proyecto.md`, `scripts.md`, `instrucciones-ia.md`; en `plantillas/modulo/`, las de cada frente, y en `plantillas/diseno/`, el índice de las maquetas.
