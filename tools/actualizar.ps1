@@ -178,7 +178,7 @@ if (-not $prueba) {
   if ($abierta) {
     Decir '3/3  Listo: la versión nueva entra cuando cierres Iridium, o con «Actualizar» abajo en Iridium.' 'Green'
   } else {
-    Decir '3/3  Iridium está cerrado: instalando la versión nueva...' 'Cyan'
+    if ($deAntes) { Decir '3/3  Instalando Iridium...' 'Cyan' } else { Decir '3/3  Iridium está cerrado: instalando la versión nueva...' 'Cyan' }
     $setup = Get-ChildItem -LiteralPath $instalador -Filter 'Iridium-Setup-*.exe' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     if (-not $setup) { Fallo "No está el instalador en $instalador." }
     $proceso = Start-Process -FilePath $setup.FullName -ArgumentList '/S' -Wait -PassThru
