@@ -71,8 +71,8 @@ test.beforeEach(async () => {
 })
 
 test.afterEach(async () => {
-  await rm(raiz, { recursive: true, force: true })
-  await rm(datos, { recursive: true, force: true })
+  await rm(raiz, { recursive: true, force: true, maxRetries: 5 })
+  await rm(datos, { recursive: true, force: true, maxRetries: 5 })
 })
 
 test('el clic derecho en una tarjeta cambia el estado, archiva al instante, cambia el ícono y abre afuera (R-7)', async () => {

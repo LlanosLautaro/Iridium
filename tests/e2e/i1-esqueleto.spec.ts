@@ -56,8 +56,8 @@ test.beforeEach(async () => {
 })
 
 test.afterEach(async () => {
-  await rm(raiz, { recursive: true, force: true })
-  await rm(datos, { recursive: true, force: true })
+  await rm(raiz, { recursive: true, force: true, maxRetries: 5 })
+  await rm(datos, { recursive: true, force: true, maxRetries: 5 })
 })
 
 test('la grilla muestra los proyectos por el último cambio, con hito y preguntas; los archivados con su interruptor', async () => {

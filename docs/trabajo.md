@@ -709,5 +709,6 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-299
 Una colección que crece con el tiempo y que cualquier proyecto puede usar: estilos visuales (vidrio esmerilado y sus variantes, entre otros) y un lenguaje de movimiento de interfaces futuristas (FUI): pulso, brillo, parpadeo, barrido de radar, luz que cruza, anillos que giran, líneas de pantalla, «glitch», datos que corren, entradas y salidas, como tokens y piezas reutilizables, no atados a un componente. Pulido (D-197) es el primer uso: sus tokens de acento, brillo y duraciones serían la base. Iría en el framework (`referencias/06-ui.md` y sus plantillas), para que la IA lo use en los otros proyectos.
 
 ## T-144 — La prueba de las tarjetas falla a veces al borrar sus datos
-Estado: pendiente · Fecha: 2026-11-26 · Origen: T-86 · Tamaño: chico, sola
+Estado: hecho · Fecha: 2026-11-26 · Origen: T-86 · Tamaño: chico, sola
 Con la suite entera de Playwright, `r7-r8-proyectos.spec.ts` › el clic derecho en una tarjeta (R-7) falló una vez: al leer la ficha, el borrado de la carpeta de datos temporal chocó con un archivo que Electron todavía tenía abierto (EBUSY). Sola, pasa. Que la prueba espere a poder borrarla, como la del ayudante de CO-I2.
+Hecho el 2026-11-26: al terminar, esta prueba y otras dos que borraban igual (la de seguridad y la del esqueleto) reintentan el borrado si Electron todavía tiene un archivo abierto, como las demás. Pasan las tres.

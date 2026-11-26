@@ -26,8 +26,8 @@ test.beforeEach(async () => {
 
 test.afterEach(async () => {
   await app.close()
-  await rm(raiz, { recursive: true, force: true })
-  await rm(datos, { recursive: true, force: true })
+  await rm(raiz, { recursive: true, force: true, maxRetries: 5 })
+  await rm(datos, { recursive: true, force: true, maxRetries: 5 })
 })
 
 test('la ventana no ve Node ni Electron; el puente solo tiene sus funciones', async () => {
