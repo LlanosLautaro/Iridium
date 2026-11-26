@@ -47,8 +47,7 @@ export function MenuTarjeta({
   eliminar: () => void
 }) {
   const verFramework = usarEstado((s) => s.verFramework)
-  const cambiarSkills = usarEstado((s) => s.cambiarSkills)
-  const enviados = usarEstado((s) => s.skills.enviados)
+  const citarPasarAlFramework = usarEstado((s) => s.citarPasarAlFramework)
   const danada = p.problema !== null
   // Actualizar al framework (OR-8): de framework viejo o una carpeta simple; la ventana del proceso principal lo vuelve a
   // comprobar (archivados y reemplazados no cuentan).
@@ -139,12 +138,8 @@ export function MenuTarjeta({
         <button
           type="button"
           role="menuitem"
-          title="Le manda el pedido a la IA de este proyecto, en una conversación nueva: gasta uso"
-          onClick={hacer(async () => {
-            await window.iridium.pasarAlFramework(p.ruta)
-            cambiarSkills({ enviados: [...enviados.filter((r) => r !== p.ruta), p.ruta] })
-            avisar({ texto: `La IA de «${p.nombre}» lo está actualizando al framework.`, error: false })
-          })}
+          title="Abre el proyecto con el pedido citado en una conversación nueva, sin enviar (D-196)"
+          onClick={hacer(async () => citarPasarAlFramework(p.ruta))}
         >
           <Icono nombre="marca" />
           Actualizar al framework

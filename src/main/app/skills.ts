@@ -1,5 +1,5 @@
 // Casos de uso de la sección Skills (modulos/skills/diseno-tecnico.md): las skills por origen y cómo está cada
-// proyecto con el framework (W-13). Solo leen; Pasar al framework manda un mensaje a la conversación del proyecto.
+// proyecto con el framework (W-13). Solo leen; Pasar al framework se cita en la conversación del proyecto (D-196).
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { TarjetaProyecto } from '../../compartido/puente'

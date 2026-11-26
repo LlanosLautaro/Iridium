@@ -1,5 +1,6 @@
 // Lo que la sección Skills (modulos/skills/) recibe del proceso principal: las skills de la PC por origen, las copias
 // dobles y cómo está cada proyecto con el framework (Skills › Framework, frente Orden, W-13).
+import type { Cita } from './citas'
 
 /** De dónde llega una skill (modulos/skills/diseno-tecnico.md › Dónde se leen las skills). */
 export const ORIGENES = ['propia', 'tercero', 'complemento', 'cuenta'] as const
@@ -80,6 +81,17 @@ export function fueraDelFramework(e: EstadoFramework): boolean {
 export const MENSAJE_PASAR_AL_FRAMEWORK =
   'Pasá este proyecto al framework de Iridium: seguí `referencias/pasar-al-framework.md` del framework ' +
   '(la skill `iridium`) hasta que el control dé cero.'
+
+/**
+ * Pasar al framework como cita (D-196, T-139): queda arriba del campo de la conversación del proyecto y lo manda el
+ * usuario. Se cita en una conversación nueva (retomar la anterior relee todo su historial), con Volver a la anterior.
+ */
+export const CITA_PASAR_AL_FRAMEWORK: Cita = {
+  clave: 'framework:pasar',
+  tipo: 'Framework',
+  nombre: 'Pasar al framework',
+  texto: MENSAJE_PASAR_AL_FRAMEWORK,
+}
 
 /** Una skill del proyecto (R-8): de su `.claude/skills/`, que Claude Code carga solo en ese proyecto. */
 export interface SkillProyecto {

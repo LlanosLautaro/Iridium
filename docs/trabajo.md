@@ -688,8 +688,9 @@ Evaluada el 2026-11-26: lo escrito con la IA trabajando queda en el cuadro como 
 Lo mencionaste en T-134: escribir el próximo pedido con la IA a mitad de un trabajo y que Iridium lo mande solo al terminar el turno, sin interrumpirla. Sería parte de Paridad (Claude Code lo tiene).
 
 ## T-139 — Pasar al framework también queda citado en la conversación
-Estado: pendiente · Idea: IA · Fecha: 2026-11-25 · Origen: D-196 · Tamaño: chico, sola
+Estado: hecho · Idea: IA · Fecha: 2026-11-25 · Origen: D-196 · Tamaño: chico, sola
 Desde el menú de la tarjeta, Skills › Framework y Archivos, Pasar al framework todavía manda el pedido solo, en una conversación nueva. Con D-196 tendría que abrir el proyecto y dejar el pedido citado en su conversación, con «conviene una conversación nueva» dicho al lado.
+Hecho el 2026-11-26: Actualizar al framework (menú de la tarjeta, Skills › Framework y el recuadro de una carpeta simple) ya no manda nada: abre el proyecto en una conversación nueva («Conversación nueva», con Volver a la anterior) y deja citado «Framework · Pasar al framework» arriba del campo; sale cuando lo mandás, solo o con lo que escribas. Mientras la IA lo pasa, Skills › Framework sigue diciendo «Actualizando…».
 
 ## T-140 — Los mensajes intermedios de la IA, con otra letra que la respuesta final
 Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: R-110 · Tamaño: chico

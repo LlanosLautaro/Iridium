@@ -142,7 +142,6 @@ const api: ApiIridium = {
   ponerseAlDia: (ruta) => ipcRenderer.invoke(CANALES.ponerseAlDia, ruta),
   skills: () => ipcRenderer.invoke(CANALES.skills),
   framework: () => ipcRenderer.invoke(CANALES.framework),
-  pasarAlFramework: (ruta) => ipcRenderer.invoke(CANALES.pasarAlFramework, ruta),
   abrirCarpetaSkill: (id) => ipcRenderer.invoke(CANALES.abrirCarpetaSkill, id),
   carpetaSkill: (id, carpeta) => ipcRenderer.invoke(CANALES.carpetaSkill, id, carpeta),
   archivoSkill: (id, archivo) => ipcRenderer.invoke(CANALES.archivoSkill, id, archivo),

@@ -821,8 +821,10 @@ function BotonApagar() {
   )
 }
 
-function iconoDeCita(tipo: string): 'revision' | 'idea' | 'comentar' | 'mapa' | 'diseno' | 'ficha' {
+function iconoDeCita(tipo: string): 'revision' | 'idea' | 'comentar' | 'mapa' | 'diseno' | 'marca' | 'ficha' {
   if (tipo === 'Diseño' || tipo === 'Otra versión') return 'diseno'
+  // Pasar al framework (T-139): la marca, como en el menú de la tarjeta.
+  if (tipo === 'Framework') return 'marca'
   return tipo === 'Revisar'
     ? 'revision'
     : tipo === 'Idea'

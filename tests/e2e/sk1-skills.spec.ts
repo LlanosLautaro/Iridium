@@ -114,23 +114,11 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Actualizar (SK-1, SK
   await expect(detalle.locator('li.fila')).toHaveText([/Gamma/])
   await win.screenshot({ path: 'test-results/sk1-framework.png' })
 
-  // Una ruta que no salió de la lista se rechaza, y una que ya sigue el framework también.
-  const rechazos = await win.evaluate(async () => {
-    const api = (window as unknown as { iridium: ApiIridium }).iridium
-    const ajena = await api.pasarAlFramework('C:\\Windows').then(
-      () => 'aceptó',
-      () => 'rechazó',
-    )
-    const alDia = (await api.framework()).find((p) => p.nombre === 'Alfa')?.ruta ?? ''
-    const yaSigue = await api.pasarAlFramework(alDia).then(
-      () => 'aceptó',
-      () => 'rechazó',
-    )
-    return { ajena, yaSigue }
-  })
-  expect(rechazos).toEqual({ ajena: 'rechazó', yaSigue: 'rechazó' })
-
+  // D-196 (T-139): Actualizar abre Gamma con el pedido citado en una conversación nueva; lo manda el usuario.
   await gamma.getByRole('button', { name: 'Actualizar' }).click()
+  await expect(win.locator('.compositor .citado')).toContainText('Pasar al framework')
+  await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
+  await win.keyboard.press('Control+2')
   await expect(gamma.getByText('Actualizando…')).toBeVisible()
   await expect(gamma.getByRole('button', { name: 'Ver la conversación' })).toBeVisible()
   await win.screenshot({ path: 'test-results/sk1-pasando.png' })

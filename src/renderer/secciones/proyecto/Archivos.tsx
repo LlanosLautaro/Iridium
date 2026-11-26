@@ -388,24 +388,16 @@ function useMarcasGit(ruta: string): ReadonlyMap<string, MarcaArbol> {
 
 /**
  * El recuadro de la carpeta simple (W-3, D-095), arriba de Archivos: no sigue el framework y se puede pasar (OR-8), con
- * el pedido a su conversación. Mientras la IA lo pasa, lo dice.
+ * el pedido citado en una conversación nueva (D-196). Mientras la IA lo pasa, lo dice.
  */
 function CarpetaSimple({ ruta }: { ruta: string }) {
   const trabajando = usarEstado((s) => fichaDe(s.fichas, ruta)?.estado === 'trabajando')
   const enviados = usarEstado((s) => s.skills.enviados)
-  const cambiarSkills = usarEstado((s) => s.cambiarSkills)
-  const [error, setError] = useState<string | null>(null)
+  const citarPasarAlFramework = usarEstado((s) => s.citarPasarAlFramework)
   const pasando = trabajando && enviados.includes(ruta)
-  const pasar = () => {
-    setError(null)
-    window.iridium.pasarAlFramework(ruta).then(
-      () => cambiarSkills({ enviados: [...enviados.filter((r) => r !== ruta), ruta] }),
-      () => setError('No se pudo enviar el pedido.'),
-    )
-  }
   return (
     <div className="archivos-simple">
-      <div className={error ? 'recuadro error' : 'recuadro'} role="note">
+      <div className="recuadro" role="note">
         <div className="cuerpo-recuadro">
           <strong>Esta carpeta no sigue el framework</strong>
           <span>
@@ -413,7 +405,6 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
               ? 'La IA la está actualizando al framework…'
               : 'Se ve y se conversa, sin frentes ni preguntas.'}
           </span>
-          {error && <span role="alert">{error}</span>}
         </div>
         <button
           type="button"
@@ -422,9 +413,9 @@ function CarpetaSimple({ ruta }: { ruta: string }) {
           title={
             trabajando
               ? 'Su IA está trabajando'
-              : 'Le envía el pedido a la IA de esta carpeta, en una conversación nueva: gasta uso'
+              : 'Deja el pedido citado en una conversación nueva, sin enviar (D-196)'
           }
-          onClick={pasar}
+          onClick={() => citarPasarAlFramework(ruta)}
         >
           Actualizar
         </button>

@@ -102,7 +102,7 @@ test('los avisos de la tarjeta llevan a su lista en Framework; Ideas lleva a Fra
   await app.close()
 })
 
-test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar en una conversación nueva (W-3, OR-8)', async () => {
+test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar citado en una conversación nueva (W-3, OR-8, D-196)', async () => {
   const { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Beta' }).click()
   const barra = win.getByRole('navigation', { name: 'Secciones del proyecto' })
@@ -123,8 +123,16 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar
   await expect(win.locator('.barra-proyectos .proy', { hasText: 'Beta' })).toContainText('Terminada')
   await expect(win.locator('.turno').first()).toContainText('Charla vieja')
 
-  // La IA falsa le arma el estado.md y la línea del framework: deja de ser una carpeta simple.
+  // D-196 (T-139): el pedido queda citado en una conversación nueva, sin mandar; lo manda el usuario.
   await recuadro.getByRole('button', { name: 'Actualizar' }).click()
+  const cita = win.locator('.compositor .citado')
+  await expect(cita).toHaveText('Framework Pasar al framework')
+  await expect(win.getByText('· conversación nueva')).toBeVisible()
+  await expect(win.locator('.turno', { hasText: 'Charla vieja' })).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/or4-citado.png' })
+  // La IA falsa le arma el estado.md y la línea del framework: deja de ser una carpeta simple.
+  await campo.press('Enter')
+  await expect(cita).toHaveCount(0)
   await expect(recuadro).toHaveCount(0, { timeout: 15_000 })
   await expect(win.locator('.turno').first()).toContainText('pasar-al-framework.md')
   await expect(win.locator('.turno', { hasText: 'Charla vieja' })).toHaveCount(0)
@@ -133,15 +141,22 @@ test('una carpeta simple: sin Mapa ni Docs, el recuadro en Archivos y Actualizar
   await app.close()
 })
 
-test('Actualizar al framework desde el menú de la tarjeta (OR-8)', async () => {
+test('Actualizar al framework desde el menú de la tarjeta: queda citado (OR-8, D-196)', async () => {
   const { app, win } = await abrir()
   const gamma = win.locator('.tarjeta', { hasText: 'Gamma' })
   await expect(gamma).toContainText('framework viejo')
   await gamma.click({ button: 'right' })
   const menu = win.getByRole('menu', { name: 'Acciones de Gamma' })
   await expect(menu.getByRole('menuitem', { name: 'Ver los avisos del framework' })).toHaveCount(0)
+  // D-196 (T-139): abre Gamma con el pedido citado en una conversación nueva; no sale hasta que el usuario lo manda.
   await menu.getByRole('menuitem', { name: 'Actualizar al framework' }).click()
-  await expect(win.getByText('La IA de «Gamma» lo está actualizando al framework.')).toBeVisible()
+  const cita = win.locator('.compositor .citado')
+  await expect(cita).toHaveText('Framework Pasar al framework')
+  await expect(win.getByText('· conversación nueva')).toBeVisible()
+  await expect(win.locator('.barra-proyectos .proy', { hasText: 'Gamma' })).toBeVisible()
+  await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
+  await expect(win.locator('.turno').first()).toContainText('pasar-al-framework.md')
+  await win.keyboard.press('Control+1')
   await expect(gamma).not.toContainText('framework viejo', { timeout: 15_000 })
 
   // Una con avisos ofrece verlos; una que ya sigue el framework no ofrece pasarla.

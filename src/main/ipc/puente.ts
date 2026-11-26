@@ -28,7 +28,6 @@ import {
   type SinArmar,
   type VersionNueva,
 } from '../../compartido/puente'
-import { fueraDelFramework, MENSAJE_PASAR_AL_FRAMEWORK } from '../../compartido/skills'
 import type { PlanEliminacion } from '../../compartido/tipos'
 import { planDeArmado, VigiaArmados } from '../app/abrir'
 import { ApagarAlTerminar } from '../app/apagar'
@@ -1121,17 +1120,6 @@ export function registrarPuente(s: Servicios): Puente {
     // «Ver en Docs» es de los documentos de un proyecto: acá no va.
     return r.tipo === 'texto' ? { ...r, documento: false } : r
   })
-  // Actualizar al framework (F-9, OR-8): solo un proyecto de la lista que esté fuera o sea una carpeta simple. Va siempre
-  // en una conversación nueva: retomar la última relee todo su historial y gasta uso en vano.
-  ipcMain.handle(CANALES.pasarAlFramework, async (_, dato: unknown) => {
-    const ruta = await proyecto(dato)
-    const p = (await conFramework()).find((x) => x.ruta === ruta)
-    if (!p || !(fueraDelFramework(p.estado) || p.estado.tipo === 'carpeta'))
-      throw new Error('Ese proyecto ya sigue el framework')
-    if (conversaciones.enMarcha().includes(ruta)) throw new Error('La IA de ese proyecto está trabajando')
-    await conversaciones.seguir(ruta, { texto: MENSAJE_PASAR_AL_FRAMEWORK, nueva: true })
-  })
-
   // El trabajo de un proyecto (W-11) y las skills (R-8): solo leen.
   ipcMain.handle(CANALES.trabajoProyecto, async (_, ruta: unknown) =>
     trabajoDelProyecto(await docs.de(await proyecto(ruta))),

@@ -1098,7 +1098,6 @@ export const CANALES = {
   estilos: 'ajustes:estilos',
   skills: 'skills:lista',
   framework: 'skills:framework',
-  pasarAlFramework: 'skills:pasar-al-framework',
   abrirCarpetaSkill: 'skills:abrir-carpeta',
   carpetaSkill: 'skills:carpeta',
   archivoSkill: 'skills:archivo',
@@ -1352,8 +1351,6 @@ export interface ApiIridium {
   skills(): Promise<ListaSkills>
   /** Cómo está cada proyecto con el framework (Skills › Framework, W-13): los de afuera primero. */
   framework(): Promise<ProyectoFramework[]>
-  /** Manda a la conversación del proyecto el pedido de pasarlo al framework (F-9, OR-8). */
-  pasarAlFramework(ruta: string): Promise<void>
   /** Abre en el explorador la carpeta de una skill de la lista (su `id`). */
   abrirCarpetaSkill(id: string): Promise<void>
   /** Lo que hay en una carpeta de una skill de la lista (`''` = la de la skill), como Archivos. */

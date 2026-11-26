@@ -29,6 +29,7 @@ import {
   type VersionNueva,
 } from '../compartido/puente'
 import type { Borrador } from '../compartido/respuestas'
+import { CITA_PASAR_AL_FRAMEWORK } from '../compartido/skills'
 import { seccionDeEntrada } from './secciones/proyecto/entrada'
 import { guardarLuego } from './ui/guardarLuego'
 
@@ -198,6 +199,11 @@ interface EstadoApp {
   citar(ruta: string, cita: Cita): void
   /** Saca una cita (la ✕); sin clave, todas (al enviar). */
   quitarCita(ruta: string, clave?: string): void
+  /**
+   * Pasar al framework (D-196, T-139): abre el proyecto en una conversación nueva con el pedido citado, sin enviar. Queda
+   * en `skills.enviados` para que Skills › Framework diga «Actualizando…» cuando lo mande.
+   */
+  citarPasarAlFramework(ruta: string): void
   /** Lo escrito en el cuadro de cada conversación y no enviado, por ruta (D-060): se guarda en disco. */
   escritos: Record<string, string>
   /** Los adjuntos sin mandar de cada conversación (PA-I2): se guardan con lo escrito. */
@@ -394,6 +400,13 @@ export const usarEstado = create<EstadoApp>((set, get) => ({
       const { [ruta]: _, ...resto } = s.citas
       return { citas: quedan.length ? { ...resto, [ruta]: quedan } : resto }
     }),
+  citarPasarAlFramework: (ruta) => {
+    const { enviados } = get().skills
+    get().cambiarSkills({ enviados: [...enviados.filter((r) => r !== ruta), ruta] })
+    get().abrirProyecto(ruta)
+    get().cambiarVista(ruta, { enBlanco: true })
+    get().citar(ruta, CITA_PASAR_AL_FRAMEWORK)
+  },
   escritos: {},
   adjuntos: {},
   // Lo que ya se escribió antes de que llegue lo guardado no se pisa.

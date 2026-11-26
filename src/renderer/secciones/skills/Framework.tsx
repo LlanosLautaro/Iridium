@@ -1,15 +1,10 @@
 // Skills › Framework (04-ux.md › W-13, H-20): qué proyectos siguen el framework. Los de afuera primero (framework
 // viejo o con avisos del control), después las carpetas simples y al final los que están al día. Cada uno de afuera
-// (y cada carpeta) con **Actualizar** (F-9, OR-8), que manda el pedido a una conversación nueva del proyecto sin salir
-// de acá; mientras trabaja, «Actualizando…» y Ver la conversación. Los avisos de uno se despliegan en su fila (T-48).
+// (y cada carpeta) con **Actualizar** (F-9, OR-8), que abre el proyecto con el pedido citado en una conversación nueva,
+// sin enviar (D-196, T-139); mientras trabaja, «Actualizando…» y Ver la conversación. Los avisos de uno se despliegan en su fila (T-48).
 // DI-I3, tanda 9: cada proyecto es una Fila con su acción a la vista y la que tiene avisos se abre en su lugar (PZ-13).
 import { type ReactNode, useState } from 'react'
-import {
-  type EstadoFramework,
-  fueraDelFramework,
-  MENSAJE_PASAR_AL_FRAMEWORK,
-  type ProyectoFramework,
-} from '../../../compartido/skills'
+import { type EstadoFramework, fueraDelFramework, type ProyectoFramework } from '../../../compartido/skills'
 import { fichaDe, usarEstado } from '../../estado'
 import { Cabecera, Filtros } from '../../ui/Cabecera'
 import { Icono } from '../../ui/Icono'
@@ -18,7 +13,7 @@ type Filtro = 'todos' | 'fuera' | 'carpetas'
 
 /** Lo que antes era la nota fija debajo de la lista, como Información a pedido (R-41). */
 const AYUDA =
-  'Actualizar envía el pedido a una conversación nueva de cada proyecto; sigues aquí. Las carpetas simples no ' +
+  'Actualizar abre el proyecto con el pedido citado en una conversación nueva: lo mandas tú. Las carpetas simples no ' +
   'cuentan como fuera: se ven y se conversan igual.'
 
 function IconoProyecto({ p }: { p: ProyectoFramework }) {
@@ -42,38 +37,16 @@ function Fila({ p }: { p: ProyectoFramework }) {
   const ficha = usarEstado((s) => fichaDe(s.fichas, p.ruta))
   const vista = usarEstado((s) => s.skills)
   const cambiarSkills = usarEstado((s) => s.cambiarSkills)
-  const motor = usarEstado((s) => s.motor)
-  const escribir = usarEstado((s) => s.escribir)
   const abrirProyecto = usarEstado((s) => s.abrirProyecto)
-  const [mandando, setMandando] = useState(false)
-  const [nota, setNota] = useState<string | null>(null)
+  const citarPasarAlFramework = usarEstado((s) => s.citarPasarAlFramework)
   const trabajando = ficha?.estado === 'trabajando'
   const loMande = vista.enviados.includes(p.ruta)
   const e = p.estado
   const abierto = e.tipo === 'avisos' && vista.avisosDe === p.ruta
 
-  const pasar = async () => {
-    setNota(null)
-    // Sin Claude Code (F-5) el pedido no sale: queda escrito en el cuadro de su conversación para mandarlo después.
-    if (motor.tipo === 'sin-sesion' || motor.tipo === 'falla') {
-      escribir(p.ruta, MENSAJE_PASAR_AL_FRAMEWORK)
-      setNota('Claude no está disponible: el pedido quedó escrito en su conversación.')
-      return
-    }
-    setMandando(true)
-    try {
-      await window.iridium.pasarAlFramework(p.ruta)
-      cambiarSkills({ enviados: [...vista.enviados.filter((r) => r !== p.ruta), p.ruta] })
-    } catch {
-      setNota('No se pudo mandar el pedido.')
-    } finally {
-      setMandando(false)
-    }
-  }
-
   let accion: ReactNode = null
   if (e.tipo === 'al-dia') accion = null
-  else if (trabajando && (loMande || mandando))
+  else if (trabajando && loMande)
     accion = (
       <>
         <span className="senal">
@@ -103,9 +76,8 @@ function Fila({ p }: { p: ProyectoFramework }) {
         <button
           type="button"
           className="boton sin-fondo chico"
-          disabled={mandando}
-          title="Le manda el pedido a la IA de este proyecto, en una conversación nueva: gasta uso"
-          onClick={() => void pasar()}
+          title="Abre el proyecto con el pedido citado en una conversación nueva, sin enviar (D-196)"
+          onClick={() => citarPasarAlFramework(p.ruta)}
         >
           Actualizar
         </button>
@@ -132,12 +104,6 @@ function Fila({ p }: { p: ProyectoFramework }) {
               </button>
             ) : (
               textoEstado(e)
-            )}
-            {nota && (
-              <span className="senal rojo" role="status">
-                {' · '}
-                {nota}
-              </span>
             )}
           </span>
         </span>
