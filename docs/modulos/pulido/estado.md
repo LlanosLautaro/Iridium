@@ -13,12 +13,12 @@
 | 4. UX | hecho | `ux.md` |
 | 5. Diseño técnico | hecho | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (la maqueta viva, probada en Q-302; el naranja, Q-303) | `docs/diseno/pantallas/pulido.html` |
-| 7. Construcción | en curso (PU-I1 y PU-I2 hechas; se prueban juntas en Q-307) | este archivo |
-| 8. Calidad | en curso (medida el 2026-11-26: el movimiento no pone lenta la app; falta Q-307 para cerrarla) | este archivo |
-| 9. Lanzamiento | pendiente | este archivo |
+| 7. Construcción | hecho (PU-I1 y PU-I2, probadas en Q-307, todo bien) | este archivo |
+| 8. Calidad | hecho (2026-11-26: el movimiento no pone lenta la app; Q-307, nada se siente lento) | este archivo |
+| 9. Lanzamiento | hecho (entra con Armar, como cada versión; 1.2.0, D-182) | este archivo |
 
 ## En qué estamos ahora
-PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los colores de las tarjetas, el mapa que late, «corriendo», la casilla, lo que entra, elegir el acento en Ajustes › Apariencia y las pestañas que se corren al arrastrar una. Las dos se prueban juntas en Q-307; después, la calidad.
+Frente cerrado (2026-11-26, 1.2.0): el acento con su brillo, los colores de las tarjetas, el mapa que late, «corriendo», la casilla, lo que entra, elegir el acento en Ajustes › Apariencia y las pestañas que se corren al arrastrar una. Probado en Q-307, todo bien; la calidad, medida. En operación, con el hito 10.
 
 ## Ruta
 - [x] Decidir cuánto color y cuánto movimiento lleva, y qué entra (Q-299, Q-300, Q-301)
@@ -26,7 +26,7 @@ PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los col
 - [x] Elegir el color de lo que te espera: naranja (Q-303)
 - [x] Color y movimiento en toda la app: el acento en lo activo, las tarjetas, el mapa que late, «corriendo», las casillas y lo que entra (PU-I1)
 - [x] Elegir el acento en Ajustes y las pestañas que se corren al arrastrar una (PU-I2)
-- [ ] Probarlo en la app (Q-307, chico)
+- [x] Probarlo en la app (Q-307)
 - [x] Medir la calidad: la app no se pone lenta con el movimiento
 
 ## Cambios requeridos en documentos generales
@@ -38,10 +38,13 @@ PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los col
 ## Iteraciones
 | ID | Objetivo | Estado |
 |---|---|---|
-| PU-I1 | Color y movimiento en las piezas y las secciones: el acento en lo activo, lo hecho apagado, el naranja, las tarjetas, el mapa que late, «corriendo», las casillas, lo que entra y el hover; sin seguir las animaciones apagadas de Windows | hecho (2026-11-25; se prueba con PU-I2) |
-| PU-I2 | El acento en Ajustes › Apariencia y las pestañas de la barra que se corren al arrastrar | hecho (2026-11-26; se prueba con PU-I1 en Q-307) |
+| PU-I1 | Color y movimiento en las piezas y las secciones: el acento en lo activo, lo hecho apagado, el naranja, las tarjetas, el mapa que late, «corriendo», las casillas, lo que entra y el hover; sin seguir las animaciones apagadas de Windows | hecho (2026-11-25; probada en Q-307) |
+| PU-I2 | El acento en Ajustes › Apariencia y las pestañas de la barra que se corren al arrastrar | hecho (2026-11-26; probada en Q-307) |
 
 ## Log de iteraciones
+### Cierre — 2026-11-26
+- Q-307 volvió con todo marcado: el acento y su brillo, los colores de las tarjetas, el radar de Frentes, «corriendo», lo que entra, elegir el acento y las pestañas que se corren; nada se siente lento ni recargado. Con la calidad ya medida, el frente queda `hecho` y la versión sube a 1.2.0 (D-182).
+
 ### Calidad: el movimiento no pone lenta la app — 2026-11-26 (el avance solo)
 - **Herramienta nueva, `tools/medir-movimiento.ts`:** abre la app de `pnpm build` con el motor falso y una carpeta armada en una temporal (los docs de Iridium como Alfa y doce proyectos de muestra) y mide cada pantalla con el movimiento y sin él: cuadros por segundo, el cuadro más largo y el procesador de toda la app; anota qué animaciones corren y qué mueven.
 - **Antes del arreglo:** los cuadros, iguales con y sin movimiento (144–145 por segundo, el peor de 7 ms) en el inicio, Frentes con el paso que late, Frentes con un script corriendo y Docs desplazándose. El procesador en reposo: 0 % quieta, 1 % con el radar del Mapa, 2,4–2,9 % con «corriendo». Una de las cuatro animaciones que no paran, la luz que cruza «corriendo», movía el fondo y redibujaba la barra en cada cuadro.
@@ -64,5 +67,5 @@ PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los col
 - La maqueta `pulido.html` usa ahora las piezas (solo le queda lo propio de la muestra). En `.impeccable/config.json`, el brillo, el pulso y la luz quedan permitidos en las piezas, el marco y las consolas, como en la maqueta (Q-299, Q-300).
 
 ## Próximo paso
-Con Q-307 respondida: lo que vuelva sin marcar, primero; si no, cerrar el frente (la calidad ya está medida: el movimiento no pone lenta la app).
+En operación, con el hito 10. Lo que falle o haga falta ajustar del color o del movimiento se anota como `T-n` con `Frente: Pulido`; T-143 (el catálogo de estilos y movimiento para el framework) espera tu aprobación en Ideas.
 **Leer antes:** este archivo › Log de iteraciones › Calidad.

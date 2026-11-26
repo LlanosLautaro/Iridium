@@ -13,7 +13,7 @@
 | 4. UX | hecho (aprobada en Q-217, D-155) | `ux.md` |
 | 5. Diseño técnico | hecho (D-156) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (el menú, la Señal, el Campo y el Aviso ya existen, D-156) | — |
-| 7. Construcción | en curso (AB-I1, AB-I2 y AB-I3 probadas; T-86 en Q-308; falta la otra PC, T-87; fuera de pausa por D-193) | este archivo |
+| 7. Construcción | en curso (AB-I1, AB-I2 y AB-I3 probadas; T-86 probada en Q-308; falta la otra PC, T-87; fuera de pausa por D-193) | este archivo |
 | 8. Calidad | hecho (2026-11-26, el avance solo: los casos raros de Windows, con cinco arreglos; ver Calidad) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
@@ -30,7 +30,7 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - [x] Armar solas las apps de escritorio con cambios, cuando están cerradas (AB-I2)
 - [x] Marcar tus proyectos (D-157)
 - [x] Probar Ejecutar y la actualización con una app tuya (Q-221)
-  - [x] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86, Q-308)
+  - [x] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86)
 - [x] Abrir y actualizar sola tu app que se usa instalada (AB-I3)
   - [ ] Ponerla al día también en la otra PC, desde sus versiones publicadas (T-87, grande; cambia el armado de tu app, que es otro proyecto, y se prueba en la otra PC)
 - [x] Revisar que Ejecutar y la actualización sean confiables
@@ -97,5 +97,5 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 **Verificado:** `tests/ab2-armados.test.ts` suma cinco pruebas (la PC dormida, el corte con su reintento, el número de otro programa, cuándo arrancó un proceso y un armado de verdad en una carpeta con eñe, que falla sin el arreglo) y el `.exe` de solo lectura en la del `.exe` trabado. Vitest 1125 (1 omitida; tres de otras secciones fallaron una vez con la PC cargada y solas pasan), Playwright de Abrir, Arranque y la actualización de Iridium (14), typecheck y lint en verde.
 
 ## Próximo paso
-Sigue T-87 (la otra PC, D-160): poner al día la app instalada en la otra PC desde sus versiones publicadas. Es grande y necesita la otra PC: no lo toma el avance solo. Q-308 (las apps armadas de noche en el aviso) espera tu prueba.
+Sigue T-87 (la otra PC, D-160): poner al día la app instalada en la otra PC desde sus versiones publicadas. Es grande y necesita la otra PC: no lo toma el avance solo. T-86 (las apps armadas de noche en el aviso), probada en Q-308: todo bien.
 **Leer antes:** `trabajo.md` › T-87 y D-160.
