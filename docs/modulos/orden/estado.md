@@ -26,7 +26,7 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 - [x] Anotar trabajo e ideas sin la IA (OR-I3)
 - [x] Pasar un proyecto viejo al framework (OR-I4)
 - [x] Medir Orden con el diseño nuevo
-- [ ] Que un proyecto sepa cuándo el framework le pide algo (T-64, grande; antes hace falta que apruebes cómo se ven las novedades en la tarjeta y en Skills)
+- [ ] Que un proyecto sepa cuándo el framework le pide algo (Q-311, T-64, grande)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -155,5 +155,5 @@ Frente abierto el 2026-11-05 con prioridad máxima (D-091): las funciones nuevas
 **Defectos:** ninguno bloqueante ni grave. Vitest 1148 (1 omitida; una corrida anterior tuvo una falla suelta que no se repitió), Playwright de Orden 32/32, typecheck, lint y control en verde.
 
 ## Próximo paso
-Sigue T-64 (D-118): las novedades del framework con fecha, «N novedades» en la tarjeta y en Skills › Framework, y **Ponerse al día**. Antes de construir, dibujar cómo se ven en la tarjeta y en Skills y pedir el visto bueno.
-**Leer antes:** `trabajo.md` › T-64; `decisiones.md` › D-118.
+Con Q-311 (cómo se ven las novedades, maquetas `diseno/pantallas/novedades-tarjeta.html` y `novedades-skills.html`): construir T-64 como se apruebe: `novedades.md` en el framework, el lector, la regla del control, «N novedades» en la tarjeta y en Skills › Framework, y **Ponerse al día** citado (D-196).
+**Leer antes:** `respuestas/Q-311.md`; `trabajo.md` › T-64; `decisiones.md` › D-118.
