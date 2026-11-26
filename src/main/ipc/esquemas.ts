@@ -199,4 +199,5 @@ export const PedidoDisenoEsquema = z.union([
     tipo: z.literal('version'),
     maqueta: ArchivoMaqueta,
   }),
+  z.object({ tipo: z.literal('direccion') }),
 ])

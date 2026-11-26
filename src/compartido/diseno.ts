@@ -28,6 +28,22 @@ export interface VersionVista extends MaquetaVista {
   descripcion: string | null
 }
 
+/** Otra dirección (DS-5, DI-I4): un `tokens.css` entero con otros valores, que se prueba sobre todas las maquetas. */
+export interface DireccionVista {
+  /** Relativo a `docs/diseno/`: `direcciones/azul-apagado.css`. */
+  archivo: string
+  /** El nombre del archivo, sin `.css`: `azul-apagado`. Va en la base de las miniaturas (`maqueta://<id>/~<nombre>/`). */
+  nombre: string
+  /** Su frase: el comentario con que empieza, o null. */
+  descripcion: string | null
+  /** Cambia cuando cambia el archivo: las miniaturas que la usan se recargan. */
+  huella: string
+  /** El texto, para ponerla sobre la maqueta grande (`insertCSS`). */
+  css: string
+  /** Lo que no coincide con `tokens.css` («le faltan --borde»), o null. Así no se puede elegir. */
+  problema: string | null
+}
+
 export interface GrupoMaquetas {
   seccion: string
   maquetas: MaquetaVista[]
@@ -90,10 +106,15 @@ export type VistaDiseno =
       sistema: SistemaDiseno
       /** Lo que está mal en el índice (sin tabla, columnas que faltan), o null. */
       problemaIndice: string | null
+      /** Las direcciones guardadas en `direcciones/`, en orden. */
+      direcciones: DireccionVista[]
     }
 
-/** Los pedidos a la IA de la sección, que quedan citados en la conversación (D-196): empezar el diseño u otra versión. */
-export type PedidoDiseno = 'empezar' | { tipo: 'version'; maqueta: string }
+/**
+ * Los pedidos a la IA de la sección, que quedan citados en la conversación (D-196): empezar el diseño, otra versión de
+ * una maqueta o una dirección nueva.
+ */
+export type PedidoDiseno = 'empezar' | { tipo: 'version'; maqueta: string } | { tipo: 'direccion' }
 
 /** El evento del puente: cambió algo de `docs/diseno/` de un proyecto. */
 export interface CambioDiseno {

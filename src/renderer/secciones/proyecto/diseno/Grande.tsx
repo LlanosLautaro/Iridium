@@ -1,7 +1,8 @@
 // Una maqueta grande (DS-12, S-4): a todo el lienzo, viva, en un `<webview>` con `file://` donde entra la extensión de
 // la Revisión (F8). Arriba, Volver, el nombre, el número y Comentar; a los costados (y con ← →, también comentando), la
 // anterior y la siguiente; Esc vuelve. Si un enlace de la maqueta lleva a otra, la cabecera la sigue. Una pantalla del
-// índice ofrece Otra versión y, si tiene, Versiones · N, que las pone lado a lado (DI-I4).
+// índice ofrece Otra versión y, si tiene, Versiones · N, que las pone lado a lado (DI-I4). Con una dirección puesta, sus
+// tokens van encima de los de la maqueta (`insertCSS`) y la cabecera lo dice.
 import { useEffect, useRef, useState } from 'react'
 import type { MaquetaVista } from '../../../../compartido/diseno'
 import { Icono } from '../../../ui/Icono'
@@ -9,6 +10,8 @@ import { Icono } from '../../../ui/Icono'
 interface Webview extends HTMLElement {
   reload(): void
   getURL(): string
+  insertCSS(css: string): Promise<string>
+  removeInsertedCSS(clave: string): Promise<void>
   sendInputEvent(e: { type: 'keyDown' | 'keyUp'; keyCode: string }): void
 }
 
@@ -40,6 +43,7 @@ export function Grande({
   verVersiones = null,
   otraVersion = null,
   trabajando = false,
+  direccion = null,
 }: {
   /** La carpeta `docs/diseno/` como `file://…/`. */
   carpeta: string
@@ -57,6 +61,8 @@ export function Grande({
   otraVersion?: (() => void) | null
   /** La IA del proyecto está trabajando: Otra versión espera. */
   trabajando?: boolean
+  /** La dirección puesta: su nombre y sus tokens, que van encima de los de la maqueta; o null. */
+  direccion?: { nombre: string; css: string } | null
 }) {
   const vista = useRef<Webview>(null)
   // La que se ve: cambia si un enlace de la maqueta lleva a otra (puede no estar en el índice).
@@ -82,6 +88,50 @@ export function Grande({
     vistaHuella.current = `${actual}|${huella}`
     if (huella && antes.startsWith(`${actual}|`) && antes !== vistaHuella.current) vista.current?.reload()
   }, [actual, huella])
+
+  // La dirección, encima de los tokens de la maqueta: cada vez que carga una página y cuando cambia. Los métodos del
+  // `webview` fallan en el acto si todavía no cargó o ya se cerró (al volver al lienzo): eso no es un error.
+  const estilo = direccion?.css ?? null
+  useEffect(() => {
+    const w = vista.current
+    if (!w) return
+    let clave: string | null = null
+    let vigente = true
+    const sacar = (k: string) => {
+      try {
+        void w.removeInsertedCSS(k).catch(() => {})
+      } catch {
+        // Ya no está: se fue con la página.
+      }
+    }
+    const poner = () => {
+      if (clave) sacar(clave)
+      clave = null
+      if (!estilo) return
+      try {
+        void w.insertCSS(estilo).then(
+          (k) => {
+            if (vigente) clave = k
+            else sacar(k)
+          },
+          () => {},
+        )
+      } catch {
+        // Todavía no cargó: lo pone `dom-ready`.
+      }
+    }
+    const alCargar = () => {
+      clave = null
+      poner()
+    }
+    w.addEventListener('dom-ready', alCargar)
+    poner()
+    return () => {
+      vigente = false
+      w.removeEventListener('dom-ready', alCargar)
+      if (clave) sacar(clave)
+    }
+  }, [estilo])
 
   useEffect(() => {
     const w = vista.current
@@ -155,6 +205,7 @@ export function Grande({
         <span className="di-grande-t" aria-live="polite">
           <b>{nombre}</b>
           {numero && <span className="sub"> · {numero}</span>}
+          {direccion && <span className="sub"> · con «{direccion.nombre}»</span>}
         </span>
         {verVersiones && versiones > 0 && (
           <button

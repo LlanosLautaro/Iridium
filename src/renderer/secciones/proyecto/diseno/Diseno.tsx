@@ -2,8 +2,9 @@
 // agrupadas por sección (Pantallas), los tokens y las piezas (Sistema) y una maqueta grande para usarla y comentarla
 // con F8. Se redibuja sola cuando la IA cambia algo; lo que cambió y no se miró lleva un punto. Sin `docs/diseno/`,
 // ofrece pedírselo a la IA. Una maqueta puede tener otras versiones (DI-I4): se piden desde la grande, se miran lado a
-// lado y se elige con cuál quedarse. Los pedidos quedan citados en la conversación, sin mandar (D-196): el usuario
-// agrega lo suyo y elige si van en esa conversación o en una nueva.
+// lado y se elige con cuál quedarse. Probar una dirección (DI-I4) pone otros tokens sobre todo el lienzo, para elegirla
+// o descartarla. Los pedidos quedan citados en la conversación, sin mandar (D-196): el usuario agrega lo suyo y elige
+// si van en esa conversación o en una nueva.
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { MaquetaVista, VistaDiseno } from '../../../../compartido/diseno'
 import { fichaDe, tarjetaDe, usarEstado, vistaDe } from '../../../estado'
@@ -11,6 +12,8 @@ import { Cabecera, Filtros } from '../../../ui/Cabecera'
 import { Icono } from '../../../ui/Icono'
 import { mismaRuta } from '../enlaces'
 import { ConfirmarQuedarme } from './CuadrosVersion'
+import { ConfirmarElegir, MenuDirecciones, type ModoDireccion, nombreDe, Probando } from './Direccion'
+import { useEsperaPedido } from './esperaPedido'
 import { Grande } from './Grande'
 import { Miniatura } from './Miniatura'
 import { Sistema } from './Sistema'
@@ -36,6 +39,13 @@ function sinPunto(v: VistaDiseno | null, archivos: ReadonlySet<string>): VistaDi
 
 /** La clave de la cita de otra versión: una por maqueta; pedir otra vez la reemplaza. */
 const claveVersion = (maqueta: string) => `diseno:version:${maqueta}`
+/** La clave de la cita de una dirección nueva: una sola; pedir otra vez la reemplaza. */
+const CLAVE_DIRECCION = 'diseno:direccion'
+
+/** El nombre de una dirección guardada por su archivo: `direcciones/anterior-2026-11-26.css` → `anterior-2026-11-26`. */
+function nombreArchivo(archivo: string): string {
+  return (archivo.split('/').pop() ?? archivo).replace(/\.css$/i, '')
+}
 
 /** La letra de una versión por su archivo: `versiones/bandeja/b.html` → `B`. */
 function letraDe(version: string): string {
@@ -66,6 +76,13 @@ export function Diseno({ ruta }: { ruta: string }) {
   const [noLlego, setNoLlego] = useState<string | null>(null)
   const [errorVersion, setErrorVersion] = useState<string | null>(null)
   const [quedarme, setQuedarme] = useState<{ maqueta: string; version: string | null } | null>(null)
+  // Probar una dirección (DI-I4): la puesta, cómo se ve, la grande sin ella, la pedida a la IA y su cuadro.
+  const [probando, setProbando] = useState<string | null>(null)
+  const [modo, setModo] = useState<ModoDireccion>('direccion')
+  const [grandeHoy, setGrandeHoy] = useState(false)
+  const [pidiendoDir, setPidiendoDir] = useState<ReadonlySet<string> | null>(null)
+  const [avisoDir, setAvisoDir] = useState<{ texto: string; error: boolean } | null>(null)
+  const [eligiendo, setEligiendo] = useState(false)
 
   const leer = useCallback(() => {
     void window.iridium.abrirDiseno(ruta).then(
@@ -84,6 +101,13 @@ export function Diseno({ ruta }: { ruta: string }) {
       ? [...vista.grupos.flatMap((g) => g.maquetas), ...(vista.sistema.piezas ? [vista.sistema.piezas] : [])]
       : []
   const enLienzo = vista?.tipo === 'diseno' ? vista.grupos.flatMap((g) => g.maquetas) : []
+  const direcciones = vista?.tipo === 'diseno' ? vista.direcciones : []
+  const dir = direcciones.find((d) => d.archivo === probando) ?? null
+  /** La base de las miniaturas con la dirección puesta: `maqueta://<id>/~<nombre>/` (el protocolo cambia los tokens). */
+  const baseDir = vista?.tipo === 'diseno' && dir ? `${vista.base}~${encodeURIComponent(dir.nombre)}/` : null
+  /** Con la dirección, la huella también cambia cuando cambia ella: las que la usan se recargan. */
+  const conDir = <T extends MaquetaVista>(m: T): T =>
+    dir ? { ...m, huella: `${m.huella}.${dir.huella}` } : m
 
   /** La maqueta del índice de un archivo: ella misma o, si es una versión, la suya. */
   const deLienzo = (archivo: string | null) =>
@@ -100,9 +124,10 @@ export function Diseno({ ruta }: { ruta: string }) {
     },
     [ruta],
   )
-  /** Agrandar marca vista la maqueta. */
+  /** Agrandar marca vista la maqueta. Con una dirección puesta, `hoy` la muestra sin ella (lado a lado, la de hoy). */
   const agrandar = useCallback(
-    (archivo: string) => {
+    (archivo: string, hoy = false) => {
+      setGrandeHoy(hoy)
       setGrande(archivo)
       marcar([archivo])
     },
@@ -140,27 +165,43 @@ export function Diseno({ ruta }: { ruta: string }) {
 
   // La versión pedida: citada, espera a que el usuario la mande; mandada, llegó (se deja de esperar) o la IA terminó su
   // turno sin escribirla (se dice). Si la cita se sacó sin mandarla, se deja de esperar.
-  const huboTrabajo = useRef(false)
   const llego =
     pidiendo !== null && enLienzo.some((m) => m.versiones.some((v) => v.archivo === pidiendo.archivo))
   const citada = pidiendo !== null && (citas ?? []).some((c) => c.clave === claveVersion(pidiendo.maqueta))
+  useEsperaPedido({
+    esperando: pidiendo !== null,
+    llego,
+    citada,
+    trabajando,
+    terminar: (fin) => {
+      if (fin === 'no-llego' && pidiendo) setNoLlego(pidiendo.archivo)
+      setPidiendo(null)
+    },
+  })
+
+  // La dirección pedida: igual, y al llegar se pone sobre el lienzo.
+  const nueva = pidiendoDir ? direcciones.find((d) => !pidiendoDir.has(d.archivo)) : undefined
+  const citadaDir = (citas ?? []).some((c) => c.clave === CLAVE_DIRECCION)
+  useEsperaPedido({
+    esperando: pidiendoDir !== null,
+    llego: nueva !== undefined,
+    citada: citadaDir,
+    trabajando,
+    terminar: (fin) => {
+      if (fin === 'llego' && nueva) {
+        setProbando(nueva.archivo)
+        setModo('direccion')
+        setAvisoDir(null)
+      } else if (fin === 'no-llego')
+        setAvisoDir({ texto: 'La IA terminó sin escribir la dirección: mirá la conversación.', error: false })
+      setPidiendoDir(null)
+    },
+  })
+  // Si la dirección puesta se va (la borró alguien), se deja de probar.
   useEffect(() => {
-    if (!pidiendo) return
-    if (llego) {
-      setPidiendo(null)
-      huboTrabajo.current = false
-    } else if (citada) huboTrabajo.current = false
-    else if (trabajando) huboTrabajo.current = true
-    else if (huboTrabajo.current) {
-      setNoLlego(pidiendo.archivo)
-      setPidiendo(null)
-      huboTrabajo.current = false
-    } else {
-      // Sin la cita y sin trabajo: se mandó y el turno todavía no arrancó, o se sacó. Se espera un poco.
-      const t = setTimeout(() => setPidiendo(null), 5000)
-      return () => clearTimeout(t)
-    }
-  }, [pidiendo, llego, citada, trabajando])
+    if (probando && vista?.tipo === 'diseno' && !vista.direcciones.some((d) => d.archivo === probando))
+      setProbando(null)
+  }, [probando, vista])
 
   const verVersiones = useCallback((archivo: string) => {
     setErrorVersion(null)
@@ -187,7 +228,6 @@ export function Diseno({ ruta }: { ruta: string }) {
           texto,
         })
         setNoLlego(null)
-        huboTrabajo.current = false
         if (archivo) setPidiendo({ archivo, maqueta })
         verVersiones(maqueta)
       },
@@ -212,6 +252,57 @@ export function Diseno({ ruta }: { ruta: string }) {
     botones.current.get(volverA.current)?.focus()
     volverA.current = null
   }, [grande])
+
+  /** Una dirección nueva (D-196): queda citada en la conversación; cuando la IA la escribe, se pone sobre el lienzo. */
+  const pedirDireccion = () => {
+    setAvisoDir(null)
+    window.iridium.citaDiseno(ruta, { tipo: 'direccion' }).then(
+      ({ texto }) => {
+        citar(ruta, {
+          clave: CLAVE_DIRECCION,
+          tipo: 'Dirección nueva',
+          nombre: 'Probar una dirección',
+          texto,
+        })
+        setPidiendoDir(new Set(direcciones.map((d) => d.archivo)))
+      },
+      (e: unknown) =>
+        setAvisoDir({ texto: `No se pudo: ${e instanceof Error ? e.message : String(e)}`, error: true }),
+    )
+  }
+  const probar = (archivo: string) => {
+    setAvisoDir(null)
+    setProbando(archivo)
+    setModo('direccion')
+  }
+  /** Elegir (con su cuadro): la dirección pasa a ser los tokens de todas las maquetas; la de hoy queda guardada. */
+  const elegirDir = () => {
+    if (!dir) return
+    window.iridium.elegirDireccion(ruta, dir.archivo).then(
+      (anterior) => {
+        setProbando(null)
+        setAvisoDir({
+          texto: `Elegida «${nombreDe(dir)}»: ya es la de todas las maquetas.${anterior ? ` La de antes quedó guardada como «${nombreArchivo(anterior)}».` : ''}`,
+          error: false,
+        })
+        leer()
+      },
+      (e: unknown) =>
+        setAvisoDir({ texto: `No se pudo: ${e instanceof Error ? e.message : String(e)}`, error: true }),
+    )
+  }
+  const descartarDir = () => {
+    if (!dir) return
+    window.iridium.descartarDireccion(ruta, dir.archivo).then(
+      () => {
+        setProbando(null)
+        setAvisoDir({ texto: `Descartada «${nombreDe(dir)}»: su archivo fue a la papelera.`, error: false })
+        leer()
+      },
+      (e: unknown) =>
+        setAvisoDir({ texto: `No se pudo: ${e instanceof Error ? e.message : String(e)}`, error: true }),
+    )
+  }
 
   /** Pedírselo a la IA (D-196): queda citado en la conversación; las maquetas aparecen cuando lo mande. */
   const pedir = () => {
@@ -253,7 +344,9 @@ export function Diseno({ ruta }: { ruta: string }) {
     </>
   )
   /** Con un cuadro abierto, Esc es del cuadro. */
-  const quieto = quedarme !== null
+  const quieto = quedarme !== null || eligiendo
+  /** La dirección se ve en el lienzo (Dirección o Lado a lado) y en la grande, salvo la de hoy agrandada. */
+  const conDireccion = dir !== null && modo !== 'hoy'
 
   if (vista?.tipo === 'diseno' && grande) {
     // Una versión, o la de hoy agrandada desde las versiones: las flechas recorren la de hoy y sus versiones.
@@ -278,6 +371,7 @@ export function Diseno({ ruta }: { ruta: string }) {
           verVersiones={suya ? () => verVersiones(suya.archivo) : null}
           otraVersion={suya?.archivo.startsWith('pantallas/') ? () => pedirOtra(suya.archivo) : null}
           trabajando={trabajando}
+          direccion={conDireccion && dir && !grandeHoy ? { nombre: nombreDe(dir), css: dir.css } : null}
         />
         {cuadrosVersion}
       </>
@@ -287,8 +381,8 @@ export function Diseno({ ruta }: { ruta: string }) {
     return (
       <>
         <Versiones
-          base={vista.base}
-          hoy={hoy}
+          base={conDireccion && baseDir ? baseDir : vista.base}
+          hoy={conDireccion ? { ...conDir(hoy), versiones: hoy.versiones.map(conDir) } : hoy}
           pidiendo={pidiendo && { archivo: pidiendo.archivo, citada }}
           noLlego={noLlego && !hoy.versiones.some((v) => v.archivo === noLlego) ? letraDe(noLlego) : null}
           error={errorVersion}
@@ -311,17 +405,28 @@ export function Diseno({ ruta }: { ruta: string }) {
         titulo="Diseño"
         cuenta={cuenta > 0 ? cuenta : undefined}
         acciones={
-          comentarios > 0 && (
-            <button
-              type="button"
-              className="boton sin-fondo chico"
-              title="Los comentarios abiertos de la Revisión"
-              onClick={() => abrirSeccion(ruta, 'revision')}
-            >
-              <Icono nombre="revision" />
-              {comentarios === 1 ? '1 comentario' : `${comentarios} comentarios`}
-            </button>
-          )
+          <>
+            {vista?.tipo === 'diseno' && pestana === 'pantallas' && enLienzo.length > 0 && (
+              <MenuDirecciones
+                direcciones={direcciones}
+                probando={probando}
+                trabajando={trabajando}
+                probar={probar}
+                pedirNueva={pedirDireccion}
+              />
+            )}
+            {comentarios > 0 && (
+              <button
+                type="button"
+                className="boton sin-fondo chico"
+                title="Los comentarios abiertos de la Revisión"
+                onClick={() => abrirSeccion(ruta, 'revision')}
+              >
+                <Icono nombre="revision" />
+                {comentarios === 1 ? '1 comentario' : `${comentarios} comentarios`}
+              </button>
+            )}
+          </>
         }
         filtros={
           vista?.tipo === 'diseno' && (
@@ -402,6 +507,36 @@ export function Diseno({ ruta }: { ruta: string }) {
           {vista.problemaIndice}. La IA lo corrige al terminar su próximo turno.
         </p>
       )}
+      {vista?.tipo === 'diseno' && pestana === 'pantallas' && pidiendoDir && (
+        <p className="di-pedido" role="status">
+          {citadaDir
+            ? 'Citada en la conversación: escribí qué dirección probar y mandala. Se pone sobre todas las maquetas cuando la IA la guarde.'
+            : 'La IA está escribiendo la dirección…'}
+        </p>
+      )}
+      {vista?.tipo === 'diseno' && pestana === 'pantallas' && avisoDir && (
+        <p
+          className={avisoDir.error ? 'script-msg error' : 'di-pedido'}
+          role={avisoDir.error ? 'alert' : 'status'}
+        >
+          {avisoDir.error && <Icono nombre="error" />}
+          {avisoDir.texto}
+        </p>
+      )}
+      {vista?.tipo === 'diseno' && pestana === 'pantallas' && dir && (
+        <Probando
+          direccion={dir}
+          modo={modo}
+          cambiarModo={setModo}
+          trabajando={trabajando}
+          elegir={() => setEligiendo(true)}
+          descartar={descartarDir}
+          dejar={() => setProbando(null)}
+        />
+      )}
+      {eligiendo && dir && (
+        <ConfirmarElegir direccion={dir} elegir={elegirDir} cerrar={() => setEligiendo(false)} />
+      )}
       {vista?.tipo === 'diseno' && pestana === 'pantallas' && (
         // biome-ignore lint/a11y/noStaticElementInteractions: las flechas mueven el foco entre los botones de adentro.
         <div className="di-lienzo" onKeyDown={alTeclado}>
@@ -416,19 +551,40 @@ export function Diseno({ ruta }: { ruta: string }) {
                 {g.seccion} <span className="n">{g.maquetas.length}</span>
               </h3>
               <div className="di-fila">
-                {g.maquetas.map((m) => (
-                  <Miniatura
-                    key={m.archivo}
-                    base={vista.base}
-                    maqueta={m}
-                    ancho={ANCHOS[tamano]}
-                    agrandar={() => agrandar(m.archivo)}
-                    boton={(b) => {
-                      if (b) botones.current.set(m.archivo, b)
-                      else botones.current.delete(m.archivo)
-                    }}
-                  />
-                ))}
+                {g.maquetas.map((m) => {
+                  const boton = (b: HTMLButtonElement | null) => {
+                    if (b) botones.current.set(m.archivo, b)
+                    else botones.current.delete(m.archivo)
+                  }
+                  if (dir && baseDir && modo === 'lado')
+                    return (
+                      <div key={m.archivo} className="di-par">
+                        <Miniatura
+                          base={vista.base}
+                          maqueta={{ ...m, nombre: `${m.nombre} · hoy` }}
+                          ancho={ANCHOS[tamano]}
+                          agrandar={() => agrandar(m.archivo, true)}
+                          boton={boton}
+                        />
+                        <Miniatura
+                          base={baseDir}
+                          maqueta={{ ...conDir(m), nombre: `${m.nombre} · ${nombreDe(dir)}` }}
+                          ancho={ANCHOS[tamano]}
+                          agrandar={() => agrandar(m.archivo)}
+                        />
+                      </div>
+                    )
+                  return (
+                    <Miniatura
+                      key={m.archivo}
+                      base={conDireccion && baseDir ? baseDir : vista.base}
+                      maqueta={conDireccion ? conDir(m) : m}
+                      ancho={ANCHOS[tamano]}
+                      agrandar={() => agrandar(m.archivo)}
+                      boton={boton}
+                    />
+                  )
+                })}
               </div>
             </section>
           ))}

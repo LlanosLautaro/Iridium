@@ -79,7 +79,7 @@ Las maquetas de la interfaz (D-105). Se miran en Iridium › Diseño.
 - Tienen los clics que la IA les ponga (abrir un menú, pasar a otra pantalla); no guardan datos ni hablan con la app (Won't de `definicion.md`).
 - **Las clases de `piezas.css` son las del código** cuando la app las tiene (en Iridium, desde DI-I3, las de `src/renderer/ui/`): así pasar al código es copiar, no traducir.
 - Una versión (`versiones/<maqueta>/<letra>.html`) es una maqueta más, con `<meta name="descripcion" content="la bandeja como una sola lista">`: la frase con que se pidió. Está dos carpetas abajo: sus hojas son `../../tokens.css` y `../../piezas.css`, y un enlace a otra pantalla, `../../pantallas/mapa.html`.
-- Una dirección (`direcciones/<nombre>.css`) es un `tokens.css` entero con otros valores: las mismas variables.
+- Una dirección (`direcciones/<nombre>.css`) es un `tokens.css` entero con otros valores: las mismas variables. Empieza con un comentario con su frase (`/* Negro con un azul apagado. */`), que Iridium muestra al lado del nombre (`core/diseno/direcciones.ts`).
 
 ## Mostrarlas vivas (S-4)
 Las maquetas son HTML con scripts que escribe la IA en un proyecto: se muestran **aisladas**, sin el puente de Iridium, sin Node y sin red. Dos formas, las dos probadas en S-4:
@@ -89,7 +89,7 @@ Las maquetas son HTML con scripts que escribe la IA en un proyecto: se muestran 
 2. `protocol.handle('maqueta')` sirve **solo** archivos dentro de `docs/diseno/` de ese proyecto: rechaza `..`, rutas absolutas y cualquier id que no se abrió. Cada respuesta lleva la política de contenido `default-src 'none'; style-src maqueta: 'unsafe-inline'; script-src maqueta: 'unsafe-inline'; img-src maqueta: data:; font-src maqueta: data:` (sin `connect-src`: ni `fetch` ni nada a la red).
 3. El `<iframe sandbox="allow-scripts">` (sin `allow-same-origin`) no puede tocar la página de Iridium (S-4: `parent.document` bloqueado). La política de la ventana suma `frame-src maqueta:`.
 4. Se dibuja a 1440×900 y se achica con `transform: scale()`; no recibe el ratón (lo toma la tarjeta de encima, que agranda). Solo cargan las que se ven (`IntersectionObserver`); las que salen de la vista hace rato se descargan.
-5. **Con una dirección puesta** (DI-I4) la base es `maqueta://<id>/~<dirección>/`: el `../tokens.css` de cada maqueta pide `/~<dirección>/tokens.css` y el protocolo devuelve `direcciones/<dirección>.css`. Hoy y la dirección lado a lado son dos `iframe` con dos bases.
+5. **Con una dirección puesta** (DI-I4) la base es `maqueta://<id>/~<dirección>/`: el `../tokens.css` de cada maqueta pide `/~<dirección>/tokens.css` y el protocolo devuelve `direcciones/<dirección>.css` (lo demás, lo de siempre; un nombre con `..` no se sirve). Hoy y la dirección lado a lado son dos `iframe` con dos bases. La huella de la miniatura suma la de la dirección: si la IA la cambia, se recarga.
 
 ### La grande: `<webview>` con `file://`
 La extensión de la Revisión solo entra en el marco principal de una página `file://` o local (`all_frames: false`, y no acepta esquemas propios): para que `F8` ande, la grande es un `<webview>` con la dirección `file://` de la maqueta, en la sesión donde el ayudante cargó la extensión (S-4: la extensión entra, los clics andan, `F8` abre el modo comentar y la captura sale).
@@ -98,7 +98,7 @@ La extensión de la Revisión solo entra en el marco principal de una página `f
   - `will-navigate` y `will-frame-navigate`: solo dentro del mismo `docs/diseno/`; lo demás se frena. `setWindowOpenHandler`: nunca.
   - `webRequest.onBeforeRequest` para los `webview`: solo `file://` dentro de ese `docs/diseno/` y la extensión; lo demás se cancela (la extensión habla con Iridium desde su service worker, no desde la página).
 - La cabecera de la grande sigue la navegación (`did-navigate`): si un enlace lleva a otra maqueta, el nombre y el número cambian.
-- **Con una dirección puesta**, `insertCSS` con el archivo de la dirección después de cargar (mismas variables, gana la última).
+- **Con una dirección puesta**, `insertCSS` con el archivo de la dirección en cada `dom-ready`, con `:root` escrito `:root:root:root` para que gane sin depender del orden de las hojas. Si el `webview` ya se cerró (al volver al lienzo), sacarlo no es un error.
 - Un solo `webview` a la vez: con versiones lado a lado (DI-I4), las demás son `iframe` grandes y la que se comenta se pasa al `webview` con un clic.
 - **La alternativa** era una vista nativa (`WebContentsView`) acomodada sobre el lienzo: el mismo aislamiento, pero hay que moverla y achicarla a mano con cada cambio de tamaño y no se superpone con los menús de React. El `webview` va dentro del árbol de React.
 
@@ -133,8 +133,9 @@ Todos quedan citados en la conversación del proyecto, sin mandar (D-196): `cita
 Sin la IA, con escritura atómica; lo que se borra va a la papelera de Windows (como Eliminar, D-090). Git deshace todo lo demás.
 - **Quedarme con esta:** la versión elegida reemplaza a la maqueta, con sus enlaces reescritos para `pantallas/` y sin su `<meta name="descripcion">`; la maqueta de antes y la carpeta `versiones/<maqueta>/` van a la papelera, así nada se pierde en un proyecto sin Git (si la elegida es la de hoy, solo va la carpeta).
 - **Guardar para después:** nada; las versiones quedan.
-- **Elegir una dirección:** `tokens.css` pasa a `direcciones/anterior-AAAA-MM-DD.css` y la dirección pasa a ser `tokens.css`. Se puede volver eligiendo la anterior.
-- **Descartar una dirección:** su archivo va a la papelera.
+- **Elegir una dirección:** `tokens.css` pasa a `direcciones/anterior-AAAA-MM-DD.css` (con `-2`, `-3` si ya hay una ese día), con la frase «La de antes de elegir «…» (fecha)», y la dirección pasa a ser `tokens.css` (sin esa frase, si la tenía); su archivo va a la papelera. Se puede volver eligiendo la anterior. Una dirección con otras variables que `tokens.css` no se puede elegir (la línea dice qué le falta).
+- **Descartar una dirección:** su archivo va a la papelera, sin cuadro (no cambia ninguna maqueta).
+- Elegir y Descartar no se pueden con la IA del proyecto trabajando.
 
 ## Sistema (DS-13)
 `core/diseno/tokens.ts` lee las variables del primer bloque `:root` de `tokens.css` (`--nombre: valor;`) con su **uso**, el comentario que sigue al `;` en la misma línea (D-114), y las agrupa:

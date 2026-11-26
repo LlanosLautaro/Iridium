@@ -115,10 +115,10 @@ Con D-105 la sección es un «Claude Design» local: **las pantallas son maqueta
 #### DS-5 — Pedir otra versión o probar una dirección
 - Como usuario quiero pedir otra versión de una pantalla, o cambiar el aspecto de todas a la vez, para comparar dos ideas mirándolas.
   - Criterios de aceptación:
-    - [ ] En una maqueta agrandada, **Otra versión** deja citado en la conversación el pedido de una alternativa; el usuario escribe ahí qué probar («la bandeja como una sola lista») y la manda (D-196).
-    - [ ] Las versiones de una pantalla se ven lado a lado; **Quedarme con esta** deja esa y borra las otras, o **Guardar para después** las deja guardadas.
-    - [ ] **Probar una dirección** cambia los tokens de todas las maquetas a la vez: una guardada en `docs/diseno/direcciones/` o una nueva pedida con una frase («el negro con un azul muy apagado»). Se ve todo el lienzo con la dirección, y **Hoy · Dirección** alterna o pone las dos lado a lado.
-    - [ ] **Elegir** una dirección la vuelve los tokens de las maquetas, con un cuadro que dice qué cambia.
+    - [x] En una maqueta agrandada, **Otra versión** deja citado en la conversación el pedido de una alternativa; el usuario escribe ahí qué probar («la bandeja como una sola lista») y la manda (D-196).
+    - [x] Las versiones de una pantalla se ven lado a lado; **Quedarme con esta** deja esa y borra las otras, o **Guardar para después** las deja guardadas.
+    - [x] **Probar una dirección** cambia los tokens de todas las maquetas a la vez: una guardada en `docs/diseno/direcciones/` o una nueva pedida con una frase («el negro con un azul muy apagado»). Se ve todo el lienzo con la dirección, y **Hoy · Dirección** alterna o pone las dos lado a lado.
+    - [x] **Elegir** una dirección la vuelve los tokens de las maquetas, con un cuadro que dice qué cambia.
 
 #### DS-6 — Pasar al código
 - Como usuario quiero pasar a la app lo que aprobé en las maquetas para que la interfaz real quede igual.
@@ -178,7 +178,7 @@ flowchart TD
 #### DS-11 — Diseño › Pantallas
 - Propósito: ver todas las maquetas juntas.
 - Elementos: la cabecera (Diseño, las pestañas, «Probar una dirección», «Pasar al código · N» y, si hay comentarios sin enviar, «3 comentarios», que lleva a la Revisión); el lienzo, agrupado por sección, con cada maqueta viva y su nombre; arriba a la derecha, el tamaño de las miniaturas (chico · grande).
-- Estados: sin `docs/diseno/` (recuadro punteado con Pedírselo a la IA); la IA escribiendo (las maquetas aparecen de a una); una cambiada sin mirar (punto junto al nombre); una rota (su lugar con el motivo); una dirección puesta (una línea arriba: «Probando: negro con azul · Hoy · Elegir · Descartar»); muchas (el lienzo se desplaza y los grupos quedan como títulos).
+- Estados: sin `docs/diseno/` (recuadro punteado con Pedírselo a la IA); la IA escribiendo (las maquetas aparecen de a una); una cambiada sin mirar (punto junto al nombre); una rota (su lugar con el motivo); una dirección puesta (una línea arriba: «Probando: negro con azul · su frase · Hoy · Dirección · Lado a lado · Elegir · Descartar · ×»; Lado a lado pone cada maqueta de hoy junto a la misma con la dirección; la grande también la lleva, salvo la de hoy agrandada desde Lado a lado; una nueva pedida dice «Citada en la conversación…» y después «La IA está escribiendo la dirección…», y se pone sola cuando llega); muchas (el lienzo se desplaza y los grupos quedan como títulos).
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

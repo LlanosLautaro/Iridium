@@ -63,6 +63,14 @@ export class MaquetasAbiertas {
       return null
     }
     if (camino.split(/[\\/]/).includes('..')) return null
+    // Con una dirección puesta (DI-I4) la base es `maqueta://<id>/~<dirección>/`: lo mismo, salvo `tokens.css`, que
+    // es `direcciones/<dirección>.css`.
+    const conDireccion = /^\/~([^/\\]+)\/(.*)$/.exec(camino)
+    if (conDireccion) {
+      const [, nombre = '', resto = ''] = conDireccion
+      if (!nombre || nombre.includes('..')) return null
+      camino = resto.toLowerCase() === 'tokens.css' ? `direcciones/${nombre}.css` : resto
+    }
     const base = carpetaDiseno(proyecto)
     const archivo = normalize(join(base, camino))
     return estaDentro(base, archivo) && archivo !== normalize(base) ? archivo : null

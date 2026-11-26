@@ -1,17 +1,29 @@
 // La sección Diseño (frente Diseño, DS-11 a DS-13; `modulos/diseno/diseno-tecnico.md`): arma lo que se ve desde
 // `docs/diseno/` del proyecto — los grupos de maquetas con su estado y sus versiones, el sistema — y marca lo que ya
-// se miró. Quedarse con una versión (DI-I4) es lo único que Iridium escribe ahí.
+// se miró. Quedarse con una versión y elegir o descartar una dirección (DI-I4) es lo único que Iridium escribe ahí.
 import { createHash } from 'node:crypto'
 import { readdir, readFile, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import type {
+  DireccionVista,
   GrupoMaquetas,
   MaquetaVista,
   SistemaDiseno,
   VersionVista,
   VistaDiseno,
 } from '../../compartido/diseno'
+import {
+  archivoAnterior,
+  comoAnterior,
+  comoTokens,
+  descripcionDireccion,
+  direccionesDe,
+  esDireccion,
+  nombreDireccion,
+  paraEncima,
+  problemaDireccion,
+} from '../core/diseno/direcciones'
 import { leerIndice } from '../core/diseno/indice'
 import {
   descripcionDe,
@@ -181,6 +193,27 @@ async function sistema(c: Carpeta, vistos: ReadonlyMap<string, string> | null): 
   }
 }
 
+/** Las direcciones guardadas, cada una con su frase, su huella y si sus variables son las de `tokens.css`. */
+async function direcciones(c: Carpeta): Promise<DireccionVista[]> {
+  const tokens = c.existentes.has('tokens.css') ? await c.leer('tokens.css') : null
+  const nombres = tokens === null ? null : new Set(leerTokens(tokens).tokens.map((t) => t.nombre))
+  const r: DireccionVista[] = []
+  for (const archivo of direccionesDe(c.existentes)) {
+    const css = await c.leer(archivo)
+    if (css === null) continue
+    const marca = c.marcas.get(archivo)
+    r.push({
+      archivo,
+      nombre: nombreDireccion(archivo),
+      descripcion: descripcionDireccion(css),
+      huella: `${Math.round(marca?.ms ?? 0)}-${marca?.tam ?? 0}`,
+      css: paraEncima(css),
+      problema: nombres === null ? 'Falta tokens.css' : problemaDireccion(nombres, css),
+    })
+  }
+  return r
+}
+
 /** Lo que se ve en Diseño de un proyecto. `base` es la de las miniaturas (`maqueta://<id>/`). */
 export async function vistaDiseno(
   proyecto: string,
@@ -233,6 +266,7 @@ export async function vistaDiseno(
     grupos,
     sistema: sis,
     problemaIndice,
+    direcciones: await direcciones(c),
   }
 }
 
@@ -268,4 +302,47 @@ export async function quedarmeConVersion(
     await escribirAtomico(join(base, archivo), sinDescripcion(reubicar(html, version, archivo)))
   }
   if (todas.length > 0) await papelera(join(base, ...carpeta.split('/').filter(Boolean)))
+}
+
+/** La dirección (`direcciones/<nombre>.css`), si existe en la carpeta; si no, un error que se puede mostrar. */
+async function direccionQueEsta(proyecto: string, archivo: string): Promise<string[]> {
+  const lista = await listarDiseno(proyecto)
+  if (!esDireccion(archivo) || !lista?.includes(archivo)) throw new Error('Esa dirección ya no está')
+  return lista
+}
+
+/**
+ * Elegir una dirección (DS-5, `diseno-tecnico.md` › Lo que Iridium escribe): los tokens de hoy pasan a
+ * `direcciones/anterior-AAAA-MM-DD.css` (con una frase que dice de dónde salieron) y la dirección pasa a ser
+ * `tokens.css`; su archivo va a la papelera. Se vuelve eligiendo la anterior. Devuelve dónde quedó la de antes.
+ */
+export async function elegirDireccion(
+  proyecto: string,
+  archivo: string,
+  papelera: (ruta: string) => Promise<void>,
+  ahora: Date = new Date(),
+): Promise<string> {
+  const lista = await direccionQueEsta(proyecto, archivo)
+  const base = carpetaDiseno(proyecto)
+  const elegida = await readFile(join(base, ...archivo.split('/')), 'utf8')
+  const hoy = await readFile(join(base, 'tokens.css'), 'utf8').catch(() => null)
+  const anterior = hoy === null ? null : archivoAnterior(ahora, lista)
+  if (hoy !== null && anterior !== null)
+    await escribirAtomico(
+      join(base, ...anterior.split('/')),
+      comoAnterior(hoy, nombreDireccion(archivo), ahora),
+    )
+  await escribirAtomico(join(base, 'tokens.css'), comoTokens(elegida))
+  await papelera(join(base, ...archivo.split('/')))
+  return anterior ?? ''
+}
+
+/** Descartar una dirección: su archivo va a la papelera; las maquetas no cambian. */
+export async function descartarDireccion(
+  proyecto: string,
+  archivo: string,
+  papelera: (ruta: string) => Promise<void>,
+): Promise<void> {
+  await direccionQueEsta(proyecto, archivo)
+  await papelera(join(carpetaDiseno(proyecto), ...archivo.split('/')))
 }

@@ -405,3 +405,58 @@
   background: var(--sel-fondo);
   color: var(--texto);
 }
+
+/* Probar una dirección (DS-11, DI-I4): la línea arriba del lienzo con la dirección puesta, Hoy · Dirección · Lado a lado,
+   Elegir y Descartar; abajo, cada maqueta con la de hoy al lado */
+.di-probando {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  margin: 8px 32px 0;
+  padding: 6px 8px 6px 12px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-bloque);
+  background: var(--elevado);
+}
+.di-probando-t {
+  overflow: hidden;
+  min-width: 0;
+  max-width: 48ch;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--tam-chico);
+  color: var(--texto-2);
+}
+.di-probando-t b {
+  font-weight: 600;
+  color: var(--texto);
+}
+.di-probando-problema {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: var(--tam-chico);
+  color: var(--texto-2);
+}
+.di-probando-problema svg {
+  color: var(--espera);
+}
+.di-probando-acciones {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+}
+.di-par {
+  display: flex;
+  gap: 8px;
+  padding-right: 16px;
+  border-right: 1px solid var(--borde);
+}
+.di-menu-vacio {
+  margin: 0;
+  padding: 4px 8px 8px;
+  font-size: var(--tam-chico);
+  color: var(--texto-3);
+}

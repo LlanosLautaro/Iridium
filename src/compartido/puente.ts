@@ -1125,6 +1125,8 @@ export const CANALES = {
   marcarVista: 'diseno:marcar-vista',
   citaDiseno: 'diseno:cita',
   quedarmeConVersion: 'diseno:quedarme-version',
+  elegirDireccion: 'diseno:elegir-direccion',
+  descartarDireccion: 'diseno:descartar-direccion',
   disenoCambio: 'diseno:cambio',
   disenoEscape: 'diseno:escape',
   disenoFlecha: 'diseno:flecha',
@@ -1425,6 +1427,13 @@ export interface ApiIridium {
    * la papelera.
    */
   quedarmeConVersion(ruta: string, maqueta: string, version: string | null): Promise<void>
+  /**
+   * Elegir una dirección (DS-5): pasa a ser `tokens.css` y los tokens de hoy quedan como otra dirección; devuelve
+   * dónde (`direcciones/anterior-AAAA-MM-DD.css`).
+   */
+  elegirDireccion(ruta: string, archivo: string): Promise<string>
+  /** Descartar una dirección: su archivo va a la papelera. */
+  descartarDireccion(ruta: string, archivo: string): Promise<void>
   /** Avisa qué archivos de `docs/diseno/` cambiaron en un proyecto. */
   alCambiarDiseno(escuchar: (cambio: CambioDiseno) => void): () => void
   /** Esc dentro de la maqueta grande, fuera del modo comentar: la sección vuelve al lienzo (DS-4). */

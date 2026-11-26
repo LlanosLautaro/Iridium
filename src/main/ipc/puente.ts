@@ -38,7 +38,13 @@ import { Comandos } from '../app/comandos'
 import { controlarProyecto } from '../app/control'
 import { Conversaciones } from '../app/conversacion'
 import { crearProyecto } from '../app/creacion'
-import { marcarVista, quedarmeConVersion, vistaDiseno } from '../app/diseno'
+import {
+  descartarDireccion,
+  elegirDireccion,
+  marcarVista,
+  quedarmeConVersion,
+  vistaDiseno,
+} from '../app/diseno'
 import { Documentos, ordenDeDocumentos } from '../app/documentos'
 import { archivarProyecto, cambiarEstadoProyecto, cambiarIconoProyecto } from '../app/edicion'
 import { ejecutarEliminacion, medirRegenerables, prepararEliminacion } from '../app/eliminacion'
@@ -65,7 +71,8 @@ import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
 import { armadoParaElAviso } from '../core/arranque'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
-import { pedidoEmpezar, pedidoOtraVersion, tieneCodigo } from '../core/diseno/pedidos'
+import { direccionesDe, nombreDireccion } from '../core/diseno/direcciones'
+import { pedidoDireccion, pedidoEmpezar, pedidoOtraVersion, tieneCodigo } from '../core/diseno/pedidos'
 import { carpetaVersiones, proximaLetra, versionesDe } from '../core/diseno/versiones'
 import {
   INSTRUCCION_CENTRO,
@@ -1197,6 +1204,11 @@ export function registrarPuente(s: Servicios): Puente {
       const raiz = await readdir(r).catch(() => [] as string[])
       return { texto: pedidoEmpezar(tieneCodigo(raiz)), archivo: null }
     }
+    // Una dirección nueva: el nombre lo pone la IA, distinto de los que hay.
+    if (pedido.tipo === 'direccion') {
+      const lista = (await listarDiseno(r)) ?? []
+      return { texto: pedidoDireccion(direccionesDe(lista).map(nombreDireccion)), archivo: null }
+    }
     // Otra versión: la próxima letra libre de la carpeta de sus versiones.
     const carpeta = carpetaVersiones(pedido.maqueta)
     const lista = await listarDiseno(r)
@@ -1216,6 +1228,18 @@ export function registrarPuente(s: Servicios): Puente {
       version === null ? null : ArchivoMaqueta.parse(version),
       aLaPapelera,
     )
+  })
+
+  // Elegir o descartar una dirección (DS-5): lo que se va, a la papelera; los tokens de hoy quedan como una dirección.
+  ipcMain.handle(CANALES.elegirDireccion, async (_, ruta: unknown, archivo: unknown) => {
+    const r = await proyecto(ruta)
+    if (conversaciones.enMarcha().includes(r)) throw new Error('La IA de ese proyecto está trabajando')
+    return elegirDireccion(r, ArchivoMaqueta.parse(archivo), aLaPapelera)
+  })
+  ipcMain.handle(CANALES.descartarDireccion, async (_, ruta: unknown, archivo: unknown) => {
+    const r = await proyecto(ruta)
+    if (conversaciones.enMarcha().includes(r)) throw new Error('La IA de ese proyecto está trabajando')
+    await descartarDireccion(r, ArchivoMaqueta.parse(archivo), aLaPapelera)
   })
 
   // El menú de la tarjeta y Nuevo proyecto (R-7, D-089). Solo sobre carpetas de la carpeta de proyectos (no Ideas ni

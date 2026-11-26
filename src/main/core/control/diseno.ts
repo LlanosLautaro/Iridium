@@ -1,6 +1,7 @@
 // Las maquetas (frente Diseño, D-105; `modulos/diseno/diseno-tecnico.md` › El control): el índice, los tokens, que
 // todo sea local y exista, sin colores escritos, que las direcciones y las versiones correspondan, y las fichas de las
 // piezas (T-62, D-117) y las medidas fijas (T-63, D-119).
+import { diferenciaVariables } from '../diseno/direcciones'
 import { COLUMNAS_INDICE, esSinPasar, FECHA_EN_LA_APP, leerIndice } from '../diseno/indice'
 import {
   coloresEscritos,
@@ -144,15 +145,14 @@ export const reglaDiseno: Regla = (a) => {
     const nombres = new Set(tokens.tokens.map((x) => x.nombre))
     for (const t of d.textos) {
       if (!/^direcciones\/[^/]+\.css$/i.test(t.ruta)) continue
-      const otra = new Set(leerTokens(t.texto).tokens.map((x) => x.nombre))
-      const faltan = [...nombres].filter((n) => !otra.has(n))
-      const sobran = [...otra].filter((n) => !nombres.has(n))
-      if (faltan.length || sobran.length)
-        av(
-          t.ruta,
-          null,
-          `una dirección tiene las mismas variables que \`tokens.css\`${faltan.length ? `; le faltan ${faltan.slice(0, 5).join(', ')}` : ''}${sobran.length ? `; sobran ${sobran.slice(0, 5).join(', ')}` : ''}`,
-        )
+      const dif = diferenciaVariables(nombres, t.texto)
+      if (!dif) continue
+      const { faltan, sobran } = dif
+      av(
+        t.ruta,
+        null,
+        `una dirección tiene las mismas variables que \`tokens.css\`${faltan.length ? `; le faltan ${faltan.slice(0, 5).join(', ')}` : ''}${sobran.length ? `; sobran ${sobran.slice(0, 5).join(', ')}` : ''}`,
+      )
     }
   }
   // 8: las fichas de las piezas y los tokens que nombra `piezas.css`.
