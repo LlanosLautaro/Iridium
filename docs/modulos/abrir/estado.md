@@ -1,7 +1,7 @@
 # Estado del módulo: Abrir
 
 **Tipo:** sección (T-80)
-**Última actualización:** 2026-11-20
+**Última actualización:** 2026-11-26
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -30,7 +30,7 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - [x] Armar solas las apps de escritorio con cambios, cuando están cerradas (AB-I2)
 - [x] Marcar tus proyectos (D-157)
 - [x] Probar Ejecutar y la actualización con una app tuya (Q-221)
-  - [ ] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86, chico, sola)
+  - [x] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86, Q-308)
 - [x] Abrir y actualizar sola tu app que se usa instalada (AB-I3)
   - [ ] Ponerla al día también en la otra PC, desde sus versiones publicadas (T-87, grande; cambia el armado de tu app, que es otro proyecto, y se prueba en la otra PC)
 - [ ] Revisar que Ejecutar y la actualización sean confiables (mediano, sola)
@@ -73,6 +73,11 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - **Criterios verificados:** `tests/ab3-instalada.test.ts` (8: la variable, la ruta fija, la ruta completa, el control, el plan de armado con el `.exe` instalado, Ejecutar sin instalar y ya instalada, Abrir con variable). `pnpm test` (881), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` (143) sin errores; el control, 0 avisos aquí y en los dos proyectos marcados. Instalar de verdad queda para tu prueba.
 - **Prueba:** Q-222 (2026-11-19): Ejecutar, Abrir la carpeta de la extensión y la versión nueva con los datos y la extensión, bien. «Actualizando…» quedó sin marcar: la versión nueva se publicó y se bajó a mano en la otra PC. En esta PC sí anduvo: el registro de armados dice que Iridium armó el instalador y lo instaló sin ventanas de 19:46 a 19:50, dos minutos después del commit de las 19:44, y Windows tiene instalada esa versión. El instalador tiene siempre el mismo nombre, así que acá no se acumulan copias. Lo que falta es la otra PC, que no tiene el código: T-87, con la decisión en Q-223.
 - **Arreglado de paso:** con un comando encadenado (`armar el instalador && correrlo`), `armado.log` guardaba solo la salida del último; ahora el comando va en su propio `comando.cmd` y el log tiene todo (`tests/ab2-armados.test.ts`, que falla sin el arreglo).
+
+### T-86 — Las apps armadas de noche en el aviso al volver — 2026-11-26 (avance solo)
+- **Hecho:** cuando un armado termina bien o falla con Iridium sin usar 5 minutos o más (la misma regla del aviso, D-149 › 8), se anota en `arranques.json` (`armados`, 7 días). El aviso «Mientras no estabas» suma un renglón por app, la última vez de cada una: «Alfa  04:10  se actualizó  Abrir» o, en rojo, «no se pudo actualizar» con el motivo al pasar el mouse (como la Señal de la tarjeta), ordenados por hora con lo del arranque y el avance solo. Sale aunque esa noche no haya arrancado nada; un armado fallado lo pone en rojo; Listo los da por vistos junto con lo demás. «Ocupada» (la abriste mientras se armaba) se reintenta y no se cuenta. `05-arquitectura.md` › Arranques al día.
+- **De paso:** en el aviso, lo de ayer dice «ayer 23:50» en vez de «ayer a las 23:50»: la hora larga le dejaba al texto una columna angosta.
+- **Criterios verificados:** `tests/t86-armados-al-volver.test.ts` (5: qué armado cuenta, la última de cada app, un `arranques.json` de antes o roto, los 7 días, lo que va a la ventana y Listo), `tests/ab2-armados.test.ts` (el vigía avisa cada armado al terminar) y Playwright (`tests/e2e/ar2-arranque.spec.ts`: los dos renglones, el rojo, el motivo, Abrir y Listo; captura `t86-aviso-armados.png`). Una noche de verdad queda para tu prueba (Q-308). Vitest 1157 (1 omitida), Playwright 198 (una de las tarjetas falló una vez por un archivo trabado al borrar sus datos y sola pasa: T-144), typecheck, lint y control en verde.
 
 ## Próximo paso
 Cuando vuelva (D-162): el paso 8 (calidad) del frente: AB-I1, AB-I2 y AB-I3 están probadas. T-87 (la otra PC, D-160) queda en la ruta para después de la calidad.

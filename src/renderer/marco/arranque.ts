@@ -30,7 +30,12 @@ export function porQueNo(r: RenglonArranqueVista): string {
   }
 }
 
-/** La hora corta para el aviso: «03:02» si fue hoy; si no, «ayer a las 23:10». */
+/**
+ * La hora corta para el aviso: «03:02» si fue hoy; si no, «ayer 23:10» (sin «a las»: la columna de la hora no le quita
+ * el ancho a lo que pasó).
+ */
 export function horaCorta(ms: number): string {
-  return new Date(ms).toDateString() === new Date().toDateString() ? hora(ms) : cuandoFue(ms)
+  return new Date(ms).toDateString() === new Date().toDateString()
+    ? hora(ms)
+    : cuandoFue(ms).replace(' a las ', ' ')
 }

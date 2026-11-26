@@ -11,6 +11,7 @@ import type {
   UsoSuscripcion,
 } from '../../compartido/puente'
 import {
+  armadosParaElAviso,
   bloqueo,
   type Candidato,
   elegir,
@@ -144,7 +145,7 @@ export class Arranque {
   async estado(): Promise<EstadoArranque> {
     const [ajuste, datos] = await Promise.all([
       this.d.ajuste(),
-      this.d.archivo.leer().catch(() => ({ momentos: [], vistoHasta: null })),
+      this.d.archivo.leer().catch(() => ({ momentos: [], vistoHasta: null, armados: [] })),
     ])
     const vista = (r: RenglonArranque) => this.vista(r)
     const semana = await Promise.all([...datos.momentos].sort((a, b) => b.cuando - a.cuando).map(vista))
@@ -154,6 +155,13 @@ export class Arranque {
       proximo: ajuste.prendido ? (this.programado?.cuando ?? null) : null,
       semana,
       aviso: semana.filter((r) => delAviso.has(r.cuando)).reverse(),
+      armados: armadosParaElAviso(datos.armados, datos.vistoHasta).map((a) => ({
+        cuando: a.cuando,
+        ruta: a.ruta,
+        nombre: a.nombre,
+        resultado: a.resultado,
+        motivo: a.motivo ?? null,
+      })),
     }
   }
 

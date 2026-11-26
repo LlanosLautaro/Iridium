@@ -167,6 +167,58 @@ test('al volver, el aviso con lo que hizo mientras no estabas; «y N más» desp
   await otra.app.close()
 })
 
+test('al volver, el aviso cuenta las apps que se armaron solas: se actualizaron o con su motivo si fallaron (T-86)', async () => {
+  await proyecto('Alfa')
+  await proyecto('Beta')
+  const alfa = join(raiz, 'Alfa')
+  const beta = join(raiz, 'Beta')
+  const ahora = Date.now()
+  await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz }))
+  await writeFile(
+    join(datos, 'arranques.json'),
+    JSON.stringify({
+      version: 1,
+      vistoHasta: null,
+      programado: null,
+      momentos: [],
+      armados: [
+        { cuando: ahora - 3 * HORA, ruta: alfa, nombre: 'Alfa', resultado: 'ok' },
+        {
+          cuando: ahora - 2 * HORA,
+          ruta: beta,
+          nombre: 'Beta',
+          resultado: 'falla',
+          motivo: 'Tardó más de 10 minutos y se cortó.',
+        },
+      ],
+    }),
+  )
+  const { app, win } = await abrir()
+  const aviso = win.getByRole('status', { name: 'Lo que hizo Iridium mientras no estabas' })
+  await expect(aviso).toBeVisible()
+  await expect(aviso).toHaveAttribute('data-estado', 'error')
+  const renglones = aviso.locator('.renglones-arranque li')
+  await expect(renglones).toHaveCount(2)
+  await expect(renglones.nth(0)).toContainText('Alfa')
+  await expect(renglones.nth(0)).toContainText('se actualizó')
+  await expect(renglones.nth(1)).toContainText('Beta')
+  await expect(renglones.nth(1)).toContainText('no se pudo actualizar')
+  await expect(renglones.nth(1).locator('.fallo')).toHaveAttribute(
+    'title',
+    'Tardó más de 10 minutos y se cortó.',
+  )
+  // La entrada del aviso termina antes de la captura.
+  await win.waitForTimeout(1000)
+  await win.screenshot({ path: 'test-results/t86-aviso-armados.png' })
+
+  await aviso.getByRole('button', { name: 'Abrir Beta' }).click()
+  await expect(win.getByRole('tablist', { name: 'Proyectos abiertos' })).toContainText('Beta')
+  await aviso.getByRole('button', { name: 'Listo' }).click()
+  await expect(aviso).toHaveCount(0)
+  await expect.poll(async () => (await leerJson('arranques.json')).vistoHasta).toBe(ahora - 2 * HORA)
+  await app.close()
+})
+
 test('el aviso al volver se usa con el teclado, cada botón dice qué hace y el texto se lee (paso 8)', async () => {
   await proyecto('Alfa')
   await proyecto('Beta')

@@ -220,6 +220,24 @@ describe('el vigía de los armados (AB-3, AB-4)', () => {
     expect(m.estados().A?.fallo).toBe(false)
   })
 
+  it('al terminar cada armado avisa cómo quedó, para el aviso al volver (T-86)', async () => {
+    const m = await mundo(['A'])
+    const terminados: { ruta: string; resultado: string }[] = []
+    m.d.alTerminar = (ruta, u) => terminados.push({ ruta, resultado: u.resultado })
+    await m.mirar()
+    expect(terminados).toEqual([])
+    m.fines.set('A', 'falla')
+    await m.mirar()
+    m.git.set('A', { commit: 'c2', fecha: 2000, limpio: true })
+    await m.mirar()
+    m.fines.set('A', 'ok')
+    await m.mirar()
+    expect(terminados).toEqual([
+      { ruta: 'A', resultado: 'falla' },
+      { ruta: 'A', resultado: 'ok' },
+    ])
+  })
+
   it('si falla porque la abriste por fuera, cuenta como ocupada y se reintenta al cerrarla (D-156 › 8)', async () => {
     const m = await mundo(['A'])
     await m.mirar()

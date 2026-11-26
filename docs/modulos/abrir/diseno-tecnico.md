@@ -54,7 +54,7 @@ Arma la versión de uso con el código de ahora. Cerrala antes.
 | `proyecto:ejecutar` (pedido) | Ejecutar Alfa; responde `ok`, `sin-armar` (AB-2), `esperando` (se abre al terminar) o el error |
 | `proyecto:armar-ahora`, `proyecto:actualizacion` (pedidos) | Armar ahora (AB-2, AB-4) y el interruptor de Ajustes del proyecto |
 | `actualizacion:cambio` (evento) | Redibujar la tarjeta y Ajustes del proyecto al empezar y terminar un armado |
-| Los armados de la noche | El aviso «Mientras no estabas» del Arranque (Should, más adelante) |
+| Los armados de la noche (`armados` en `arranques.json`, T-86) | El aviso «Mientras no estabas» del Arranque: un renglón por app que se armó con Iridium sin usar 5 minutos o más |
 
 ### Para plugins
 - No aplica: es una sección del núcleo.

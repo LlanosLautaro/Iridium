@@ -393,7 +393,13 @@ describe('arranques.json', () => {
     const ruta = join(datos, 'arranques.json')
     await writeFile(ruta, '{ roto')
     const archivo = new ArchivoArranques(ruta)
-    expect(await archivo.leer()).toEqual({ version: 1, vistoHasta: null, programado: null, momentos: [] })
+    expect(await archivo.leer()).toEqual({
+      version: 1,
+      vistoHasta: null,
+      programado: null,
+      momentos: [],
+      armados: [],
+    })
     const renglon = (cuando: number) => ({
       cuando,
       momento: 'hora' as const,

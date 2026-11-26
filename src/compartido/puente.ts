@@ -233,6 +233,15 @@ export interface RenglonArranqueVista {
   agotado?: boolean
 }
 
+/** Una app que se armó sola mientras no estaba el usuario (frente Abrir, T-86): un renglón más del aviso al volver. */
+export interface ArmadoSinUsarVista {
+  cuando: number
+  ruta: string
+  nombre: string
+  resultado: 'ok' | 'falla'
+  motivo: string | null
+}
+
 /** El arranque para la ventana: el detalle del uso y el aviso al volver. */
 export interface EstadoArranque {
   prendido: boolean
@@ -242,6 +251,8 @@ export interface EstadoArranque {
   semana: RenglonArranqueVista[]
   /** Lo que muestra el aviso al volver (AR-4), del más viejo al más nuevo; vacío, sin aviso. */
   aviso: RenglonArranqueVista[]
+  /** Las apps que se armaron solas y el aviso no mostró, del más viejo al más nuevo: la última de cada una. */
+  armados: ArmadoSinUsarVista[]
 }
 
 /** Lo más largo que puede ser cada texto de Ajustes. */

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { textoDeCierre } from '../../compartido/consolas'
 import type { Novedades } from '../../compartido/novedades'
-import type { RenglonArranqueVista } from '../../compartido/puente'
+import type { ArmadoSinUsarVista, RenglonArranqueVista } from '../../compartido/puente'
 import { primeraFrase } from '../../compartido/versiones'
 import { type AvisoEjecutar, type AvisoSesion, tarjetaDe, usarEstado } from '../estado'
 import { armarProyecto } from '../secciones/proyecto/ejecutar'
@@ -157,18 +157,55 @@ function FilaArranque({ r }: { r: RenglonArranqueVista }) {
 }
 
 /**
- * AR-4: lo que hizo el arranque mientras no estaba el usuario. No se va solo: es lo primero que ve al volver; Listo lo
- * cierra y lo que mostró no vuelve a aparecer.
+ * Un renglón de una app que se armó sola mientras no estaba el usuario (frente Abrir, T-86): «Alfa  04:10  se
+ * actualizó  Abrir» o, en rojo, «no se pudo actualizar» (como la Señal de la tarjeta) con el motivo al pasar el mouse.
  */
-function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
+function FilaArmado({ a }: { a: ArmadoSinUsarVista }) {
+  const abrirProyecto = usarEstado((s) => s.abrirProyecto)
+  const fallo = a.resultado === 'falla'
+  return (
+    <li>
+      <b>{a.nombre}</b>
+      <span className="cuando">{horaCorta(a.cuando)}</span>
+      <span className={fallo ? 'fallo' : undefined} title={fallo ? (a.motivo ?? undefined) : undefined}>
+        {fallo ? 'no se pudo actualizar' : 'se actualizó'}
+      </span>
+      <button
+        type="button"
+        className="boton sin-fondo chico"
+        aria-label={`Abrir ${a.nombre}`}
+        onClick={() => abrirProyecto(a.ruta)}
+      >
+        Abrir
+      </button>
+    </li>
+  )
+}
+
+/** Un renglón del aviso al volver: un momento del arranque o del avance solo, o una app que se armó sola. */
+type RenglonAviso = { tipo: 'arranque'; r: RenglonArranqueVista } | { tipo: 'armado'; a: ArmadoSinUsarVista }
+
+const cuandoDe = (x: RenglonAviso) => (x.tipo === 'arranque' ? x.r.cuando : x.a.cuando)
+
+/**
+ * AR-4: lo que hizo el arranque mientras no estaba el usuario, con las apps que se armaron solas (T-86). No se va solo:
+ * es lo primero que ve al volver; Listo lo cierra y lo que mostró no vuelve a aparecer.
+ */
+function AvisoArranque({ filas, armados }: { filas: RenglonArranqueVista[]; armados: ArmadoSinUsarVista[] }) {
   const [cerrado, setCerrado] = useState<number | null>(null)
   const [todas, setTodas] = useState(false)
-  const ultimo = filas.at(-1)
-  if (!ultimo || (cerrado !== null && cerrado >= ultimo.cuando)) return null
-  const mostradas = todas ? filas : filas.slice(-FILAS_ARRANQUE)
-  const resto = filas.length - mostradas.length
-  // Rojo si una conversación falló; ámbar si dejó preguntas o algo no arrancó.
-  const falla = filas.some((r) => r.proyecto?.estado === 'error' && !r.agotado)
+  const renglones: RenglonAviso[] = [
+    ...filas.map((r) => ({ tipo: 'arranque' as const, r })),
+    ...armados.map((a) => ({ tipo: 'armado' as const, a })),
+  ].sort((x, y) => cuandoDe(x) - cuandoDe(y))
+  const ultimo = renglones.at(-1)
+  if (!ultimo || (cerrado !== null && cerrado >= cuandoDe(ultimo))) return null
+  const mostradas = todas ? renglones : renglones.slice(-FILAS_ARRANQUE)
+  const resto = renglones.length - mostradas.length
+  // Rojo si una conversación o un armado falló; ámbar si dejó preguntas o algo no arrancó.
+  const falla =
+    filas.some((r) => r.proyecto?.estado === 'error' && !r.agotado) ||
+    armados.some((a) => a.resultado === 'falla')
   const espera = filas.some((r) => !r.proyecto || r.proyecto.preguntas > 0 || r.agotado)
   return (
     <div
@@ -180,9 +217,13 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
       <Icono nombre={falla ? 'error' : espera ? 'espera' : 'check'} />
       <b className="t">Mientras no estabas</b>
       <ul className="renglones-arranque">
-        {mostradas.map((r) => (
-          <FilaArranque key={r.cuando} r={r} />
-        ))}
+        {mostradas.map((x) =>
+          x.tipo === 'arranque' ? (
+            <FilaArranque key={`r${x.r.cuando}`} r={x.r} />
+          ) : (
+            <FilaArmado key={`a${x.a.cuando}${x.a.ruta}`} a={x.a} />
+          ),
+        )}
       </ul>
       <div className="pie">
         {resto > 0 && !todas && (
@@ -199,8 +240,9 @@ function AvisoArranque({ filas }: { filas: RenglonArranqueVista[] }) {
           type="button"
           className="boton principal chico"
           onClick={() => {
-            setCerrado(ultimo.cuando)
-            void window.iridium.arranqueVisto(ultimo.cuando)
+            const hasta = cuandoDe(ultimo)
+            setCerrado(hasta)
+            void window.iridium.arranqueVisto(hasta)
           }}
         >
           Listo
@@ -358,6 +400,7 @@ function AvisoApagar() {
 export function Avisos() {
   const avisos = usarEstado((s) => s.avisos)
   const delArranque = usarEstado((s) => s.arranque?.aviso) ?? []
+  const armados = usarEstado((s) => s.arranque?.armados) ?? []
   const quitar = usarEstado((s) => s.quitarAviso)
   const deEjecutar = usarEstado((s) => s.avisoEjecutar)
   const [novedades, novedadesVistas] = useNovedades()
@@ -378,12 +421,22 @@ export function Avisos() {
     window.addEventListener('keydown', alTeclado)
     return () => window.removeEventListener('keydown', alTeclado)
   }, [avisos, quitar])
-  if (avisos.length === 0 && delArranque.length === 0 && !deEjecutar && !novedades && !apagar) return null
+  if (
+    avisos.length === 0 &&
+    delArranque.length === 0 &&
+    armados.length === 0 &&
+    !deEjecutar &&
+    !novedades &&
+    !apagar
+  )
+    return null
   return (
     <section className="avisos" aria-label="Avisos de las sesiones" style={{ right: ancho + 12 }}>
       {apagar && <AvisoApagar />}
       {novedades && <AvisoNovedades n={novedades} listo={novedadesVistas} />}
-      {delArranque.length > 0 && <AvisoArranque filas={delArranque} />}
+      {(delArranque.length > 0 || armados.length > 0) && (
+        <AvisoArranque filas={delArranque} armados={armados} />
+      )}
       {avisos.map((a) => (
         <Aviso key={a.id} a={a} />
       ))}

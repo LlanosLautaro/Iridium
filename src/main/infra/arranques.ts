@@ -37,6 +37,16 @@ const Renglon = z.object({
 })
 export type RenglonArranque = z.infer<typeof Renglon>
 
+/** Una app que se armó sola con Iridium sin usar (frente Abrir, T-86): el aviso al volver la cuenta. */
+const Armado = z.object({
+  cuando: z.number(),
+  ruta: z.string(),
+  nombre: z.string(),
+  resultado: z.enum(['ok', 'falla']),
+  motivo: z.string().optional().catch(undefined),
+})
+export type ArmadoSinUsar = z.infer<typeof Armado>
+
 const Archivo = z.object({
   version: z.literal(1),
   /** Hasta cuándo ya se mostró en el aviso al volver (Listo). */
@@ -44,10 +54,12 @@ const Archivo = z.object({
   /** El momento que estaba programado: si al abrir pasó hace poco (el reinicio de Actualizar solo), se hace. */
   programado: z.number().nullable().catch(null),
   momentos: z.array(Renglon.catch(() => null as unknown as RenglonArranque)).catch([]),
+  /** Lo que se armó solo mientras no estaba el usuario; falta en los archivos de antes. */
+  armados: z.array(Armado.catch(() => null as unknown as ArmadoSinUsar)).catch([]),
 })
 export type DatosArranques = z.infer<typeof Archivo>
 
-const VACIO: DatosArranques = { version: 1, vistoHasta: null, programado: null, momentos: [] }
+const VACIO: DatosArranques = { version: 1, vistoHasta: null, programado: null, momentos: [], armados: [] }
 
 export class ArchivoArranques {
   private actual: DatosArranques | null = null
@@ -58,7 +70,9 @@ export class ArchivoArranques {
   async leer(): Promise<DatosArranques> {
     if (this.actual) return this.actual
     const leido = await leerDatos(this.archivo, (t) => Archivo.parse(JSON.parse(t)))
-    this.actual = leido ? { ...leido, momentos: leido.momentos.filter(Boolean) } : { ...VACIO }
+    this.actual = leido
+      ? { ...leido, momentos: leido.momentos.filter(Boolean), armados: leido.armados.filter(Boolean) }
+      : { ...VACIO }
     return this.actual
   }
 
@@ -67,6 +81,13 @@ export class ArchivoArranques {
     const d = await this.leer()
     const desde = r.cuando - DIAS_GUARDADOS * DIA
     await this.guardar({ momentos: [...d.momentos.filter((m) => m.cuando >= desde), r] })
+  }
+
+  /** Suma un armado hecho sin el usuario y deja solo los de los últimos 7 días. */
+  async anotarArmado(a: ArmadoSinUsar): Promise<void> {
+    const d = await this.leer()
+    const desde = a.cuando - DIAS_GUARDADOS * DIA
+    await this.guardar({ armados: [...d.armados.filter((m) => m.cuando >= desde), a] })
   }
 
   /** Cambia el renglón de `cuando` (lo gastado, al terminar la sesión del avance solo). */

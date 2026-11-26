@@ -104,6 +104,32 @@ export function pendienteAlAbrir(programado: number | null, ahora: number): bool
 }
 
 /**
+ * Si un armado que terminó va al aviso al volver (T-86): el que salió bien o falló con Iridium sin usar hace 5 minutos o
+ * más. «ocupada» (la abrieron mientras se armaba) se reintenta, no se cuenta.
+ */
+export function armadoParaElAviso(resultado: 'ok' | 'falla' | 'ocupada', segundosSinUsar: number): boolean {
+  return resultado !== 'ocupada' && segundosSinUsar >= SIN_USAR_PARA_EL_AVISO_S
+}
+
+/**
+ * Las apps que se armaron solas y el aviso al volver no mostró (frente Abrir, T-86): la última de cada una (si se armó
+ * dos veces de noche, cuenta cómo quedó), del más viejo al más nuevo.
+ */
+export function armadosParaElAviso<A extends { cuando: number; ruta: string }>(
+  armados: readonly A[],
+  vistoHasta: number | null,
+): A[] {
+  const ultimo = new Map<string, A>()
+  for (const a of armados) {
+    if (a.cuando <= (vistoHasta ?? Number.NEGATIVE_INFINITY)) continue
+    const clave = a.ruta.toLowerCase()
+    const antes = ultimo.get(clave)
+    if (!antes || antes.cuando <= a.cuando) ultimo.set(clave, a)
+  }
+  return [...ultimo.values()].sort((a, b) => a.cuando - b.cuando)
+}
+
+/**
  * Los renglones del aviso al volver (D-149 › 8), del más viejo al más nuevo: los que todavía no se mostraron, que
  * pasaron con Iridium sin usar hace 5 minutos o más y que dicen algo (arrancó, o no pudo por la semana, la sesión de
  * Claude o el uso sin leer). Lo del avance solo (FS-5) entra siempre: lo tomó porque el usuario no estaba.

@@ -64,6 +64,7 @@ import { leerSeccionSkills, proyectosConFramework, skillsDelProyecto } from '../
 import { trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
+import { armadoParaElAviso } from '../core/arranque'
 import { type Cual, rutasIridium } from '../core/carpeta-iridium'
 import { pedidoEmpezar, pedidoOtraVersion, tieneCodigo } from '../core/diseno/pedidos'
 import { carpetaVersiones, proximaLetra, versionesDe } from '../core/diseno/versiones'
@@ -431,6 +432,24 @@ export function registrarPuente(s: Servicios): Puente {
         ahora: Date.now,
         excluida: datosArmados.excluida,
         alCambio: (e) => enviar(CANALES.actualizacionCambio, e),
+        // Lo que se armó con Iridium sin usar va al aviso al volver (T-86).
+        alTerminar: (ruta, u) => {
+          if (u.resultado === 'ocupada' || !armadoParaElAviso(u.resultado, s.segundosSinUso())) return
+          const t =
+            ultimaLista?.tipo === 'lista' ? ultimaLista.proyectos.find((p) => p.ruta === ruta) : undefined
+          void s.arranques
+            .anotarArmado({
+              cuando: u.cuando,
+              ruta,
+              nombre: t?.nombre ?? basename(ruta),
+              resultado: u.resultado,
+              ...(u.motivo ? { motivo: u.motivo } : {}),
+            })
+            .then(
+              () => avisarArranque(),
+              () => {},
+            )
+        },
         registrar: (t) => s.registro.escribir(t),
       })
     : null

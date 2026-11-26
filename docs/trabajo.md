@@ -398,8 +398,9 @@ Estado: hecho · Fecha: 2026-11-19 · Origen: R-93
 En la Bandeja de entrada, la Señal «Respondida, sin procesar» de una pregunta va en verde (`--bien`), como lo que ya está hecho del lado del usuario. Revisar que no choque con D-108 (sin ruido) ni con la Señal en la tarjeta. Hecho el 2026-11-21: la Señal va en verde, también «Postergada, sin procesar» (el usuario ya hizo su parte); sin ruido, porque es una sola Señal por pregunta.
 
 ## T-86 — El aviso «Mientras no estabas» suma las apps que se armaron solas
-Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: D-156
+Estado: hecho · Frente: Abrir · Fecha: 2026-11-19 · Origen: D-156
 Lo que el diseño técnico dejó como «Should, más adelante»: al volver, el aviso del Arranque dice también qué apps se armaron de noche y cuáles fallaron.
+Hecho el 2026-11-26: el aviso «Mientras no estabas» suma un renglón por app que se armó sola mientras no estabas («se actualizó» o, en rojo, «no se pudo actualizar» con el motivo al pasar el mouse); se prueba en Q-308.
 
 ## T-87 — Que la app instalada en otra PC también se ponga al día
 Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: Q-222 · Idea: IA
@@ -690,3 +691,7 @@ En MI PC, `docs/scripts.md` tenía `**Ejecutar:** \`powershell … compactar-wsl
 ## T-143 — Un catálogo de estilos y de movimiento para los design systems
 Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-299
 Una colección que crece con el tiempo y que cualquier proyecto puede usar: estilos visuales (vidrio esmerilado y sus variantes, entre otros) y un lenguaje de movimiento de interfaces futuristas (FUI): pulso, brillo, parpadeo, barrido de radar, luz que cruza, anillos que giran, líneas de pantalla, «glitch», datos que corren, entradas y salidas, como tokens y piezas reutilizables, no atados a un componente. Pulido (D-197) es el primer uso: sus tokens de acento, brillo y duraciones serían la base. Iría en el framework (`referencias/06-ui.md` y sus plantillas), para que la IA lo use en los otros proyectos.
+
+## T-144 — La prueba de las tarjetas falla a veces al borrar sus datos
+Estado: pendiente · Fecha: 2026-11-26 · Origen: T-86 · Tamaño: chico, sola
+Con la suite entera de Playwright, `r7-r8-proyectos.spec.ts` › el clic derecho en una tarjeta (R-7) falló una vez: al leer la ficha, el borrado de la carpeta de datos temporal chocó con un archivo que Electron todavía tenía abierto (EBUSY). Sola, pasa. Que la prueba espere a poder borrarla, como la del ayudante de CO-I2.

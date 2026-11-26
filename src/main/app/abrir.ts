@@ -66,6 +66,8 @@ export interface DependenciasArmados {
   /** La carpeta del código de Iridium: tiene su propio armado (D-122). */
   excluida: string | null
   alCambio(estados: Record<string, ActualizacionProyecto>): void
+  /** Terminó un armado: el aviso al volver cuenta los que pasaron sin el usuario (T-86). */
+  alTerminar?(ruta: string, ultimo: UltimoArmado): void
   registrar(texto: string): void
   limiteMs?: number
 }
@@ -273,6 +275,7 @@ export class VigiaArmados {
     if (resultado === 'ok') cambio.commit = commit
     const nuevo = await this.d.archivo.cambiar(ruta, cambio)
     this.d.registrar(`Abrir: ${ruta} terminó de armar: ${resultado}${motivo ? ` — ${motivo}` : ''}`)
+    this.d.alTerminar?.(ruta, ultimo)
     const esperan = this.esperando.get(ruta) ?? []
     this.esperando.delete(ruta)
     for (const listo of esperan) listo(resultado)
