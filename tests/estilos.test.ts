@@ -276,6 +276,35 @@ describe('el control de estilos (DI-I3)', () => {
     expect(malas).toEqual([])
   })
 
+  it('lo que late sin parar mueve solo transform y opacity (Pulido, calidad): no redibuja la pantalla en cada cuadro', () => {
+    const malas: string[] = []
+    const hojas = [
+      ...SECCIONES.map((f) => join(ESTILOS, f)),
+      join(ESTILOS, 'piezas.css'),
+      join(RAIZ, 'docs/diseno/piezas.css'),
+    ]
+    for (const ruta of hojas) {
+      const css = sinComentarios(texto(ruta))
+      for (const m of css.matchAll(/animation:\s*([\w-]+)[^;}]*\binfinite\b/g)) {
+        const nombre = m[1] ?? ''
+        const inicio = css.indexOf(`@keyframes ${nombre} {`)
+        if (inicio < 0) continue
+        // El bloque del @keyframes, hasta su llave de cierre.
+        let nivel = 0
+        let fin = css.indexOf('{', inicio)
+        for (; fin < css.length; fin++) {
+          if (css[fin] === '{') nivel++
+          else if (css[fin] === '}' && --nivel === 0) break
+        }
+        const props = [...css.slice(inicio, fin).matchAll(/([a-z-]+)\s*:/g)].map((p) => p[1])
+        for (const p of props)
+          if (p !== 'transform' && p !== 'opacity')
+            malas.push(`${ruta.slice(RAIZ.length + 1)} › ${nombre}: ${p}`)
+      }
+    }
+    expect([...new Set(malas)]).toEqual([])
+  })
+
   it('las duraciones del movimiento salen de los tokens (D-197): ninguna hoja escribe .12s ni 0.15s', () => {
     const malos: string[] = []
     for (const f of [...SECCIONES, 'piezas.css'])

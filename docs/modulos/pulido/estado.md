@@ -14,7 +14,7 @@
 | 5. Diseño técnico | hecho | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | hecho (la maqueta viva, probada en Q-302; el naranja, Q-303) | `docs/diseno/pantallas/pulido.html` |
 | 7. Construcción | en curso (PU-I1 y PU-I2 hechas; se prueban juntas en Q-307) | este archivo |
-| 8. Calidad | pendiente | este archivo |
+| 8. Calidad | en curso (medida el 2026-11-26: el movimiento no pone lenta la app; falta Q-307 para cerrarla) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
@@ -27,7 +27,7 @@ PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los col
 - [x] Color y movimiento en toda la app: el acento en lo activo, las tarjetas, el mapa que late, «corriendo», las casillas y lo que entra (PU-I1)
 - [x] Elegir el acento en Ajustes y las pestañas que se corren al arrastrar una (PU-I2)
 - [ ] Probarlo en la app (Q-307, chico)
-- [ ] Medir la calidad: la app no se pone lenta con el movimiento (chico, sola)
+- [x] Medir la calidad: la app no se pone lenta con el movimiento
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -42,6 +42,13 @@ PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los col
 | PU-I2 | El acento en Ajustes › Apariencia y las pestañas de la barra que se corren al arrastrar | hecho (2026-11-26; se prueba con PU-I1 en Q-307) |
 
 ## Log de iteraciones
+### Calidad: el movimiento no pone lenta la app — 2026-11-26 (el avance solo)
+- **Herramienta nueva, `tools/medir-movimiento.ts`:** abre la app de `pnpm build` con el motor falso y una carpeta armada en una temporal (los docs de Iridium como Alfa y doce proyectos de muestra) y mide cada pantalla con el movimiento y sin él: cuadros por segundo, el cuadro más largo y el procesador de toda la app; anota qué animaciones corren y qué mueven.
+- **Antes del arreglo:** los cuadros, iguales con y sin movimiento (144–145 por segundo, el peor de 7 ms) en el inicio, Frentes con el paso que late, Frentes con un script corriendo y Docs desplazándose. El procesador en reposo: 0 % quieta, 1 % con el radar del Mapa, 2,4–2,9 % con «corriendo». Una de las cuatro animaciones que no paran, la luz que cruza «corriendo», movía el fondo y redibujaba la barra en cada cuadro.
+- **Arreglo:** la luz es ahora una franja que se corre y se desvanece (solo `transform` y `opacity`, como el radar y el punto que late), en la app y en la pieza del design system; se ve igual. Con «corriendo», el procesador bajó a 1,2 %; los cuadros, iguales.
+- El radar del Mapa no corre fuera de Frentes (lo que no se ve no late). La ventana escondida o minimizada la frena Chromium.
+- **Prueba nueva** en `tests/estilos.test.ts`: lo que late sin parar mueve solo `transform` y `opacity` (falla con la luz vieja). Vitest 1120 (1 omitida), Playwright de las consolas y de Frentes, typecheck y lint en verde.
+
 ### PU-I2 — 2026-11-26
 - **El acento en Ajustes › Apariencia**, arriba del ancho de lectura: Cian (el que viene), Verde, Azul y Violeta, cada uno con su muestra de color (la muestra es un estado nuevo de los Filtros, PZ-6, en la maqueta y en la app). Cambia en el momento en toda la app y se recuerda (la preferencia `acento`; una rota vuelve a cian). La app pone `--acento` en la raíz; el brillo y el fondo tenue salen de ahí.
 - **Las pestañas de la barra de proyectos se corren** al arrastrar una, como en la maqueta: la arrastrada sigue al mouse en el acento con su brillo, sin salirse de la barra; las que pasa se corren a dejarle lugar; al soltar queda ahí y el orden se guarda como antes (R-102). Escape la vuelve a su lugar. Arrastra recién pasados 5 px, así un clic sigue eligiendo la pestaña, y el clic al soltar no la abre. Reemplaza al arrastre de Windows, que mostraba una copia fantasma y una raya.
@@ -57,5 +64,5 @@ PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los col
 - La maqueta `pulido.html` usa ahora las piezas (solo le queda lo propio de la muestra). En `.impeccable/config.json`, el brillo, el pulso y la luz quedan permitidos en las piezas, el marco y las consolas, como en la maqueta (Q-299, Q-300).
 
 ## Próximo paso
-Con Q-307 respondida: lo que vuelva sin marcar, primero; si no, la calidad (medir con `tools/medir.ts` que la app no se pone lenta con el movimiento) y cerrar el frente.
-**Leer antes:** `modulos/pulido/diseno-tecnico.md` › Pruebas.
+Con Q-307 respondida: lo que vuelva sin marcar, primero; si no, cerrar el frente (la calidad ya está medida: el movimiento no pone lenta la app).
+**Leer antes:** este archivo › Log de iteraciones › Calidad.
