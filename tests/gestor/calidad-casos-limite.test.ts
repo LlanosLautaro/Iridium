@@ -5,21 +5,19 @@ import { mkdir, mkdtemp, readdir, readFile, rm, symlink, writeFile } from 'node:
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import type { Vista } from '../../src/compartido/tipos'
-import { listarProyectos } from '../../src/main/app/casos'
+import type { ListaProyectos } from '../../src/compartido/puente'
 import { crearProyecto } from '../../src/main/app/creacion'
-import { guardarProyecto } from '../../src/main/app/edicion'
+import { cambiarEstadoProyecto } from '../../src/main/app/edicion'
 import { ejecutarEliminacion, prepararEliminacion } from '../../src/main/app/eliminacion'
+import { listarProyectos } from '../../src/main/app/proyectos'
 import { leerGuia } from '../../src/main/core/guia'
 import { leerMetadatos } from '../../src/main/core/metadatos'
-import { calcularUltimaActividad } from '../../src/main/infra/actividad'
 import { borrarDefinitivamente } from '../../src/main/infra/eliminacion'
 
 let base: string
 let raiz: string
 
-const entorno = () => ({ raiz, rutaAbierta: undefined, abrirCarpeta: async () => {} })
-const proyectos = (v: Vista) => (v.tipo === 'lista' ? v.secciones.flatMap((s) => s.proyectos) : [])
+const proyectos = (v: ListaProyectos) => (v.tipo === 'lista' ? v.proyectos : [])
 
 beforeEach(async () => {
   base = await mkdtemp(join(tmpdir(), 'gestor-limite-'))
@@ -42,42 +40,21 @@ describe('nombres de carpeta', () => {
 
   it('lista, clasifica y guarda proyectos con nombres raros', async () => {
     for (const n of nombres) await mkdir(join(raiz, n))
-    const v = await listarProyectos(entorno())
+    const v = await listarProyectos(raiz)
     expect(
       proyectos(v)
         .map((p) => p.nombre)
         .sort(),
     ).toEqual([...nombres].sort())
-    for (const n of nombres) {
-      const r = await guardarProyecto(raiz, join(raiz, n), {
-        descripcion: `Prueba de ${n.slice(0, 50)}`,
-        estado: 'idea',
-        etiquetas: ['ñ', '🚀'],
-        icono: null,
-        reemplazadoPor: null,
-      })
-      expect(r).toEqual({ ok: true })
-    }
-    const v2 = await listarProyectos(entorno())
+    for (const n of nombres)
+      expect(await cambiarEstadoProyecto(raiz, join(raiz, n), 'idea')).toEqual({ ok: true })
+    const v2 = await listarProyectos(raiz)
     expect(proyectos(v2).every((p) => p.estado === 'idea')).toBe(true)
   })
 
   it('crea un proyecto nuevo con acentos y emoji', async () => {
     expect(await crearProyecto(raiz, '  Ñoño 🚀  ')).toMatchObject({ ok: true, nombre: 'Ñoño 🚀' })
     expect(await readdir(raiz)).toEqual(['Ñoño 🚀'])
-  })
-
-  it('un proyecto con datos referencia a otro con nombre raro como reemplazo', async () => {
-    await mkdir(join(raiz, 'Viejo'))
-    await mkdir(join(raiz, 'Nuevo #2 (ñ)'))
-    const r = await guardarProyecto(raiz, join(raiz, 'Viejo'), {
-      descripcion: 'Se rescata.',
-      estado: 'en-rescate',
-      etiquetas: [],
-      icono: null,
-      reemplazadoPor: 'Nuevo #2 (ñ)',
-    })
-    expect(r).toEqual({ ok: true })
   })
 })
 
@@ -101,32 +78,23 @@ describe('.proyecto.json roto o extraño', () => {
     })
   }
 
-  it('una descripción enorme (1 MB) se lee igual; guardar la rechaza por larga', async () => {
+  it('una descripción enorme (1 MB) se lee igual', () => {
     const enorme = 'a'.repeat(1_000_000)
     expect(leerMetadatos(JSON.stringify({ version: 1, estado: 'idea', descripcion: enorme })).tipo).toBe('ok')
-    await mkdir(join(raiz, 'Alfa'))
-    const r = await guardarProyecto(raiz, join(raiz, 'Alfa'), {
-      descripcion: enorme,
-      estado: 'idea',
-      etiquetas: [],
-      icono: null,
-      reemplazadoPor: null,
-    })
-    expect(r).toMatchObject({ ok: false, errores: { descripcion: expect.any(String) } })
   })
 
   it('un .proyecto.json que es una carpeta no rompe la lista', async () => {
     await mkdir(join(raiz, 'Alfa', '.proyecto.json'), { recursive: true })
     await mkdir(join(raiz, 'Beta'))
-    const v = await listarProyectos(entorno())
+    const v = await listarProyectos(raiz)
     expect(proyectos(v)).toHaveLength(2)
     expect(proyectos(v).find((p) => p.nombre === 'Alfa')?.problema).toBe('no se pudo leer el archivo')
   })
 
-  it('guardar sobre un archivo dañado lo reemplaza solo al guardar', async () => {
+  it('listar no reescribe un archivo dañado', async () => {
     await mkdir(join(raiz, 'Alfa'))
     await writeFile(join(raiz, 'Alfa', '.proyecto.json'), '{roto')
-    await listarProyectos(entorno())
+    await listarProyectos(raiz)
     expect(await readFile(join(raiz, 'Alfa', '.proyecto.json'), 'utf8')).toBe('{roto')
   })
 })
@@ -143,14 +111,6 @@ describe('docs/estado.md raro', () => {
 })
 
 describe('enlaces y junctions de Windows', () => {
-  it('la última actividad no sigue un enlace que apunta a la carpeta padre (no hay bucle)', async () => {
-    const p = join(raiz, 'Alfa')
-    await mkdir(p)
-    await writeFile(join(p, 'a.txt'), 'x')
-    await symlink(raiz, join(p, 'bucle'), 'junction')
-    expect(await calcularUltimaActividad(p)).toEqual(expect.any(Number))
-  })
-
   it('borrar un node_modules con un enlace adentro no borra el destino del enlace', async () => {
     const afuera = join(base, 'afuera')
     await mkdir(afuera)
@@ -192,18 +152,18 @@ describe('raíces extrañas', () => {
   it('una raíz que es un archivo muestra el error, sin lanzar', async () => {
     const archivo = join(base, 'no-es-carpeta.txt')
     await writeFile(archivo, 'x')
-    expect(await listarProyectos({ ...entorno(), raiz: archivo })).toMatchObject({ tipo: 'error' })
+    expect(await listarProyectos(archivo)).toMatchObject({ tipo: 'error' })
   })
 
   it('una raíz vacía da una lista sin proyectos', async () => {
-    const v = await listarProyectos(entorno())
+    const v = await listarProyectos(raiz)
     expect(v.tipo).toBe('lista')
     expect(proyectos(v)).toHaveLength(0)
   })
 
   it('una raíz con barra final o barras invertidas funciona igual', async () => {
     await mkdir(join(raiz, 'Alfa'))
-    const v = await listarProyectos({ ...entorno(), raiz: `${raiz.replace(/\//g, '\\')}\\` })
+    const v = await listarProyectos(`${raiz.replace(/\//g, '\\')}\\`)
     expect(proyectos(v).map((p) => p.nombre)).toEqual(['Alfa'])
   })
 })
@@ -221,7 +181,7 @@ describe('volumen', () => {
     let ms = Number.POSITIVE_INFINITY
     for (let i = 0; i < 3; i++) {
       const inicio = performance.now()
-      const v = await listarProyectos(entorno())
+      const v = await listarProyectos(raiz)
       ms = Math.min(ms, performance.now() - inicio)
       expect(proyectos(v)).toHaveLength(300)
     }

@@ -12,7 +12,7 @@ vi.mock('node:fs/promises', async (original) => {
 })
 
 const { escribirMetadatos } = await import('../../src/main/infra/escritura')
-const { guardarProyecto } = await import('../../src/main/app/edicion')
+const { cambiarEstadoProyecto } = await import('../../src/main/app/edicion')
 
 let raiz: string
 let carpeta: string
@@ -57,21 +57,14 @@ describe('escribirMetadatos', () => {
   })
 })
 
-describe('guardarProyecto con el archivo de solo lectura', () => {
+describe('cambiar el estado con el archivo de solo lectura', () => {
   it('avisa con un mensaje claro y no cambia el archivo', async () => {
     await writeFile(join(carpeta, '.proyecto.json'), '{"version":1,"estado":"idea"}')
     await chmod(join(carpeta, '.proyecto.json'), 0o444)
-    const r = await guardarProyecto(raiz, carpeta, {
-      descripcion: 'Nueva.',
-      estado: 'pausado',
-      etiquetas: [],
-      icono: null,
-      reemplazadoPor: null,
-    })
+    const r = await cambiarEstadoProyecto(raiz, carpeta, 'pausado')
     expect(r).toEqual({
       ok: false,
       mensaje: 'No se pudo guardar: la carpeta es de solo lectura o está en uso.',
-      errores: {},
     })
     expect(await readFile(join(carpeta, '.proyecto.json'), 'utf8')).toBe('{"version":1,"estado":"idea"}')
     expect(await readdir(carpeta)).toEqual(['.proyecto.json'])

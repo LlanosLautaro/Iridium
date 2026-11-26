@@ -427,9 +427,9 @@ Las ideas y los pendientes están en `trabajo.md`.
 ## Deuda técnica
 | Qué | Por qué se aceptó | Cuándo resolverla |
 |---|---|---|
-| Del Gestor se copió también lo que el Centro todavía no usa (editar con el formulario y eliminar proyectos; la lista por secciones de `app/casos.ts`). Crear, cambiar el estado, archivar y el ícono ya se usan (D-089) | Las pruebas del Gestor se cruzan entre esas partes; copiarlo entero deja las 217 pasando sin reescribir pruebas. Nada de eso está conectado a la ventana | Cuando el Centro edite fichas (después del MVP) se usa; si no, se borra al cerrar el MVP |
+| ~~Del Gestor se copió también lo que el Centro todavía no usa (editar con el formulario y eliminar proyectos; la lista por secciones de `app/casos.ts`). Crear, cambiar el estado, archivar y el ícono ya se usan (D-089)~~ | Las pruebas del Gestor se cruzan entre esas partes; copiarlo entero deja las 217 pasando sin reescribir pruebas. Nada de eso está conectado a la ventana | Resuelta el 2026-11-26 (T-41): Eliminar ya se usa (R-10); se borraron la lista por secciones (`app/casos.ts`), el formulario de edición, la última actividad vieja (`infra/actividad.ts`) y sus tipos, y los casos límite de la lista pasaron a la lista de la grilla |
 | ~~La prueba del receptor de la Revisión elige un puerto al azar (47400 a 47899) y falló una vez en la corrida completa (pasa sola)~~ | Pasó en cuatro corridas seguidas; no afecta a la app | Resuelta en el hito 8, tanda 1: el receptor acepta el puerto 0 y dice cuál tomó (`08-calidad.md` › Defectos 2) |
-| La ventana no se minifica (680 KB) | Es una app local que carga de disco; no cambia nada para el usuario | Si el arranque pasa de 2 s |
+| La ventana no se minifica (680 KB; 1,6 MB el 2026-11-26) | Es una app local que carga de disco; no cambia nada para el usuario. Minificada, la Revisión de Iridium perdería los nombres de los componentes | Si el arranque pasa de 2 s. Medido el 2026-11-26 (T-41), con 30 proyectos y el motor falso: la ventana a 0,85 s y las tarjetas a 1,1 s; sigue sin minificar |
 
 ## Checklist de salida (del MVP)
 Cerrado el 2026-11-01; la verificación integral sigue en `08-calidad.md`.

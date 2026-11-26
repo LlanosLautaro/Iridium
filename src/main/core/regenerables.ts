@@ -1,6 +1,6 @@
 // Copiado de la app anterior de proyectos (D-026).
 // Carpetas regenerables (D-006, D-013, research/carpetas-regenerables.md).
-// Para la última actividad alcanza con el nombre: solo se leen fechas, no se borra nada.
+// Para recorrer los documentos sin entrar en lo que se regenera alcanza con el nombre: no se borra nada.
 // Para eliminar hace falta además el archivo marcador de cada ecosistema (esRegenerable).
 export const CARPETAS_SIN_ACTIVIDAD = new Set([
   '.git',
@@ -22,18 +22,6 @@ export const CARPETAS_SIN_ACTIVIDAD = new Set([
   'venv',
   '.vs',
 ])
-
-/**
- * Archivos que tampoco cuentan: los de la ficha (`.proyecto.json`, `.proyecto-icono.svg`…).
- * Editar la ficha no es trabajar en el proyecto.
- */
-export function archivoCuentaParaActividad(nombreArchivo: string): boolean {
-  return !nombreArchivo.startsWith('.proyecto')
-}
-
-export function cuentaParaActividad(nombreCarpeta: string): boolean {
-  return !CARPETAS_SIN_ACTIVIDAD.has(nombreCarpeta)
-}
 
 /** Lo que se averiguó en disco de una carpeta cuyo nombre está en la lista cerrada. */
 export interface HechosCarpeta {

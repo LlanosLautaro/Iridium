@@ -190,8 +190,9 @@ Descartado el 2026-11-25: repetido, lo sigue T-79 (los avisos de `pnpm audit`, q
 No viaja en la app. Se cierra cuando `electron-builder` lo actualice (se mira en cada mantenimiento).
 
 ## T-41 — Deuda: lo copiado del Gestor sin usar y la ventana sin minificar
-Estado: pendiente · Origen: `07-construccion.md` › Deuda técnica · Tamaño: chico, sola
+Estado: hecho (2026-11-26) · Origen: `07-construccion.md` › Deuda técnica · Tamaño: chico, sola
 Lo copiado se usa con C-9 y C-10, o se borra; la ventana se minifica si el arranque pasa de 2 s.
+Hecho el 2026-11-26: se borró lo del Gestor que nada usaba (la lista por secciones, el formulario de edición, la última actividad vieja y sus pruebas; unas 800 líneas); los casos límite de la lista (nombres raros, fichas rotas, 300 proyectos en menos de 2 s) ahora prueban la lista de la grilla. El arranque tarda 1,1 s hasta ver las tarjetas: la ventana sigue sin minificar (`07-construccion.md` › Deuda técnica).
 
 ## T-42 — Sacar de `carpeta-iridium.ts` el nombre viejo de la carpeta de skills
 Estado: pendiente · Origen: D-082, Q-127 · Tamaño: chico, sola

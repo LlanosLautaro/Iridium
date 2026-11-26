@@ -1,37 +1,20 @@
 // Copiado de la app anterior de proyectos (D-026).
-// Casos de uso de edición (historia 4): guardar el formulario y el cambio rápido de estado.
+// Casos de uso de edición (historia 4): el estado, el archivo y el ícono desde el menú de la tarjeta.
 
-import type { DatosEdicion, ErroresFormulario, Estado } from '../../compartido/tipos'
+import type { Estado } from '../../compartido/tipos'
 import { fechaDelDia } from '../core/creacion'
-import {
-  cambiarArchivado,
-  cambiarEstado,
-  cambiarIcono,
-  mezclarEdicion,
-  serializarMetadatos,
-  validarEdicion,
-} from '../core/edicion'
+import { cambiarArchivado, cambiarEstado, cambiarIcono, serializarMetadatos } from '../core/edicion'
 import type { LecturaMetadatos, Metadatos } from '../core/metadatos'
 import { leerMetadatos, rutaIconoSegura } from '../core/metadatos'
 import { esMismaRuta } from '../core/proyectos'
 import { escribirMetadatos, leerTextoMetadatos } from '../infra/escritura'
-import { existeArchivo, leerCarpetas } from '../infra/raiz'
-
-export type ResultadoGuardar =
-  | { ok: true }
-  | { ok: false; mensaje: string | null; errores: ErroresFormulario }
-
-const fallo = (mensaje: string, errores: ErroresFormulario = {}): ResultadoGuardar => ({
-  ok: false,
-  mensaje,
-  errores,
-})
+import { leerCarpetas } from '../infra/raiz'
 
 /** La ruta tiene que ser una carpeta hija de la raíz: la pestaña nunca puede hacer escribir en otro lado. */
 export async function proyectosDeLaRaiz(raiz: string, ruta: string) {
   const carpetas = await leerCarpetas(raiz)
   const proyecto = carpetas.find((c) => esMismaRuta(c.ruta, ruta))
-  return { proyecto, otros: carpetas.filter((c) => c !== proyecto).map((c) => c.nombre) }
+  return { proyecto }
 }
 
 function mensajeDeEscritura(e: unknown): string {
@@ -40,35 +23,6 @@ function mensajeDeEscritura(e: unknown): string {
     return 'No se pudo guardar: la carpeta es de solo lectura o está en uso.'
   }
   return 'No se pudo guardar el archivo del proyecto.'
-}
-
-export async function guardarProyecto(
-  raiz: string,
-  ruta: string,
-  datos: DatosEdicion,
-): Promise<ResultadoGuardar> {
-  const { proyecto, otros } = await proyectosDeLaRaiz(raiz, ruta)
-  if (!proyecto) return fallo('El proyecto ya no está en la carpeta raíz.')
-
-  const validacion = validarEdicion(datos, proyecto.nombre, otros)
-  if (!validacion.ok) return { ok: false, mensaje: null, errores: validacion.errores }
-  const limpios = validacion.datos
-  if (limpios.icono !== null && !(await existeArchivo(`${proyecto.ruta}/${limpios.icono}`))) {
-    return {
-      ok: false,
-      mensaje: null,
-      errores: { icono: 'La imagen ya no existe en la carpeta del proyecto.' },
-    }
-  }
-
-  try {
-    const texto = await leerTextoMetadatos(proyecto.ruta)
-    const actual = texto === null ? null : leerMetadatos(texto)
-    await escribirMetadatos(proyecto.ruta, serializarMetadatos(mezclarEdicion(actual, texto, limpios)))
-    return { ok: true }
-  } catch (e) {
-    return fallo(mensajeDeEscritura(e))
-  }
 }
 
 export type ResultadoSimple = { ok: true } | { ok: false; mensaje: string }

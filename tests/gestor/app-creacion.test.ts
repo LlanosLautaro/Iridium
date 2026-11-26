@@ -4,8 +4,8 @@ import { mkdir, mkdtemp, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { listarProyectos } from '../../src/main/app/casos'
 import { crearProyecto } from '../../src/main/app/creacion'
+import { listarProyectos } from '../../src/main/app/proyectos'
 import { problemaNombreProyecto } from '../../src/main/core/creacion'
 
 describe('problemaNombreProyecto', () => {
@@ -65,10 +65,9 @@ describe('crearProyecto', () => {
     expect(r).toEqual({ ok: true, ruta: join(raiz, 'Mi idea'), nombre: 'Mi idea' })
     expect((await stat(join(raiz, 'Mi idea'))).isDirectory()).toBe(true)
     expect(await readdir(join(raiz, 'Mi idea'))).toEqual([])
-    const vista = await listarProyectos({ raiz, rutaAbierta: undefined, abrirCarpeta: async () => {} })
-    if (vista.tipo !== 'lista') throw new Error('se esperaba la lista')
-    const sinClasificar = vista.secciones.find((s) => s.id === 'sin-clasificar')
-    expect(sinClasificar?.proyectos.map((p) => p.nombre)).toContain('Mi idea')
+    const lista = await listarProyectos(raiz)
+    if (lista.tipo !== 'lista') throw new Error('se esperaba la lista')
+    expect(lista.proyectos.find((p) => p.nombre === 'Mi idea')?.estado).toBeNull()
   })
 
   it('no pisa una carpeta ni un archivo que ya existen', async () => {
@@ -92,20 +91,5 @@ describe('crearProyecto', () => {
       ok: false,
       mensaje: expect.stringContaining('No se pudo leer la carpeta raíz'),
     })
-  })
-})
-
-describe('raizAbierta', () => {
-  it('indica si la ventana tiene abierta la carpeta raíz', async () => {
-    const raiz = await mkdtemp(join(tmpdir(), 'gestor-'))
-    try {
-      const abrir = async () => {}
-      const conRaiz = await listarProyectos({ raiz, rutaAbierta: `${raiz}\\`, abrirCarpeta: abrir })
-      const sinRaiz = await listarProyectos({ raiz, rutaAbierta: undefined, abrirCarpeta: abrir })
-      expect(conRaiz.tipo === 'lista' && conRaiz.raizAbierta).toBe(true)
-      expect(sinRaiz.tipo === 'lista' && sinRaiz.raizAbierta).toBe(false)
-    } finally {
-      await rm(raiz, { recursive: true, force: true })
-    }
   })
 })
