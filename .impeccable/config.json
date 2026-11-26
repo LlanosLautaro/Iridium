@@ -260,6 +260,60 @@
         ],
         "createdAt": "2026-11-25T22:52:42.772Z",
         "reason": "no es texto que se desplaza: es la luz que cruza «corriendo» mientras corre algo; Q-300 A (D-197), PU-I1"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/novedades-skills.html"
+        ],
+        "createdAt": "2026-11-26T21:00:35.621Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/novedades-skills.html"
+        ],
+        "createdAt": "2026-11-26T21:00:35.839Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/novedades-skills.html"
+        ],
+        "createdAt": "2026-11-26T21:00:36.055Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/novedades-tarjeta.html"
+        ],
+        "createdAt": "2026-11-26T21:00:36.261Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/novedades-tarjeta.html"
+        ],
+        "createdAt": "2026-11-26T21:00:36.475Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/novedades-tarjeta.html"
+        ],
+        "createdAt": "2026-11-26T21:00:36.680Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
       }
     ]
   }
