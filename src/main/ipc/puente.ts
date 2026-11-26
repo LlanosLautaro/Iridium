@@ -84,6 +84,7 @@ import {
   fechaDe,
   finDeArmado,
   gitDeArmado,
+  inicioDeProceso,
   LOG_ARMADO,
   lanzarArmado,
   procesoVivo,
@@ -425,6 +426,7 @@ export function registrarPuente(s: Servicios): Puente {
         lanzar: lanzarArmado,
         fin: finDeArmado,
         vivo: procesoVivo,
+        inicio: inicioDeProceso,
         cortar: cortarArmado,
         abierta: abiertaAhora,
         fechaExe: fechaDe,
@@ -433,7 +435,12 @@ export function registrarPuente(s: Servicios): Puente {
         alCambio: (e) => enviar(CANALES.actualizacionCambio, e),
         // Lo que se armó con Iridium sin usar va al aviso al volver (T-86).
         alTerminar: (ruta, u) => {
-          if (u.resultado === 'ocupada' || !armadoParaElAviso(u.resultado, s.segundosSinUso())) return
+          if (
+            u.resultado === 'ocupada' ||
+            u.reintentar ||
+            !armadoParaElAviso(u.resultado, s.segundosSinUso())
+          )
+            return
           const t =
             ultimaLista?.tipo === 'lista' ? ultimaLista.proyectos.find((p) => p.ruta === ruta) : undefined
           void s.arranques
@@ -991,8 +998,15 @@ export function registrarPuente(s: Servicios): Puente {
     return ejecutarPlan(plan, (r) => shell.openPath(r), abrirEnNavegador, enConsola(carpeta))
   }
   /** Al terminar de armarse, la abre (AB-2): con la versión nueva o, si falló, con la anterior que haya. */
+  const abriendo = new Set<string>()
   const abrirAlTerminar = (carpeta: string, fin: Promise<unknown>): void => {
-    void fin.then(() => ejecutar(carpeta)).catch(() => {})
+    // Ejecutar dos veces mientras se arma la abre una sola (paso 8).
+    if (abriendo.has(carpeta)) return
+    abriendo.add(carpeta)
+    void fin
+      .then(() => ejecutar(carpeta))
+      .catch(() => {})
+      .finally(() => abriendo.delete(carpeta))
   }
   ipcMain.handle(CANALES.ejecutarProyecto, async (_, ruta: unknown): Promise<ResultadoEjecutar> => {
     const carpeta = await proyecto(ruta)

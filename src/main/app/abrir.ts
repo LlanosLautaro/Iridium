@@ -14,6 +14,14 @@ const CADA_MS = 60_000
 const ARMANDO_CADA_MS = 3_000
 /** Con Iridium abierta, un armado se corta a los 10 minutos (D-156 › 6). */
 export const LIMITE_ARMADO_MS = 10 * 60_000
+/**
+ * Entre dos miradas, lo más que cuenta para el límite: un salto más largo es la PC dormida (o Iridium cerrada), y el
+ * armado no corrió en ese rato (paso 8).
+ */
+const SALTO_MAXIMO_MS = 60_000
+/** Un proceso que arrancó más de esto después de anotado el armado es otro con el mismo número. */
+const HOLGURA_INICIO_MS = 5_000
+const SE_CORTO = 'El armado se cortó antes de terminar.'
 
 export type ResultadoArmado = UltimoArmado['resultado']
 
@@ -59,6 +67,8 @@ export interface DependenciasArmados {
   lanzar(carpeta: string, comando: string, cwd: string): Promise<number>
   fin(carpeta: string): Promise<'ok' | 'falla' | null>
   vivo(pid: number): boolean
+  /** Cuándo arrancó ese proceso (ms), o null si no se sabe: para no confundir el armado con otro programa. */
+  inicio?(pid: number): Promise<number | null>
   cortar(pid: number): Promise<void>
   abierta(exe: string): Promise<boolean>
   fechaExe(exe: string): Promise<number | null>
@@ -70,6 +80,11 @@ export interface DependenciasArmados {
   alTerminar?(ruta: string, ultimo: UltimoArmado): void
   registrar(texto: string): void
   limiteMs?: number
+}
+
+/** El commit con que falló el último armado (y no se vuelve a intentar), o null. */
+function fallado(u: UltimoArmado | null): string | null {
+  return u?.resultado === 'falla' && !u.reintentar ? u.commit : null
 }
 
 function igual(a: string, b: string): boolean {
@@ -85,6 +100,10 @@ export class VigiaArmados {
   private pedidos: string[] = []
   private esperando = new Map<string, ((r: ResultadoArmado) => void)[]>()
   private cerrado = false
+  /** Los armados (por su proceso) que se sabe que son nuestros: lanzados o comprobados en esta sesión. */
+  private propios = new Set<number>()
+  /** El tiempo que corrió cada armado con Iridium mirando: la última mirada y lo acumulado. */
+  private corrido = new Map<number, { ultima: number; ms: number }>()
 
   constructor(private readonly d: DependenciasArmados) {}
 
@@ -192,7 +211,7 @@ export class VigiaArmados {
         armado: anotado.commit,
         limpio: git?.limpio ?? false,
         prendida: !apagados.some((a) => igual(a, ruta)),
-        fallo: anotado.ultimo?.resultado === 'falla' ? anotado.ultimo.commit : null,
+        fallo: fallado(anotado.ultimo),
         // Lo más lento al final: solo si lo demás deja armar.
         iaTrabajando: false,
         abierta: false,
@@ -232,7 +251,10 @@ export class VigiaArmados {
     const carpeta = this.d.carpeta(ruta)
     try {
       const pid = await this.d.lanzar(carpeta, plan.comando, plan.cwd)
-      await this.d.archivo.cambiar(ruta, { enCurso: { pid, desde: this.d.ahora(), commit } })
+      const desde = this.d.ahora()
+      this.propios.add(pid)
+      this.corrido.set(pid, { ultima: desde, ms: 0 })
+      await this.d.archivo.cambiar(ruta, { enCurso: { pid, desde, commit } })
       this.d.registrar(`Abrir: arma ${ruta} (${commit?.slice(0, 7) ?? 'sin commit'})`)
     } catch (e) {
       await this.terminar(
@@ -255,13 +277,40 @@ export class VigiaArmados {
         return this.terminar(ruta, en.commit, 'ocupada', 'La app estaba abierta.')
       return this.terminar(ruta, en.commit, 'falla', 'El script de armar terminó con error.')
     }
-    if (!this.d.vivo(en.pid))
-      return this.terminar(ruta, en.commit, 'falla', 'El armado se cortó antes de terminar.')
-    if (this.d.ahora() - en.desde > (this.d.limiteMs ?? LIMITE_ARMADO_MS)) {
+    if (!this.d.vivo(en.pid) || !(await this.esElArmado(en.pid, en.desde))) {
+      // Se cortó sin culpa del script (la PC se apagó a mitad): se intenta otra vez, una sola con ese commit.
+      const yaSeCorto = a.ultimo?.reintentar === true && a.ultimo.commit === en.commit
+      return yaSeCorto
+        ? this.terminar(ruta, en.commit, 'falla', SE_CORTO)
+        : this.terminar(ruta, en.commit, 'falla', `${SE_CORTO} Se vuelve a intentar.`, true)
+    }
+    if (this.corrio(en.pid) > (this.d.limiteMs ?? LIMITE_ARMADO_MS)) {
       await this.d.cortar(en.pid)
       return this.terminar(ruta, en.commit, 'falla', 'Tardó más de 10 minutos y se cortó.')
     }
     return a
+  }
+
+  /**
+   * Si ese proceso es el armado y no otro programa con el mismo número (después de reiniciar la PC): uno lanzado en
+   * esta sesión lo es; uno anotado de antes, si arrancó antes de anotarlo. Sin saberlo, se lo da por bueno.
+   */
+  private async esElArmado(pid: number, desde: number): Promise<boolean> {
+    if (this.propios.has(pid) || !this.d.inicio) return true
+    const inicio = await this.d.inicio(pid)
+    if (inicio !== null && inicio > desde + HOLGURA_INICIO_MS) return false
+    this.propios.add(pid)
+    return true
+  }
+
+  /** Cuánto corrió el armado con Iridium mirando: lo de la PC dormida o Iridium cerrada no cuenta. */
+  private corrio(pid: number): number {
+    const ahora = this.d.ahora()
+    const c = this.corrido.get(pid) ?? { ultima: ahora, ms: 0 }
+    c.ms += Math.min(Math.max(ahora - c.ultima, 0), SALTO_MAXIMO_MS)
+    c.ultima = ahora
+    this.corrido.set(pid, c)
+    return c.ms
   }
 
   private async terminar(
@@ -269,8 +318,20 @@ export class VigiaArmados {
     commit: string | null,
     resultado: ResultadoArmado,
     motivo?: string,
+    reintentar?: true,
   ): Promise<ArmadoProyecto> {
-    const ultimo: UltimoArmado = { cuando: this.d.ahora(), commit, resultado, ...(motivo ? { motivo } : {}) }
+    const ultimo: UltimoArmado = {
+      cuando: this.d.ahora(),
+      commit,
+      resultado,
+      ...(motivo ? { motivo } : {}),
+      ...(reintentar ? { reintentar } : {}),
+    }
+    const en = (await this.d.archivo.de(ruta)).enCurso
+    if (en) {
+      this.corrido.delete(en.pid)
+      this.propios.delete(en.pid)
+    }
     const cambio: Partial<ArmadoProyecto> = { enCurso: null, ultimo }
     if (resultado === 'ok') cambio.commit = commit
     const nuevo = await this.d.archivo.cambiar(ruta, cambio)
@@ -299,7 +360,11 @@ export class VigiaArmados {
         ultimo: a.ultimo
           ? { cuando: a.ultimo.cuando, resultado: a.ultimo.resultado, motivo: a.ultimo.motivo ?? null }
           : null,
-        fallo: a.enCurso === null && a.ultimo?.resultado === 'falla' && a.ultimo.commit === commit,
+        fallo:
+          a.enCurso === null &&
+          a.ultimo?.resultado === 'falla' &&
+          !a.ultimo.reintentar &&
+          a.ultimo.commit === commit,
       }
     }
     // Lo pedido a un proyecto que ya no se arma solo (se borró la marca) no queda esperando.

@@ -125,6 +125,8 @@ test('se arman solas, de a una: «Actualizando…» y, si falla, «No se pudo ac
   // Alfa termina bien: al día no se dice nada. Beta falla.
   await expect(beta.locator('.senal', { hasText: 'No se pudo actualizar' })).toBeVisible({ timeout: 30_000 })
   await expect(alfa.locator('.senal', { hasText: /Actualizando|No se pudo/ })).toHaveCount(0)
+  // El motivo, que se ve al pasar el mouse, también lo lee el lector de pantalla (paso 8).
+  await expect(beta.locator('.senal.rojo .solo-lector')).toHaveText(/terminó con error/)
   await win.screenshot({ path: 'test-results/ab2-fallo.png' })
   await app.close()
 })

@@ -81,6 +81,8 @@ export function SenalActualizacion({ a }: { a: ActualizacionProyecto | undefined
       <span className="senal rojo actualizacion" title={a.ultimo?.motivo ?? undefined}>
         <Icono nombre="error" />
         No se pudo actualizar
+        {/* El motivo, que se lee al pasar el mouse, también para el lector de pantalla (paso 8). */}
+        {a.ultimo?.motivo && <span className="solo-lector">: {a.ultimo.motivo}</span>}
       </span>
     )
   return null

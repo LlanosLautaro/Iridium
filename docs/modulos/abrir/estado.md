@@ -13,8 +13,8 @@
 | 4. UX | hecho (aprobada en Q-217, D-155) | `ux.md` |
 | 5. Diseño técnico | hecho (D-156) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (el menú, la Señal, el Campo y el Aviso ya existen, D-156) | — |
-| 7. Construcción | en pausa (AB-I1, AB-I2 y AB-I3 probadas; la otra PC, T-87; en pausa por D-162) | este archivo |
-| 8. Calidad | pendiente | este archivo |
+| 7. Construcción | en curso (AB-I1, AB-I2 y AB-I3 probadas; T-86 en Q-308; falta la otra PC, T-87; fuera de pausa por D-193) | este archivo |
+| 8. Calidad | hecho (2026-11-26, el avance solo: los casos raros de Windows, con cinco arreglos; ver Calidad) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
@@ -33,7 +33,7 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
   - [x] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86, Q-308)
 - [x] Abrir y actualizar sola tu app que se usa instalada (AB-I3)
   - [ ] Ponerla al día también en la otra PC, desde sus versiones publicadas (T-87, grande; cambia el armado de tu app, que es otro proyecto, y se prueba en la otra PC)
-- [ ] Revisar que Ejecutar y la actualización sean confiables (mediano, sola)
+- [x] Revisar que Ejecutar y la actualización sean confiables
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -79,6 +79,23 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - **De paso:** en el aviso, lo de ayer dice «ayer 23:50» en vez de «ayer a las 23:50»: la hora larga le dejaba al texto una columna angosta.
 - **Criterios verificados:** `tests/t86-armados-al-volver.test.ts` (5: qué armado cuenta, la última de cada app, un `arranques.json` de antes o roto, los 7 días, lo que va a la ventana y Listo), `tests/ab2-armados.test.ts` (el vigía avisa cada armado al terminar) y Playwright (`tests/e2e/ar2-arranque.spec.ts`: los dos renglones, el rojo, el motivo, Abrir y Listo; captura `t86-aviso-armados.png`). Una noche de verdad queda para tu prueba (Q-308). Vitest 1157 (1 omitida), Playwright 198 (una de las tarjetas falló una vez por un archivo trabado al borrar sus datos y sola pasa: T-144), typecheck, lint y control en verde.
 
+## Calidad (paso 8, 2026-11-26, el avance solo)
+**Historias.** Cada criterio de AB-1 a AB-4 tiene su prueba (`tests/ab1-ejecutar.test.ts`, `ab2-armados.test.ts`, `ab3-instalada.test.ts` y los Playwright `ab1-ejecutar` y `ab2-actualizacion`); lo que solo se ve con tus apps lo probaste en Q-221 y Q-222.
+
+**Casos raros, probados en Windows de verdad.** Encontrados y arreglados:
+- **Un proyecto con eñe o acento en la carpeta no se actualizaba nunca.** El archivo que lanza el armado cambia a mitad de camino cómo Windows lee las letras y, con una «ñ» en la ruta, leía las líneas corridas: el armado no dejaba su marca de fin y quedaba como «se cortó». Ahora ese archivo no lleva ninguna letra fuera del inglés y las rutas le llegan aparte.
+- **Una app instalada en Archivos de programa (o de solo lectura) contaba como abierta para siempre**: no se actualizaba nunca y no lo decía. Windows da otro aviso para «sin permiso» que para «en uso»; ahora solo «en uso» es abierta, y si no puede escribirla falla con su log a la vista.
+- **La PC dormida mientras arma:** al despertar el reloj saltó y lo cortaba por «más de 10 minutos», como falla, sin reintentar hasta el próximo commit. Ahora los 10 minutos cuentan solo el tiempo que corrió.
+- **La PC apagada a mitad de un armado:** al volver, ese número de proceso podía ser de otro programa, que Iridium esperaba y, a los 10 minutos, cerraba a la fuerza. Ahora mira cuándo arrancó: si es posterior al armado, no es suyo. Y un armado que se cortó así se intenta una vez más sola, sin ponerse en rojo; si se corta de nuevo, sí es una falla.
+- **Ejecutar dos veces mientras se arma** abría la app dos veces al terminar; ahora una.
+- De paso: si Iridium hereda una variable de Windows que no deja correr un programa de la carpeta por su nombre solo (la tiene una terminal de Claude Code), el armado la saca.
+
+**Accesibilidad.** Ejecutar Alfa tiene su nombre para el lector en la barra y en el menú; Ajustes › Este proyecto se usa con el teclado. **Arreglado:** el motivo de «No se pudo actualizar» se leía solo al pasar el mouse; ahora también lo lee el lector de pantalla (Playwright `ab2-actualizacion`).
+
+**Seguridad (P2).** Nada nuevo sale de la PC. El comando de armar es el que escribió la IA del proyecto en su `scripts.md`, como antes; el número de proceso que se consulta va como número.
+
+**Verificado:** `tests/ab2-armados.test.ts` suma cinco pruebas (la PC dormida, el corte con su reintento, el número de otro programa, cuándo arrancó un proceso y un armado de verdad en una carpeta con eñe, que falla sin el arreglo) y el `.exe` de solo lectura en la del `.exe` trabado. Vitest 1125 (1 omitida; tres de otras secciones fallaron una vez con la PC cargada y solas pasan), Playwright de Abrir, Arranque y la actualización de Iridium (14), typecheck y lint en verde.
+
 ## Próximo paso
-Cuando vuelva (D-162): el paso 8 (calidad) del frente: AB-I1, AB-I2 y AB-I3 están probadas. T-87 (la otra PC, D-160) queda en la ruta para después de la calidad.
-**Leer antes:** `referencias/08-calidad.md` del framework y `ux.md` › AB-1 a AB-4.
+Sigue T-87 (la otra PC, D-160): poner al día la app instalada en la otra PC desde sus versiones publicadas. Es grande y necesita la otra PC: no lo toma el avance solo. Q-308 (las apps armadas de noche en el aviso) espera tu prueba.
+**Leer antes:** `trabajo.md` › T-87 y D-160.

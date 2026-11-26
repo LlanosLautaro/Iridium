@@ -2,7 +2,7 @@
 // disco y un Windows de mentira (de a uno, al día, falla, ocupada, el corte a los 10 minutos, Actualizar ahora) y lo
 // que toca Windows de verdad: el `.exe` trabado, `armados.json` roto y un armado escondido que termina bien o mal.
 import { spawn } from 'node:child_process'
-import { copyFile, mkdtemp, readFile, writeFile } from 'node:fs/promises'
+import { chmod, copyFile, mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -14,6 +14,7 @@ import {
   ArchivoArmados,
   abiertaAhora,
   finDeArmado,
+  inicioDeProceso,
   LOG_ARMADO,
   lanzarArmado,
   procesoVivo,
@@ -253,14 +254,66 @@ describe('el vigía de los armados (AB-3, AB-4)', () => {
   it('a los 10 minutos lo corta y es una falla; si el proceso desaparece sin marca, también', async () => {
     const m = await mundo(['A', 'B'])
     await m.mirar()
-    m.pasar(11 * 60_000)
-    await m.mirar()
+    for (let i = 0; i < 22; i++) {
+      m.pasar(30_000)
+      await m.mirar()
+    }
     expect(m.cortados).toHaveLength(1)
     expect((await m.archivo.de('A')).ultimo).toMatchObject({ resultado: 'falla', motivo: /10 minutos/ })
     // B arrancó: se cierra la consola de B sin marca de fin.
     m.vivos.clear()
     await m.mirar()
     expect((await m.archivo.de('B')).ultimo).toMatchObject({ resultado: 'falla', motivo: /se cortó/ })
+  })
+
+  it('la PC dormida no cuenta para los 10 minutos: al despertar no lo corta (paso 8)', async () => {
+    const m = await mundo(['A'])
+    await m.mirar()
+    m.pasar(60_000)
+    await m.mirar()
+    // Ocho horas dormida: el reloj salta, el armado no corrió.
+    m.pasar(8 * 3600_000)
+    await m.mirar()
+    expect(m.cortados).toHaveLength(0)
+    m.fines.set('A', 'ok')
+    await m.mirar()
+    expect((await m.archivo.de('A')).commit).toBe('c1')
+  })
+
+  it('si se corta sin marca (la PC se apagó), lo intenta una vez más sin ponerse en rojo (paso 8)', async () => {
+    const m = await mundo(['A'])
+    await m.mirar()
+    m.vivos.clear()
+    await m.mirar()
+    // Volvió a armar enseguida, con el mismo commit.
+    expect(m.lanzados).toHaveLength(2)
+    expect((await m.archivo.de('A')).ultimo).toMatchObject({ resultado: 'falla', reintentar: true })
+    expect(m.estados().A?.fallo).toBe(false)
+    // Se corta otra vez: ahora sí es una falla, en rojo, y no insiste.
+    m.vivos.clear()
+    await m.mirar()
+    expect(m.estados().A).toMatchObject({ fallo: true, ultimo: { resultado: 'falla' } })
+    await m.mirar()
+    expect(m.lanzados).toHaveLength(2)
+  })
+
+  it('después de reiniciar, el número del armado de antes es de otro programa: no lo espera ni lo corta (paso 8)', async () => {
+    const m = await mundo(['A'])
+    // Un armado anotado por otra sesión de Iridium, con un proceso que hoy es otro programa (arrancó después).
+    await m.archivo.cambiar('A', { enCurso: { pid: 7, desde: 5_000, commit: 'c1' } })
+    m.vivos.add(7)
+    m.d.inicio = async () => 60_000
+    await m.mirar()
+    expect(m.cortados).toEqual([])
+    expect(m.lanzados).toHaveLength(1)
+    // El que sí es el armado (arrancó antes de anotarlo) se espera.
+    const m2 = await mundo(['A'])
+    await m2.archivo.cambiar('A', { enCurso: { pid: 8, desde: 5_000, commit: 'c1' } })
+    m2.vivos.add(8)
+    m2.d.inicio = async () => 4_900
+    await m2.mirar()
+    expect(m2.lanzados).toHaveLength(0)
+    expect(m2.vigia.armando('A')).toBe(true)
   })
 
   it('Actualizar ahora arma aunque esté apagada o al día, y Ejecutar espera el fin (AB-2)', async () => {
@@ -309,7 +362,40 @@ describe('Windows de verdad (D-156 › 3 y 6)', () => {
     await new Promise((r) => p.once('exit', r))
     expect(await abiertaAhora(exe)).toBe(false)
     expect(await abiertaAhora(join(carpeta, 'no-esta.exe'))).toBe(false)
+    // Sin permiso de escritura (de solo lectura, o en Archivos de programa) no es estar abierta (paso 8).
+    await chmod(exe, 0o444)
+    expect(await abiertaAhora(exe)).toBe(false)
+    await chmod(exe, 0o666)
   })
+
+  it('el número de un proceso dice cuándo arrancó; uno que no corre, nada (paso 8)', async () => {
+    const antes = Date.now()
+    const ping = join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'PING.EXE')
+    const p = spawn(ping, ['-n', '30', '127.0.0.1'], { stdio: 'ignore', windowsHide: true })
+    await new Promise((r) => p.once('spawn', r))
+    const inicio = await inicioDeProceso(p.pid ?? 0)
+    expect(inicio).not.toBeNull()
+    expect(Math.abs((inicio ?? 0) - antes)).toBeLessThan(5_000)
+    p.kill()
+    await new Promise((r) => p.once('exit', r))
+    expect(await inicioDeProceso(p.pid ?? 0)).toBeNull()
+  }, 30_000)
+
+  it('arma en una carpeta con eñe, acentos y espacios (paso 8)', async () => {
+    const base = await mkdtemp(join(tmpdir(), 'iridium-ab2-eñe-'))
+    const carpeta = join(base, 'armados', 'Diseño y más')
+    const cwd = join(base, 'Proyecto Ñandú')
+    await mkdir(cwd, { recursive: true })
+    await writeFile(join(cwd, 'armar.cmd'), ['@echo off', 'echo armado en %CD%', ''].join('\r\n'), 'utf8')
+    await lanzarArmado(carpeta, 'armar.cmd', cwd)
+    let fin: string | null = null
+    for (let i = 0; i < 100 && !fin; i++) {
+      fin = await finDeArmado(carpeta)
+      if (!fin) await new Promise((r) => setTimeout(r, 100))
+    }
+    expect(fin).toBe('ok')
+    expect(await readFile(join(carpeta, LOG_ARMADO), 'utf8')).toContain('Proyecto Ñandú')
+  }, 30_000)
 
   it('el armado escondido deja su log y su marca de fin: ok o falla', async () => {
     const carpeta = await mkdtemp(join(tmpdir(), 'iridium-ab2-armado-'))

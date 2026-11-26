@@ -13,6 +13,8 @@ const Ultimo = z.object({
   commit: z.string().nullable(),
   resultado: z.enum(['ok', 'falla', 'ocupada']),
   motivo: z.string().optional(),
+  /** Se cortó sin que fuera culpa del script (la PC se apagó a mitad): se vuelve a intentar una vez. */
+  reintentar: z.boolean().optional(),
 })
 export type UltimoArmado = z.infer<typeof Ultimo>
 
@@ -83,7 +85,9 @@ const COMANDO = 'comando.cmd'
 
 /**
  * Si la app está abierta (D-156 › 3): un programa que corre tiene su `.exe` trabado. Se abre para escribir sin
- * cambiar nada; si Windows lo niega, está abierta. Sin el archivo, cerrada.
+ * cambiar nada; si Windows dice que está en uso (EBUSY), está abierta. Sin el archivo, cerrada. Un `.exe` sin permiso
+ * de escritura (de solo lectura o instalado en Archivos de programa) da EPERM: eso no es estar abierta, y tomarlo así
+ * dejaba la app sin actualizar nunca y sin avisar; se intenta el armado y, si no puede, falla con su log (paso 8).
  */
 export async function abiertaAhora(exe: string): Promise<boolean> {
   try {
@@ -92,7 +96,7 @@ export async function abiertaAhora(exe: string): Promise<boolean> {
     return false
   } catch (e) {
     const codigo = (e as NodeJS.ErrnoException).code
-    return codigo === 'EBUSY' || codigo === 'EPERM' || codigo === 'EACCES'
+    return codigo === 'EBUSY'
   }
 }
 
@@ -142,21 +146,36 @@ export async function lanzarArmado(carpeta: string, comando: string, cwd: string
   const lanzador = join(carpeta, LANZADOR)
   const soloComando = join(carpeta, COMANDO)
   await writeFile(soloComando, ['@echo off', `call ${comando}`, ''].join('\r\n'), 'utf8')
+  await writeFile(log, `> ${comando}\r\n`, 'utf8')
+  // El lanzador no lleva ninguna letra fuera del inglés: `chcp 65001` cambia a mitad de archivo cómo lee cmd el resto
+  // y, con una eñe o un acento en una ruta (la del proyecto o la de su armado), leía las líneas corridas y el armado no
+  // terminaba nunca (paso 8). Las rutas le llegan por variables.
   await writeFile(
     lanzador,
     [
       '@echo off',
       'chcp 65001 >nul',
-      `cd /d "${cwd}"`,
-      `echo ^> ${comando.replace(/[&|<>^]/g, '^$&')}> "${log}"`,
-      `call "${soloComando}" >> "${log}" 2>&1`,
-      `if errorlevel 1 (echo falla> "${fin}") else (echo ok> "${fin}")`,
+      'cd /d "%IRIDIUM_ARMADO_CARPETA%"',
+      'call "%IRIDIUM_ARMADO_COMANDO%" >> "%IRIDIUM_ARMADO_LOG%" 2>&1',
+      'if errorlevel 1 (echo falla> "%IRIDIUM_ARMADO_FIN%") else (echo ok> "%IRIDIUM_ARMADO_FIN%")',
       '',
     ].join('\r\n'),
     'utf8',
   )
-  const env: NodeJS.ProcessEnv = { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1' }
+  const env: NodeJS.ProcessEnv = {
+    ...process.env,
+    FORCE_COLOR: '0',
+    NO_COLOR: '1',
+    IRIDIUM_ARMADO_CARPETA: cwd,
+    IRIDIUM_ARMADO_COMANDO: soloComando,
+    IRIDIUM_ARMADO_LOG: log,
+    IRIDIUM_ARMADO_FIN: fin,
+  }
   delete env.ELECTRON_RUN_AS_NODE
+  // Heredada (de una terminal o de Claude Code), impide correr un programa de la carpeta del proyecto por su nombre
+  // solo («armar.cmd»), como lo escribe `scripts.md`.
+  for (const k of Object.keys(env))
+    if (k.toLowerCase() === 'nodefaultcurrentdirectoryinexepath') delete env[k]
   const pid = await new Promise<string>((listo, fallo) =>
     execFile(
       'powershell.exe',
@@ -189,6 +208,29 @@ export function procesoVivo(pid: number): boolean {
   } catch {
     return false
   }
+}
+
+/**
+ * Cuándo arrancó un proceso (ms), para saber si ese número sigue siendo el del armado: después de reiniciar la PC,
+ * Windows reparte los números de nuevo. null si no corre o no se pudo saber.
+ */
+export function inicioDeProceso(pid: number): Promise<number | null> {
+  return new Promise((listo) =>
+    execFile(
+      'powershell.exe',
+      [
+        '-NoProfile',
+        '-NonInteractive',
+        '-Command',
+        `[DateTimeOffset]::new((Get-Process -Id ${Math.trunc(pid)} -ErrorAction Stop).StartTime).ToUnixTimeMilliseconds()`,
+      ],
+      { windowsHide: true, encoding: 'utf8' },
+      (e, texto) => {
+        const n = Number(texto.trim())
+        listo(e || !Number.isFinite(n) || n <= 0 ? null : n)
+      },
+    ),
+  )
 }
 
 /** Corta el armado con todo lo que lanzó. */
