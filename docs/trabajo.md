@@ -378,8 +378,9 @@ Estado: hecho · Idea: usuario · Fecha: 2026-11-17
 Hecho el 2026-11-22 (T-117, D-174): las ideas terminadas se ven como «Hechas» en Ideas, aparte de las aprobadas.
 
 ## T-79 — Paquetes con avisos de seguridad (hono, picomatch, minimatch)
-Estado: pendiente · Fecha: 2026-11-17 · Tamaño: chico, sola
+Estado: hecho · Fecha: 2026-11-17 · Tamaño: chico, sola
 Visto en el paso 8 de Ideas: `pnpm audit` da 10 avisos (1 alto): `hono` y `@hono/node-server` llegan con el SDK de Claude Code (0.3.309; hay 0.3.326) y `picomatch` y `minimatch`, con `electron-builder` (solo al armar). Ninguno en lo que Iridium expone. Subir el SDK con las pruebas completas y ver si `electron-builder` ya trae las versiones arregladas. Menor.
+Hecho el 2026-11-26: el SDK de Claude Code pasó de 0.3.309 a 0.3.332 y `hono` (4.13.22) y `@hono/node-server` (2.1.11) quedaron en sus versiones arregladas; `picomatch` ya no aparece. Quedan 2 avisos moderados de `minimatch` dentro de `electron-builder` 26.18.0, que sigue siendo la última y no viaja en la app: es el Defecto 4 de `08-calidad.md`, que se cierra cuando lo actualicen. El motor real anda con el SDK nuevo (`tools/probar-motor.ts`: sesión, modelos, uso y estilos).
 
 ## T-80 — Ofrecer la capacidad a los proyectos de mantener las aplicaciones acualizadas si se cuplen ciertas condiciones, que la app no esté abierta y que esté instalada, esto solo si corresponde para el tipo de app. En el caso actual serviría tanto para Moon como para bedrock studio
 Estado: en curso · Frente: Abrir · Idea: usuario · Fecha: 2026-11-17 · Origen: Q-208

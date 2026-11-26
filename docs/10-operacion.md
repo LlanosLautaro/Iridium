@@ -40,6 +40,7 @@
 ## Mantenimiento
 | Fecha | Qué se actualizó | Motivo |
 |---|---|---|
+| 2026-11-26 | El SDK de Claude Code, de 0.3.309 a 0.3.332, y con él `hono` 4.13.22 y `@hono/node-server` 2.1.11 (arreglados). `pnpm audit`: de 10 avisos a 2 moderados, los de `minimatch` dentro de `electron-builder` 26.18.0, la última (Defecto 4) | T-79, el avance solo. Pruebas completas y el motor real con `tools/probar-motor.ts` |
 | 2026-11-17 | Nada: revisado. `pnpm audit`: 10 avisos (1 alto, `picomatch`; 8 moderados; 1 bajo), de `hono` por el SDK de Claude Code y de `minimatch` y `picomatch` por `electron-builder` (T-79). `pnpm outdated`: parches de React, Vitest, Zustand, Playwright, Biome y el SDK (0.3.309 → 0.3.326); mayores de Electron (45), Vite (8), electron-vite (6) y el plugin de React (6) | El paso 8 de Ideas |
 | 2026-11-02 | Nada: revisado. `pnpm audit`: las 4 moderadas de `minimatch` dentro de `electron-builder` (Defecto 4). `pnpm outdated`: parches de React, Zustand, Vitest y el SDK de Claude Code (0.3.309 → 0.3.316); versiones mayores de Electron (45), Vite (8) y electron-vite (6) | Primera revisión del hito 10. Los parches van al Backlog (Should); las mayores, cuando haga falta |
 
