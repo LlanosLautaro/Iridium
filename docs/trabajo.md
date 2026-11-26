@@ -3,7 +3,7 @@
 Las ideas y los pendientes de la IA, cada uno con su estado (framework de Iridium). Pasado al framework el 2026-11-06: juntó «Ideas para después» de `00-idea.md`, «Ideas del brainstorming» de `01-exploracion.md`, «Ideas nuevas» de `07-construccion.md`, el Backlog de `10-operacion.md` y los «Pendientes» de `estado.md` y de los frentes. La prioridad del Backlog (Must, Should, Could) va en el texto.
 
 ## T-1 — La guía según el tipo de proyecto (app, herramienta, juego)
-Estado: pendiente · Idea: IA · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-13, Q-80
+Estado: pendiente · Idea: IA · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-13, Q-80 · Tamaño: grande
 Evaluada el 2026-11-25: una variante del framework por tipo de proyecto (la herramienta personal sin lanzamiento, el juego con su propio flujo) y los formularios para contestar antes de hablar con la IA. Grande, del frente Plantillas (T-81), que ya arma piezas por tipo de app. No va directo: hace falta que elijas qué tipo va primero, y el del juego conviene escribirlo cuando haya un juego de verdad para probarlo.
 Para juegos (historia, arte, música, mundo, motor propio) el flujo cambia desde la raíz; el framework preguntaría al empezar si es una app o un juego. Con formularios prearmados para contestar antes de hablar con la IA (Q-13; los formularios se verían en la Bandeja de entrada).
 Lo de la conversación del 2026-10-30 (Q-80): una herramienta personal no tiene lanzamiento real; el hito 9 se vuelve «ponerla en uso» (instalar, actualizar, copias de seguridad) y el 10 casi no aplica. Un juego cambia desde la raíz (documento de diseño, prueba de una porción jugable, motor y contenido como frentes paralelos sobre un motor estable); conviene escribir esa variante cuando haya un juego de verdad para probarla. La otra mitad de esa idea, los frentes en paralelo, se decidió en D-063 (el núcleo con un portón «estable», hasta dos frentes activos, el Mapa y la Bandeja por frente) y la sigue el frente Orden. Que el framework venga con Iridium ya está (D-086).
@@ -38,7 +38,7 @@ Estado: pendiente · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-003, D-005 · 
 APKs, archivos, textos, notificaciones; quizás instalar desde la PC. Should: del celular a la PC y la misma pieza para otro proyecto y otra app (C-41, C-42).
 
 ## T-9 — Iridium para Linux o para el celular
-Estado: pendiente · Idea: IA · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-30
+Estado: pendiente · Idea: IA · Fecha: 2026-10-21 · Origen: `00-idea.md`, Q-30 · Tamaño: grande
 Evaluada el 2026-11-25: Linux es mediano (Electron arma para Linux, pero hay que revisar lo que hoy es de Windows: el instalador, las rutas con variables, la consola de abajo y Usar la PC) y necesita una PC con Linux para probarlo. El celular es otra app que habla con la PC: grande, va con el Puente (T-8). Necesita que digas si alguna de las dos te sirve hoy.
 Linux sale casi gratis porque Electron es multiplataforma; el celular es otra app: pantalla chica y Claude Code no corre ahí, así que hablaría con la PC.
 
@@ -59,12 +59,12 @@ Estado: descartado · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.m
 Aunque la app principal sea propia.
 
 ## T-13 — Mandar tareas desde el celular con Dispatch
-Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` · Tamaño: chico
 Evaluada el 2026-11-25: usar Dispatch (mandarle tareas a Claude desde el celular) en vez de construir algo propio. Investigar si esas tareas llegan a Claude Code en esta PC y cómo las vería Iridium es chico, del Puente (T-8); usarlo necesita tu cuenta y tu celular, así que no va directo.
 Usar Dispatch en vez de construir algo propio para eso.
 
 ## T-14 — Puente: avisos y descargas de APK
-Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` · Tamaño: mediano
 Evaluada el 2026-11-25: avisar con ntfy cuando se arma un APK y publicarlo en un lugar fijo para que Obtainium lo actualice en el celular. Mediano, del Puente (T-8), y se apoya en Abrir, que ya arma las apps solas. No va directo: necesita una app Android tuya que se arme y tu celular para probarlo.
 Avisar con ntfy cuando termina un APK, con el enlace para bajarlo; publicar los APK en un lugar fijo y que Obtainium los actualice solo en el celular.
 
@@ -84,7 +84,7 @@ Evaluada el 2026-11-25: comentar capturas de una app Android como hoy se comenta
 Comentarios sobre capturas, más adelante.
 
 ## T-18 — Avisar cuando hay dos copias de la misma skill
-Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
+Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` · Tamaño: chico, sola
 Evaluada el 2026-11-25: en Skills, avisar cuando la misma skill está en dos lugares (la carpeta de Skills, un plugin, la configuración global). Chico, del frente Skills, junto con T-44 (sacar las copias dobles). Puede ir directo a hacerse.
 En la sección Skills.
 
@@ -190,11 +190,11 @@ Descartado el 2026-11-25: repetido, lo sigue T-79 (los avisos de `pnpm audit`, q
 No viaja en la app. Se cierra cuando `electron-builder` lo actualice (se mira en cada mantenimiento).
 
 ## T-41 — Deuda: lo copiado del Gestor sin usar y la ventana sin minificar
-Estado: pendiente · Origen: `07-construccion.md` › Deuda técnica
+Estado: pendiente · Origen: `07-construccion.md` › Deuda técnica · Tamaño: chico, sola
 Lo copiado se usa con C-9 y C-10, o se borra; la ventana se minifica si el arranque pasa de 2 s.
 
 ## T-42 — Sacar de `carpeta-iridium.ts` el nombre viejo de la carpeta de skills
-Estado: pendiente · Origen: D-082, Q-127
+Estado: pendiente · Origen: D-082, Q-127 · Tamaño: chico, sola
 Q-127 ya dio bien la mudanza.
 
 ## T-43 — El framework reemplaza a la guía y a `gestor-proyectos`
@@ -248,6 +248,7 @@ Hecho el 2026-11-15 con DI-I3 tanda 7: dos pruebas al día (sin framework no hay
 
 ## T-55 — Diagramas que dibuja la IA, con recorrido paso a paso
 Estado: nueva · Frente: Paridad · Fecha: 2026-11-09 · Origen: Q-153, `research/referentes-agentes.md` (Beluga)
+Evaluada el 2026-11-26: el bloque de datos (nodos, flechas, pasos) y el dibujo con el recorrido en el chat y en Docs. Grande, de Paridad (o un frente propio). No va directo: hace falta que elijas dónde se ve primero (el chat o los documentos) y si alcanza con un diagrama quieto antes del recorrido.
 La IA escribe un bloque de datos (nodos, flechas, pasos) y Iridium dibuja un diagrama: pasar el mouse resalta lo conectado, un clic muestra el detalle y un recorrido explica una cosa por vez. En el chat, en los documentos y en los resúmenes de hito. Solo datos, sin código.
 
 ## T-56 — La prueba visible de lo hecho
@@ -301,7 +302,8 @@ Q-167 (2026-11-15): la ventana y el reinicio con la PC quieta andan, pero tras u
 Corregido el 2026-11-15: el armado solo sí andaba (los registros muestran que cada commit posterior se armó solo entre 1 y 2 minutos después: 13:03→13:05, 13:22→13:24, 13:29→13:30); armar tarda unos 20 segundos y lo que no pasaba era el reinicio, que esperaba a la PC quieta. Ahora espera a Iridium sin usar 3 minutos y, si no estaba al frente, la versión nueva abre minimizada sin quitar el foco (D-122 al día). Pruebas: `or2-actualizar.test.ts` › Iridium sin usar y `co6-sin-armar.spec.ts` › solo. Q-169 (2026-11-15): probado por el usuario; arma solo tras el commit, no se reinicia mientras la usa, con 3 minutos sin usarla se reinicia y vuelve minimizada, en el mismo proyecto y maximizada si lo estaba.
 
 ## T-68 — Medir si conviene un chat nuevo o seguir en el mismo
-Estado: en curso · Fecha: 2026-11-15 · Origen: pregunta del usuario, Q-168
+Estado: en curso · Fecha: 2026-11-15 · Origen: pregunta del usuario, Q-168 · Tamaño: chico
+Tamaño sin «sola» hasta el 2026-11-29: antes no hay dos semanas para comparar.
 Con los registros de Claude Code se midió cuánto cuesta arrancar un chat y cuánto cuesta cada paso según el contexto (`research/costo-de-contexto.md`). Chat nuevo conviene cuando el viejo pasó ~200 mil o la caché venció (más de una hora); no para tareas chicas. Volver a medir hacia el 2026-11-29 con el ajuste que elija el usuario en Q-168 y comparar el costo por iteración cerrada.
 Q-168 (A, D-123): aplicada el 2026-11-15 la regla por tamaño y tiempo (framework e instrucciones globales) y el arranque liviano (`estado.md` corto, `CLAUDE.md` sin la lista de herramientas, que pasa a `herramientas-ia.md`). Para medir: `tools/medir-uso.ts`, que guarda el resumen en `research/uso/sesiones.json` (hecho el 2026-11-15, con la línea de base de las 115 conversaciones). Pendiente: correrlo hacia el 2026-11-29 (`--dias 14`); si el `estado.md` largo se repite, que el control marque «En qué estamos ahora» de más de cinco líneas o muy largo.
 
@@ -336,15 +338,17 @@ El usuario quiere rehacer el Mapa como un frente propio: arriba, un mapa por fre
 
 
 ## T-72 — La imagen y el color de cada IA en la conversación
-Estado: pendiente · Idea: IA · Fecha: 2026-11-15 · Origen: R-64
+Estado: pendiente · Idea: IA · Fecha: 2026-11-15 · Origen: R-64 · Tamaño: mediano
 El nombre de la IA en la conversación («Claudio») llevaría una imagen de perfil por fuente de IA (Claude, en este caso), elegida por el usuario, y un color también a elección. Va con Ajustes › Perfil (AJ-2, donde ya se elige el nombre) y con el color donde informa (D-124): hay que decidir si el color es libre o de una lista acotada para que no choque con el verde, el ámbar y el rojo, que ya dicen algo. Es una función nueva, no un arreglo: después de DI-I3.
 
 ## T-73 — ckryptickunal/OpenDesigner
 Estado: nueva · Idea: enlace · Fecha: 2026-11-16 · Enlace: https://github.com/ckryptickunal/OpenDesigner
+Evaluada el 2026-11-26: leer el repositorio y proponer qué ideas de diseño copiar al frente Diseño o al framework (06-ui) es chico. No va directo: según el método, lo que se saca de un enlace lo elegís vos en el chat; se hace en una conversación con vos.
 una skill de diseño para ver si podemos copiar ideas
 
 ## T-74 — Ver desde acá si la IA de la otra persona trabaja bien con Iridium
 Estado: nueva · Idea: usuario · Fecha: 2026-11-16 · Origen: pedido del usuario al hacer público el repo (D-132)
+Evaluada el 2026-11-26: lo más simple, «Mandar un informe» (versión, avisos del control y errores del registro, sin el contenido de los proyectos) que la otra persona envía, es mediano y de Compartir. El canal entre las dos IA o el acceso remoto de la nota es grande y toca la protección (P2). No va directo: hay que conversarlo y elegir el alcance.
 Una forma de depurar la copia compartida: saber si su IA escribe los formatos que Iridium lee (lo que marca el control), si las sesiones fallan y con qué versión. Lo más simple y respetuoso: un botón en su Iridium, «Mandar un informe», que arma un resumen sin el contenido de sus proyectos (los avisos del control, los errores del registro y la versión) para que ella lo envíe; mandarlo solo, sin que lo pida, sería una conexión a un tercero que no eligió (P2) y necesita su permiso. Pensarlo en el chat antes de construir.
 
 ## T-75 — La opcion de poder hacer theming local, independiente de las actualizaciones. Supongo que en esa opcion habría que dejar una pequea referencia para que la IA vaya a buscar la guia de como hacerlo a github, donde está el codigo fuente y puede hacer las ediciones sin equivocarse
@@ -371,7 +375,7 @@ Estado: hecho · Idea: usuario · Fecha: 2026-11-17
 Hecho el 2026-11-22 (T-117, D-174): las ideas terminadas se ven como «Hechas» en Ideas, aparte de las aprobadas.
 
 ## T-79 — Paquetes con avisos de seguridad (hono, picomatch, minimatch)
-Estado: pendiente · Fecha: 2026-11-17
+Estado: pendiente · Fecha: 2026-11-17 · Tamaño: chico, sola
 Visto en el paso 8 de Ideas: `pnpm audit` da 10 avisos (1 alto): `hono` y `@hono/node-server` llegan con el SDK de Claude Code (0.3.309; hay 0.3.326) y `picomatch` y `minimatch`, con `electron-builder` (solo al armar). Ninguno en lo que Iridium expone. Subir el SDK con las pruebas completas y ver si `electron-builder` ya trae las versiones arregladas. Menor.
 
 ## T-80 — Ofrecer la capacidad a los proyectos de mantener las aplicaciones acualizadas si se cuplen ciertas condiciones, que la app no esté abierta y que esté instalada, esto solo si corresponde para el tipo de app. En el caso actual serviría tanto para Moon como para bedrock studio
@@ -428,9 +432,11 @@ Sin cambiar cuándo se verifica: un solo comando de cierre que corre todo y mues
 
 ## T-93 — Al comparti Iridium sucedió un problema, la otra persona no tenía ni idea de como usarlo, quizás una demo programada sirva, como un recorrido de la app, es una idea ya mencionada, la otra cosa es que tampoco tenía ni la más de las palidas ideas sobre desarrollo, no tenia ni nocion de lo que es una app web, de lo que es una nativa, electron, rust, nada de nada. Como enfrentamos este segundo desafío? es que en realidad hay que hacerle saber estas cosas? definir plantillas predefinidas para ciertos tipos de apps dependiendo de algunos requisitos? como por ejemplo sincronizacion celular/desktop, etc.
 Estado: nueva · Idea: usuario · Fecha: 2026-11-20
+Evaluada el 2026-11-26: dos partes: un recorrido guiado de la app (mediano, Inicio o Compartir) y que la IA guíe a alguien sin nociones técnicas con plantillas por requisitos (sincronía celular, web o escritorio), que es grande y va con Plantillas (T-81). No va directo: hay que decidir con vos cuánto se le explica y cuánto se le esconde a esa persona.
 
 ## T-94 — Pantallas a medida para algunas partes de los hitos
 Estado: nueva · Idea: usuario · Fecha: 2026-11-21 · Origen: una respuesta del usuario en otro proyecto
+Evaluada el 2026-11-26: un frente nuevo de pantallas por hito; la primera, el tablero MoSCoW del hito 2 (arrastrar casos entre columnas y que quede escrito en 02-definicion.md), es mediana; el frente entero, grande. No va directo: necesita su propuesta y que elijas qué pantalla va primero.
 Hoy un documento largo (como la clasificación MoSCoW de un hito 2) solo se puede leer y contestar con una pregunta: no hay forma cómoda de revisarlo y corregirlo. La idea es sumar cuestionarios o pantallas específicas para ciertas partes de ciertos hitos: por ejemplo, un tablero de decisiones del MVP con columnas (Must, Should, Could, Won't, postergar como idea) donde se arrastran los casos, o una pantalla de métricas para las fases de rendimiento. El usuario lo ve como un frente de mejora grande y casi sin costo.
 
 ## T-95 — plugins por proyecto, similares a los mods de claude desktop
@@ -552,6 +558,7 @@ Hecha el 2026-11-22: la primera vuelta empieza a los 2 s de abrir y el proyecto 
 
 ## T-115 — añadir la seleccion de modo de permisossi viene con claude cli o agent sdk, no crear una funcion personalizada
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Evaluada el 2026-11-26: el SDK ya tiene el modo de permisos (hoy Iridium lo fija en «sin confirmaciones»); elegir entre ese y el de solo planificar es chico, pero los modos que piden permiso necesitan mostrar los pedidos en la conversación: mediano. De Paridad, junto con T-120. No va directo: elegí qué modos querés tener.
 
 ## T-116 — que las consolas vengan dentro de iridium, podríamos colocar un algo que la haga aparecer como hero o como colapsable en algún lugar que no ocupe espacio, admitiría multiples consolas como vscode, podría también estar en la barra inferior o allí simplemente poner el indicador de que está running. De este modo nos ahorramos también que los scripts de iridium estén desplegando consolas en nuevas ventanas
 Estado: hecho · Idea: usuario · Fecha: 2026-11-22
@@ -569,6 +576,7 @@ Hecho el 2026-11-22 (D-174): las dos pasan a Hechas, el framework dice cuándo s
 
 ## T-118 — skill de iridium incluye un MCP iridium? tendrpia algún sentido si todo es local?
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Evaluada el 2026-11-26: un MCP de Iridium tendría sentido aunque todo sea local: le daría a la IA herramientas para leer y escribir preguntas, trabajos y rutas con el formato ya validado, en vez de editar los archivos y esperar al control. Mediano, del framework (Plantillas). La recomendación es esperar: el control ya corrige casi todo. Necesita tu decisión.
 
 ## T-119 — actualmente creo que tenemos rastros de un "claude notifer" que suena cuando claude termina de trabajar, eso yo lo desinstalé, creo que quedo como vestigio de un complemento de vscode, deberíamos quitarlo ya que hay una idea para que Iridiuj tenga su propia implementación de ello con algo más de control para eviatar justamente esto de q queda como vestigio
 Estado: hecho · Idea: usuario · Fecha: 2026-11-22
@@ -576,6 +584,7 @@ Hecho el 2026-11-23: la extensión de VS Code estaba desinstalada, pero dejó ci
 
 ## T-120 — comandos iridium, por ejemplo /consulta sería para hablar con la IA pero que no haga cambios de código, puede leer y todo pero no escribir (no estricto, por ejemplo sí pod´ria escribir en pendientes o en ideas etc)
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
+Evaluada el 2026-11-26: se puede con los comandos del plugin de Iridium (los muestra la lista de «/» de PA-I1) y el modo de solo planificar del SDK: /consulta lee todo y escribe solo en trabajo.md y estado.md. Chico a mediano, de Paridad, junto con T-115 y T-133. No va directo: elegí qué comandos van primero.
 
 ## T-121 — cambiar como se nueran las versiones de iridium, usar 1.0.x etc en lugar de codigos alfanumericos
 Estado: hecho · Idea: usuario · Fecha: 2026-11-23 · Frente: Compartir · Origen: D-171
@@ -642,6 +651,7 @@ Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan co
 
 ## T-133 — unn nuevo tipo de sesiones, quizás una skill o un comando, un tipo de sesion de trabajodonde el foco no es avanzar, sino resolver dudas y consultas para que luego la IA pueda trabajar sola por más tiempo, estas sesiones pueden ser un poco más largas supongo, incluso hasta gastar toda la cuota de 5hs, con eso listo, las siguientes 5hs o 10hs claude podrá trabajar solo, como un programador real que le rinde cuentas al cliente
 Estado: nueva · Idea: usuario · Fecha: 2026-11-24
+Evaluada el 2026-11-26: un comando o modo de sesión que recorre los frentes y lo que viene, junta todas las dudas en una conversación y deja los pasos con tamaño y «sola» para que el avance solo siga horas. Mediano, de Frentes, junto con T-120 (/consulta). No va directo: hay que definir con vos cómo termina la sesión y qué deja escrito.
 
 ## T-134 — un modo de "apagar al finalizar". En configuraciones podríamos determinar una opcion que habilite el display o no de un botón en un chat, al tocar ese botón se configura que la computadora se apagará al terminar la tarea, esto sería independiente de la IA y podría reutilizar el mismo sistema de deteccion de tarea finalizada que usamos para las actualizaciones automáticas, de este modo podemos dejar a claude trabajando e irnos de la casa. Esto trae una ventaja, yo antes le pedía textualmente a claude que apague la pc al acabar cuando debía irme, pero si quería hacer que la apague y estaba a mitad de trabajo ya no tenía forma de hacerlo(ahora recuero que podemos añadir la funcionalidad de "en cola" para los mensajes, promts que van luego de que termine de hacer lo que est´ahora, es parte de paridad creo) e interrumpirla o pasarle otro prompt en cola pues cagaría contexto innecesario, esta funcionalidad evita todo eso, no gasta uso en lo más minimo tampoco
 Estado: hecho · Idea: usuario · Fecha: 2026-11-24 · Origen: D-195
@@ -670,6 +680,7 @@ Dos armados corrieron juntos en `release/nueva` y quedó puesta una app sin los 
 
 ## T-138 — Mensajes en cola: lo que escribís mientras la IA trabaja sale cuando termina
 Estado: nueva · Idea: IA · Fecha: 2026-11-25 · Origen: T-134
+Evaluada el 2026-11-26: lo escrito con la IA trabajando queda en el cuadro como «en cola» y sale solo al terminar el turno, con forma de sacarlo o editarlo antes. Mediano, de Paridad. Puede ir directo a hacerse una vez aprobada.
 Lo mencionaste en T-134: escribir el próximo pedido con la IA a mitad de un trabajo y que Iridium lo mande solo al terminar el turno, sin interrumpirla. Sería parte de Paridad (Claude Code lo tiene).
 
 ## T-139 — Pasar al framework también queda citado en la conversación

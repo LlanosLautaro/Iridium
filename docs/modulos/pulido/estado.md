@@ -26,7 +26,7 @@ PU-I1 (2026-11-25) y PU-I2 (2026-11-26) hechas: el acento con su brillo, los col
 - [x] Elegir el color de lo que te espera: naranja (Q-303)
 - [x] Color y movimiento en toda la app: el acento en lo activo, las tarjetas, el mapa que late, «corriendo», las casillas y lo que entra (PU-I1)
 - [x] Elegir el acento en Ajustes y las pestañas que se corren al arrastrar una (PU-I2)
-- [ ] Probarlo en la app (Q-307)
+- [ ] Probarlo en la app (Q-307, chico)
 - [ ] Medir la calidad: la app no se pone lenta con el movimiento (chico, sola)
 
 ## Cambios requeridos en documentos generales
