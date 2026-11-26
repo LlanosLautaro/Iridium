@@ -329,7 +329,7 @@ export function registrarPuente(s: Servicios): Puente {
   const listar = async (): Promise<ListaProyectos> => {
     const [actual, iridium, antes] = await Promise.all([raiz(), carpetaIridium(), anteriores()])
     // Sin la carpeta de proyectos no se crea `.iridium`: crearla de rebote escondería que falta (CO-4).
-    enDisco = await prepararCarpetaIridium(iridium, actual, !mudando && (await existeCarpeta(actual)), antes)
+    enDisco = await prepararCarpetaIridium(iridium, !mudando && (await existeCarpeta(actual)), antes)
     raizActual = actual
     const lista = await listarProyectos(actual, iridium, enDisco)
     // Cambiaron los proyectos (o es la primera lista): la actualización automática los mira ya, no al minuto.

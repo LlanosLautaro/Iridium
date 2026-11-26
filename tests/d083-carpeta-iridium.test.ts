@@ -19,6 +19,8 @@ import { ArchivoSesiones } from '../src/main/infra/sesiones'
 let base: string
 let raiz: string
 let iridium: string
+/** Una carpeta de Iridium de antes (la de D-083 o el `.iridium` de otra carpeta de proyectos). */
+let anterior: string
 
 async function archivo(ruta: string, texto: string) {
   await mkdir(join(ruta, '..'), { recursive: true })
@@ -29,6 +31,7 @@ beforeEach(async () => {
   base = await mkdtemp(join(tmpdir(), 'iridium-d083-'))
   raiz = join(base, 'Proyectos')
   iridium = join(base, 'Iridium')
+  anterior = join(base, 'Documentos', 'Iridium')
   await mkdir(join(raiz, 'Alfa'), { recursive: true })
 })
 afterEach(async () => {
@@ -37,7 +40,7 @@ afterEach(async () => {
 
 describe('prepararCarpetaIridium', () => {
   it('sin nada, crea Ideas y Skills con lo mínimo y no hay mudanza', async () => {
-    const r = await prepararCarpetaIridium(iridium, raiz)
+    const r = await prepararCarpetaIridium(iridium)
     expect(r).toEqual({
       rutas: { ideas: join(iridium, 'Ideas'), skills: join(iridium, 'Skills') },
       mudanza: null,
@@ -49,59 +52,64 @@ describe('prepararCarpetaIridium', () => {
 
   it('no pisa lo que ya está', async () => {
     await archivo(join(iridium, 'Ideas', 'CLAUDE.md'), '# Mías\n')
-    await prepararCarpetaIridium(iridium, raiz)
+    await prepararCarpetaIridium(iridium)
     expect(await readFile(join(iridium, 'Ideas', 'CLAUDE.md'), 'utf8')).toBe('# Mías\n')
   })
 
-  it('con las de antes en la carpeta de proyectos, las usa, ofrece mudarlas y no crea las nuevas', async () => {
-    await archivo(join(raiz, 'Ideas', 'ideas.md'), '# Ideas\n')
-    await archivo(join(raiz, 'Skills y Claude', 'CLAUDE.md'), '# Skills\n')
-    const r = await prepararCarpetaIridium(iridium, raiz)
-    expect(r.rutas).toEqual({ ideas: join(raiz, 'Ideas'), skills: join(raiz, 'Skills y Claude') })
+  it('con las de una carpeta de Iridium anterior, las usa, ofrece mudarlas y no crea las nuevas', async () => {
+    await archivo(join(anterior, 'Ideas', 'ideas.md'), '# Ideas\n')
+    await archivo(join(anterior, 'Skills', 'CLAUDE.md'), '# Skills\n')
+    const r = await prepararCarpetaIridium(iridium, true, [anterior])
+    expect(r.rutas).toEqual({ ideas: join(anterior, 'Ideas'), skills: join(anterior, 'Skills') })
     expect(r.mudanza).toEqual(r.rutas)
     expect(await readdir(base)).not.toContain('Iridium')
   })
 
   it('si solo falta mudar una, la otra se crea en la carpeta Iridium', async () => {
+    await archivo(join(anterior, 'Ideas', 'ideas.md'), '# Ideas\n')
+    const r = await prepararCarpetaIridium(iridium, true, [anterior])
+    expect(r.rutas).toEqual({ ideas: join(anterior, 'Ideas'), skills: join(iridium, 'Skills') })
+    expect(r.mudanza).toEqual({ ideas: join(anterior, 'Ideas'), skills: null })
+  })
+
+  it('T-42: una carpeta Ideas en la carpeta de proyectos es un proyecto más, no la de antes', async () => {
     await archivo(join(raiz, 'Ideas', 'ideas.md'), '# Ideas\n')
-    const r = await prepararCarpetaIridium(iridium, raiz)
-    expect(r.rutas).toEqual({ ideas: join(raiz, 'Ideas'), skills: join(iridium, 'Skills') })
-    expect(r.mudanza).toEqual({ ideas: join(raiz, 'Ideas'), skills: null })
+    const r = await prepararCarpetaIridium(iridium)
+    expect(r.rutas.ideas).toBe(join(iridium, 'Ideas'))
+    expect(r.mudanza).toBeNull()
+    const lista = await listarProyectos(raiz, iridium, r)
+    if (lista.tipo !== 'lista') throw new Error(lista.tipo)
+    expect(lista.proyectos.map((p) => p.nombre).sort()).toEqual(['Alfa', 'Ideas'])
   })
 
   it('D-087: con .iridium en la carpeta de proyectos, también ofrece traer las de una carpeta de Iridium anterior', async () => {
     const vault = join(raiz, '.iridium')
-    const anterior = join(base, 'Documentos', 'Iridium')
     await archivo(join(anterior, 'Ideas', 'ideas.md'), '# Ideas\n')
     await archivo(join(anterior, 'Skills', 'CLAUDE.md'), '# Skills\n')
-    const r = await prepararCarpetaIridium(vault, raiz, true, [join(base, 'no-esta'), anterior])
+    const r = await prepararCarpetaIridium(vault, true, [join(base, 'no-esta'), anterior])
     expect(r.mudanza).toEqual({ ideas: join(anterior, 'Ideas'), skills: join(anterior, 'Skills') })
-    // Las sueltas en la carpeta de proyectos van primero.
-    await archivo(join(raiz, 'Ideas', 'ideas.md'), '# Ideas\n')
-    const r2 = await prepararCarpetaIridium(vault, raiz, true, [anterior])
-    expect(r2.mudanza?.ideas).toBe(join(raiz, 'Ideas'))
     // Ya en .iridium, no hay nada para mudar aunque las viejas sigan.
     await archivo(join(vault, 'Ideas', 'ideas.md'), '# Ideas\n')
     await archivo(join(vault, 'Skills', 'CLAUDE.md'), '# Skills\n')
-    expect((await prepararCarpetaIridium(vault, raiz, true, [anterior])).mudanza).toBeNull()
+    expect((await prepararCarpetaIridium(vault, true, [anterior])).mudanza).toBeNull()
   })
 })
 
 describe('listarProyectos con la carpeta Iridium', () => {
   it('Ideas y Skills llegan aparte; las de antes no salen en la grilla', async () => {
-    await archivo(join(raiz, 'Ideas', 'ideas.md'), '# Ideas\n')
-    const enDisco = await prepararCarpetaIridium(iridium, raiz)
+    await archivo(join(anterior, 'Ideas', 'ideas.md'), '# Ideas\n')
+    const enDisco = await prepararCarpetaIridium(iridium, true, [anterior])
     const lista = await listarProyectos(raiz, iridium, enDisco)
     if (lista.tipo !== 'lista') throw new Error(lista.tipo)
     expect(lista.proyectos.map((p) => p.nombre)).toEqual(['Alfa'])
     expect(lista.iridium.carpeta).toBe(iridium)
-    expect(lista.iridium.ideas?.ruta).toBe(join(raiz, 'Ideas'))
+    expect(lista.iridium.ideas?.ruta).toBe(join(anterior, 'Ideas'))
     expect(lista.iridium.skills?.ruta).toBe(join(iridium, 'Skills'))
-    expect(lista.iridium.mudanza).toEqual({ ideas: join(raiz, 'Ideas'), skills: null })
+    expect(lista.iridium.mudanza).toEqual({ ideas: join(anterior, 'Ideas'), skills: null })
   })
 
   it('sin carpeta de proyectos, Ideas y Skills igual están', async () => {
-    const enDisco = await prepararCarpetaIridium(iridium, join(base, 'no-existe'))
+    const enDisco = await prepararCarpetaIridium(iridium)
     const lista = await listarProyectos(join(base, 'no-existe'), iridium, enDisco)
     expect(lista.tipo).toBe('error')
     expect(lista.iridium.ideas?.ruta).toBe(join(iridium, 'Ideas'))
@@ -120,7 +128,7 @@ describe('la mudanza', () => {
   })
 
   it('rehace los enlaces de las skills propias y deja los demás', async () => {
-    const antes = join(raiz, 'Skills y Claude')
+    const antes = join(anterior, 'Skills')
     const despues = join(iridium, 'Skills')
     const claude = join(base, '.claude')
     await archivo(join(antes, 'skills', 'guia', 'SKILL.md'), '# guía\n')
@@ -139,7 +147,7 @@ describe('la mudanza', () => {
 
   it('lleva las conversaciones de Claude Code; si ya había, las suma', async () => {
     const claude = join(base, '.claude')
-    const antes = join(raiz, 'Ideas')
+    const antes = join(anterior, 'Ideas')
     const despues = join(iridium, 'Ideas')
     // Claude Code a veces guarda la letra del disco en minúscula.
     const vieja = carpetaDeConversaciones(antes).replace(/^./, (l) => l.toLowerCase())
@@ -183,14 +191,12 @@ describe('la mudanza', () => {
 
 describe('rutaMudada', () => {
   it('cambia lo que está adentro, sin distinguir mayúsculas, y deja lo de afuera', () => {
-    expect(rutaMudada('D:\\P\\Skills y Claude\\skills\\x', 'd:\\p\\skills y claude', 'D:\\I\\Skills')).toBe(
+    expect(rutaMudada('D:\\P\\Skills vieja\\skills\\x', 'd:\\p\\skills vieja', 'D:\\I\\Skills')).toBe(
       join('D:\\I\\Skills', 'skills', 'x'),
     )
-    expect(rutaMudada('D:\\P\\Skills y Claude', 'D:\\P\\Skills y Claude', 'D:\\I\\Skills')).toBe(
-      'D:\\I\\Skills',
-    )
-    expect(rutaMudada('D:\\P\\Skills y Claude 2\\x', 'D:\\P\\Skills y Claude', 'D:\\I\\Skills')).toBeNull()
-    expect(rutaMudada('E:\\otra\\x', 'D:\\P\\Skills y Claude', 'D:\\I\\Skills')).toBeNull()
+    expect(rutaMudada('D:\\P\\Skills vieja', 'D:\\P\\Skills vieja', 'D:\\I\\Skills')).toBe('D:\\I\\Skills')
+    expect(rutaMudada('D:\\P\\Skills vieja 2\\x', 'D:\\P\\Skills vieja', 'D:\\I\\Skills')).toBeNull()
+    expect(rutaMudada('E:\\otra\\x', 'D:\\P\\Skills vieja', 'D:\\I\\Skills')).toBeNull()
   })
 })
 

@@ -3,7 +3,6 @@
 import { cp, lstat, mkdir, readdir, readlink, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import {
-  ANTES,
   type Cual,
   carpetaDeConversaciones,
   INICIALES,
@@ -30,13 +29,11 @@ async function crear(ruta: string, cual: Cual): Promise<void> {
 }
 
 /**
- * Qué carpeta se usa para Ideas y para Skills: la de `carpeta`; si falta y hay una de antes (suelta en la carpeta de
- * proyectos, D-060 y D-068, o en otra carpeta de Iridium, `anteriores`), esa, y se ofrece mudarla; si no hay ninguna,
- * se crea la nueva.
+ * Qué carpeta se usa para Ideas y para Skills: la de `carpeta`; si falta y hay una de antes (en otra carpeta de
+ * Iridium, `anteriores`), esa, y se ofrece mudarla; si no hay ninguna, se crea la nueva.
  */
 export async function prepararCarpetaIridium(
   carpeta: string,
-  raiz: string,
   crearSiFalta = true,
   anteriores: string[] = [],
 ): Promise<CarpetasEnDisco> {
@@ -45,7 +42,7 @@ export async function prepararCarpetaIridium(
   const mudanza: Record<Cual, string | null> = { ideas: null, skills: null }
   for (const cual of ['ideas', 'skills'] as const) {
     let vieja: string | null = null
-    for (const posible of [join(raiz, ANTES[cual]), ...anteriores.map((a) => rutasIridium(a)[cual])])
+    for (const posible of anteriores.map((a) => rutasIridium(a)[cual]))
       if (!vieja && (await existeCarpeta(posible))) vieja = posible
     if (await existeCarpeta(nuevas[cual])) rutas[cual] = nuevas[cual]
     else if (vieja) rutas[cual] = mudanza[cual] = vieja

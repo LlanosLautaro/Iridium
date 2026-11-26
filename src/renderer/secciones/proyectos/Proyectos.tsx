@@ -16,8 +16,7 @@ import { NuevoProyecto } from './NuevoProyecto'
 import { Tarjeta } from './Tarjeta'
 
 /**
- * La mudanza (D-083, D-087): Ideas y Skills siguen donde estaban antes (sueltas en la carpeta de proyectos o en otra
- * carpeta de Iridium). Mover las lleva a `.iridium`, después de confirmarlo.
+ * La mudanza (D-083, D-087): Ideas y Skills siguen donde estaban antes (en otra carpeta de Iridium). Mover las lleva a `.iridium`, después de confirmarlo.
  */
 function Mudanza({ lista }: { lista: ListaProyectos }) {
   const ponerLista = usarEstado((s) => s.ponerLista)

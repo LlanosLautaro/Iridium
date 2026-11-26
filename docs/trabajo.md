@@ -195,8 +195,9 @@ Lo copiado se usa con C-9 y C-10, o se borra; la ventana se minifica si el arran
 Hecho el 2026-11-26: se borró lo del Gestor que nada usaba (la lista por secciones, el formulario de edición, la última actividad vieja y sus pruebas; unas 800 líneas); los casos límite de la lista (nombres raros, fichas rotas, 300 proyectos en menos de 2 s) ahora prueban la lista de la grilla. El arranque tarda 1,1 s hasta ver las tarjetas: la ventana sigue sin minificar (`07-construccion.md` › Deuda técnica).
 
 ## T-42 — Sacar de `carpeta-iridium.ts` el nombre viejo de la carpeta de skills
-Estado: pendiente · Origen: D-082, Q-127 · Tamaño: chico, sola
+Estado: hecho (2026-11-26) · Origen: D-082, Q-127 · Tamaño: chico, sola
 Q-127 ya dio bien la mudanza.
+Hecho el 2026-11-26: Iridium ya no busca las carpetas de Ideas y Skills de antes sueltas en la carpeta de proyectos (con su nombre viejo): se mudaron en Q-127. La mudanza desde otra carpeta de Iridium (D-087) sigue igual. De paso, una carpeta que se llame `Ideas` entre tus proyectos ahora sale como un proyecto más, en vez de tomarse por la de las ideas. Sin cambios a la vista.
 
 ## T-43 — El framework reemplaza a la guía y a `gestor-proyectos`
 Estado: hecho (2026-11-20) · Frente: Skills · Origen: D-092, D-095

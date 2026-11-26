@@ -1,5 +1,5 @@
-// D-083 con la app abierta y el motor falso: las carpetas de Ideas y Skills de antes, en la carpeta de proyectos, se
-// siguen usando y el inicio ofrece Mover; Mover (con la confirmación reemplazada) las lleva a la carpeta Iridium con
+// D-083 con la app abierta y el motor falso: las carpetas de Ideas y Skills de antes, en la carpeta de Iridium que se
+// usaba antes de D-087, se siguen usando y el inicio ofrece Mover; Mover (con la confirmación reemplazada) las lleva a la carpeta Iridium con
 // sus enlaces y su conversación. Con D-087 la carpeta de Iridium es `.iridium`, dentro de la carpeta de proyectos: al
 // cambiar de carpeta de proyectos, Iridium ofrece traerla.
 import { mkdir, mkdtemp, readdir, readFile, readlink, rm, symlink, writeFile } from 'node:fs/promises'
@@ -9,6 +9,7 @@ import { type ElectronApplication, _electron as electron, expect, type Page, tes
 
 let base: string
 let raiz: string
+let anterior: string
 let claude: string
 let datos: string
 let abierta: ElectronApplication | null = null
@@ -49,29 +50,30 @@ const leerConfig = async () => JSON.parse(await readFile(join(datos, 'config.jso
 test.beforeEach(async () => {
   base = await mkdtemp(join(tmpdir(), 'iridium-e2e-d083-'))
   raiz = join(base, 'Proyectos')
+  anterior = join(base, 'Documentos', 'Iridium')
   claude = join(base, '.claude')
   datos = join(base, 'datos')
   await archivo(join(raiz, 'Alfa', '.proyecto.json'), ficha)
-  // Las de antes, como las dejaba D-060 y D-068, con su git y una skill propia enlazada.
-  await archivo(join(raiz, 'Ideas', 'CLAUDE.md'), '# Ideas\n')
+  // Las de antes, como las dejaba D-083, con su git y una skill propia enlazada.
+  await archivo(join(anterior, 'Ideas', 'CLAUDE.md'), '# Ideas\n')
   await archivo(
-    join(raiz, 'Ideas', 'ideas.md'),
+    join(anterior, 'Ideas', 'ideas.md'),
     '# Ideas\n\n## Sueltas\n\n### Una idea vieja — 2026-10-01\nQué es.\n',
   )
   await archivo(
-    join(raiz, 'Ideas', 'sueltas.md'),
+    join(anterior, 'Ideas', 'sueltas.md'),
     '# Ideas sueltas\n\n## T-1 — Una idea vieja\nEstado: nueva · Idea: usuario · Fecha: 2026-10-01\n',
   )
-  await archivo(join(raiz, 'Ideas', '.git', 'HEAD'), 'ref: refs/heads/main\n')
-  await archivo(join(raiz, 'Skills y Claude', 'CLAUDE.md'), '# Skills\n')
+  await archivo(join(anterior, 'Ideas', '.git', 'HEAD'), 'ref: refs/heads/main\n')
+  await archivo(join(anterior, 'Skills', 'CLAUDE.md'), '# Skills\n')
   await archivo(
-    join(raiz, 'Skills y Claude', 'skills', 'guia', 'SKILL.md'),
+    join(anterior, 'Skills', 'skills', 'guia', 'SKILL.md'),
     '---\nname: guia\ndescription: Una.\n---\n',
   )
   await mkdir(join(claude, 'skills'), { recursive: true })
-  await symlink(join(raiz, 'Skills y Claude', 'skills', 'guia'), join(claude, 'skills', 'guia'), 'junction')
+  await symlink(join(anterior, 'Skills', 'skills', 'guia'), join(claude, 'skills', 'guia'), 'junction')
   await mkdir(datos, { recursive: true })
-  await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz }))
+  await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz, carpetaIridium: anterior }))
 })
 
 test.afterEach(async () => {
@@ -91,7 +93,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   // No salen en la grilla: siguen funcionando como Ideas y Skills.
   await expect(grilla.locator('.tarjeta')).toHaveCount(1)
   const aviso = grilla.locator('.recuadro.mudar')
-  await expect(aviso).toContainText('Ideas y Skills y Claude siguen donde estaban antes')
+  await expect(aviso).toContainText('Ideas y Skills siguen donde estaban antes')
   await expect(aviso).toContainText(join(raiz, '.iridium'))
   await win.keyboard.press('Control+3')
   await expect(win.getByRole('region', { name: 'Ideas' }).locator('.idp-item')).toContainText(
@@ -111,7 +113,8 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   })
   await aviso.getByRole('button', { name: 'Mover' }).click()
   await expect(aviso.getByRole('button', { name: 'Mover' })).toBeEnabled()
-  expect((await readdir(raiz)).sort()).toEqual(['Alfa', 'Ideas', 'Skills y Claude'])
+  expect(await readdir(raiz)).toEqual(['Alfa'])
+  expect((await readdir(anterior)).sort()).toEqual(['Ideas', 'Skills'])
 
   await app.evaluate(({ dialog }) => {
     dialog.showMessageBox = (async () => ({ response: 0, checkboxChecked: false })) as never
@@ -120,6 +123,7 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
   await expect(grilla.locator('.recuadro.mudar')).toContainText('Listo: se movieron a la carpeta de Iridium.')
   await win.screenshot({ path: 'test-results/d083-movidas.png' })
   expect((await readdir(raiz)).sort()).toEqual(['.iridium', 'Alfa'])
+  expect(await readdir(anterior)).toEqual([])
   const iridium = join(raiz, '.iridium')
   expect((await readdir(join(iridium, 'Ideas'))).sort()).toEqual([
     '.git',
@@ -154,8 +158,8 @@ test('las de antes se siguen usando; Mover las lleva a .iridium con su enlace y 
 })
 
 test('D-087: sin las de antes crea .iridium; con otra carpeta de proyectos, ofrece traerla', async () => {
-  await rm(join(raiz, 'Ideas'), { recursive: true })
-  await rm(join(raiz, 'Skills y Claude'), { recursive: true })
+  await rm(anterior, { recursive: true })
+  await writeFile(join(datos, 'config.json'), JSON.stringify({ version: 1, raiz }))
   const { app, win } = await abrir()
   await expect(win.locator('.tarjeta', { hasText: 'Alfa' })).toBeVisible()
   // Sin las de antes, Iridium crea las suyas en .iridium, y la grilla no la muestra.

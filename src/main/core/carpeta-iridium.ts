@@ -3,13 +3,7 @@
 import { join, relative, resolve } from 'node:path'
 import { CARPETA_GENERAL, CARPETA_SKILLS } from '../../compartido/puente'
 
-/**
- * Los nombres que tenían dentro de la carpeta de proyectos antes de D-083 (D-060, D-068): si están ahí, se ofrece
- * mudarlas.
- */
-export const ANTES = { ideas: 'Ideas', skills: 'Skills y Claude' } as const
-
-export type Cual = keyof typeof ANTES
+export type Cual = 'ideas' | 'skills'
 
 export function rutasIridium(carpeta: string): Record<Cual, string> {
   return { ideas: join(carpeta, CARPETA_GENERAL), skills: join(carpeta, CARPETA_SKILLS) }
