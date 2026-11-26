@@ -57,6 +57,10 @@ La construcción del módulo está completa: SK-I1 aprobada (Q-95) y los archivo
 - **Instrucciones globales:** ya no describen el método; dicen que los proyectos se trabajan desde Iridium (D-093) y qué es un proyecto y qué una carpeta simple (D-095), y apuntan a la carpeta Skills de Iridium en lugar de la vieja. El `CLAUDE.md` de Ideas, igual.
 - **No tocado:** los `CLAUDE.md` de los demás proyectos (se ponen al día con Pasar al framework) ni las fichas.
 
+### T-18 — La doble no queda escondida en un grupo plegado (2026-11-26, el avance solo)
+- **Qué faltaba:** la señal «doble» de SK-2 ya estaba en la fila de cada copia y el aviso, en el detalle; pero los grupos De complementos y Desde la cuenta se pliegan solos con más de diez skills, y una doble adentro no se veía. Ahora la fila del grupo plegado lleva la misma señal ámbar «doble» (al pasar el mouse: «Una está dos veces» o «N están dos veces»). Sin la cuenta arriba de la lista: D-108 la sacó.
+- **Pruebas:** `sk1-skills.spec.ts` pliega los dos grupos: el de complementos lleva la señal y el de la cuenta no (captura `test-results/sk1-plegado-doble.png`). Vitest 1119 (1 omitida), Playwright de Skills 5/5, typecheck y lint en verde.
+
 ## Próximo paso
 Lo que sigue en la ruta: traer las skills que la licencia permite (T-44), cuando se elija. Sus errores y mejoras van a `trabajo.md`.
 **Leer antes:** nada.

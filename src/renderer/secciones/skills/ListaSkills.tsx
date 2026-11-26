@@ -1,6 +1,7 @@
 // La columna de la sección Skills (SK-W1, W-13; DI-I3, tanda 9: la maqueta `docs/diseno/pantallas/skills.html`): la
 // entrada fija Framework, con los proyectos fuera del framework, y las skills en Bloques por origen, cada una una Fila
-// con la señal de las que están dos veces. Un grupo plegado es una fila gris con su cuenta.
+// con la señal de las que están dos veces. Un grupo plegado es una fila gris con su cuenta y, si esconde una doble,
+// su señal (T-18).
 import type { ReactNode } from 'react'
 import {
   fueraDelFramework,
@@ -108,12 +109,22 @@ export function ListaDeSkills({
         const error = lista.errores.find((e) => e.origenes.includes(o))
         if (del.length === 0 && !error) return null
         const plegado = plegados.includes(o)
+        // Plegado, el grupo lleva la señal de sus dobles para que no queden escondidas (T-18).
+        const dobles = del.filter((s) => s.doble).length
         const nombre = (
           <>
             <span className="principal-fila">
               <span className="titulo-fila">{NOMBRE_ORIGEN[o]}</span>
             </span>
             <span className="cuenta">{del.length}</span>
+            {dobles > 0 && (
+              <span
+                className="senal ambar"
+                title={dobles === 1 ? 'Una está dos veces' : `${dobles} están dos veces`}
+              >
+                doble
+              </span>
+            )}
           </>
         )
         if (plegado)

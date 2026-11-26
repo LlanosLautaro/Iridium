@@ -163,6 +163,14 @@ test('Ctrl+2: la lista por origen, la doble y Framework con Actualizar (SK-1, SK
   // Los grupos se pliegan.
   await lista.getByRole('button', { name: /Desde la cuenta/ }).click()
   await expect(lista.getByTitle('pdf', { exact: true })).toHaveCount(0)
+  await expect(lista.locator('.sk-plegado', { hasText: 'Desde la cuenta' }).locator('.senal')).toHaveCount(0)
+  // Plegado, el grupo con una doble lleva su señal (T-18).
+  await lista.getByRole('button', { name: /De complementos/ }).click()
+  await expect(lista.getByTitle('impeccable:impeccable', { exact: true })).toHaveCount(0)
+  await expect(
+    lista.locator('.sk-plegado', { hasText: 'De complementos' }).getByTitle('Una está dos veces'),
+  ).toHaveText('doble')
+  await win.screenshot({ path: 'test-results/sk1-plegado-doble.png' })
   await app.close()
 })
 

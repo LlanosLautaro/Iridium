@@ -84,9 +84,10 @@ Evaluada el 2026-11-25: comentar capturas de una app Android como hoy se comenta
 Comentarios sobre capturas, más adelante.
 
 ## T-18 — Avisar cuando hay dos copias de la misma skill
-Estado: pendiente · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` · Tamaño: chico, sola
+Estado: hecho · Idea: IA · Fecha: 2026-10-22 · Origen: `01-exploracion.md` · Tamaño: chico, sola
 Evaluada el 2026-11-25: en Skills, avisar cuando la misma skill está en dos lugares (la carpeta de Skills, un plugin, la configuración global). Chico, del frente Skills, junto con T-44 (sacar las copias dobles). Puede ir directo a hacerse.
 En la sección Skills.
+Hecho el 2026-11-26: el aviso ya estaba (la señal «doble» en las dos copias y, en el detalle, cuál sobra con Pedir que la saquen); faltaba que se viera con el grupo plegado: ahora la fila del grupo lleva la señal.
 
 ## T-19 — El Gestor como acceso rápido dentro de VS Code
 Estado: descartado · Fecha: 2026-10-22 · Origen: `01-exploracion.md`
