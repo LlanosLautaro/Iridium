@@ -204,6 +204,7 @@
 | D-195 | 2026-11-25 | Apariencia y ajustes (T-134) | 10 (T-134) | Apagar la PC al terminar: un botón en la conversación que no pasa por la IA | vigente |
 | D-196 | 2026-11-25 | general | 10 (Q-295) | Los pedidos a la IA desde una sección quedan citados en la conversación | vigente |
 | D-197 | 2026-11-25 | general | 10, frente Pulido, paso 1 (Q-299 a Q-301) | Pulido: un aire de instrumento sobre el negro, con acento, colores de estado y movimiento sutil | vigente (corrige en parte D-100, D-103 y D-108) |
+| D-201 | 2026-11-27 | Ideas | 10, frente Ideas (T-109) | Una idea rechazada se muestra en gris, no en rojo | vigente (corrige en parte D-128) |
 
 ---
 
@@ -3764,3 +3765,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** (1) la tarjeta dice «N aprobados sin lugar en la ruta» en vez de «Todo hecho» y el frente abierto ya no dice «Todo hecho por ahora» si los tiene; (2) el control marca cada `T-n` `pendiente` o `en curso` con `Frente:` que la ruta de su frente no nombra (también en un frente `hecho`); (3) la revisión del avance solo los nombra y la IA los ubica con su tamaño y `sola`, así la noche los toma; (4) `SKILL.md` lo dice en la ruta, la revisión y el control, y `novedades.md` suma la novedad del 2026-11-26 para los proyectos con frentes.
 **Motivo:** el trabajo aprobado tiene que verse y poder tomarse; arreglarlo en un solo proyecto se repetiría (la regla de errores de formato en el framework).
 **Consecuencias:** los proyectos con frentes ven una novedad del framework; Paridad, Ideas y Diseño tienen esos trabajos en su ruta (T-83, T-105 y T-109, chicos y `sola`). Pruebas: `tests/ma1-ruta.test.ts` y `tests/fs4-revision.test.ts`.
+
+## D-201 — Una idea rechazada se muestra en gris, no en rojo
+- **Fecha:** 2026-11-27
+- **Ámbito:** Ideas
+- **Hito o paso:** 10; frente Ideas (T-109, de la ronda de UX 1, aprobada en Ideas)
+- **Estado:** vigente (corrige en parte D-128)
+
+**Contexto:** D-128 (Q-175) puso el estado de cada idea en color: aprobada en verde y rechazada en rojo. `06-ui.md` deja el rojo para los errores, y en una lista larga las rechazadas llamaban más la atención que las que esperan.
+**Decisión:** «Rechazada» y el ícono de una idea rechazada van en gris (el texto apagado), con el título apagado como antes. Aprobada sigue en verde.
+**Motivo:** el rojo dice «algo anda mal»; una idea rechazada es algo que ya se resolvió y tiene que quedar atrás.
+**Consecuencias:** cambian la lista de Ideas (de un proyecto y del inicio), sus dos maquetas y `modulos/ideas/definicion.md`. Prueba: `tests/e2e/id1-ideas-proyecto.spec.ts`.

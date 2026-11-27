@@ -1,6 +1,6 @@
 /* Ideas de un proyecto (frente Ideas, W-10; `docs/diseno/pantallas/ideas-proyecto-c.html`): el campo de arriba, los
    grupos (Bloques, PZ-3) con sus Filas (PZ-2) y la idea abierta como Fila que se abre (PZ-13). El estado va en color:
-   verde aprobada, rojo rechazada (Q-175). */
+   verde aprobada; rechazada en gris, porque el rojo es de los errores (T-109, D-201). */
 
 .idp-cuerpo {
   flex: 1;
@@ -106,11 +106,11 @@
 .idp-aprobada .icono-fila {
   color: var(--bien);
 }
-.idp-rechazada .icono-fila {
-  color: var(--error);
-}
+.idp-rechazada .icono-fila,
 .idp-rechazada .titulo-fila {
   color: var(--texto-3);
+}
+.idp-rechazada .titulo-fila {
   font-weight: 400;
 }
 

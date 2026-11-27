@@ -518,8 +518,9 @@ Con preguntas, la lista de la Bandeja va en la columna centrada (como el Mapa y 
 Hecho el 2026-11-21: el vacío va en la columna de las preguntas, como el de Revisión.
 
 ## T-109 — «Rechazada» en rojo, que es el color de los errores
-Estado: pendiente · Idea: IA · Frente: Ideas · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: hecho · Idea: IA · Frente: Ideas · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 En Ideas, una idea rechazada lleva «Rechazada» en rojo (Q-175). `06-ui.md` deja el rojo para un error, y en una lista larga las rechazadas llaman más la atención que las que esperan. Propuesta: la palabra en gris, con el título apagado como ahora; el verde de Aprobada queda.
+Hecho el 2026-11-27: una idea rechazada lleva «Rechazada» y su ícono en gris, con el título apagado; Aprobada sigue en verde (D-201).
 
 ## T-110 — Mirar los avisos juntos en la esquina
 Estado: hecho · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)

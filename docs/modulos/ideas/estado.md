@@ -1,7 +1,7 @@
 # Estado del módulo: Ideas
 
 **Tipo:** sección (las ideas y los enlaces para revisar de cada proyecto; D-127)
-**Última actualización:** 2026-11-17
+**Última actualización:** 2026-11-27
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -29,7 +29,7 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 - [x] Pegar enlaces e imágenes en la nota de una idea (ID-I3)
 - [x] Ideas del inicio como las de un proyecto, y moverlas a uno (ID-I4)
 - [x] Probar Ideas con sus historias, una por una
-- [ ] «Rechazada» en gris, no en rojo, que es el color de los errores (T-109, chico, sola)
+- [x] «Rechazada» en gris, no en rojo, que es el color de los errores (T-109)
 - [ ] Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea (T-83, chico, sola)
 - [ ] La miniatura del sitio en un enlace pegado (T-76, mediano)
 
@@ -48,6 +48,8 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 | ID-I4 | El inicio: ideas sueltas, Mover a un proyecto; se saca el bloc | hecha y probada (Q-196, Q-198) |
 
 ## Log de iteraciones
+### En operación
+- **2026-11-27, T-109 (el avance solo, D-201):** «Rechazada» y el ícono de una idea rechazada van en gris (`--texto-3`), con el título apagado como antes; el rojo queda para los errores (`06-ui.md`). Aprobada sigue en verde. Lo mismo en las maquetas `ideas-proyecto-c.html` e `ideas-inicio-c.html` y en `definicion.md`. Prueba: `tests/e2e/id1-ideas-proyecto.spec.ts` mide el color de la palabra y del ícono (el gris del texto apagado); captura `test-results/id1-ideas-lista.png`. Verificado: Playwright de Ideas 10/10, `tests/estilos.test.ts`, typecheck y lint. Se prueba en Q-315.
 ### ID-I4 — Las ideas sueltas del inicio (hecha y probada)
 - **2026-11-17, Q-198:** todo bien: pegar una captura en el campo de arriba en el inicio y en un proyecto, solo una captura («Imagen pegada»), otra captura en una idea abierta y Mover a un proyecto con la nota y la captura.
 - **2026-11-17, Q-196, R-87, R-88:** anotar sin proyecto y en un proyecto con Ver, bien. Las dos casillas de pegar una captura quedaron sin marcar, y R-87 y R-88 (en el inicio y en un proyecto) dicen que pegar una imagen no funciona en el **campo de arriba**: ahí no se podía, solo en la idea abierta. Hecho en el momento: Ctrl+V con una imagen en el campo de arriba la deja debajo, chica y con ✕ para sacarla (si el pegado no la trae a la ventana, se busca en el portapapeles de Windows, como en la nota); al anotar, va con lo escrito y queda al final de la nota, en la carpeta de la idea; sin nada escrito, la idea se llama «Imagen pegada». Un enlace no lleva imágenes: lo dice antes de anotar nada. Si una imagen no se puede guardar, la idea queda anotada y avisa que faltó. `anotarIdea` recibe las imágenes (el canal las valida: hasta 10, como mucho 20 MB cada una). Pruebas: `tests/r87-anotar-con-imagen.test.ts` (la nota con la imagen, dos imágenes, sin texto, en las sueltas, un enlace, lo que no es imagen, una que falla, sin imágenes) y en `tests/e2e/id1-ideas-proyecto.spec.ts` (pegar dos, sacar una, Enter, la idea abierta con la imagen, solo una imagen; capturas `test-results/r87-campo-con-imagen.png` y `r87-anotada.png`). Verificado: `pnpm test` (796 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` (126 pasan). Lo que falta de ID-I4, en Q-198.
@@ -81,4 +83,4 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 **Verificado:** `pnpm test` (797 pasan), `pnpm typecheck`, `pnpm lint` y `pnpm e2e` (127 pasan).
 
 ## Próximo paso
-Módulo completo. Lo que salga del uso va a `trabajo.md` con `Frente: Ideas` (esperan T-76 y T-78).
+Módulo completo. Sigue T-83 (Enter guarda la nota, chico, sola); después T-76 (la miniatura del sitio). Lo que salga del uso va a `trabajo.md` con `Frente: Ideas`.

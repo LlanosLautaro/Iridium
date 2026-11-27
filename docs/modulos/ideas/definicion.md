@@ -16,7 +16,7 @@ Un solo lugar, dentro de cada proyecto y en el inicio, para anotar ideas sin sal
 ### Must (MVP del módulo)
 - **Ideas en la barra de cada proyecto**, con la forma C (`docs/diseno/pantallas/ideas-proyecto-c.html`): un campo arriba para anotar o pegar; «Para revisar» con los enlaces; «Ideas», cada una en su renglón.
 - **Una idea es una nota chica:** su primera línea es el título; un clic la abre en su lugar y se escribe libre, con enlaces (pegar una dirección la vuelve una etiqueta) e imágenes pegadas. Se guarda sola.
-- **Estado de una idea, en color** (Q-175): sin evaluar (sin color), **aprobada** (verde) y **rechazada** (rojo, el título apagado), y **hecha** cuando lo que salió de ella se terminó. Aprobar y Rechazar están en la idea abierta.
+- **Estado de una idea, en color** (Q-175): sin evaluar (sin color), **aprobada** (verde) y **rechazada** (gris, con el título apagado: el rojo es de los errores, D-201), y **hecha** cuando lo que salió de ella se terminó. Aprobar y Rechazar están en la idea abierta.
 - **Las ideas de la IA en la misma lista** (Q-176): son los `T-n` del proyecto que nacen como idea, con el robot en lugar de la lamparita y su código al lado; el mismo color de estado.
 - **Para revisar:** pegar una dirección en el campo de arriba la deja ahí, con su nombre y su sitio. **Revisar con la IA** le pide en el chat de al lado que la lea y proponga qué sacar; lo que el usuario elige queda como idea y el enlace pasa a revisado. También se marca como revisado a mano.
 - **Hablar de esta idea:** le pasa la idea al chat de al lado.
