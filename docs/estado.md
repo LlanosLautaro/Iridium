@@ -37,13 +37,14 @@
 | Orden (`modulos/orden/estado.md`) | sección | en operación (con el hito 10; OR-I5, las novedades del framework, probada en Q-312; cerrado el 2026-11-26, 1.3.0) | hecho |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
 | Arranque (`modulos/arranque/estado.md`) | sección | en operación (con el hito 10; probada en Q-227, calidad el 2026-11-21) | hecho |
-| Plantillas (T-81) | plugin (el framework) | 1. Propuesta (la primera pieza, las pruebas sin ventanas; suma la guía de la actualización sola, D-207) | pendiente |
+| Plantillas (`modulos/plantillas/estado.md`) | plugin (el framework) | 1. Propuesta (escrita; espera Q-324 y Q-325) | en curso |
 | Abrir (`modulos/abrir/estado.md`) | sección | en operación (con el hito 10; T-87, la guía del framework, D-207; cerrado el 2026-11-27, 1.5.0) | hecho |
 | Paridad (`modulos/paridad/estado.md`) | sección | en operación (con el hito 10; las dos partes probadas y con su calidad, la última el 2026-11-25) | hecho |
 | Frentes (`modulos/frentes/estado.md`) | sección | en operación (con el hito 10; FS-I4, la revisión del avance solo, probada en Q-294; D-194 confirmado en Q-298) | hecho |
 | Pulido (`modulos/pulido/estado.md`) | sección | en operación (con el hito 10; PU-I1 y PU-I2 probadas en Q-307, cerrado el 2026-11-26, 1.2.0) | hecho |
 
 ## En qué estamos ahora
+**2026-11-27, Plantillas abierto** (T-81): la propuesta está escrita (`modulos/plantillas/propuesta.md`). Una **pieza** es un archivo del framework que resuelve un problema para un tipo de app (escritorio, página, consola), con la receta probada en Iridium y cómo se prueba; el tipo sale de la marca del script que abre el proyecto (D-148), sin declararlo otra vez. Las dos primeras: las pruebas que no ocupan tu pantalla (D-072 llevado a cualquier app) y la actualización sola (D-207). Espera Q-324 y Q-325.
 **2026-11-27, Abrir cerrado** (1.5.0): T-87, con Q-322 y Q-323 (en el chat, D-207): cómo una app instalada se pone al día sola en todas las PC (en la del código la arma Iridium; en las otras baja sola la última versión publicada en GitHub) quedó como guía del framework, `referencias/actualizacion-sola.md`, para reusarla en tus apps hasta Plantillas. Tu app la suma cuando se lo pidas en su conversación; como su repositorio es privado, ahí se decide dónde publica sus versiones.
 **2026-11-27, las respuestas de Q-313 a Q-320.** **Diseño, cerrado** (1.4.0): lo nuevo probado en Q-314 (T-105 hecha) y el borde de los controles queda como está, anotado como hueco aceptado (Q-313 B, D-205). **Ideas:** Enter en la nota, probado (Q-316, T-83); «Rechazada» vuelve al rojo, como pediste en Q-315 (T-109 deshecha, D-204). **El ancho de lectura** se elige solo en Docs y Ajustes › Apariencia queda con el acento (Q-317 A, T-102 hecha, D-206). Probados, todo bien: la pestaña que sigue «Esperando» al salir del proyecto (Q-318, T-84), las respuestas que se suben solas a GitHub (Q-319, T-89) y los títulos cortos de tus ideas (Q-320, T-126). Lo que cambió a la vista, probado en Q-321, todo bien.
 **Antes, el mismo día (el avance solo):** la revisión evaluó T-140 a T-143 (T-142 puede ir sola si la aprobás; T-82 y T-95 esperan definirse con vos). **Frentes, D-200** (lo reportaste: Paridad e Ideas decían «Todo hecho» y no se archivaban): lo aprobado de un frente va en su ruta; la tarjeta dice «N aprobados sin lugar en la ruta» y el control lo marca. **Diseño, paso 8:** el lienzo es una sola parada con Tab y las maquetas se descargan a los 30 s de salir de Diseño.
@@ -59,11 +60,18 @@
 Ideas sin evaluar: T-143 (un catálogo de estilos y de movimiento para los design systems, de Q-299), T-142 (el control y las líneas **Ejecutar:** que no se leen), T-140 y T-141 (de R-110), T-76, T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto), T-133 (sesiones para resolver dudas antes de que la IA trabaje sola), T-138 (mensajes en cola, de T-134). La revisión del 2026-11-26 evaluó T-55, T-73, T-74, T-93, T-94, T-115, T-118, T-120, T-133 y T-138 (todas esperan tu aprobación; T-115, T-120 y T-133 conviene pensarlas juntas) y puso tamaño a diez trabajos del Núcleo (los `sola`, T-18, T-41, T-42 y T-79, hechos). Desde FS-I4 las evalúa la revisión del avance solo: la primera (2026-11-25) evaluó T-1, T-2, T-9, T-11, T-13 a T-18, puso tamaño a los pasos de Diseño, Skills, Compartir, Apariencia, Orden, Abrir y Frentes y a diez trabajos del Núcleo; quedan `sola` el paso 8 de Orden (DI-I4, T-86, el paso 8 de Abrir y T-29, hechos); el 2026-11-25 se cerraron las que ya estaban resueltas (T-11, T-38, T-78, T-130) y T-40, repetida en T-79 (**T-39 hecha** el 2026-11-25: la prueba intermitente de la Revisión en apps Electron tenía dos causas, una de la prueba y otra del ayudante que va en las apps de tus proyectos, que a veces dejaba los comentarios sin «Dónde» ni componentes; arregladas las dos). Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-(Ninguna.)
+- **Q-324 — ¿Seguimos con Plantillas como piezas del framework, empezando por estas dos?**
+  Tipo: decisión · frena · Frente: Plantillas
+  Contexto: `modulos/plantillas/propuesta.md` › Cómo encaja en el producto. Cada pieza es un archivo del framework con la receta por tipo de app, el código que ya anda en Iridium para copiar o adaptar, y cómo se prueba. Las primeras: pruebas sin ventanas y la actualización sola.
+  Opciones: A) Sí, piezas sueltas del framework, estas dos primero (recomendada: crece de a una sin engordar los hitos y sirve también para lo que no es código) · B) Solo una regla en `08-calidad.md` con la receta, sin frente · C) Plantillas de proyecto enteras por tipo de app (más grande; va con T-93)
+- **Q-325 — Una pieza nueva, ¿cómo llega a tus proyectos que ya existen?**
+  Tipo: decisión · Frente: Plantillas
+  Contexto: `modulos/plantillas/propuesta.md` › Cómo llega a los proyectos que ya existen. La novedad marca la tarjeta solo de los proyectos que tienen cierto archivo (por ejemplo, la configuración de Playwright).
+  Opciones: A) Como novedad del framework: la tarjeta dice «1 novedad» y Ponerse al día la aplica (recomendada: no se olvida y decidís cuándo) · B) Sin aviso: la IA la aplica la próxima vez que toque las pruebas de ese proyecto · C) Solo cuando lo pidas en la conversación del proyecto
 
 ## Próximo paso
-Plantillas (T-81), paso 1: la propuesta del frente (piezas del framework por tipo de app; la primera, las pruebas sin ventanas; la guía de la actualización sola, D-207, entra como otra). Antes, si querés, una ronda de las ideas que esperan tu aprobación.
-**Leer antes:** `trabajo.md` › T-81, `decisiones.md` › D-150 y D-166, y `referencias/modulos.md` del framework.
+Con Q-324 y Q-325 respondidas: procesarlas y escribir la definición de Plantillas (las dos primeras piezas y dónde viven en el framework).
+**Leer antes:** `modulos/plantillas/estado.md`, `modulos/plantillas/propuesta.md` y `respuestas/Q-324.md`, `respuestas/Q-325.md`.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).
