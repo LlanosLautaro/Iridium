@@ -74,7 +74,7 @@ describe('el lector de novedades.md', () => {
     expect(problemas.map((p) => p.linea)).toEqual([1, 5, 6, 8])
   })
 
-  it('el novedades.md del framework se lee sin problemas y trae las de D-117, D-119 y D-200', async () => {
+  it('el novedades.md del framework se lee sin problemas y trae las de D-117, D-119, D-200 y D-203', async () => {
     const texto = await readFile(RUTA_NOVEDADES_EN_REPO, 'utf8')
     const { novedades, problemas } = leerNovedades(texto)
     expect(problemas).toEqual([])
@@ -82,6 +82,7 @@ describe('el lector de novedades.md', () => {
       'Las piezas del design system llevan ficha',
       'Las medidas fijas son tokens',
       'Lo aprobado de un frente va en su ruta',
+      'Las ideas del usuario llevan un título corto',
     ])
   })
 })

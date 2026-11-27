@@ -21,3 +21,7 @@ La altura de la barra, de los controles y de las filas y el ancho de los paneles
 ## 2026-11-26 — Lo aprobado de un frente va en su ruta
 Solo si: docs/modulos
 Cada `T-n` `pendiente` o `en curso` de `docs/trabajo.md` con `Frente:` tiene que estar nombrado en un paso de la `## Ruta` de ese frente, también si el frente está `hecho`: sumá un paso `[ ]` donde le toca, con su tamaño (y `sola` si va sin el usuario). Si ya no va, pasalo a `descartado` con el motivo. Sin eso, la tarjeta del frente dice «Todo hecho» y el avance solo no lo toma; el control ahora lo marca.
+
+## 2026-11-27 — Las ideas del usuario llevan un título corto
+Solo si: docs/trabajo.md
+Cada idea `Idea: usuario` ya evaluada (con «Evaluada el …») o aprobada, y sin terminar, cuyo título sea un párrafo (más de unas ocho palabras) lleva un título corto en sus palabras, y su texto pasa tal cual al principio de su nota `docs/ideas/T-n.md` (creala si no tiene), como dice `SKILL.md` › El trabajo. El control marca las de más de 80 letras.

@@ -227,6 +227,37 @@ describe('el control (OR-2)', () => {
     expect(r).toContain('trabajo: el título no empieza con `T-n — `')
   })
 
+  it('trabajo.md: el título largo de una idea del usuario evaluada o aprobada; ni la nueva sin evaluar ni la hecha (D-203)', () => {
+    const largo =
+      'que las consolas vengan dentro de iridium, como colapsable en algún lugar que no ocupe espacio y con varias'
+    const trabajo = `${TRABAJO_BIEN}
+## T-3 — ${largo}
+Estado: nueva · Idea: usuario · Fecha: 2026-11-20
+
+## T-4 — ${largo}
+Estado: nueva · Idea: usuario · Fecha: 2026-11-20
+Evaluada el 2026-11-27: mediana, del Núcleo.
+
+## T-5 — ${largo}
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-20
+
+## T-6 — ${largo}
+Estado: hecho · Idea: usuario · Fecha: 2026-11-20
+Evaluada el 2026-11-21: chica.
+
+## T-7 — Las consolas adentro de Iridium
+Estado: en curso · Idea: usuario · Fecha: 2026-11-20
+
+## T-8 — ${largo}
+Estado: pendiente · Idea: IA · Fecha: 2026-11-20
+`
+    const r = reglas(archivos({ trabajo })).filter((x) => x.includes('el título es todo'))
+    expect(r).toEqual([
+      'trabajo: T-4: el título es todo lo que escribió el usuario: ponele uno corto (de tres a ocho palabras) y pasá su texto tal cual al principio de su nota `docs/ideas/T-4.md`',
+      'trabajo: T-5: el título es todo lo que escribió el usuario: ponele uno corto (de tres a ocho palabras) y pasá su texto tal cual al principio de su nota `docs/ideas/T-5.md`',
+    ])
+  })
+
   it('trabajo.md: las ideas con `Idea:` desconocido, un enlace sin dirección y una nota sin su T-n (D-130)', () => {
     const trabajo = `${TRABAJO_BIEN}
 ## T-3 — Rara

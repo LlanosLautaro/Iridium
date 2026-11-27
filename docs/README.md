@@ -2,7 +2,7 @@
 
 Esta carpeta documenta el desarrollo de la app hito por hito. Es documentación viva: se actualiza cuando cambia algo.
 
-**Framework:** 2026-11-26
+**Framework:** 2026-11-27
 
 ## Por dónde empezar
 1. `estado.md` — en qué hito está el proyecto y qué sigue.

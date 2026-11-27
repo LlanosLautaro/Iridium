@@ -1,11 +1,16 @@
 // `docs/trabajo.md` (D-094): cada ítem con código, `Estado:` del vocabulario y `Frente:` válido; ningún código
 // repetido. Las ideas (D-130): `Idea:` con un valor conocido, un enlace con su dirección y cada nota de `docs/ideas/`
-// con su `T-n`. El `Tamaño:` de los del Núcleo (D-193).
+// con su `T-n`. El `Tamaño:` de los del Núcleo (D-193). El título corto de una idea del usuario ya evaluada o
+// aprobada y abierta (D-203).
 import { ESTADOS } from '../estados'
 import { leerTrabajo } from '../trabajo'
 import { type Aviso, type Regla, sinAcentos } from './tipos'
 
 const ARCHIVO = 'docs/trabajo.md'
+
+/** Más que esto no es un título: es el párrafo que escribió el usuario (D-203). */
+export const LARGO_TITULO_IDEA = 80
+const EVALUADA = /^\s*Evaluada el \d{4}-\d{2}-\d{2}/m
 
 export const reglaTrabajo: Regla = (a) => {
   if (a.trabajo === null)
@@ -42,6 +47,17 @@ export const reglaTrabajo: Regla = (a) => {
     if (i.tamanoTexto && i.tamano === null)
       av(
         `«Tamaño: ${i.tamanoTexto}» no se entiende: \`chico\`, \`mediano\` o \`grande\`, y \`, sola\` si la IA lo hace sola`,
+      )
+    if (
+      i.idea === 'usuario' &&
+      [...i.titulo].length > LARGO_TITULO_IDEA &&
+      i.estado !== null &&
+      i.estado !== 'hecho' &&
+      i.estado !== 'descartado' &&
+      (i.estado !== 'nueva' || EVALUADA.test(i.texto))
+    )
+      av(
+        `el título es todo lo que escribió el usuario: ponele uno corto (de tres a ocho palabras) y pasá su texto tal cual al principio de su nota \`docs/ideas/${i.codigo}.md\``,
       )
     if (i.tamanoTexto && i.frente)
       av(

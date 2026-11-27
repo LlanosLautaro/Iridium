@@ -356,7 +356,7 @@ Estado: nueva · Idea: usuario · Fecha: 2026-11-16 · Origen: pedido del usuari
 Evaluada el 2026-11-26: lo más simple, «Mandar un informe» (versión, avisos del control y errores del registro, sin el contenido de los proyectos) que la otra persona envía, es mediano y de Compartir. El canal entre las dos IA o el acceso remoto de la nota es grande y toca la protección (P2). No va directo: hay que conversarlo y elegir el alcance.
 Una forma de depurar la copia compartida: saber si su IA escribe los formatos que Iridium lee (lo que marca el control), si las sesiones fallan y con qué versión. Lo más simple y respetuoso: un botón en su Iridium, «Mandar un informe», que arma un resumen sin el contenido de sus proyectos (los avisos del control, los errores del registro y la versión) para que ella lo envíe; mandarlo solo, sin que lo pida, sería una conexión a un tercero que no eligió (P2) y necesita su permiso. Pensarlo en el chat antes de construir.
 
-## T-75 — La opcion de poder hacer theming local, independiente de las actualizaciones. Supongo que en esa opcion habría que dejar una pequea referencia para que la IA vaya a buscar la guia de como hacerlo a github, donde está el codigo fuente y puede hacer las ediciones sin equivocarse
+## T-75 — Un tema propio que no pisan las actualizaciones
 Estado: pendiente · Frente: Apariencia y ajustes · Idea: usuario · Fecha: 2026-11-16 · Origen: Q-187
 Decidido en Q-187 (D-134): solo tokens, la guía dentro de la app y la IA desde Ajustes. Va después de Ideas.
 Revisada con la IA el 2026-11-16:
@@ -384,15 +384,15 @@ Estado: hecho · Fecha: 2026-11-17 · Tamaño: chico, sola
 Visto en el paso 8 de Ideas: `pnpm audit` da 10 avisos (1 alto): `hono` y `@hono/node-server` llegan con el SDK de Claude Code (0.3.309; hay 0.3.326) y `picomatch` y `minimatch`, con `electron-builder` (solo al armar). Ninguno en lo que Iridium expone. Subir el SDK con las pruebas completas y ver si `electron-builder` ya trae las versiones arregladas. Menor.
 Hecho el 2026-11-26: el SDK de Claude Code pasó de 0.3.309 a 0.3.332 y `hono` (4.13.22) y `@hono/node-server` (2.1.11) quedaron en sus versiones arregladas; `picomatch` ya no aparece. Quedan 2 avisos moderados de `minimatch` dentro de `electron-builder` 26.18.0, que sigue siendo la última y no viaja en la app: es el Defecto 4 de `08-calidad.md`, que se cierra cuando lo actualicen. El motor real anda con el SDK nuevo (`tools/probar-motor.ts`: sesión, modelos, uso y estilos).
 
-## T-80 — Ofrecer la capacidad a los proyectos de mantener las aplicaciones acualizadas si se cuplen ciertas condiciones, que la app no esté abierta y que esté instalada, esto solo si corresponde para el tipo de app. En el caso actual serviría tanto para Moon como para bedrock studio
+## T-80 — Mantener al día las apps de los proyectos
 Estado: en curso · Frente: Abrir · Idea: usuario · Fecha: 2026-11-17 · Origen: Q-208
 Evaluada el 2026-11-18; aprobada en Q-208 (D-148), frente Abrir, detrás de Arranque. Son dos problemas: **saber cómo se abre** lo que hace un proyecto (lo que hoy les cuesta a otras personas) y **mantenerlo al día**. El primero vale para casi todo (una app de escritorio se abre con su `.exe`, una página con su dirección, una herramienta de consola con un comando; un proyecto sin nada que usar no lleva botón); el segundo, solo para las apps de escritorio que se arman en la PC. Propuesta: que la IA declare en `scripts.md` cuál es el script que abre lo que el proyecto hace y de qué tipo es, y que Iridium lo muestre como **Abrir** en la tarjeta y la pestaña; después, para el tipo escritorio, armar solo cuando hay cambios y la app está cerrada, como Iridium hace consigo mismo (D-122). Es un cambio de formato: va con el lector, el control y el framework (D-086). Pasada adelante el 2026-11-19 (D-153): frente abierto en `modulos/abrir/`, definición esperando Q-216.
 
-## T-81 — Tengo otro problema con algunas apps, especificamente con los tests, Moon usa los tests ocupando la pantalla, mientras que iridium los hace sin aparecer pestañas a cada rato, eso mismo queremos lograr en todas las apps compatibles, no s´pe si esto es una guia para el framework, creo que conecta con lo de las plantillas de TIPO de apps (muy genéricas o modulares quizás ¿? )
+## T-81 — Pruebas sin ventanas en todas las apps
 Estado: pendiente · Frente: Plantillas · Idea: usuario · Fecha: 2026-11-18 · Origen: Q-209
 Evaluada el 2026-11-18; aprobada en Q-209 (D-150): frente Plantillas, piezas modulares por tipo de app; la primera, las pruebas sin ventanas. Detrás de Arranque, antes de Abrir. La app de la que habla también es de Electron, como Iridium, y abre la ventana de cada prueba a la vista. Electron no tiene un modo «sin ventana»: lo que hace Iridium (D-072) es una receta en su propio código, que se prende solo durante las pruebas (`IRIDIUM_OCULTA`): la ventana fuera de la pantalla, sin botón en la barra de tareas y sin foco, y las consolas escondidas. Se puede llevar a cualquier proyecto, pero cambia según el tipo de app: una página que se prueba con Playwright ya corre sin ventana con solo pedirlo; una app de escritorio de Electron necesita la receta; una herramienta de consola no abre ventanas; otras apps de escritorio, lo que su motor permita. Propuesta: una regla en el framework («las pruebas no ocupan la pantalla del usuario») con la receta por tipo en `referencias/08-calidad.md` y `07-construccion.md`, que la IA aplica al armar las pruebas de cualquier proyecto y al retomar uno que ya las tiene. El tipo de app es el mismo dato que va a declarar el frente Abrir (D-148); unas plantillas por tipo de app son una idea más grande, aparte.
 
-## T-82 — una demo en vivo para cuando se instala la app por primera vez, muestra paso a paso qué hacer y como hacerlo, quizás con un proyecto pequeño de prueba y un modelo de los más baratos, haiku para Claude, luna para ChatGPT, etc
+## T-82 — Una demo en vivo al instalar Iridium
 Estado: pendiente · Idea: usuario · Fecha: 2026-11-18 · Tamaño: grande
 Sin `sola`: necesita que decidas qué muestra la demo, con qué proyecto de prueba y qué motores (cuesta uso de tu cuenta).
 
@@ -440,7 +440,7 @@ Que Iridium corra las pruebas al terminar cada turno de la IA y solo le avise si
 Estado: descartado · Idea: IA · Fecha: 2026-11-20 · Origen: D-163
 Sin cambiar cuándo se verifica: un solo comando de cierre que corre todo y muestra solo lo que falla, Playwright nunca en segundo plano con sondeos, y probar si puede correr de a varias ventanas (hoy va de a una). Ahorra pasos y minutos de espera (`research/costo-de-pruebas.md`).
 
-## T-93 — Al comparti Iridium sucedió un problema, la otra persona no tenía ni idea de como usarlo, quizás una demo programada sirva, como un recorrido de la app, es una idea ya mencionada, la otra cosa es que tampoco tenía ni la más de las palidas ideas sobre desarrollo, no tenia ni nocion de lo que es una app web, de lo que es una nativa, electron, rust, nada de nada. Como enfrentamos este segundo desafío? es que en realidad hay que hacerle saber estas cosas? definir plantillas predefinidas para ciertos tipos de apps dependiendo de algunos requisitos? como por ejemplo sincronizacion celular/desktop, etc.
+## T-93 — Guiar a quien no sabe nada de desarrollo
 Estado: nueva · Idea: usuario · Fecha: 2026-11-20
 Evaluada el 2026-11-26: dos partes: un recorrido guiado de la app (mediano, Inicio o Compartir) y que la IA guíe a alguien sin nociones técnicas con plantillas por requisitos (sincronía celular, web o escritorio), que es grande y va con Plantillas (T-81). No va directo: hay que decidir con vos cuánto se le explica y cuánto se le esconde a esa persona.
 
@@ -569,7 +569,7 @@ Estado: hecho · Idea: usuario · Fecha: 2026-11-22 · Origen: Q-257
 Evaluada el 2026-11-22: hoy (D-159) la primera vuelta empieza a los 20 s de abrir y va de a un proyecto (unos 1,6 s cada uno; medido: 7 con remoto, 11 s en total), y nada frena mandarle algo a la IA antes: en la otra PC la IA puede trabajar sobre archivos viejos y después las dos PC quedan separadas. Arranque (y T-113) tiene el mismo hueco. Con Q-257 (A, D-172): por proyecto; con Q-259 (D-173), antes de Capacidades.
 Hecha el 2026-11-22: la primera vuelta empieza a los 2 s de abrir y el proyecto al que se entra o al que se le manda algo pasa primero en la fila. Mandarle algo a la IA (también desde Revisión), Arranque y Commit esperan a que ese proyecto se haya mirado desde que abrió Iridium, hasta 15 s; lo ya mirado no espera. En el chat lo escrito queda en el cuadro con «Poniéndose al día con GitHub…» (en Git, el botón lo dice) y sale solo; sin conexión, sin sesión, con commits distintos de cada lado o pasados los 15 s, sale igual y una línea dice por qué. Pruebas: `tests/d172-al-dia.test.ts` y `tests/e2e/d172-al-dia.spec.ts`. Probada por el usuario en Q-260 (2026-11-23): todo bien, también sin internet.
 
-## T-115 — añadir la seleccion de modo de permisossi viene con claude cli o agent sdk, no crear una funcion personalizada
+## T-115 — Elegir el modo de permisos del SDK
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Evaluada el 2026-11-26: el SDK ya tiene el modo de permisos (hoy Iridium lo fija en «sin confirmaciones»); elegir entre ese y el de solo planificar es chico, pero los modos que piden permiso necesitan mostrar los pedidos en la conversación: mediano. De Paridad, junto con T-120. No va directo: elegí qué modos querés tener.
 
@@ -587,7 +587,7 @@ Estado: hecho · Idea: usuario · Fecha: 2026-11-22
 Revisada el 2026-11-22: Iridium muestra bien el estado que lee; el problema era la IA. Aprobar pasa la idea a `pendiente` (Aprobada), pero nada le pedía a la IA pasarla a `hecho` (Hecha) al terminarla, y dos ideas tuyas ya construidas seguían como Aprobadas: T-70 (el Arranque, terminado el 2026-11-21) y T-96 (el + y los comandos del chat, la primera parte de Paridad). Ninguna idea perdió su marca de idea ni cambió sola de estado.
 Hecho el 2026-11-22 (D-174): las dos pasan a Hechas, el framework dice cuándo se cierra una idea (al marcar hecho el último paso de la ruta que la nombra y al cerrar el frente que nació de ella) y el control lo avisa al terminar cada turno si la IA se olvida. Pruebas: `tests/ma1-ruta.test.ts`.
 
-## T-118 — skill de iridium incluye un MCP iridium? tendrpia algún sentido si todo es local?
+## T-118 — ¿Un MCP propio de Iridium?
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Evaluada el 2026-11-26: un MCP de Iridium tendría sentido aunque todo sea local: le daría a la IA herramientas para leer y escribir preguntas, trabajos y rutas con el formato ya validado, en vez de editar los archivos y esperar al control. Mediano, del framework (Plantillas). La recomendación es esperar: el control ya corrige casi todo. Necesita tu decisión.
 
@@ -595,7 +595,7 @@ Evaluada el 2026-11-26: un MCP de Iridium tendría sentido aunque todo sea local
 Estado: hecho · Idea: usuario · Fecha: 2026-11-22
 Hecho el 2026-11-23: la extensión de VS Code estaba desinstalada, pero dejó cinco hooks en la configuración de usuario de Claude Code (al terminar, al pedir permiso, al preguntar, al mandar un mensaje y al terminar un subagente) que seguían sonando en cada sesión, también en las de Iridium. Se sacaron, y sus archivos y lo que quedaba de la extensión se borraron del todo, sin respaldo, a pedido del usuario. El sonido propio de Iridium es T-52 (D-183).
 
-## T-120 — comandos iridium, por ejemplo /consulta sería para hablar con la IA pero que no haga cambios de código, puede leer y todo pero no escribir (no estricto, por ejemplo sí pod´ria escribir en pendientes o en ideas etc)
+## T-120 — Comandos de Iridium, como /consulta
 Estado: nueva · Idea: usuario · Fecha: 2026-11-22
 Evaluada el 2026-11-26: se puede con los comandos del plugin de Iridium (los muestra la lista de «/» de PA-I1) y el modo de solo planificar del SDK: /consulta lee todo y escribe solo en trabajo.md y estado.md. Chico a mediano, de Paridad, junto con T-115 y T-133. No va directo: elegí qué comandos van primero.
 
@@ -623,8 +623,9 @@ La tarjeta de un frente y su «Te espera» iban siempre en ámbar (D-180), aunqu
 Hecho el 2026-11-23: en Frentes la cuenta va en gris y pasa a ámbar solo si alguna de esas preguntas frena, como en la grilla. Con su prueba (Playwright del tablero y del Mapa). Se mira en Q-275.
 
 ## T-126 — Un título corto para las ideas del usuario al evaluarlas
-Estado: pendiente · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2) · Tamaño: mediano, sola
+Estado: hecho · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2) · Tamaño: mediano, sola
 Una idea que anotás queda con tu texto entero como título, y lo sigue teniendo al aprobarla: en Frentes, T-116 (las consolas adentro) ocupa cinco renglones en el Núcleo, y en Ideas varias se cortan a la mitad. Propuesta: al evaluarla, la IA le pone un título corto («Las consolas adentro de Iridium») y tu texto queda tal cual debajo, como «Tu idea: …», así no se pierde nada de lo que escribiste. Es un cambio del framework (cómo se escribe una idea evaluada) con su control; Iridium no cambia. Si no, se deja como está.
+Hecho el 2026-11-27 (D-203): al evaluar una idea tuya con un párrafo de título, la IA le pone uno corto y tu texto pasa tal cual al principio de su nota (no a «Tu idea: …» en este archivo, porque Ideas no lo muestra); el control marca las que falten. Las nueve largas de este proyecto ya lo tienen.
 
 ## T-127 — Una segunda Iridium abierta trabó la actualización
 Estado: hecho · Fecha: 2026-11-23 · Origen: el usuario en el chat («parece que ya no se actualiza»)
@@ -662,7 +663,7 @@ Hecho el 2026-11-24:
 Pruebas nuevas en `t132-actualizaciones.test.ts` (las dos del ayudante fallan con el de antes) y la barra en `co6-sin-armar.spec.ts`. Se prueba en Q-289.
 2026-11-24, probada en Q-289. Con Q-290 (D-192): en GitHub quedan las últimas 10 versiones y cada versión nueva dice qué trae en el aviso de la esquina. Y la publicación sola no había corrido nunca: los archivos de `docs/` sin commitear (tus respuestas) hacían que la versión se viera «con cambios sin commitear»; ya no cuentan. Se ve en Q-291.
 
-## T-133 — unn nuevo tipo de sesiones, quizás una skill o un comando, un tipo de sesion de trabajodonde el foco no es avanzar, sino resolver dudas y consultas para que luego la IA pueda trabajar sola por más tiempo, estas sesiones pueden ser un poco más largas supongo, incluso hasta gastar toda la cuota de 5hs, con eso listo, las siguientes 5hs o 10hs claude podrá trabajar solo, como un programador real que le rinde cuentas al cliente
+## T-133 — Sesiones para resolver dudas, no para avanzar
 Estado: nueva · Idea: usuario · Fecha: 2026-11-24
 Evaluada el 2026-11-26: un comando o modo de sesión que recorre los frentes y lo que viene, junta todas las dudas en una conversación y deja los pasos con tamaño y «sola» para que el avance solo siga horas. Mediano, de Frentes, junto con T-120 (/consulta). No va directo: hay que definir con vos cómo termina la sesión y qué deja escrito.
 
