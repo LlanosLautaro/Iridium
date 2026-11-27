@@ -29,3 +29,7 @@ Cada idea `Idea: usuario` ya evaluada (con «Evaluada el …») o aprobada, y si
 ## 2026-11-27 — Las pruebas no ocupan la pantalla del usuario
 Solo si: playwright.config.ts · playwright.config.js · playwright.config.mjs · app/playwright.config.ts · app/playwright.config.js · tests/playwright.config.ts
 Aplicá `recetas/pruebas-sin-ventanas.md` según el tipo de la app (la marca del script que la abre): en una página, que Playwright corra sin ventana; en una de Electron, la variable que solo prenden las pruebas, con la ventana fuera de la pantalla, sin foco ni sonido, y las consolas escondidas. Las pruebas tienen que pasar igual que antes, y la prueba del usuario va como `Q-n` con casillas (la receta › Cómo se prueba). Si ya no abren nada a la vista, decilo y no cambies nada.
+
+## 2026-11-27 — Las pruebas sin ventanas no tocan lo que la app recuerda
+Solo si: playwright.config.ts · playwright.config.js · playwright.config.mjs · app/playwright.config.ts · app/playwright.config.js · tests/playwright.config.ts
+Si la app es de Electron, repasá los puntos 5 y 6 de Escritorio en `recetas/pruebas-sin-ventanas.md`: con la variable de las pruebas, la app no lee ni guarda el lugar y el tamaño de su ventana (si no, el usuario la puede abrir después fuera de la pantalla) y no se trae al frente (`focus()`, `maximize()`, avisos de Windows). Si ya era así o la app no recuerda su ventana, decilo y no cambies nada.

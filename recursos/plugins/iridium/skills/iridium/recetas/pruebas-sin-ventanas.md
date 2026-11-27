@@ -37,12 +37,18 @@ Electron no tiene un modo sin ventana: la ventana tiene que existir para que la 
    ```ts
    spawn('cmd.exe', ['/d', '/s', oculta ? '/c' : '/k', comando], { windowsHide: oculta })
    ```
-5. **Lo que no se puede esconder** (abrir el navegador, VS Code, el explorador) no se hace en las pruebas: una variable de las pruebas lo cambia por algo que la prueba puede mirar.
+5. **Lo que la app recuerda de su ventana** (el lugar, el tamaño, maximizada): con la variable no lo lee ni lo guarda. Si lo leyera, la abriría maximizada a la vista; si lo guardara, la próxima vez el usuario la abriría fuera de la pantalla.
+   ```ts
+   const como = oculta ? null : leerVentanaGuardada()
+   v.on('close', () => { if (!oculta) guardarVentana(v) })
+   ```
+6. **Lo que trae la ventana al frente** (`focus()`, `maximize()`, `flashFrame()`, `app.focus()`, un aviso de Windows con `Notification`, un sonido): con la variable no se llama. Tampoco lo que corre solo en la app instalada (actualizar, publicar), que en las pruebas no va.
+7. **Lo que no se puede esconder** (abrir el navegador, VS Code, el explorador) no se hace en las pruebas: una variable de las pruebas lo cambia por algo que la prueba puede mirar.
 
 Si las pruebas no son de Playwright, lo mismo: la variable la prende su herramienta.
 
 ## Consola
-Una herramienta de consola no abre ventanas: no le toca. Si abre algo (un navegador, un archivo), va como el punto 5.
+Una herramienta de consola no abre ventanas: no le toca. Si abre algo (un navegador, un archivo), va como el punto 7 de Escritorio.
 
 ## Cómo se prueba
 - La IA corre las pruebas enteras y mira que pasen igual que antes, con las capturas iguales (no en blanco).

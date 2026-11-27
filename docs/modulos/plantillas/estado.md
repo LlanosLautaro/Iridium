@@ -13,19 +13,20 @@
 | 4. UX | descartado (no tiene pantallas: lo lee la IA) | — |
 | 5. Diseño técnico | descartado (el cambio de `Solo si:` es chico; va en el log de PL-I1) | — |
 | 6. UI (solo si hay piezas nuevas) | descartado (sin interfaz) | — |
-| 7. Construcción | en curso (PL-I1 hecha; espera Q-327) | este archivo |
-| 8. Calidad | pendiente | este archivo |
-| 9. Lanzamiento | pendiente | este archivo |
+| 7. Construcción | hecho (PL-I1, probada en Q-327) | este archivo |
+| 8. Calidad | hecho (2026-11-27) | este archivo |
+| 9. Lanzamiento | hecho (va con Iridium 1.6.0) | este archivo |
 
 ## En qué estamos ahora
-Definición aprobada (Q-326). PL-I1 hecha: las dos recetas en `recetas/` del framework, citadas desde `SKILL.md`, y la novedad de las pruebas sin ventanas, que les llega solo a los proyectos con Playwright. Espera Q-327, la prueba en tu app.
+**Cerrado el 2026-11-27 (1.6.0).** PL-I1 probada en Q-327, todo bien: en tu app de Electron, Ponerse al día aplicó la receta y sus pruebas corren sin verse. La calidad sumó a la receta lo que la app recuerda de su ventana y lo que la trae al frente, con su novedad. T-81 hecha; sigue recibiendo recetas nuevas (T-1, la guía por tipo de proyecto, es la candidata).
 
 ## Ruta
 - [x] Aprobar la propuesta: qué es una receta y las dos primeras (Q-324, Q-325)
 - [x] Probar la receta sin ventanas en una app de Electron de muestra, fuera de Iridium (S-9)
 - [x] Aprobar la definición de las dos primeras recetas (Q-326)
 - [x] Escribir la receta «Pruebas sin ventanas», mudar la actualización sola a `recetas/` y avisar con la novedad (PL-I1)
-- [ ] Ponerse al día en tu app de Electron y ver que sus pruebas no se ven (T-81, Q-327)
+- [x] Ponerse al día en tu app de Electron y ver que sus pruebas no se ven (T-81, Q-327)
+- [x] La calidad de las recetas y cerrar el frente
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -55,6 +56,12 @@ Definición aprobada (Q-326). PL-I1 hecha: las dos recetas en `recetas/` del fra
 
 **Encontrado de paso:** una novedad con la misma fecha que el `**Framework:**` de un proyecto no le llega (T-145).
 
+### Calidad (paso 8, 2026-11-27)
+- Q-327, todo bien: la novedad le llegó solo a tu app de Electron, Ponerse al día aplicó la receta, sus pruebas pasan y no se ven, no roban el foco ni suenan.
+- La receta comparada con el código de Iridium (D-072): le faltaban dos cosas que Iridium sí hace. **Lo que la app recuerda de su ventana**: con la variable, no lo lee ni lo guarda (si no, después de las pruebas el usuario la abriría fuera de la pantalla o maximizada a la vista). **Lo que la trae al frente** (`focus()`, `maximize()`, avisos de Windows) y lo que corre solo instalada (actualizar, publicar): con la variable, no va. Sumados como puntos 5 y 6 de Escritorio, con la novedad «Las pruebas sin ventanas no tocan lo que la app recuerda» (mismo `Solo si:`), que llega aunque te hayas puesto al día hoy (T-145). Iridium ya lo cumple: su `**Framework:**` pasa a esa.
+- La actualización sola, revisada: sin cambios.
+- Pruebas: `or-novedades` con la novedad nueva; Vitest 1182 en verde; typecheck y lint sin errores.
+
 ## Próximo paso
-Con Q-327 respondida: si anduvo, la calidad de las recetas (paso 8) y cerrar el frente (T-81 hecha); si no, arreglar la receta.
-**Leer antes:** `respuestas/Q-327.md` y `recetas/pruebas-sin-ventanas.md` del framework.
+Frente cerrado. Una receta nueva entra como un paso nuevo de la ruta, con su novedad si les pide algo a los proyectos que ya existen (D-209).
+**Leer antes:** `recetas/` del framework.

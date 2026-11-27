@@ -1,6 +1,6 @@
 {
   "name": "iridium",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "description": "Iridium: plataforma de desarrollo personal donde el usuario dirige con sus ideas y la IA desarrolla.",
   "main": "out/main/index.js",
