@@ -3,7 +3,15 @@
 // `docs/ideas/T-n/` y el texto con formato se pega como texto. Si el pegado no trae la imagen a la ventana, se busca en
 // el portapapeles de Windows; sin ninguna, se dice qué trae (Q-189). Se pinta una vez al abrir; cada cambio sube como el
 // texto que guarda Iridium (el título en la primera línea), y quien la usa lo guarda un momento después.
-import { type ClipboardEvent, type DragEvent, type MouseEvent, useLayoutEffect, useRef } from 'react'
+// Enter guarda y cierra la idea (`alListo`, sin cambiar su estado); Ctrl+Enter o Shift+Enter bajan de renglón (T-83, R-90).
+import {
+  type ClipboardEvent,
+  type DragEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  useLayoutEffect,
+  useRef,
+} from 'react'
 import { bloquesDeIdea, escritoDeIdea } from '../../../compartido/ideas'
 import {
   abrirEnlace,
@@ -30,9 +38,11 @@ interface Props {
   imagenes: Record<string, string>
   alCambiar: (escrito: string) => void
   alFallo: (mensaje: string) => void
+  /** Enter: guardar lo escrito y cerrar la idea. */
+  alListo: () => void
 }
 
-export function NotaDeIdea({ ruta, codigo, titulo, nota, imagenes, alCambiar, alFallo }: Props) {
+export function NotaDeIdea({ ruta, codigo, titulo, nota, imagenes, alCambiar, alFallo, alListo }: Props) {
   const editor = useRef<HTMLDivElement>(null)
   const molde = useRef<HTMLSpanElement>(null)
   const inicial = useRef({ titulo, nota, imagenes })
@@ -119,6 +129,15 @@ export function NotaDeIdea({ ruta, codigo, titulo, nota, imagenes, alCambiar, al
     if (archivos.length) void pegarImagenes(deArchivos(archivos))
   }
 
+  // Enter guarda y cierra; con Ctrl o Shift, un párrafo nuevo (el mismo que hacía Enter). Mientras se compone una letra
+  // (los acentos de un teclado internacional), Enter es del compositor.
+  const alTecla = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Enter' || e.nativeEvent.isComposing || e.altKey || e.metaKey) return
+    e.preventDefault()
+    if (e.ctrlKey || e.shiftKey) document.execCommand('insertParagraph')
+    else alListo()
+  }
+
   // Apretar un enlace no mueve el cursor (la hoja se correría bajo el mouse); un clic lo abre en el navegador.
   const alApretar = (e: MouseEvent<HTMLDivElement>) => {
     if (enlaceTocado(e.target)) e.preventDefault()
@@ -148,6 +167,7 @@ export function NotaDeIdea({ ruta, codigo, titulo, nota, imagenes, alCambiar, al
         tabIndex={0}
         onFocus={() => document.execCommand('defaultParagraphSeparator', false, 'p')}
         onInput={avisar}
+        onKeyDown={alTecla}
         onPaste={alPegar}
         onDrop={alSoltar}
         onMouseDown={alApretar}

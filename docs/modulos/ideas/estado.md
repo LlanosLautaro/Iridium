@@ -30,7 +30,7 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 - [x] Ideas del inicio como las de un proyecto, y moverlas a uno (ID-I4)
 - [x] Probar Ideas con sus historias, una por una
 - [x] «Rechazada» en gris, no en rojo, que es el color de los errores (T-109)
-- [ ] Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea (T-83, chico, sola)
+- [x] Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea (T-83)
 - [ ] La miniatura del sitio en un enlace pegado (T-76, mediano)
 
 ## Cambios requeridos en documentos generales
@@ -49,6 +49,7 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 
 ## Log de iteraciones
 ### En operación
+- **2026-11-27, T-83 (el avance solo, R-90):** en la nota de una idea abierta, Enter guarda lo escrito y cierra la idea, igual que Esc (`cerrar`: sin título no cierra y lo dice), sin cambiar su estado; Ctrl+Enter o Shift+Enter bajan de renglón (un párrafo nuevo, como hacía Enter); mientras se compone una letra, Enter es del compositor. Vale en Ideas de un proyecto y en las del inicio (es la misma nota). `ux.md` › ID-2 lo dice. Prueba: `tests/e2e/id1-ideas-proyecto.spec.ts` (Ctrl+Enter y Shift+Enter bajan de renglón; Enter cierra, la nota queda en el disco con el renglón nuevo y la idea sigue sin evaluar; captura `test-results/t83-enter.png`). Verificado: Playwright de Ideas (id1 e in1) 10/10, typecheck y lint. Se prueba en Q-316.
 - **2026-11-27, T-109 (el avance solo, D-201):** «Rechazada» y el ícono de una idea rechazada van en gris (`--texto-3`), con el título apagado como antes; el rojo queda para los errores (`06-ui.md`). Aprobada sigue en verde. Lo mismo en las maquetas `ideas-proyecto-c.html` e `ideas-inicio-c.html` y en `definicion.md`. Prueba: `tests/e2e/id1-ideas-proyecto.spec.ts` mide el color de la palabra y del ícono (el gris del texto apagado); captura `test-results/id1-ideas-lista.png`. Verificado: Playwright de Ideas 10/10, `tests/estilos.test.ts`, typecheck y lint. Se prueba en Q-315.
 ### ID-I4 — Las ideas sueltas del inicio (hecha y probada)
 - **2026-11-17, Q-198:** todo bien: pegar una captura en el campo de arriba en el inicio y en un proyecto, solo una captura («Imagen pegada»), otra captura en una idea abierta y Mover a un proyecto con la nota y la captura.

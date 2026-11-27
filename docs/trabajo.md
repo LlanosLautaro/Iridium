@@ -396,8 +396,9 @@ Evaluada el 2026-11-18; aprobada en Q-209 (D-150): frente Plantillas, piezas mod
 Estado: pendiente · Idea: usuario · Fecha: 2026-11-18
 
 ## T-83 — Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea
-Estado: pendiente · Frente: Ideas · Fecha: 2026-11-18 · Origen: R-90
+Estado: hecho · Frente: Ideas · Fecha: 2026-11-18 · Origen: R-90
 En las ideas de un proyecto, al escribir la nota de una idea: Enter guarda lo escrito y cierra el cuadro, sin cambiar el estado de la idea; Ctrl+Enter hace el salto de línea. Hoy Enter salta de línea.
+Hecho el 2026-11-27: en la nota de una idea (de un proyecto o del inicio), Enter guarda y la cierra sin cambiar su estado; Ctrl+Enter o Shift+Enter bajan de renglón. Se prueba en Q-316.
 
 ## T-84 — La pestaña no muestra «esperando» mientras la IA espera algo de fondo
 Estado: pendiente · Fecha: 2026-11-19 · Origen: R-92

@@ -612,6 +612,7 @@ export function IdeasProyecto({
             imagenes={leida?.imagenes ?? {}}
             alCambiar={escribir}
             alFallo={(mensaje) => setFallo({ titulo: 'No se pegó la imagen', mensaje })}
+            alListo={() => void cerrar()}
           />
         )
       ) : (

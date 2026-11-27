@@ -18,6 +18,7 @@
   - [ ] Si lo escrito es solo una dirección de internet, va a «Enlaces» (ID-4).
 - **ID-2 —** Como usuario quiero abrir una idea y escribir en ella, para pensarla con más detalle.
   - [ ] Un clic en su renglón la abre en su lugar; otro clic, Esc o abrir otra la cierra. Una abierta a la vez.
+  - [ ] En la nota, Enter guarda lo escrito y cierra la idea, sin cambiar su estado; Ctrl+Enter (o Shift+Enter) baja de renglón (T-83, R-90).
   - [ ] La nota se escribe libre: pegar una dirección la vuelve una etiqueta con el nombre y el sitio (un clic la abre en el navegador); pegar una imagen la guarda con la idea; pegar texto con formato pega solo el texto.
   - [ ] Se guarda sola un momento después de escribir; al salir y volver sigue ahí.
   - [ ] Cambiar la primera línea cambia el título del renglón.

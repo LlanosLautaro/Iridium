@@ -160,7 +160,10 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     const nota = ideas.getByRole('textbox', { name: /Idea Un sonido/ })
     await expect(nota).toBeFocused()
     await nota.press('End')
-    await nota.pressSequentially(' (bajito)\nQue no suene si estoy mirando la ventana.')
+    // Ctrl+Enter baja de renglón (T-83, R-90): Enter solo guarda y cierra.
+    await nota.pressSequentially(' (bajito)')
+    await nota.press('Control+Enter')
+    await nota.pressSequentially('Que no suene si estoy mirando la ventana.')
     await expect
       .poll(() => readFile(join(raiz, 'Alfa/docs/ideas/T-1.md'), 'utf8').catch(() => ''))
       .toContain('Que no suene si estoy mirando la ventana.')
@@ -204,6 +207,23 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
       'Un sonido cuando la IA termina (bajito)',
       'Que no suene si estoy mirando la ventana.',
     ])
+    // T-83 (R-90): Enter guarda lo escrito y cierra la idea, sin cambiar su estado; Shift+Enter también baja de renglón.
+    await win.keyboard.press('Control+End')
+    await win.keyboard.press('Shift+Enter')
+    await win.keyboard.type('Ni de noche.')
+    await win.keyboard.press('Enter')
+    await expect(abierta).toHaveCount(0)
+    await expect
+      .poll(() => readFile(join(raiz, 'Alfa/docs/ideas/T-1.md'), 'utf8').catch(() => ''))
+      .toContain('ventana.\n\nNi de noche.')
+    await expect.poll(trabajo).toMatch(/## T-1 — [^\n]+\nEstado: nueva/)
+    await fila('Un sonido cuando la IA termina').getByRole('button').first().click()
+    await expect(ideas.getByRole('textbox', { name: /Idea Un sonido/ }).locator('p')).toHaveText([
+      'Un sonido cuando la IA termina (bajito)',
+      'Que no suene si estoy mirando la ventana.',
+      'Ni de noche.',
+    ])
+    await win.screenshot({ path: 'test-results/t83-enter.png' })
     await win.keyboard.press('Escape')
 
     // La de la IA se lee al abrirla, sin escribir en ella; se rechaza con el clic derecho.
@@ -230,7 +250,7 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     const hoja = ideas.getByRole('textbox', { name: /Idea Un sonido/ })
     await hoja.locator('p').nth(1).click()
     await win.keyboard.press('End')
-    await win.keyboard.press('Enter')
+    await win.keyboard.press('Control+Enter')
     await app.evaluate(({ clipboard }) => clipboard.writeText('https://github.com/alfa/sonidos'))
     await win.keyboard.press('Control+V')
     await expect(hoja.locator('.nota-enlace')).toHaveText('sonidosgithub.com')
@@ -424,7 +444,7 @@ test('Calidad (paso 8): Shift+Enter, una idea abierta a la vez, pegar con format
     const hoja = ideas.getByRole('textbox', { name: /Idea Un sonido/ })
     await expect(hoja).toBeFocused()
     await win.keyboard.press('End')
-    await win.keyboard.press('Enter')
+    await win.keyboard.press('Control+Enter')
     await app.evaluate(({ clipboard, ClipboardItem }) =>
       clipboard.write([
         new ClipboardItem({
