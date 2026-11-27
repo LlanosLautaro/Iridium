@@ -209,6 +209,20 @@ export function fechaDelFramework(readme: string): string | null {
 }
 
 /**
+ * El título de la última novedad hecha, que Ponerse al día anota después de la fecha (`**Framework:** AAAA-MM-DD ·
+ * Título`, T-145); null si no lo tiene.
+ */
+export function ultimaDelFramework(readme: string): string | null {
+  const lineas = readme.replace(/^﻿/, '').split(/\r?\n/)
+  const resto = campo(lineas, 'Framework')
+    ?.replace(/^.*?\d{4}-\d{2}-\d{2}/, '')
+    .replace(/^[\s·—–-]+/, '')
+    .replace(/^[`«"]+|[`»"]+$/g, '')
+    .trim()
+  return resto ? resto : null
+}
+
+/**
  * Cómo está un proyecto con el framework (W-13); null si no cuenta (archivado, descontinuado o reemplazado por otro).
  * Con `**Framework:**` está al día o con avisos; con `estado.md` y sin esa línea, de framework viejo; sin `estado.md`,
  * es una carpeta simple.

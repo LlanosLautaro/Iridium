@@ -1,10 +1,10 @@
 # Novedades del framework
 
-Los cambios del framework que les piden algo a los proyectos que ya lo siguen (D-118), del más viejo al más nuevo. Iridium compara cada fecha con la de `**Framework:**` del `docs/README.md` de un proyecto: las más nuevas son sus novedades («N novedades del framework» en la tarjeta y en Skills › Framework) y **Ponerse al día** se las pide a su IA, que las hace y adelanta esa fecha a la de la última.
+Los cambios del framework que les piden algo a los proyectos que ya lo siguen (D-118), del más viejo al más nuevo. Iridium compara cada fecha con la de `**Framework:**` del `docs/README.md` de un proyecto: las más nuevas son sus novedades («N novedades del framework» en la tarjeta y en Skills › Framework) y **Ponerse al día** se las pide a su IA, que las hace y adelanta esa línea a la fecha y el título de la última (`**Framework:** AAAA-MM-DD · Qué cambió`): las del mismo día que vienen después siguen siendo nuevas.
 
 Cómo se escribe una (formato en `SKILL.md` › Las novedades del framework):
 
-- `## AAAA-MM-DD — Qué cambió`, en una línea; la fecha es la del cambio en el framework.
+- `## AAAA-MM-DD — Qué cambió`, en una línea; la fecha es la del cambio en el framework y el título no se repite en el mismo día.
 - `Solo si: <ruta>` (opcional, la línea siguiente): solo les toca a los proyectos que tienen ese archivo o carpeta; con varias separadas por ` · `, a los que tienen alguna.
 - Debajo, qué tiene que hacer el proyecto, corto y concreto.
 

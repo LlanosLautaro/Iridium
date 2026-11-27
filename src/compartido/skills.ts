@@ -106,7 +106,13 @@ export function textoParaMirar(t: string): string {
  * de la última. Se cita en la conversación del proyecto y lo manda el usuario.
  */
 export function mensajePonerseAlDia(novedades: readonly NovedadFramework[]): string {
-  const ultima = novedades.reduce((m, n) => (n.fecha > m ? n.fecha : m), '')
+  // La última, en el orden del archivo (del más viejo al más nuevo): su fecha y su título (T-145), para que una novedad
+  // posterior del mismo día no cuente como vista.
+  const u = novedades.reduce<NovedadFramework | null>(
+    (m, n) => (m === null || n.fecha >= m.fecha ? n : m),
+    null,
+  )
+  const ultima = u ? `${u.fecha} · ${u.titulo}` : ''
   const lista = novedades.map((n) => `- **${n.fecha} — ${n.titulo}.** ${n.texto.replace(/\s*\n\s*/g, ' ')}`)
   return [
     `Ponete al día con el framework de Iridium (la skill \`iridium\`): ${novedades.length === 1 ? 'cambió una cosa que le pide algo' : `cambiaron ${novedades.length} cosas que le piden algo`} a este proyecto desde la fecha de \`**Framework:**\` de \`docs/README.md\`.`,

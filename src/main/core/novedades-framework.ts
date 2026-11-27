@@ -54,6 +54,11 @@ export function leerNovedades(texto: string): NovedadesLeidas {
         return
       }
       const ultima = novedades.at(-1)
+      if (novedades.some((n) => n.fecha === m[1] && mismoTitulo(n.titulo, m[2] ?? '')))
+        problemas.push({
+          linea: i + 1,
+          texto: `ya hay una novedad del ${m[1]} con ese título: el de la última hecha se anota en \`**Framework:**\``,
+        })
       if (ultima && m[1] < ultima.fecha)
         problemas.push({
           linea: i + 1,
@@ -81,16 +86,36 @@ export function leerNovedades(texto: string): NovedadesLeidas {
   return { novedades, problemas }
 }
 
+/** Dos títulos de novedad son el mismo sin contar mayúsculas, espacios de más ni el punto final. */
+export function mismoTitulo(a: string, b: string): boolean {
+  const n = (t: string) =>
+    t
+      .trim()
+      .replace(/[.\s]+$/, '')
+      .replace(/\s+/g, ' ')
+      .toLocaleLowerCase('es')
+  return n(a) === n(b)
+}
+
 /**
  * Las novedades de un proyecto: las de después de su fecha `**Framework:**` (sin fecha, todas) que le tocan. `existe`
- * dice si el proyecto tiene una ruta (relativa, con `/`).
+ * dice si el proyecto tiene una ruta (relativa, con `/`). Con `ultima` (el título de la última hecha, que Ponerse al día
+ * anota junto a la fecha, T-145), las de esa misma fecha que vienen después también son nuevas; sin él, o si no se
+ * encuentra, las de esa fecha cuentan como vistas.
  */
 export function novedadesDelProyecto(
   novedades: readonly NovedadFramework[],
   fecha: string | null,
   existe: (ruta: string) => boolean,
+  ultima: string | null = null,
 ): NovedadFramework[] {
+  const corte =
+    fecha === null || ultima === null
+      ? -1
+      : novedades.findIndex((n) => n.fecha === fecha && mismoTitulo(n.titulo, ultima))
   return novedades.filter(
-    (n) => (fecha === null || n.fecha > fecha) && (n.soloSi === null || n.soloSi.some(existe)),
+    (n, i) =>
+      (fecha === null || n.fecha > fecha || (corte >= 0 && n.fecha === fecha && i > corte)) &&
+      (n.soloSi === null || n.soloSi.some(existe)),
   )
 }

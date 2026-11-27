@@ -302,9 +302,9 @@ Solo si: docs/diseno/piezas.css
 Cada pieza de `docs/diseno/piezas.css` empieza con su ficha…
 ```
 
-- Una por `## AAAA-MM-DD — Qué cambió`, del más viejo al más nuevo; `Solo si:` (opcional, la línea siguiente) es un archivo o carpeta del proyecto, relativo, o varios separados por ` · ` (`Solo si: playwright.config.ts · playwright.config.js`): solo les toca a los que tienen alguno; debajo, qué tiene que hacer el proyecto.
+- Una por `## AAAA-MM-DD — Qué cambió`, del más viejo al más nuevo, sin repetir el título en el mismo día; `Solo si:` (opcional, la línea siguiente) es un archivo o carpeta del proyecto, relativo, o varios separados por ` · ` (`Solo si: playwright.config.ts · playwright.config.js`): solo les toca a los que tienen alguno; debajo, qué tiene que hacer el proyecto.
 - **Al cambiar el framework** de una forma que le pide algo a un proyecto que ya lo sigue (un formato nuevo, una regla nueva del control que hay que cumplir a mano), sumá su novedad al final, en el mismo cambio.
-- **Al ponerte al día** (te llega el pedido con la lista): hacé lo que pide cada una y al terminar poné en `**Framework:**` la fecha de la última. Si una no aplica, decilo; si necesita una decisión del usuario, una `Q-n`.
+- **Al ponerte al día** (te llega el pedido con la lista): hacé lo que pide cada una y al terminar poné en `**Framework:**` la fecha y el título de la última, como dice el pedido (`**Framework:** 2026-11-27 · Las pruebas no ocupan la pantalla del usuario`): así una novedad que se suma después el mismo día no cuenta como vista. Si una no aplica, decilo; si necesita una decisión del usuario, una `Q-n`.
 
 ## Las recetas
 

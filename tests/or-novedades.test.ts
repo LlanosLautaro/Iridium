@@ -19,7 +19,7 @@ import {
   novedadesDelProyecto,
   RUTA_NOVEDADES_EN_REPO,
 } from '../src/main/core/novedades-framework'
-import { estadoConFramework } from '../src/main/core/skills'
+import { estadoConFramework, ultimaDelFramework } from '../src/main/core/skills'
 import { fijarCarpetaFramework } from '../src/main/infra/novedades-framework'
 
 const MUESTRA = [
@@ -128,6 +128,39 @@ describe('las novedades de un proyecto', () => {
     expect(novedadesDelProyecto(novedades, null, conDiseno)).toHaveLength(2)
   })
 
+  it('una novedad del mismo día no se pierde: cuenta desde la última hecha (T-145)', () => {
+    const delDia = leerNovedades(
+      [
+        '## 2026-11-27 — Primera del día',
+        'Algo.',
+        '## 2026-11-27 — Segunda del día',
+        'Otra cosa.',
+        '## 2026-11-27 — Tercera del día',
+        'Y otra.',
+      ].join('\n'),
+    ).novedades
+    const titulos = (u: string | null) =>
+      novedadesDelProyecto(delDia, '2026-11-27', () => true, u).map((n) => n.titulo)
+    expect(titulos('Primera del día')).toEqual(['Segunda del día', 'Tercera del día'])
+    // Sin importar mayúsculas, espacios ni el punto final.
+    expect(titulos('  segunda  DEL día. ')).toEqual(['Tercera del día'])
+    expect(titulos('Tercera del día')).toEqual([])
+    // Sin título, o uno que ya no está, la fecha sola: las del día cuentan como vistas (como antes).
+    expect(titulos(null)).toEqual([])
+    expect(titulos('Una que se renombró')).toEqual([])
+    // Un día anterior con título: las de después de esa fecha, todas.
+    expect(novedadesDelProyecto(delDia, '2026-11-26', () => true, 'Primera del día')).toHaveLength(3)
+  })
+
+  it('el título de la última hecha sale de la línea **Framework:**', () => {
+    expect(ultimaDelFramework('# Docs\n\n**Framework:** 2026-11-27 · Segunda del día\n')).toBe(
+      'Segunda del día',
+    )
+    expect(ultimaDelFramework('**Framework:** 2026-11-27 — «Segunda del día»')).toBe('Segunda del día')
+    expect(ultimaDelFramework('**Framework:** 2026-11-27')).toBeNull()
+    expect(ultimaDelFramework('# Docs')).toBeNull()
+  })
+
   it('Skills › Framework las lleva solo si hay', () => {
     const base = {
       tieneEstado: true,
@@ -150,7 +183,7 @@ describe('Ponerse al día', () => {
     const m = mensajePonerseAlDia(novedades)
     expect(m).toContain('**2026-11-12 — Las piezas llevan ficha.** Cada pieza empieza con su `Grupo:`.')
     expect(m).toContain('La marca en `docs/scripts.md`. En dos líneas.')
-    expect(m).toContain('`**Framework:** 2026-11-20`')
+    expect(m).toContain('`**Framework:** 2026-11-20 · Cada proyecto dice cómo se abre`')
     expect(m).toContain('cambiaron 2 cosas')
     const c = citaPonerseAlDia(novedades.slice(0, 1))
     expect(c).toMatchObject({ tipo: 'Framework', nombre: 'Ponerse al día · 1 novedad' })
@@ -168,6 +201,17 @@ describe('el control', () => {
   it('revisa novedades.md solo donde está (el repo de Iridium)', () => {
     expect(correrControl(vacio).filter((a) => a.regla === 'novedades')).toEqual([])
     expect(correrControl({ ...vacio, novedades: MUESTRA }).filter((a) => a.regla === 'novedades')).toEqual([])
+    const repetida = correrControl({
+      ...vacio,
+      novedades:
+        '## 2026-11-12 — La misma\nAlgo.\n## 2026-11-12 — La misma.\nOtra.\n## 2026-11-13 — La misma\nBien.',
+    })
+    expect(repetida.filter((a) => a.regla === 'novedades')).toEqual([
+      expect.objectContaining({
+        linea: 3,
+        texto: expect.stringContaining('ya hay una novedad del 2026-11-12'),
+      }),
+    ])
     const avisos = correrControl({ ...vacio, novedades: '## 2026-11-12 Sin raya\nAlgo.' })
     expect(avisos.filter((a) => a.regla === 'novedades')).toEqual([
       expect.objectContaining({ regla: 'novedades', archivo: RUTA_NOVEDADES_EN_REPO, linea: 1 }),

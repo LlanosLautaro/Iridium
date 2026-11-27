@@ -12,7 +12,7 @@ import { novedadesDelProyecto } from '../core/novedades-framework'
 import { contarPendientes, preguntasSinResponder } from '../core/pendientes'
 import type { CarpetaProyecto } from '../core/proyectos'
 import { CARPETA_REVISION, leerComentario } from '../core/revision/comentario'
-import { fechaDelFramework } from '../core/skills'
+import { fechaDelFramework, ultimaDelFramework } from '../core/skills'
 import { leerScripts, RUTA_SCRIPTS } from '../core/visor/scripts'
 import type { CarpetasEnDisco } from '../infra/carpeta-iridium'
 import { novedadesDelFramework } from '../infra/novedades-framework'
@@ -127,7 +127,13 @@ async function leerFramework(c: CarpetaProyecto): Promise<TarjetaProyecto['frame
   ])
   if (avisos === null) return 'viejo'
   const fecha = readme === null ? null : fechaDelFramework(readme)
-  const novedades = novedadesDelProyecto(todas, fecha, (r) => existsSync(join(c.ruta, ...r.split('/'))))
+  const ultima = readme === null ? null : ultimaDelFramework(readme)
+  const novedades = novedadesDelProyecto(
+    todas,
+    fecha,
+    (r) => existsSync(join(c.ruta, ...r.split('/'))),
+    ultima,
+  )
   return { avisos: avisos.map((a) => `${dondeDe(a)} — ${a.texto}`), novedades }
 }
 
