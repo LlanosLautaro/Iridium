@@ -196,10 +196,8 @@ test('Otra versión: queda citada en la conversación, su lugar mientras la IA e
         ?.evaluate(() => document.body.innerText.length),
     )
     .toBeGreaterThan(0)
-  await expect(win.getByRole('complementary', { name: 'Conversación' })).toContainText(
-    'Escribí otra versión de la maqueta',
-    { timeout: 10_000 },
-  )
+  // Q-310: lo citado va en el hilo como una ficha corta; la IA recibe el pedido entero.
+  await expect(win.locator('.hilo .turno.usuario .ficha.citado')).toHaveCount(1, { timeout: 10_000 })
   await win.screenshot({ path: 'test-results/di4-escribiendo.png' })
   // El motor falso no la escribe: al terminar su turno, se dice.
   await expect(win.getByRole('button', { name: 'Detener' })).toHaveCount(0, { timeout: 20_000 })

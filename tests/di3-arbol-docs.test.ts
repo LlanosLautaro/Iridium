@@ -1,6 +1,11 @@
 // DI-I3, tanda 11: el árbol de Docs (docs/diseno/pantallas/docs.html).
 import { describe, expect, it } from 'vitest'
-import { arbolDeDocs, contiene, type NodoDoc } from '../src/renderer/secciones/proyecto/arbolDocs'
+import {
+  arbolDeDocs,
+  contiene,
+  type NodoDoc,
+  nombreDeCarpeta,
+} from '../src/renderer/secciones/proyecto/arbolDocs'
 
 /** El árbol como texto: una línea por nodo, con dos espacios por nivel y «/» al final de las carpetas. */
 function dibujar(nodos: NodoDoc[], nivel = 0): string[] {
@@ -24,10 +29,12 @@ describe('el árbol de Docs', () => {
     'docs/modulos/orden/estado.md',
     'docs/research/costo.md',
     'docs/research/viejo/notas.md',
+    'docs/README.md',
     'README.md',
+    'CLAUDE.md',
   ]
 
-  it('los sueltos arriba; después Hitos, Frentes (una carpeta por frente) y las demás carpetas', () => {
+  it('los sueltos arriba; después Hitos, Frentes (una carpeta por frente), las demás carpetas y los de la raíz aparte (T-105)', () => {
     expect(dibujar(arbolDeDocs(lista))).toEqual([
       'estado.md',
       'perfil-proyecto.md',
@@ -38,20 +45,34 @@ describe('el árbol de Docs', () => {
       '  00-idea.md',
       '  10-operacion.md',
       'Frentes/',
-      '  diseno/',
+      '  Diseño/',
       '    estado.md',
       '    ux.md',
-      '  orden/',
+      '  Orden/',
       '    estado.md',
-      'research/',
+      'Investigación/',
       '  costo.md',
-      '  viejo/',
+      '  Viejo/',
       '    notas.md',
+      'Del proyecto/',
+      '  README.md',
+      '  CLAUDE.md',
     ])
   })
 
   it('sin hitos ni frentes, no hay carpetas vacías', () => {
-    expect(dibujar(arbolDeDocs(['docs/notas.md', 'README.md']))).toEqual(['notas.md', 'README.md'])
+    expect(dibujar(arbolDeDocs(['docs/notas.md']))).toEqual(['notas.md'])
+    expect(dibujar(arbolDeDocs(['docs/notas.md', 'README.md']))).toEqual([
+      'notas.md',
+      'Del proyecto/',
+      '  README.md',
+    ])
+  })
+
+  it('las carpetas con nombre para el usuario; los códigos, como están', () => {
+    expect(
+      ['diseno', 'research', 'revision', 'ideas', 'respuestas', 'Q-12', 'mis-notas'].map(nombreDeCarpeta),
+    ).toEqual(['Diseño', 'Investigación', 'Revisión', 'Ideas', 'Respuestas', 'Q-12', 'Mis notas'])
   })
 
   it('sabe qué carpeta tiene el documento que se lee (para abrirla)', () => {

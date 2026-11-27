@@ -1,12 +1,18 @@
 // Una maqueta viva y achicada en el lienzo (DS-3, S-4): un `iframe` aislado (sin `allow-same-origin`) que carga por
 // `maqueta://` y no recibe el ratón: tocarla la agranda. Solo carga cuando está a la vista. Rota, muestra el motivo.
 // Si tiene otras versiones (DI-I4), lo dice junto al nombre; una versión nueva sin mirar también lleva el punto.
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import type { MaquetaVista } from '../../../../compartido/diseno'
 
 /** Para qué tamaño se dibujan las maquetas (`diseno-tecnico.md` › Las maquetas). */
 export const ANCHO_MAQUETA = 1440
 export const ALTO_MAQUETA = 900
+
+/**
+ * Si las maquetas pueden estar cargadas. Iridium deja montada la sección al salir de ella (para volver al instante), pero
+ * las maquetas siguen vivas, con su memoria y sus animaciones: Diseño las descarga un rato después de salir (paso 8).
+ */
+export const MaquetasVivas = createContext(true)
 
 export function Miniatura({
   base,
@@ -14,6 +20,8 @@ export function Miniatura({
   ancho,
   agrandar,
   boton,
+  clave,
+  enTab = true,
 }: {
   base: string
   maqueta: MaquetaVista
@@ -21,8 +29,12 @@ export function Miniatura({
   agrandar: () => void
   /** Para moverse con las flechas del teclado entre miniaturas. */
   boton?: (el: HTMLButtonElement | null) => void
+  /** En el lienzo: cómo la conoce el lienzo y si es la que recibe el Tab (las demás, con las flechas). */
+  clave?: string
+  enTab?: boolean
 }) {
   const marco = useRef<HTMLDivElement>(null)
+  const vivas = useContext(MaquetasVivas)
   const [aLaVista, setALaVista] = useState(false)
   const escala = ancho / ANCHO_MAQUETA
 
@@ -49,6 +61,8 @@ export function Miniatura({
       type="button"
       className="di-mini"
       data-archivo={maqueta.archivo}
+      data-clave={clave}
+      tabIndex={enTab ? 0 : -1}
       aria-label={etiqueta}
       title={maqueta.archivo}
       onClick={agrandar}
@@ -61,7 +75,8 @@ export function Miniatura({
         {maqueta.rota ? (
           <span className="di-motivo">{maqueta.rota}</span>
         ) : (
-          aLaVista && (
+          aLaVista &&
+          vivas && (
             <iframe
               key={maqueta.huella}
               title={maqueta.nombre}

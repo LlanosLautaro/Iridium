@@ -496,7 +496,7 @@ Ajustes › Acerca de copia el mensaje completo del último commit (doce líneas
 Hecho el 2026-11-21: la fecha y la primera frase del mensaje (cortada en una palabra si es muy larga); el mensaje entero, al pasar el mouse.
 
 ## T-105 — Docs: los archivos de la raíz mezclados con los de docs/
-Estado: pendiente · Idea: IA · Frente: Diseño · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: en curso · Idea: IA · Frente: Diseño · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 La lista de Docs pone `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md` y el `README.md` de la raíz entre los de `docs/`: quedan dos «README.md» iguales. Además, unas carpetas tienen nombre para el usuario (Hitos, Frentes) y otras el de la carpeta (diseno, ideas, research, revision). Propuesta: los de la raíz en un grupo aparte («Del proyecto») y todas las carpetas con nombre (Diseño, Ideas, Investigación, Revisión).
 
 ## T-106 — «Este proyecto no marca cómo se arma»

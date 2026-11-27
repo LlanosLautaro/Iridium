@@ -1,5 +1,7 @@
-// El árbol de Docs (DI-I3, tanda 11; docs/diseno/pantallas/docs.html): los documentos sueltos arriba, los de los hitos
-// en «Hitos», los de los frentes en «Frentes» (una carpeta por frente) y cada otra carpeta de docs/ con su nombre.
+// El árbol de Docs (DI-I3, tanda 11; docs/diseno/pantallas/docs.html): los documentos sueltos de docs/ arriba, los de
+// los hitos en «Hitos», los de los frentes en «Frentes» (una carpeta por frente), cada otra carpeta de docs/ y, al final,
+// los de la raíz en «Del proyecto», para que su README.md no se confunda con el de docs/ (T-105). Las carpetas llevan
+// nombre para el usuario: «Diseño», «Investigación», no `diseno`, `research`.
 // Llega la lista ya ordenada (ordenDeDocumentos): el árbol respeta ese orden.
 
 export type NodoDoc =
@@ -9,6 +11,29 @@ export type NodoDoc =
 type Carpeta = Extract<NodoDoc, { tipo: 'carpeta' }>
 
 const HITO = /^docs\/\d{2}-[^/]+\.md$/
+
+/** Las carpetas del framework y de los frentes de costumbre, con tilde o en castellano. */
+const NOMBRES: Record<string, string> = {
+  diseno: 'Diseño',
+  research: 'Investigación',
+  revision: 'Revisión',
+  ux: 'UX',
+  ui: 'UI',
+  modulos: 'Frentes',
+  pantallas: 'Pantallas',
+  direcciones: 'Direcciones',
+  versiones: 'Versiones',
+}
+
+/** El nombre de una carpeta para el usuario: el conocido, o el de la carpeta con mayúscula y sin guiones. */
+export function nombreDeCarpeta(carpeta: string): string {
+  const conocido = NOMBRES[carpeta.toLowerCase()]
+  if (conocido) return conocido
+  // Un código (`Q-12`, `T-5`) queda como está.
+  if (/^[A-Z]+-\d+$/.test(carpeta)) return carpeta
+  const t = carpeta.replace(/[-_]+/g, ' ').trim()
+  return t ? t.charAt(0).toLocaleUpperCase('es') + t.slice(1) : carpeta
+}
 
 /** Arma el árbol de los documentos. */
 export function arbolDeDocs(lista: readonly string[]): NodoDoc[] {
@@ -24,6 +49,7 @@ export function arbolDeDocs(lista: readonly string[]): NodoDoc[] {
   }
   const hitos: Carpeta = { tipo: 'carpeta', clave: 'hitos', nombre: 'Hitos', hijos: [] }
   const frentes: Carpeta = { tipo: 'carpeta', clave: 'docs/modulos', nombre: 'Frentes', hijos: [] }
+  const raiz: Carpeta = { tipo: 'carpeta', clave: 'raiz', nombre: 'Del proyecto', hijos: [] }
 
   for (const ruta of lista) {
     const nombre = ruta.split('/').at(-1) ?? ruta
@@ -31,18 +57,24 @@ export function arbolDeDocs(lista: readonly string[]): NodoDoc[] {
       hitos.hijos.push({ tipo: 'doc', ruta, nombre })
       continue
     }
-    const partes = ruta.startsWith('docs/') ? ruta.slice(5).split('/') : [ruta]
+    if (!ruta.startsWith('docs/')) {
+      raiz.hijos.push({ tipo: 'doc', ruta, nombre })
+      continue
+    }
+    const partes = ruta.slice(5).split('/')
     if (partes.length === 1) {
       sueltos.push({ tipo: 'doc', ruta, nombre })
       continue
     }
     // Las carpetas de en medio; la de los frentes se llama «Frentes».
     let actual: Carpeta =
-      partes[0] === 'modulos' ? frentes : carpeta(carpetas, `docs/${partes[0]}`, partes[0] ?? '')
+      partes[0] === 'modulos'
+        ? frentes
+        : carpeta(carpetas, `docs/${partes[0]}`, nombreDeCarpeta(partes[0] ?? ''))
     for (let i = 1; i < partes.length - 1; i++) {
       const sub = actual.hijos.filter((h): h is Carpeta => h.tipo === 'carpeta')
       const clave = `docs/${partes.slice(0, i + 1).join('/')}`
-      const nueva = carpeta(sub, clave, partes[i] ?? '')
+      const nueva = carpeta(sub, clave, nombreDeCarpeta(partes[i] ?? ''))
       if (!actual.hijos.includes(nueva)) actual.hijos.push(nueva)
       actual = nueva
     }
@@ -54,7 +86,7 @@ export function arbolDeDocs(lista: readonly string[]): NodoDoc[] {
     c.hijos.sort((a, b) => (a.tipo === b.tipo ? 0 : a.tipo === 'doc' ? -1 : 1))
     for (const h of c.hijos) if (h.tipo === 'carpeta') ordenar(h)
   }
-  const raices = [hitos, frentes, ...carpetas].filter((c) => c.hijos.length > 0)
+  const raices = [hitos, frentes, ...carpetas, raiz].filter((c) => c.hijos.length > 0)
   for (const c of raices) ordenar(c)
   return [...sueltos, ...raices]
 }

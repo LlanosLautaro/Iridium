@@ -133,6 +133,26 @@ test('el lienzo: las maquetas vivas por sección, la rota con su motivo y el red
     .toBe('Red cargada')
   await win.screenshot({ path: 'test-results/di1-lienzo.png' })
 
+  // Con el teclado, el lienzo es una sola parada: Tab entra a una miniatura y las flechas, Inicio y Fin recorren
+  // (paso 8 de Diseño); Tab vuelve a la última que tuvo el foco.
+  const minis = diseno.locator('.di-mini')
+  await expect(minis.and(win.locator('[tabindex="0"]'))).toHaveCount(1)
+  await minis.first().focus()
+  await win.keyboard.press('ArrowRight')
+  await expect(minis.nth(1)).toBeFocused()
+  await win.keyboard.press('End')
+  await expect(minis.nth(3)).toBeFocused()
+  await win.keyboard.press('Home')
+  await expect(minis.first()).toBeFocused()
+  await win.keyboard.press('ArrowRight')
+  await expect(minis.and(win.locator('[tabindex="0"]'))).toHaveAttribute(
+    'data-archivo',
+    'pantallas/nota.html',
+  )
+  await win.keyboard.press('Tab')
+  await expect(minis.nth(1)).not.toBeFocused()
+  expect(await win.evaluate(() => document.activeElement?.classList.contains('di-mini'))).toBe(false)
+
   // La IA cambia una maqueta: se redibuja sola y queda con el punto hasta que se mira.
   const archivo = join(raiz, 'Alfa', 'docs', 'diseno', 'pantallas', 'lista.html')
   await writeFile(
@@ -264,10 +284,10 @@ test('sin docs/diseno/: el recuadro y Pedírselo a la IA, que queda citado en la
   await expect(win.locator('.hilo .turno')).toHaveCount(0)
   await win.screenshot({ path: 'test-results/di1-pedir.png' })
   await win.getByRole('textbox', { name: 'Mensaje para la IA' }).press('Enter')
-  await expect(win.getByRole('complementary', { name: 'Conversación' })).toContainText(
-    'Armá el diseño de este proyecto en',
-    { timeout: 10_000 },
-  )
+  // Q-310: lo citado va en el hilo como una ficha corta; la IA recibe el pedido entero.
+  await expect(win.locator('.hilo .turno.usuario .ficha.citado')).toHaveText('Diseño Armar el diseño', {
+    timeout: 10_000,
+  })
   // Cerrar con la IA trabajando pregunta (F-6): se espera a que termine su turno.
   await expect(win.getByRole('button', { name: 'Detener' })).toHaveCount(0, { timeout: 20_000 })
   await app.close()

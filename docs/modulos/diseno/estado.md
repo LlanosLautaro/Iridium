@@ -1,7 +1,7 @@
 # Estado del módulo: Diseño
 
 **Tipo:** sección (un «Claude Design» local dentro de Iridium; T-5, D-102)
-**Última actualización:** 2026-11-26
+**Última actualización:** 2026-11-27
 **Nivel de protección:** hereda P2.
 
 ## Progreso
@@ -14,7 +14,7 @@
 | 5. Diseño técnico | hecho (2026-11-08; S-4, D-106) | `diseno-tecnico.md` |
 | 6. UI | descartado como paso aparte: la sección se arma con las piezas de hoy en DI-I1 y su UI nueva va en las maquetas de DI-I2 (D-105, D-106) | `docs/diseno/` (DI-I2) |
 | 7. Construcción | hecho (DI-I1 hecha y probada en Q-152; DI-I2 hecha y aprobada en Q-154 y Q-157; D-107 a D-121; T-61 a T-63 hechas; DI-I3 en curso: tanda 1 probada en Q-162, tanda 2 en Q-163, tanda 3 en Q-164, tanda 4 en Q-165, tanda 5 en Q-166, tanda 6 en Q-170 y tanda 7 en Q-171; el color de D-124 en Q-172; las pestañas y las casillas verdes en Q-173; la tanda 8, Ideas como bloc de notas, quedó sin probar: el usuario la dio por descontinuada en Q-174, la reemplaza el frente Ideas; reactivado el 2026-11-18 por D-151; tanda 9, Skills, probada en Q-212; tanda 10, Revisión, en Q-213; tanda 11, Docs, en Q-214; en pausa del 2026-11-19 al 2026-11-20 por D-153, vuelve por D-162; tanda 12, Archivos, probada en Q-228; tanda 13, Git, probada en Q-229 y su visor en Q-231; tanda 14, Scripts, probada en Q-232; tanda 15, Ajustes, probada en Q-233; tanda 16, la Cabecera y los cuadros, probada en Q-234; tanda 17, la grilla de Proyectos, probada en Q-235; tanda 18, los menús de la barra y del uso, probada en Q-236; tanda 19, lo que no son piezas (T-58, T-90, T-53), probada en Q-240; **DI-I3 hecha el 2026-11-21**, con `DESIGN.md` y `06-ui.md` escritos desde lo construido; **DI-I4 hecha el 2026-11-26**: las versiones lado a lado probadas en Q-295 y Probar una dirección en Q-309) | este archivo |
-| 8. Calidad | pendiente (sigue, ya con DI-I4 hecha; anotado: el borde de los controles, a 1,9:1, y la extensión de la Revisión al negro, T-99) | este archivo |
+| 8. Calidad | en curso (2026-11-27: medida; el lienzo con el teclado y las maquetas que quedaban vivas al salir, arreglados; el borde de los controles espera Q-313 y lo nuevo, Q-314; T-99 lo descartaste desde Ideas; ver Calidad) | este archivo |
 | 9. Lanzamiento | pendiente | este archivo |
 
 ## En qué estamos ahora
@@ -42,8 +42,9 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 - [x] Escribir el diseño de Iridium desde lo construido (DESIGN.md y 06-ui.md)
 - [x] Comparar dos versiones de una pantalla lado a lado (DI-I4, Q-295)
 - [x] Probar una dirección sobre todo el lienzo y elegirla o descartarla; el pedido queda citado en la conversación, D-196 (DI-I4, Q-309)
-- [ ] Docs: los archivos de la raíz en un grupo aparte y todas las carpetas con nombre (T-105, chico, sola)
-- [ ] La calidad de Diseño: el borde de los controles (06-ui.md › Contraste) y la Revisión en negro (T-99, mediano)
+- [x] Medir la calidad de Diseño: el teclado en el lienzo, la primera fila en menos de un segundo y las maquetas que quedaban vivas al salir
+- [ ] Docs: los archivos de la raíz en un grupo aparte y todas las carpetas con nombre (T-105, Q-314)
+- [ ] Decidir si se aclara el borde de los controles, a 1,9:1 (Q-313)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
@@ -72,6 +73,14 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` › Iteraciones.
 
 ## Log de iteraciones
+### Calidad — 2026-11-27 (paso 8)
+- **Accesibilidad** (`tools/accesibilidad.ts`, que ahora también recorre Diseño con Tab): sin textos de bajo contraste ni controles sin nombre. El foco de una miniatura se ve (el borde blanco va en su marco; la herramienta lo marcaba porque mira solo el botón). Lo que sí estaba mal: para salir del lienzo con Tab había que pasar por las 45 maquetas. Ahora el lienzo es **una sola parada**: Tab entra a la última miniatura que tuvo el foco y sale; las flechas, Inicio y Fin recorren (también lado a lado, las dos de cada par). Prueba en `tests/e2e/di1-diseno.spec.ts`.
+- **Tiempos y memoria**, con las 45 maquetas de Iridium: la primera fila aparece en 0,86 s (el riesgo de DI-I1 pedía menos de un segundo); volver es instantáneo. Pero Iridium deja montada cada sección al salir, y las maquetas seguían vivas (con sus animaciones) mientras estabas en otra: unos 240 MB más. Ahora, a los 30 s de salir de Diseño se descargan; si volvés antes siguen ahí, y después se vuelven a poner en 0,15 s.
+- **El borde de los controles** (`06-ui.md` › Contraste): 1,9:1 sobre el negro, WCAG pide 3:1. Para mirarlo antes de decidir, la dirección `direcciones/borde-controles.css` lo pone a 3,3:1 y deja todo lo demás igual: Probar una dirección › Hoy · Dirección · Lado a lado. Se decide en Q-313.
+- **T-105** (Docs): los archivos de la raíz (`CLAUDE.md`, `DESIGN.md`, el `README.md` de afuera) van al final en «Del proyecto», y las carpetas tienen nombre para el usuario (Diseño, Investigación, Revisión…; las de un código, como `Q-12`, quedan así). Se prueba en Q-314.
+- Dos pruebas de la app abierta (`di1-diseno`, `di4-versiones`) seguían buscando el pedido entero en el hilo, de antes de las fichas de Q-310: puestas al día.
+- Sin defectos graves. T-99 (la extensión de la Revisión al negro) no va: la descartaste desde Ideas.
+
 ### DI-I4 — 2026-11-26 — Q-309: todo bien, y lo citado como ficha
 - Q-309 volvió con todo marcado: Una nueva citada, la dirección puesta sola con «Probando», Hoy · Dirección · Lado a lado y la grande, Elegir con su «anterior» y Descartar. **DI-I4 queda hecha.**
 - Pedido en la primera casilla: que lo citado no se vea entero en el mensaje enviado, sino resumido como la llamada a una skill. Resuelto en el momento (de la iteración): cada cita sale con una marca en su primera línea (`<!-- cita: Tipo · Nombre -->`) y el hilo la muestra como una ficha corta, con el mismo ícono y nombre que en el cuadro («Dirección nueva Probar una dirección»); un clic abre en el visor lo que le llegó a la IA. Vale para todas las citas (Revisar una idea, Empezar un frente, Pasar al framework, Otra versión…); un comentario de la Revisión sigue como su tarjeta y los mensajes de antes, sin marca, como estaban. El título de una conversación que empieza solo con una cita es «Tipo: Nombre». La IA sigue recibiendo el pedido entero.
@@ -453,5 +462,5 @@ El orden es el de Q-151 (D-106). El detalle de cada una, en `diseno-tecnico.md` 
 - **Queda para después:** medir con las 30 maquetas de Iridium que la primera fila aparezca en menos de un segundo (`diseno-tecnico.md` › Riesgos) va con DI-I2, cuando existan.
 
 ## Próximo paso
-El paso 8 (la calidad de Diseño): el borde de los controles (`06-ui.md` › Contraste, cambia el borde de toda la app: va con tu visto bueno) y T-99.
-**Leer antes:** `06-ui.md` › Contraste; `trabajo.md` › T-99.
+Con Q-313 y Q-314: aplicar el borde que elijas en `docs/diseno/tokens.css` (o anotar el hueco), cerrar T-105 y el paso 8; después el 9 y cerrar el frente (sube a 1.4.0, D-182).
+**Leer antes:** `respuestas/Q-313.md` y `respuestas/Q-314.md`; este archivo › Calidad — 2026-11-27.

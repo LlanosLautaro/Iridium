@@ -5,7 +5,7 @@
 // lado y se elige con cuál quedarse. Probar una dirección (DI-I4) pone otros tokens sobre todo el lienzo, para elegirla
 // o descartarla. Los pedidos quedan citados en la conversación, sin mandar (D-196): el usuario agrega lo suyo y elige
 // si van en esa conversación o en una nueva.
-import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { type FocusEvent, type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { MaquetaVista, VistaDiseno } from '../../../../compartido/diseno'
 import { fichaDe, tarjetaDe, usarEstado, vistaDe } from '../../../estado'
 import { Cabecera, Filtros } from '../../../ui/Cabecera'
@@ -15,7 +15,7 @@ import { ConfirmarQuedarme } from './CuadrosVersion'
 import { ConfirmarElegir, MenuDirecciones, type ModoDireccion, nombreDe, Probando } from './Direccion'
 import { useEsperaPedido } from './esperaPedido'
 import { Grande } from './Grande'
-import { Miniatura } from './Miniatura'
+import { MaquetasVivas, Miniatura } from './Miniatura'
 import { Sistema } from './Sistema'
 import { Versiones } from './Versiones'
 
@@ -52,6 +52,26 @@ function letraDe(version: string): string {
   return (version.split('/').pop() ?? '').replace(/\.html?$/i, '').toUpperCase()
 }
 
+/** La clave de la miniatura con la dirección, lado a lado con la de hoy. */
+const DE_DIRECCION = '#direccion'
+
+/** Cuánto siguen cargadas las maquetas después de salir de Diseño: ir y volver enseguida no las recarga. */
+export const VIVAS_DESPUES_MS = 30_000
+
+/** Si las maquetas siguen cargadas: a la vista, sí; al salir, hasta `VIVAS_DESPUES_MS` después. */
+function useVivas(aLaVista: boolean): boolean {
+  const [vivas, setVivas] = useState(aLaVista)
+  useEffect(() => {
+    if (aLaVista) {
+      setVivas(true)
+      return
+    }
+    const t = setTimeout(() => setVivas(false), VIVAS_DESPUES_MS)
+    return () => clearTimeout(t)
+  }, [aLaVista])
+  return vivas
+}
+
 export function Diseno({ ruta }: { ruta: string }) {
   const [vista, setVista] = useState<VistaDiseno | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -66,10 +86,13 @@ export function Diseno({ ruta }: { ruta: string }) {
   const abrirSeccion = usarEstado((s) => s.abrirSeccion)
   const abrirArchivo = usarEstado((s) => s.abrirArchivo)
   const pedida = usarEstado((s) => vistaDe(s.vistas, ruta).maqueta)
+  const vivas = useVivas(usarEstado((s) => vistaDe(s.vistas, ruta).seccion === 'diseno'))
   const cambiarVista = usarEstado((s) => s.cambiarVista)
   const [noEsta, setNoEsta] = useState<string | null>(null)
   const botones = useRef(new Map<string, HTMLButtonElement>())
   const volverA = useRef<string | null>(null)
+  /** La miniatura que recibe el Tab: el lienzo es una sola parada y las flechas recorren (paso 8). */
+  const [activa, setActiva] = useState<string | null>(null)
   // Las versiones (DI-I4): la maqueta que se mira lado a lado, la versión que está escribiendo la IA y los cuadros.
   const [comparar, setComparar] = useState<string | null>(null)
   const [pidiendo, setPidiendo] = useState<{ archivo: string; maqueta: string } | null>(null)
@@ -318,15 +341,28 @@ export function Diseno({ ruta }: { ruta: string }) {
     )
   }
 
-  // En el lienzo, las flechas pasan de una miniatura a otra (Enter agranda: es un botón).
+  // En el lienzo, las flechas pasan de una miniatura a otra (Enter agranda: es un botón); Inicio y Fin, a la primera y
+  // la última. Tab entra a la última que tuvo el foco y sale del lienzo: no recorre las cuarenta (paso 8).
+  const lado = Boolean(dir && baseDir && modo === 'lado')
+  const claves = enLienzo.flatMap((m) => (lado ? [m.archivo, `${m.archivo}${DE_DIRECCION}`] : [m.archivo]))
+  const conTab = activa && claves.includes(activa) ? activa : (claves[0] ?? null)
   const alTeclado = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) return
-    const lista = enLienzo.map((m) => botones.current.get(m.archivo)).filter((b) => b !== undefined)
+    if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return
+    const lista = claves.map((c) => botones.current.get(c)).filter((b) => b !== undefined)
     const i = lista.indexOf(document.activeElement as HTMLButtonElement)
     if (i < 0) return
     e.preventDefault()
-    const paso = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1
-    lista[Math.min(lista.length - 1, Math.max(0, i + paso))]?.focus()
+    const destino =
+      e.key === 'Home'
+        ? 0
+        : e.key === 'End'
+          ? lista.length - 1
+          : i + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1)
+    lista[Math.min(lista.length - 1, Math.max(0, destino))]?.focus()
+  }
+  const alFoco = (e: FocusEvent<HTMLDivElement>) => {
+    const clave = (e.target as HTMLElement).dataset.clave
+    if (clave) setActiva(clave)
   }
 
   const paraQuedarme = deLienzo(quedarme?.maqueta ?? null)
@@ -400,7 +436,7 @@ export function Diseno({ ruta }: { ruta: string }) {
   const sinDiseno = vista?.tipo === 'sin-diseno'
   const cuenta = enLienzo.length
   return (
-    <>
+    <MaquetasVivas.Provider value={vivas}>
       <Cabecera
         titulo="Diseño"
         cuenta={cuenta > 0 ? cuenta : undefined}
@@ -539,7 +575,7 @@ export function Diseno({ ruta }: { ruta: string }) {
       )}
       {vista?.tipo === 'diseno' && pestana === 'pantallas' && (
         // biome-ignore lint/a11y/noStaticElementInteractions: las flechas mueven el foco entre los botones de adentro.
-        <div className="di-lienzo" onKeyDown={alTeclado}>
+        <div className="di-lienzo" onKeyDown={alTeclado} onFocus={alFoco}>
           {vista.grupos.length === 0 && !vista.problemaIndice && (
             <p className="cab-vacia">
               Todavía no hay pantallas en el índice. Aparecen acá cuando la IA las guarda.
@@ -552,11 +588,11 @@ export function Diseno({ ruta }: { ruta: string }) {
               </h3>
               <div className="di-fila">
                 {g.maquetas.map((m) => {
-                  const boton = (b: HTMLButtonElement | null) => {
-                    if (b) botones.current.set(m.archivo, b)
-                    else botones.current.delete(m.archivo)
+                  const boton = (clave: string) => (b: HTMLButtonElement | null) => {
+                    if (b) botones.current.set(clave, b)
+                    else botones.current.delete(clave)
                   }
-                  if (dir && baseDir && modo === 'lado')
+                  if (dir && baseDir && lado)
                     return (
                       <div key={m.archivo} className="di-par">
                         <Miniatura
@@ -564,13 +600,18 @@ export function Diseno({ ruta }: { ruta: string }) {
                           maqueta={{ ...m, nombre: `${m.nombre} · hoy` }}
                           ancho={ANCHOS[tamano]}
                           agrandar={() => agrandar(m.archivo, true)}
-                          boton={boton}
+                          boton={boton(m.archivo)}
+                          clave={m.archivo}
+                          enTab={conTab === m.archivo}
                         />
                         <Miniatura
                           base={baseDir}
                           maqueta={{ ...conDir(m), nombre: `${m.nombre} · ${nombreDe(dir)}` }}
                           ancho={ANCHOS[tamano]}
                           agrandar={() => agrandar(m.archivo)}
+                          boton={boton(`${m.archivo}${DE_DIRECCION}`)}
+                          clave={`${m.archivo}${DE_DIRECCION}`}
+                          enTab={conTab === `${m.archivo}${DE_DIRECCION}`}
                         />
                       </div>
                     )
@@ -581,7 +622,9 @@ export function Diseno({ ruta }: { ruta: string }) {
                       maqueta={conDireccion ? conDir(m) : m}
                       ancho={ANCHOS[tamano]}
                       agrandar={() => agrandar(m.archivo)}
-                      boton={boton}
+                      boton={boton(m.archivo)}
+                      clave={m.archivo}
+                      enTab={conTab === m.archivo}
                     />
                   )
                 })}
@@ -600,6 +643,6 @@ export function Diseno({ ruta }: { ruta: string }) {
           pedir={trabajando ? null : pedir}
         />
       )}
-    </>
+    </MaquetasVivas.Provider>
   )
 }

@@ -299,7 +299,7 @@ for (const tema of ['negro']) {
         win,
         tema,
         `proyecto-${i}-${nom.replace(/[^\wáéíóúñ]+/gi, '-')}`,
-        i < 3 || /Revisi/.test(nom),
+        i < 3 || /Revisi|Dise/.test(nom),
       )
     }
     // Agrandar la letra con el teclado (04-ux.md › Accesibilidad).
