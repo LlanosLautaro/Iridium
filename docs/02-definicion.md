@@ -269,6 +269,7 @@ Además de lo que está en *Won't*:
 | Biblioteca de diseño | La carpeta local con los estilos guardados: captura y `DESIGN.md` de cada uno (D-011) |
 | Lienzo | Donde se ven los prototipos lado a lado, en rondas, con comentarios |
 | Pieza | Un componente compartido de la interfaz (botón, fila, bloque…) con sus variantes; lo que Claude Design llama componente (D-103) |
+| Receta | Una solución probada en Iridium, en el framework (`recetas/`), que la IA aplica en cualquier proyecto de ese tipo de app (frente Plantillas, D-208); no es una pieza del design system |
 | Dirección | Un juego de tokens que se prueba sobre todas las pantallas a la vez, por ejemplo el negro con otro acento (D-103) |
 | Pantallas | En Diseño, las maquetas de todas las vistas de la app juntas en un lienzo, para mirar el conjunto (D-103, D-105) |
 | Maqueta | Una pantalla de la app dibujada en HTML por la IA, en `docs/diseno/`, que se mira viva y se comenta con `F8` antes de pasarla al código (D-105) |

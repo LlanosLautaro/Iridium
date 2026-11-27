@@ -15,7 +15,7 @@ Es el último de la fila de D-166 (Paridad, Orden, Abrir, Plantillas): todo lo d
 ## Cómo encaja en el producto
 Iridium hace que la IA trabaje con un método (`02-definicion.md`); el framework es ese método y es parte del producto (OR-I1). Las plantillas son la parte del framework que no es método sino **receta probada**: lo que ya anduvo en Iridium, contado para que la IA de cualquier proyecto lo aplique en el suyo.
 
-**Qué es una pieza.** Un archivo del framework, `piezas/<nombre>.md`, que resuelve un problema para uno o más tipos de app:
+**Qué es una pieza.** Un archivo del framework, `piezas/<nombre>.md` (en la definición pasaron a llamarse recetas, `recetas/<nombre>.md`: «pieza» ya es del design system), que resuelve un problema para uno o más tipos de app:
 - **Para qué tipos** (escritorio de Electron, página, consola…) y **cuándo se aplica** (al armar las pruebas, al instalar la app, cuando el usuario lo pide).
 - **La receta por tipo**: qué se cambia en el proyecto, con los fragmentos de código que ya andan en Iridium, para copiar o adaptar.
 - **Cómo se prueba** que quedó bien, con algo que el usuario pueda ver (una `Q-n` de prueba con casillas).
@@ -26,7 +26,7 @@ Iridium hace que la IA trabaje con un método (`02-definicion.md`); el framework
 | Pieza | Para qué tipos | Qué trae |
 |---|---|---|
 | Pruebas sin ventanas | escritorio (Electron), página | En una página, Playwright sin ventana (ya lo hace con pedirlo). En Electron, la receta de D-072: una variable que solo prenden las pruebas, la ventana fuera de la pantalla, sin botón en la barra de tareas, sin foco y sin dejar de dibujar; las consolas que abre la app, escondidas; y una forma de mirarlas si hace falta. Una herramienta de consola no abre ventanas: no le toca. |
-| La actualización sola | escritorio (instalada) | La guía de D-207, que pasa a ser pieza tal cual (`referencias/actualizacion-sola.md` → `piezas/`). |
+| La actualización sola | escritorio (instalada) | La guía de D-207, que pasa a ser pieza tal cual (`referencias/actualizacion-sola.md` → `recetas/`). |
 
 Más adelante, candidatas (no entran ahora): el armado que no se pisa (T-137), las pruebas que no suenan (T-124), las plantillas por requisitos para alguien sin nociones técnicas (T-93, que todavía no aprobaste).
 
@@ -47,4 +47,4 @@ Una pieza nueva se cita desde `SKILL.md` (la IA la ve en cada proyecto). Para lo
 - **Sin novedad**: la IA la aplica la próxima vez que toque las pruebas de ese proyecto, o cuando el usuario se lo pida.
 
 ## Decisión
-Espera Q-324 (la propuesta y la forma de las piezas) y Q-325 (cómo llega a los proyectos).
+Seguir — aprobada en Q-324 (A, D-208); una receta nueva llega a los proyectos como novedad del framework (Q-325, A, D-209).

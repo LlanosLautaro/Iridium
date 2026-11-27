@@ -3851,3 +3851,25 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** el usuario eligió que la receta quede en el framework, para reutilizarla en cualquier app, hasta que sea una pieza de Plantillas: `referencias/actualizacion-sola.md` (el número que crece, el instalador por usuario, electron-updater en la app, publicar con la sesión de git y sin claves, el armado que publica después de instalar, el repositorio privado como decisión del usuario y cómo se prueba), citada desde `SKILL.md` › Los scripts. No es una novedad: cada proyecto la aplica cuando el usuario la pide, desde su conversación.
 **Motivo:** sirve para todas sus apps, no solo una, y no mezcla el trabajo de otro proyecto con el de Iridium.
 **Consecuencias:** T-87 hecha; Abrir se cierra (1.5.0, D-182). La app del usuario la adopta cuando él lo pida en su conversación; su repositorio es privado, así que ahí se decide dónde se publican las versiones. Plantillas (T-81) la absorbe como pieza.
+
+## D-208 — Plantillas: recetas del framework por tipo de app, empezando por las pruebas sin ventanas y la actualización sola
+- **Fecha:** 2026-11-27
+- **Ámbito:** frente Plantillas (T-81), con el framework
+- **Hito o paso:** 10; frente Plantillas, paso 1 (Q-324)
+- **Estado:** vigente (precisa D-150)
+
+**Contexto:** D-150 pidió plantillas modulares por tipo de app que crezcan con los casos. La propuesta (`modulos/plantillas/propuesta.md`) comparó una regla suelta en `08-calidad.md`, un paquete de código y plantillas de proyecto enteras.
+**Decisión:** opción A de Q-324: cada solución es un archivo suelto del framework con la receta por tipo de app, los fragmentos de código que ya andan en Iridium y cómo se prueba. Las dos primeras: las pruebas sin ventanas (D-072 llevado a cualquier app) y la actualización sola (D-207, que se muda tal cual). El tipo de app sale de la marca del script que abre el proyecto (D-148), sin declararlo otra vez. En la definición pasaron a llamarse **recetas** (`recetas/`), porque «pieza» ya es del design system.
+**Motivo:** se suma de a una sin engordar las referencias de los hitos, que la IA lee enteras, y sirve también para lo que no es código (cómo se prueba, qué se le pregunta al usuario).
+**Consecuencias:** el framework suma `recetas/` y una sección corta en `SKILL.md`; `referencias/actualizacion-sola.md` se muda. Plantillas de proyecto enteras quedan con T-93.
+
+## D-209 — Una receta nueva llega a los proyectos como novedad del framework
+- **Fecha:** 2026-11-27
+- **Ámbito:** frente Plantillas, con el framework y las novedades (D-118, D-199)
+- **Hito o paso:** 10; frente Plantillas, paso 1 (Q-325)
+- **Estado:** vigente (D-207 sigue: la actualización sola se aplica solo a pedido)
+
+**Contexto:** una receta nueva le sirve a proyectos que ya existen; la IA podía aplicarla sola al tocar las pruebas, solo a pedido, o con el aviso de novedades.
+**Decisión:** opción A de Q-325: como novedad del framework, para los proyectos a los que les toca. La tarjeta dice «1 novedad del framework» y **Ponerse al día** la aplica cuando el usuario quiere.
+**Motivo:** no se olvida y el usuario decide cuándo.
+**Consecuencias:** la novedad de las pruebas sin ventanas tiene que tocarles solo a los proyectos con Playwright, cuya configuración puede tener tres nombres: `Solo si:` pasa a aceptar varias rutas, con su lector, el control y sus pruebas (D-086). La actualización sola no lleva novedad (D-207).
