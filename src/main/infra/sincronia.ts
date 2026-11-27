@@ -3,7 +3,10 @@
 // subir). Lo que hace sola no abre ventanas: sin sesión de GitHub, lo dice. Lo que pide el usuario sí puede abrir la
 // del Administrador de credenciales, como Publicar (D-081). Nunca pasa por una consola: los argumentos van tal cual.
 import { execFile } from 'node:child_process'
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
 import type { ResultadoGit, SincroniaGit } from '../../compartido/puente'
+import { mensajeSugerido } from '../../compartido/sincronia'
 import { ladosDe, motivoAlGuardar, motivoAlJuntar, motivoDeRed, queTraer } from '../core/sincronia'
 import { tieneRepo } from './git'
 
@@ -181,5 +184,76 @@ export async function guardarYSubir(ruta: string, mensaje: string, subir: boolea
   } catch (e) {
     if (e instanceof SinPrograma) return mal('No se encontró git en la PC.')
     return mal(e instanceof Error ? e.message : String(e))
+  }
+}
+
+/**
+ * Cómo terminó subir solas unas respuestas (T-89): `subida` (commit hecho y subido), `nada` (no había nada que
+ * guardar: ya estaban en un commit), `sin-remoto` (sin git o con la rama fuera de un remoto: no se hace nada),
+ * `esperar` (sin conexión, GitHub con commits que no se pueden poner encima, cambios que chocan: no se tocó nada y se
+ * reintenta) y `sin-subir` (el commit se hizo pero no subió: queda para Sincronizar).
+ */
+export interface SubidaRespuestas {
+  resultado: 'subida' | 'nada' | 'sin-remoto' | 'esperar' | 'sin-subir'
+  motivo: string | null
+  /** El mensaje del commit, si se hizo. */
+  mensaje?: string
+}
+
+/**
+ * Sube solas las respuestas que se guardaron desde Iridium (T-89), para que la otra PC las vea sin Commit y subir.
+ * El commit lleva solo esas respuestas y sus imágenes, nunca otros cambios (ni los preparados). Antes trae lo del
+ * remoto, como la vigía (solo si se pone encima); si no se puede dejar al día, no hace el commit, para no separar
+ * las dos PC. Nunca abre la ventana para iniciar sesión.
+ */
+export async function subirRespuestas(ruta: string, codigos: readonly string[]): Promise<SubidaRespuestas> {
+  const asi = (resultado: SubidaRespuestas['resultado'], motivo: string | null = null): SubidaRespuestas => ({
+    resultado,
+    motivo,
+  })
+  try {
+    if (!(await tieneRepo(ruta)) || !(await sigueAlRemoto(ruta))) return asi('sin-remoto')
+    const rama = (await correr(ruta, ['branch', '--show-current'], false)).texto.trim()
+    if (!rama) return asi('sin-remoto')
+    const rutas = codigos
+      .flatMap((q) => [`docs/respuestas/${q}.md`, `docs/respuestas/${q}`])
+      .filter((r) => existsSync(join(ruta, ...r.split('/'))))
+    if (rutas.length === 0) return asi('nada')
+    const cambios = await correr(
+      ruta,
+      ['status', '--porcelain', '--untracked-files=all', '--', ...rutas],
+      false,
+    )
+    if (cambios.codigo !== 0) return asi('esperar', motivoAlGuardar(cambios.error))
+    const archivos = cambios.texto
+      .split('\n')
+      .filter((l) => l.trim() !== '')
+      .map((l) => ({ ruta: l.slice(3).replace(/^"|"$/g, '') }))
+    if (archivos.length === 0) return asi('nada')
+
+    const fallo = await fetch(ruta, false)
+    if (fallo) return asi('esperar', motivoDeRed(fallo.error).motivo)
+    const l = await lados(ruta)
+    if (!l) return asi('esperar', 'No se pudo comparar con el remoto.')
+    const que = queTraer(l.adelante, l.atras)
+    if (que === 'separada')
+      return asi('esperar', 'Esta PC y GitHub tienen commits distintos: Sincronizar, en Git, los junta.')
+    if (que === 'traer') {
+      const r = await correr(ruta, ['merge', '--ff-only', '--quiet', '@{u}'], false)
+      if (r.codigo !== 0) return asi('esperar', motivoAlJuntar(r.error))
+    }
+
+    const mensaje = mensajeSugerido(archivos) || 'Respuestas'
+    const add = await correr(ruta, ['add', '--', ...rutas], false)
+    if (add.codigo !== 0) return asi('esperar', motivoAlGuardar(add.error))
+    // Con las rutas, el commit lleva solo esas: lo que estaba preparado de otra cosa sigue preparado.
+    const c = await correr(ruta, ['commit', '--quiet', '--no-edit', '-m', mensaje, '--', ...rutas], false)
+    if (c.codigo !== 0) return asi('esperar', motivoAlGuardar(`${c.error}\n${c.texto}`))
+    const p = await correr(ruta, ['push', '--quiet'], false)
+    if (p.codigo !== 0) return { resultado: 'sin-subir', motivo: motivoDeRed(p.error).motivo, mensaje }
+    return { resultado: 'subida', motivo: null, mensaje }
+  } catch (e) {
+    if (e instanceof SinPrograma) return asi('sin-remoto')
+    return asi('esperar', e instanceof Error ? e.message : String(e))
   }
 }

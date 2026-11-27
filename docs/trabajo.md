@@ -424,8 +424,9 @@ Estado: hecho · Fecha: 2026-11-20 · Origen: D-159
 Pedido del usuario: un proyecto mostraba lo de antes de lo que se hizo en la otra PC, y Git no tenía cómo guardar y subir las respuestas. Iridium trae sola lo del remoto (al abrir, cada cinco minutos y al entrar a un proyecto) y Git suma Commit y subir y Sincronizar. Prueba en Q-224.
 
 ## T-89 — Subir solas las respuestas a las preguntas
-Estado: pendiente · Idea: IA · Fecha: 2026-11-20 · Origen: D-159 · Tamaño: mediano, sola
+Estado: hecho · Idea: IA · Fecha: 2026-11-20 · Origen: D-159 · Tamaño: mediano, sola
 Al responder una `Q-n` desde Iridium, que la respuesta se guarde en un commit y se suba sola (si el proyecto está en GitHub y la IA no trabaja en él), para que la otra PC la vea sin tocar Commit y subir.
+Hecho el 2026-11-27 (el avance solo, D-202): unos segundos después de responder, la respuesta va sola a GitHub en un commit «Respuesta a Q-n» con solo ella y sus imágenes; si no se puede (sin conexión, la IA trabajando, las PC separadas), lo reintenta después. Se prueba en Q-319.
 
 ## T-90 — Buscar un archivo en Archivos
 Estado: hecho · Frente: Diseño · Fecha: 2026-11-20 · Origen: DI-I3 (tanda 12) · Idea: IA

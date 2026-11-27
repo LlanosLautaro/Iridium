@@ -66,6 +66,7 @@ import { leerPreguntasAbiertas, listarProyectos } from '../app/proyectos'
 import { Comentarios } from '../app/revision/comentarios'
 import { VigiaSincronia } from '../app/sincronia'
 import { leerSeccionSkills, proyectosConFramework, skillsDelProyecto } from '../app/skills'
+import { SubidaDeRespuestas } from '../app/subida'
 import { trabajoDelProyecto } from '../app/trabajo'
 import { UsoDeLaSuscripcion } from '../app/uso'
 import { motivo } from '../app/visor'
@@ -120,7 +121,7 @@ import { leerImagenDelPortapapeles } from '../infra/portapapeles'
 import { existeCarpeta } from '../infra/raiz'
 import type { Registro } from '../infra/registro'
 import type { ArchivoSesiones } from '../infra/sesiones'
-import { guardarYSubir, sincronizar, traerDelRemoto } from '../infra/sincronia'
+import { guardarYSubir, sincronizar, subirRespuestas, traerDelRemoto } from '../infra/sincronia'
 import { type Vigilancia, vigilar } from '../infra/vigilancia'
 import { abrirEnVsCode } from '../infra/vscode'
 import type { Motor } from '../motor/motor'
@@ -488,6 +489,19 @@ export function registrarPuente(s: Servicios): Puente {
     alTraer: (ruta) => armados?.alTerminarTurno(ruta),
   })
 
+  // Las respuestas a las preguntas se suben solas (T-89, D-202): un commit con solo esas respuestas, unos segundos
+  // después de guardarlas, si el proyecto está en GitHub y la IA no trabaja en él.
+  const subidas = new SubidaDeRespuestas({
+    subir: subirRespuestas,
+    ocupado: async (ruta) =>
+      iaEnMarcha(ruta) || !!armados?.armando(ruta) || (await conversaciones.usadaAfuera(ruta)),
+    registrar: (t) => s.registro.escribir(t),
+    alSubir: (ruta, subio) => {
+      if (subio) sincronia.anotar(ruta, { cuando: Date.now(), resultado: 'al-dia', bajados: 0, motivo: null })
+      armados?.alTerminarTurno(ruta)
+    },
+  })
+
   /** Lo que la ventana mandó a guardar y todavía se está escribiendo: al cerrar se espera (D-060). */
   const enCurso = new Set<Promise<unknown>>()
   const guardando = <T>(f: () => Promise<T>): Promise<T> => {
@@ -559,6 +573,7 @@ export function registrarPuente(s: Servicios): Puente {
         // Si era lo que tomó el avance solo, se anota lo gastado y mira si sigue con otro.
         void avance.mirar()
         armados?.alTerminarTurno(c.ruta)
+        subidas.reintentar(c.ruta)
       }
       apagado.revisar()
     },
@@ -931,9 +946,12 @@ export function registrarPuente(s: Servicios): Puente {
     conversaciones.cerrarFicha(await proyecto(ruta)),
   )
   ipcMain.handle(CANALES.pendientes, async (_, ruta: unknown) => pendientes.proyecto(await proyecto(ruta)))
-  ipcMain.handle(CANALES.responder, async (_, ruta: unknown, pedido: unknown) =>
-    pendientes.responder(await proyecto(ruta), PedidoResponder.parse(pedido)),
-  )
+  ipcMain.handle(CANALES.responder, async (_, ruta: unknown, pedido: unknown) => {
+    const carpeta = await proyecto(ruta)
+    const r = await pendientes.responder(carpeta, PedidoResponder.parse(pedido))
+    if (r.tipo === 'guardado') subidas.anotar(carpeta, r.pendiente.codigo)
+    return r
+  })
   ipcMain.handle(CANALES.aMedias, async (_, ruta: unknown, codigo: unknown, borrador: unknown) =>
     guardando(async () =>
       pendientes.aMedias(await proyecto(ruta), Codigo.parse(codigo), EsquemaBorrador.parse(borrador)),
@@ -1426,7 +1444,10 @@ export function registrarPuente(s: Servicios): Puente {
     async terminarDeGuardar() {
       // Lo último que manda la ventana al cerrarse llega un instante después: se le da ese momento.
       await new Promise((r) => setTimeout(r, 150))
-      await Promise.race([Promise.all([...enCurso]), new Promise((r) => setTimeout(r, 3000))])
+      await Promise.race([
+        Promise.all([...enCurso, subidas.subirTodo()]),
+        new Promise((r) => setTimeout(r, 3000)),
+      ])
     },
     alSuspender: () => arranque.alSuspender(),
     alDespertar: () => void arranque.alDespertar(),
@@ -1436,6 +1457,7 @@ export function registrarPuente(s: Servicios): Puente {
       apagado.cerrar()
       armados?.cerrar()
       sincronia.cerrar()
+      subidas.cerrar()
       uso.cerrar()
       conversaciones.cerrarTodo()
       vigilancia?.cerrar()

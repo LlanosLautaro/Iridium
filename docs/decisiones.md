@@ -3776,3 +3776,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** «Rechazada» y el ícono de una idea rechazada van en gris (el texto apagado), con el título apagado como antes. Aprobada sigue en verde.
 **Motivo:** el rojo dice «algo anda mal»; una idea rechazada es algo que ya se resolvió y tiene que quedar atrás.
 **Consecuencias:** cambian la lista de Ideas (de un proyecto y del inicio), sus dos maquetas y `modulos/ideas/definicion.md`. Prueba: `tests/e2e/id1-ideas-proyecto.spec.ts`.
+
+## D-202 — Las respuestas a las preguntas se suben solas a GitHub
+- **Fecha:** 2026-11-27
+- **Ámbito:** general (Git y la Bandeja, H-16; ajusta D-159)
+- **Hito o paso:** 10; T-89 (el avance solo)
+- **Estado:** vigente
+
+**Contexto:** con dos PC, una respuesta escrita en una no se veía en la otra hasta que alguien tocaba Commit y subir (D-159) o la IA hacía su commit. Si el usuario responde y no abre la IA, la otra PC sigue mostrando la pregunta sin responder.
+**Decisión:** al guardar una respuesta desde Iridium (también al corregirla o dejarla para después), unos 8 s después Iridium hace un commit con solo esa respuesta y sus imágenes («Respuesta a Q-10», o «Respuestas a Q-3 y Q-4» si se respondieron seguidas) y lo sube. Lo demás que haya sin guardar, o preparado, no entra. Solo si el proyecto tiene su rama en GitHub (u otro remoto): un repositorio solo local no se toca. Antes trae lo del remoto como la vigía (solo si se pone encima); si no se puede (sin conexión, sin sesión, las dos PC con commits distintos, cambios que chocan), no hace el commit y lo reintenta cada 5 minutos y al terminar el turno de la IA. Con la IA trabajando o el proyecto armándose, espera a que termine; si la IA ya guardó la respuesta en su commit, no queda nada que hacer. Al cerrar Iridium sube lo que estaba esperando. No abre la ventana para iniciar sesión.
+**Motivo:** es el pedido de D-159 («lo que se hace en una PC tiene que verse en la otra sin pedírselo a nadie») para lo único que escribe el usuario. Un commit solo con la respuesta no puede mezclarse con el trabajo a medias de nadie, y no hacerlo cuando no se puede subir evita dejar las dos PC separadas.
+**Consecuencias:** el historial de Git suma commits «Respuesta a Q-n». Si el remoto cambia justo entre traer y subir, el commit queda en esta PC y Sincronizar lo sube (Git dice cuántos faltan subir). Sin ajuste para apagarlo: si molesta, se suma uno. Pruebas: `tests/t89-subir-respuestas.test.ts` (repositorios de verdad y la fila) y `tests/e2e/t89-subir-respuestas.spec.ts` (con la app abierta).
