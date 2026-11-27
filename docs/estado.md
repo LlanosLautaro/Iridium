@@ -44,6 +44,7 @@
 | Pulido (`modulos/pulido/estado.md`) | sección | en operación (con el hito 10; PU-I1 y PU-I2 probadas en Q-307, cerrado el 2026-11-26, 1.2.0) | hecho |
 
 ## En qué estamos ahora
+**T-84 hecha** (2026-11-27, el avance solo, R-92): si salías del proyecto mientras la IA esperaba algo de fondo, la pestaña perdía el «Esperando» y después la IA «se activaba sola»; ahora lo sigue diciendo hasta que retoma. Se prueba en Q-318.
 **Revisión del avance solo (2026-11-27):** T-140 a T-143 evaluadas (T-142 puede ir sola si la aprobás); los dos pasos que quedan de Diseño, chicos y con tu respuesta; T-84, T-89 y T-126 quedan para el avance solo, T-82 y T-95 esperan definirse con vos, y T-102 espera Q-317.
 **2026-11-27.** **Ideas, T-109 hecha** (el avance solo, D-201): una idea rechazada dice «Rechazada» en gris, no en rojo; se prueba en Q-315. **T-83 hecha** (también el avance solo, R-90): en la nota de una idea, Enter guarda y cierra sin cambiar su estado, y Ctrl+Enter (o Shift+Enter) baja de renglón; se prueba en Q-316. **Frentes, D-200** (lo reportaste: Paridad e Ideas decían «Todo hecho» y no se archivaban): tenían ideas aprobadas que nunca se pusieron en su ruta. La tarjeta ahora dice «N aprobados sin lugar en la ruta», el control lo marca y la revisión del avance solo los ubica; ya están en sus rutas. **Diseño, paso 8 medido:** el lienzo es una sola parada con Tab, las maquetas se descargan a los 30 s de salir de Diseño y Docs separa los archivos de la raíz (T-105); el borde de los controles se decide en Q-313 y lo nuevo se prueba en Q-314.
 **Pulido** (D-197, 2026-11-25): un aire de instrumento futurista sobre el negro: acento elegible con brillo, estados de tarjetas con color, otro color para lo que espera (Q-303) y movimiento sutil; maqueta viva probada (Q-302); lo que te espera pasa a naranja (Q-303); R-111 a R-113 cerrados. **PU-I1 hecha** (2026-11-25): la sección elegida en el acento con su brillo, el punto de la Bandeja y del inicio en el acento (naranja si frena), los estados de las tarjetas en su color, el paso actual de Frentes que late, «corriendo» que late, la casilla con su golpe y lo que entra; ya no sigue las animaciones apagadas de Windows. **PU-I2 hecha** (2026-11-26): el acento se elige en Ajustes › Apariencia (Cian, Verde, Azul, Violeta) y las pestañas de la barra se corren al arrastrar una (Escape la vuelve). Las dos, probadas en Q-307, todo bien: **Pulido, cerrado** (2026-11-26, 1.2.0). **Calidad medida** (2026-11-26, el avance solo): el movimiento no pone lenta la app (los mismos cuadros con y sin él); la luz de «corriendo» redibujaba la barra y ahora se corre sin redibujar (la mitad del procesador).
@@ -84,6 +85,12 @@ Ideas sin evaluar: T-143 (un catálogo de estilos y de movimiento para los desig
   Tipo: decisión
   Contexto: `trabajo.md` › T-102 (ancho de lectura). Proponía sacar Apariencia de Ajustes, pero desde PU-I2 tiene también el acento: ya no quedaría vacía.
   Opciones: A) Solo en Docs, Apariencia queda con el acento (recomendada: se elige donde se usa) · B) En los dos lugares, como hoy (T-102 se descarta)
+- **Q-318 — Mirá que la pestaña siga «Esperando» al salir del proyecto**
+  Tipo: prueba
+  Contexto: con la versión nueva, en un proyecto pedile a la IA algo que deje corriendo de fondo (por ejemplo, «corré las pruebas de fondo y esperá el resultado»). Cuando termine su turno esperando:
+  - [ ] La pestaña dice «Esperando»
+  - [ ] Al ir al inicio o a otro proyecto, la pestaña y la tarjeta siguen diciendo «Esperando»
+  - [ ] Cuando termina lo de fondo, la pestaña pasa a «Trabajando» y después a «Terminada»
 
 ## Próximo paso
 Cuando vuelvan Q-313 y Q-314, cerrar el paso 8 de Diseño (el borde elegido, T-105) y el frente; mientras tanto, Abrir, T-87: que tu app instalada en la otra PC se ponga al día sola desde sus versiones publicadas (D-160); es grande y se prueba en la otra PC. Después, Plantillas (T-81).

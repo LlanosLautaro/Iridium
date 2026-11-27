@@ -190,3 +190,25 @@ test('lo que la IA deja de fondo se ve mientras lo espera, y retoma sola cuando 
   await expect(win.locator('.ahora')).toHaveCount(0)
   await app.close()
 })
+
+test('al salir del proyecto mientras espera lo de fondo, la pestaña sigue «Esperando» (T-84)', async () => {
+  const { app, win } = await abrir({ IRIDIUM_FALSO_PASO_MS: '300' })
+  await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
+  const campo = win.getByRole('textbox', { name: 'Mensaje para la IA' })
+  await campo.fill('Corré las pruebas de fondo')
+  await campo.press('Enter')
+  const pestana = win.locator('.barra-proyectos .proy', { hasText: 'Alfa' })
+  await expect(pestana).toContainText('Esperando')
+
+  // Salir al inicio daba por vista la conversación y la pestaña perdía el «Esperando».
+  await win.getByRole('button', { name: /^Inicio/ }).click()
+  await expect(win.locator('.tarjeta', { hasText: 'Beta' })).toBeVisible()
+  await win.waitForTimeout(300)
+  await expect(pestana).toContainText('Esperando')
+  await win.screenshot({ path: 'test-results/t84-esperando-al-salir.png' })
+
+  // Cuando termina, la IA retoma sola: la pestaña pasa a trabajar y después a terminada.
+  await expect(pestana).toContainText(/Trabajando|Terminada/, { timeout: 15_000 })
+  await expect(pestana).toContainText('Terminada', { timeout: 15_000 })
+  await app.close()
+})

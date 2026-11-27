@@ -402,8 +402,9 @@ En las ideas de un proyecto, al escribir la nota de una idea: Enter guarda lo es
 Hecho el 2026-11-27: en la nota de una idea (de un proyecto o del inicio), Enter guarda y la cierra sin cambiar su estado; Ctrl+Enter o Shift+Enter bajan de renglón. Se prueba en Q-316.
 
 ## T-84 — La pestaña no muestra «esperando» mientras la IA espera algo de fondo
-Estado: pendiente · Fecha: 2026-11-19 · Origen: R-92 · Tamaño: mediano, sola
+Estado: hecho · Fecha: 2026-11-19 · Origen: R-92 · Tamaño: mediano, sola
 En la conversación de un proyecto, la IA terminó su turno con algo corriendo de fondo («Quedo a la espera del resultado de las pruebas») y la pestaña no la marcó «esperando lo que dejó de fondo» (T-65); al rato retomó sola. Parece que Iridium perdió el rastro de lo que corría de fondo. Reproducir con el motor falso («de fondo») y con un caso real: varias tareas de fondo, o una que se corta.
+Hecho el 2026-11-27 (el avance solo): al salir del proyecto (o cerrar su pestaña) mientras la IA esperaba lo de fondo, Iridium daba la conversación por vista y borraba su estado, y con él el «Esperando»; ahora sigue hasta que la IA retoma. También, si la IA retomaba justo mientras corría el control, la pestaña decía «Terminada» con la IA trabajando: ahora sigue «Trabajando». Claude Code avisa la lista entera de lo de fondo cada vez, así que varias tareas o una que se corta no pierden el rastro. Pruebas nuevas en la conversación y con la app abierta (captura `t84-esperando-al-salir.png`); se prueba en Q-318.
 
 ## T-85 — «Respondida, sin procesar» en verde
 Estado: hecho · Fecha: 2026-11-19 · Origen: R-93
@@ -647,7 +648,7 @@ Hecho el 2026-11-25: ya resuelto, como confirmaste al revisar las ideas. Va con 
 
 ## T-131 — Pruebas que se pasan de tiempo con la suite entera
 Estado: pendiente · Frente: Núcleo · Idea: IA · Fecha: 2026-11-24
-Con `pnpm test` entero y la PC ocupada, a veces fallan por tiempo `d081-github.test.ts` (publicar), `gestor/calidad-casos-limite.test.ts` (300 proyectos), `t128-ventana-actualizando.test.ts` (Reiniciar ahora) y, una vez el 2026-11-25, `ar1-arranque.test.ts` (el arranque después del vencimiento: no arrancó a tiempo); solas pasan. Como T-129: darles el tiempo que necesitan o medir sin competir con el resto. Tamaño: chico.
+Con `pnpm test` entero y la PC ocupada, a veces fallan por tiempo `d081-github.test.ts` (publicar), `gestor/calidad-casos-limite.test.ts` (300 proyectos), `t128-ventana-actualizando.test.ts` (Reiniciar ahora) y, el 2026-11-25 y otra vez el 2026-11-27, `ar1-arranque.test.ts` (el arranque después del vencimiento: no arrancó a tiempo); solas pasan. Como T-129: darles el tiempo que necesitan o medir sin competir con el resto. Tamaño: chico.
 
 ## T-132 — Las actualizaciones: el botón que seguía, «Actualizando…» antes de tiempo y la otra PC
 Estado: hecho · Frente: Núcleo · Idea: usuario · Fecha: 2026-11-24 · Origen: el usuario en el chat

@@ -776,7 +776,8 @@ function soltarVista(s: EstadoApp): void {
           : null
   if (!ruta) return
   const ficha = s.fichas.find((f) => f.ruta === ruta)
-  if (ficha?.estado === 'terminada') void window.iridium.cerrarFicha(ficha.ruta)
+  // La que espera lo que dejó de fondo todavía no terminó: sigue «Esperando» (T-84).
+  if (ficha?.estado === 'terminada' && !ficha.fondo?.length) void window.iridium.cerrarFicha(ficha.ruta)
 }
 
 /** La carpeta del chat de la vista de Proyectos (D-060), si está (D-083). */

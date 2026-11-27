@@ -141,6 +141,11 @@ interface Proyecto {
   controlando: Extract<Entrada, { tipo: 'control' }> | null
   /** El turno terminó y corre el control: la sesión que se cierra mientras tanto no es un error. */
   revisando: boolean
+  /**
+   * Mientras corría el control, terminó lo de fondo y la IA retomó sola (T-84): el turno no se cierra al terminar el
+   * control, sigue trabajando y se revisa cuando termine el que retomó.
+   */
+  retomo?: boolean
   /** Cuántos mensajes mandó el usuario: si cambia mientras corre el control, ese turno sigue y se revisa después. */
   envios: number
   /** Lo que la IA dejó corriendo de fondo (T-65); va en la ficha mientras haya algo. */
@@ -277,10 +282,14 @@ export class Conversaciones {
     })
   }
 
-  /** La ficha con lo que sigue de fondo, si hay algo (T-65). */
+  /**
+   * La ficha con lo que sigue de fondo, si hay algo (T-65). Mientras haya algo de fondo hay ficha, aunque la de la
+   * sesión se haya cerrado: la pestaña dice «Esperando» hasta que termine (T-84).
+   */
   private ficha(p: Proyecto): FichaSesion | null {
-    if (!p.ficha) return null
-    return p.fondo.length > 0 ? { ...p.ficha, fondo: p.fondo } : p.ficha
+    if (p.fondo.length === 0) return p.ficha
+    const base = p.ficha ?? { ruta: p.ruta, estado: 'terminada' as const, preguntas: [], motivo: null }
+    return { ...base, fondo: p.fondo }
   }
 
   /** Lee el contexto de la conversación sin mandar nada (una vez por conversación) y lo avisa cuando llega. */
@@ -641,10 +650,13 @@ export class Conversaciones {
     await Promise.all([...this.guardando])
   }
 
-  /** Cierra la ficha de una sesión que no trabaja; la conversación queda para Seguí. */
+  /**
+   * Cierra la ficha de una sesión que no trabaja; la conversación queda para Seguí. La que espera lo que dejó de fondo
+   * sigue: todavía no terminó (T-84; al salir del proyecto se perdía el «Esperando»).
+   */
   cerrarFicha(ruta: string): void {
     const p = this.proyectos.get(ruta)
-    if (!p?.ficha || this.trabajando(p)) return
+    if (!p?.ficha || this.trabajando(p) || p.fondo.length > 0) return
     p.ficha = null
     this.emitir(p, [])
   }
@@ -751,7 +763,12 @@ export class Conversaciones {
         return
       case 'retoma':
         // Terminó lo que había dejado de fondo y la IA sigue sola: vuelve a trabajar, como con un mensaje (T-65).
-        if (this.trabajando(p) || p.revisando) return
+        // Si corre el control del turno anterior, la ficha todavía dice «trabajando»: que no la cierre al terminar (T-84).
+        if (p.revisando) {
+          p.retomo = true
+          return
+        }
+        if (this.trabajando(p)) return
         p.antes = new Set([...p.antes, ...(p.ficha?.preguntas.map((q) => q.codigo) ?? [])])
         p.ficha = { ruta: p.ruta, estado: 'trabajando', preguntas: [], motivo: null }
         this.emitir(p, [])
@@ -796,11 +813,13 @@ export class Conversaciones {
     const control = this.d.control
     if (control && p.controlando) {
       p.revisando = true
+      p.retomo = false
       void this.enFila(p, () => this.terminarCorreccion(p, control, resultado, motivo, falla))
       return
     }
     if (control && resultado === 'ok') {
       p.revisando = true
+      p.retomo = false
       void this.enFila(p, () => this.revisar(p, control, motivo)).finally(() => {
         p.revisando = false
       })
@@ -823,9 +842,12 @@ export class Conversaciones {
     // Mientras corría el control, el usuario pudo mandar otro mensaje: ese turno sigue y se revisa al terminar.
     if (!this.trabajando(p) || p.envios !== envios) return
     if (!avisos?.length) {
-      this.cerrarTurno(p, 'ok', motivo)
+      // La IA ya retomó sola (terminó lo de fondo): sigue trabajando y se revisa cuando termine ese turno (T-84).
+      if (p.retomo) p.retomo = false
+      else this.cerrarTurno(p, 'ok', motivo)
       return
     }
+    p.retomo = false
     const entrada: Entrada & { tipo: 'control' } = {
       tipo: 'control',
       id: this.id(),
@@ -857,6 +879,11 @@ export class Conversaciones {
       })
     }
     p.revisando = false
+    // La IA ya retomó sola mientras corría el control: sigue trabajando (T-84).
+    if (p.retomo && resultado === 'ok') {
+      p.retomo = false
+      return
+    }
     this.cerrarTurno(p, resultado, motivo, falla)
   }
 
@@ -869,7 +896,7 @@ export class Conversaciones {
       id: p.id,
       reiniciar: false,
       entradas: [entrada],
-      ficha: p.ficha,
+      ficha: this.ficha(p),
       contexto: p.contexto,
     })
   }

@@ -208,6 +208,68 @@ describe('Conversaciones', () => {
     expect(textos.some((t) => t.includes('Terminaron las pruebas de fondo'))).toBe(true)
   })
 
+  it('salir del proyecto mientras espera lo de fondo no borra el «Esperando» (T-84)', async () => {
+    const { c } = armar(crearMotorFalso({ pasoMs: 50 }))
+    await c.seguir(alfa, { texto: 'Corré las pruebas de fondo' })
+    await hasta(() => fichaDe(alfa)?.estado === 'terminada' && (fichaDe(alfa)?.fondo?.length ?? 0) > 0)
+    // Lo que hace la app al salir de un proyecto terminado (lo da por visto) o al cerrar su pestaña.
+    c.cerrarFicha(alfa)
+    expect(fichaDe(alfa)?.fondo).toEqual(['Pruebas con la app abierta (de prueba)'])
+    expect((await c.abrir(alfa)).ficha?.fondo).toHaveLength(1)
+    // Cuando termina, la IA retoma y la pestaña vuelve a «trabajando».
+    const antes = cambios.length
+    await hasta(() => cambios.slice(antes).some((x) => x.ficha?.estado === 'trabajando'))
+    await hasta(() => fichaDe(alfa)?.estado === 'terminada' && !fichaDe(alfa)?.fondo)
+    // Ya terminada de verdad, sí se cierra.
+    c.cerrarFicha(alfa)
+    expect(fichaDe(alfa)).toBeNull()
+  })
+
+  it('si la IA retoma sola mientras corre el control, la pestaña sigue «trabajando» (T-84)', async () => {
+    let emitir: (e: EventoMotor) => void = () => {}
+    const motor: Motor = {
+      ...crearMotorFalso(),
+      abrir: (_o, f) => {
+        emitir = f
+        return {
+          enviar: () => true,
+          ajustar: () => {},
+          ponerTono: () => {},
+          detener: async () => {},
+          cerrar: () => {},
+        }
+      },
+    }
+    let soltar: () => void = () => {}
+    let controles = 0
+    const c = new Conversaciones({
+      motor,
+      registro: new ArchivoSesiones(join(raiz, 'datos', 'sesiones.json')),
+      preguntas: leerPreguntasAbiertas,
+      alCambio: (x) => cambios.push(x),
+      // El primer control tarda hasta que la prueba lo suelta; los demás, en el acto.
+      control: () => {
+        controles++
+        return controles === 1 ? new Promise((r) => (soltar = () => r([]))) : Promise.resolve([])
+      },
+    })
+    await c.seguir(alfa, {})
+    emitir({ tipo: 'conversacion', id: 'x' })
+    emitir({ tipo: 'fondo', tareas: ['Pruebas'] })
+    emitir({ tipo: 'turno', resultado: 'ok', motivo: null, sigue: false })
+    await hasta(() => controles === 1)
+    // Terminó lo de fondo y la IA retomó mientras el control seguía corriendo.
+    emitir({ tipo: 'fondo', tareas: [] })
+    emitir({ tipo: 'retoma' })
+    soltar()
+    await new Promise((r) => setTimeout(r, 50))
+    expect(fichaDe(alfa)?.estado).toBe('trabajando')
+    // Al terminar el turno que retomó, se revisa y termina.
+    emitir({ tipo: 'turno', resultado: 'ok', motivo: null, sigue: false })
+    await hasta(() => fichaDe(alfa)?.estado === 'terminada')
+    expect(controles).toBe(2)
+  })
+
   it('Detener mientras espera lo de fondo lo corta y cierra la sesión (T-65)', async () => {
     const { c } = armar(crearMotorFalso({ pasoMs: 50 }))
     await c.seguir(alfa, { texto: 'Corré las pruebas de fondo' })
