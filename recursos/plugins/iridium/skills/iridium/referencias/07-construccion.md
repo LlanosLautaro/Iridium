@@ -31,7 +31,7 @@ Cada iteración tiene un objetivo en una frase, una lista de historias y su **co
 ## Ciclo de cada iteración
 1. **Planificar:** leer el contexto de la iteración (su **Leer antes**), elegir las historias, revisar sus criterios de aceptación y el diseño correspondiente.
 2. **Construir:** en pasos pequeños; cada paso compila, pasa los tests y se puede commitear.
-3. **Probar:** tests automáticos de la lógica nueva + prueba manual de los criterios de aceptación. Como el usuario no revisa código, los tests son la red de seguridad principal: toda lógica de dominio nueva lleva tests.
+3. **Probar:** tests automáticos de la lógica nueva + prueba manual de los criterios de aceptación. Como el usuario no revisa código, los tests son la red de seguridad principal: toda lógica de dominio nueva lleva tests. Las pruebas no ocupan la pantalla del usuario: al armarlas, `recetas/pruebas-sin-ventanas.md`.
 4. **Verificar antes de mostrar:** recorrer uno por uno los criterios de aceptación de las historias de la iteración contra lo construido (con la app abierta, no de memoria) y anotar en el log cuáles se cumplen y cuáles no. Lo que falta se termina o se dice; una iteración no se da por hecha con un criterio sin cumplir.
 5. **Revisar con el usuario:** mostrar lo construido funcionando (capturas, demo, criterios de aceptación cumplidos), nunca el código, con su prueba como `Q-n` de tipo prueba (un punto por cosa que tiene que comprobar); ajustar.
 6. **Documentar:** actualizar el log de iteraciones, `estado.md` y los documentos afectados. Si algo cambió respecto del diseño o la arquitectura, actualizar ese documento y registrar la decisión.

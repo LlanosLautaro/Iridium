@@ -79,8 +79,11 @@ export interface NovedadFramework {
   titulo: string
   /** Qué le pide al proyecto (markdown corto). */
   texto: string
-  /** Solo les toca a los proyectos que tienen este archivo o carpeta (relativo, con `/`); null, a todos. */
-  soloSi: string | null
+  /**
+   * Solo les toca a los proyectos que tienen alguno de estos archivos o carpetas (relativos, con `/`; D-209: la
+   * configuración de Playwright tiene tres nombres); null, a todos.
+   */
+  soloSi: string[] | null
 }
 
 /** Las novedades que tiene un proyecto (al día o con avisos); vacío si no tiene. */

@@ -230,7 +230,7 @@ Una vez, o cuando la IA lo pida.
 ```
 
 - Un `##` por script con lo que hace en palabras del usuario, una línea de para qué sirve y **una** línea de acción: `**Ejecutar:**` (un comando, en la raíz o en la `**Carpeta:**` indicada; o un archivo del proyecto, `.exe`, `.msi`, `.bat`, `.lnk`…, que Windows abre) o `**Abrir:**` (una carpeta o un archivo para ver).
-- **Lo que abre el proyecto lleva su marca**, una línea más, sin comillas: `**Marca:** ejecutar · escritorio` (un programa: `**Ejecutar:**` con su `.exe`), `ejecutar · página` (`**Abrir:**` con un `.html` o una dirección `https://`, que abre el navegador) o `ejecutar · consola` (`**Ejecutar:**` con un comando que se queda corriendo, como un bot o un servidor). Con ella, Iridium muestra **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, y la descripción del script es lo que dice al pasar el mouse. Si es una app de escritorio, el script que la arma lleva `**Marca:** armar` (`**Ejecutar:**` con un comando que no pregunta nada y reemplaza el `.exe`). Una app que se usa instalada fuera del proyecto se marca con la ruta de su `.exe` empezando por una variable de Windows (`%LOCALAPPDATA%\Programs\alfa\Alfa.exe`), nunca con una ruta fija (la que empieza con la letra del disco), y su `armar` arma el instalador y lo corre sin preguntas (`npm run instalador && instalador\Alfa-instalador.exe /S`); si el usuario la usa en más de una PC y pide que se ponga al día sola en todas, la receta está en `referencias/actualizacion-sola.md`. Una sola de cada una por proyecto. Se escriben una vez, cuando el proyecto ya tiene algo para usar (o al retomarlo), y se corrigen si cambia cómo se abre o cómo se arma.
+- **Lo que abre el proyecto lleva su marca**, una línea más, sin comillas: `**Marca:** ejecutar · escritorio` (un programa: `**Ejecutar:**` con su `.exe`), `ejecutar · página` (`**Abrir:**` con un `.html` o una dirección `https://`, que abre el navegador) o `ejecutar · consola` (`**Ejecutar:**` con un comando que se queda corriendo, como un bot o un servidor). Con ella, Iridium muestra **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, y la descripción del script es lo que dice al pasar el mouse. Si es una app de escritorio, el script que la arma lleva `**Marca:** armar` (`**Ejecutar:**` con un comando que no pregunta nada y reemplaza el `.exe`). Una app que se usa instalada fuera del proyecto se marca con la ruta de su `.exe` empezando por una variable de Windows (`%LOCALAPPDATA%\Programs\alfa\Alfa.exe`), nunca con una ruta fija (la que empieza con la letra del disco), y su `armar` arma el instalador y lo corre sin preguntas (`npm run instalador && instalador\Alfa-instalador.exe /S`); si el usuario la usa en más de una PC y pide que se ponga al día sola en todas, la receta está en `recetas/actualizacion-sola.md`. Una sola de cada una por proyecto. Se escriben una vez, cuando el proyecto ya tiene algo para usar (o al retomarlo), y se corrigen si cambia cómo se abre o cómo se arma.
 - Lo más usado primero, no más de ocho. Las herramientas que usa solo la IA van en el `CLAUDE.md`. Se corrige en la misma sesión en que algo cambia. Sin nada que ejecutar: «(Todavía no hay scripts: el proyecto no tiene código.)».
 - En una `Q-n`, citá el script (`scripts.md` › Abrir en modo desarrollo) en vez de repetir el comando.
 
@@ -302,9 +302,18 @@ Solo si: docs/diseno/piezas.css
 Cada pieza de `docs/diseno/piezas.css` empieza con su ficha…
 ```
 
-- Una por `## AAAA-MM-DD — Qué cambió`, del más viejo al más nuevo; `Solo si:` (opcional, la línea siguiente) es un archivo o carpeta del proyecto, relativo: solo les toca a los que lo tienen; debajo, qué tiene que hacer el proyecto.
+- Una por `## AAAA-MM-DD — Qué cambió`, del más viejo al más nuevo; `Solo si:` (opcional, la línea siguiente) es un archivo o carpeta del proyecto, relativo, o varios separados por ` · ` (`Solo si: playwright.config.ts · playwright.config.js`): solo les toca a los que tienen alguno; debajo, qué tiene que hacer el proyecto.
 - **Al cambiar el framework** de una forma que le pide algo a un proyecto que ya lo sigue (un formato nuevo, una regla nueva del control que hay que cumplir a mano), sumá su novedad al final, en el mismo cambio.
 - **Al ponerte al día** (te llega el pedido con la lista): hacé lo que pide cada una y al terminar poné en `**Framework:**` la fecha de la última. Si una no aplica, decilo; si necesita una decisión del usuario, una `Q-n`.
+
+## Las recetas
+
+Lo que ya anduvo en Iridium y le sirve a cualquier app de un tipo está en `recetas/`, una por problema. Cada una dice arriba **para qué tipos** de app vale (escritorio, página, consola: el de la marca del script que abre el proyecto, `SKILL.md` › Los scripts) y **cuándo se aplica**; después, la receta por tipo con el código para copiar o adaptar, y **cómo se prueba**. Se le cuenta al usuario por lo que cambia para él, no por su código.
+
+- `recetas/pruebas-sin-ventanas.md`: **las pruebas no ocupan la pantalla del usuario.** Al armar las pruebas de un proyecto, y al retomar uno que ya las tiene, aplicala: mientras corren, ninguna ventana ni consola a la vista, sin robar el foco ni sonar.
+- `recetas/actualizacion-sola.md`: una app de escritorio instalada que se pone al día sola en todas las PC desde sus versiones publicadas; solo si el usuario la pide.
+
+Una receta nueva que le pide algo a los proyectos que ya existen lleva su novedad, con `Solo si:` los archivos que dicen que le toca.
 
 ## El control
 
@@ -342,7 +351,7 @@ Al pasar un portón o terminar una iteración, cerrá así. Un chat nuevo se pag
 - `referencias/iconos.md`: el estilo de los íconos de proyecto.
 - `referencias/integraciones.md`: las skills externas (`impeccable`) en los hitos 4, 6, 7, 8 y 10.
 - `referencias/ronda-ux.md`: la ronda de UX de la operación.
-- `referencias/actualizacion-sola.md`: una app de escritorio instalada que se pone al día sola en todas las PC desde sus versiones publicadas (hasta que sea una pieza de las plantillas).
+- `recetas/`: las soluciones probadas por tipo de app (`SKILL.md` › Las recetas).
 - `referencias/pasar-al-framework.md`: cómo pasar un proyecto de la guía de hitos (o una carpeta simple) al framework.
 - `novedades.md`: los cambios del framework que les piden algo a los proyectos, con fecha.
 - `plantillas/`: `estado.md`, `trabajo.md`, `README-docs.md`, `decisiones.md`, `perfil-proyecto.md`, `scripts.md`, `instrucciones-ia.md`; en `plantillas/modulo/`, las de cada frente, y en `plantillas/diseno/`, el índice de las maquetas.

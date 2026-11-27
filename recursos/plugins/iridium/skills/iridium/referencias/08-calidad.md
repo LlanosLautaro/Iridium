@@ -11,7 +11,7 @@
 
 ## Actividades
 
-**1. Revisión de cobertura.** Comprueba que la lógica central tiene tests automáticos y que pasan. Prioriza lo que puede perder o dañar datos del usuario.
+**1. Revisión de cobertura.** Comprueba que la lógica central tiene tests automáticos y que pasan. Prioriza lo que puede perder o dañar datos del usuario. Mientras corren, no aparece ninguna ventana ni consola (`recetas/pruebas-sin-ventanas.md`).
 
 **2. Pruebas funcionales.** Recorre cada historia de usuario con sus criterios de aceptación y cada flujo de `04-ux.md`, incluidos los de error.
 

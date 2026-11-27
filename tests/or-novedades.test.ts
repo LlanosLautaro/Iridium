@@ -46,7 +46,7 @@ describe('el lector de novedades.md', () => {
         fecha: '2026-11-12',
         titulo: 'Las piezas llevan ficha',
         texto: 'Cada pieza empieza con su `Grupo:`.',
-        soloSi: 'docs/diseno/piezas.css',
+        soloSi: ['docs/diseno/piezas.css'],
       },
       {
         fecha: '2026-11-20',
@@ -74,7 +74,30 @@ describe('el lector de novedades.md', () => {
     expect(problemas.map((p) => p.linea)).toEqual([1, 5, 6, 8])
   })
 
-  it('el novedades.md del framework se lee sin problemas y trae las de D-117, D-119, D-200 y D-203', async () => {
+  it('Solo si con varias rutas: le toca al proyecto que tiene alguna (D-209); una mala marca toda la línea', () => {
+    const { novedades, problemas } = leerNovedades(
+      [
+        '## 2026-11-27 — Las pruebas sin ventanas',
+        'Solo si: playwright.config.ts · `playwright.config.js` · app\\playwright.config.mjs',
+        'Algo.',
+        '## 2026-11-28 — Otra',
+        'Solo si: playwright.config.ts · ../afuera',
+        'Algo.',
+      ].join('\n'),
+    )
+    expect(novedades[0]?.soloSi).toEqual([
+      'playwright.config.ts',
+      'playwright.config.js',
+      'app/playwright.config.mjs',
+    ])
+    expect(problemas.map((p) => p.linea)).toEqual([5])
+    const solo = novedades.slice(0, 1)
+    expect(novedadesDelProyecto(solo, null, (r) => r === 'playwright.config.js')).toHaveLength(1)
+    expect(novedadesDelProyecto(solo, null, (r) => r === 'app/playwright.config.mjs')).toHaveLength(1)
+    expect(novedadesDelProyecto(solo, null, () => false)).toEqual([])
+  })
+
+  it('el novedades.md del framework se lee sin problemas y trae las de D-117, D-119, D-200, D-203 y D-209', async () => {
     const texto = await readFile(RUTA_NOVEDADES_EN_REPO, 'utf8')
     const { novedades, problemas } = leerNovedades(texto)
     expect(problemas).toEqual([])
@@ -83,6 +106,7 @@ describe('el lector de novedades.md', () => {
       'Las medidas fijas son tokens',
       'Lo aprobado de un frente va en su ruta',
       'Las ideas del usuario llevan un título corto',
+      'Las pruebas no ocupan la pantalla del usuario',
     ])
   })
 })

@@ -1,13 +1,16 @@
 # Una app de escritorio que se actualiza sola en todas las PC
 
-Para una app de escritorio de Electron que el usuario usa **instalada** y en **más de una PC**. Es la receta que usa Iridium (probada de punta a punta); hasta que sea una pieza de las plantillas, se copia de acá. Se aplica cuando el usuario la pide (no es una novedad que el proyecto deba hacer solo) y se le cuenta por sus consecuencias, no por su código.
+**Para:** escritorio (Electron, instalada)
+**Se aplica:** solo cuando el usuario la pide (no llega como novedad).
+
+Para una app de escritorio de Electron que el usuario usa **instalada** y en **más de una PC**. Es la receta que usa Iridium (probada de punta a punta) y se le cuenta por sus consecuencias, no por su código.
 
 ## Cómo queda
 - **En la PC del código:** cada commit con la app cerrada, Iridium la arma y la instala sola (`scripts.md` › la marca `armar`, `SKILL.md` › Los scripts). Al terminar, el mismo script la **publica** en GitHub.
 - **En las otras PC:** no hace falta el código ni herramientas. La app, al abrirse, mira si hay una versión publicada más nueva, la baja sola (solo lo que cambió) y entra al cerrarla. Se instala a mano una sola vez.
 - Los datos del usuario no se tocan al instalar, actualizar ni desinstalar.
 
-## Las piezas
+## La receta
 1. **Un número de versión que crece en cada armado.** La app solo instala un número mayor que el suyo. Lo simple: el tercer número cuenta los commits desde que cambió el del medio (`1.0.0` → `1.0.12`; lo calcula el script de armar y lo pone en el `version` del armado), y el del medio sube al cerrar algo grande. Una fecha y hora (`2026.1127.1530`) también sirve.
 2. **El instalador, por usuario.** electron-builder con NSIS, sin pedir permisos de administrador (`nsis.oneClick: true`, `perMachine: false`): instala en `%LOCALAPPDATA%\Programs\<nombre>` con su acceso en el escritorio y el menú Inicio, y queda en «Aplicaciones instaladas». El nombre del instalador lleva el número (`artifactName: ${productName}-Setup-${version}.${ext}`): la app busca el `.blockmap` de la versión anterior por ese número para bajar solo lo que cambió. Sin firma de código, Windows avisa la primera vez que se instala a mano; las actualizaciones no.
 3. **De dónde se actualiza.** `publish: { provider: github, owner: <dueño>, repo: <repo de las versiones> }` en la configuración de electron-builder: el instalador lleva adentro `resources/app-update.yml` con esa dirección.

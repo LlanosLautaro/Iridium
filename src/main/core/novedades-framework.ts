@@ -1,6 +1,6 @@
 // Las novedades del framework (frente Orden, T-64, D-118): los cambios que les piden algo a los proyectos, con fecha, en
 // `novedades.md` del framework. Un proyecto tiene las que son más nuevas que su `**Framework:**` y le tocan (`Solo si:`
-// un archivo que tiene). Todo puro: leer el disco es de quien llama.
+// un archivo que tiene, o uno de varios separados por ` · `, D-209). Todo puro: leer el disco es de quien llama.
 import type { NovedadFramework } from '../../compartido/skills'
 
 /** Dónde está `novedades.md` dentro del framework (la carpeta de la skill `iridium`). */
@@ -24,7 +24,10 @@ export function rutaSoloSiValida(r: string): boolean {
   return r.length > 0 && !/^[a-z]:|^[\\/]/i.test(r) && !r.split(/[\\/]/).includes('..')
 }
 
-/** Lee `novedades.md`: un `## AAAA-MM-DD — Qué cambió` por novedad, `Solo si: <ruta>` opcional y lo que pide. */
+/**
+ * Lee `novedades.md`: un `## AAAA-MM-DD — Qué cambió` por novedad, `Solo si: <ruta>` opcional (o varias, separadas por
+ * ` · `: le toca al proyecto que tiene alguna) y lo que pide.
+ */
 export function leerNovedades(texto: string): NovedadesLeidas {
   const lineas = texto.replace(/^﻿/, '').split(/\r?\n/)
   const novedades: NovedadFramework[] = []
@@ -62,12 +65,13 @@ export function leerNovedades(texto: string): NovedadesLeidas {
     if (!actual) return
     const s = SOLO_SI.exec(l.trim())
     if (s && actual.cuerpo.every((c) => c.trim() === '')) {
-      const ruta = (s[1] ?? '').trim().replace(/^`|`$/g, '').replaceAll('\\', '/')
-      if (rutaSoloSiValida(ruta)) actual.n.soloSi = ruta
+      const rutas = (s[1] ?? '').split(' · ').map((r) => r.trim().replace(/^`|`$/g, '').replaceAll('\\', '/'))
+      if (rutas.every(rutaSoloSiValida)) actual.n.soloSi = rutas
       else
         problemas.push({
           linea: i + 1,
-          texto: '`Solo si:` lleva un archivo o carpeta del proyecto, relativo: `docs/diseno/piezas.css`',
+          texto:
+            '`Solo si:` lleva archivos o carpetas del proyecto, relativos y separados por ` · `: `docs/diseno/piezas.css`',
         })
       return
     }
@@ -87,6 +91,6 @@ export function novedadesDelProyecto(
   existe: (ruta: string) => boolean,
 ): NovedadFramework[] {
   return novedades.filter(
-    (n) => (fecha === null || n.fecha > fecha) && (n.soloSi === null || existe(n.soloSi)),
+    (n) => (fecha === null || n.fecha > fecha) && (n.soloSi === null || n.soloSi.some(existe)),
   )
 }

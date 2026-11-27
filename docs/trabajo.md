@@ -732,3 +732,7 @@ Una colección que crece con el tiempo y que cualquier proyecto puede usar: esti
 Estado: hecho · Fecha: 2026-11-26 · Origen: T-86 · Tamaño: chico, sola
 Con la suite entera de Playwright, `r7-r8-proyectos.spec.ts` › el clic derecho en una tarjeta (R-7) falló una vez: al leer la ficha, el borrado de la carpeta de datos temporal chocó con un archivo que Electron todavía tenía abierto (EBUSY). Sola, pasa. Que la prueba espere a poder borrarla, como la del ayudante de CO-I2.
 Hecho el 2026-11-26: al terminar, esta prueba y otras dos que borraban igual (la de seguridad y la del esqueleto) reintentan el borrado si Electron todavía tiene un archivo abierto, como las demás. Pasan las tres.
+
+## T-145 — Una novedad del mismo día no llega a quien ya se puso al día ese día
+Estado: pendiente · Idea: IA · Fecha: 2026-11-27 · Origen: PL-I1 · Tamaño: chico, sola
+Las novedades se comparan con la fecha `**Framework:**` del proyecto: una novedad con la misma fecha cuenta como vista. Si un proyecto se puso al día hoy y después se suma otra novedad de hoy, no la ve. Hoy no le pasa a nadie (el único con fecha de hoy es Iridium, que ya la cumple). Arreglo posible: que **Ponerse al día** escriba también la última novedad hecha, o que el lector cuente por título dentro del mismo día; va con el lector, el control y sus pruebas.

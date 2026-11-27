@@ -21,7 +21,7 @@ Que la IA de cualquier proyecto del usuario aplique, sin que él tenga que nombr
   - *Consola:* no abre ventanas; no le toca.
 - **Receta «La actualización sola»:** la guía de D-207 pasa a `recetas/` con el mismo formato, sin cambiar lo que dice.
 - **`SKILL.md`** cita las recetas en una sección corta y suma la regla «las pruebas no ocupan la pantalla del usuario»; `referencias/07-construccion.md` y `08-calidad.md` la nombran donde se arman las pruebas.
-- **La novedad** de las pruebas sin ventanas, solo para los proyectos con Playwright. Como su configuración puede ser `playwright.config.ts`, `.js` o `.mjs`, `Solo si:` acepta varias rutas separadas por ` · ` (le toca si tiene alguna): cambia el lector de novedades, el control y sus pruebas en el mismo cambio (D-086).
+- **La novedad** de las pruebas sin ventanas, solo para los proyectos con Playwright. Como su configuración puede ser `playwright.config.ts`, `.js` o `.mjs`, en la raíz o en `app/` o `tests/`, `Solo si:` acepta varias rutas separadas por ` · ` (le toca si tiene alguna): cambia el lector de novedades, el control y sus pruebas en el mismo cambio (D-086).
 - **Probarla fuera de Iridium** antes de escribirla: una app de Electron de muestra en una carpeta descartable, con pruebas que comprueban solas que la ventana no se ve, no tiene foco y la captura no sale en blanco.
 
 ### Should
