@@ -96,9 +96,9 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 
 **Verificado:** `tests/ab2-armados.test.ts` suma cinco pruebas (la PC dormida, el corte con su reintento, el número de otro programa, cuándo arrancó un proceso y un armado de verdad en una carpeta con eñe, que falla sin el arreglo) y el `.exe` de solo lectura en la del `.exe` trabado. Vitest 1125 (1 omitida; tres de otras secciones fallaron una vez con la PC cargada y solas pasan), Playwright de Abrir, Arranque y la actualización de Iridium (14), typecheck y lint en verde.
 
-## T-87 — El pedido para la conversación de tu app (si Q-322 es A)
+## T-87 — El pedido para la conversación de tu app (si Q-323 es A)
 > Que la app instalada se ponga al día sola en cualquier PC desde sus versiones publicadas en GitHub, como Iridium (su D-171): sumar electron-updater (mira al abrir y cada seis horas, baja solo lo que cambió con el `.blockmap` y entra al cerrar, con un aviso «Versión nueva lista»), un número de versión que crezca en cada armado, y que el script de armar (la marca `armar` de `scripts.md`), después de instalarla en esta PC, la publique (instalador, `.blockmap` y `latest.yml`). El repo es privado: resolver cómo la lee la otra PC sin dejar una clave en el repo. Se prueba con un commit acá y abriéndola en la otra PC.
 
 ## Próximo paso
-T-87 espera Q-322 (es código de tu app instalada, otro proyecto). T-86, probada en Q-308: todo bien.
+T-87 espera Q-323 (es código de tu app instalada, otro proyecto). T-86, probada en Q-308: todo bien.
 **Leer antes:** `trabajo.md` › T-87, D-160 y D-171.
