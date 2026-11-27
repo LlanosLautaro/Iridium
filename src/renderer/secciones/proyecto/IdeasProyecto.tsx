@@ -114,7 +114,7 @@ function primeraLinea(texto: string): string {
 function Senal({ idea }: { idea: IdeaVista }) {
   if (idea.de === 'enlace') return idea.estado === 'hecha' ? <span className="senal">Revisado</span> : null
   if (idea.estado === 'aprobada') return <span className="senal verde">Aprobada</span>
-  if (idea.estado === 'rechazada') return <span className="senal">Rechazada</span>
+  if (idea.estado === 'rechazada') return <span className="senal rojo">Rechazada</span>
   if (idea.estado === 'hecha') return <span className="senal">Hecha</span>
   return null
 }

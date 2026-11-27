@@ -17,9 +17,9 @@
   .texto-doc  .pegada { display: block; width: 240px; height: 120px; margin: var(--esp-2) 0 var(--esp-3); border-radius: var(--radio-bloque); border: 1px solid var(--borde); background: var(--elevado); position: relative; overflow: hidden; }
   .pegada::before { content: ""; position: absolute; inset: 18px 18px auto 18px; height: 10px; border-radius: 5px; background: var(--borde-fuerte); box-shadow: 0 20px 0 var(--borde), 0 40px 0 var(--borde); }
   .grupo + .grupo { margin-top: var(--esp-5); }
-  /* Q-175: el estado en color (verde aprobada; rechazada en gris, el rojo es de los errores (D-201); sin color, sin evaluar). Q-176: las de la IA llevan el robot y su código. */
+  /* Q-175: el estado en color (verde aprobada, rojo rechazada; sin color, sin evaluar). Q-176: las de la IA llevan el robot y su código. */
   .item.aprobada .icono-fila { color: var(--bien); }
-  .item.rechazada .icono-fila { color: var(--texto-3); }
+  .item.rechazada .icono-fila { color: var(--error); }
   .item.rechazada .titulo-fila { color: var(--texto-3); font-weight: 400; }
   .item .meta { display: inline-flex; gap: var(--esp-3); align-items: center; }
 </style>
@@ -66,7 +66,7 @@
           <div class="fila item aprobada"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Aprobados provisionales</span></span><span class="meta"><span class="senal verde">Aprobada</span>29 oct</span></div>
           <div class="fila item"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Comentar un documento párrafo por párrafo</span></span><span class="meta">22 oct</span></div>
           <div class="fila item"><span class="icono-fila" aria-label="Anotada por la IA"><i data-ic="robot"></i></span><span class="principal-fila"><span class="titulo-fila">Iridium en Linux o en el celular</span></span><span class="meta"><span class="cuenta">T-38</span>21 oct</span></div>
-          <div class="fila item rechazada"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Revisión para apps Android</span></span><span class="meta"><span class="senal">Rechazada</span>22 oct</span></div>
+          <div class="fila item rechazada"><span class="icono-fila"><i data-ic="ideas"></i></span><span class="principal-fila"><span class="titulo-fila">Revisión para apps Android</span></span><span class="meta"><span class="senal rojo">Rechazada</span>22 oct</span></div>
         </div>
       </div>
     </div>

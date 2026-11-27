@@ -204,7 +204,15 @@
 | D-195 | 2026-11-25 | Apariencia y ajustes (T-134) | 10 (T-134) | Apagar la PC al terminar: un botón en la conversación que no pasa por la IA | vigente |
 | D-196 | 2026-11-25 | general | 10 (Q-295) | Los pedidos a la IA desde una sección quedan citados en la conversación | vigente |
 | D-197 | 2026-11-25 | general | 10, frente Pulido, paso 1 (Q-299 a Q-301) | Pulido: un aire de instrumento sobre el negro, con acento, colores de estado y movimiento sutil | vigente (corrige en parte D-100, D-103 y D-108) |
-| D-201 | 2026-11-27 | Ideas | 10, frente Ideas (T-109) | Una idea rechazada se muestra en gris, no en rojo | vigente (corrige en parte D-128) |
+| D-198 | 2026-11-26 | Compartir | 10, frente Compartir (Q-304 A) | El Iridium de esta PC también va instalado, con el mismo instalador que la otra | vigente |
+| D-199 | 2026-11-26 | general (Orden, T-64) | 10, frente Orden, OR-I5 (Q-311 A) | Las novedades del framework, como en las maquetas | vigente |
+| D-200 | 2026-11-26 | general (Frentes) | 10 (lo reportó el usuario) | Lo aprobado de un frente va en su ruta, y el control lo marca | vigente |
+| D-201 | 2026-11-27 | Ideas | 10, frente Ideas (T-109) | Una idea rechazada se muestra en gris, no en rojo | reemplazada por D-204 |
+| D-202 | 2026-11-27 | general (Git y la Bandeja) | 10 (T-89) | Las respuestas a las preguntas se suben solas a GitHub | vigente |
+| D-203 | 2026-11-27 | general (el framework) | 10 (T-126) | Una idea del usuario lleva un título corto al evaluarla | vigente |
+| D-204 | 2026-11-27 | Ideas | 10 (Q-315) | Una idea rechazada vuelve al rojo | vigente (reemplaza D-201) |
+| D-205 | 2026-11-27 | general (design system) | 10, frente Diseño, paso 8 (Q-313 B) | El borde de los controles queda a 1,9:1, como hueco aceptado | vigente |
+| D-206 | 2026-11-27 | Apariencia y ajustes | 10 (Q-317 A, T-102) | El ancho de lectura se elige solo en Docs | vigente |
 
 ---
 
@@ -3770,7 +3778,7 @@ evision-cola-electron.json` y sale cuando Iridium está.
 - **Fecha:** 2026-11-27
 - **Ámbito:** Ideas
 - **Hito o paso:** 10; frente Ideas (T-109, de la ronda de UX 1, aprobada en Ideas)
-- **Estado:** vigente (corrige en parte D-128)
+- **Estado:** reemplazada por D-204 (corregía en parte D-128)
 
 **Contexto:** D-128 (Q-175) puso el estado de cada idea en color: aprobada en verde y rechazada en rojo. `06-ui.md` deja el rojo para los errores, y en una lista larga las rechazadas llamaban más la atención que las que esperan.
 **Decisión:** «Rechazada» y el ícono de una idea rechazada van en gris (el texto apagado), con el título apagado como antes. Aprobada sigue en verde.
@@ -3798,3 +3806,36 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** al evaluar una idea del usuario (o al tomarla, si nadie la evaluó), si su título pasa de unas ocho palabras, la IA le pone uno corto en sus palabras y pasa su texto tal cual, sin resumir ni corregir, al principio de su nota (`docs/ideas/T-n.md`, que crea si no hay). Una `nueva` sin evaluar queda como la anotó. El control marca una idea del usuario evaluada o aprobada, sin terminar, con un título de más de 80 letras.
 **Motivo:** la propuesta de T-126 decía dejar el texto en `trabajo.md` como «Tu idea: …», pero Ideas no muestra ese texto en las ideas del usuario: al abrirlas se ve el título y su nota, que el usuario edita. En la nota, abrirla muestra el título corto y debajo todo lo que escribió, y sigue siendo editable. Iridium no cambia.
 **Consecuencias:** las nueve ideas largas de este proyecto (T-75, T-80, T-81, T-82, T-93, T-115, T-118, T-120 y T-133) tienen título corto y su texto en la nota. Los demás proyectos lo hacen con la novedad del framework del 2026-11-27. Las terminadas y descartadas no se tocan. Pruebas: `tests/or1-control.test.ts` (el aviso).
+
+## D-204 — Una idea rechazada vuelve al rojo
+- **Fecha:** 2026-11-27
+- **Ámbito:** Ideas
+- **Hito o paso:** 10 (Q-315)
+- **Estado:** vigente (reemplaza D-201; vuelve a D-128)
+
+**Contexto:** con D-201 (T-109) «Rechazada» y su ícono pasaron a gris. Al probarlo en Q-315 el usuario pidió deshacerlo: «en rojo estaba bien».
+**Decisión:** una idea rechazada lleva «Rechazada» y su ícono en rojo, con el título apagado, como en D-128 (Q-175). Aprobada, en verde.
+**Motivo:** el usuario prefiere que lo rechazado se distinga de un vistazo; en Ideas el rojo no se confunde con un error porque va siempre con la palabra «Rechazada».
+**Consecuencias:** vuelven como antes la lista de Ideas (de un proyecto y del inicio), sus dos maquetas y `modulos/ideas/definicion.md`. T-109, descartada. La prueba de Ideas (`tests/e2e/id1-ideas-proyecto.spec.ts`) ahora mide el rojo de la palabra y del ícono.
+
+## D-205 — El borde de los controles queda a 1,9:1, como hueco aceptado
+- **Fecha:** 2026-11-27
+- **Ámbito:** general (design system, `06-ui.md` › Contraste)
+- **Hito o paso:** 10; frente Diseño, paso 8 (Q-313 B)
+- **Estado:** vigente
+
+**Contexto:** el borde de los campos, las casillas y el botón secundario (`--borde-control`) da 1,9:1 sobre el negro; WCAG pide 3:1 para el borde de un control. El usuario lo miró con la dirección `borde-controles` (3,3:1) y Lado a lado.
+**Decisión:** queda como está. Es un hueco aceptado del contraste, anotado en `06-ui.md`.
+**Motivo:** más negro y limpio; los campos se reconocen también por su texto de ayuda y el botón por su letra.
+**Consecuencias:** la dirección `direcciones/borde-controles.css` se borra (queda en el historial de Git). Si alguien con baja visión usa Iridium, se vuelve a mirar.
+
+## D-206 — El ancho de lectura se elige solo en Docs
+- **Fecha:** 2026-11-27
+- **Ámbito:** Apariencia y ajustes (W-17)
+- **Hito o paso:** 10 (Q-317 A, T-102)
+- **Estado:** vigente
+
+**Contexto:** Angosto · Normal · Ancho estaba arriba del documento en Docs y también en Ajustes › Apariencia. Desde PU-I2 Apariencia tiene el acento, así que sacarle el ancho no la deja vacía.
+**Decisión:** el ancho de lectura se elige solo en la cabecera de Docs; Ajustes › Apariencia queda con el acento.
+**Motivo:** se elige donde se usa, y no hay dos lugares para lo mismo.
+**Consecuencias:** cambian Ajustes › Apariencia, su maqueta (`pantallas/ajustes.html`) y `04-ux.md` › W-17. El ancho elegido se sigue recordando igual. Prueba: `tests/e2e/ap1-ajustes.spec.ts`.

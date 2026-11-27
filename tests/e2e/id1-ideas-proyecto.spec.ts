@@ -99,19 +99,22 @@ test('Ideas en un proyecto: la lista, anotar, abrir y escribir, aprobar y rechaz
     await expect(fila('El Mapa como una red de pasos')).not.toContainText('T-2')
     await expect(fila('Dictado')).toContainText('Aprobada')
     await expect(fila('Revisión para apps Android')).toContainText('Rechazada')
-    // Rechazada en gris, no en rojo, que es el color de los errores (T-109, D-201); Aprobada sigue en verde.
+    // Rechazada en rojo (Q-175; el gris de T-109 se deshizo en Q-315, D-204); Aprobada en verde.
     const colorDe = (l: import('@playwright/test').Locator) => l.evaluate((e) => getComputedStyle(e).color)
-    const gris = await colorDe(fila('Revisión para apps Android').locator('.senal', { hasText: 'Rechazada' }))
-    const texto3 = await win.evaluate(() => {
-      const s = document.createElement('span')
-      s.style.color = 'var(--texto-3)'
-      document.body.append(s)
-      const c = getComputedStyle(s).color
-      s.remove()
-      return c
-    })
-    expect(gris).toBe(texto3)
-    expect(await colorDe(fila('Revisión para apps Android').locator('.icono-fila'))).toBe(texto3)
+    const colorDeToken = (token: string) =>
+      win.evaluate((t) => {
+        const s = document.createElement('span')
+        s.style.color = `var(${t})`
+        document.body.append(s)
+        const c = getComputedStyle(s).color
+        s.remove()
+        return c
+      }, token)
+    const rojo = await colorDeToken('--error')
+    expect(
+      await colorDe(fila('Revisión para apps Android').locator('.senal', { hasText: 'Rechazada' })),
+    ).toBe(rojo)
+    expect(await colorDe(fila('Revisión para apps Android').locator('.icono-fila'))).toBe(rojo)
     await win.screenshot({ path: 'test-results/id1-ideas-lista.png' })
 
     // Anotar: Enter la deja primera en Ideas, sin evaluar; el campo queda vacío y con el foco.

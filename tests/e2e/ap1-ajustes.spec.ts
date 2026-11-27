@@ -89,7 +89,7 @@ test('el ⚙ y Ctrl+, abren Ajustes; Esc, la ✕ y un clic afuera cierran sin pe
   await app.close()
 })
 
-test('un solo tema, el negro; Apariencia elige el ancho de lectura y sigue al volver a abrir (AJ-1, D-104)', async () => {
+test('un solo tema, el negro; el ancho de lectura se elige solo en Docs y sigue al volver a abrir (AJ-1, D-104, T-102)', async () => {
   let { app, win } = await abrir()
   await win.locator('.tarjeta', { hasText: 'Alfa' }).click()
   // El negro de docs/diseno/tokens.css, sin atributo de tema.
@@ -98,24 +98,35 @@ test('un solo tema, el negro; Apariencia elige el ancho de lectura y sigue al vo
     getComputedStyle(document.documentElement).getPropertyValue('--fondo').trim(),
   )
   expect(fondo).toBe('#000000')
+  // Apariencia tiene el acento y ya no el ancho de lectura (Q-317 A).
   await win.keyboard.press('Control+,')
   await win.getByRole('dialog').getByRole('button', { name: 'Apariencia' }).click()
   await expect(win.getByRole('radiogroup', { name: 'Tema' })).toHaveCount(0)
-  const anchos = win.getByRole('group', { name: 'Ancho de lectura' })
+  await expect(win.getByRole('group', { name: 'Acento' })).toBeVisible()
+  await expect(win.getByRole('group', { name: 'Ancho de lectura' })).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/ap1-apariencia.png' })
+  await win.keyboard.press('Escape')
+
+  const anchosDeDocs = async () => {
+    await win
+      .getByRole('navigation', { name: 'Secciones del proyecto' })
+      .getByRole('button', { name: 'Docs' })
+      .click()
+    return win.locator('[data-seccion="docs"]').getByRole('group', { name: 'Ancho del texto' })
+  }
+  const anchos = await anchosDeDocs()
   await expect(anchos.getByRole('button', { name: 'Normal' })).toHaveAttribute('aria-pressed', 'true')
   await anchos.getByRole('button', { name: 'Ancho' }).click()
   await expect(anchos.getByRole('button', { name: 'Ancho' })).toHaveAttribute('aria-pressed', 'true')
-  await win.screenshot({ path: 'test-results/ap1-apariencia.png' })
   await expect.poll(async () => (await leerConfig()).anchoHoja).toBe('ancho')
   await app.close()
 
   ;({ app, win } = await abrir())
   await expect(win.locator('.zona-principal')).toHaveAttribute('aria-label', 'Alfa')
-  await win.keyboard.press('Control+,')
-  await win.getByRole('dialog').getByRole('button', { name: 'Apariencia' }).click()
-  await expect(
-    win.getByRole('group', { name: 'Ancho de lectura' }).getByRole('button', { name: 'Ancho' }),
-  ).toHaveAttribute('aria-pressed', 'true')
+  await expect((await anchosDeDocs()).getByRole('button', { name: 'Ancho' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
   await app.close()
 })
 

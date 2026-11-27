@@ -22,8 +22,9 @@ Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-010
 Las `Q-n` de todos los proyectos: es Pendientes (D-010, D-022); pasa a llamarse Bandeja de entrada con el frente Orden (D-097).
 
 ## T-5 — Biblioteca de diseño local
-Estado: en curso · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-011 · Tamaño: grande
+Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-011 · Tamaño: grande
 Design systems, patrones y capturas de páginas de referencia; prototipos con comentarios. Es el frente Diseño, activo desde el 2026-11-07 como un «Claude Design» local (D-102, `modulos/diseno/`). Del brainstorming: que la biblioteca arranque con los design systems de los proyectos propios, y perillas en vivo dentro de los prototipos (C-34).
+Hecho el 2026-11-27: el frente Diseño quedó cerrado (1.4.0).
 
 ## T-6 — Revisión con comentarios sobre apps web y Electron
 Estado: hecho · Fecha: 2026-10-21 · Origen: `00-idea.md`, D-012, D-046
@@ -485,9 +486,10 @@ Hecho el 2026-11-21: sin conversación, la cabecera va sin título (el cuerpo ya
 Q-248 pidió que diga «Nueva conversación» (2026-11-21): dice eso, y sin conversación no muestra el botón Nueva, que no hacía nada (el chat ya está en blanco); así el título entra entero a 1440 y a 1024.
 
 ## T-102 — El ancho de lectura, en un solo lugar
-Estado: pendiente · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1) · Tamaño: chico
+Estado: hecho · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1) · Tamaño: chico
 Desde PU-I2 (D-197) Ajustes › Apariencia tiene también el acento, así que ya no queda vacía: falta que decidas si el ancho sigue en los dos lugares o solo en Docs. Sin `sola` hasta entonces.
 Angosto · Normal · Ancho está en la cabecera de Docs y en Ajustes › Apariencia, que queda con solo eso desde que hay un tema (D-104). Propuesta: dejarlo en Docs, donde se usa, y sacar Apariencia de Ajustes hasta que tenga algo propio.
+Hecho el 2026-11-27 (Q-317 A, D-206): el ancho se elige solo arriba del documento en Docs; Ajustes › Apariencia queda con el acento. Prueba: `tests/e2e/ap1-ajustes.spec.ts`.
 
 ## T-103 — Git en blanco mientras lee
 Estado: hecho · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
@@ -502,8 +504,9 @@ Ajustes › Acerca de copia el mensaje completo del último commit (doce líneas
 Hecho el 2026-11-21: la fecha y la primera frase del mensaje (cortada en una palabra si es muy larga); el mensaje entero, al pasar el mouse.
 
 ## T-105 — Docs: los archivos de la raíz mezclados con los de docs/
-Estado: en curso · Idea: IA · Frente: Diseño · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: hecho · Idea: IA · Frente: Diseño · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 La lista de Docs pone `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md` y el `README.md` de la raíz entre los de `docs/`: quedan dos «README.md» iguales. Además, unas carpetas tienen nombre para el usuario (Hitos, Frentes) y otras el de la carpeta (diseno, ideas, research, revision). Propuesta: los de la raíz en un grupo aparte («Del proyecto») y todas las carpetas con nombre (Diseño, Ideas, Investigación, Revisión).
+Hecho el 2026-11-27 (paso 8 de Diseño): los de la raíz van al final en «Del proyecto» y las carpetas tienen nombre para el usuario; probado en Q-314.
 
 ## T-106 — «Este proyecto no marca cómo se arma»
 Estado: hecho · Frente: Abrir · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
@@ -524,9 +527,10 @@ Con preguntas, la lista de la Bandeja va en la columna centrada (como el Mapa y 
 Hecho el 2026-11-21: el vacío va en la columna de las preguntas, como el de Revisión.
 
 ## T-109 — «Rechazada» en rojo, que es el color de los errores
-Estado: hecho · Idea: IA · Frente: Ideas · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: descartado (Q-315: «en rojo estaba bien», D-204) · Idea: IA · Frente: Ideas · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
 En Ideas, una idea rechazada lleva «Rechazada» en rojo (Q-175). `06-ui.md` deja el rojo para un error, y en una lista larga las rechazadas llaman más la atención que las que esperan. Propuesta: la palabra en gris, con el título apagado como ahora; el verde de Aprobada queda.
 Hecho el 2026-11-27: una idea rechazada lleva «Rechazada» y su ícono en gris, con el título apagado; Aprobada sigue en verde (D-201).
+Deshecho el 2026-11-27: al probarlo en Q-315 pediste volver al rojo; «Rechazada» y su ícono van en rojo otra vez (D-204).
 
 ## T-110 — Mirar los avisos juntos en la esquina
 Estado: hecho · Frente: Orden · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)

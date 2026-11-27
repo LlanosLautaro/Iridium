@@ -32,7 +32,7 @@
 | Compartir (`modulos/compartir/estado.md`) | sección | en operación (con el hito 10; CO-I11, tu Iridium instalado, probada en Q-306) | hecho |
 | Apariencia y ajustes (`modulos/apariencia/estado.md`) | sección | en operación (con el hito 10) | hecho |
 | Inicio (`modulos/inicio/estado.md`) | sección | en operación (con el hito 10) | hecho |
-| Diseño (`modulos/diseno/estado.md`) | sección | 8. Calidad (medida el 2026-11-27; el borde espera Q-313 y lo nuevo, Q-314; DI-I4 hecha el 2026-11-26) | en curso |
+| Diseño (`modulos/diseno/estado.md`) | sección | en operación (con el hito 10; lo nuevo probado en Q-314, el borde como hueco aceptado en Q-313; cerrado el 2026-11-27, 1.4.0) | hecho |
 | Ideas (`modulos/ideas/estado.md`) | sección | en operación (con el hito 10; ID-I4 probada en Q-198, calidad el 2026-11-17) | hecho |
 | Orden (`modulos/orden/estado.md`) | sección | en operación (con el hito 10; OR-I5, las novedades del framework, probada en Q-312; cerrado el 2026-11-26, 1.3.0) | hecho |
 | Mapa (`modulos/mapa/estado.md`) | sección | en operación (con el hito 10; los frentes archivados, R-91, probados en Q-215) | hecho |
@@ -44,11 +44,8 @@
 | Pulido (`modulos/pulido/estado.md`) | sección | en operación (con el hito 10; PU-I1 y PU-I2 probadas en Q-307, cerrado el 2026-11-26, 1.2.0) | hecho |
 
 ## En qué estamos ahora
-**T-126 hecha** (2026-11-27, el avance solo, D-203): tus ideas con un párrafo de título ahora tienen uno corto, y lo que escribiste pasa tal cual al principio de su nota; la IA lo hace al evaluarlas y el control marca las que falten. Nueve de este proyecto ya están. Se mira en Q-320.
-**T-89 hecha** (2026-11-27, el avance solo, D-202): cuando respondés una pregunta en la Bandeja, unos segundos después la respuesta se sube sola a GitHub en un commit «Respuesta a Q-n» con solo ella; así la otra PC la ve sin tocar Commit y subir. Se prueba en Q-319.
-**T-84 hecha** (2026-11-27, el avance solo, R-92): si salías del proyecto mientras la IA esperaba algo de fondo, la pestaña perdía el «Esperando» y después la IA «se activaba sola»; ahora lo sigue diciendo hasta que retoma. Se prueba en Q-318.
-**Revisión del avance solo (2026-11-27):** T-140 a T-143 evaluadas (T-142 puede ir sola si la aprobás); los dos pasos que quedan de Diseño, chicos y con tu respuesta; T-84, T-89 y T-126 (hechas) eran para el avance solo, T-82 y T-95 esperan definirse con vos, y T-102 espera Q-317.
-**2026-11-27.** **Ideas, T-109 hecha** (el avance solo, D-201): una idea rechazada dice «Rechazada» en gris, no en rojo; se prueba en Q-315. **T-83 hecha** (también el avance solo, R-90): en la nota de una idea, Enter guarda y cierra sin cambiar su estado, y Ctrl+Enter (o Shift+Enter) baja de renglón; se prueba en Q-316. **Frentes, D-200** (lo reportaste: Paridad e Ideas decían «Todo hecho» y no se archivaban): tenían ideas aprobadas que nunca se pusieron en su ruta. La tarjeta ahora dice «N aprobados sin lugar en la ruta», el control lo marca y la revisión del avance solo los ubica; ya están en sus rutas. **Diseño, paso 8 medido:** el lienzo es una sola parada con Tab, las maquetas se descargan a los 30 s de salir de Diseño y Docs separa los archivos de la raíz (T-105); el borde de los controles se decide en Q-313 y lo nuevo se prueba en Q-314.
+**2026-11-27, las respuestas de Q-313 a Q-320.** **Diseño, cerrado** (1.4.0): lo nuevo probado en Q-314 (T-105 hecha) y el borde de los controles queda como está, anotado como hueco aceptado (Q-313 B, D-205). **Ideas:** Enter en la nota, probado (Q-316, T-83); «Rechazada» vuelve al rojo, como pediste en Q-315 (T-109 deshecha, D-204). **El ancho de lectura** se elige solo en Docs y Ajustes › Apariencia queda con el acento (Q-317 A, T-102 hecha, D-206). Probados, todo bien: la pestaña que sigue «Esperando» al salir del proyecto (Q-318, T-84), las respuestas que se suben solas a GitHub (Q-319, T-89) y los títulos cortos de tus ideas (Q-320, T-126). Lo que cambió a la vista se mira en Q-321.
+**Antes, el mismo día (el avance solo):** la revisión evaluó T-140 a T-143 (T-142 puede ir sola si la aprobás; T-82 y T-95 esperan definirse con vos). **Frentes, D-200** (lo reportaste: Paridad e Ideas decían «Todo hecho» y no se archivaban): lo aprobado de un frente va en su ruta; la tarjeta dice «N aprobados sin lugar en la ruta» y el control lo marca. **Diseño, paso 8:** el lienzo es una sola parada con Tab y las maquetas se descargan a los 30 s de salir de Diseño.
 **Pulido** (D-197, 2026-11-25): un aire de instrumento futurista sobre el negro: acento elegible con brillo, estados de tarjetas con color, otro color para lo que espera (Q-303) y movimiento sutil; maqueta viva probada (Q-302); lo que te espera pasa a naranja (Q-303); R-111 a R-113 cerrados. **PU-I1 hecha** (2026-11-25): la sección elegida en el acento con su brillo, el punto de la Bandeja y del inicio en el acento (naranja si frena), los estados de las tarjetas en su color, el paso actual de Frentes que late, «corriendo» que late, la casilla con su golpe y lo que entra; ya no sigue las animaciones apagadas de Windows. **PU-I2 hecha** (2026-11-26): el acento se elige en Ajustes › Apariencia (Cian, Verde, Azul, Violeta) y las pestañas de la barra se corren al arrastrar una (Escape la vuelve). Las dos, probadas en Q-307, todo bien: **Pulido, cerrado** (2026-11-26, 1.2.0). **Calidad medida** (2026-11-26, el avance solo): el movimiento no pone lenta la app (los mismos cuadros con y sin él); la luz de «corriendo» redibujaba la barra y ahora se corre sin redibujar (la mitad del procesador).
 **T-41 hecha** (2026-11-26, el avance solo): se borró lo copiado del Gestor que nada usaba (unas 800 líneas, sin cambios a la vista); el arranque tarda 1,1 s, así que la ventana sigue sin minificar. **T-42 hecha** (también el avance solo): el código ya no nombra la carpeta de skills vieja ni busca las de antes en la carpeta de proyectos (se mudaron en Q-127); sin cambios a la vista. **T-18 hecha** (también el avance solo): en Skills, un grupo plegado lleva la señal «doble» si esconde una skill que está dos veces. **T-139 hecha** (también el avance solo, D-196): Actualizar al framework, desde la tarjeta, Skills o una carpeta simple, ya no manda el pedido solo: abre el proyecto en una conversación nueva con el pedido citado, y lo mandás vos. **T-79 hecha** (también el avance solo): el SDK de Claude Code subió a 0.3.332 y los avisos de seguridad bajaron de 10 a 2, los de `minimatch` dentro de `electron-builder`, que solo se usa al armar (Defecto 4); sin cambios a la vista. **T-144 hecha** (también el avance solo): la prueba de las tarjetas, y otras dos iguales, ya no fallan a veces al borrar sus datos. **T-29 hecha** (también el avance solo): subieron los parches y versiones menores (React, Zustand, Vitest, Playwright, Biome, Electron 44, Vite 7), con todas las pruebas y el armado en verde; sin cambios a la vista. Las mayores (Electron 45, Vite 8) quedan para cuando hagan falta.
 **Orden, paso 8 hecho** (2026-11-26): el control da cero en tus proyectos con framework y tarda un cuarto de segundo en el más grande; aguanta archivos guardados con el Bloc de notas, vacíos o enormes; la accesibilidad de la Bandeja, Frentes, Ideas y Docs está limpia. Sin defectos graves. **T-64, construida** (2026-11-26, Q-311 A, D-199): cuando el framework cambia algo que le pide trabajo a un proyecto, su tarjeta dice «N novedades del framework» en blanco; en Skills › Framework se ven la fecha, qué cambió y qué le pide, con el filtro Con novedades, y **Ponerse al día** deja el pedido citado en una conversación nueva del proyecto, que mandás vos. Las dos primeras: las fichas de las piezas y las medidas fijas, solo para los proyectos con maquetas. Probada en Q-312, todo bien: **T-64 hecha y Orden, cerrado** (2026-11-26, 1.3.0); Iridium quedó al día con el framework del 2026-11-12.
@@ -61,54 +58,16 @@
 Ideas sin evaluar: T-143 (un catálogo de estilos y de movimiento para los design systems, de Q-299), T-142 (el control y las líneas **Ejecutar:** que no se leen), T-140 y T-141 (de R-110), T-76, T-93 (cómo lo usa alguien sin nociones técnicas; va con Plantillas, T-81), T-94 (pantallas a medida para partes de un hito), T-95 (plugins por proyecto), T-133 (sesiones para resolver dudas antes de que la IA trabaje sola), T-138 (mensajes en cola, de T-134). La revisión del 2026-11-26 evaluó T-55, T-73, T-74, T-93, T-94, T-115, T-118, T-120, T-133 y T-138 (todas esperan tu aprobación; T-115, T-120 y T-133 conviene pensarlas juntas) y puso tamaño a diez trabajos del Núcleo (los `sola`, T-18, T-41, T-42 y T-79, hechos). Desde FS-I4 las evalúa la revisión del avance solo: la primera (2026-11-25) evaluó T-1, T-2, T-9, T-11, T-13 a T-18, puso tamaño a los pasos de Diseño, Skills, Compartir, Apariencia, Orden, Abrir y Frentes y a diez trabajos del Núcleo; quedan `sola` el paso 8 de Orden (DI-I4, T-86, el paso 8 de Abrir y T-29, hechos); el 2026-11-25 se cerraron las que ya estaban resueltas (T-11, T-38, T-78, T-130) y T-40, repetida en T-79 (**T-39 hecha** el 2026-11-25: la prueba intermitente de la Revisión en apps Electron tenía dos causas, una de la prueba y otra del ayudante que va en las apps de tus proyectos, que a veces dejaba los comentarios sin «Dónde» ni componentes; arregladas las dos). Chat nuevo por tamaño y tiempo (D-123, T-68): se compara hacia el 2026-11-29 con `tools/medir-uso.ts`.
 
 ## Preguntas abiertas
-- **Q-313 — ¿Aclaramos el borde de los campos, las casillas y el botón secundario?**
-  Tipo: decisión · Frente: Diseño
-  Contexto: hoy está a 1,9:1 sobre el negro y WCAG pide 3:1 para el borde de un control (`06-ui.md` › Contraste). Miralo en Iridium › Diseño › Pantallas › Probar una dirección › «borde-controles», con Hoy · Dirección · Lado a lado. Si ahí tocás Elegir, ya queda puesto: marcá A.
-  Opciones: A) Aclararlo a 3,3:1 en toda la app (recomendada: los campos y las casillas se distinguen mejor y no cambia nada más) · B) Dejarlo como está y anotarlo como hueco aceptado (más negro y limpio, menos visible) · C) Aclararlo solo en los campos y las casillas; el botón secundario queda como hoy
-- **Q-314 — Probá lo nuevo de Diseño y de Frentes**
-  Tipo: prueba · Frente: Diseño
-  Contexto: con la versión nueva (`scripts.md` › Armar la última versión, o esperá a que se arme sola), en este proyecto:
-  - [ ] Frentes: Paridad e Ideas muestran su paso que sigue (ya no «Todo hecho») y Diseño, el de Docs
-  - [ ] Docs: `CLAUDE.md`, `DESIGN.md` y el `README.md` de afuera están al final, en «Del proyecto», y las carpetas dicen Diseño, Investigación, Revisión
-  - [ ] Diseño › Pantallas: Tab entra a una maqueta y el siguiente Tab sale del lienzo; las flechas pasan de una a otra
-  - [ ] Ir a otra sección y volver a Diseño: las maquetas están (enseguida si volvés rápido; en menos de un segundo después de un rato)
-- **Q-315 — Mirá una idea rechazada en Ideas**
-  Tipo: prueba · Frente: Ideas
-  Contexto: con la versión nueva, en Ideas de un proyecto con alguna idea rechazada (o rechazá una y después tocá Quitar el rechazo):
-  - [ ] «Rechazada» y su ícono se ven en gris, no en rojo, y el título apagado
-  - [ ] «Aprobada» sigue en verde
-- **Q-316 — Probá Enter en la nota de una idea**
-  Tipo: prueba · Frente: Ideas
-  Contexto: con la versión nueva, en Ideas de un proyecto (o en Ideas del inicio), abrí una idea tuya y escribí en ella:
-  - [ ] Ctrl+Enter (o Shift+Enter) baja de renglón
-  - [ ] Enter guarda lo escrito y cierra la idea; al volver a abrirla está todo
-  - [ ] La idea sigue en el mismo estado (sin evaluar, aprobada…)
-- **Q-317 — ¿El ancho de lectura queda en Docs y en Ajustes, o solo en Docs?**
-  Tipo: decisión
-  Contexto: `trabajo.md` › T-102 (ancho de lectura). Proponía sacar Apariencia de Ajustes, pero desde PU-I2 tiene también el acento: ya no quedaría vacía.
-  Opciones: A) Solo en Docs, Apariencia queda con el acento (recomendada: se elige donde se usa) · B) En los dos lugares, como hoy (T-102 se descarta)
-- **Q-318 — Mirá que la pestaña siga «Esperando» al salir del proyecto**
+- **Q-321 — Mirá Apariencia y una idea rechazada**
   Tipo: prueba
-  Contexto: con la versión nueva, en un proyecto pedile a la IA algo que deje corriendo de fondo (por ejemplo, «corré las pruebas de fondo y esperá el resultado»). Cuando termine su turno esperando:
-  - [ ] La pestaña dice «Esperando»
-  - [ ] Al ir al inicio o a otro proyecto, la pestaña y la tarjeta siguen diciendo «Esperando»
-  - [ ] Cuando termina lo de fondo, la pestaña pasa a «Trabajando» y después a «Terminada»
-- **Q-319 — Probá que tus respuestas se suben solas a GitHub (T-89)**
-  Tipo: prueba
-  Contexto: con la versión nueva de Iridium, en un proyecto que está en GitHub. D-202 (respuestas que se suben solas).
-  - [ ] Respondés una pregunta en la Bandeja y, unos 10 s después, Git muestra el commit «Respuesta a Q-n» en el historial, sin cambios por subir
-  - [ ] Lo que tenías sin guardar en ese proyecto sigue en Cambios, fuera de ese commit
-  - [ ] En la otra PC, la pregunta aparece respondida sin tocar nada (a los pocos minutos, o al entrar al proyecto)
-- **Q-320 — Mirá los títulos cortos de tus ideas (T-126)**
-  Tipo: prueba
-  Contexto: en Iridium › este proyecto › Ideas (no hace falta la versión nueva: el cambio está en los archivos). D-203 (título corto al evaluar).
-  - [ ] Las ideas largas (como «Una demo en vivo al instalar Iridium» o «Sesiones para resolver dudas, no para avanzar») entran en un renglón
-  - [ ] Al abrir una, debajo del título corto está tu texto entero, tal como lo escribiste, y lo que ya tenía la nota sigue debajo
-  - [ ] Los títulos te dicen de qué se trata; si alguno no, anotá cuál en su nota
+  Contexto: con la versión nueva (`scripts.md` › Armar la última versión, o esperá a que se arme sola). D-204 y D-206.
+  - [ ] Ajustes › Apariencia tiene solo el acento, sin el ancho de lectura
+  - [ ] En Docs, Angosto · Normal · Ancho sigue arriba del documento y se recuerda al volver a abrir Iridium
+  - [ ] En Ideas, una idea rechazada dice «Rechazada» en rojo otra vez
 
 ## Próximo paso
-Cuando vuelvan Q-313 y Q-314, cerrar el paso 8 de Diseño (el borde elegido, T-105) y el frente; mientras tanto, Abrir, T-87: que tu app instalada en la otra PC se ponga al día sola desde sus versiones publicadas (D-160); es grande y se prueba en la otra PC. Después, Plantillas (T-81).
-**Leer antes:** para Diseño, `modulos/diseno/estado.md` › Próximo paso; para Abrir, `modulos/abrir/estado.md` › Próximo paso, `trabajo.md` › T-87 y `decisiones.md` › D-160.
+Abrir, T-87: que tu app instalada en la otra PC se ponga al día sola desde sus versiones publicadas (D-160); es grande y se prueba en la otra PC. Después, Plantillas (T-81).
+**Leer antes:** `modulos/abrir/estado.md` › Próximo paso, `trabajo.md` › T-87 y `decisiones.md` › D-160.
 
 ## Hitos con huecos aceptados
 - Hito 9: sin versión etiquetada ni `CHANGELOG.md`, por ahora (D-077).

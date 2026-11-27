@@ -1,9 +1,8 @@
-// Ajustes › Apariencia (AJ-1): hay un solo tema, el negro (D-104). Arriba el acento, el color de lo activo (Pulido,
-// D-197), con su muestra en cada opción; debajo el ancho de lectura de Docs, el mismo que se elige arriba del documento.
-// Los dos con los Filtros (PZ-6) de la maqueta y cambian en el momento.
+// Ajustes › Apariencia (AJ-1): hay un solo tema, el negro (D-104), y el acento, el color de lo activo (Pulido, D-197),
+// con su muestra en cada opción, con los Filtros (PZ-6) de la maqueta; cambia en el momento. El ancho de lectura se
+// elige solo arriba del documento en Docs, donde se usa (T-102, Q-317).
 import type { Acento } from '../../../compartido/puente'
 import { usarEstado } from '../../estado'
-import { ANCHOS } from '../../secciones/proyecto/Lector'
 import type { PropsSeccion } from '../Ajustes'
 import { Ajuste } from './Ajuste'
 
@@ -15,7 +14,6 @@ export const ACENTOS: { id: Acento; nombre: string }[] = [
 ]
 
 export function Apariencia({ cambiar }: PropsSeccion) {
-  const ancho = usarEstado((s) => s.preferencias.anchoHoja)
   const acento = usarEstado((s) => s.preferencias.acento)
   return (
     <>
@@ -36,23 +34,6 @@ export function Apariencia({ cambiar }: PropsSeccion) {
               }}
             >
               <span className="muestra-color" style={{ background: `var(--acento-${a.id})` }} />
-              {a.nombre}
-            </button>
-          ))}
-        </fieldset>
-      </Ajuste>
-      <Ajuste titulo="Ancho de lectura" detalle="Lo ancho del texto en Docs" id="ajuste-ancho">
-        <fieldset className="filtros" aria-labelledby="ajuste-ancho" aria-describedby="ajuste-ancho-d">
-          {ANCHOS.map((a) => (
-            <button
-              key={a.id}
-              type="button"
-              className={ancho === a.id ? 'filtro elegido' : 'filtro'}
-              aria-pressed={ancho === a.id}
-              onClick={() => {
-                if (ancho !== a.id) void cambiar({ anchoHoja: a.id })
-              }}
-            >
               {a.nombre}
             </button>
           ))}
