@@ -13,11 +13,13 @@
 | 4. UX | hecho (aprobada en Q-217, D-155) | `ux.md` |
 | 5. Diseño técnico | hecho (D-156) | `diseno-tecnico.md` |
 | 6. UI (solo si hay piezas nuevas) | descartado (el menú, la Señal, el Campo y el Aviso ya existen, D-156) | — |
-| 7. Construcción | en curso (AB-I1, AB-I2 y AB-I3 probadas; T-86 probada en Q-308; falta la otra PC, T-87; fuera de pausa por D-193) | este archivo |
+| 7. Construcción | hecho (AB-I1, AB-I2 y AB-I3 probadas; T-86 probada en Q-308; T-87, la guía del framework, D-207) | este archivo |
 | 8. Calidad | hecho (2026-11-26, el avance solo: los casos raros de Windows, con cinco arreglos; ver Calidad) | este archivo |
-| 9. Lanzamiento | pendiente | este archivo |
+| 9. Lanzamiento | hecho (entra con Armar, como cada versión; 1.5.0, D-182) | este archivo |
 
 ## En qué estamos ahora
+**Frente cerrado (2026-11-27, 1.5.0).** T-87 (Q-323, D-207): cómo una app instalada se pone al día sola en todas las PC quedó como guía del framework (`referencias/actualizacion-sola.md`), para cualquier app del usuario; cada una la suma cuando él lo pida en su conversación. En operación, con el hito 10.
+
 Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154): dos partes, primero **Abrir** (AB-I1) y después la **actualización automática** de las apps de escritorio, sin IA, prendida de entrada y apagable por proyecto (AB-I2). UX aprobada (D-155): el botón es **Ejecutar Alfa**, con lo que hace al pasar el mouse. Diseño técnico cerrado (D-156). AB-I1 construida: la marca en `scripts.md` (lector, control y framework) y **Ejecutar Alfa** en el menú de la tarjeta y en la barra del proyecto, con el aviso de AB-2. La prueba (Q-218) no mostró el botón porque ningún proyecto tenía la marca; cómo marcarlos, Q-219. AB-I2 construida: las apps de escritorio se arman solas, de a una y escondidas, con la Señal en la tarjeta y Ajustes › Este proyecto. Tus proyectos marcados (D-157); las dos, probadas en Q-221. AB-I3 (D-158): la app que se usa instalada se abre y se actualiza sola, con la ruta de su `.exe` empezando por una variable de Windows; probada en Q-222: en esta PC se armó e instaló sola. Falta la otra PC, que no tiene el código: se va a actualizar sola desde sus versiones publicadas (D-160, T-87). **En pausa desde el 2026-11-20 (D-162):** vuelve Diseño, a pedido del usuario; el paso 8 y T-87 siguen al cerrar DI-I3.
 
 ## Ruta
@@ -32,7 +34,7 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 - [x] Probar Ejecutar y la actualización con una app tuya (Q-221)
   - [x] Avisar en «Mientras no estabas» las apps que se armaron de noche (T-86)
 - [x] Abrir y actualizar sola tu app que se usa instalada (AB-I3)
-  - [ ] Ponerla al día también en la otra PC, desde sus versiones publicadas (T-87, grande; cambia el armado de tu app, que es otro proyecto, y se prueba en la otra PC)
+  - [x] Ponerla al día también en la otra PC, desde sus versiones publicadas: la receta, en el framework (T-87, D-207)
 - [x] Revisar que Ejecutar y la actualización sean confiables
 
 ## Cambios requeridos en documentos generales
@@ -96,9 +98,5 @@ Abierto el 2026-11-19, adelante de Diseño (D-153). Definición aprobada (D-154)
 
 **Verificado:** `tests/ab2-armados.test.ts` suma cinco pruebas (la PC dormida, el corte con su reintento, el número de otro programa, cuándo arrancó un proceso y un armado de verdad en una carpeta con eñe, que falla sin el arreglo) y el `.exe` de solo lectura en la del `.exe` trabado. Vitest 1125 (1 omitida; tres de otras secciones fallaron una vez con la PC cargada y solas pasan), Playwright de Abrir, Arranque y la actualización de Iridium (14), typecheck y lint en verde.
 
-## T-87 — El pedido para la conversación de tu app (si Q-323 es A)
-> Que la app instalada se ponga al día sola en cualquier PC desde sus versiones publicadas en GitHub, como Iridium (su D-171): sumar electron-updater (mira al abrir y cada seis horas, baja solo lo que cambió con el `.blockmap` y entra al cerrar, con un aviso «Versión nueva lista»), un número de versión que crezca en cada armado, y que el script de armar (la marca `armar` de `scripts.md`), después de instalarla en esta PC, la publique (instalador, `.blockmap` y `latest.yml`). El repo es privado: resolver cómo la lee la otra PC sin dejar una clave en el repo. Se prueba con un commit acá y abriéndola en la otra PC.
-
 ## Próximo paso
-T-87 espera Q-323 (es código de tu app instalada, otro proyecto). T-86, probada en Q-308: todo bien.
-**Leer antes:** `trabajo.md` › T-87, D-160 y D-171.
+Ninguno: frente cerrado. Lo que aparezca va como `T-n` con `Frente: Abrir`.

@@ -213,6 +213,7 @@
 | D-204 | 2026-11-27 | Ideas | 10 (Q-315) | Una idea rechazada vuelve al rojo | vigente (reemplaza D-201) |
 | D-205 | 2026-11-27 | general (design system) | 10, frente Diseño, paso 8 (Q-313 B) | El borde de los controles queda a 1,9:1, como hueco aceptado | vigente |
 | D-206 | 2026-11-27 | Apariencia y ajustes | 10 (Q-317 A, T-102) | El ancho de lectura se elige solo en Docs | vigente |
+| D-207 | 2026-11-27 | framework (Abrir, T-87) | 10; frente Abrir, paso 7 (Q-323) | La actualización sola de una app instalada en varias PC es una guía del framework | vigente (precisa D-160) |
 
 ---
 
@@ -3839,3 +3840,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** el ancho de lectura se elige solo en la cabecera de Docs; Ajustes › Apariencia queda con el acento.
 **Motivo:** se elige donde se usa, y no hay dos lugares para lo mismo.
 **Consecuencias:** cambian Ajustes › Apariencia, su maqueta (`pantallas/ajustes.html`) y `04-ux.md` › W-17. El ancho elegido se sigue recordando igual. Prueba: `tests/e2e/ap1-ajustes.spec.ts`.
+
+## D-207 — La actualización sola de una app instalada en varias PC es una guía del framework
+- **Fecha:** 2026-11-27
+- **Ámbito:** framework (Abrir, T-87; precisa D-160)
+- **Hito o paso:** 10; frente Abrir, paso 7 (Q-322 y Q-323, en el chat)
+- **Estado:** vigente
+
+**Contexto:** D-160 decidió que la app instalada del usuario se ponga al día en la otra PC desde sus versiones publicadas, como Iridium (D-171). Todo lo que falta es código de esa app, que es otro proyecto y no se toca desde acá sin su pedido.
+**Decisión:** el usuario eligió que la receta quede en el framework, para reutilizarla en cualquier app, hasta que sea una pieza de Plantillas: `referencias/actualizacion-sola.md` (el número que crece, el instalador por usuario, electron-updater en la app, publicar con la sesión de git y sin claves, el armado que publica después de instalar, el repositorio privado como decisión del usuario y cómo se prueba), citada desde `SKILL.md` › Los scripts. No es una novedad: cada proyecto la aplica cuando el usuario la pide, desde su conversación.
+**Motivo:** sirve para todas sus apps, no solo una, y no mezcla el trabajo de otro proyecto con el de Iridium.
+**Consecuencias:** T-87 hecha; Abrir se cierra (1.5.0, D-182). La app del usuario la adopta cuando él lo pida en su conversación; su repositorio es privado, así que ahí se decide dónde se publican las versiones. Plantillas (T-81) la absorbe como pieza.

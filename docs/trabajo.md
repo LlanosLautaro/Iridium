@@ -386,8 +386,9 @@ Visto en el paso 8 de Ideas: `pnpm audit` da 10 avisos (1 alto): `hono` y `@hono
 Hecho el 2026-11-26: el SDK de Claude Code pasó de 0.3.309 a 0.3.332 y `hono` (4.13.22) y `@hono/node-server` (2.1.11) quedaron en sus versiones arregladas; `picomatch` ya no aparece. Quedan 2 avisos moderados de `minimatch` dentro de `electron-builder` 26.18.0, que sigue siendo la última y no viaja en la app: es el Defecto 4 de `08-calidad.md`, que se cierra cuando lo actualicen. El motor real anda con el SDK nuevo (`tools/probar-motor.ts`: sesión, modelos, uso y estilos).
 
 ## T-80 — Mantener al día las apps de los proyectos
-Estado: en curso · Frente: Abrir · Idea: usuario · Fecha: 2026-11-17 · Origen: Q-208
+Estado: hecho · Frente: Abrir · Idea: usuario · Fecha: 2026-11-17 · Origen: Q-208
 Evaluada el 2026-11-18; aprobada en Q-208 (D-148), frente Abrir, detrás de Arranque. Son dos problemas: **saber cómo se abre** lo que hace un proyecto (lo que hoy les cuesta a otras personas) y **mantenerlo al día**. El primero vale para casi todo (una app de escritorio se abre con su `.exe`, una página con su dirección, una herramienta de consola con un comando; un proyecto sin nada que usar no lleva botón); el segundo, solo para las apps de escritorio que se arman en la PC. Propuesta: que la IA declare en `scripts.md` cuál es el script que abre lo que el proyecto hace y de qué tipo es, y que Iridium lo muestre como **Abrir** en la tarjeta y la pestaña; después, para el tipo escritorio, armar solo cuando hay cambios y la app está cerrada, como Iridium hace consigo mismo (D-122). Es un cambio de formato: va con el lector, el control y el framework (D-086). Pasada adelante el 2026-11-19 (D-153): frente abierto en `modulos/abrir/`, definición esperando Q-216.
+Hecho el 2026-11-27: **Ejecutar** abre lo que hace cada proyecto desde su tarjeta y su barra, las apps de escritorio se arman solas cuando hay cambios y están cerradas, la que usás instalada se instala sola en esta PC, y la receta para que se ponga al día en las otras PC quedó en el framework (D-207). Frente Abrir, cerrado (1.5.0).
 
 ## T-81 — Pruebas sin ventanas en todas las apps
 Estado: pendiente · Frente: Plantillas · Idea: usuario · Fecha: 2026-11-18 · Origen: Q-209
@@ -417,8 +418,9 @@ Lo que el diseño técnico dejó como «Should, más adelante»: al volver, el a
 Hecho el 2026-11-26: el aviso «Mientras no estabas» suma un renglón por app que se armó sola mientras no estabas («se actualizó» o, en rojo, «no se pudo actualizar» con el motivo al pasar el mouse); se prueba en Q-308.
 
 ## T-87 — Que la app instalada en otra PC también se ponga al día
-Estado: pendiente · Frente: Abrir · Fecha: 2026-11-19 · Origen: Q-222 · Idea: IA
+Estado: hecho · Frente: Abrir · Fecha: 2026-11-19 · Origen: Q-222 · Idea: IA
 La actualización automática arma e instala en la PC donde está el código; en otra PC sin el código la versión nueva se publicó y se bajó a mano. Aprobada en Q-223 (D-160): la app se actualiza sola al abrirse desde sus versiones publicadas en GitHub, como Iridium (D-085), y su armado la publica después de instalarla.
+Hecho el 2026-11-27 (Q-323, D-207): la receta quedó en el framework (`referencias/actualizacion-sola.md`) para cualquier app tuya; tu app la suma cuando se lo pidas en su conversación.
 
 ## T-88 — Iridium al día con GitHub, y Commit y subir en Git
 Estado: hecho · Fecha: 2026-11-20 · Origen: D-159
