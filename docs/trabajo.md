@@ -393,7 +393,8 @@ Estado: pendiente · Frente: Plantillas · Idea: usuario · Fecha: 2026-11-18 ·
 Evaluada el 2026-11-18; aprobada en Q-209 (D-150): frente Plantillas, piezas modulares por tipo de app; la primera, las pruebas sin ventanas. Detrás de Arranque, antes de Abrir. La app de la que habla también es de Electron, como Iridium, y abre la ventana de cada prueba a la vista. Electron no tiene un modo «sin ventana»: lo que hace Iridium (D-072) es una receta en su propio código, que se prende solo durante las pruebas (`IRIDIUM_OCULTA`): la ventana fuera de la pantalla, sin botón en la barra de tareas y sin foco, y las consolas escondidas. Se puede llevar a cualquier proyecto, pero cambia según el tipo de app: una página que se prueba con Playwright ya corre sin ventana con solo pedirlo; una app de escritorio de Electron necesita la receta; una herramienta de consola no abre ventanas; otras apps de escritorio, lo que su motor permita. Propuesta: una regla en el framework («las pruebas no ocupan la pantalla del usuario») con la receta por tipo en `referencias/08-calidad.md` y `07-construccion.md`, que la IA aplica al armar las pruebas de cualquier proyecto y al retomar uno que ya las tiene. El tipo de app es el mismo dato que va a declarar el frente Abrir (D-148); unas plantillas por tipo de app son una idea más grande, aparte.
 
 ## T-82 — una demo en vivo para cuando se instala la app por primera vez, muestra paso a paso qué hacer y como hacerlo, quizás con un proyecto pequeño de prueba y un modelo de los más baratos, haiku para Claude, luna para ChatGPT, etc
-Estado: pendiente · Idea: usuario · Fecha: 2026-11-18
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-18 · Tamaño: grande
+Sin `sola`: necesita que decidas qué muestra la demo, con qué proyecto de prueba y qué motores (cuesta uso de tu cuenta).
 
 ## T-83 — Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea
 Estado: hecho · Frente: Ideas · Fecha: 2026-11-18 · Origen: R-90
@@ -401,7 +402,7 @@ En las ideas de un proyecto, al escribir la nota de una idea: Enter guarda lo es
 Hecho el 2026-11-27: en la nota de una idea (de un proyecto o del inicio), Enter guarda y la cierra sin cambiar su estado; Ctrl+Enter o Shift+Enter bajan de renglón. Se prueba en Q-316.
 
 ## T-84 — La pestaña no muestra «esperando» mientras la IA espera algo de fondo
-Estado: pendiente · Fecha: 2026-11-19 · Origen: R-92
+Estado: pendiente · Fecha: 2026-11-19 · Origen: R-92 · Tamaño: mediano, sola
 En la conversación de un proyecto, la IA terminó su turno con algo corriendo de fondo («Quedo a la espera del resultado de las pruebas») y la pestaña no la marcó «esperando lo que dejó de fondo» (T-65); al rato retomó sola. Parece que Iridium perdió el rastro de lo que corría de fondo. Reproducir con el motor falso («de fondo») y con un caso real: varias tareas de fondo, o una que se corta.
 
 ## T-85 — «Respondida, sin procesar» en verde
@@ -422,7 +423,7 @@ Estado: hecho · Fecha: 2026-11-20 · Origen: D-159
 Pedido del usuario: un proyecto mostraba lo de antes de lo que se hizo en la otra PC, y Git no tenía cómo guardar y subir las respuestas. Iridium trae sola lo del remoto (al abrir, cada cinco minutos y al entrar a un proyecto) y Git suma Commit y subir y Sincronizar. Prueba en Q-224.
 
 ## T-89 — Subir solas las respuestas a las preguntas
-Estado: pendiente · Idea: IA · Fecha: 2026-11-20 · Origen: D-159
+Estado: pendiente · Idea: IA · Fecha: 2026-11-20 · Origen: D-159 · Tamaño: mediano, sola
 Al responder una `Q-n` desde Iridium, que la respuesta se guarde en un commit y se suba sola (si el proyecto está en GitHub y la IA no trabaja en él), para que la otra PC la vea sin tocar Commit y subir.
 
 ## T-90 — Buscar un archivo en Archivos
@@ -447,7 +448,8 @@ Evaluada el 2026-11-26: un frente nuevo de pantallas por hito; la primera, el ta
 Hoy un documento largo (como la clasificación MoSCoW de un hito 2) solo se puede leer y contestar con una pregunta: no hay forma cómoda de revisarlo y corregirlo. La idea es sumar cuestionarios o pantallas específicas para ciertas partes de ciertos hitos: por ejemplo, un tablero de decisiones del MVP con columnas (Must, Should, Could, Won't, postergar como idea) donde se arrastran los casos, o una pantalla de métricas para las fases de rendimiento. El usuario lo ve como un frente de mejora grande y casi sin costo.
 
 ## T-95 — plugins por proyecto, similares a los mods de claude desktop
-Estado: pendiente · Idea: usuario · Fecha: 2026-11-21
+Estado: pendiente · Idea: usuario · Fecha: 2026-11-21 · Tamaño: grande
+Sin `sola`: es una función nueva grande que hay que definir con vos (qué puede hacer un plugin y dónde se ve) antes de construirla; conviene abrirla como frente.
 
 ## T-96 — una muestra de como se ve el chat de Claude desktop, el + despliega esas opciones, el resto nosotros lo tenemos parecido.
 Estado: hecho · Frente: Paridad · Idea: usuario · Fecha: 2026-11-21 · Origen: D-165
@@ -481,7 +483,8 @@ Hecho el 2026-11-21: sin conversación, la cabecera va sin título (el cuerpo ya
 Q-248 pidió que diga «Nueva conversación» (2026-11-21): dice eso, y sin conversación no muestra el botón Nueva, que no hacía nada (el chat ya está en blanco); así el título entra entero a 1440 y a 1024.
 
 ## T-102 — El ancho de lectura, en un solo lugar
-Estado: pendiente · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1)
+Estado: pendiente · Idea: IA · Fecha: 2026-11-21 · Origen: T-100 (ronda de UX 1) · Tamaño: chico
+Desde PU-I2 (D-197) Ajustes › Apariencia tiene también el acento, así que ya no queda vacía: falta que decidas si el ancho sigue en los dos lugares o solo en Docs. Sin `sola` hasta entonces.
 Angosto · Normal · Ancho está en la cabecera de Docs y en Ajustes › Apariencia, que queda con solo eso desde que hay un tema (D-104). Propuesta: dejarlo en Docs, donde se usa, y sacar Apariencia de Ajustes hasta que tenga algo propio.
 
 ## T-103 — Git en blanco mientras lee
@@ -618,7 +621,7 @@ La tarjeta de un frente y su «Te espera» iban siempre en ámbar (D-180), aunqu
 Hecho el 2026-11-23: en Frentes la cuenta va en gris y pasa a ámbar solo si alguna de esas preguntas frena, como en la grilla. Con su prueba (Playwright del tablero y del Mapa). Se mira en Q-275.
 
 ## T-126 — Un título corto para las ideas del usuario al evaluarlas
-Estado: pendiente · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2)
+Estado: pendiente · Idea: IA · Fecha: 2026-11-23 · Origen: T-123 (ronda de UX 2) · Tamaño: mediano, sola
 Una idea que anotás queda con tu texto entero como título, y lo sigue teniendo al aprobarla: en Frentes, T-116 (las consolas adentro) ocupa cinco renglones en el Núcleo, y en Ideas varias se cortan a la mitad. Propuesta: al evaluarla, la IA le pone un título corto («Las consolas adentro de Iridium») y tu texto queda tal cual debajo, como «Tu idea: …», así no se pierde nada de lo que escribiste. Es un cambio del framework (cómo se escribe una idea evaluada) con su control; Iridium no cambia. Si no, se deja como está.
 
 ## T-127 — Una segunda Iridium abierta trabó la actualización
@@ -698,18 +701,22 @@ Hecho el 2026-11-26: Actualizar al framework (menú de la tarjeta, Skills › Fr
 
 ## T-140 — Los mensajes intermedios de la IA, con otra letra que la respuesta final
 Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: R-110 · Tamaño: chico
+Evaluada el 2026-11-27: chico, del Núcleo (la conversación). Primero una maqueta de la conversación con los mensajes intermedios más chicos y apagados, que tenés que mirar; con tu visto bueno, pasarla al código es chico y puede ir sola.
 Hoy lo que la IA dice mientras trabaja («Ahora edito…») se ve igual que su respuesta final. Como en Claude Code o Codex, los intermedios irían más chicos o apagados, como si fuera respondiendo a medida que avanza; la respuesta final queda como está. Se prueba primero en una maqueta de la conversación.
 
 ## T-141 — Decir en vivo qué hace la IA («Buscando», «Leyendo», «Editando código»)
 Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: R-110 · Tamaño: mediano
+Evaluada el 2026-11-27: mediano, del Núcleo (la conversación). Las herramientas con nombre propio (buscar, leer, editar) ya dicen qué hacen y pueden tener su texto desde el primer día; el registro de unos días solo hace falta para los comandos de consola. El registro puede ir solo; los textos finales y cómo se ve el paso los mirás vos antes de pasarlos al código.
 Primero Iridium anota, en todas las sesiones, qué herramientas y qué comandos usa la IA (`cd`, `grep`, escribir un archivo…). En unos días se revisa lo más usado y a cada cosa se le pone un texto según su uso más probable; mientras trabaja, el paso dice «Buscando» o «Editando código» en vez de «Usó N herramientas», y al terminar queda como hoy.
 
 ## T-142 — El control avisa de una línea **Ejecutar:** que no se lee como script
-Estado: nueva · Idea: IA · Fecha: 2026-11-25 · Origen: MI PC › Q-1 · Tamaño: chico, sola
-En MI PC, `docs/scripts.md` tenía `**Ejecutar:** \`powershell … compactar-wsl.ps1\` (en una terminal de administrador)`: el texto después del comando hace que el lector no lo tome como script (pide que la línea termine en la comilla), y Scripts dijo «no tiene scripts con una línea Ejecutar:» sin que el control avisara. Fallé yo al escribirla (la explicación iba en la descripción), pero el framework no lo dice y el control solo revisa los scripts que ya se leyeron. Qué haría falta: que el control marque una línea que empieza con **Ejecutar:**/**Abrir:** y no se lee («lo que sigue al comando va en la descripción»), y una frase en `SKILL.md` › Los scripts: la línea de acción lleva solo el comando, nada después. Aparte: un script que necesita administrador no tiene forma de pedirlo desde el botón; en MI PC lo resolví con un script que se vuelve a abrir pidiendo permiso.
+Estado: nueva · Idea: IA · Fecha: 2026-11-25 · Origen: otro proyecto, su Q-1 · Tamaño: chico, sola
+Evaluada el 2026-11-27: chico, del Núcleo (el framework y su control, D-086). Puede ir directo a hacerse, sin nada tuyo: la regla en el control con su prueba y la frase en `SKILL.md` › Los scripts. Lo de pedir permiso de administrador desde un botón es otra idea, aparte, y esa sí necesita que decidas si vale la pena.
+En otro proyecto, `docs/scripts.md` tenía `**Ejecutar:** \`powershell … compactar-wsl.ps1\` (en una terminal de administrador)`: el texto después del comando hace que el lector no lo tome como script (pide que la línea termine en la comilla), y Scripts dijo «no tiene scripts con una línea Ejecutar:» sin que el control avisara. Fallé yo al escribirla (la explicación iba en la descripción), pero el framework no lo dice y el control solo revisa los scripts que ya se leyeron. Qué haría falta: que el control marque una línea que empieza con **Ejecutar:**/**Abrir:** y no se lee («lo que sigue al comando va en la descripción»), y una frase en `SKILL.md` › Los scripts: la línea de acción lleva solo el comando, nada después. Aparte: un script que necesita administrador no tiene forma de pedirlo desde el botón; allí lo resolví con un script que se vuelve a abrir pidiendo permiso.
 
 ## T-143 — Un catálogo de estilos y de movimiento para los design systems
 Estado: nueva · Idea: usuario · Fecha: 2026-11-25 · Origen: Q-299
+Evaluada el 2026-11-27: grande, del framework (`referencias/06-ui.md` y sus plantillas), partiendo de los tokens de Pulido. Necesita algo tuyo antes: qué estilos y movimientos van primero, y mirar una maqueta del catálogo; después cada tanda puede ir sola.
 Una colección que crece con el tiempo y que cualquier proyecto puede usar: estilos visuales (vidrio esmerilado y sus variantes, entre otros) y un lenguaje de movimiento de interfaces futuristas (FUI): pulso, brillo, parpadeo, barrido de radar, luz que cruza, anillos que giran, líneas de pantalla, «glitch», datos que corren, entradas y salidas, como tokens y piezas reutilizables, no atados a un componente. Pulido (D-197) es el primer uso: sus tokens de acento, brillo y duraciones serían la base. Iría en el framework (`referencias/06-ui.md` y sus plantillas), para que la IA lo use en los otros proyectos.
 
 ## T-144 — La prueba de las tarjetas falla a veces al borrar sus datos

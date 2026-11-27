@@ -43,8 +43,8 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 - [x] Comparar dos versiones de una pantalla lado a lado (DI-I4, Q-295)
 - [x] Probar una dirección sobre todo el lienzo y elegirla o descartarla; el pedido queda citado en la conversación, D-196 (DI-I4, Q-309)
 - [x] Medir la calidad de Diseño: el teclado en el lienzo, la primera fila en menos de un segundo y las maquetas que quedaban vivas al salir
-- [ ] Docs: los archivos de la raíz en un grupo aparte y todas las carpetas con nombre (T-105, Q-314)
-- [ ] Decidir si se aclara el borde de los controles, a 1,9:1 (Q-313)
+- [ ] Docs: los archivos de la raíz en un grupo aparte y todas las carpetas con nombre (T-105, Q-314, chico)
+- [ ] Decidir si se aclara el borde de los controles, a 1,9:1 (Q-313, chico)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |
