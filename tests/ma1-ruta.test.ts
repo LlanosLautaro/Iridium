@@ -184,6 +184,33 @@ describe('el control de la ruta', () => {
     expect(avisos[0]?.texto).toContain('originó el frente Beta')
     expect(deRuta(archivos(`${tipo}\n## Ruta\n- [ ] Uno\n`))).toEqual([])
   })
+
+  // D-200: un frente con la ruta toda hecha y trabajo aprobado afuera decía «Todo hecho» y no se archivaba.
+  it('avisa del T-n aprobado de un frente que su ruta no nombra, también si el frente está hecho', () => {
+    const trabajo =
+      '# Trabajo\n\n## T-60 — Enter guarda\nEstado: pendiente · Frente: Beta · Fecha: 2026-11-18\n\n' +
+      '## T-61 — Una idea\nEstado: nueva · Frente: Beta · Fecha: 2026-11-18\n\n' +
+      '## T-62 — Ya ubicado\nEstado: en curso · Frente: Alfa · Fecha: 2026-11-18\n'
+    const avisos = deRuta(
+      archivos(
+        '## Ruta\n- [ ] Lo de ahora (T-62)\n',
+        '# Estado del módulo: Beta\n\n## Ruta\n- [x] Todo\n',
+        trabajo,
+      ),
+    )
+    expect(avisos.map((a) => [a.archivo, a.linea])).toEqual([['docs/trabajo.md', 3]])
+    expect(avisos[0]?.texto).toContain('T-60 está `pendiente` en el frente Beta y su ruta no lo nombra')
+    // Ubicado en la ruta, ya no avisa.
+    expect(
+      deRuta(
+        archivos(
+          '## Ruta\n- [ ] Lo de ahora (T-62)\n',
+          '# Estado del módulo: Beta\n\n## Ruta\n- [x] Todo\n- [ ] Enter guarda (T-60, chico, sola)\n',
+          trabajo,
+        ),
+      ),
+    ).toEqual([])
+  })
 })
 
 // FS-I1 (D-178): el tamaño y `sola` van en el paréntesis final, con los códigos, y no se muestran.

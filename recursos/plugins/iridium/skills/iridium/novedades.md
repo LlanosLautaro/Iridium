@@ -17,3 +17,7 @@ Cada pieza de `docs/diseno/piezas.css` empieza con su ficha: el comentario que l
 ## 2026-11-12 — Las medidas fijas son tokens
 Solo si: docs/diseno/piezas.css
 La altura de la barra, de los controles y de las filas y el ancho de los paneles van como tokens `--alto-<nombre>` y `--ancho-<nombre>` en `docs/diseno/tokens.css` (una sola medida y su uso), y `piezas.css` los usa en lugar del número escrito a mano. Las maquetas se tienen que ver igual que antes.
+
+## 2026-11-26 — Lo aprobado de un frente va en su ruta
+Solo si: docs/modulos
+Cada `T-n` `pendiente` o `en curso` de `docs/trabajo.md` con `Frente:` tiene que estar nombrado en un paso de la `## Ruta` de ese frente, también si el frente está `hecho`: sumá un paso `[ ]` donde le toca, con su tamaño (y `sola` si va sin el usuario). Si ya no va, pasalo a `descartado` con el motivo. Sin eso, la tarjeta del frente dice «Todo hecho» y el avance solo no lo toma; el control ahora lo marca.

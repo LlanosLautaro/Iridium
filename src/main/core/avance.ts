@@ -152,6 +152,8 @@ export interface RevisionSola {
   nucleo: string[]
   /** Los frentes que no están en pausa ni hechos y no tienen nada por hacer en su ruta. */
   sinPasos: string[]
+  /** El trabajo aprobado de un frente que su ruta no nombra: la IA lo ubica en la ruta, con su tamaño. */
+  sinLugar: { frente: string; codigos: string[] }[]
 }
 
 export type Eleccion =
@@ -167,7 +169,7 @@ export const REVISAR_CADA_MS = 24 * 3_600_000
 
 /** Si hay algo para revisar: los frentes sin pasos solos no la piden (si la IA no pudo sumarles, se repetiría cada día). */
 export const hayQueRevisar = (r: RevisionSola): boolean =>
-  r.ideas.length > 0 || r.pasos.length > 0 || r.nucleo.length > 0
+  r.ideas.length > 0 || r.pasos.length > 0 || r.nucleo.length > 0 || r.sinLugar.length > 0
 
 /**
  * La clave con que se recuerda lo que se tomó, para no repetirlo en 12 horas: el paso por su texto (la línea cambia
@@ -249,6 +251,9 @@ export function textoDe(e: Eleccion): string {
         : null,
       r.nucleo.length ? `trabajos del Núcleo sin tamaño: ${r.nucleo.join(', ')}` : null,
       r.sinPasos.length ? `frentes sin nada por hacer en su ruta: ${r.sinPasos.join(', ')}` : null,
+      r.sinLugar.length
+        ? `trabajo aprobado sin lugar en la ruta de su frente: ${r.sinLugar.map((f) => `${f.frente} (${f.codigos.join(', ')})`).join(', ')}`
+        : null,
     ].filter(Boolean)
     return `Avance solo: revisión. Revisá, sin hacer el trabajo, ${partes.join('; ')}.`
   }

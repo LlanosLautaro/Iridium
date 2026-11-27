@@ -54,6 +54,7 @@ const revision = (cambio: Partial<RevisionSola> = {}): RevisionSola => ({
   pasos: [],
   nucleo: [],
   sinPasos: [],
+  sinLugar: [],
   ...cambio,
 })
 const respuestas: RespuestasSolas = {
@@ -114,6 +115,11 @@ describe('la fila con la revisión (D-193)', () => {
     expect(elegirPaso([], [], 50, prendido, new Set(), [vacia])).toBeNull()
   })
 
+  it('lo aprobado sin lugar en la ruta sí la pide: la IA lo ubica y no se repite', () => {
+    const r = revision({ ideas: [], sinLugar: [{ frente: 'Ideas', codigos: ['T-76'] }] })
+    expect(elegirPaso([], [], 50, prendido, new Set(), [r])).toEqual({ tipo: 'revision', revision: r })
+  })
+
   it('sin chicos elegidos en Ajustes, no revisa', () => {
     expect(elegirPaso([], [], 100, { ...prendido, tamanos: ['grande'] }, new Set(), [revision()])).toBeNull()
   })
@@ -126,11 +132,13 @@ describe('la fila con la revisión (D-193)', () => {
         pasos: [{ frente: 'Orden', cuantos: 2 }],
         nucleo: ['T-3'],
         sinPasos: ['Diseño'],
+        sinLugar: [{ frente: 'Ideas', codigos: ['T-76', 'T-83'] }],
       }),
     })
     expect(texto).toBe(
       'Avance solo: revisión. Revisá, sin hacer el trabajo, ideas nuevas sin evaluar: T-7, T-8; pasos sin tamaño ' +
-        'en Orden (2); trabajos del Núcleo sin tamaño: T-3; frentes sin nada por hacer en su ruta: Diseño.',
+        'en Orden (2); trabajos del Núcleo sin tamaño: T-3; frentes sin nada por hacer en su ruta: Diseño; ' +
+        'trabajo aprobado sin lugar en la ruta de su frente: Ideas (T-76, T-83).',
     )
     expect(
       textoDe({ tipo: 'paso', paso: paso({ frente: 'Núcleo', carpeta: '', codigo: 'T-1', texto: 'Algo' }) }),
@@ -198,7 +206,8 @@ describe('lo que se lee de un proyecto', () => {
         '## T-3 — Una idea\nEstado: nueva · Idea: usuario · Fecha: 2026-11-24\n\n' +
         '## T-4 — Otra idea\nEstado: nueva · Idea: usuario · Fecha: 2026-11-24\nEvaluada el 2026-11-25: chica, de Apariencia.\n\n' +
         '## T-5 — Hecha\nEstado: hecho · Fecha: 2026-11-01 · Tamaño: chico, sola\n\n' +
-        '## T-6 — Del frente\nEstado: pendiente · Frente: Orden · Fecha: 2026-11-19\n',
+        '## T-6 — Del frente\nEstado: pendiente · Frente: Orden · Fecha: 2026-11-19\n\n' +
+        '## T-7 — De un frente hecho\nEstado: pendiente · Frente: Notas · Fecha: 2026-11-19\n',
     )
   })
 
@@ -215,6 +224,11 @@ describe('lo que se lee de un proyecto', () => {
       ],
       nucleo: ['T-2'],
       sinPasos: ['Diseño'],
+      // Lo aprobado que la ruta no nombra, también de un frente hecho (si no, la tarjeta diría «Todo hecho»).
+      sinLugar: [
+        { frente: 'Orden', codigos: ['T-6'] },
+        { frente: 'Notas', codigos: ['T-7'] },
+      ],
     })
   })
 

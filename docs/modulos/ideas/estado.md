@@ -29,6 +29,9 @@ La forma C (D-128), aprobar es pasar al trabajo (D-129), la UX aprobada (Q-180) 
 - [x] Pegar enlaces e imágenes en la nota de una idea (ID-I3)
 - [x] Ideas del inicio como las de un proyecto, y moverlas a uno (ID-I4)
 - [x] Probar Ideas con sus historias, una por una
+- [ ] «Rechazada» en gris, no en rojo, que es el color de los errores (T-109, chico, sola)
+- [ ] Enter guarda la nota de una idea y cierra el cuadro; Ctrl+Enter, salto de línea (T-83, chico, sola)
+- [ ] La miniatura del sitio en un enlace pegado (T-76, mediano)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

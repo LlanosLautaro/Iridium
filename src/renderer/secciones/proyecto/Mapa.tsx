@@ -173,7 +173,12 @@ interface Tarjeta {
 
 function detalleDe(f: FrenteMapa): string {
   if (f.error) return 'No se puede leer'
-  return queSigue(f.pasos)?.texto ?? 'Todo hecho'
+  const sigue = queSigue(f.pasos)?.texto
+  if (sigue) return sigue
+  // La ruta hecha no es el frente hecho: lo aprobado que todavía no tiene lugar en ella también es por hacer.
+  const n = f.sinLugar.length
+  if (n) return `${n} ${n === 1 ? 'aprobado' : 'aprobados'} sin lugar en la ruta`
+  return 'Todo hecho'
 }
 
 /** Si el avance solo va a tomar algo de este frente: prendido en Ajustes, en el proyecto y en el frente, con un paso `sola`
@@ -515,7 +520,7 @@ function VistaFrente({ ruta, f }: { ruta: string; f: FrenteMapa }) {
         </p>
       )}
       {!f.error && <Camino ruta={ruta} pasos={f.pasos} pausa={f.estado === 'en pausa'} />}
-      {todoHecho && !f.sinRuta && (
+      {todoHecho && !f.sinRuta && f.sinLugar.length === 0 && (
         <p className="gris-mapa al-pie">Todo hecho por ahora. Lo que venga, la IA lo suma a la ruta.</p>
       )}
       {f.sinLugar.length > 0 && (

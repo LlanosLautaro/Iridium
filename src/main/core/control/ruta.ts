@@ -1,10 +1,11 @@
 // La ruta de cada frente (Mapa, MA-I1, D-145): que `## Ruta` sea una lista de casillas que el Mapa entiende, que nombre
 // códigos que existen y que el frente en curso la tenga. Los frentes en operación o en pausa sin ruta no se avisan:
 // la reciben la próxima vez que se trabaje en ellos (D-139). Además (D-174), que el trabajo cumplido no siga abierto:
-// un `T-n` que la ruta solo nombra en pasos hechos, o el que originó un frente que ya está hecho.
+// un `T-n` que la ruta solo nombra en pasos hechos, o el que originó un frente que ya está hecho. Y (D-200) que lo
+// aprobado de un frente tenga lugar en su ruta: si no, la tarjeta del frente no lo cuenta y el avance solo no lo toma.
 import type { Estado } from '../estados'
-import { frenteDeEstado, leerFrentes } from '../mapa'
-import { leerRuta, marcasDe, marcasDudosas, origenDeFrente, type PasoRuta } from '../ruta'
+import { frenteDeEstado, leerFrentes, nombreDeModulo } from '../mapa'
+import { leerRuta, marcasDe, marcasDudosas, origenDeFrente, type PasoRuta, trabajoDeRuta } from '../ruta'
 import { leerTrabajo } from '../trabajo'
 import { type Aviso, type Regla, sinAcentos } from './tipos'
 
@@ -78,6 +79,26 @@ export const reglaRuta: Regla = (a) => {
     }
     for (const p of ruta.problemas)
       avisos.push({ regla: 'ruta', archivo: e.ruta, linea: p.linea, texto: p.texto })
+    // Lo aprobado (o empezado) de este frente que la ruta no nombra ni es el trabajo que lo originó.
+    const nombres = [nombreDeModulo(e.texto, carpeta), carpeta, ...(fila ? [fila.nombre] : [])].map(
+      sinAcentos,
+    )
+    const nombrados = trabajoDeRuta(ruta)
+    const origen = new Set([...(fila?.trabajo ?? []), ...origenDeFrente(e.texto)])
+    for (const item of estadoDe.values())
+      if (
+        (item.estado === 'pendiente' || item.estado === 'en curso') &&
+        item.frente &&
+        nombres.includes(sinAcentos(item.frente)) &&
+        !nombrados.has(item.codigo) &&
+        !origen.has(item.codigo)
+      )
+        avisos.push({
+          regla: 'ruta',
+          archivo: 'docs/trabajo.md',
+          linea: item.linea + 1,
+          texto: `${item.codigo} está \`${item.estado}\` en el frente ${fila?.nombre ?? nombreDeModulo(e.texto, carpeta)} y su ruta no lo nombra: sumalo a \`${e.ruta}\` › Ruta como un paso \`[ ]\` donde le toca, con su tamaño (y \`sola\` si va sin el usuario)`,
+        })
     const lineas = e.texto.split(/\r?\n/)
     const revisar = (ps: PasoRuta[]) => {
       for (const p of ps) {

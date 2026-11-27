@@ -399,7 +399,8 @@ const EVALUADA = /^\s*Evaluada el \d{4}-\d{2}-\d{2}/m
 /**
  * Lo que un proyecto tiene para revisar (D-193): las ideas `nueva` sin «Evaluada el …» y los `T-n` del Núcleo que
  * esperan sin `Tamaño:` (hasta `POR_REVISION` de cada uno, los más viejos), los pasos `[ ]` sin tamaño de los frentes
- * que no están en pausa y los frentes sin terminar que no tienen nada por hacer. Lo revisado queda escrito en los
+ * que no están en pausa, los frentes sin terminar que no tienen nada por hacer y el trabajo aprobado que la ruta de su
+ * frente no nombra. Lo revisado queda escrito en los
  * documentos: no se vuelve a pedir.
  */
 export function revisionDe(d: DocumentosProyecto, proyecto: { ruta: string; nombre: string }): RevisionSola {
@@ -410,6 +411,7 @@ export function revisionDe(d: DocumentosProyecto, proyecto: { ruta: string; nomb
     pasos: [],
     nucleo: [],
     sinPasos: [],
+    sinLugar: [],
   }
   const trabajo = d.texto(TRABAJO)
   if (trabajo)
@@ -441,6 +443,7 @@ export function revisionDe(d: DocumentosProyecto, proyecto: { ruta: string; nomb
     }
     contar(ruta.pasos)
     if (sinTamano) r.pasos.push({ frente: f.nombre, cuantos: sinTamano })
+    if (f.sinLugar.length) r.sinLugar.push({ frente: f.nombre, codigos: f.sinLugar.map((t) => t.codigo) })
     if (!vienen && f.estado !== 'en uso') r.sinPasos.push(f.nombre)
   }
   return r

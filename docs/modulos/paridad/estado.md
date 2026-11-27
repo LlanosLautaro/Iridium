@@ -41,6 +41,7 @@ La UX está aprobada (`ux.md`, PA-1 a PA-6, D-168): un comando escondido escrito
 - [x] Usar los plugins de Claude Code desde las sesiones (T-28; PA-I4)
 - [x] Usar la PC y el navegador desde las sesiones (T-28; PA-I5 y PA-I6)
 - [x] Medir la calidad de Capacidades (paso 8)
+- [ ] Ver en vivo lo que la IA produce (capturas, pruebas) y dejar lo mejor como prueba de lo hecho (T-56, grande)
 
 ## Cambios requeridos en documentos generales
 | Documento general | Cambio | Decisión | Aplicado |

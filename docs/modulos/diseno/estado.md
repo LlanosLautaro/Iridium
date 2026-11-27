@@ -42,6 +42,7 @@ Frente activado el 2026-11-07 (D-102), adelante de Capacidades y del paso 8 de O
 - [x] Escribir el diseño de Iridium desde lo construido (DESIGN.md y 06-ui.md)
 - [x] Comparar dos versiones de una pantalla lado a lado (DI-I4, Q-295)
 - [x] Probar una dirección sobre todo el lienzo y elegirla o descartarla; el pedido queda citado en la conversación, D-196 (DI-I4, Q-309)
+- [ ] Docs: los archivos de la raíz en un grupo aparte y todas las carpetas con nombre (T-105, chico, sola)
 - [ ] La calidad de Diseño: el borde de los controles (06-ui.md › Contraste) y la Revisión en negro (T-99, mediano)
 
 ## Cambios requeridos en documentos generales

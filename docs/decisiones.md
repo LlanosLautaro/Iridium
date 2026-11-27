@@ -3753,3 +3753,14 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** «N novedades del framework» en blanco al pie de la tarjeta (no ámbar: no frena nada) y **Ponerse al día · N novedades** en su menú; en Skills › Framework, «framework del AAAA-MM-DD · N novedades», que se abre con la fecha, qué cambió y qué le pide, **Ponerse al día** a la vista y el filtro Con novedades. Ponerse al día cita el pedido en una conversación nueva del proyecto y lo manda el usuario (D-196). Las novedades se escriben en `novedades.md` del framework, `## AAAA-MM-DD — Qué cambió`, con `Solo si: <ruta>` cuando solo les tocan a los proyectos que tienen un archivo o carpeta; la IA del proyecto las hace y adelanta `**Framework:**` a la fecha de la última. Sin un botón para poner al día todos juntos.
 **Motivo:** sigue D-118 y lo que ya se conoce de «framework viejo» y los avisos; `Solo si:` evita pedirle el design system a un proyecto sin maquetas.
 **Consecuencias:** `SKILL.md` pide sumar la novedad en el mismo cambio que cambia el framework; el control revisa `novedades.md` en el repo que lo trae. Las dos primeras son las fichas de las piezas (D-117) y las medidas fijas (D-119).
+
+## D-200 — Lo aprobado de un frente va en su ruta, y el control lo marca
+- **Fecha:** 2026-11-26
+- **Ámbito:** framework, frente Frentes y control
+- **Hito o paso:** 10 (lo reportó el usuario: Paridad e Ideas decían «Todo hecho» y no se archivaban)
+- **Estado:** vigente
+
+**Contexto:** la tarjeta de un frente en Frentes decía «Todo hecho» con la ruta toda `[x]`, pero el frente no se archivaba porque tenía trabajo aprobado afuera de la ruta (Paridad: T-56; Ideas: T-76, T-83 y T-109; Diseño: T-105). La regla del archivo (D-152) era correcta; fallaban el texto de la tarjeta, que miraba solo la ruta, y el framework, que pedía ubicar lo aprobado en la ruta pero nadie lo revisaba: al aprobar desde Ideas, la IA no se entera.
+**Decisión:** (1) la tarjeta dice «N aprobados sin lugar en la ruta» en vez de «Todo hecho» y el frente abierto ya no dice «Todo hecho por ahora» si los tiene; (2) el control marca cada `T-n` `pendiente` o `en curso` con `Frente:` que la ruta de su frente no nombra (también en un frente `hecho`); (3) la revisión del avance solo los nombra y la IA los ubica con su tamaño y `sola`, así la noche los toma; (4) `SKILL.md` lo dice en la ruta, la revisión y el control, y `novedades.md` suma la novedad del 2026-11-26 para los proyectos con frentes.
+**Motivo:** el trabajo aprobado tiene que verse y poder tomarse; arreglarlo en un solo proyecto se repetiría (la regla de errores de formato en el framework).
+**Consecuencias:** los proyectos con frentes ven una novedad del framework; Paridad, Ideas y Diseño tienen esos trabajos en su ruta (T-83, T-105 y T-109, chicos y `sola`). Pruebas: `tests/ma1-ruta.test.ts` y `tests/fs4-revision.test.ts`.
