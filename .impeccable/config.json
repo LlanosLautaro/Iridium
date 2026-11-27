@@ -341,6 +341,60 @@
         ],
         "createdAt": "2026-11-27T03:06:48.860Z",
         "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-proyecto-c.html"
+        ],
+        "createdAt": "2026-11-27T03:09:55.819Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-proyecto-c.html"
+        ],
+        "createdAt": "2026-11-27T03:09:56.050Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-proyecto-c.html"
+        ],
+        "createdAt": "2026-11-27T03:09:56.256Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-inicio-c.html"
+        ],
+        "createdAt": "2026-11-27T03:09:56.504Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-inicio-c.html"
+        ],
+        "createdAt": "2026-11-27T03:09:56.711Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "docs/diseno/pantallas/ideas-inicio-c.html"
+        ],
+        "createdAt": "2026-11-27T03:09:56.953Z",
+        "reason": "user confirmed in Q-307 (D-197, frente Pulido): el brillo del acento, el latido de «corriendo» y su luz que se corre vienen del marco compartido (piezas.js/piezas.css), no de esta maqueta"
       }
     ]
   }
