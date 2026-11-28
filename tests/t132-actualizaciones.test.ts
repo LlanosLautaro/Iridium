@@ -277,3 +277,21 @@ describe('con otro Iridium abierto desde la app (el escondido de una prueba, 202
     expect(log).not.toContain('sigue abierto (')
   }, 60_000)
 })
+
+describe('Publicar sola en la app armada', () => {
+  // El 2026-11-28 apareció que la publicación sola no había corrido nunca: Rollup veía los valores fijos de
+  // `__ARMADO__` y dejaba `debePublicar` en «nunca». Se arma el proceso principal y se mira que la regla siga entera.
+  it('el armado deja la regla de publicar como está escrita', async () => {
+    const salida = await temporal()
+    const raiz = join(import.meta.dirname, '..')
+    execFileSync(
+      process.execPath,
+      [join(raiz, 'node_modules', 'electron-vite', 'bin', 'electron-vite.js'), 'build', '--outDir', salida],
+      { cwd: raiz, stdio: 'ignore', windowsHide: true },
+    )
+    const principal = await readFile(join(salida, 'main', 'index.js'), 'utf8')
+    const regla = principal.slice(principal.indexOf('function debePublicar('))
+    expect(regla.slice(0, regla.indexOf('\n}'))).toContain('d.sinGuardar')
+    expect(principal).toMatch(/debePublicar\(\{[^}]*sinGuardar/)
+  }, 120_000)
+})

@@ -672,12 +672,15 @@ if (pasarALaInstalada) {
     // arranque. Las pruebas no publican (corren sin armar o escondidas).
     if (release && app.isPackaged && !oculta && process.env.IRIDIUM_PUBLICAR !== 'no')
       setTimeout(() => {
+        // Copiado al abrir: con los valores fijos de `__ARMADO__` a la vista, Rollup 4.65 dejaba `debePublicar` en
+        // «nunca» y la versión en uso no se publicaba nunca (2026-11-28; tests/t132-actualizaciones.test.ts).
+        const armadoEnUso = JSON.parse(JSON.stringify(__ARMADO__)) as typeof __ARMADO__
         void publicarSola({
           codigo: dirname(release),
           archivo: join(carpetaDatos, 'publicar.json'),
           version: app.getVersion(),
-          commit: __ARMADO__.commit,
-          sinGuardar: __ARMADO__.sinGuardar,
+          commit: armadoEnUso.commit,
+          sinGuardar: armadoEnUso.sinGuardar,
         })
           .then((l) => l && registro.escribir(`Publicar: manda ${app.getVersion()} a GitHub`))
           .catch((e) => registro.escribir(`Publicar: no se pudo lanzar (${e})`))

@@ -3,7 +3,7 @@
 > Este archivo es lo primero que lee la IA en cada sesión. Cabe en una pantalla: el historial va al documento del hito.
 
 **Proyecto:** Iridium (carpeta «Centro de Desarrollo», D-033)
-**Última actualización:** 2026-11-27
+**Última actualización:** 2026-11-28
 **Nivel de protección:** P2 — personal conectado (ver `perfil-proyecto.md`)
 
 ## Hito actual
@@ -46,7 +46,8 @@
 
 ## En qué estamos ahora
 **2026-11-27, Tipos de proyecto abierto** (Q-328 A, D-210): la guía según el tipo de proyecto (T-1), empezando por la herramienta personal. La propuesta (`modulos/tipos/propuesta.md`): un dato nuevo, el tipo (app, herramienta personal, juego), y los hitos que cambian en una herramienta: la exploración más corta, el lanzamiento pasa a «Ponerla en uso» y la operación sin preguntas periódicas. Espera Q-329 a Q-331.
-**Antes, el mismo día:** Plantillas (1.6.0), Abrir (1.5.0) y Diseño (1.4.0) cerrados; la fila de D-166 quedó hecha. El resumen de lo anterior pasó a `10-operacion.md` › Lo hecho, resumido.
+**2026-11-28, arreglo de Compartir:** la publicación sola de la versión en uso (D-191) no había corrido nunca: al armar, el empaquetador (Rollup 4.65) dejaba la regla de publicar en «nunca». Arreglado, con una prueba que arma el proceso principal y mira la regla; entra con el próximo armado y publica cinco minutos después de abrir (queda en `release/publicar.log`).
+**Antes, el 2026-11-27:** Plantillas (1.6.0), Abrir (1.5.0) y Diseño (1.4.0) cerrados; la fila de D-166 quedó hecha. El resumen de lo anterior pasó a `10-operacion.md` › Lo hecho, resumido.
 Mientras, el avance solo sigue con lo chico. Ideas sin evaluar y evaluadas que esperan tu aprobación: en Ideas.
 
 ## Preguntas abiertas
