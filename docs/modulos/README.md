@@ -16,4 +16,5 @@
 | Abrir | sección | 5. Diseño técnico | `modulos/abrir/` |
 | Paridad | sección | 1. Propuesta | `modulos/paridad/` |
 | Pulido | sección | 1. Propuesta | `modulos/pulido/` |
-| Plantillas | plugin (el framework) | 7. Construcción | `modulos/plantillas/` |
+| Plantillas | plugin (el framework) | en operación (con el hito 10) | `modulos/plantillas/` |
+| Tipos de proyecto | plugin (el framework) | 1. Propuesta | `modulos/tipos/` |

@@ -3873,3 +3873,13 @@ evision-cola-electron.json` y sale cuando Iridium está.
 **Decisión:** opción A de Q-325: como novedad del framework, para los proyectos a los que les toca. La tarjeta dice «1 novedad del framework» y **Ponerse al día** la aplica cuando el usuario quiere.
 **Motivo:** no se olvida y el usuario decide cuándo.
 **Consecuencias:** la novedad de las pruebas sin ventanas tiene que tocarles solo a los proyectos con Playwright, cuya configuración puede tener tres nombres: `Solo si:` pasa a aceptar varias rutas, con su lector, el control y sus pruebas (D-086). La actualización sola no lleva novedad (D-207).
+
+## D-210 — Sigue la guía según el tipo de proyecto, como el frente Tipos de proyecto
+- **Fecha:** 2026-11-27
+- **Ámbito:** general (el framework y lo que Iridium lee de él)
+- **Hito o paso:** 10 (Q-328)
+- **Estado:** vigente
+
+**Contexto:** con Plantillas cerrado quedó hecha la fila de D-166 y no había frente en curso. Esperaban T-1 (la guía por tipo de proyecto), T-8 (el puente PC–celular) y T-31 (el plan completo).
+**Decisión:** opción A de Q-328: T-1, empezando por la herramienta personal. Se abre como frente propio, **Tipos de proyecto** (prefijo `TI`), y no como una receta de Plantillas: las recetas dependen de cómo corre la app (escritorio, página, consola); el tipo, de para quién se hace, y cambia la forma de los hitos.
+**Motivo:** es lo que más usa el usuario y ya choca con el framework en sus herramientas (el hueco de D-077 en el propio Iridium). El juego se escribe cuando haya uno de verdad para probarlo.
